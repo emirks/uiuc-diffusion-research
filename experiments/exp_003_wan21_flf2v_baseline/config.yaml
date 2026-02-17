@@ -10,23 +10,23 @@ inputs:
   # Wan prompt style: Opening shot -> Camera motion -> Reveal/payoff + aesthetic control.
   prompt: "Opening shot: the scene starts with the composition and subject style of the first frame. Camera motion: a smooth, cinematic dolly movement with stable temporal continuity, natural parallax, and coherent subject motion through the transition. Reveal/payoff: the scene gradually resolves into the composition, subject arrangement, and mood of the last frame. Keep realistic lighting, clean details, consistent geometry, and filmic color grading without abrupt jumps."
   # Official Wan recommended negative prompt (HF model card style).
-  negative_prompt: "Bright tones, overexposed, static, blurred details, subtitles, style, works, paintings, images, static, overall gray, worst quality, low quality, JPEG compression residue, ugly, incomplete, extra fingers, poorly drawn hands, poorly drawn faces, deformed, disfigured, misshapen limbs, fused fingers, still picture, messy background, three legs, many people in the background, walking backwards"
-  start_frame: data/processed/vc_bench_samples/start_frame.png
-  end_frame: data/processed/vc_bench_samples/end_frame.png
+  negative_prompt: "bright tones, overexposed, static, blurred details, subtitles, style, works, paintings, images, static, overall gray, worst quality, low quality, JPEG compression residue, ugly, incomplete, extra fingers, poorly drawn hands, poorly drawn faces, deformed, disfigured, misshapen limbs, fused fingers, still picture, messy background, three legs, many people in the background, walking backwards"
+  start_frame: data/processed/vc-bench-flf/first_last_frames/Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/first.png
+  end_frame: data/processed/vc-bench-flf/first_last_frames/Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/last.png
 
 inference:
   # HF starter values for 14B-720P are typically around these settings.
-  num_frames: 81
-  num_inference_steps: 30
+  num_frames: 25
+  num_inference_steps: 15
   guidance_scale: 5.0
-  height: 720
-  width: 1280
+  height: 480
+  width: 848
 
 runtime:
   seed: 42
-  device: auto
-  enable_model_cpu_offload: true
-  dry_run: true
+  device: cuda
+  enable_model_cpu_offload: false
+  dry_run: false
 
 outputs:
   root_dir: outputs/videos
