@@ -1,0 +1,19 @@
+name: diffusion
+channels:
+  - pytorch
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - numpy
+  - pyyaml
+  - matplotlib
+  - pytest
+  - pytorch
+  - torchvision
+  - pip:
+      - tqdm
+      - diffusers
+      - transformers
+      - accelerate
+      - safetensors

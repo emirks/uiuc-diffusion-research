@@ -1,0 +1,20 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+.DS_Store
+
+# outputs are ephemeral
+outputs/
+
+# local data
+data/raw/
+data/processed/
+
+# editor
+.vscode/
+.idea/

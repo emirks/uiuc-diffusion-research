@@ -1,0 +1,7 @@
+question: "How do loss variants (eps/x0/v) affect training stability?"
+
+timesteps: 1000
+beta_schedule: linear
+loss: eps
+
+seed: 0
