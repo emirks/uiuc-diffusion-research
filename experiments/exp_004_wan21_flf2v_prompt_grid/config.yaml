@@ -1,0 +1,36 @@
+experiment_name: exp_004_wan21_flf2v_prompt_grid
+
+model:
+  repo_id: "Wan-AI/Wan2.1-FLF2V-14B-720P-Diffusers"
+  torch_dtype: bfloat16
+  use_safetensors: true
+
+inputs:
+  frame_pairs_root: data/processed/vc-bench-flf/first_last_frames
+  num_frame_pairs: 3
+  # Optional explicit selection. If empty, the first num_frame_pairs folders are used.
+  frame_pair_ids: []
+
+  prompts:
+    - "Opening shot: hold the first frame composition for a brief beat. Camera motion: smooth cinematic dolly-in with stable temporal continuity, controlled parallax, and clean geometry. Reveal/payoff: gradually resolve into the final frame composition with natural lighting and coherent subject motion."
+    - "Opening shot: start from the first frame exactly. Camera motion: aggressive whip pan from left to right, very fast transition with strong directional motion blur and kinetic energy, then quickly stabilize. Reveal/payoff: lock onto the last frame composition with clear subject structure after the whip movement."
+    - "Opening shot: begin from the first frame faithfully. Camera motion: slow orbit/arc movement around the scene with gentle parallax and high temporal smoothness, almost floating camera behavior. Reveal/payoff: settle into the last frame composition with soft filmic continuity and minimal abrupt motion."
+
+  negative_prompt: "bright tones, overexposed, static, blurred details, subtitles, style, works, paintings, images, static, overall gray, worst quality, low quality, JPEG compression residue, ugly, incomplete, extra fingers, poorly drawn hands, poorly drawn faces, deformed, disfigured, misshapen limbs, fused fingers, still picture, messy background, three legs, many people in the background, walking backwards"
+
+inference:
+  num_frames: 24
+  num_inference_steps: 15
+  guidance_scale: 5.0
+  height: 480
+  width: 848
+
+runtime:
+  seed: 42
+  device: cuda
+  enable_model_cpu_offload: false
+  dry_run: false
+
+outputs:
+  root_dir: outputs/videos
+  fps: 16
