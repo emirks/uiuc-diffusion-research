@@ -7,12 +7,15 @@ model:
   use_safetensors: true
 
 inputs:
-  prompt: "A smooth cinematic transition from the first scene into the last scene."
-  negative_prompt: "blurry, artifacts, flicker, jitter"
+  # Wan prompt style: Opening shot -> Camera motion -> Reveal/payoff + aesthetic control.
+  prompt: "Opening shot: the scene starts with the composition and subject style of the first frame. Camera motion: a smooth, cinematic dolly movement with stable temporal continuity, natural parallax, and coherent subject motion through the transition. Reveal/payoff: the scene gradually resolves into the composition, subject arrangement, and mood of the last frame. Keep realistic lighting, clean details, consistent geometry, and filmic color grading without abrupt jumps."
+  # Official Wan recommended negative prompt (HF model card style).
+  negative_prompt: "Bright tones, overexposed, static, blurred details, subtitles, style, works, paintings, images, static, overall gray, worst quality, low quality, JPEG compression residue, ugly, incomplete, extra fingers, poorly drawn hands, poorly drawn faces, deformed, disfigured, misshapen limbs, fused fingers, still picture, messy background, three legs, many people in the background, walking backwards"
   start_frame: data/processed/vc_bench_samples/start_frame.png
   end_frame: data/processed/vc_bench_samples/end_frame.png
 
 inference:
+  # HF starter values for 14B-720P are typically around these settings.
   num_frames: 81
   num_inference_steps: 30
   guidance_scale: 5.0
@@ -27,4 +30,5 @@ runtime:
 
 outputs:
   root_dir: outputs/videos
+  # Wan quick-test default commonly uses 16 fps; increase if needed.
   fps: 16
