@@ -8,6 +8,16 @@ Use this repository to run disciplined, reproducible diffusion research. Treat i
 - `experiments/` is where hypotheses are tested.
 - `notes/` and `papers_drafts/` capture reasoning and communication.
 
+## Folder scope (main folders)
+- `data/`: datasets and derived data used by experiments.
+- `src/`: reusable library code (core diffusion/video logic).
+- `experiments/`: runnable experiment entrypoints (`config.yaml` + `run.py`).
+- `outputs/`: generated artifacts only (videos, images, logs, checkpoints).
+- `scripts/`: one-off utilities (download/prep/inspection helpers).
+- `tests/`: sanity and regression checks.
+- `notes/`: research thinking, paper notes, derivations, conclusions.
+- `papers_drafts/`: writing and figure drafting for reports/papers.
+
 ## Current structure
 ```
 diffusion-research/
@@ -89,6 +99,14 @@ python scripts/download_cifar_data.py
 ```
 
 If needed, keep optional inspection exports in `data/processed/`.
+
+### Start/end frame placement (simple rule)
+- Put reusable input frames in `data/processed/` (recommended).
+- Keep only tiny, one-off debug frames inside a specific `experiments/exp_XXX.../` folder.
+
+Why:
+- `data/` is for shared inputs.
+- `experiments/` is for run logic/config and disposable experiment-local files.
 
 ## Running experiments
 Example implemented experiment:
