@@ -1,14 +1,14 @@
 experiment_name: exp_003_wan21_flf2v_baseline
 
 model:
-  # Set this to a valid Diffusers FLF2V-capable repo id in your environment.
-  repo_id: "Wan-AI/Wan2.1-FLF2V-14B-720P"
-  torch_dtype: bfloat16          # float16 | bfloat16 | float32
+  # Official Diffusers format model id for Wan FLF2V.
+  repo_id: "Wan-AI/Wan2.1-FLF2V-14B-720P-Diffusers"
+  torch_dtype: bfloat16
   use_safetensors: true
 
 inputs:
-  prompt: "A smooth cinematic transition from the first frame scene into the last frame scene."
-  negative_prompt: "flicker, jitter, artifacts, blur"
+  prompt: "A smooth cinematic transition from the first scene into the last scene."
+  negative_prompt: "blurry, artifacts, flicker, jitter"
   start_frame: data/processed/vc_bench_samples/start_frame.png
   end_frame: data/processed/vc_bench_samples/end_frame.png
 
@@ -21,10 +21,10 @@ inference:
 
 runtime:
   seed: 42
-  device: auto                   # auto | cuda | cpu
+  device: auto
   enable_model_cpu_offload: true
-  dry_run: true                  # true = validate setup only, no model call
+  dry_run: true
 
 outputs:
   root_dir: outputs/videos
-  save_frames: true
+  fps: 16
