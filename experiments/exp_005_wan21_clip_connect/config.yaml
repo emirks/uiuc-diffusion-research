@@ -1,0 +1,60 @@
+experiment_name: exp_005_wan21_clip_connect
+
+model:
+  # T2V is used because our hard-constraint approach does not rely on FLF2V's
+  # frame-conditioning mechanism; we inject anchor clips via latent overwriting.
+  repo_id: "Wan-AI/Wan2.1-T2V-14B-Diffusers"
+  # VAE must stay float32 for numerical stability during encode/decode.
+  # Transformer and text encoder use bfloat16.
+  transformer_dtype: bfloat16
+  text_encoder_dtype: bfloat16
+  vae_dtype: float32
+
+inputs:
+  # Paths are relative to the repository root.
+  # first.mp4 / last.mp4 are 24-frame clips at original source resolution;
+  # run.py will center-crop and resize them to the target dimensions.
+  start_clip: data/processed/vc-bench-flf/first_last_clips_24/Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/first.mp4
+  end_clip:   data/processed/vc-bench-flf/first_last_clips_24/Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/last.mp4
+
+  # Wan-style prompt: describe the desired transition between the two clips.
+  prompt: >
+    Cinematic transition: the scene starts with the composition and motion of
+    the first clip. Camera moves with smooth, stable temporal continuity and
+    natural parallax. The scene gradually resolves into the subject arrangement
+    and mood of the last clip. Consistent lighting, clean geometry, filmic
+    color grading throughout.
+
+  # Standard Wan negative prompt (from the official model card).
+  negative_prompt: >
+    bright tones, overexposed, static, blurred details, subtitles, style,
+    works, paintings, images, static, overall gray, worst quality, low quality,
+    JPEG compression residue, ugly, incomplete, extra fingers, poorly drawn
+    hands, poorly drawn faces, deformed, disfigured, misshapen limbs, fused
+    fingers, still picture, messy background, three legs, many people in the
+    background, walking backwards
+
+inference:
+  # Total output frames. Must satisfy: (num_frames - 1) % 4 == 0.
+  # 72 frames → 18 latent frames (6 start + 6 middle + 6 end).
+  num_frames: 73
+  # Frames per anchor clip. Must match the length of the input mp4 clips.
+  anchor_frames: 24
+  height: 480
+  width: 848
+  num_inference_steps: 15
+  guidance_scale: 5.0
+  # Tiled VAE decode reduces peak VRAM; set false only if you have ample GPU memory.
+  enable_vae_tiling: true
+
+runtime:
+  seed: 42
+  device: cuda
+  # Set true to verify inputs/paths without loading the model.
+  dry_run: false
+  # Use model CPU offload if VRAM is limited (reduces peak VRAM, slower).
+  enable_model_cpu_offload: false
+
+outputs:
+  root_dir: outputs/videos
+  fps: 16
