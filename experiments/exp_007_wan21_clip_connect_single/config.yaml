@@ -1,0 +1,44 @@
+# Experiment 007 — Wan 2.1 T2V 1.3B clip-to-clip connecting (single pass).
+# One clip pair, one prompt → one video. Tweak and re-run for fast iteration.
+
+experiment_name: exp_007_wan21_clip_connect_single
+
+model:
+  repo_id: "Wan-AI/Wan2.1-T2V-1.3B-Diffusers"
+  transformer_dtype: bfloat16
+  text_encoder_dtype: bfloat16
+  vae_dtype: float32
+
+inputs:
+  pair_id: "pair_A_same"
+  start_clip: data/processed/vc-bench-flf/first_last_clips_24/Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/first.mp4
+  end_clip:   data/processed/vc-bench-flf/first_last_clips_24/Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/last.mp4
+
+  prompt: "continuous motion video"
+
+  negative_prompt: >
+    bright tones, overexposed, static, blurred details, subtitles, style,
+    works, paintings, images, static, overall gray, worst quality, low quality,
+    JPEG compression residue, ugly, incomplete, extra fingers, poorly drawn
+    hands, poorly drawn faces, deformed, disfigured, misshapen limbs, fused
+    fingers, still picture, messy background, three legs, many people in the
+    background, walking backwards
+
+inference:
+  num_frames: 73
+  anchor_frames: 24
+  height: 480
+  width: 848
+  num_inference_steps: 15
+  guidance_scale: 1.0
+  enable_vae_tiling: true
+
+runtime:
+  seed: 42
+  device: cuda
+  dry_run: false
+  enable_model_cpu_offload: false
+
+outputs:
+  root_dir: outputs/videos
+  fps: 16
