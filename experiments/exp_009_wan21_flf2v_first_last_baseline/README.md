@@ -18,9 +18,9 @@ The baseline implementation for Wan2.1 FLF2V-14B-720P Model
 
 ```bash
 cd /workspace/diffusion-research
-python experiments/exp_009_wan21_i2v_first_last/run.py
+python experiments/exp_009_wan21_flf2v_first_last_baseline/run.py
 ```
 
 ## Outputs
 
-`outputs/videos/exp_009_wan21_i2v_first_last/s42_steps15_cfg5.0.mp4`
+`outputs/videos/exp_009_wan21_flf2v_first_last_baseline/s42_steps15_cfg5.0.mp4`

@@ -15,12 +15,12 @@ inputs:
     background, walking backwards
 
 inference:
-  max_area: 921600   # 720 * 1280 — drives target_resolution()
+  max_area: 399360   # 720 * 1280 — drives target_resolution()
   # num_frames = 24 (start) + 33 (generated middle) + 24 (end) = 81
   # Must satisfy: (num_frames - 1) % vae_scale_factor_temporal == 0  →  (81-1) % 4 == 0 ✓
   # Must satisfy: anchor_frames * 2 < num_frames  →  48 < 81 ✓
-  num_frames: 81
-  num_inference_steps: 15
+  num_frames: 73
+  num_inference_steps: 50
   guidance_scale: 5.5
 
 runtime:

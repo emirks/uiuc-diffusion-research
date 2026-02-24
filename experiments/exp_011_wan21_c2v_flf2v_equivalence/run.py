@@ -12,55 +12,21 @@ Conditioning equivalence with FLF2V (anchor_frames=1):
 All three are structurally identical to what WanImageToVideoPipeline produces.
 """
 import pathlib
-import numpy as np
 import yaml
 import torch
-import PIL.Image
 from diffusers import AutoencoderKLWan
 from diffusers.utils import export_to_video, load_image
 from transformers import CLIPVisionModel
 
 from diffusion.pipeline_wan_c2v import WanVideoConnectPipeline
+from diffusion.exp_utils import load_config, next_run_dir, resolve_resolution
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
 CONFIG_PATH = pathlib.Path(__file__).parent / "config.yaml"
 
 
-def load_config() -> dict:
-    with open(CONFIG_PATH) as f:
-        return yaml.safe_load(f)
-
-
-def next_run_dir(out_dir: pathlib.Path) -> tuple[str, pathlib.Path]:
-    existing = []
-    for p in out_dir.glob("run_*"):
-        if p.is_dir():
-            try:
-                existing.append(int(p.name.split("_", 1)[1]))
-            except Exception:
-                pass
-    nxt = (max(existing) + 1) if existing else 1
-    run_id  = f"run_{nxt:04d}"
-    run_dir = out_dir / run_id
-    run_dir.mkdir(parents=True, exist_ok=False)
-    return run_id, run_dir
-
-
-def snap_to_grid(value: int, mod: int) -> int:
-    return value // mod * mod
-
-
-def target_resolution(pil_frame: PIL.Image.Image, max_area: int, mod_value: int) -> tuple[int, int]:
-    """Compute (height, width) preserving aspect ratio so H*W ≈ max_area,
-    snapped to mod_value.  Identical to exp_009's aspect_ratio_resize logic."""
-    aspect = pil_frame.height / pil_frame.width
-    height = snap_to_grid(round(np.sqrt(max_area * aspect)), mod_value)
-    width  = snap_to_grid(round(np.sqrt(max_area / aspect)), mod_value)
-    return height, width
-
-
 def main() -> None:
-    cfg = load_config()
+    cfg = load_config(CONFIG_PATH)
 
     # ── Resolve paths ──────────────────────────────────────────────────────────
     first_path    = REPO_ROOT / cfg["inputs"]["first_frame"]
@@ -98,13 +64,14 @@ def main() -> None:
     first_frame = load_image(str(first_path))
     last_frame  = load_image(str(last_path))
 
-    # Compute target resolution from first frame — same formula as exp_009.
+    # ── Compute target resolution ──────────────────────────────────────────────
+    # ref_image = first_frame (used when config specifies max_area).
+    # preprocess_video inside the pipeline handles the actual resize.
     mod_value = pipe.vae_scale_factor_spatial * pipe.transformer.config.patch_size[1]
-    height, width = target_resolution(first_frame, cfg["inference"]["max_area"], mod_value)
+    height, width = resolve_resolution(cfg["inference"], mod_value, first_frame)
     print(f"[info] resolution    : {width}x{height}  (mod_value={mod_value})")
 
-    # Wrap as single-frame lists; preprocess_video inside the pipeline handles
-    # resize + normalisation to (B, C, 1, H, W) float32 in [-1, 1].
+    # Wrap as single-frame lists for the C2V pipeline.
     start_clip = [first_frame]
     end_clip   = [last_frame]
 

@@ -8,74 +8,21 @@ VideoProcessor.preprocess_video handles resize + normalisation internally,
 producing (1, C, T, H, W) float32 in [-1, 1] range as expected by prepare_latents.
 """
 import pathlib
-import numpy as np
 import yaml
 import torch
-import PIL.Image
-import torchvision.io as tio
 from diffusers import AutoencoderKLWan
 from diffusers.utils import export_to_video
 from transformers import CLIPVisionModel
 
 from diffusion.pipeline_wan_c2v import WanVideoConnectPipeline
+from diffusion.exp_utils import load_config, next_run_dir, resolve_resolution, load_clip_from_mp4
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
 CONFIG_PATH = pathlib.Path(__file__).parent / "config.yaml"
 
 
-def load_config() -> dict:
-    with open(CONFIG_PATH) as f:
-        return yaml.safe_load(f)
-
-
-def next_run_dir(out_dir: pathlib.Path) -> tuple[str, pathlib.Path]:
-    existing = []
-    for p in out_dir.glob("run_*"):
-        if p.is_dir():
-            try:
-                existing.append(int(p.name.split("_", 1)[1]))
-            except Exception:
-                pass
-    nxt = (max(existing) + 1) if existing else 1
-    run_id  = f"run_{nxt:04d}"
-    run_dir = out_dir / run_id
-    run_dir.mkdir(parents=True, exist_ok=False)
-    return run_id, run_dir
-
-
-def snap_to_grid(value: int, mod: int) -> int:
-    """Floor-snap value to the nearest multiple of mod."""
-    return value // mod * mod
-
-
-def target_resolution(pil_frame: PIL.Image.Image, max_area: int, mod_value: int) -> tuple[int, int]:
-    """Compute (height, width) preserving aspect ratio so H*W ≈ max_area,
-    snapped to mod_value (spatial patch grid requirement)."""
-    aspect = pil_frame.height / pil_frame.width
-    height = snap_to_grid(round(np.sqrt(max_area * aspect)), mod_value)
-    width  = snap_to_grid(round(np.sqrt(max_area / aspect)), mod_value)
-    return height, width
-
-
-def load_clip_from_mp4(path: pathlib.Path, anchor_frames: int) -> list[PIL.Image.Image]:
-    """Load the first anchor_frames frames of an mp4 as a list of PIL images.
-
-    Uses torchvision.io.read_video (output_format='THWC') which returns a
-    (T, H, W, 3) uint8 tensor at the video's native resolution.
-    Resizing to the target resolution is intentionally deferred to the pipeline
-    (VideoProcessor.preprocess_video), keeping this function pure I/O.
-    """
-    frames_t, _, _ = tio.read_video(str(path), output_format="THWC", pts_unit="sec")
-    # frames_t: (T, H, W, 3) uint8
-    if len(frames_t) < anchor_frames:
-        raise ValueError(
-            f"{path.name} has {len(frames_t)} frames but anchor_frames={anchor_frames}"
-        )
-    return [PIL.Image.fromarray(frames_t[i].numpy()) for i in range(anchor_frames)]
-
-
 def main() -> None:
-    cfg = load_config()
+    cfg = load_config(CONFIG_PATH)
 
     # ── Resolve paths ──────────────────────────────────────────────────────────
     start_path    = REPO_ROOT / cfg["inputs"]["start_clip"]
@@ -114,9 +61,10 @@ def main() -> None:
     start_frames = load_clip_from_mp4(start_path, anchor_frames)
     end_frames   = load_clip_from_mp4(end_path,   anchor_frames)
 
-    # ── Compute target resolution from the first frame of the start clip ──────
+    # ── Compute target resolution ──────────────────────────────────────────────
+    # ref_image = first frame of start clip (used when config specifies max_area).
     mod_value = pipe.vae_scale_factor_spatial * pipe.transformer.config.patch_size[1]
-    height, width = target_resolution(start_frames[0], cfg["inference"]["max_area"], mod_value)
+    height, width = resolve_resolution(cfg["inference"], mod_value, start_frames[0])
     print(f"[info] resolution    : {width}x{height}  (mod_value={mod_value})")
 
     # ── Generate ───────────────────────────────────────────────────────────────
