@@ -1,0 +1,90 @@
+---
+description: Project conventions for diffusion-research — experiments, src, data, outputs
+alwaysApply: true
+---
+
+# diffusion-research Project Rules
+
+## Repo layout (never violate)
+
+- `src/diffusion/` — reusable, importable library code only. No CLI, no plotting, no dataset downloads.
+- `experiments/exp_NNN_<slug>/` — one question per experiment. Contains `run.py`, `config.yaml`, `README.md`.
+- `outputs/` — generated artifacts only (videos, images, logs). Never committed source or config edits.
+- `data/raw/` — immutable. `data/processed/` — derived inputs.
+- `tests/` — shape, indexing, and determinism checks for `src/`.
+
+## Starting a new experiment
+
+1. Next number = `max(existing exp_NNN) + 1`. Pad to 3 digits: `exp_012_…`.
+2. Copy the closest prior experiment as a starting point or write a new one; never mutate old ones.
+3. Every experiment must have:
+   - `config.yaml` 
+   - `run.py`
+   - `README.md` with `## Question`, `## Setup`, `## How to run`, `## Expected outcome` / `## Outputs`.
+4. Output dir in config: `"outputs/videos/exp_NNN_<slug>"`.
+5. Output filename must encode distinguishing hyperparams (seed, steps, cfg, anchor_frames, …).
+6. Always save a `config_snapshot.yaml` alongside the video.
+
+## config.yaml conventions
+
+```yaml
+model:
+  repo_id: "Wan-AI/..."
+
+inputs:
+  # paths relative to REPO_ROOT
+
+inference:
+  height: 480       
+  width: 832
+  # or something like
+  max_area: 399360
+  num_frames: 25     # must satisfy (num_frames - 1) % 4 == 0
+  num_inference_steps: 15
+  guidance_scale: 5.5
+
+runtime:
+  seed: 42
+  device: cuda
+  dtype: bfloat16
+  cpu_offload: true
+
+outputs:
+  dir: "outputs/videos/exp_NNN_<slug>"
+  fps: 16
+```
+
+## run.py conventions
+
+- `REPO_ROOT` anchored at `pathlib.Path(__file__).resolve().parents[2]`.
+- All file paths resolved as `REPO_ROOT / cfg[...]` — never hardcoded strings.
+- Always import boilerplate from `diffusion.exp_utils`:
+  ```python
+  from diffusion.exp_utils import load_config, next_run_dir, resolve_resolution
+  # also import load_clip_from_mp4 when loading clips from MP4
+  ```
+- Call `load_config(CONFIG_PATH)` (not a local `load_config()`).
+- Resolution: use `resolve_resolution(cfg["inference"], mod_value, ref_image)`.
+  - `ref_image` = first frame of start clip (MP4 experiments) or first PNG frame.
+  - Handles both `max_area` and explicit `height`/`width` configs transparently.
+- Pipeline always loaded with `vae` and `image_encoder` at `torch.float32`; transformer at config dtype.
+- Always call `pipe.vae.enable_tiling()`.
+- Generator: `torch.Generator(device=device).manual_seed(seed)`.
+- Print `[info]` lines for key inputs, resolution, and `[done] run_id → path` at the end.
+
+## Wan 2.1 / C2V specifics
+
+- VAE temporal scale = 4, spatial scale = 8.
+- `num_frames` constraint: `(num_frames - 1) % 4 == 0`.
+- `anchor_frames` constraint: `anchor_frames * 2 < num_frames`.
+- Transformer input shape: `(B, 36, T_lat, H_lat, W_lat)` where `T_lat = (num_frames-1)//4 + 1`.
+- Conditioning channel split: 16 noisy latents | 4 mask | 16 VAE condition = 36.
+- Mask build order: pixel-frame ones → repeat first-frame group ×4 → concat → view(B, T_lat, 4, H, W) → transpose(1,2).
+- CLIP image embed for FLF2V/C2V always encodes exactly **two** frames: `[start_frame, end_frame]`.
+
+## What belongs in src/ vs experiments/
+
+| Reusable math / pipeline logic | → `src/diffusion/` |
+| One-off run script, config, I/O | → `experiments/exp_NNN_…/` |
+| Dataset download / prep | → `scripts/` |
+| Generated files | → `outputs/` |
