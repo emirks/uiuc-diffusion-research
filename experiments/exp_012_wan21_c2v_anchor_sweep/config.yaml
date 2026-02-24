@@ -1,0 +1,49 @@
+model:
+  repo_id: "Wan-AI/Wan2.1-FLF2V-14B-720P-Diffusers"
+
+inputs:
+  # All clips loaded from first_last_clips_24 — the 24-frame clips cover every
+  # anchor_frames value in anchor_frames_list (load_clip_from_mp4 takes the
+  # first N frames, so clips_24 with N=1 is identical to clips_2 with N=1).
+  clip_dir: "data/processed/vc-bench-flf/first_last_clips_24"
+  anchor_frames_list: [1, 2, 4, 8, 16, 24]
+  pairs:
+    - name: "1581362_self"
+      start_clip: "Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/first.mp4"
+      end_clip:   "Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/last.mp4"
+    - name: "3106432_self"
+      start_clip: "Actions_Activities_action_action_3106432_2562x1440_e99d05828f/first.mp4"
+      end_clip:   "Actions_Activities_action_action_3106432_2562x1440_e99d05828f/last.mp4"
+    - name: "1402988_self"
+      start_clip: "Actions_Activities_action_action_1402988_1920x1080_199e157427/first.mp4"
+      end_clip:   "Actions_Activities_action_action_1402988_1920x1080_199e157427/last.mp4"
+    - name: "3106432x1581362_cross"
+      start_clip: "Actions_Activities_action_action_3106432_2562x1440_e99d05828f/first.mp4"
+      end_clip:   "Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/first.mp4"
+  prompt: "A continuous smooth video transitioning from the first clip to the last clip."
+  negative_prompt: >
+    bright tones, overexposed, static, blurred details, subtitles, style,
+    works, paintings, images, static, overall gray, worst quality, low quality,
+    JPEG compression residue, ugly, incomplete, extra fingers, poorly drawn
+    hands, poorly drawn faces, deformed, disfigured, misshapen limbs, fused
+    fingers, still picture, messy background, three legs, many people in the
+    background, walking backwards
+
+inference:
+  max_area: 399360   # 480 * 832 — aspect-ratio resize per pair
+  # num_frames must satisfy (num_frames - 1) % 4 == 0
+  # and anchor_frames * 2 < num_frames for all anchor_frames in the list.
+  # max anchor = 24 → 24*2=48 < 81 ✓
+  num_frames: 81
+  num_inference_steps: 15
+  guidance_scale: 5.5
+
+runtime:
+  seed: 42
+  device: cuda
+  dtype: bfloat16
+  cpu_offload: true
+
+outputs:
+  dir: "outputs/videos/exp_012_wan21_c2v_anchor_sweep"
+  fps: 16
