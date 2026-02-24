@@ -6,6 +6,10 @@ Reads:  data/raw/vc-bench-data/  (flat directory; filenames contain backslashes)
 
 Writes: data/processed/vc-bench-flf/
     first_last_frames/{video_id}/first.png  last.png
+    first_last_clips_2/{video_id}/first.mp4   last.mp4
+    first_last_clips_4/{video_id}/first.mp4   last.mp4
+    first_last_clips_8/{video_id}/first.mp4   last.mp4
+    first_last_clips_16/{video_id}/first.mp4  last.mp4
     first_last_clips_24/{video_id}/first.mp4  last.mp4
     first_last_clips_36/{video_id}/first.mp4  last.mp4
     first_last_clips_48/{video_id}/first.mp4  last.mp4
@@ -50,7 +54,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 RAW_DIR   = REPO_ROOT / "data" / "raw" / "vc-bench-data"
 OUT_DIR   = REPO_ROOT / "data" / "processed" / "vc-bench-flf"
 
-CLIP_SIZES = [24, 36, 48]
+CLIP_SIZES = [2, 4, 8, 16, 24, 36, 48]
 
 
 # ---------------------------------------------------------------------------
@@ -110,27 +114,35 @@ def process_video(args: tuple) -> dict:
     """
     Process a single video file.
     Returns a metadata dict with at least keys: video_id, status.
+
+    Skips any individual output (frame PNGs or per-size clips) that already
+    exists on disk, so previously completed sizes are never re-written.
     """
     video_path, out_dir, clip_sizes, dry_run = args
     filename  = video_path.name          # e.g. "Animals\cat\cat_123_1920x1080.mp4"
     video_id  = make_video_id(filename)
 
-    # ---- check if already done ----
-    done_marker = out_dir / "first_last_frames" / video_id / "last.png"
-    if done_marker.exists():
-        # verify all clip outputs exist too
-        all_exist = all(
-            (out_dir / f"first_last_clips_{n}" / video_id / "last.mp4").exists()
-            for n in clip_sizes
-        )
-        if all_exist:
-            return {"video_id": video_id, "source": filename, "status": "skipped_exists"}
+    frames_dir = out_dir / "first_last_frames" / video_id
+    first_png  = frames_dir / "first.png"
+    last_png   = frames_dir / "last.png"
+
+    # Determine what is actually missing
+    need_frames   = not first_png.exists() or not last_png.exists()
+    missing_clips = [
+        n for n in clip_sizes
+        if not (out_dir / f"first_last_clips_{n}" / video_id / "first.mp4").exists()
+        or not (out_dir / f"first_last_clips_{n}" / video_id / "last.mp4").exists()
+    ]
+
+    if not need_frames and not missing_clips:
+        return {"video_id": video_id, "source": filename, "status": "skipped_exists"}
 
     if dry_run:
         return {"video_id": video_id, "source": filename, "status": "dry_run"}
 
     # ---- read video in a single pass ----
-    max_n     = max(clip_sizes)
+    # Only need to buffer as many frames as the largest *missing* clip size.
+    max_n     = max(missing_clips) if missing_clips else 1
     first_buf = []          # stores first `max_n` frames (ndarray HxWxC uint8)
     last_buf  = collections.deque(maxlen=max_n)
     fps       = 30.0
@@ -167,19 +179,20 @@ def process_video(args: tuple) -> dict:
 
     last_list = list(last_buf)  # last `min(total_frames, max_n)` frames
 
-    # ---- save first / last frames (PNG) ----
-    try:
-        write_png(first_buf[0],  out_dir / "first_last_frames" / video_id / "first.png")
-        write_png(last_list[-1], out_dir / "first_last_frames" / video_id / "last.png")
-    except Exception as exc:
-        return {"video_id": video_id, "source": filename, "status": "error",
-                "error": f"frame write failed: {exc}"}
+    # ---- save first / last frames (PNG) – only if missing ----
+    if need_frames:
+        try:
+            write_png(first_buf[0],  first_png)
+            write_png(last_list[-1], last_png)
+        except Exception as exc:
+            return {"video_id": video_id, "source": filename, "status": "error",
+                    "error": f"frame write failed: {exc}"}
 
-    # ---- save clips for each clip size ----
+    # ---- save clips for each missing clip size ----
     outputs: dict[str, dict] = {}
-    for n in clip_sizes:
+    for n in missing_clips:
         key = f"first_last_clips_{n}"
-        clip_dir = out_dir / key / video_id
+        clip_dir  = out_dir / key / video_id
         available = min(n, total_frames)
 
         first_clip = first_buf[:available]
