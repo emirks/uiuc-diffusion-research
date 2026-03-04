@@ -19,3 +19,6 @@ data/processed/
 # editor
 .vscode/
 .idea/
+
+# model weights
+*.pt
