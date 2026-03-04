@@ -91,6 +91,28 @@ For each experiment, ensure:
 - Output filenames include experiment identity.
 - Plots and tensor logs can be regenerated from code + config.
 
+## Model weights
+
+Model weights live under **`/workspace/cache/models/`** (outside this repo; not tracked by git).
+Each experiment's `config.yaml` references them by path (e.g. `/workspace/cache/models/LTX-2/...`).
+
+```
+/workspace/cache/models/
+├── LTX-2/                                      # https://huggingface.co/Lightricks/LTX-2
+│   ├── ltx-2-19b-dev.safetensors
+│   ├── ltx-2-19b-distilled-lora-384.safetensors
+│   └── ltx-2-spatial-upscaler-x2-1.0.safetensors
+└── gemma-3-12b-it-qat-q4_0-unquantized/        # https://huggingface.co/google/gemma-3-12b-it-qat-q4_0-unquantized
+    └── (full repo)
+```
+
+Why not inside the project:
+- `data/` is for datasets and derived tensors, not binary model weights.
+- `src/` is for reusable code.
+- Weights are too large for git and environment-specific.
+
+If sharing the workspace, point configs to a shared mount (e.g. `/mnt/models/`) instead.
+
 ## Data workflow
 Download CIFAR-10 into `data/raw/cifar10`:
 

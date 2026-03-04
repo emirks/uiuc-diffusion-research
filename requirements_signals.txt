@@ -1,0 +1,36 @@
+# Signal extraction dependencies
+# Install with: pip install -r requirements_signals.txt
+#
+# Notes
+# -----
+# - torch / torchvision are expected to already be installed (they are used
+#   by the main diffusion pipeline).  Only signal-specific extras are listed.
+# - SAM weights must be downloaded separately (see segmentation.py docstring).
+
+# Core CV
+opencv-python>=4.8.0
+
+# Depth estimation
+transformers>=4.40.0        # Depth-Anything V2 via HuggingFace
+timm>=0.9.0                 # required by Depth-Anything V2 backbone
+# MiDaS is loaded via torch.hub — no extra package needed.
+
+# Optical flow
+# RAFT is bundled in torchvision>=0.13 — no extra package needed.
+
+# Segmentation (SAM)
+# Install from source (the PyPI package lags behind):
+#   pip install git+https://github.com/facebookresearch/segment-anything.git
+# Weights (choose one):
+#   wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth   (~375 MB)
+#   wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth   (~2.4 GB)
+
+# Pose estimation + detection + (internal detector for SORT)
+ultralytics>=8.1.0          # YOLOv8 pose + detect
+
+# MediaPipe (CPU-friendly pose)
+mediapipe>=0.10.0
+
+# SORT tracker support
+filterpy>=1.4.5             # Kalman filter implementation
+scipy>=1.11.0               # linear_sum_assignment for Hungarian matching

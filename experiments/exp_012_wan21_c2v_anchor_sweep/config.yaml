@@ -8,9 +8,9 @@ inputs:
   clip_dir: "data/processed/vc-bench-flf/first_last_clips_24"
   anchor_frames_list: [1, 2, 4, 8, 16, 24]
   pairs:
-    - name: "1581362_self"
-      start_clip: "Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/first.mp4"
-      end_clip:   "Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/last.mp4"
+    # - name: "1581362_self"
+    #   start_clip: "Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/first.mp4"
+    #   end_clip:   "Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/last.mp4"
     - name: "3106432_self"
       start_clip: "Actions_Activities_action_action_3106432_2562x1440_e99d05828f/first.mp4"
       end_clip:   "Actions_Activities_action_action_3106432_2562x1440_e99d05828f/last.mp4"
