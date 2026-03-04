@@ -3,13 +3,17 @@
 Handles common boilerplate so each run.py can focus on the experiment-specific
 pipeline call.  Import as:
 
-    from diffusion.exp_utils import load_config, next_run_dir, resolve_resolution, load_clip_from_mp4
+    from diffusion.exp_utils import (
+        load_config, next_run_dir, resolve_resolution, load_clip_from_mp4,
+        compute_num_frames, TeeLogger,
+    )
 """
 from __future__ import annotations
 
 import math
 import pathlib
-from typing import Optional
+import sys
+from typing import IO, Optional
 
 import PIL.Image
 import torchvision.io as tio
@@ -70,6 +74,63 @@ def resolve_resolution(
             raise ValueError("ref_image is required when config uses 'max_area'")
         return target_resolution(ref_image, inference_cfg["max_area"], mod_value)
     raise ValueError("inference config must contain 'height'/'width' or 'max_area'")
+
+
+def compute_num_frames(anchor_frames: int, target_middle: int = 24) -> int:
+    """Return the smallest num_frames = 2*anchor_frames + middle satisfying
+    the VAE temporal constraint (num_frames - 1) % 4 == 0, with middle >= target_middle.
+
+    Example results with target_middle=24:
+      af=1  → num_frames=29  (middle=27)
+      af=2  → num_frames=29  (middle=25)
+      af=4  → num_frames=33  (middle=25)
+      af=8  → num_frames=41  (middle=25)
+      af=16 → num_frames=57  (middle=25)
+      af=24 → num_frames=73  (middle=25)
+    """
+    raw = 2 * anchor_frames + target_middle
+    remainder = (raw - 1) % 4
+    if remainder != 0:
+        raw += 4 - remainder
+    return raw
+
+
+class TeeLogger:
+    """Context manager that tees sys.stdout to both the terminal and a log file.
+
+    stderr is left untouched so tqdm/diffusers progress bars render correctly
+    in the terminal while all print() output is captured to the log file.
+
+    Usage::
+
+        run_id, run_dir = next_run_dir(out_dir)
+        with TeeLogger(run_dir / "run.log"):
+            ... # all print() calls go to terminal + run.log
+    """
+
+    def __init__(self, log_path: pathlib.Path) -> None:
+        self._log_path = log_path
+        self._file: Optional[IO[str]] = None
+        self._orig: Optional[IO[str]] = None
+
+    # --- file-like interface so sys.stdout = self works ---
+    def write(self, data: str) -> None:
+        self._orig.write(data)      # type: ignore[union-attr]
+        self._file.write(data)      # type: ignore[union-attr]
+
+    def flush(self) -> None:
+        self._orig.flush()          # type: ignore[union-attr]
+        self._file.flush()          # type: ignore[union-attr]
+
+    def __enter__(self) -> "TeeLogger":
+        self._file = open(self._log_path, "w", buffering=1, encoding="utf-8")
+        self._orig = sys.stdout
+        sys.stdout = self           # type: ignore[assignment]
+        return self
+
+    def __exit__(self, *args) -> None:
+        sys.stdout = self._orig     # type: ignore[assignment]
+        self._file.close()          # type: ignore[union-attr]
 
 
 def load_clip_from_mp4(path: pathlib.Path, anchor_frames: int) -> list[PIL.Image.Image]:

@@ -31,10 +31,10 @@ inputs:
 
 inference:
   max_area: 399360   # 480 * 832 — aspect-ratio resize per pair
-  # num_frames must satisfy (num_frames - 1) % 4 == 0
-  # and anchor_frames * 2 < num_frames for all anchor_frames in the list.
-  # max anchor = 24 → 24*2=48 < 81 ✓
-  num_frames: 81
+  # num_frames is computed per-run as compute_num_frames(anchor_frames, target_middle_frames).
+  # The result is the smallest 2*af + middle ≡ 1 (mod 4) with middle >= target_middle_frames.
+  # Example: af=24, target=24 → num_frames=73 (middle=25); af=1 → num_frames=29 (middle=27).
+  target_middle_frames: 24
   num_inference_steps: 15
   guidance_scale: 5.5
 

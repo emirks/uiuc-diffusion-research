@@ -60,10 +60,25 @@ outputs:
 - All file paths resolved as `REPO_ROOT / cfg[...]` — never hardcoded strings.
 - Always import boilerplate from `diffusion.exp_utils`:
   ```python
-  from diffusion.exp_utils import load_config, next_run_dir, resolve_resolution
-  # also import load_clip_from_mp4 when loading clips from MP4
+  from diffusion.exp_utils import (
+      load_config, next_run_dir, resolve_resolution,
+      load_clip_from_mp4,   # when loading MP4 clips
+      compute_num_frames,   # when num_frames depends on anchor_frames
+      TeeLogger,
+  )
   ```
 - Call `load_config(CONFIG_PATH)` (not a local `load_config()`).
+- **Always use `TeeLogger`**: create `run_dir` first via `next_run_dir`, then wrap the rest of `main()`:
+  ```python
+  run_id, run_dir = next_run_dir(out_dir)
+  with TeeLogger(run_dir / "run.log"):
+      ...  # all print() output saved to run.log + shown in terminal
+  ```
+- **`num_frames`**: if the experiment sweeps `anchor_frames`, do NOT hardcode `num_frames` in config. Use `target_middle_frames: 24` and compute per-run:
+  ```python
+  num_frames = compute_num_frames(anchor_frames, cfg["inference"]["target_middle_frames"])
+  ```
+  For fixed-anchor experiments, `num_frames` may still be explicit in config.
 - Resolution: use `resolve_resolution(cfg["inference"], mod_value, ref_image)`.
   - `ref_image` = first frame of start clip (MP4 experiments) or first PNG frame.
   - Handles both `max_area` and explicit `height`/`width` configs transparently.
