@@ -21,7 +21,29 @@ two-stage diffusion + spatial upsampling?
 
 ## How to run
 
-1. **Download models** to `/workspace/cache/models/`:
+cd /workspace/diffusion-research
+source src/LTX-2/.venv/bin/activate
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python experiments/exp_013_ltx2_keyframe_interpolation/run.py
+
+
+1. **Use the LTX-2 environment** (required — `ltx_core` and `ltx_pipelines` are installed there via uv):
+
+```bash
+cd /workspace/diffusion-research
+source src/LTX-2/.venv/bin/activate
+```
+
+If the venv doesn't exist yet, create it from the LTX-2 root. Use the workspace cache so uv doesn't fill the system disk:
+
+```bash
+export UV_CACHE_DIR=/workspace/cache/uv
+cd /workspace/diffusion-research/src/LTX-2
+uv sync
+```
+
+Then activate as above.
+
+2. **Download models** to `/workspace/cache/models/` (or use HF cache paths in `config.yaml`):
 
 ```bash
 pip install huggingface_hub
@@ -48,12 +70,9 @@ huggingface-cli download google/gemma-3-12b-it-qat-q4_0-unquantized \
   --local-dir /workspace/cache/models/gemma-3-12b-it-qat-q4_0-unquantized
 ```
 
-2. From `diffusion-research/`:
+3. From `diffusion-research/` (with the LTX-2 venv active from step 1):
 
 ```bash
-# Activate the LTX-2 environment
-source src/LTX-2/.venv/bin/activate
-
 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
 python experiments/exp_013_ltx2_keyframe_interpolation/run.py
 ```

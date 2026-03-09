@@ -2,20 +2,30 @@
 
 Uses KeyframeInterpolationPipeline to interpolate between the first and last
 frames of an action clip from vc-bench-flf, producing a two-stage video.
+
+To run:
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python /workspace/diffusion-research/experiments/exp_013_ltx2_keyframe_interpolation/run.py
+
+We have to set pytorch_cuda_alloc_conf
+
 """
+import logging
 import pathlib
 import yaml
-import torch
 
 from ltx_core.components.guiders import MultiModalGuiderParams
 from ltx_core.loader import LTXV_LORA_COMFY_RENAMING_MAP, LoraPathStrengthAndSDOps
 from ltx_core.model.video_vae import TilingConfig, get_video_chunks_number
+from ltx_core.quantization import QuantizationPolicy
 from ltx_pipelines.keyframe_interpolation import KeyframeInterpolationPipeline
-from ltx_pipelines.utils.constants import AUDIO_SAMPLE_RATE
+from ltx_pipelines.utils.args import ImageConditioningInput
 from ltx_pipelines.utils.media_io import encode_video
+import torch
+
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
 CONFIG_PATH = pathlib.Path(__file__).parent / "config.yaml"
+log = logging.getLogger(__name__)
 
 
 def load_config() -> dict:
@@ -41,8 +51,14 @@ def next_run_dir(out_dir: pathlib.Path) -> tuple[str, pathlib.Path]:
     run_dir.mkdir(parents=True, exist_ok=False)
     return run_id, run_dir
 
-
+@torch.inference_mode()
 def main() -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)-8s %(name)s  %(message)s",
+        datefmt="%H:%M:%S",
+    )
+
     cfg = load_config()
 
     # ── Paths ─────────────────────────────────────────────────────────────────
@@ -68,14 +84,18 @@ def main() -> None:
     ]
 
     # ── Pipeline ──────────────────────────────────────────────────────────────
-    print("[info] loading KeyframeInterpolationPipeline …")
+    # LTX inference path has little internal logging: loaders do not log; you get
+    # tqdm progress for denoising steps and media_io "Video saved to ..." at the end.
+    log.info("Loading KeyframeInterpolationPipeline (checkpoint + LoRA + upsampler + Gemma)…")
     pipeline = KeyframeInterpolationPipeline(
         checkpoint_path=checkpoint_path,
         distilled_lora=distilled_lora,
         spatial_upsampler_path=spatial_upsampler,
         gemma_root=gemma_root,
         loras=[],
+        quantization=QuantizationPolicy.fp8_cast(),
     )
+    log.info("Pipeline loaded.")
 
     # ── Guider params (defaults from ltx-pipelines docs) ─────────────────────
     video_guider_params = MultiModalGuiderParams(
@@ -98,8 +118,8 @@ def main() -> None:
     # ── Image conditioning ────────────────────────────────────────────────────
     num_frames = cfg["inference"]["num_frames"]
     images = [
-        (first_path, 0,              cfg["inputs"]["first_frame_strength"]),
-        (last_path,  num_frames - 1, cfg["inputs"]["last_frame_strength"]),
+        ImageConditioningInput(first_path, 0, cfg["inputs"]["first_frame_strength"]),
+        ImageConditioningInput(last_path, num_frames - 1, cfg["inputs"]["last_frame_strength"]),
     ]
 
     # ── Tiling ────────────────────────────────────────────────────────────────
@@ -107,10 +127,15 @@ def main() -> None:
     video_chunks_number = get_video_chunks_number(num_frames, tiling_config)
 
     # ── Run ───────────────────────────────────────────────────────────────────
-    print(f"[info] running inference  seed={cfg['runtime']['seed']}  "
-          f"{cfg['inference']['width']}x{cfg['inference']['height']}  "
-          f"frames={num_frames}  steps={cfg['inference']['num_inference_steps']} …")
-
+    log.info(
+        "Running inference  seed=%s  %sx%s  frames=%s  steps=%s",
+        cfg["runtime"]["seed"],
+        cfg["inference"]["width"],
+        cfg["inference"]["height"],
+        num_frames,
+        cfg["inference"]["num_inference_steps"],
+    )
+    frame_rate = float(cfg["inference"]["frame_rate"])
     video, audio = pipeline(
         prompt=cfg["inputs"]["prompt"],
         negative_prompt=cfg["inputs"]["negative_prompt"],
@@ -118,7 +143,7 @@ def main() -> None:
         height=cfg["inference"]["height"],
         width=cfg["inference"]["width"],
         num_frames=num_frames,
-        frame_rate=cfg["inference"]["frame_rate"],
+        frame_rate=frame_rate,
         num_inference_steps=cfg["inference"]["num_inference_steps"],
         video_guider_params=video_guider_params,
         audio_guider_params=audio_guider_params,
@@ -132,11 +157,11 @@ def main() -> None:
     steps = cfg["inference"]["num_inference_steps"]
     video_path = run_dir / f"s{seed}_steps{steps}.mp4"
 
+    log.info("Encoding video to %s", video_path)
     encode_video(
         video=video,
-        fps=cfg["inference"]["frame_rate"],
+        fps=int(frame_rate),
         audio=audio,
-        audio_sample_rate=AUDIO_SAMPLE_RATE,
         output_path=str(video_path),
         video_chunks_number=video_chunks_number,
     )
@@ -144,7 +169,7 @@ def main() -> None:
     with (run_dir / "config_snapshot.yaml").open("w") as f:
         yaml.safe_dump(cfg, f, sort_keys=False, allow_unicode=True)
 
-    print(f"[done] {run_id}  →  {video_path}")
+    log.info("Done %s  →  %s", run_id, video_path)
 
 
 if __name__ == "__main__":

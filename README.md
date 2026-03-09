@@ -113,6 +113,16 @@ Why not inside the project:
 
 If sharing the workspace, point configs to a shared mount (e.g. `/mnt/models/`) instead.
 
+## Cache (uv)
+
+[uv](https://docs.astral.sh/uv/) is used by LTX-2 for its environment. By default uv caches under `~/.cache/uv`, which can fill the system disk. To keep the cache in the workspace:
+
+```bash
+export UV_CACHE_DIR=/workspace/cache/uv
+```
+
+Use this before running `uv sync` in `src/LTX-2/`. The directory `/workspace/cache/uv` is the intended location for uv's dependency cache.
+
 ## Data workflow
 Download CIFAR-10 into `data/raw/cifar10`:
 
