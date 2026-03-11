@@ -1,0 +1,37 @@
+model:
+  # Full-precision bfloat16 checkpoint — no fp8, no Triton, no quantization.
+  # Download with: bash download_models.sh
+  checkpoint_path: "/workspace/cache/huggingface/hub/models--Lightricks--LTX-2/snapshots/47da56e2ad66ce4125a9922b4a8826bf407f9d0a/ltx-2-19b-dev.safetensors"
+  distilled_lora_path: "/workspace/cache/huggingface/ltx2_models/ltx-2-19b-distilled-lora-384.safetensors"
+  distilled_lora_strength: 0.6
+  spatial_upsampler_path: "/workspace/cache/huggingface/ltx2_models/ltx-2-spatial-upscaler-x2-1.0.safetensors"
+  gemma_root: "/workspace/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
+
+inputs:
+  first_frame: "data/processed/vc-bench-flf/first_last_frames/Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/first.png"
+  last_frame:  "data/processed/vc-bench-flf/first_last_frames/Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/last.png"
+  first_frame_strength: 1.0
+  last_frame_strength: 1.0
+  prompt: >
+    A person performs a dynamic physical action outdoors. The scene transitions
+    smoothly from the opening pose through natural motion, with stable camera,
+    coherent lighting, and realistic movement. Cinematic framing, clean details.
+  negative_prompt: >
+    blurry, out of focus, overexposed, underexposed, low contrast, washed out colors,
+    excessive noise, grainy texture, poor lighting, flickering, motion blur, distorted
+    proportions, unnatural skin tones, deformed facial features, extra limbs, disfigured
+    hands, artifacts, inconsistent perspective, camera shake, jittery movement, AI artifacts.
+
+inference:
+  height: 512         # final output resolution; stage-1 runs at half (256×384)
+  width: 768          # recommended by official README for i2v/keyframe tasks
+  num_frames: 97      # longer clip: (97-1) % 8 == 0, ~4 s at 24 fps
+  frame_rate: 24
+  num_inference_steps: 40  # official recommendation for production quality
+
+runtime:
+  seed: 42
+  device: cuda
+
+outputs:
+  dir: "outputs/videos/exp_014_ltx2_keyframe_interpolation_bf16"
