@@ -14,7 +14,9 @@ N frames, so af=1 from a 24-frame clip equals a single-frame FLF2V anchor).
 Pipeline is loaded once and reused across all 24 runs.
 Terminal output (print statements) is saved to run_dir/run.log via TeeLogger.
 """
+import logging
 import pathlib
+import sys
 import yaml
 import torch
 from diffusers import AutoencoderKLWan
@@ -50,6 +52,13 @@ def main() -> None:
     run_id, run_dir = next_run_dir(out_dir)
 
     with TeeLogger(run_dir / "run.log"):
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s %(levelname)-8s %(name)s  %(message)s",
+            datefmt="%H:%M:%S",
+            stream=sys.stdout,  # sys.stdout is TeeLogger here → goes to terminal + run.log
+            force=True,
+        )
         print(f"[info] run_dir        : {run_dir}")
         print(f"[runtime] device : {device}  dtype : {dtype}")
         print(f"[info] pairs          : {len(pairs)}")
