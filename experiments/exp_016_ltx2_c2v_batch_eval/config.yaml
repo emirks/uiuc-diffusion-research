@@ -1,0 +1,69 @@
+model:
+  checkpoint_path: "/workspace/cache/huggingface/hub/models--Lightricks--LTX-2/snapshots/47da56e2ad66ce4125a9922b4a8826bf407f9d0a/ltx-2-19b-dev.safetensors"
+  distilled_lora_path: "/workspace/cache/huggingface/ltx2_models/ltx-2-19b-distilled-lora-384.safetensors"
+  distilled_lora_strength: 0.6
+  spatial_upsampler_path: "/workspace/cache/huggingface/ltx2_models/ltx-2-spatial-upscaler-x2-1.0.safetensors"
+  gemma_root: "/workspace/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
+
+# Four cross-video C2V samples (start clip from one video, end clip from another).
+# Each sample specifies explicit start_clip and end_clip paths.
+# Same set as the last 4 samples in exp_017.
+samples:
+  - sample_id: "cross_horse_to_forest"
+    start_clip: "data/processed/vc-bench-flf/first_last_clips_24/Animals_horse_horse_2355570_3840x2160_f16cf04df3/first.mp4"
+    end_clip:   "data/processed/vc-bench-flf/first_last_clips_24/Plants_forest_forest_1583096_4096x2160_869fb0fa79/last.mp4"
+    prompt: >
+      Horse riders gallop along a sunlit beach into a vibrant autumn forest. Rolling
+      coastal cliffs give way to colorful trees in red, orange, and green, with rocky
+      cliffs and dense woodland under a clear blue sky.
+
+  - sample_id: "cross_sunset_to_coast"
+    start_clip: "data/processed/vc-bench-flf/first_last_clips_24/Weather_sunset_sunset_1621682_1920x1080_887a0cea1c/first.mp4"
+    end_clip:   "data/processed/vc-bench-flf/first_last_clips_24/Nature_coast_coast_2046576_1920x1080_3693aec169/last.mp4"
+    prompt: >
+      A breathtaking sunset over a city skyline transitions to an aerial view of a rugged
+      coastline. Vibrant orange and pink sky hues give way to waves crashing against dark
+      rocks, with the ocean's white foam contrasting against deep blue water.
+
+  - sample_id: "cross_music_to_architecture"
+    start_clip: "data/processed/vc-bench-flf/first_last_clips_24/Art_music_music_1121486_1920x1080_4589eee482/first.mp4"
+    end_clip:   "data/processed/vc-bench-flf/first_last_clips_24/City_Architecture_architecture_architecture_1994819_1920x1080_541dbb310c/last.mp4"
+    prompt: >
+      A close-up of a hand skillfully plucking guitar strings gives way to an aerial view
+      of the Golden Gate Bridge at dawn. The warm guitar wood grain dissolves into the
+      iconic red structure standing tall against a soft sky with swirling clouds.
+
+  - sample_id: "cross_car_to_talk"
+    start_clip: "data/processed/vc-bench-flf/first_last_clips_24/Vehicles_car_car_1572432_2560x1440_8996b74162/first.mp4"
+    end_clip:   "data/processed/vc-bench-flf/first_last_clips_24/Actions_Activities_talk_talk_3044681_3840x2160_478ae4cee8/last.mp4"
+    prompt: >
+      A blue car with colorful balloons drives along a desert road. The vast sandy
+      landscape transitions to a bright modern office where two women walk and talk,
+      smiling and holding devices under circular ceiling lights.
+
+inputs:
+  # Number of pixel frames loaded from each clip.
+  # With LTX temporal scale=8: 24 frames → 3 latent tokens per clip.
+  num_clip_frames: 24
+  start_clip_strength: 1.0
+  end_clip_strength: 1.0
+  negative_prompt: >
+    blurry, out of focus, overexposed, underexposed, low contrast, washed out colors,
+    excessive noise, grainy texture, poor lighting, flickering, motion blur, distorted
+    proportions, unnatural skin tones, deformed facial features, extra limbs, disfigured
+    hands, artifacts, inconsistent perspective, camera shake, jittery movement, AI artifacts.
+
+inference:
+  height: 512         # final output resolution; stage-1 runs at half (256×384)
+  width: 768
+  # 97 frames at 24 fps ≈ 4 s.  (97-1) % 8 == 0 ✓
+  # With num_clip_frames=24 → frame_idx_end = 97-24 = 73.
+  num_frames: 97
+  frame_rate: 24
+  num_inference_steps: 40
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_016_ltx2_c2v_batch_eval"
