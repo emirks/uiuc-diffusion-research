@@ -1,0 +1,44 @@
+model:
+  # Full-precision bfloat16 checkpoint — same as exp_014.
+  checkpoint_path: "/workspace/cache/huggingface/hub/models--Lightricks--LTX-2/snapshots/47da56e2ad66ce4125a9922b4a8826bf407f9d0a/ltx-2-19b-dev.safetensors"
+  distilled_lora_path: "/workspace/cache/huggingface/ltx2_models/ltx-2-19b-distilled-lora-384.safetensors"
+  distilled_lora_strength: 0.6
+  spatial_upsampler_path: "/workspace/cache/huggingface/ltx2_models/ltx-2-spatial-upscaler-x2-1.0.safetensors"
+  gemma_root: "/workspace/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
+
+inputs:
+  # Same clips as exp_010 (Wan C2V baseline) for direct comparison.
+  start_clip: "data/processed/vc-bench-flf/first_last_clips_24/Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/first.mp4"
+  end_clip:   "data/processed/vc-bench-flf/first_last_clips_24/Actions_Activities_action_action_1581362_2562x1440_b27b9c451a/last.mp4"
+  # Number of pixel frames to load from each clip.
+  # With LTX temporal scale=8: 24 frames → 3 latent tokens per clip.
+  # Start clip latent tokens land at output positions [0,1], [1,9], [9,17].
+  # End clip latent tokens land at output positions [73,81], [81,89], [89,97].
+  num_clip_frames: 24
+  start_clip_strength: 1.0
+  end_clip_strength: 1.0
+  prompt: >
+    A continuous smooth video transitioning from the first clip to the last clip.
+    Natural motion, stable camera, coherent lighting.
+  negative_prompt: >
+    blurry, out of focus, overexposed, underexposed, low contrast, washed out colors,
+    excessive noise, grainy texture, poor lighting, flickering, motion blur, distorted
+    proportions, unnatural skin tones, deformed facial features, extra limbs, disfigured
+    hands, artifacts, inconsistent perspective, camera shake, jittery movement, AI artifacts.
+
+inference:
+  height: 512         # final output resolution; stage-1 runs at half (256×384)
+  width: 768
+  # 97 frames at 24 fps ≈ 4 s.  (97-1) % 8 == 0 ✓
+  # With num_clip_frames=24 → frame_idx_end = 97-24 = 73.
+  # Start clip anchors latent tokens 0-2; end clip anchors tokens 10-12.
+  # Tokens 3-9 (≈ pixel frames 17-73) are generated freely by the model.
+  num_frames: 97
+  frame_rate: 24
+  num_inference_steps: 40
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_015_ltx2_c2v_s1_clip_guiding"
