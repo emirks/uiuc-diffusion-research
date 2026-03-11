@@ -4,8 +4,8 @@ Handles common boilerplate so each run.py can focus on the experiment-specific
 pipeline call.  Import as:
 
     from diffusion.exp_utils import (
-        load_config, next_run_dir, resolve_resolution, load_clip_from_mp4,
-        compute_num_frames, TeeLogger,
+        load_config, next_run_dir, resolve_path, resolve_resolution,
+        load_clip_from_mp4, compute_num_frames, TeeLogger,
     )
 """
 from __future__ import annotations
@@ -39,6 +39,11 @@ def next_run_dir(out_dir: pathlib.Path) -> tuple[str, pathlib.Path]:
     run_dir = out_dir / run_id
     run_dir.mkdir(parents=True, exist_ok=False)
     return run_id, run_dir
+
+
+def resolve_path(path: str) -> str:
+    """Expand user and resolve to an absolute path string (e.g. for model paths in config)."""
+    return str(pathlib.Path(path).expanduser().resolve())
 
 
 def snap_to_grid(value: int, mod: int) -> int:

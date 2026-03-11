@@ -4,6 +4,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import cv2
+import imageio
 import numpy as np
 
 
@@ -12,22 +13,17 @@ import numpy as np
 # ---------------------------------------------------------------------------
 
 def read_video_frames(path: str | Path) -> tuple[list[np.ndarray], float]:
-    """Decode an mp4/avi/… file into a list of H×W×3 uint8 RGB arrays.
+    """Decode an mp4/avi/… file into a list of H×W×3 uint8 RGB arrays via imageio.
 
     Returns
     -------
     frames : list of np.ndarray
     fps    : native frame-rate (float)
     """
-    cap = cv2.VideoCapture(str(path))
-    fps = cap.get(cv2.CAP_PROP_FPS) or 8.0
-    frames: list[np.ndarray] = []
-    while True:
-        ok, bgr = cap.read()
-        if not ok:
-            break
-        frames.append(cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB))
-    cap.release()
+    reader = imageio.get_reader(str(path), format="ffmpeg")
+    fps = float(reader.get_meta_data().get("fps", 8.0))
+    frames: list[np.ndarray] = [frame for frame in reader]
+    reader.close()
     if not frames:
         raise ValueError(f"No frames decoded from {path}")
     return frames, fps
@@ -35,10 +31,11 @@ def read_video_frames(path: str | Path) -> tuple[list[np.ndarray], float]:
 
 def read_image(path: str | Path) -> np.ndarray:
     """Load a single image as H×W×3 uint8 RGB."""
-    bgr = cv2.imread(str(path))
-    if bgr is None:
+    frame = imageio.imread(str(path))
+    if frame is None:
         raise FileNotFoundError(path)
-    return cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
+    # drop alpha channel if present
+    return np.asarray(frame)[..., :3]
 
 
 # ---------------------------------------------------------------------------
@@ -65,21 +62,25 @@ def load_signal_arrays(directory: Path) -> list[np.ndarray]:
 def save_frames_png(frames: list[np.ndarray], out_dir: Path, prefix: str = "frame") -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     for i, frame in enumerate(frames):
-        bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-        cv2.imwrite(str(out_dir / f"{prefix}_{i:04d}.png"), bgr)
+        imageio.imwrite(str(out_dir / f"{prefix}_{i:04d}.png"), frame)
 
 
 def save_viz_video(frames: list[np.ndarray], path: Path, fps: float = 8.0) -> None:
-    """Write a list of RGB uint8 frames to an mp4 file."""
+    """Write a list of RGB uint8 frames to an mp4 file via imageio/ffmpeg."""
     if not frames:
         return
     path.parent.mkdir(parents=True, exist_ok=True)
-    h, w = frames[0].shape[:2]
-    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-    writer = cv2.VideoWriter(str(path), fourcc, fps, (w, h))
+    writer = imageio.get_writer(
+        str(path),
+        format="ffmpeg",
+        fps=fps,
+        codec="libx264",
+        pixelformat="yuv420p",
+        macro_block_size=1,
+    )
     for frame in frames:
-        writer.write(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
-    writer.release()
+        writer.append_data(np.asarray(frame, dtype=np.uint8))
+    writer.close()
 
 
 # ---------------------------------------------------------------------------
@@ -118,8 +119,6 @@ def save_signal_result(
     if viz_frames:
         save_frames_png(viz_frames, viz_dir)
         save_viz_video(viz_frames, signal_dir / "viz.mp4", fps=fps)
-
-    print(f"  ✓ {extractor_name:30s} → {signal_dir.relative_to(signal_dir.parents[3])}")
 
 
 # ---------------------------------------------------------------------------
