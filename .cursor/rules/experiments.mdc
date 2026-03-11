@@ -1,0 +1,83 @@
+---
+description: Global rules for all experiments — structure, exp_utils, and output conventions
+globs: experiments/**
+alwaysApply: false
+---
+
+# experiments/ — Global Rules
+
+Applies to every `experiments/exp_NNN_*/` directory regardless of model or task.
+
+## Required structure
+
+Every experiment needs exactly three files:
+- `config.yaml`
+- `run.py`
+- `README.md` — sections: `## Question`, `## Setup`, `## How to run`, `## Outputs`
+
+## run.py — always import from exp_utils
+
+**Never re-define boilerplate locally.** Import everything from `diffusion.exp_utils`:
+
+```python
+from diffusion.exp_utils import (
+    load_config,        # load config.yaml — never write a local load_config()
+    next_run_dir,       # sequential run_NNNN/ dirs — never write a local version
+    resolve_path,       # expanduser + resolve — never write a local resolve()
+    resolve_resolution, # handles max_area vs explicit height/width
+    TeeLogger,          # tees stdout to run.log — always wrap main body
+    load_clip_from_mp4, # load MP4 clip as PIL frames (C2V / video tasks)
+    compute_num_frames, # compute num_frames from anchor_frames
+)
+```
+
+Use only what the experiment needs; omit the rest.
+
+## run.py — required patterns
+
+```python
+import logging
+import sys
+
+REPO_ROOT   = pathlib.Path(__file__).resolve().parents[2]
+CONFIG_PATH = pathlib.Path(__file__).parent / "config.yaml"
+
+def main():
+    cfg     = load_config(CONFIG_PATH)              # ← use exp_utils
+    out_dir = REPO_ROOT / cfg["outputs"]["dir"]
+    run_id, run_dir = next_run_dir(out_dir)         # ← use exp_utils
+    with TeeLogger(run_dir / "run.log"):             # ← always wrap
+        logging.basicConfig(                         # ← always inside TeeLogger context
+            level=logging.INFO,
+            format="%(asctime)s %(levelname)-8s %(name)s  %(message)s",
+            datefmt="%H:%M:%S",
+            stream=sys.stdout,  # sys.stdout IS TeeLogger here → library logs go to run.log too
+            force=True,
+        )
+        ...
+        yaml.safe_dump(cfg, open(run_dir / "config_snapshot.yaml", "w"))
+        print(f"[done] {run_id} → {video_path}")
+```
+
+Output filenames must encode key hyperparams (seed, steps, etc.).
+All paths resolved as `REPO_ROOT / cfg[...]` — no hardcoded strings.
+
+## config.yaml — required sections
+
+```yaml
+model:      # model paths / repo_id
+inputs:     # all paths relative to REPO_ROOT
+inference:  # height/width (or max_area), num_frames, steps, guidance
+runtime:    # seed, device, dtype
+outputs:
+  dir: "outputs/videos/exp_NNN_<slug>"
+```
+
+`num_frames` must satisfy `(num_frames - 1) % 4 == 0` (LTX-2 & Wan constraint).
+
+## Hard rules
+
+- Never edit a past experiment — fork a new `exp_NNN` instead.
+- New experiment number = `max(existing NNN) + 1`, zero-padded to 3 digits.
+- Outputs go under `outputs/` only — never inside `experiments/`.
+- Experiment-specific one-off math (e.g. `compute_clip_frame_idx`) stays in `run.py`, not in `src/`.

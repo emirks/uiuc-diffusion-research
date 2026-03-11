@@ -1,0 +1,39 @@
+---
+description: Rules for modifying src/LTX-2 — the vendored LTX-2 library fork
+globs: src/LTX-2/**,/workspace/diffusion-research/src/LTX-2/**
+alwaysApply: false
+---
+# src/LTX-2 — Local Fork Rules
+
+`src/LTX-2` is a **maintained local fork** of the upstream LTX-2 library. It is not a read-only dependency.
+
+## One rule for what goes here
+
+Before touching anything in `src/LTX-2`, ask:
+
+> **Could a different experiment ever need this?**
+
+- **Yes** → add it to `src/LTX-2` (general, reusable capability)
+- **No** → it belongs in `experiments/exp_XXX/run.py` only
+
+## Every change must be
+
+1. **Additive.** New functions or new optional parameters with backward-compatible defaults. Never change an existing signature.
+2. **General-purpose.** No experiment names, no hardcoded paths, no research-question-specific logic inside the library.
+3. **Documented in `src/LTX-2/CHANGES.md`** — immediately, in the same edit session.
+
+## CHANGES.md is mandatory
+
+Every time you add or modify anything in `src/LTX-2`, append an entry to `src/LTX-2/CHANGES.md` with:
+- Date
+- Which file(s) changed
+- What was added/changed and why (one sentence)
+- The new signature if it is a function
+
+This file exists so upstream upgrades can be re-applied cleanly without diffing.
+
+## What stays in experiments/
+
+- Config-specific computations (e.g. `compute_clip_frame_idx`)
+- Pipeline call sites and argument assembly
+- Anything that references a specific experiment number or dataset path
