@@ -52,6 +52,10 @@ SIGNALS: list[str] | str = "all"
 # Base output dir — next_run_dir will create run_0001 / run_0002 / … inside
 OUTPUT_BASE: Path = _REPO_ROOT / "outputs" / "signals" / "exp_017_ltx2_c2v_category_sweep"
 
+# Optional: set to an existing run dir to fill in missing signals instead of
+# starting a new run.  e.g. _REPO_ROOT / "outputs/signals/.../run_0003"
+TARGET_RUN_DIR: Path | None = _REPO_ROOT / "outputs" / "signals" / "exp_017_ltx2_c2v_category_sweep" / "run_0003"
+
 DEVICE: str = "cuda"
 
 # Set to True to skip a (sample, role, signal) whose output dir already exists
@@ -132,8 +136,13 @@ def main() -> None:
             print(f"  [{s.sample_id}/{s.role}]  {s.path}")
         sys.exit(1)
 
-    OUTPUT_BASE.mkdir(parents=True, exist_ok=True)
-    run_id, run_dir = next_run_dir(OUTPUT_BASE)
+    if TARGET_RUN_DIR is not None:
+        run_dir = TARGET_RUN_DIR.resolve()
+        run_id = run_dir.name
+        print(f"  (targeting existing run dir)")
+    else:
+        OUTPUT_BASE.mkdir(parents=True, exist_ok=True)
+        run_id, run_dir = next_run_dir(OUTPUT_BASE)
 
     print(f"\nRun     : {run_id}  →  {run_dir}")
     print(f"Inputs  : {len(all_specs)} clips  ({len(all_specs) // 2} samples × start+end)")
