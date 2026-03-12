@@ -5,6 +5,10 @@ alwaysApply: true
 
 # diffusion-research Project Rules
 
+## Learning & notes
+
+When we learn **theory**, **model mechanics**, or **implementation details**, add them to `/workspace/diffusion-research/notes/{model-or-topic}.md` only if not already there. One file per model/topic; one concept per `##` section; keep atomic, concrete, and end with "From chat: … (date)." After explaining something new, add or extend the relevant note file.
+
 ## Repo layout (never violate)
 
 - `src/diffusion/` — reusable, importable library code only. No CLI, no plotting, no dataset downloads.
