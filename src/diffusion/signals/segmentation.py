@@ -26,7 +26,11 @@ from .base import BaseExtractor
 from .io import overlay_mask
 
 
-_DEFAULT_SAM_CHECKPOINT = Path.home() / ".cache" / "sam" / "sam_vit_b_01ec64.pth"
+import os as _os
+_DEFAULT_SAM_CHECKPOINT = (
+    Path(_os.environ["XDG_CACHE_HOME"]) if "XDG_CACHE_HOME" in _os.environ
+    else Path.home() / ".cache"
+) / "sam" / "sam_vit_b_01ec64.pth"
 _DEFAULT_SAM_MODEL_TYPE = "vit_b"
 
 

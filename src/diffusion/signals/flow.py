@@ -32,10 +32,21 @@ class RAFTExtractor(BaseExtractor):
     Result keys
     -----------
     flow : list of np.ndarray, each H×W×2 (dx, dy in pixels), len = N-1 frames
+
+    Parameters
+    ----------
+    max_size : int
+        Longest-side cap before running RAFT.  Raw 4K frames produce feature
+        tensors of ~9 GB each; at 12 refinement steps this grows to 78+ GB.
+        Capping at 1024 px keeps peak VRAM under ~4 GB.  Set to 0 to disable.
     """
 
     name = "flow_raft"
     input_type = "video"
+
+    def __init__(self, device: str = "cuda", max_size: int = 1024) -> None:
+        super().__init__(device)
+        self._max_size = max_size
 
     def _load_model(self) -> None:
         import torch
@@ -47,9 +58,22 @@ class RAFTExtractor(BaseExtractor):
         self._transforms = weights.transforms()
         self._torch = torch
 
+    def _resize(self, frame: np.ndarray) -> np.ndarray:
+        """Resize so longest side ≤ max_size, with dims rounded to multiples of 8."""
+        if self._max_size <= 0:
+            return frame
+        h, w = frame.shape[:2]
+        scale = min(self._max_size / max(h, w), 1.0)
+        if scale == 1.0:
+            return frame
+        import cv2
+        # Round to nearest multiple of 8 (RAFT feature-pyramid requirement)
+        nh = max(8, (int(h * scale) // 8) * 8)
+        nw = max(8, (int(w * scale) // 8) * 8)
+        return cv2.resize(frame, (nw, nh), interpolation=cv2.INTER_AREA)
+
     def extract(self, frames: list[np.ndarray]) -> dict:
         import torch
-        from torchvision.transforms.functional import resize as tv_resize
         import torchvision.transforms.functional as TF
 
         if len(frames) < 2:
@@ -57,8 +81,10 @@ class RAFTExtractor(BaseExtractor):
 
         flows: list[np.ndarray] = []
         for i in range(len(frames) - 1):
-            f1 = TF.to_tensor(frames[i]).unsqueeze(0)
-            f2 = TF.to_tensor(frames[i + 1]).unsqueeze(0)
+            fr1 = self._resize(frames[i])
+            fr2 = self._resize(frames[i + 1])
+            f1 = TF.to_tensor(fr1).unsqueeze(0)
+            f2 = TF.to_tensor(fr2).unsqueeze(0)
             # RAFT expects images in [0, 1] float; transforms() handles normalisation
             f1t, f2t = self._transforms(f1, f2)
             f1t = f1t.to(self.device)
