@@ -170,9 +170,3 @@ Minimum bar for new reusable code in `src/`:
 - Draft narrative and figure planning belong in `papers_drafts/`.
 - Keep conclusions scoped: separate evidence, interpretation, and speculation.
 
-## What to improve next
-Current repository gaps to address as research expands:
-- Implement `src/diffusion/reverse.py`, `losses.py`, `sampling.py`, and model modules.
-- Add stronger tests for numerical properties (not only shapes).
-- Flesh out `experiments/exp_002_loss_variants/run.py` into a full training/evaluation pipeline.
-- Implement utility scripts (`inspect_scheduler.py`, `visualize_noise.py`).
