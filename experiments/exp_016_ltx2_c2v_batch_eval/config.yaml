@@ -5,46 +5,97 @@ model:
   spatial_upsampler_path: "/workspace/cache/huggingface/ltx2_models/ltx-2-spatial-upscaler-x2-1.0.safetensors"
   gemma_root: "/workspace/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
 
-# Four cross-video C2V samples (start clip from one video, end clip from another).
-# Each sample specifies explicit start_clip and end_clip paths.
-# Same set as the last 4 samples in exp_017.
+# DAVIS image-dir pairs for C2V transition evaluation.
+# start_images: first frames of the source sequence (from_end=False).
+# end_images:   last frames of the target sequence (from_end=True).
+#
+# Easy pairs (high optical-flow similarity — test smooth continuity):
+#   davis_camel_to_horsejump  : large-quadruped articulation (flow sim ≈ 0.965)
+#   davis_walking_to_tuktuk   : camera-translation / street parallax (flow sim ≈ 0.984)
+# Hard pairs (large domain shift — test cross-domain generalisation):
+#   davis_paragliding_to_boxing : aerial freedom → fisheye indoor combat
+#   davis_goldfish_to_nightrace : underwater stillness → high-speed night driving
 samples:
-  - sample_id: "cross_horse_to_forest"
-    start_clip: "data/processed/vc-bench-flf/first_last_clips_24/Animals_horse_horse_2355570_3840x2160_f16cf04df3/first.mp4"
-    end_clip:   "data/processed/vc-bench-flf/first_last_clips_24/Plants_forest_forest_1583096_4096x2160_869fb0fa79/last.mp4"
+  - sample_id: "davis_drift_straight_to_drift_turn"
+    start_images: "data/raw/DAVIS/JPEGImages/480p/drift-straight"
+    end_images:   "data/raw/DAVIS/JPEGImages/480p/drift-turn"
     prompt: >
-      Horse riders gallop along a sunlit beach into a vibrant autumn forest. Rolling
-      coastal cliffs give way to colorful trees in red, orange, and green, with rocky
-      cliffs and dense woodland under a clear blue sky.
+      A race car drifts aggressively through an asphalt section, smoke curling from
+      the rear tires as the camera tracks the vehicle from a low dynamic angle. The
+      straight drift line transitions into a curved drift turn with similar track
+      textures and lighting, preserving motorsport energy while changing trajectory.
 
-  - sample_id: "cross_sunset_to_coast"
-    start_clip: "data/processed/vc-bench-flf/first_last_clips_24/Weather_sunset_sunset_1621682_1920x1080_887a0cea1c/first.mp4"
-    end_clip:   "data/processed/vc-bench-flf/first_last_clips_24/Nature_coast_coast_2046576_1920x1080_3693aec169/last.mp4"
+  - sample_id: "davis_dance_twirl_to_dancing"
+    start_images: "data/raw/DAVIS/JPEGImages/480p/dance-twirl"
+    end_images:   "data/raw/DAVIS/JPEGImages/480p/dancing"
     prompt: >
-      A breathtaking sunset over a city skyline transitions to an aerial view of a rugged
-      coastline. Vibrant orange and pink sky hues give way to waves crashing against dark
-      rocks, with the ocean's white foam contrasting against deep blue water.
+      A dancer spins fluidly in place, fabric and limbs tracing circular arcs in a
+      rhythmic performance. The twirling motion transitions into a broader dancing
+      sequence with continued human-body articulation, keeping movement style coherent
+      while varying pose progression and camera-relative motion.
 
-  - sample_id: "cross_music_to_architecture"
-    start_clip: "data/processed/vc-bench-flf/first_last_clips_24/Art_music_music_1121486_1920x1080_4589eee482/first.mp4"
-    end_clip:   "data/processed/vc-bench-flf/first_last_clips_24/City_Architecture_architecture_architecture_1994819_1920x1080_541dbb310c/last.mp4"
+  - sample_id: "davis_camel_to_horsejump"
+    start_images: "data/raw/DAVIS/JPEGImages/480p/camel"
+    end_images:   "data/raw/DAVIS/JPEGImages/480p/horsejump-low"
     prompt: >
-      A close-up of a hand skillfully plucking guitar strings gives way to an aerial view
-      of the Golden Gate Bridge at dawn. The warm guitar wood grain dissolves into the
-      iconic red structure standing tall against a soft sky with swirling clouds.
+      A lone camel strides steadily across a sunlit desert expanse, its heavy gait
+      raising puffs of sand. The sandy terrain and warm amber light gradually give way
+      to a green show-jumping course, where a horse and rider clear a low fence with
+      confident precision.
 
-  - sample_id: "cross_car_to_talk"
-    start_clip: "data/processed/vc-bench-flf/first_last_clips_24/Vehicles_car_car_1572432_2560x1440_8996b74162/first.mp4"
-    end_clip:   "data/processed/vc-bench-flf/first_last_clips_24/Actions_Activities_talk_talk_3044681_3840x2160_478ae4cee8/last.mp4"
+  - sample_id: "davis_walking_to_tuktuk"
+    start_images: "data/raw/DAVIS/JPEGImages/480p/walking"
+    end_images:   "data/raw/DAVIS/JPEGImages/480p/tuk-tuk"
     prompt: >
-      A blue car with colorful balloons drives along a desert road. The vast sandy
-      landscape transitions to a bright modern office where two women walk and talk,
-      smiling and holding devices under circular ceiling lights.
+      Two people walk casually along a tree-lined street, their footsteps unhurried
+      on the pavement. The calm pedestrian pace dissolves into the vibrant moving
+      perspective from inside a tuk-tuk weaving through busy traffic, buildings and
+      motorbikes streaming past on both sides.
+
+  - sample_id: "davis_paragliding_to_boxing"
+    start_images: "data/raw/DAVIS/JPEGImages/480p/paragliding-launch"
+    end_images:   "data/raw/DAVIS/JPEGImages/480p/boxing-fisheye"
+    prompt: >
+      A paraglider charges down a steep hillside and launches into open sky, wind
+      rushing as the green landscape drops far below. The sweeping aerial freedom
+      transitions to the compressed fisheye-distorted interior of a boxing gym, where
+      two fighters circle each other under harsh overhead lights.
+
+  - sample_id: "davis_goldfish_to_nightrace"
+    start_images: "data/raw/DAVIS/JPEGImages/480p/gold-fish"
+    end_images:   "data/raw/DAVIS/JPEGImages/480p/night-race"
+    prompt: >
+      Vivid orange goldfish drift in slow arcs through clear softly-lit water, their
+      fins catching the light in silence. The quiet underwater world dissolves into a
+      high-speed night race, headlights slicing through darkness and neon reflections
+      smearing across wet asphalt.
+
+# --- previous vc-bench samples kept for reference (re-enable by removing the '#') ---
+# - sample_id: "cross_horse_to_forest"
+#   start_clip: "data/processed/vc-bench-flf/first_last_clips_24/Animals_horse_horse_2355570_3840x2160_f16cf04df3/first.mp4"
+#   end_clip:   "data/processed/vc-bench-flf/first_last_clips_24/Plants_forest_forest_1583096_4096x2160_869fb0fa79/last.mp4"
+#   prompt: >
+#     Horse riders gallop along a sunlit beach into a vibrant autumn forest.
+# - sample_id: "cross_sunset_to_coast"
+#   start_clip: "data/processed/vc-bench-flf/first_last_clips_24/Weather_sunset_sunset_1621682_1920x1080_887a0cea1c/first.mp4"
+#   end_clip:   "data/processed/vc-bench-flf/first_last_clips_24/Nature_coast_coast_2046576_1920x1080_3693aec169/last.mp4"
+#   prompt: >
+#     A breathtaking sunset over a city skyline transitions to a rugged coastline.
+# - sample_id: "cross_music_to_architecture"
+#   start_clip: "data/processed/vc-bench-flf/first_last_clips_24/Art_music_music_1121486_1920x1080_4589eee482/first.mp4"
+#   end_clip:   "data/processed/vc-bench-flf/first_last_clips_24/City_Architecture_architecture_architecture_1994819_1920x1080_541dbb310c/last.mp4"
+#   prompt: >
+#     A close-up of a hand plucking guitar strings gives way to the Golden Gate Bridge.
+# - sample_id: "cross_car_to_talk"
+#   start_clip: "data/processed/vc-bench-flf/first_last_clips_24/Vehicles_car_car_1572432_2560x1440_8996b74162/first.mp4"
+#   end_clip:   "data/processed/vc-bench-flf/first_last_clips_24/Actions_Activities_talk_talk_3044681_3840x2160_478ae4cee8/last.mp4"
+#   prompt: >
+#     A blue car with balloons drives along a desert road into a modern office scene.
 
 inputs:
   # Number of pixel frames loaded from each clip.
-  # With LTX temporal scale=8: 24 frames → 3 latent tokens per clip.
-  num_clip_frames: 24
+  # With LTX temporal scale=8: 25 frames → 3 latent tokens per clip.
+  num_clip_frames: 25
   start_clip_strength: 1.0
   end_clip_strength: 1.0
   negative_prompt: >

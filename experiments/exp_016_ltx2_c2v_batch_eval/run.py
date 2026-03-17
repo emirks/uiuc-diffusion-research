@@ -39,7 +39,7 @@ from ltx_pipelines.keyframe_interpolation import KeyframeInterpolationPipeline
 from ltx_pipelines.utils.args import ClipConditioningInput
 from ltx_pipelines.utils.media_io import encode_video
 
-from diffusion.exp_utils import load_config, next_run_dir, resolve_path, TeeLogger
+from diffusion.exp_utils import load_config, next_run_dir, resolve_path, TeeLogger, image_dir_to_tmp_mp4
 
 REPO_ROOT   = pathlib.Path(__file__).resolve().parents[2]
 CONFIG_PATH = pathlib.Path(__file__).parent / "config.yaml"
@@ -149,11 +149,31 @@ def main() -> None:
         summary: list[dict] = []
 
         for idx, sample in enumerate(cfg["samples"]):
-            sample_id = sample["sample_id"]
-            prompt    = sample["prompt"]
+            sample_id  = sample["sample_id"]
+            prompt     = sample["prompt"]
+            sample_dir = run_dir / sample_id  # may be created early for image inputs
 
-            # Support either explicit start_clip/end_clip (cross-video) or clip_dir (same-video).
-            if "start_clip" in sample and "end_clip" in sample:
+            # Resolve input clip paths.
+            # - start_images/end_images : DAVIS-style JPEG dirs → temp MP4s written to sample_dir
+            # - start_clip/end_clip     : explicit MP4 paths (cross-video)
+            # - clip_dir                : folder containing first.mp4 / last.mp4 (same-video)
+            clips_in_sample_dir = False
+            if "start_images" in sample and "end_images" in sample:
+                sample_dir.mkdir(parents=True, exist_ok=True)
+                start_path = str(sample_dir / "start_clip.mp4")
+                end_path   = str(sample_dir / "end_clip.mp4")
+                log.info("Building start clip from images: %s", sample["start_images"])
+                image_dir_to_tmp_mp4(
+                    REPO_ROOT / sample["start_images"], num_clip_frames,
+                    pathlib.Path(start_path), fps=int(frame_rate), from_end=False,
+                )
+                log.info("Building end clip from images: %s", sample["end_images"])
+                image_dir_to_tmp_mp4(
+                    REPO_ROOT / sample["end_images"], num_clip_frames,
+                    pathlib.Path(end_path), fps=int(frame_rate), from_end=True,
+                )
+                clips_in_sample_dir = True
+            elif "start_clip" in sample and "end_clip" in sample:
                 start_path = str(REPO_ROOT / sample["start_clip"])
                 end_path   = str(REPO_ROOT / sample["end_clip"])
             else:
@@ -201,13 +221,16 @@ def main() -> None:
             elapsed = time.perf_counter() - t_infer
             log.info("Inference done in %.1fs.", elapsed)
 
-            sample_dir = run_dir / sample_id
             sample_dir.mkdir(parents=True, exist_ok=True)
 
             # Copy input clips so the output directory is self-contained.
-            shutil.copy2(start_path, sample_dir / "start_clip.mp4")
-            shutil.copy2(end_path,   sample_dir / "end_clip.mp4")
-            log.info("Copied input clips → %s/", sample_dir.name)
+            # For image-dir inputs the MP4s were already written there; skip copy.
+            if not clips_in_sample_dir:
+                shutil.copy2(start_path, sample_dir / "start_clip.mp4")
+                shutil.copy2(end_path,   sample_dir / "end_clip.mp4")
+                log.info("Copied input clips → %s/", sample_dir.name)
+            else:
+                log.info("Input clips already in %s/", sample_dir.name)
 
             video_path = sample_dir / f"s{seed}_K{num_clip_frames}_steps{steps}.mp4"
 
@@ -243,6 +266,10 @@ def main() -> None:
                 per_sample_cfg["start_clip"] = sample["start_clip"]
             if "end_clip" in sample:
                 per_sample_cfg["end_clip"] = sample["end_clip"]
+            if "start_images" in sample:
+                per_sample_cfg["start_images"] = sample["start_images"]
+            if "end_images" in sample:
+                per_sample_cfg["end_images"] = sample["end_images"]
             with (sample_dir / "config_snapshot.yaml").open("w") as f:
                 yaml.safe_dump(per_sample_cfg, f, sort_keys=False, allow_unicode=True)
 
