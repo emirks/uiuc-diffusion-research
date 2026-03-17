@@ -3,19 +3,24 @@ VC-Bench Dataset Explorer
 =========================
 Interactive Gradio app for browsing and analysing the VC-Bench video dataset.
 
-Run locally:
+Run locally (point at your local vc-bench-hf snapshot):
     python scripts/vc_bench_explorer/app.py
+
+    # or point at a custom data dir:
+    VC_BENCH_HF_DIR=/path/to/vc-bench-hf python scripts/vc_bench_explorer/app.py
 
 Share a 72-hour public link (Gradio tunnel):
     python scripts/vc_bench_explorer/app.py --share
 
-The app reads VC-Bench.csv and resolves local video paths from vc-bench-hf.
-If a local path is not found it falls back to the Hugging Face CDN URL so the
-app also works when deployed to HF Spaces (no 45 GB upload required).
+HF Spaces deployment:
+    gradio deploy          # run from this directory
+    # The app auto-downloads VC-Bench.csv from the HF dataset hub on startup
+    # and streams all videos via the HF CDN — no 45 GB upload required.
 """
 
 import argparse
 import json
+import os
 import urllib.parse
 from pathlib import Path
 
@@ -25,9 +30,19 @@ import plotly.express as px
 
 # ── Configuration ──────────────────────────────────────────────────────────────
 HF_DATASET = "Kevinson-lzp/VC-Bench"
-HF_DIR = Path("/workspace/diffusion-research/data/raw/vc-bench-hf")
+
+# Local data directory: override with VC_BENCH_HF_DIR env var.
+_DEFAULT_HF_DIR = Path("/workspace/diffusion-research/data/raw/vc-bench-hf")
+HF_DIR = Path(os.environ.get("VC_BENCH_HF_DIR", str(_DEFAULT_HF_DIR)))
+
 CSV_PATH = HF_DIR / "VC-Bench.csv"
-PATH_INDEX_CACHE = HF_DIR / ".path_index.json"
+
+# Write the path-index cache next to the data when possible, otherwise /tmp.
+_CACHE_DIR = HF_DIR if HF_DIR.exists() else Path("/tmp")
+PATH_INDEX_CACHE = _CACHE_DIR / ".vc_bench_path_index.json"
+
+# True when running inside a Hugging Face Space.
+IS_HF_SPACE = bool(os.environ.get("SPACE_ID"))
 
 # Main category → subcategories (from disk structure).
 # Key = folder name on disk, value = list of sub-folder names.
@@ -55,14 +70,43 @@ DISPLAY_COLS = ["filename", "main_category", "category", "resolution",
 
 # ── Data loading ───────────────────────────────────────────────────────────────
 
+def _get_csv_path() -> Path:
+    """Return a local path to VC-Bench.csv, downloading it from HF Hub if needed."""
+    if CSV_PATH.exists():
+        return CSV_PATH
+    print("VC-Bench.csv not found locally — downloading from HF Hub…")
+    from huggingface_hub import hf_hub_download
+    return Path(hf_hub_download(
+        repo_id=HF_DATASET,
+        filename="VC-Bench.csv",
+        repo_type="dataset",
+    ))
+
+
+def _hf_cdn_url(hf_path: str) -> str:
+    return (
+        f"https://huggingface.co/datasets/{HF_DATASET}/resolve/main/"
+        + urllib.parse.quote(hf_path, safe="")
+    )
+
+
+def _infer_hf_path(filename: str, main_cat: str, sub_cat: str) -> str:
+    """
+    Reconstruct the HF repo-relative path from CSV columns.
+    The dataset stores files as  MainCategory\\subcategory\\filename.mp4
+    (literal backslashes, matching the original Windows upload layout).
+    """
+    return f"{main_cat}\\{sub_cat}\\{filename}"
+
+
 def _build_path_index(hf_dir: Path) -> dict:
     """
     Scan vc-bench-hf for MP4 files and return:
       basename -> {"local": abs_path, "hf_path": repo-relative path}
 
     HF snapshot_download stores files with literal backslashes in the name on
-    Linux, e.g. /vc-bench-hf/Weather\sunset\sunset_xyz.mp4.
-    The p.name therefore IS the repo-relative path (backslashes included).
+    Linux, e.g. /vc-bench-hf/Weather\\sunset\\sunset_xyz.mp4.
+    p.name therefore IS the repo-relative path (backslashes included).
     """
     index: dict[str, dict] = {}
     for p in hf_dir.rglob("*.mp4"):
@@ -79,33 +123,40 @@ def _load_path_index(hf_dir: Path, cache_path: Path) -> dict:
     if cache_path.exists():
         with open(cache_path) as f:
             return json.load(f)
+    if not hf_dir.exists():
+        return {}
     print("Building path index (first run, may take a moment)…")
     index = _build_path_index(hf_dir)
-    with open(cache_path, "w") as f:
-        json.dump(index, f)
-    print(f"  Indexed {len(index)} videos → cached at {cache_path}")
+    try:
+        with open(cache_path, "w") as f:
+            json.dump(index, f)
+        print(f"  Indexed {len(index)} videos → cached at {cache_path}")
+    except OSError as e:
+        print(f"  Warning: could not write path index cache ({e})")
     return index
 
 
-def _hf_cdn_url(hf_path: str) -> str:
-    return (
-        f"https://huggingface.co/datasets/{HF_DATASET}/resolve/main/"
-        + urllib.parse.quote(hf_path, safe="")
-    )
-
-
 def load_dataframe() -> tuple[pd.DataFrame, dict]:
-    df = pd.read_csv(CSV_PATH)
+    csv_path = _get_csv_path()
+    df = pd.read_csv(csv_path)
+
     index = _load_path_index(HF_DIR, PATH_INDEX_CACHE)
 
-    df["local_path"] = df["filename"].map(lambda f: index.get(f, {}).get("local"))
-    df["hf_url"]     = df["filename"].map(
-        lambda f: _hf_cdn_url(index[f]["hf_path"]) if f in index else None
-    )
     df["main_category"] = df["category"].map(SUB_TO_MAIN).fillna("Unknown")
-    df["has_video"]     = df["local_path"].notna()
 
-    # Resolution as a readable string e.g. "1920×1080"
+    # Always compute CDN URLs from CSV columns so every row is streamable on
+    # Spaces (and as fallback when running locally without a full video mirror).
+    df["hf_url"] = df.apply(
+        lambda row: _hf_cdn_url(
+            index[row["filename"]]["hf_path"]
+            if row["filename"] in index
+            else _infer_hf_path(row["filename"], row["main_category"], row["category"])
+        ),
+        axis=1,
+    )
+    df["local_path"] = df["filename"].map(lambda f: index.get(f, {}).get("local"))
+    df["has_video"]  = df["local_path"].notna()
+
     def fmt_res(r):
         try:
             dims = json.loads(str(r).replace("'", '"').replace("(", "[").replace(")", "]"))
@@ -121,7 +172,8 @@ def load_dataframe() -> tuple[pd.DataFrame, dict]:
 
 print("Loading VC-Bench data…")
 DF, PATH_INDEX = load_dataframe()
-print(f"  {len(DF)} metadata rows, {DF['has_video'].sum()} with local video")
+_local_count = int(DF["has_video"].sum())
+print(f"  {len(DF)} metadata rows · {_local_count} local · {len(DF)} streamable via CDN")
 
 MAIN_CATS   = ["All"] + sorted(MAIN_CAT_MAP.keys())
 ALL_SUBCATS = sorted(DF["category"].dropna().unique().tolist())
@@ -214,6 +266,7 @@ def on_row_select(evt: gr.SelectData, filtered_state):
     row_idx = evt.index[0]
     row = filtered_state.iloc[row_idx]
 
+    # Prefer a local file; fall back to HF CDN stream.
     video_src = row.get("local_path") or row.get("hf_url")
 
     md = f"""
@@ -239,11 +292,18 @@ def on_row_select(evt: gr.SelectData, filtered_state):
 def build_ui():
     fig_cat, fig_aes, fig_dur, fig_scenes = make_stats_plots()
 
+    _local = int(DF["has_video"].sum())
+    _video_note = (
+        f"**{_local} local · {len(DF)} streamable via HF CDN**"
+        if _local > 0
+        else f"**{len(DF)} streamable via HF CDN**"
+    )
+
     with gr.Blocks(title="VC-Bench Explorer") as demo:
         gr.Markdown("# VC-Bench Dataset Explorer")
         gr.Markdown(
             f"Browsing **{len(DF)} metadata entries** · "
-            f"**{DF['has_video'].sum()} local videos** · "
+            + _video_note + " · "
             f"**{len(MAIN_CAT_MAP)} main categories** · "
             f"**{len(ALL_SUBCATS)} subcategories**"
         )
@@ -278,10 +338,8 @@ def build_ui():
                         video_out = gr.Video(label="Video", height=320)
                         meta_md   = gr.Markdown("*Select a row to see video and metadata.*")
 
-                # state holding the full filtered df (with paths)
                 filtered_state = gr.State(DF[DISPLAY_COLS + ["local_path", "hf_url", "caption", "scene_start_frames"]])
 
-                # wire up events
                 dd_main.change(get_sub_cats, inputs=dd_main, outputs=dd_sub)
 
                 for trigger in [dd_main, dd_sub, txt_search]:
@@ -306,7 +364,7 @@ def build_ui():
                 gr.Markdown(f"""
 **Quick facts**
 - Total metadata rows: **{len(DF):,}**
-- Videos available locally: **{DF['has_video'].sum():,}** ({DF['has_video'].mean()*100:.1f} %)
+- Videos available locally: **{int(DF['has_video'].sum()):,}** ({DF['has_video'].mean()*100:.1f} %)
 - Average aesthetic score: **{DF['aesthetic_score'].mean():.3f}**
 - Average length: **{DF['length'].mean():.0f} frames**
 - FPS values: {sorted(DF['fps'].dropna().unique().astype(int).tolist())}
@@ -315,13 +373,19 @@ def build_ui():
     return demo
 
 
+# Build the demo at module level so HF Spaces can find it.
+demo = build_ui()
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="VC-Bench Dataset Explorer")
-    parser.add_argument("--share",  action="store_true", help="Create a 72-hour public Gradio link")
-    parser.add_argument("--port",   type=int, default=7860, help="Local port (default 7860)")
-    parser.add_argument("--host",   default="0.0.0.0", help="Bind address (default 0.0.0.0)")
+    parser.add_argument("--share", action="store_true", help="Create a 72-hour public Gradio link")
+    parser.add_argument("--port",  type=int, default=7860, help="Local port (default 7860)")
+    parser.add_argument("--host",  default="0.0.0.0",    help="Bind address (default 0.0.0.0)")
     args = parser.parse_args()
 
-    demo = build_ui()
-    demo.launch(server_name=args.host, server_port=args.port, share=args.share,
-                theme=gr.themes.Soft())
+    demo.launch(
+        server_name=args.host,
+        server_port=args.port,
+        share=args.share,
+        theme=gr.themes.Soft(),
+    )
