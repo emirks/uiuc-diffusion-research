@@ -27,11 +27,13 @@ SpatioTemporalScaleFactors(time=8, height=32, width=32)
 F_lat = (F_pix - 1) // 8 + 1
 ```
 
-| Pixel frames | Latent frames | Example |
-|---|---|---|
-| 1 (single image) | 1 | |
-| 24 (1s at 24fps) | 3 | `(24-1)//8+1 = 3` |
-| 97 (~4s at 24fps) | 13 | `(97-1)//8+1 = 13` |
+
+| Pixel frames      | Latent frames | Example            |
+| ----------------- | ------------- | ------------------ |
+| 1 (single image)  | 1             |                    |
+| 24 (1s at 24fps)  | 3             | `(24-1)//8+1 = 3`  |
+| 97 (~4s at 24fps) | 13            | `(97-1)//8+1 = 13` |
+
 
 **Spatial:** a 512×768 pixel frame → 16×24 latent grid.
 
@@ -44,6 +46,7 @@ F_lat = (F_pix - 1) // 8 + 1
 The transformer does not operate on a 5D tensor. The patchifier flattens the latent into a 1D sequence of tokens via `VideoLatentPatchifier`.
 
 **Code** (`ltx_core/components/patchifiers.py`):
+
 ```python
 "b c (f p1) (h p2) (w p3)  →  b (f·h·w) (c·p1·p2·p3)"
 ```
@@ -52,11 +55,13 @@ The transformer does not operate on a 5D tensor. The patchifier flattens the lat
 - Spatial patch size `p2 = p3 = P` (typically P=2, grouping 2×2 latent cells into one token)
 
 **Token count:**
+
 ```
 N_tokens = F_lat × (H_lat / P) × (W_lat / P)
 ```
 
 For a 97-frame, 512×768 video (P=2):
+
 - `F_lat=13`, `H_lat=16`, `W_lat=24`
 - `N = 13 × 8 × 12 = 1248 tokens`
 
@@ -69,6 +74,7 @@ Each token has dimension `D = 128 × P² = 512`.
 Every token carries a **3D bounding box in pixel space**.
 
 **Shape:** `(B, 3, N_tokens, 2)` where:
+
 - Axis 1 = three spatial axes: `(time, height, width)`
 - Last dim = `[start, end)` — a range, not a single point
 
@@ -82,12 +88,15 @@ Every token carries a **3D bounding box in pixel space**.
 For a 3-frame latent: temporal bounds are `[0,1], [1,2], [2,3]`.
 
 **Step 2:** `get_pixel_coords` → multiply by scale factors:
+
 ```python
 pixel_coords = latent_coords * scale_tensor   # time×8, h×32, w×32
 ```
+
 Result: `[0,8], [8,16], [16,24]` in pixel-frames.
 
 **Step 3 (causal_fix = True, applied only to output video and start-of-clip cond):**
+
 ```python
 pixel_coords[:, 0, :] = (pixel_coords[:, 0, :] + 1 - 8).clamp(0)
 # i.e. shift ALL temporal coords by -(8-1) = -7
@@ -97,21 +106,25 @@ pixel_coords[:, 0, :] = (pixel_coords[:, 0, :] + 1 - 8).clamp(0)
 
 **After causal_fix**, output video token temporal positions for a 97-frame video:
 
+
 | Latent token | Pixel range (after causal_fix) |
-|---|---|
-| 0 | [0, 1] |
-| 1 | [1, 9] |
-| 2 | [9, 17] |
-| 3 | [17, 25] |
-| … | … |
-| 10 | [73, 81] |
-| 11 | [81, 89] |
-| 12 | [89, 97] |
+| ------------ | ------------------------------ |
+| 0            | [0, 1]                         |
+| 1            | [1, 9]                         |
+| 2            | [9, 17]                        |
+| 3            | [17, 25]                       |
+| …            | …                              |
+| 10           | [73, 81]                       |
+| 11           | [81, 89]                       |
+| 12           | [89, 97]                       |
+
 
 **Step 4:** Temporal dimension is divided by FPS to convert from pixel-frames to seconds:
+
 ```python
 positions[:, 0, ...] /= fps    # e.g. fps=24
 ```
+
 Token 12: `[89/24, 97/24] = [3.71s, 4.04s]`.
 
 ---
@@ -155,6 +168,7 @@ For C2V (97-frame output, 2 clips of 24 frames each):
 **Purpose:** Tell the transformer WHERE in (t, y, x) space each token lives.
 
 **Flow:**
+
 ```
 positions (t_sec, y_px, x_px)
     ↓ normalize by max_pos = [20s, 2048px, 2048px]
@@ -171,6 +185,61 @@ Q and K vectors are rotated before dot-product attention
 
 **Code:** `ltx_core/model/transformer/rope.py` → `precompute_freqs_cis`
 
+### 5.1-a Bounding Box → Single Position: The Midpoint
+
+Each token carries a `[start, end)` range per axis — but RoPE needs a single number per axis.
+The bridge is `use_middle_indices_grid=True` (default in `LTXModel`), inside `generate_freqs` in `rope.py`:
+
+```python
+if use_middle_indices_grid:
+    indices_grid = (indices_grid_start + indices_grid_end) / 2.0
+```
+
+The bounding box is collapsed to its **midpoint**. That midpoint is then normalized:
+
+```
+fractional_pos = midpoint / max_pos[axis]
+```
+
+So the "position" of a token is the **center of its pixel-space brick**, normalized to `[0, 1]`.
+
+**Concrete example — 17-pixel-frame video (temporal scale = 4):**
+
+
+| Latent frame | Pixel range (causal_fix) | Midpoint | Fractional (max_pos=20s, fps=25) |
+| ------------ | ------------------------ | -------- | -------------------------------- |
+| 0            | [0, 1)                   | 0.5      | 0.5 / 25 / 20 = 0.001            |
+| 1            | [1, 5)                   | 3.0      | …                                |
+| 2            | [5, 9)                   | 7.0      | …                                |
+| 3            | [9, 13)                  | 11.0     | …                                |
+| 4            | [13, 17)                 | 15.0     | …                                |
+
+
+### 5.1-b Image Conditioning vs. Clip Conditioning: Temporal Midpoint Distribution
+
+**Single keyframe at `frame_idx=T`** (e.g. T=0):
+
+- Always 1 latent frame → pixel range `[0,1)` → midpoint `0.5`
+- After `+ frame_idx`: midpoint = `T + 0.5`
+- All N spatial tokens of this keyframe share the **same temporal midpoint** `T + 0.5`
+- They differ only in `(h, w)` midpoints
+
+**Video clip (F_pix frames → F_lat latent frames)** at `frame_idx=T`:
+
+- F_lat latent frames each have their own temporal midpoints, spread across the clip duration
+- E.g. 17-frame clip → midpoints `{0.5, 3, 7, 11, 15}` + T
+- Different latent frames' tokens have **different temporal midpoints** covering the full clip
+
+**Effect in attention:**
+
+- A conditioning token attends most strongly to the noisy token whose midpoint is closest to its own.
+- For a single keyframe: all spatial tokens point to the same moment T → they "pin" the output at time T.
+- For a clip: temporal midpoints are distributed across the clip duration → each latent frame pins a different temporal region of the output → richer, motion-aware conditioning.
+
+**No training mismatch:** the clip conditioning tokens' temporal midpoints are identical to the noisy output tokens' temporal midpoints for the same latent frames (both computed the same way with the same causal scaling). So the model sees what it was trained on.
+
+From chat: image vs. clip conditioning via bounding-box midpoints (2026-03-12).
+
 ---
 
 ### 5.2 Denoise Mask (Controls Noising and Timestep)
@@ -180,29 +249,36 @@ Q and K vectors are rotated before dot-product attention
 **Value:** `1.0 = noisy, 0.0 = clean` (a per-token scalar).
 
 For conditioning with `strength=1.0`:
+
 ```python
 denoise_mask = 1.0 - strength = 0.0
 ```
 
 **Use 1 — Noising initialization** (`GaussianNoiser`):
+
 ```python
 noise = randn(shape)
 latent = noise * denoise_mask  +  latent * (1 - denoise_mask)
 ```
+
 - Output tokens (mask=1): replaced entirely with random noise
 - Conditioning tokens (mask=0): kept exactly as the clean VAE encoding
 
 **Use 2 — Per-token timestep** (during each denoising step):
+
 ```python
 timesteps = denoise_mask * current_sigma
 ```
+
 - Output tokens: timestep = sigma → full denoising signal
 - Conditioning tokens: timestep = 0 → "already at noise level 0"
 
 **Use 3 — The X0 formula:**
+
 ```python
 denoised = latent - velocity * timesteps   # per-token sigma
 ```
+
 For conditioning tokens: `timesteps=0` → `denoised = latent` → **no update, frozen**.
 
 **Code:** `ltx_core/components/noisers.py`, `ltx_core/utils.py` (`to_denoised`)
@@ -214,6 +290,7 @@ For conditioning tokens: `timesteps=0` → `denoised = latent` → **no update, 
 **Purpose:** Prevent different conditioning groups from cross-contaminating each other in self-attention.
 
 **Shape:** `[B, N_total, N_total]`, values in `[0, 1]`.
+
 - `1.0` → full attention allowed
 - `0.0` → completely blocked
 
@@ -233,10 +310,12 @@ Cond-End     [    1.0     |      0.0       |     1.0     ]
 **Why block cross-conditioning attention?** If Cond-Start could attend to Cond-End, their information would mix. The model was not trained for mixed-conditioning self-attention between separate groups.
 
 **Under the hood:** Converted to additive log-space bias before softmax:
+
 ```python
 1.0 → log(1.0) = 0.0           # neutral, no effect
 0.0 → -float_max               # fully masked
 ```
+
 Applied as `(B, 1, T, T)` bias added to Q·K scores.
 
 **Code:** `ltx_core/conditioning/mask_utils.py` (`build_attention_mask`)
@@ -293,6 +372,7 @@ return LatentState(
 After `apply_to`, the sequence is `N_output + M` tokens. After both clips, it is `N_output + M_start + M_end`.
 
 **After the denoising loop:**
+
 ```python
 video_state = video_tools.clear_conditioning(video_state)
 # Drops tokens beyond the first N_output — removes all cond tokens
@@ -307,12 +387,14 @@ video_state = video_tools.unpatchify(video_state)
 **File:** `ltx_pipelines/keyframe_interpolation.py`
 
 **Stage 1 — Low resolution generation (half-res: 256×384):**
+
 - Loads the video encoder from `stage_1_model_ledger`
 - Builds conditionings at `height//2 × width//2` → clips encoded at lower res → fewer latent cells (8×12 → 4×6 at half-res), so fewer spatial tokens per clip
 - Denoises with full transformer + CFG (MultiModalGuider)
 - Sigmas: full LTX2Scheduler schedule (40 steps)
 
 **Stage 2 — Upsample + refinement (full-res: 512×768):**
+
 - Upsamples stage-1 latent via `spatial_upsampler` (×2 spatial)
 - Builds conditionings AGAIN at full resolution `height × width` → clips re-encoded at full res
 - Denoises with distilled LoRA transformer (fewer steps, distilled sigmas)
@@ -339,6 +421,7 @@ Without causal_fix, clip token local temporal ranges are `[0,8], [8,16], [16,24]
 With `frame_idx=73` added: `[73,81], [81,89], [89,97]`.
 
 Output tokens 10, 11, 12 have temporal ranges (after causal_fix):
+
 - Token 10: `[80,88] - 7 = [73,81]` ✓
 - Token 11: `[88,96] - 7 = [81,89]` ✓
 - Token 12: `[96,104] - 7 = [89,97]` ✓
@@ -346,6 +429,7 @@ Output tokens 10, 11, 12 have temporal ranges (after causal_fix):
 **Single-frame special case:** With `num_clip_frames=1`: `frame_idx_end = 97-1 = 96`. That's exactly what exp_014 uses for the last keyframe.
 
 **Causal_fix rule:**
+
 - `frame_idx == 0` → `causal_fix = True` (start clip, first frame of output)
 - `frame_idx != 0` → `causal_fix = False` (end clip, interior clip)
 
@@ -367,6 +451,7 @@ images = [
 ```
 
 **Token counts (97-frame, 512×768):**
+
 - Output: 1248 tokens
 - First frame cond: 96 tokens (1 × 8 × 12)
 - Last frame cond: 96 tokens
@@ -394,6 +479,7 @@ clips = [
 `frame_idx_end = 97 - 24 = 73`.
 
 **Token counts (97-frame, 512×768):**
+
 - Output: 1248 tokens
 - Start clip cond: 288 tokens (3 × 8 × 12)
 - End clip cond: 288 tokens
@@ -403,24 +489,28 @@ clips = [
 
 **Code additions to LTX-2 source (all additive, no breaking changes):**
 
-| File | Change |
-|---|---|
-| `ltx_pipelines/utils/args.py` | Added `ClipConditioningInput(path, frame_idx, strength, num_clip_frames)` |
-| `ltx_pipelines/utils/helpers.py` | Added `clip_conditionings_by_adding_guiding_latent()` |
-| `ltx_pipelines/keyframe_interpolation.py` | Added `clips: list[ClipConditioningInput] \| None` to `__call__`; uses clip helper when provided, falls back to image helper otherwise |
+
+| File                                      | Change                                                                                                                                |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `ltx_pipelines/utils/args.py`             | Added `ClipConditioningInput(path, frame_idx, strength, num_clip_frames)`                                                             |
+| `ltx_pipelines/utils/helpers.py`          | Added `clip_conditionings_by_adding_guiding_latent()`                                                                                 |
+| `ltx_pipelines/keyframe_interpolation.py` | Added `clips: list[ClipConditioningInput] | None` to `__call_`_; uses clip helper when provided, falls back to image helper otherwise |
+
 
 ---
 
 ## 11. Option Comparison: How to Do C2V
 
-| | Option A (individual frames) | Option C (clip encoding) |
-|---|---|---|
-| LTX source changes | 0 | +73 lines, 3 files |
-| Temporal VAE context | ✗ each frame encoded alone | ✓ full clip in one pass |
-| Token count | K × 96 (one per frame) | 3 × 96 (one per latent time step) |
-| Position alignment | ✓ each frame at its own frame_idx | ✓ clip tokens at latent-aligned positions |
-| Frame selection | must pick which K frames to use | encodes all K frames naturally |
-| Quality | degrades: VAE has no temporal context | correct behavior |
+
+|                      | Option A (individual frames)          | Option C (clip encoding)                  |
+| -------------------- | ------------------------------------- | ----------------------------------------- |
+| LTX source changes   | 0                                     | +73 lines, 3 files                        |
+| Temporal VAE context | ✗ each frame encoded alone            | ✓ full clip in one pass                   |
+| Token count          | K × 96 (one per frame)                | 3 × 96 (one per latent time step)         |
+| Position alignment   | ✓ each frame at its own frame_idx     | ✓ clip tokens at latent-aligned positions |
+| Frame selection      | must pick which K frames to use       | encodes all K frames naturally            |
+| Quality              | degrades: VAE has no temporal context | correct behavior                          |
+
 
 **Option B (subclass / code duplication):** duplicates ~130 lines of pipeline code in the experiment folder; no LTX changes but fragile (diverges if pipeline updates).
 
@@ -453,6 +543,7 @@ images = [
 This adds 2 × 96 = 192 extra tokens (one per boundary frame), giving both temporal motion context AND pixel-precise boundary anchoring.
 
 **Implementation:** Change the pipeline `if clips / else images` logic to:
+
 ```python
 stage_conditionings = (
     clip_conditionings_by_adding_guiding_latent(clips, ...) if clips else []
@@ -474,21 +565,23 @@ This preserves temporal continuity between both clips (they're in the same VAE f
 
 ## 13. Summary Table: Numbers for 97-Frame, 512×768, K=24
 
-| Quantity | Formula | Value |
-|---|---|---|
-| Temporal scale | constant | 8 |
-| Spatial scale | constant | 32 × 32 |
-| Output latent shape | `(97-1)//8+1, 512//32, 768//32` | `13 × 16 × 24` |
-| Output token count (P=2) | `13 × 8 × 12` | 1248 |
-| Clip latent frames | `(24-1)//8+1` | 3 |
-| Clip token count (P=2) | `3 × 8 × 12` | 288 |
-| End clip frame_idx | `97 - 24` | 73 |
-| Total tokens (C2V, exp_015) | `1248 + 288 + 288` | 1824 |
-| Stage 1 spatial | `256×384` | half-res |
-| Stage 1 clip token count (P=2) | `3 × 4 × 6` | 72 |
-| Stage 2 = full res | `512×768` | full-res |
-| max_pos for RoPE | `[20s, 2048px, 2048px]` | constant |
-| causal_fix shift | `1 - time_scale = -7` | constant |
+
+| Quantity                       | Formula                         | Value          |
+| ------------------------------ | ------------------------------- | -------------- |
+| Temporal scale                 | constant                        | 8              |
+| Spatial scale                  | constant                        | 32 × 32        |
+| Output latent shape            | `(97-1)//8+1, 512//32, 768//32` | `13 × 16 × 24` |
+| Output token count (P=2)       | `13 × 8 × 12`                   | 1248           |
+| Clip latent frames             | `(24-1)//8+1`                   | 3              |
+| Clip token count (P=2)         | `3 × 8 × 12`                    | 288            |
+| End clip frame_idx             | `97 - 24`                       | 73             |
+| Total tokens (C2V, exp_015)    | `1248 + 288 + 288`              | 1824           |
+| Stage 1 spatial                | `256×384`                       | half-res       |
+| Stage 1 clip token count (P=2) | `3 × 4 × 6`                     | 72             |
+| Stage 2 = full res             | `512×768`                       | full-res       |
+| max_pos for RoPE               | `[20s, 2048px, 2048px]`         | constant       |
+| causal_fix shift               | `1 - time_scale = -7`           | constant       |
+
 
 ---
 
@@ -506,21 +599,24 @@ The transformer is a "fill-in-the-blank" machine:
 
 ## 15. Key Source Files Reference
 
-| Concept | File |
-|---|---|
-| Scale factors, LatentState, VideoLatentShape | `ltx_core/types.py` |
-| Patchifier, `get_pixel_coords` | `ltx_core/components/patchifiers.py` |
-| GaussianNoiser | `ltx_core/components/noisers.py` |
-| `VideoConditionByKeyframeIndex` | `ltx_core/conditioning/types/keyframe_cond.py` |
-| `VideoConditionByLatentIndex` | `ltx_core/conditioning/types/latent_cond.py` |
-| Attention mask builder | `ltx_core/conditioning/mask_utils.py` |
-| `VideoLatentTools`, `create_initial_state`, `clear_conditioning` | `ltx_core/tools.py` |
-| RoPE, `precompute_freqs_cis` | `ltx_core/model/transformer/rope.py` |
-| `TransformerArgsPreprocessor`, position embedding prep | `ltx_core/model/transformer/transformer_args.py` |
-| X0Model, `to_denoised` | `ltx_core/model/transformer/model.py`, `ltx_core/utils.py` |
-| `image_conditionings_by_adding_guiding_latent` | `ltx_pipelines/utils/helpers.py` |
-| `clip_conditionings_by_adding_guiding_latent` | `ltx_pipelines/utils/helpers.py` |
-| `load_video_conditioning`, `load_image_conditioning` | `ltx_pipelines/utils/media_io.py` |
-| `ImageConditioningInput`, `ClipConditioningInput` | `ltx_pipelines/utils/args.py` |
-| `KeyframeInterpolationPipeline` | `ltx_pipelines/keyframe_interpolation.py` |
-| Full diagram (keyframe) | `ltx_pipelines/docs/KEYFRAME_INTERPOLATION_TASK_DIAGRAM.md` |
+
+| Concept                                                          | File                                                        |
+| ---------------------------------------------------------------- | ----------------------------------------------------------- |
+| Scale factors, LatentState, VideoLatentShape                     | `ltx_core/types.py`                                         |
+| Patchifier, `get_pixel_coords`                                   | `ltx_core/components/patchifiers.py`                        |
+| GaussianNoiser                                                   | `ltx_core/components/noisers.py`                            |
+| `VideoConditionByKeyframeIndex`                                  | `ltx_core/conditioning/types/keyframe_cond.py`              |
+| `VideoConditionByLatentIndex`                                    | `ltx_core/conditioning/types/latent_cond.py`                |
+| Attention mask builder                                           | `ltx_core/conditioning/mask_utils.py`                       |
+| `VideoLatentTools`, `create_initial_state`, `clear_conditioning` | `ltx_core/tools.py`                                         |
+| RoPE, `precompute_freqs_cis`                                     | `ltx_core/model/transformer/rope.py`                        |
+| `TransformerArgsPreprocessor`, position embedding prep           | `ltx_core/model/transformer/transformer_args.py`            |
+| X0Model, `to_denoised`                                           | `ltx_core/model/transformer/model.py`, `ltx_core/utils.py`  |
+| `image_conditionings_by_adding_guiding_latent`                   | `ltx_pipelines/utils/helpers.py`                            |
+| `clip_conditionings_by_adding_guiding_latent`                    | `ltx_pipelines/utils/helpers.py`                            |
+| `load_video_conditioning`, `load_image_conditioning`             | `ltx_pipelines/utils/media_io.py`                           |
+| `ImageConditioningInput`, `ClipConditioningInput`                | `ltx_pipelines/utils/args.py`                               |
+| `KeyframeInterpolationPipeline`                                  | `ltx_pipelines/keyframe_interpolation.py`                   |
+| Full diagram (keyframe)                                          | `ltx_pipelines/docs/KEYFRAME_INTERPOLATION_TASK_DIAGRAM.md` |
+
+
