@@ -138,6 +138,41 @@ class TeeLogger:
         self._file.close()          # type: ignore[union-attr]
 
 
+def image_dir_to_tmp_mp4(
+    image_dir: pathlib.Path,
+    num_frames: int,
+    out_path: pathlib.Path,
+    fps: int = 24,
+    from_end: bool = False,
+) -> None:
+    """Write a short MP4 clip from JPEG frames in a DAVIS-style image directory.
+
+    Frames are selected in sorted filename order.  Pass ``from_end=True`` to
+    take the *last* ``num_frames`` (use this for the end-clip of a sequence).
+
+    Args:
+        image_dir:  Directory containing numbered JPEG frames (e.g. 00000.jpg).
+        num_frames: Number of frames to encode.
+        out_path:   Destination MP4 path; parent directory must already exist.
+        fps:        Frame rate written into the MP4 container.
+        from_end:   Take the last ``num_frames`` instead of the first.
+    """
+    import numpy as np
+    import torch
+
+    frames = sorted(image_dir.glob("*.jpg"))
+    if len(frames) < num_frames:
+        raise ValueError(
+            f"{image_dir.name} has {len(frames)} frames but num_frames={num_frames}"
+        )
+    selected = frames[-num_frames:] if from_end else frames[:num_frames]
+    pil_frames = [PIL.Image.open(p).convert("RGB") for p in selected]
+    tensor = torch.from_numpy(
+        np.stack([np.array(f) for f in pil_frames], axis=0)
+    )  # (T, H, W, 3) uint8
+    tio.write_video(str(out_path), tensor, fps=fps)
+
+
 def load_clip_from_mp4(path: pathlib.Path, anchor_frames: int) -> list[PIL.Image.Image]:
     """Load the first anchor_frames frames of an mp4 as a list of PIL images.
 

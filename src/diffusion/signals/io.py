@@ -170,6 +170,8 @@ def draw_boxes(frame: np.ndarray, boxes: np.ndarray, ids: np.ndarray | None = No
     np.random.seed(42)
     palette = np.random.randint(80, 230, (256, 3)).tolist()
     for i, (x1, y1, x2, y2) in enumerate(boxes.astype(int)):
+        # OpenCV 4.13+ requires plain Python int, not numpy scalars
+        x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
         colour = tuple(int(c) for c in palette[int(ids[i]) % 256]) if ids is not None else (0, 220, 90)
         cv2.rectangle(out, (x1, y1), (x2, y2), colour[::-1], 2)
         label = str(int(ids[i])) if ids is not None else ""

@@ -76,11 +76,25 @@ class MediaPipeExtractor(BaseExtractor):
     input_type = "image"
 
     def _load_model(self) -> None:
-        import mediapipe as mp
+        # MediaPipe package layout varies by version/distribution.
+        # Try both known import paths before failing with a clear hint.
+        try:
+            import mediapipe.solutions.pose as _mp_pose
+            import mediapipe.solutions.drawing_utils as _mp_drawing
+        except Exception:
+            try:
+                from mediapipe.python.solutions import pose as _mp_pose
+                from mediapipe.python.solutions import drawing_utils as _mp_drawing
+            except Exception as exc:
+                raise ImportError(
+                    "MediaPipe Solutions API is unavailable. "
+                    "Install a Solutions-compatible version (e.g. mediapipe==0.10.21) "
+                    "or skip pose_mediapipe."
+                ) from exc
 
         print("  Loading MediaPipe BlazePose …")
-        self._mp_pose = mp.solutions.pose
-        self._mp_drawing = mp.solutions.drawing_utils
+        self._mp_pose = _mp_pose
+        self._mp_drawing = _mp_drawing
         self._model = self._mp_pose.Pose(
             static_image_mode=True,
             model_complexity=1,
