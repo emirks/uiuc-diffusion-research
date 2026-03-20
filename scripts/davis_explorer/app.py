@@ -72,6 +72,16 @@ CACHE_DIR = Path(os.environ.get(
 ))
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
+def _cleanup_stale_tmp() -> None:
+    """Remove any leftover _tmp_* directories left by interrupted encode runs."""
+    stale = list(CACHE_DIR.glob("_tmp_*"))
+    if stale:
+        print(f"  Removing {len(stale)} stale tmp dir(s) from previous run…")
+        for d in stale:
+            shutil.rmtree(d, ignore_errors=True)
+
+_cleanup_stale_tmp()
+
 DAVIS_PALETTE = np.array([
     [  0,   0,   0], [128,   0,   0], [  0, 128,   0], [128, 128,   0],
     [  0,   0, 128], [128,   0, 128], [  0, 128, 128], [128, 128, 128],
