@@ -405,13 +405,21 @@ def get_legend(seq: str) -> str:
     return "\n".join(lines)
 
 
+def _is_cache_complete() -> bool:
+    with _cache_lock:
+        return (len(_cache_progress) >= len(ALL_SEQUENCES)
+                and all(v == "done" for v in _cache_progress.values()))
+
+
 def cache_status_md() -> str:
     with _cache_lock:
-        done  = sum(1 for v in _cache_progress.values() if v == "done")
+        done   = sum(1 for v in _cache_progress.values() if v == "done")
+        errors = sum(1 for v in _cache_progress.values() if v.startswith("error"))
     total = len(ALL_SEQUENCES)
     pct   = done / total * 100 if total else 0
     bar   = "█" * int(pct / 5) + "░" * (20 - int(pct / 5))
-    return f"`[{bar}]` **{done}/{total}** cached ({pct:.0f}%)"
+    err   = f" · ⚠️ {errors} errors" if errors else ""
+    return f"`[{bar}]` **{done}/{total}** cached ({pct:.0f}%){err}"
 
 
 # ── Stats plots ────────────────────────────────────────────────────────────────
