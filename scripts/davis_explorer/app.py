@@ -706,43 +706,58 @@ def build_ui():
             with gr.TabItem("📺 Multi-Video"):
                 gr.Markdown(
                     f"Watch **{PAGE_SIZE} sequences at once** in a 3×3 grid. "
-                    "Use Prev/Next to page through all {len(ALL_SEQUENCES)} sequences, "
-                    "or filter first. Videos are encoded once and cached permanently."
+                    f"Page through all {len(ALL_SEQUENCES)} sequences. "
+                    "Videos are served from the permanent MP4 cache."
                 )
-                with gr.Row():
-                    mv_year  = gr.Dropdown(["All years","2016 only","2017 only"],
-                                            value="All years", label="Year", scale=1)
-                    mv_split = gr.Dropdown(["All splits","Train only","Val only"],
-                                            value="All splits", label="Split", scale=1)
-                    mv_obj   = gr.Dropdown(["Any # objects","1 object","2 objects","3+ objects"],
-                                            value="Any # objects", label="Objects", scale=1)
-                    mv_srch  = gr.Textbox(placeholder="Search…", label="Search", scale=2)
-                with gr.Row():
-                    mv_fps  = gr.Slider(1, 30, DEFAULT_FPS, step=1, label="FPS", scale=2)
-                    mv_ov   = gr.Checkbox(value=True, label="Burn overlay", scale=1)
-                    mv_a    = gr.Slider(0.1, 1.0, DEFAULT_ALPHA, step=0.05,
-                                         label="Opacity", scale=2)
-                    mv_load = gr.Button("▶  Load Page", variant="primary", scale=1)
 
-                with gr.Row():
-                    mv_prev = gr.Button("◀  Prev", scale=1)
-                    with gr.Column(scale=3):
-                        mv_page_lbl = gr.Markdown(f"**Page 1 / {total_pages}**")
-                    mv_next = gr.Button("Next  ▶", scale=1)
+                # ── Caching-in-progress overlay (hidden once done) ────────
+                _initially_done = _is_cache_complete()
+                with gr.Column(visible=not _initially_done) as mv_wait_col:
+                    gr.Markdown("### ⏳ Building MP4 cache — please wait…")
+                    mv_wait_status = gr.Markdown(cache_status_md())
+                    gr.Markdown(
+                        "All 90 sequences are being encoded as MP4s in the background "
+                        "(raw + overlay variant each). The grid will unlock automatically "
+                        "when encoding finishes. You can watch other tabs in the meantime."
+                    )
+                    mv_refresh_btn = gr.Button("↻  Refresh status", size="sm")
 
-                mv_status = gr.Markdown("")
-
-                # 9 fixed video slots, 3 rows × 3 cols
-                mv_vids  = []
-                mv_lbls  = []
-                for row_i in range(3):
+                # ── Main grid (hidden until cache ready) ──────────────────
+                with gr.Column(visible=_initially_done) as mv_grid_col:
                     with gr.Row():
-                        for col_i in range(3):
-                            with gr.Column():
-                                lbl = gr.Markdown("—")
-                                vid = gr.Video(height=260, autoplay=True, label="")
-                                mv_lbls.append(lbl)
-                                mv_vids.append(vid)
+                        mv_year  = gr.Dropdown(["All years","2016 only","2017 only"],
+                                                value="All years", label="Year", scale=1)
+                        mv_split = gr.Dropdown(["All splits","Train only","Val only"],
+                                                value="All splits", label="Split", scale=1)
+                        mv_obj   = gr.Dropdown(["Any # objects","1 object","2 objects","3+ objects"],
+                                                value="Any # objects", label="Objects", scale=1)
+                        mv_srch  = gr.Textbox(placeholder="Search…", label="Search", scale=2)
+                    with gr.Row():
+                        mv_fps  = gr.Slider(1, 30, DEFAULT_FPS, step=1, label="FPS", scale=2)
+                        mv_ov   = gr.Checkbox(value=True, label="Burn overlay", scale=1)
+                        mv_a    = gr.Slider(0.1, 1.0, DEFAULT_ALPHA, step=0.05,
+                                             label="Opacity", scale=2)
+                        mv_load = gr.Button("▶  Load Page", variant="primary", scale=1)
+
+                    with gr.Row():
+                        mv_prev = gr.Button("◀  Prev", scale=1)
+                        with gr.Column(scale=3):
+                            mv_page_lbl = gr.Markdown(f"**Page 1 / {total_pages}**")
+                        mv_next = gr.Button("Next  ▶", scale=1)
+
+                    mv_status = gr.Markdown("")
+
+                    # 9 fixed video slots, 3 rows × 3 cols
+                    mv_vids  = []
+                    mv_lbls  = []
+                    for row_i in range(3):
+                        with gr.Row():
+                            for col_i in range(3):
+                                with gr.Column():
+                                    lbl = gr.Markdown("—")
+                                    vid = gr.Video(height=260, autoplay=True, label="")
+                                    mv_lbls.append(lbl)
+                                    mv_vids.append(vid)
 
                 # State: list of sequences currently matching filter, page index
                 mv_seq_state  = gr.State(ALL_SEQUENCES.copy())
