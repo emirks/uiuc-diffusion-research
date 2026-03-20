@@ -50,11 +50,18 @@ DAVIS_ZIP_URL = (
 IS_HF_SPACE = bool(os.environ.get("SPACE_ID"))
 
 # Path resolution:
-#   • HF Spaces with persistent storage → /data/DAVIS
-#   • HF Spaces without persistent storage → /tmp/DAVIS
-#   • Local                              → workspace path (or DAVIS_ROOT env var)
+#   • HF Spaces with persistent storage  → /data/DAVIS   (survives restarts ✅)
+#   • HF Spaces without persistent storage → /tmp/DAVIS  (wiped on restart ⚠️)
+#   • Local                               → workspace path (or DAVIS_ROOT env var)
 if IS_HF_SPACE:
-    _hf_base    = Path("/data") if Path("/data").exists() else Path("/tmp")
+    _data_dir = Path("/data")
+    if _data_dir.exists() and os.access(_data_dir, os.W_OK):
+        _hf_base = _data_dir
+        print("Persistent storage detected at /data ✅")
+    else:
+        _hf_base = Path("/tmp")
+        print("⚠️  WARNING: /data not available — using /tmp (data will be lost on restart).")
+        print("   → Go to Space Settings → Persistent Storage and attach a disk to fix this.")
     _local_root = _hf_base / "DAVIS"
 else:
     _local_root = Path("/workspace/diffusion-research/data/raw/DAVIS")
@@ -99,15 +106,14 @@ THUMB_W, THUMB_H = 320, 200   # thumbnail dimensions for Gallery
 
 # ── Dataset download ───────────────────────────────────────────────────────────
 
-def ensure_dataset() -> None:
-    """Download and extract DAVIS 2017 trainval (480p) if not already present.
+HF_CACHE_REPO = "emirkisa/DAVIS-2017-480p-mp4"    # pre-encoded MP4s
+HF_CACHE_MARKER = CACHE_DIR / ".hf_cache_downloaded"
 
-    Safe to call every startup — exits immediately when data is found.
-    The zip extracts into a top-level ``DAVIS/`` directory, so we extract
-    into ``DAVIS_ROOT.parent`` which gives the expected ``DAVIS_ROOT`` layout.
-    """
+
+def ensure_dataset() -> None:
+    """Download and extract DAVIS 2017 trainval (480p) if not already present."""
     if IMG_DIR.exists() and any(IMG_DIR.iterdir()):
-        return   # data already present
+        return
 
     import urllib.request
     import zipfile
@@ -134,10 +140,8 @@ def ensure_dataset() -> None:
         raise RuntimeError(f"Download failed: {exc}") from exc
 
     print(f"\n  Download complete ({zip_dst.stat().st_size // 1_048_576} MB). Extracting…")
-
     with zipfile.ZipFile(zip_dst, "r") as zf:
         zf.extractall(DAVIS_ROOT.parent)
-
     zip_dst.unlink(missing_ok=True)
 
     if not IMG_DIR.exists():
@@ -146,6 +150,40 @@ def ensure_dataset() -> None:
             "Check that the zip contains a top-level DAVIS/ directory."
         )
     print(f"  DAVIS dataset ready at {DAVIS_ROOT}")
+
+
+def ensure_cache() -> None:
+    """Download pre-encoded MP4 cache from HF Hub if not already present.
+
+    Downloads ``emirkisa/davis-explorer-cache`` into ``CACHE_DIR``.
+    Skipped if the marker file already exists (i.e. downloaded before).
+    Falls back silently if the repo is unavailable — the app will encode
+    on demand instead.
+    """
+    if HF_CACHE_MARKER.exists():
+        print(f"  MP4 cache already downloaded ({CACHE_DIR})")
+        return
+
+    # Count how many raw MP4s are already present locally
+    existing = list(CACHE_DIR.glob("*_raw_*fps.mp4"))
+    if len(existing) >= len(list(IMG_DIR.iterdir())):
+        HF_CACHE_MARKER.touch()
+        print(f"  MP4 cache already complete locally ({len(existing)} raw files)")
+        return
+
+    try:
+        from huggingface_hub import snapshot_download
+        print(f"Downloading MP4 cache from {HF_CACHE_REPO} (~290 MB)…")
+        snapshot_download(
+            repo_id=HF_CACHE_REPO,
+            repo_type="dataset",
+            local_dir=str(CACHE_DIR),
+        )
+        HF_CACHE_MARKER.touch()
+        n = len(list(CACHE_DIR.glob("*.mp4")))
+        print(f"  MP4 cache ready — {n} files in {CACHE_DIR}")
+    except Exception as e:
+        print(f"  ⚠️  Could not download MP4 cache ({e}). Will encode on demand.")
 
 
 # ── Dataset loading ────────────────────────────────────────────────────────────
@@ -190,6 +228,7 @@ def build_dataframe() -> pd.DataFrame:
 
 
 ensure_dataset()
+ensure_cache()
 print("Loading DAVIS metadata…")
 DF = build_dataframe()
 ALL_SEQUENCES = sorted(DF["sequence"].tolist())
@@ -864,6 +903,27 @@ def build_ui():
                 mv_next.click(_next, [mv_seq_state, mv_page_state],
                               [mv_page_state, mv_page_lbl])
 
+                # ── Cache progress wiring (timer + manual refresh) ────────
+                def _mv_cache_tick():
+                    """Auto-refresh: hides the wait panel and shows the grid when done."""
+                    done_now = _is_cache_complete()
+                    status   = cache_status_md()
+                    return (
+                        status,                                 # mv_wait_status
+                        gr.update(visible=not done_now),        # mv_wait_col
+                        gr.update(visible=done_now),            # mv_grid_col
+                        gr.update(active=not done_now),         # timer — stop when done
+                    )
+
+                mv_refresh_btn.click(_mv_cache_tick,
+                                     outputs=[mv_wait_status, mv_wait_col,
+                                              mv_grid_col, gr.State()])
+
+                mv_timer = gr.Timer(value=4, active=not _initially_done)
+                mv_timer.tick(_mv_cache_tick,
+                              outputs=[mv_wait_status, mv_wait_col,
+                                       mv_grid_col, mv_timer])
+
             # ──────────────────────────────────────────────────────────────
             # Tab 5 · Compare  (up to 6 side-by-side)
             # ──────────────────────────────────────────────────────────────
@@ -1011,10 +1071,14 @@ demo = build_ui()
 start_precache(fps=DEFAULT_FPS, workers=4)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="DAVIS Dataset Explorer")
-    parser.add_argument("--share",  action="store_true")
-    parser.add_argument("--port",   type=int, default=7860)
-    parser.add_argument("--host",   default="0.0.0.0")
-    args = parser.parse_args()
-    demo.launch(server_name=args.host, server_port=args.port,
-                share=args.share, theme=gr.themes.Soft())
+    if IS_HF_SPACE:
+        # HF Spaces runs `python app.py` directly — must bind to 0.0.0.0.
+        demo.launch(server_name="0.0.0.0", server_port=7860, theme=gr.themes.Soft())
+    else:
+        parser = argparse.ArgumentParser(description="DAVIS Dataset Explorer")
+        parser.add_argument("--share", action="store_true")
+        parser.add_argument("--port",  type=int, default=7860)
+        parser.add_argument("--host",  default="0.0.0.0")
+        args = parser.parse_args()
+        demo.launch(server_name=args.host, server_port=args.port,
+                    share=args.share, theme=gr.themes.Soft())
