@@ -68,6 +68,12 @@ else:
 
 DAVIS_ROOT = Path(os.environ.get("DAVIS_ROOT", str(_local_root)))
 
+if IS_HF_SPACE:
+    _processed_default = _hf_base / "DAVIS_processed"
+else:
+    _processed_default = Path("/workspace/diffusion-research/data/processed/DAVIS")
+PROCESSED_DAVIS_DIR = Path(os.environ.get("PROCESSED_DAVIS_DIR", str(_processed_default)))
+
 IMG_DIR  = DAVIS_ROOT / "JPEGImages" / "480p"
 ANN_DIR  = DAVIS_ROOT / "Annotations" / "480p"
 SETS_DIR = DAVIS_ROOT / "ImageSets"
@@ -88,12 +94,6 @@ def _cleanup_stale_tmp() -> None:
             shutil.rmtree(d, ignore_errors=True)
 
 _cleanup_stale_tmp()
-
-_REPO_ROOT = Path(__file__).resolve().parents[2]
-PROCESSED_DAVIS_DIR = Path(os.environ.get(
-    "PROCESSED_DAVIS_DIR",
-    str(_REPO_ROOT / "data" / "processed" / "DAVIS"),
-))
 
 DAVIS_PALETTE = np.array([
     [  0,   0,   0], [128,   0,   0], [  0, 128,   0], [128, 128,   0],
@@ -907,11 +907,13 @@ def build_ui():
                                 value=str(_s_path) if _s_path.exists() else None,
                                 label=f"start · {_vc_label(_start_seq)}",
                                 autoplay=True, loop=True, height=280,
+                                interactive=False,
                             )
                             gr.Video(
                                 value=str(_e_path) if _e_path.exists() else None,
                                 label=f"end · {_vc_label(_end_seq)}",
                                 autoplay=True, loop=True, height=280,
+                                interactive=False,
                             )
 
             # ──────────────────────────────────────────────────────────────
@@ -961,9 +963,12 @@ demo = build_ui()
 start_precache(fps=DEFAULT_FPS, workers=4)
 
 if __name__ == "__main__":
+    _allowed = [str(PROCESSED_DAVIS_DIR)] if PROCESSED_DAVIS_DIR.exists() else []
+
     if IS_HF_SPACE:
         # HF Spaces runs `python app.py` directly — must bind to 0.0.0.0.
-        demo.launch(server_name="0.0.0.0", server_port=7860, theme=gr.themes.Soft())
+        demo.launch(server_name="0.0.0.0", server_port=7860,
+                    theme=gr.themes.Soft(), allowed_paths=_allowed)
     else:
         parser = argparse.ArgumentParser(description="DAVIS Dataset Explorer")
         parser.add_argument("--share", action="store_true")
@@ -971,4 +976,5 @@ if __name__ == "__main__":
         parser.add_argument("--host",  default="0.0.0.0")
         args = parser.parse_args()
         demo.launch(server_name=args.host, server_port=args.port,
-                    share=args.share, theme=gr.themes.Soft())
+                    share=args.share, theme=gr.themes.Soft(),
+                    allowed_paths=_allowed)
