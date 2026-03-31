@@ -22,6 +22,7 @@ To run (from repo root, LTX-2 venv):
     PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \\
     python experiments/exp_016_ltx2_c2v_batch_eval/run.py
 """
+import argparse
 import logging
 import pathlib
 import shutil
@@ -41,8 +42,8 @@ from ltx_pipelines.utils.media_io import encode_video
 
 from diffusion.exp_utils import load_config, next_run_dir, resolve_path, TeeLogger, image_dir_to_tmp_mp4
 
-REPO_ROOT   = pathlib.Path(__file__).resolve().parents[2]
-CONFIG_PATH = pathlib.Path(__file__).parent / "config.yaml"
+REPO_ROOT        = pathlib.Path(__file__).resolve().parents[2]
+DEFAULT_CONFIG   = pathlib.Path(__file__).parent / "config.yaml"
 
 # LTX-2 video VAE temporal downscale factor.
 LTX_TEMPORAL_SCALE = 8
@@ -62,7 +63,12 @@ def compute_clip_frame_idx(num_output_frames: int, num_clip_frames: int) -> tupl
 
 @torch.inference_mode()
 def main() -> None:
-    cfg     = load_config(CONFIG_PATH)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", type=pathlib.Path, default=DEFAULT_CONFIG,
+                        help="Path to config YAML (default: config.yaml)")
+    args = parser.parse_args()
+
+    cfg     = load_config(args.config)
     out_dir = REPO_ROOT / cfg["outputs"]["dir"]
     run_id, run_dir = next_run_dir(out_dir)
 
