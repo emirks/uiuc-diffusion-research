@@ -1,0 +1,69 @@
+model:
+  checkpoint_path: "/workspace/cache/huggingface/hub/models--Lightricks--LTX-2/snapshots/47da56e2ad66ce4125a9922b4a8826bf407f9d0a/ltx-2-19b-dev.safetensors"
+  distilled_lora_path: "/workspace/cache/huggingface/ltx2_models/ltx-2-19b-distilled-lora-384.safetensors"
+  distilled_lora_strength: 0.6
+  spatial_upsampler_path: "/workspace/cache/huggingface/ltx2_models/ltx-2-spatial-upscaler-x2-1.0.safetensors"
+  gemma_root: "/workspace/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
+
+# Sweep over slerp_blend_alphas across 3 selected DAVIS pairs.
+# Videos land in the same sample sub-directory for easy side-by-side comparison.
+samples:
+
+  - sample_id: "class1__blackswan__mallard-water"
+    class: "1_similar_context_similar_category_similar_movement"
+    start_clip: "data/processed/DAVIS/blackswan/2s.mp4"
+    end_clip:   "data/processed/DAVIS/mallard-water/2s.mp4"
+    prompt: >
+      A black swan glides serenely across dark green water near a stone embankment,
+      its elegant neck curved and feathers glistening. The calm reflective surface
+      gradually gives way to a mallard duck paddling through sunlit rippling water,
+      its brown and iridescent green plumage catching the light as concentric
+      ripples spread around it.
+
+  - sample_id: "class2__motocross-bumps__motocross-jump"
+    class: "2_similar_context_similar_category_different_movement"
+    start_clip: "data/processed/DAVIS/motocross-bumps/2s.mp4"
+    end_clip:   "data/processed/DAVIS/motocross-jump/2s.mp4"
+    prompt: >
+      A motocross rider in full protective gear powers aggressively through a rough
+      dirt track, the bike bouncing hard over a series of closely spaced bumps as
+      clumps of earth spray outward. The rough terrain opens into a launch ramp and
+      the rider launches the bike into the air, both wheels leaving the ground in a
+      clean jump against an open sky.
+
+  - sample_id: "class6__longboard__kite-surf"
+    class: "6_different_context_similar_category_different_movement"
+    start_clip: "data/processed/DAVIS/longboard/2s.mp4"
+    end_clip:   "data/processed/DAVIS/kite-surf/2s.mp4"
+    prompt: >
+      A longboarder cruises down a narrow tree-lined road, leaning into a gentle
+      curve as the lush green canopy blurs past on both sides. The road and trees
+      dissolve into open turquoise ocean where a kite surfer carves aggressively
+      across the waves at high speed, a large colorful kite pulling them skyward
+      against a bright blue sky.
+
+inputs:
+  num_clip_frames: 25
+  start_clip_strength: 1.0
+  end_clip_strength: 1.0
+  # Alpha sweep: each value runs all samples → 3 × 3 = 9 videos total.
+  # 1.0 = pure noise (exp_016 baseline), lower = stronger SLERP bias.
+  slerp_blend_alphas: [0.8, 0.5, 0.2]
+  negative_prompt: >
+    blurry, out of focus, overexposed, underexposed, low contrast, washed out colors,
+    excessive noise, grainy texture, poor lighting, flickering, motion blur, distorted
+    proportions, unnatural skin tones, deformed facial features, extra limbs, disfigured
+    hands, artifacts, inconsistent perspective, camera shake, jittery movement, AI artifacts.
+
+inference:
+  height: 512
+  width: 768
+  num_frames: 97
+  frame_rate: 24
+  num_inference_steps: 40
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_019_ltx2_c2v_s2_slerp_sweep"
