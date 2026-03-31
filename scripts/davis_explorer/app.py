@@ -89,6 +89,12 @@ def _cleanup_stale_tmp() -> None:
 
 _cleanup_stale_tmp()
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+PROCESSED_DAVIS_DIR = Path(os.environ.get(
+    "PROCESSED_DAVIS_DIR",
+    str(_REPO_ROOT / "data" / "processed" / "DAVIS"),
+))
+
 DAVIS_PALETTE = np.array([
     [  0,   0,   0], [128,   0,   0], [  0, 128,   0], [128, 128,   0],
     [  0,   0, 128], [128,   0, 128], [  0, 128, 128], [128, 128, 128],
@@ -100,9 +106,34 @@ DAVIS_PALETTE = np.array([
 DEFAULT_FPS   = 24
 DEFAULT_ALPHA = 0.55
 DEFAULT_CRF   = 18
-MAX_COMPARE   = 6      # slots in the Compare tab
-PAGE_SIZE     = 9      # videos per page in Multi-Video tab
-THUMB_W, THUMB_H = 320, 200   # thumbnail dimensions for Gallery
+THUMB_W, THUMB_H = 427, 240   # 16:9 thumbnails (half of 854×480 DAVIS frames)
+
+# ── VC experiment subset ───────────────────────────────────────────────────────
+# Canonical 10-pair evaluation set defined in exp_016/config_davis.yaml and
+# reused verbatim in exp_018 and exp_019.
+# Taxonomy axes: context (similar/different) · category · movement
+VC_SUBSET: list[tuple[str, list[tuple[str, str]]]] = [
+    ("Class 1 — similar context · similar category · similar movement", [
+        ("blackswan",          "mallard-water"),
+    ]),
+    ("Class 2 — similar context · similar category · different movement", [
+        ("paragliding-launch", "paragliding"),
+        ("motocross-bumps",    "motocross-jump"),
+        ("mallard-fly",        "mallard-water"),
+    ]),
+    ("Class 5 — different context · similar category · similar movement", [
+        ("car-roundabout",     "bus"),
+        ("car-turn",           "car-shadow"),
+        ("lucia",              "hike"),
+        ("breakdance-flare",   "breakdance"),
+    ]),
+    ("Class 6 — different context · similar category · different movement", [
+        ("longboard",          "kite-surf"),
+    ]),
+    ("Class 8 — different context · different category · different movement", [
+        ("blackswan",          "boat"),
+    ]),
+]
 
 # ── Dataset download ───────────────────────────────────────────────────────────
 
@@ -514,8 +545,6 @@ def build_ui():
     n_2017  = int(DF["in_2017"].sum())
     _first  = ALL_SEQUENCES[0]
     _first_n = len(_get_frame_paths(_first))
-    total_pages = (len(ALL_SEQUENCES) + PAGE_SIZE - 1) // PAGE_SIZE
-
     with gr.Blocks(title="DAVIS Dataset Explorer") as demo:
 
         gr.Markdown(
@@ -648,14 +677,33 @@ def build_ui():
                 btn_play.click(get_video, [seq_dd, v_ov, v_a, v_fps], [video_out, v_status])
 
             # ──────────────────────────────────────────────────────────────
-            # Tab 3 · Gallery  (thumbnail grid of all sequences)
+            # Tab 3 · Gallery  (toggle up to 4 sequences — videos at top)
             # ──────────────────────────────────────────────────────────────
             with gr.TabItem("🖼 Gallery"):
-                gr.Markdown(
-                    "Thumbnails of all sequences (first frame). "
-                    "Use the filters to narrow down, then **click any thumbnail** "
-                    "to instantly play that sequence below."
+
+                # ── Video playback area (top) ──────────────────────────────
+                g_placeholder = gr.Markdown(
+                    "### 🎬 Choose up to 4 sequences from the gallery below",
+                    visible=True,
                 )
+                g_sel_info = gr.Markdown("", visible=False)
+
+                with gr.Row():
+                    g_vid_0 = gr.Video(visible=False, autoplay=True,
+                                       height=320, label="")
+                    g_vid_1 = gr.Video(visible=False, autoplay=True,
+                                       height=320, label="")
+                with gr.Row():
+                    g_vid_2 = gr.Video(visible=False, autoplay=True,
+                                       height=320, label="")
+                    g_vid_3 = gr.Video(visible=False, autoplay=True,
+                                       height=320, label="")
+
+                g_clr_btn = gr.Button("✕  Clear selection", size="sm", visible=False)
+
+                gr.Markdown("---")
+
+                # ── Filter + video options ─────────────────────────────────
                 with gr.Row():
                     g_year  = gr.Dropdown(["All years","2016 only","2017 only"],
                                            value="All years", label="Year", scale=1)
@@ -666,345 +714,143 @@ def build_ui():
                     g_srch  = gr.Textbox(placeholder="Search…", label="Search", scale=2)
                 with gr.Row():
                     g_fmin = gr.Slider(int(DF["frames"].min()), int(DF["frames"].max()),
-                                       int(DF["frames"].min()), step=1, label="Min frames", scale=3)
+                                       int(DF["frames"].min()), step=1,
+                                       label="Min frames", scale=3)
                     g_fmax = gr.Slider(int(DF["frames"].min()), int(DF["frames"].max()),
-                                       int(DF["frames"].max()), step=1, label="Max frames", scale=3)
+                                       int(DF["frames"].max()), step=1,
+                                       label="Max frames", scale=3)
                 with gr.Row():
-                    g_ov = gr.Checkbox(value=False, label="Show mask overlay on thumbnails")
+                    g_fps    = gr.Slider(1, 30, DEFAULT_FPS, step=1, label="FPS", scale=2)
+                    g_vid_ov = gr.Checkbox(value=True, label="Burn overlay", scale=1)
+                    g_vid_a  = gr.Slider(0.1, 1.0, DEFAULT_ALPHA, step=0.05,
+                                          label="Opacity", scale=2)
+                    g_ov_th  = gr.Checkbox(value=False, label="Overlay on thumbnails",
+                                           scale=1)
 
-                g_count_md = gr.Markdown(f"**{len(ALL_SEQUENCES)} sequences**")
+                g_count_md = gr.Markdown(
+                    f"**{len(ALL_SEQUENCES)} sequences** — click thumbnails to toggle (max 4)"
+                )
 
-                # Gallery component
+                # ── Gallery thumbnails (bottom) ────────────────────────────
                 gallery = gr.Gallery(
                     value=_ALL_THUMBS,
                     label="Sequences",
-                    columns=5,
+                    columns=4,
                     rows=None,
                     height="auto",
                     allow_preview=False,
                     show_label=False,
+                    object_fit="contain",
                 )
 
-                # State holding the sequence names matching current filter (in gallery order)
-                g_seq_state = gr.State(ALL_SEQUENCES.copy())
+                # States
+                g_seq_state      = gr.State(ALL_SEQUENCES.copy())
+                g_selected_state = gr.State([])  # list[str], max 4
 
-                gr.Markdown("---")
-                with gr.Row():
-                    g_info_md  = gr.Markdown("*Click a thumbnail to play.*")
-                with gr.Row():
-                    g_fps      = gr.Slider(1, 30, DEFAULT_FPS, step=1,
-                                            label="FPS", scale=2)
-                    g_vid_ov   = gr.Checkbox(value=True, label="Burn overlay", scale=1)
-                    g_vid_a    = gr.Slider(0.1, 1.0, DEFAULT_ALPHA, step=0.05,
-                                            label="Opacity", scale=2)
-                    g_btn_play = gr.Button("▶  Play selected", variant="primary", scale=1)
-
-                with gr.Column(scale=5):
-                    g_vid_status = gr.Markdown("")
-                g_video = gr.Video(label="Playback", height=400, autoplay=True)
-                g_selected = gr.State("")
-
-                # Filter → rebuild gallery
+                # ── Filter → rebuild gallery ───────────────────────────────
                 g_f_inputs = [g_year, g_split, g_obj, g_fmin, g_fmax, g_srch]
 
                 def _on_g_filter(*args):
-                    ov = args[-1]       # last arg is the overlay checkbox
-                    fargs = args[:-1]   # filter args
+                    ov    = args[-1]
+                    fargs = args[:-1]
                     fdf   = filter_df(*fargs)
                     seqs  = fdf["sequence"].tolist()
                     items = build_gallery_items(seqs, overlay=ov)
-                    return items, seqs, f"**{len(seqs)} sequences**"
+                    return (items, seqs,
+                            f"**{len(seqs)} sequences** — click thumbnails to toggle (max 4)")
 
-                for inp in g_f_inputs + [g_ov]:
-                    inp.change(_on_g_filter, g_f_inputs + [g_ov],
+                for inp in g_f_inputs + [g_ov_th]:
+                    inp.change(_on_g_filter, g_f_inputs + [g_ov_th],
                                [gallery, g_seq_state, g_count_md])
 
-                # Click thumbnail → load info + auto-generate video
-                def _on_gallery_click(evt: gr.SelectData, seqs, ov, a, fps):
-                    if evt is None or not seqs:
-                        return "", gr.update(), None, ""
-                    seq  = seqs[evt.index]
-                    info = _seq_info(seq)
-                    path, status = get_video(seq, ov, a, fps)
-                    return info, seq, path, status
+                # ── Toggle helpers ─────────────────────────────────────────
+                def _build_video_updates(sel_seqs, ov, a, fps):
+                    """Return 4 gr.update() objects for video slots 0-3."""
+                    updates = []
+                    for i in range(4):
+                        if i < len(sel_seqs):
+                            try:
+                                p, _ = get_video(sel_seqs[i], ov, a, fps)
+                                path = str(p) if p else None
+                            except Exception:
+                                path = None
+                            updates.append(gr.update(
+                                visible=True, value=path, label=sel_seqs[i]))
+                        else:
+                            updates.append(gr.update(visible=False, value=None))
+                    return updates
+
+                # ── Gallery click → two-step: fast toggle, then load videos ──
+                # Step 1: update selection state + indicators only (no I/O, <1 ms).
+                # This commits the new state before any video encoding starts,
+                # preventing the "previous-click lag" caused by slow get_video.
+                def _toggle_sel(evt: gr.SelectData, sel_seqs, g_seqs):
+                    if evt is None or not g_seqs:
+                        return (sel_seqs,
+                                gr.update(visible=True),
+                                gr.update(visible=False, value=""),
+                                gr.update(visible=False))
+                    seq = g_seqs[evt.index]
+                    if seq in sel_seqs:
+                        sel_seqs = [s for s in sel_seqs if s != seq]
+                    elif len(sel_seqs) < 4:
+                        sel_seqs = sel_seqs + [seq]
+                    # else: already 4 selected — silently ignore
+
+                    n = len(sel_seqs)
+                    info_txt = ("▶ " +
+                                "  ·  ".join(f"**{s}**" for s in sel_seqs) +
+                                "  *(click a thumbnail to deselect)*") if n > 0 else ""
+                    return (
+                        sel_seqs,
+                        gr.update(visible=(n == 0)),
+                        gr.update(visible=(n > 0), value=info_txt),
+                        gr.update(visible=(n > 0)),
+                    )
+
+                # Step 2: encode / fetch videos for the now-committed selection.
+                def _load_selected(sel_seqs, ov, a, fps):
+                    return _build_video_updates(sel_seqs, ov, a, fps)
 
                 gallery.select(
-                    _on_gallery_click,
-                    inputs=[g_seq_state, g_vid_ov, g_vid_a, g_fps],
-                    outputs=[g_info_md, g_selected, g_video, g_vid_status],
-                )
-                g_btn_play.click(
-                    lambda seq, ov, a, fps: get_video(seq, ov, a, fps),
-                    inputs=[g_selected, g_vid_ov, g_vid_a, g_fps],
-                    outputs=[g_video, g_vid_status],
-                )
-
-            # ──────────────────────────────────────────────────────────────
-            # Tab 4 · Multi-Video  (paged 3×3 grid, all as MP4)
-            # ──────────────────────────────────────────────────────────────
-            with gr.TabItem("📺 Multi-Video"):
-                gr.Markdown(
-                    f"Watch **{PAGE_SIZE} sequences at once** in a 3×3 grid. "
-                    f"Page through all {len(ALL_SEQUENCES)} sequences. "
-                    "Videos are served from the permanent MP4 cache."
+                    _toggle_sel,
+                    inputs=[g_selected_state, g_seq_state],
+                    outputs=[g_selected_state, g_placeholder, g_sel_info, g_clr_btn],
+                ).then(
+                    _load_selected,
+                    inputs=[g_selected_state, g_vid_ov, g_vid_a, g_fps],
+                    outputs=[g_vid_0, g_vid_1, g_vid_2, g_vid_3],
                 )
 
-                # ── Caching-in-progress overlay (hidden once done) ────────
-                _initially_done = _is_cache_complete()
-                with gr.Column(visible=not _initially_done) as mv_wait_col:
-                    gr.Markdown("### ⏳ Building MP4 cache — please wait…")
-                    mv_wait_status = gr.Markdown(cache_status_md())
-                    gr.Markdown(
-                        "All 90 sequences are being encoded as MP4s in the background "
-                        "(raw + overlay variant each). The grid will unlock automatically "
-                        "when encoding finishes. You can watch other tabs in the meantime."
+                # Re-encode when overlay / FPS settings change
+                for _inp in [g_vid_ov, g_vid_a, g_fps]:
+                    _inp.change(
+                        _load_selected,
+                        inputs=[g_selected_state, g_vid_ov, g_vid_a, g_fps],
+                        outputs=[g_vid_0, g_vid_1, g_vid_2, g_vid_3],
                     )
-                    mv_refresh_btn = gr.Button("↻  Refresh status", size="sm")
 
-                # ── Main grid (hidden until cache ready) ──────────────────
-                with gr.Column(visible=_initially_done) as mv_grid_col:
-                    with gr.Row():
-                        mv_year  = gr.Dropdown(["All years","2016 only","2017 only"],
-                                                value="All years", label="Year", scale=1)
-                        mv_split = gr.Dropdown(["All splits","Train only","Val only"],
-                                                value="All splits", label="Split", scale=1)
-                        mv_obj   = gr.Dropdown(["Any # objects","1 object","2 objects","3+ objects"],
-                                                value="Any # objects", label="Objects", scale=1)
-                        mv_srch  = gr.Textbox(placeholder="Search…", label="Search", scale=2)
-                    with gr.Row():
-                        mv_fps  = gr.Slider(1, 30, DEFAULT_FPS, step=1, label="FPS", scale=2)
-                        mv_ov   = gr.Checkbox(value=True, label="Burn overlay", scale=1)
-                        mv_a    = gr.Slider(0.1, 1.0, DEFAULT_ALPHA, step=0.05,
-                                             label="Opacity", scale=2)
-                        mv_load = gr.Button("▶  Load Page", variant="primary", scale=1)
-
-                    with gr.Row():
-                        mv_prev = gr.Button("◀  Prev", scale=1)
-                        with gr.Column(scale=3):
-                            mv_page_lbl = gr.Markdown(f"**Page 1 / {total_pages}**")
-                        mv_next = gr.Button("Next  ▶", scale=1)
-
-                    mv_status = gr.Markdown("")
-
-                    # 9 fixed video slots, 3 rows × 3 cols
-                    mv_vids  = []
-                    mv_lbls  = []
-                    for row_i in range(3):
-                        with gr.Row():
-                            for col_i in range(3):
-                                with gr.Column():
-                                    lbl = gr.Markdown("—")
-                                    vid = gr.Video(height=260, autoplay=True, label="")
-                                    mv_lbls.append(lbl)
-                                    mv_vids.append(vid)
-
-                # State: list of sequences currently matching filter, page index
-                mv_seq_state  = gr.State(ALL_SEQUENCES.copy())
-                mv_page_state = gr.State(0)
-
-                def _mv_filter(*args):
-                    fdf  = filter_df(*args)
-                    seqs = fdf["sequence"].tolist()
-                    tp   = max(1, (len(seqs) + PAGE_SIZE - 1) // PAGE_SIZE)
-                    return seqs, 0, f"**Page 1 / {tp}**"
-
-                mv_f_inputs = [mv_year, mv_split, mv_obj,
-                               gr.Slider(int(DF["frames"].min()), int(DF["frames"].max()),
-                                         int(DF["frames"].min()), step=1, label=""),
-                               gr.Slider(int(DF["frames"].min()), int(DF["frames"].max()),
-                                         int(DF["frames"].max()), step=1, label=""),
-                               mv_srch]
-
-                # Simpler: just use the three dropdowns + search for multi-video filter
-                def _mv_filter_simple(yr, sp, ob, sr):
-                    fdf  = filter_df(yr, sp, ob,
-                                     int(DF["frames"].min()), int(DF["frames"].max()), sr)
-                    seqs = fdf["sequence"].tolist()
-                    tp   = max(1, (len(seqs) + PAGE_SIZE - 1) // PAGE_SIZE)
-                    return seqs, 0, f"**Page 1 / {tp}**"
-
-                mv_simple_f = [mv_year, mv_split, mv_obj, mv_srch]
-                for inp in mv_simple_f:
-                    inp.change(_mv_filter_simple, mv_simple_f,
-                               [mv_seq_state, mv_page_state, mv_page_lbl])
-
-                def _load_page(seqs, page, ov, a, fps):
-                    # Block if pre-cache not yet finished
-                    if not _is_cache_complete():
-                        with _cache_lock:
-                            done = sum(1 for v in _cache_progress.values() if v == "done")
-                        total = len(ALL_SEQUENCES)
-                        pct   = int(done / total * 100) if total else 0
-                        bar   = "█" * (pct // 5) + "░" * (20 - pct // 5)
-                        status = (f"⏳ `[{bar}]` {done}/{total} sequences cached ({pct}%) — "
-                                  "please wait for caching to finish then click Load Page again.")
-                        out = []
-                        for _ in range(PAGE_SIZE):
-                            out.append("—")
-                            out.append(None)
-                        out.append(status)
-                        out.append(f"**Page {page + 1} / ?**")
-                        return out
-
-                    start  = page * PAGE_SIZE
-                    chunk  = seqs[start: start + PAGE_SIZE]
-                    tp     = max(1, (len(seqs) + PAGE_SIZE - 1) // PAGE_SIZE)
-                    pg_lbl = f"**Page {page + 1} / {tp}**"
-
-                    # Sequential — encode_sequence() returns in <1 ms when already cached
-                    res, lbs = [], []
-                    for s in chunk:
-                        try:
-                            p, _ = get_video(s, ov, a, fps)
-                            res.append(str(p) if p else None)
-                        except Exception:
-                            res.append(None)
-                        lbs.append(s)
-
-                    while len(res) < PAGE_SIZE:   # pad
-                        res.append(None); lbs.append("—")
-
-                    n_loaded = sum(1 for r in res if r)
-                    status   = f"✅ {n_loaded}/{len(chunk)} videos loaded (page {page+1}/{tp})"
-
-                    out = []
-                    for lb, r in zip(lbs, res):
-                        out.append(f"**{lb}**" if lb and lb != "—" else "—")
-                        out.append(r)
-                    out.append(status)
-                    out.append(pg_lbl)
-                    return out
-
-                mv_page_outputs = []
-                for l, v in zip(mv_lbls, mv_vids):
-                    mv_page_outputs.append(l)
-                    mv_page_outputs.append(v)
-                mv_page_outputs.append(mv_status)
-                mv_page_outputs.append(mv_page_lbl)
-
-                mv_load.click(
-                    _load_page,
-                    inputs=[mv_seq_state, mv_page_state, mv_ov, mv_a, mv_fps],
-                    outputs=mv_page_outputs,
-                )
-
-                def _prev(seqs, page):
-                    new_p = max(0, page - 1)
-                    tp    = max(1, (len(seqs) + PAGE_SIZE - 1) // PAGE_SIZE)
-                    return new_p, f"**Page {new_p+1} / {tp}**"
-
-                def _next(seqs, page):
-                    tp    = max(1, (len(seqs) + PAGE_SIZE - 1) // PAGE_SIZE)
-                    new_p = min(tp - 1, page + 1)
-                    return new_p, f"**Page {new_p+1} / {tp}**"
-
-                mv_prev.click(_prev, [mv_seq_state, mv_page_state],
-                              [mv_page_state, mv_page_lbl])
-                mv_next.click(_next, [mv_seq_state, mv_page_state],
-                              [mv_page_state, mv_page_lbl])
-
-                # ── Cache progress wiring (timer + manual refresh) ────────
-                def _mv_cache_tick():
-                    """Auto-refresh: hides the wait panel and shows the grid when done."""
-                    done_now = _is_cache_complete()
-                    status   = cache_status_md()
+                # Clear selection button
+                def _clear_selection():
                     return (
-                        status,                                 # mv_wait_status
-                        gr.update(visible=not done_now),        # mv_wait_col
-                        gr.update(visible=done_now),            # mv_grid_col
-                        gr.update(active=not done_now),         # timer — stop when done
+                        [],
+                        gr.update(visible=True),
+                        gr.update(visible=False, value=""),
+                        gr.update(visible=False, value=None),
+                        gr.update(visible=False, value=None),
+                        gr.update(visible=False, value=None),
+                        gr.update(visible=False, value=None),
+                        gr.update(visible=False),
                     )
 
-                mv_refresh_btn.click(_mv_cache_tick,
-                                     outputs=[mv_wait_status, mv_wait_col,
-                                              mv_grid_col, gr.State()])
-
-                mv_timer = gr.Timer(value=4, active=not _initially_done)
-                mv_timer.tick(_mv_cache_tick,
-                              outputs=[mv_wait_status, mv_wait_col,
-                                       mv_grid_col, mv_timer])
-
-            # ──────────────────────────────────────────────────────────────
-            # Tab 5 · Compare  (up to 6 side-by-side)
-            # ──────────────────────────────────────────────────────────────
-            with gr.TabItem("⚖️ Compare"):
-                gr.Markdown(
-                    "Pick up to **6 sequences**, set FPS/overlay, "
-                    "then **Load All** — encoded in parallel and cached."
+                g_clr_btn.click(
+                    _clear_selection,
+                    outputs=[g_selected_state, g_placeholder, g_sel_info,
+                             g_vid_0, g_vid_1, g_vid_2, g_vid_3, g_clr_btn],
                 )
-                with gr.Row():
-                    cmp_fps = gr.Slider(1, 30, DEFAULT_FPS, step=1, label="FPS", scale=2)
-                    cmp_ov  = gr.Checkbox(value=True, label="Burn overlay", scale=1)
-                    cmp_a   = gr.Slider(0.1, 1.0, DEFAULT_ALPHA, step=0.05,
-                                         label="Opacity", scale=2)
-                    cmp_btn = gr.Button("▶  Load All", variant="primary", scale=1)
-
-                cmp_dds  = []
-                cmp_vids = []
-                cmp_lbls = []
-                default_seqs = (ALL_SEQUENCES + [None] * MAX_COMPARE)[:MAX_COMPARE]
-
-                for row_i in range(2):
-                    with gr.Row():
-                        for col_i in range(3):
-                            si = row_i * 3 + col_i
-                            with gr.Column():
-                                dd  = gr.Dropdown([""] + ALL_SEQUENCES,
-                                                   value=default_seqs[si] or "",
-                                                   label=f"Slot {si+1}")
-                                vid = gr.Video(height=270, autoplay=True, label="")
-                                lbl = gr.Markdown(
-                                    f"*{default_seqs[si]}*" if default_seqs[si] else "*empty*")
-                                cmp_dds.append(dd)
-                                cmp_vids.append(vid)
-                                cmp_lbls.append(lbl)
-
-                cmp_status = gr.Markdown("")
-
-                cmp_outputs = []
-                for v, l in zip(cmp_vids, cmp_lbls):
-                    cmp_outputs.append(v)
-                    cmp_outputs.append(l)
-                cmp_outputs.append(cmp_status)
-
-                def _load_all(*args):
-                    ov, a, fps = args[0], args[1], args[2]
-                    slots = list(args[3:])
-                    res   = [None] * MAX_COMPARE
-                    lbs   = [""] * MAX_COMPARE
-
-                    # Sequential — fast when pre-cached, safe in all environments
-                    for i, seq in enumerate(slots):
-                        if seq:
-                            try:
-                                p, _ = get_video(seq, ov, a, fps)
-                                res[i] = str(p) if p else None
-                            except Exception:
-                                res[i] = None
-                            lbs[i] = seq
-
-                    n_ok = sum(1 for r in res if r)
-                    out  = []
-                    for r, l in zip(res, lbs):
-                        out.append(r)
-                        out.append(f"**{l}**" if l else "*empty*")
-                    out.append(f"✅ {n_ok}/{len([s for s in slots if s])} slots loaded")
-                    return out
-
-                cmp_btn.click(_load_all,
-                              inputs=[cmp_ov, cmp_a, cmp_fps] + cmp_dds,
-                              outputs=cmp_outputs)
-
-                for i, (dd, vid, lbl) in enumerate(zip(cmp_dds, cmp_vids, cmp_lbls)):
-                    def _mk(idx):
-                        def _single(seq, ov, a, fps):
-                            p, _ = get_video(seq, ov, a, fps)
-                            return p, f"**{seq}**" if seq else "*empty*"
-                        return _single
-                    dd.change(_mk(i), [dd, cmp_ov, cmp_a, cmp_fps], [vid, lbl])
 
             # ──────────────────────────────────────────────────────────────
-            # Tab 6 · Statistics
+            # Tab 4 · Statistics
             # ──────────────────────────────────────────────────────────────
             with gr.TabItem("📊 Statistics"):
                 gr.Markdown("### Dataset Overview")
@@ -1025,7 +871,51 @@ def build_ui():
 """)
 
             # ──────────────────────────────────────────────────────────────
-            # Tab 7 · About
+            # Tab 5 · VC Subset
+            # ──────────────────────────────────────────────────────────────
+            with gr.TabItem("🔬 VC Subset"):
+                gr.Markdown(
+                    "### DAVIS VC Experiment Subset — 10 Pairs\n"
+                    "Canonical evaluation set used across **exp_016 / exp_018 / exp_019**.  \n"
+                    "Each clip is `data/processed/DAVIS/<seq>/2s.mp4` — 48 frames @ 24 fps.  \n\n"
+                    "**Class taxonomy** (context · category · movement):\n\n"
+                    "| Class | Context | Category | Movement | # Pairs |\n"
+                    "|-------|---------|----------|----------|---------|\n"
+                    "| 1 | similar | similar | similar | 1 |\n"
+                    "| 2 | similar | similar | different | 3 |\n"
+                    "| 3 | similar | different | similar | 0 |\n"
+                    "| 4 | similar | different | different | 0 |\n"
+                    "| 5 | different | similar | similar | 4 |\n"
+                    "| 6 | different | similar | different | 1 |\n"
+                    "| 7 | different | different | similar | 0 |\n"
+                    "| 8 | different | different | different | 1 |"
+                )
+
+                def _vc_label(seq: str) -> str:
+                    if seq not in ALL_SEQUENCES:
+                        return seq
+                    r = DF[DF["sequence"] == seq].iloc[0]
+                    return f"{seq}  [{r['frames']}f · {r['n_objects']}obj]"
+
+                for _cls_label, _pairs in VC_SUBSET:
+                    gr.Markdown(f"---\n#### {_cls_label}")
+                    for _start_seq, _end_seq in _pairs:
+                        _s_path = PROCESSED_DAVIS_DIR / _start_seq / "2s.mp4"
+                        _e_path = PROCESSED_DAVIS_DIR / _end_seq   / "2s.mp4"
+                        with gr.Row():
+                            gr.Video(
+                                value=str(_s_path) if _s_path.exists() else None,
+                                label=f"start · {_vc_label(_start_seq)}",
+                                autoplay=True, loop=True, height=280,
+                            )
+                            gr.Video(
+                                value=str(_e_path) if _e_path.exists() else None,
+                                label=f"end · {_vc_label(_end_seq)}",
+                                autoplay=True, loop=True, height=280,
+                            )
+
+            # ──────────────────────────────────────────────────────────────
+            # Tab 6 · About
             # ──────────────────────────────────────────────────────────────
             with gr.TabItem("ℹ️ About"):
                 gr.Markdown(f"""
