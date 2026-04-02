@@ -135,6 +135,14 @@ VC_SUBSET: list[tuple[str, list[tuple[str, str]]]] = [
     ]),
 ]
 
+# Per-sequence frame-window overrides for the 2s subset clip.
+# Mirrors the CLIP_OVERRIDES in scripts/export_davis_clips.py.
+# Format: (start_frame, end_frame_inclusive) — negative = from end of sequence.
+_VC_CLIP_OVERRIDES: dict[str, tuple[int, int | None]] = {
+    "motocross-bumps": (-48, None),   # last 48 frames
+    "mallard-fly":     (8,   55),     # frames 8–55 inclusive
+}
+
 # ── Dataset download ───────────────────────────────────────────────────────────
 
 HF_CACHE_REPO = "emirkisa/DAVIS-2017-480p-mp4"    # pre-encoded MP4s
@@ -268,6 +276,25 @@ print(f"  {len(DF)} sequences  ·  frames {DF['frames'].min()}–{DF['frames'].m
 
 DISPLAY_COLS = ["sequence", "frames", "n_objects", "resolution", "split"]
 
+
+def _vc_default_interval(seq: str) -> tuple[int, int]:
+    """Return (start_frame, end_frame_inclusive) for the 2s subset clip of seq."""
+    row = DF[DF["sequence"] == seq]
+    total = int(row.iloc[0]["frames"]) if not row.empty else 48
+    raw = _VC_CLIP_OVERRIDES.get(seq)
+    if raw is None:
+        return 0, min(47, total - 1)
+    s_raw, e_raw = raw
+    s = (total + s_raw) if s_raw < 0 else s_raw
+    s = max(0, min(s, total - 1))
+    if e_raw is None:
+        e = min(s + 47, total - 1)
+    else:
+        e = (total + e_raw) if e_raw < 0 else e_raw
+        e = max(0, min(e, total - 1))
+    return s, e
+
+
 # ── Frame helpers ──────────────────────────────────────────────────────────────
 
 @lru_cache(maxsize=16)
@@ -368,6 +395,35 @@ def get_video(seq: str, overlay: bool, alpha: float, fps: int) -> tuple[str | No
         return str(p), f"✅ **{seq}** · {n} frames · {fps} fps · {mode} · {size} KB"
     except Exception as e:
         return None, f"❌ {e}"
+
+
+def encode_sequence_range(seq: str, start: int, end_incl: int, fps: int) -> Path:
+    """Encode frames [start, end_incl] of a DAVIS sequence to MP4.
+
+    Reads directly from raw DAVIS JPEGs so it works on HF Spaces (no processed
+    clips needed). Output is cached in CACHE_DIR by (seq, start, num_frames, fps).
+    """
+    num = max(1, end_incl - start + 1)
+    out = CACHE_DIR / f"{seq}_vc{start:05d}n{num:03d}_{fps}fps.mp4"
+    if out.exists():
+        return out
+    if not _get_frame_paths(seq):
+        raise FileNotFoundError(f"No frames for {seq}")
+    cmd = [
+        "ffmpeg", "-y",
+        "-framerate", str(fps),
+        "-start_number", str(start),
+        "-i", str(IMG_DIR / seq / "%05d.jpg"),
+        "-frames:v", str(num),
+        "-c:v", "libx264", "-preset", "fast", "-pix_fmt", "yuv420p",
+        "-crf", str(DEFAULT_CRF), "-movflags", "+faststart",
+        "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2",
+        str(out),
+    ]
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    if r.returncode != 0:
+        raise RuntimeError(r.stderr[-600:])
+    return out
 
 
 # ── Background pre-cache ───────────────────────────────────────────────────────
@@ -877,7 +933,9 @@ def build_ui():
                 gr.Markdown(
                     "### DAVIS VC Experiment Subset — 10 Pairs\n"
                     "Canonical evaluation set used across **exp_016 / exp_018 / exp_019**.  \n"
-                    "Each clip is `data/processed/DAVIS/<seq>/2s.mp4` — 48 frames @ 24 fps.  \n\n"
+                    "Clips are encoded on demand from raw DAVIS JPEGs — "
+                    "default intervals match the experiment subset. "
+                    "Drag the frame sliders to change the window; video re-encodes on release.  \n\n"
                     "**Class taxonomy** (context · category · movement):\n\n"
                     "| Class | Context | Category | Movement | # Pairs |\n"
                     "|-------|---------|----------|----------|---------|\n"
@@ -897,24 +955,64 @@ def build_ui():
                     r = DF[DF["sequence"] == seq].iloc[0]
                     return f"{seq}  [{r['frames']}f · {r['n_objects']}obj]"
 
+                def _make_vc_encode(seq: str):
+                    def _fn(start, end):
+                        try:
+                            p = encode_sequence_range(seq, int(start), int(end), DEFAULT_FPS)
+                            return str(p)
+                        except Exception:
+                            return None
+                    return _fn
+
                 for _cls_label, _pairs in VC_SUBSET:
                     gr.Markdown(f"---\n#### {_cls_label}")
                     for _start_seq, _end_seq in _pairs:
-                        _s_path = PROCESSED_DAVIS_DIR / _start_seq / "2s.mp4"
-                        _e_path = PROCESSED_DAVIS_DIR / _end_seq   / "2s.mp4"
+                        _s_total = (int(DF[DF["sequence"] == _start_seq].iloc[0]["frames"])
+                                    if _start_seq in ALL_SEQUENCES else 80)
+                        _e_total = (int(DF[DF["sequence"] == _end_seq].iloc[0]["frames"])
+                                    if _end_seq in ALL_SEQUENCES else 80)
+                        _s_def = _vc_default_interval(_start_seq)
+                        _e_def = _vc_default_interval(_end_seq)
+
+                        try:
+                            _s_val = str(encode_sequence_range(
+                                _start_seq, _s_def[0], _s_def[1], DEFAULT_FPS))
+                        except Exception:
+                            _s_val = None
+                        try:
+                            _e_val = str(encode_sequence_range(
+                                _end_seq, _e_def[0], _e_def[1], DEFAULT_FPS))
+                        except Exception:
+                            _e_val = None
+
                         with gr.Row():
-                            gr.Video(
-                                value=str(_s_path) if _s_path.exists() else None,
-                                label=f"start · {_vc_label(_start_seq)}",
-                                autoplay=True, loop=True, height=280,
-                                interactive=False,
-                            )
-                            gr.Video(
-                                value=str(_e_path) if _e_path.exists() else None,
-                                label=f"end · {_vc_label(_end_seq)}",
-                                autoplay=True, loop=True, height=280,
-                                interactive=False,
-                            )
+                            with gr.Column():
+                                _s_vid = gr.Video(
+                                    value=_s_val,
+                                    label=f"start · {_vc_label(_start_seq)}",
+                                    interactive=False, autoplay=True, loop=True, height=260,
+                                )
+                                _s_start_sl = gr.Slider(
+                                    0, _s_total - 1, _s_def[0], step=1, label="Start frame")
+                                _s_end_sl = gr.Slider(
+                                    0, _s_total - 1, _s_def[1], step=1, label="End frame")
+                            with gr.Column():
+                                _e_vid = gr.Video(
+                                    value=_e_val,
+                                    label=f"end · {_vc_label(_end_seq)}",
+                                    interactive=False, autoplay=True, loop=True, height=260,
+                                )
+                                _e_start_sl = gr.Slider(
+                                    0, _e_total - 1, _e_def[0], step=1, label="Start frame")
+                                _e_end_sl = gr.Slider(
+                                    0, _e_total - 1, _e_def[1], step=1, label="End frame")
+
+                        _s_fn = _make_vc_encode(_start_seq)
+                        _e_fn = _make_vc_encode(_end_seq)
+                        _s_start_sl.release(_s_fn, [_s_start_sl, _s_end_sl], _s_vid)
+                        _s_end_sl.release(_s_fn, [_s_start_sl, _s_end_sl], _s_vid)
+                        _e_start_sl.release(_e_fn, [_e_start_sl, _e_end_sl], _e_vid)
+                        _e_end_sl.release(_e_fn, [_e_start_sl, _e_end_sl], _e_vid)
 
             # ──────────────────────────────────────────────────────────────
             # Tab 6 · About
