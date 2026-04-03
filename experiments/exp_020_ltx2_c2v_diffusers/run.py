@@ -1,25 +1,31 @@
-"""exp_020 — LTX-2 C2V — simplest implementation using official diffusers API.
+"""exp_020 — LTX-2 C2V — minimal VC aligned with diffusers *Condition Pipeline Generation*.
 
-Two-stage pipeline following the official HuggingFace diffusers LTX-2 docs:
-  https://huggingface.co/docs/diffusers/main/en/api/pipelines/ltx2
+Canonical doc (same page, two sections combined):
+  https://github.com/huggingface/diffusers/blob/main/docs/source/en/api/pipelines/ltx2.md
 
-Stage 1  LTX2ConditionPipeline  — base model, non-distilled, guidance_scale=4.0
-         conditioning: LTX2VideoCondition(frames=list[PIL], index, strength=1.0)
-         output: latent at config height×width (512×768)
-         [Maps to LTX2Pipeline in the docs T2V example; LTX2ConditionPipeline
-          is used here to support the `conditions` parameter.]
+  • **#condition-pipeline-generation** — `LTX2ConditionPipeline`, `LTX2VideoCondition`,
+    `pipe.vae.enable_tiling()` right after CPU offload, two-stage FLF2V-style Stage 2
+    kwargs (`width=width*2`, `height=height*2`, `num_inference_steps=3`,
+    `sigmas=STAGE_2_DISTILLED_SIGMA_VALUES`, `generator=…`, `guidance_scale=1.0`).
+    VC here = two *video* conditions (start clip @ 0, end clip @ end_idx), not FLF2V images.
 
-Upsample LTX2LatentUpsamplePipeline — ×2 spatial, latent → latent (1024×1536)
+  • **#two-stages-generation** (same file) — `Lightricks/LTX-2` base + Stage 2 distilled
+    LoRA from Hub, Stage 1 non-distilled (`sigmas=None`, `guidance_scale=4.0`), and
+    `noise_scale` on Stage 2 as in that T2V snippet.  At `guidance_scale=1.0`, CFG is off
+    (`do_classifier_free_guidance` is False), so `negative_prompt` on Stage 2 has no effect
+    — we omit it there; Stage 1 still passes it with CFG.
 
-Stage 2  LTX2ConditionPipeline  — distilled LoRA, guidance_scale=1.0
-         sigmas=STAGE_2_DISTILLED_SIGMA_VALUES, 3 steps
-         No conditions re-passed; height/width/num_frames inferred from latent.
-         output: pixel frames at 1024×1536
+Setup order: Condition Pipeline block (offload → tiling) → Two-stages block (load LoRA,
+stage-2 scheduler) → latent upsampler — see comments in `main()`.
+
+Stage 2 spatial: `width=width*2`, `height=height*2` are required for `LTX2ConditionPipeline`
+(mask built from pixel `height`/`width`; not inferred from latents alone).
 
 Conditioning index for end clip (multi-frame):
-  end_clip_index = latent_num_frames - clip_latent_frames
-  For 97 output frames (13 lat) and 25 clip frames (4 lat): index = 9.
-  Using index=-1 is WRONG for multi-frame clips — it trims to a single latent.
+  end_clip_index = latent_num_frames - clip_latent_frames  (121 px → 16 lat, 25 px clip → 4 lat → index 12)
+  index=-1 would trim a multi-frame clip to one latent — do not use for VC.
+
+Memory: `enable_model_cpu_offload` (whole components), not `enable_sequential_cpu_offload`.
 
 How to run:
     source /workspace/miniforge3/etc/profile.d/conda.sh
@@ -148,37 +154,37 @@ def main() -> None:
             (num_clip_frames - 1) // LTX_TEMPORAL_SCALE + 1,
         )
 
-        # ── Load pipeline — follows official docs two-stage pattern exactly ──
-        # https://huggingface.co/docs/diffusers/main/en/api/pipelines/ltx2
-        # LTX2ConditionPipeline replaces LTX2Pipeline from the docs T2V example;
-        # everything else is a 1-to-1 mapping of the documented setup order.
+        # ── Condition Pipeline Generation (ltx2.md): load → offload → tiling ──
+        # https://github.com/huggingface/diffusers/blob/main/docs/source/en/api/pipelines/ltx2.md#condition-pipeline-generation
+        # Doc uses enable_sequential_cpu_offload; we use enable_model_cpu_offload (whole components).
         log.info("Loading LTX2ConditionPipeline from %s …", model_id)
         t0   = time.perf_counter()
         pipe = LTX2ConditionPipeline.from_pretrained(model_id, torch_dtype=torch.bfloat16)
-        pipe.enable_sequential_cpu_offload(device=DEVICE)
+        # Whole-component offload (see DiffusionPipeline.enable_model_cpu_offload docstring).
+        pipe.enable_model_cpu_offload(device=DEVICE)
+        pipe.vae.enable_tiling()
         log.info("Pipeline loaded in %.1fs.", time.perf_counter() - t0)
 
         # Keep the default stage-1 scheduler so it can be restored each sample.
         stage1_scheduler = pipe.scheduler
 
-        # Docs order: load LoRA → enable_tiling → build stage-2 scheduler.
-        # Pre-loaded once here; toggled per stage via disable_lora / enable_lora.
-        log.info("Loading distilled LoRA …")
+        # ── Two-stages Generation (same doc page): LoRA + Stage-2 scheduler ──
+        # https://github.com/huggingface/diffusers/blob/main/docs/source/en/api/pipelines/ltx2.md#two-stages-generation
+        # FLF2V Condition example uses a fully-distilled checkpoint without extra LoRA; for
+        # Lightricks/LTX-2 we attach Stage-2 distilled LoRA here (T2V snippet weight_name).
+        log.info("Loading distilled LoRA (Stage 2) …")
         pipe.load_lora_weights(
             model_id,
             adapter_name="stage_2_distilled",
             weight_name="ltx-2-19b-distilled-lora-384.safetensors",
         )
         pipe.set_adapters("stage_2_distilled", lora_strength)
-        # VAE tiling for high-res decode — docs call this after load_lora_weights.
-        pipe.vae.enable_tiling()
 
-        # Stage-2 scheduler: disable dynamic shifting (required for distilled sigmas).
         stage2_scheduler = FlowMatchEulerDiscreteScheduler.from_config(
             pipe.scheduler.config, use_dynamic_shifting=False, shift_terminal=None
         )
 
-        # Spatial upsampler (×2 each spatial dim, latent → latent).
+        # Spatial upsampler (×2 each spatial dim, latent → latent) — matches T2V two-stage snippet.
         log.info("Loading spatial upsampler …")
         latent_upsampler = LTX2LatentUpsamplerModel.from_pretrained(
             model_id, subfolder="latent_upsampler", torch_dtype=torch.bfloat16
@@ -222,6 +228,7 @@ def main() -> None:
             pipe.disable_lora()
             log.info("Stage 1: %dx%d  %d steps  guidance=%.1f", height, width, num_steps, guidance_scale)
 
+            # Stage 1: Two-stages Generation defaults (non-distilled CFG), not the distilled 8-step FLF2V Stage 1.
             video_latent, audio_latent = pipe(
                 conditions=conditions,
                 prompt=prompt,
@@ -233,6 +240,7 @@ def main() -> None:
                 num_inference_steps=num_steps,
                 sigmas=None,
                 guidance_scale=guidance_scale,
+                generator=generator,
                 output_type="latent",
                 return_dict=False,
             )
@@ -246,23 +254,24 @@ def main() -> None:
             log.info("Upsample done in %.1fs.", time.perf_counter() - t_up)
 
             # ── Stage 2: distilled LoRA, 3 steps ─────────────────────────────
-            # Docs pattern:
-            #   guidance_scale=1.0  — distilled checkpoint needs no CFG
-            #   noise_scale=STAGE_2_DISTILLED_SIGMA_VALUES[0]  — renoise before refine
-            #   No explicit height/width/num_frames — inferred from upscaled latent
+            # Condition Pipeline FLF2V + Two-stages T2V: noise_scale from T2V (renoise); no negative_prompt
+            # at guidance_scale=1.0 (CFG disabled — see pipeline do_classifier_free_guidance).
             pipe.scheduler = stage2_scheduler
             pipe.enable_lora()
-            log.info("Stage 2: 3 steps  guidance=1.0 (distilled LoRA)")
+            log.info("Stage 2: 3 steps  guidance=1.0  %dx%d (distilled LoRA)", width * 2, height * 2)
             t_s2 = time.perf_counter()
 
             video, audio = pipe(
                 latents=upscaled_latent,
                 audio_latents=audio_latent,
                 prompt=prompt,
-                negative_prompt=negative_prompt,
+                width=width * 2,
+                height=height * 2,
+                num_frames=num_frames,  # doc examples omit (default 121); explicit if config changes
                 num_inference_steps=3,
                 noise_scale=STAGE_2_DISTILLED_SIGMA_VALUES[0],
                 sigmas=STAGE_2_DISTILLED_SIGMA_VALUES,
+                generator=generator,
                 guidance_scale=1.0,
                 output_type="np",
                 return_dict=False,

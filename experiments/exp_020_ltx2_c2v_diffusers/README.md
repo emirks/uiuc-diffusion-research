@@ -1,86 +1,90 @@
-# exp_020 — LTX-2 C2V Diffusers Migration
+# exp_020 — LTX-2 C2V (HuggingFace Diffusers)
+
+## What this is
+
+Clip-to-video (C2V) on DAVIS pairs using **`diffusers`** pipelines only — not the vendored
+`src/LTX-2/` Python package or the [Lightricks/LTX-2](https://github.com/Lightricks/LTX-2)
+application repo. Weights are loaded from the Hugging Face Hub checkpoint
+[`Lightricks/LTX-2`](https://huggingface.co/Lightricks/LTX-2) via `from_pretrained`, but
+**the API, call signatures, and behaviour** follow the official Diffusers documentation:
+
+- [LTX-2 pipelines (diffusers)](https://huggingface.co/docs/diffusers/main/en/api/pipelines/ltx2)
+- Doc layout this experiment follows: [**Condition Pipeline Generation**](https://github.com/huggingface/diffusers/blob/main/docs/source/en/api/pipelines/ltx2.md#condition-pipeline-generation) (conditions API, offload → tiling, Stage 2 spatial) plus [**Two-stages Generation**](https://github.com/huggingface/diffusers/blob/main/docs/source/en/api/pipelines/ltx2.md#two-stages-generation) (non-distilled Stage 1 + Hub distilled LoRA for Stage 2). `run.py` uses **`enable_model_cpu_offload`**, not sequential offload.
+- Source in-tree: `diffusers.pipelines.ltx2` (installed via `pip install diffusers`)
+
+---
 
 ## Question
 
-Can the official **HuggingFace diffusers** `LTX2ConditionPipeline` reproduce the same
-clip-to-video (C2V) results as our vendored `KeyframeInterpolationPipeline` (exp_016)?
-What are the practical differences between the two conditioning APIs?
+Can **`LTX2ConditionPipeline`** in **diffusers** reproduce the same C2V-style behaviour as
+our vendored `KeyframeInterpolationPipeline` (exp_016)? What differs between the two
+conditioning APIs?
 
 ---
 
-## Setup
+## Setup (matches `run.py` + `config.yaml`)
 
-- **Pipeline**: `LTX2ConditionPipeline` from `diffusers` (official HF library).
-- **Conditioning API**: `LTX2VideoCondition(frames=<list[PIL]>, index=<latent_idx>, strength=1.0)`
-  — passed as `conditions=[start_cond, end_cond]` to both Stage 1 and Stage 2.
-- **Frame loading**: DAVIS JPEG directories loaded directly as PIL frames (no temporary MP4
-  needed, unlike exp_016).
-- **Samples**: identical 6-pair DAVIS subset from exp_016 — 3 easy + 3 hard pairs.
-- **Inference**: 97 frames @ 24 fps (≈ 4 s), 512 × 768, seed 42.
-  - Stage 1: 40 steps at 256 × 384 (half resolution).
-  - Upsample: `LTX2LatentUpsamplePipeline` × 2.
-  - Stage 2: 3 steps at 512 × 768 with distilled LoRA.
-- **Guidance** (identical to exp_016):
-  - Video: CFG 3.0 / STG 1.0 / modality 3.0 / rescale 0.7 / STG-block [29]
-  - Audio: CFG 7.0 / STG 1.0 / modality 3.0 / rescale 0.7
+- **Library**: HuggingFace **`diffusers`** (+ **`accelerate`** for CPU offload, **`peft`** for LoRA loading).
+- **Pipeline**: `LTX2ConditionPipeline` — see docs link above.
+- **Conditioning**: `LTX2VideoCondition(frames=<list[PIL]>, index=<latent_idx>, strength=…)` as
+  `conditions=[start_cond, end_cond]` on **Stage 1** only; Stage 2 refines upsampled latents
+  (same pattern as the FLF2V two-stage example in the diffusers docs).
+- **Inputs**: DAVIS **`start_clip` / `end_clip` MP4s** under `data/processed/DAVIS/` (same pairs as
+  exp_016 `config_davis.yaml`).
+- **Inference** (defaults in `config.yaml`):
+  - **121** frames @ 24 fps (official LTX-2 default in the diffusers docs), **512 × 768** Stage 1;
+    latent upsampler **×2** → **1024 × 1536** Stage 2 decode.
+  - Stage 1: **40** steps, `guidance_scale=4.0`, `sigmas=None`.
+  - Stage 2: **3** steps, `guidance_scale=1.0`, `STAGE_2_DISTILLED_SIGMA_VALUES`, distilled LoRA;
+    **`height=height*2`, `width=width*2`** (required for `LTX2ConditionPipeline` — see `run.py` comments).
 
 ---
 
-## Diffusers vs. our vendored LTX-2 — key differences
+## Diffusers vs. vendored LTX-2 (exp_016)
 
-| Aspect | exp_016 (vendored `KeyframeInterpolationPipeline`) | exp_020 (diffusers `LTX2ConditionPipeline`) |
+| Aspect | exp_016 (`KeyframeInterpolationPipeline` in `src/LTX-2/`) | exp_020 (`LTX2ConditionPipeline` in **diffusers**) |
 |---|---|---|
 | Conditioning type | `ClipConditioningInput(path, frame_idx_px, strength, K)` | `LTX2VideoCondition(frames=list[PIL], index=lat_idx, strength)` |
-| Coordinate system | **Pixel frame offset** — `frame_idx=0` (start), `frame_idx=N_px − K_px` (end) | **Latent frame index** — `index=0` (start), `index=N_lat − K_lat` (end) |
-| Input format | File path → MP4 → decoded internally | `list[PIL.Image]` passed directly |
-| Stage-2 conditioning | Re-applied (clips re-encoded at ×2 resolution) | Also re-applied here (same `conditions` list; pipeline resizes internally) |
-| State dict caching | Explicit `StateDictRegistry` passed to `ModelLedger` | `enable_sequential_cpu_offload` keeps model on CPU between calls |
-| Library | Vendored `src/LTX-2/` (upstream fork) | HuggingFace `diffusers` (pip) |
+| Coordinate system | Pixel frame offset | **Latent** frame index — `index=0` (start), `index=N_lat − K_lat` (end) |
+| Input format | Path → MP4 decoded inside pipeline | MP4 → `torchvision` → `list[PIL]` in `run.py` |
+| Stage 2 | Conditioning re-applied at ×2 | Latents only; spatial size passed as `height*2`, `width*2` |
+| Model loading | `StateDictRegistry` / custom ledger | `from_pretrained("Lightricks/LTX-2")` + Hub LoRA / upsampler subfolders |
+| Code reference | Vendored `src/LTX-2/` fork | **`diffusers`** pip package + HF docs |
 
-### End-clip index derivation
+### End-clip index (with `num_frames=121`, `num_clip_frames=25`)
 
 ```
 LTX temporal scale = 8
-latent_num_frames   = (num_frames     - 1) // 8 + 1   # 97 → 13
-clip_latent_frames  = (num_clip_frames - 1) // 8 + 1   # 25 →  4 (24 → 3)
-end_clip_index      = latent_num_frames - clip_latent_frames  # 13 - 4 = 9
+latent_num_frames   = (121 - 1) // 8 + 1   = 16
+clip_latent_frames  = (25 - 1) // 8 + 1   =  4
+end_clip_index      = 16 - 4  = 12
 ```
 
-Diffusers `index=-1` is **not** used for multi-frame end clips — it places only
-the very last latent frame as a condition, not the full clip. The correct value
-is `latent_num_frames - clip_latent_frames`.
+`index=-1` is **not** used for multi-frame end clips in the VC setup.
 
 ---
 
 ## How to run
 
-### 1. Environment setup
+### 1. Environment
+
+Use the conda env that has **diffusers**, **accelerate**, and **peft** (same as `run.py` docstring):
 
 ```bash
-# Activate the LTX-2 venv (has torch 2.9 + CUDA)
-source /workspace/diffusion-research/src/LTX-2/.venv/bin/activate
-
-# Install diffusers (one-time); accelerate is needed for cpu_offload
-pip install "diffusers>=0.33.0" accelerate
+source /workspace/miniforge3/etc/profile.d/conda.sh
+conda activate /workspace/envs/diff
+pip install "diffusers>=0.37" accelerate peft   # one-time if needed
 ```
 
-### 2. First-run model download
-
-`LTX2ConditionPipeline.from_pretrained("Lightricks/LTX-2")` downloads the
-**diffusers-format** model components (~38 GB) into the HF Hub cache the first
-time. Set `HF_HOME` to keep everything in the workspace:
+### 2. Model cache
 
 ```bash
 export HF_HOME=/workspace/cache/huggingface
 ```
 
-> **Note:** The raw safetensors blob already cached from exp_016 is in a different
-> format (flat single file) and cannot be reused directly by `from_pretrained`.
-> The distilled LoRA and spatial-upsampler safetensors at
-> `/workspace/cache/huggingface/ltx2_models/` **are** reusable directly
-> via `pipe.load_lora_weights(local_path)`.
+First run downloads diffusers-format shards from the Hub into `HF_HOME`.
 
-### 3. Run
+### 3. Launch
 
 ```bash
 cd /workspace/diffusion-research
@@ -96,24 +100,18 @@ python experiments/exp_020_ltx2_c2v_diffusers/run.py
 ```
 outputs/videos/exp_020_ltx2_c2v_diffusers/
 └── run_NNNN/
-    ├── run.log                        # stdout captured with TeeLogger
-    ├── config_snapshot.yaml           # full config at run time
-    ├── summary.yaml                   # per-sample elapsed_s + video paths
+    ├── run.log
+    ├── config_snapshot.yaml
+    ├── summary.yaml
     └── {sample_id}/
         ├── s{seed}_K{K}_steps{steps}.mp4
-        └── config_snapshot.yaml       # per-sample record
+        └── config_snapshot.yaml
 ```
-
-Frame images are not copied (no source MP4 is created).
 
 ---
 
-## Expected interpretation
+## Notes
 
-- With identical guidance settings and the same DAVIS pairs, outputs should be
-  visually comparable to exp_016 videos.
-- Latent alignment of the end clip is slightly different: our approach anchors
-  at pixel offset `N_px − K_px = 72`; diffusers anchors at latent index 9
-  (≈ pixel 65). The difference is < 1 latent frame and should be imperceptible.
-- The diffusers pipeline uses the same denoising loop internals (Euler flow-
-  matching), so generation quality should be equivalent.
+- **Primary reference** for parameters and two-stage flow: **diffusers** [`ltx2.md`](https://huggingface.co/docs/diffusers/main/en/api/pipelines/ltx2), not the Lightricks GitHub app repo.
+- Outputs are comparable in spirit to exp_016; conditioning indices and guidance recipes differ
+  (exp_020 follows diffusers defaults in `config.yaml`).
