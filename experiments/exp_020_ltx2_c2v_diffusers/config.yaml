@@ -148,26 +148,17 @@ inputs:
     hands, artifacts, inconsistent perspective, camera shake, jittery movement, AI artifacts.
 
 inference:
-  height: 512         # Stage 2 output resolution; Stage 1 runs at half (256×384)
+  height: 512       # Stage 1 resolution; upsampler ×2 → Stage 2 decodes at 1024×1536
   width: 768
   # 97 frames at 24 fps ≈ 4 s.  (97-1) % 8 == 0 ✓  → 13 latent frames.
   num_frames: 97
   frame_rate: 24.0
-  # Stage 1 (non-distilled, full model)
-  stage1_num_inference_steps: 40
-  # Guidance — identical to exp_016 video/audio guider params
-  guidance_scale: 3.0
-  stg_scale: 1.0
-  modality_scale: 3.0
-  guidance_rescale: 0.7
-  audio_guidance_scale: 7.0
-  audio_stg_scale: 1.0
-  audio_modality_scale: 3.0
-  audio_guidance_rescale: 0.7
-  # STG transformer block index. LTX-2.0 = [29]; LTX-2.3 = [28].
-  stg_blocks: [29]
-  # use_cross_timestep: True for LTX-2.3; False (legacy) for LTX-2.0.
-  use_cross_timestep: false
+  # Stage 1: standard (non-distilled) denoising.
+  # guidance_scale=4.0 is the official LTX-2 default for non-distilled inference.
+  # See: https://huggingface.co/docs/diffusers/main/en/api/pipelines/ltx2
+  num_inference_steps: 40
+  guidance_scale: 4.0
+  # Stage 2 always uses guidance_scale=1.0 + STAGE_2_DISTILLED_SIGMA_VALUES (hardcoded in run.py).
 
 runtime:
   seed: 42
