@@ -7,6 +7,7 @@ Code lives in `src/LTX-2/`.
 
 | File | Contents |
 |---|---|
+| [`information_bank.md`](information_bank.md) | **Dense reference:** Diffusers vs vendored LTX-2, two-stage Hub recipe, distilled LoRA role, `LTX2ConditionPipeline` vs `LTX2Pipeline`, C2V indices, pitfalls (PEFT, Stage 2 shapes, offload), exp_020; links to official `ltx2.md`. (Copy lives in `experiments/exp_020_ltx2_c2v_diffusers/LTX2_INFORMATION_BANK.md`.) |
 | [`conditioning_mechanism.md`](conditioning_mechanism.md) | Deep notes on the conditioning pipeline: VAE encoding, patchification, position bounding boxes, RoPE, denoise mask, attention mask, `VideoConditionByKeyframeIndex`, two-stage pipeline, frame_idx alignment formula, exp_014 (keyframe interpolation) and exp_015 (C2V clip conditioning), option comparison, future improvements. |
 
 ## Quick Reference
