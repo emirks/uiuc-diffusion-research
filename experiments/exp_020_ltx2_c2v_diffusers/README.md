@@ -11,6 +11,7 @@ application repo. Weights are loaded from the Hugging Face Hub checkpoint
 - [LTX-2 pipelines (diffusers)](https://huggingface.co/docs/diffusers/main/en/api/pipelines/ltx2)
 - Doc layout this experiment follows: [**Condition Pipeline Generation**](https://github.com/huggingface/diffusers/blob/main/docs/source/en/api/pipelines/ltx2.md#condition-pipeline-generation) (conditions API, offload → tiling, Stage 2 spatial) plus [**Two-stages Generation**](https://github.com/huggingface/diffusers/blob/main/docs/source/en/api/pipelines/ltx2.md#two-stages-generation) (non-distilled Stage 1 + Hub distilled LoRA for Stage 2). `run.py` uses **`enable_model_cpu_offload`**, not sequential offload.
 - Source in-tree: `diffusers.pipelines.ltx2` (installed via `pip install diffusers`)
+- **Dense LTX-2 reference (this chat + docs):** [`LTX2_INFORMATION_BANK.md`](LTX2_INFORMATION_BANK.md) — mirrored at [`notes/models/ltx2/information_bank.md`](../../notes/models/ltx2/information_bank.md).
 
 ---
 
