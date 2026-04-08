@@ -83,6 +83,16 @@ DEVICE             = "cuda:0"
 log = logging.getLogger(__name__)
 
 
+def _gpu_mem_str() -> str:
+    """Return a compact GPU memory summary string (allocated / reserved)."""
+    if not torch.cuda.is_available():
+        return "no-cuda"
+    alloc  = torch.cuda.memory_allocated(DEVICE)  / 1024**3
+    reserv = torch.cuda.memory_reserved(DEVICE)   / 1024**3
+    peak   = torch.cuda.max_memory_allocated(DEVICE) / 1024**3
+    return f"alloc={alloc:.2f}GB  reserved={reserv:.2f}GB  peak={peak:.2f}GB"
+
+
 # ── Frame / clip helpers ──────────────────────────────────────────────────────
 
 def load_frames_from_mp4(path: str | pathlib.Path, n: int, from_end: bool = False) -> list[Image.Image]:
@@ -181,14 +191,23 @@ class TrajectoryLogger:
         self._target_scheduler:  Any = None   # Stage-1 scheduler identity guard
         self._hooks: list = []
 
+        # verbosity controls
+        self.log_every_n_steps: int  = traj_cfg.get("log_every_n_steps", 1)
+        # step indices at which to print full per-frame breakdown (sparse subset)
+        self._detail_fracs: list[float] = [0.0, 0.25, 0.5, 0.75, 1.0]
+
         # per-sample state
         self._total_steps: int = 0
         self._step_count:  int = 0
+        self._k_lat:       int = 0   # conditioned clip length in latent frames
+        self._end_idx:     int = 0   # latent frame index where end clip starts
+        self._sample_id:   str = ""
         self._timesteps:   list[float]        = []
         self._z_t_list:    list[torch.Tensor] = []
         self._v_pred_list: list[torch.Tensor] = []
         self._z_final:     torch.Tensor | None = None
         self._hidden:      dict[int, dict[int, torch.Tensor]] = {}
+        self._t0_step:     float = 0.0   # wall-clock start of current step
 
     # ── setup / teardown ─────────────────────────────────────────────────────
 
@@ -219,11 +238,15 @@ class TrajectoryLogger:
             **kwargs: Any,
         ) -> Any:
             should_log = sched_self is logger._target_scheduler
+            t0_wall = time.perf_counter()
+
             if should_log:
                 t_val = timestep.item() if torch.is_tensor(timestep) else float(timestep)
+                z_cpu = sample.detach().cpu().to(torch.bfloat16)
+                v_cpu = model_output.detach().cpu().to(torch.bfloat16)
                 logger._timesteps.append(t_val)
-                logger._z_t_list.append(sample.detach().cpu().to(torch.bfloat16))
-                logger._v_pred_list.append(model_output.detach().cpu().to(torch.bfloat16))
+                logger._z_t_list.append(z_cpu)
+                logger._v_pred_list.append(v_cpu)
 
             # Call the original unbound function with the correct scheduler instance.
             result = logger._original_step(sched_self, model_output, timestep, sample, **kwargs)
@@ -237,7 +260,14 @@ class TrajectoryLogger:
                 else:
                     z_next = result
                 logger._z_final = z_next.detach().cpu().to(torch.bfloat16)
+
+                step_idx = logger._step_count
                 logger._step_count += 1
+
+                # Per-step diagnostics (respects log_every_n_steps).
+                if step_idx % logger.log_every_n_steps == 0:
+                    elapsed = time.perf_counter() - t0_wall
+                    logger._log_step(z_cpu, v_cpu, step_idx, t_val, elapsed)
 
             return result
 
@@ -297,6 +327,152 @@ class TrajectoryLogger:
 
         return _hook
 
+    # ── per-step diagnostics ─────────────────────────────────────────────────
+
+    def _log_step(
+        self,
+        z_t:     torch.Tensor,   # [C, F', H', W'] bfloat16 on CPU
+        v_pred:  torch.Tensor,   # [C, F', H', W'] bfloat16 on CPU
+        step_idx: int,
+        t_val:    float,
+        elapsed:  float,
+    ) -> None:
+        """Compact per-step diagnostics line + sparse frame-wise breakdown."""
+        z = z_t.float()
+        v = v_pred.float()
+        F_prime = z.shape[1]
+
+        # ── per-frame L2 norms: sqrt(Σ over C, H', W') ──────────────────────
+        z_fn = z.pow(2).sum(dim=(0, 2, 3)).sqrt()   # [F']
+        v_fn = v.pow(2).sum(dim=(0, 2, 3)).sqrt()   # [F']
+
+        # ── temporal frame-delta norms ────────────────────────────────────────
+        delta_p      = z[:, 1:, :, :] - z[:, :-1, :, :]   # [C, F'-1, H', W']
+        delta_flat   = delta_p.permute(1, 0, 2, 3).flatten(1)  # [F'-1, C*H'*W']
+        delta_norms  = delta_flat.norm(dim=1)               # [F'-1]
+
+        # ── angular consistency of consecutive Δ_p vectors ───────────────────
+        if delta_flat.shape[0] >= 2:
+            dn          = delta_norms.clamp(min=1e-8).unsqueeze(1)
+            delta_unit  = delta_flat / dn
+            cos_sim     = (delta_unit[:-1] * delta_unit[1:]).sum(dim=1)  # [F'-2]
+            mean_cos    = cos_sim.mean().item()
+            min_cos     = cos_sim.min().item()
+        else:
+            mean_cos = float("nan")
+            min_cos  = float("nan")
+
+        # ── mid / boundary norm ratio ─────────────────────────────────────────
+        k, e = self._k_lat, self._end_idx
+        if k > 0 and e > 0 and e + k <= F_prime:
+            bnd = list(range(k)) + list(range(e, e + k))
+            mid = [p for p in range(F_prime) if p not in bnd]
+            if mid and bnd:
+                mid_mean = z_fn[mid].mean().item()
+                bnd_mean = z_fn[bnd].mean().item()
+                ratio    = mid_mean / (bnd_mean + 1e-8)
+            else:
+                ratio = float("nan")
+        else:
+            ratio = float("nan")
+
+        # ── compact one-liner ─────────────────────────────────────────────────
+        log.info(
+            "  [step %2d/%d  t=%.4f  %.1fs]"
+            "  ‖z_t‖=%6.2f  ‖v‖=%6.2f  mid/bnd=%5.2f  cos(Δ,Δ) mean=%+.3f min=%+.3f",
+            step_idx + 1, self._total_steps, t_val, elapsed,
+            z.norm().item(), v.norm().item(),
+            ratio, mean_cos, min_cos,
+        )
+
+        # ── sparse full frame-wise breakdown ──────────────────────────────────
+        if self._total_steps > 0:
+            detail_steps = {
+                round(f * max(self._total_steps - 1, 1))
+                for f in self._detail_fracs
+            }
+            if step_idx in detail_steps:
+                _fmt = lambda t: "  ".join(f"{v:5.2f}" for v in t.tolist())
+                log.info("    ├─ z_t   frame ‖ [F'=%d]: [%s]", F_prime, _fmt(z_fn))
+                log.info("    ├─ v_pred frame ‖ [F'=%d]: [%s]", F_prime, _fmt(v_fn))
+                log.info("    └─ Δ_p   frame ‖ [F'-1=%d]: [%s]", F_prime - 1, _fmt(delta_norms))
+
+    # ── post-flush trajectory summary ────────────────────────────────────────
+
+    def _log_trajectory_summary(
+        self,
+        z_t:    torch.Tensor,   # [S, C, F', H', W']
+        v_pred: torch.Tensor,   # [S, C, F', H', W']
+    ) -> None:
+        """Print an at-a-glance table of trajectory geometry after all steps."""
+        S = z_t.shape[0]
+        if S == 0:
+            return
+        z = z_t.float()   # [S, C, F', H', W']
+        v = v_pred.float()
+        F_prime = z.shape[2]
+        k, e = self._k_lat, self._end_idx
+
+        # per-step total norms
+        z_step_norm = z.flatten(1).norm(dim=1)   # [S]
+        v_step_norm = v.flatten(1).norm(dim=1)   # [S]
+
+        # per-frame norms averaged over all steps
+        z_frame_mean = z.pow(2).sum(dim=(0, 1, 3, 4)).sqrt()   # [F']  (approx avg)
+        v_frame_mean = v.pow(2).sum(dim=(0, 1, 3, 4)).sqrt()   # [F']
+
+        # mid / boundary ratios over all steps
+        bnd = list(range(k)) + list(range(e, e + k)) if k > 0 and e > 0 else []
+        mid = [p for p in range(F_prime) if p not in bnd]
+
+        # trajectory curvature at each step (mean angular deviation of Δ_p)
+        # delta_p: [S, C, F'-1, H', W']
+        delta_all   = z[:, :, 1:, :, :] - z[:, :, :-1, :, :]
+        delta_flat  = delta_all.permute(0, 2, 1, 3, 4).flatten(2)  # [S, F'-1, C*H'*W']
+        dn          = delta_flat.norm(dim=2, keepdim=True).clamp(min=1e-8)
+        delta_unit  = delta_flat / dn
+        if delta_unit.shape[1] >= 2:
+            cos_by_step = (delta_unit[:, :-1] * delta_unit[:, 1:]).sum(dim=2).mean(dim=1)  # [S]
+        else:
+            cos_by_step = torch.zeros(S)
+
+        sep = "═" * 70
+        log.info(sep)
+        log.info("  TRAJECTORY SUMMARY  sample=%s", self._sample_id)
+        log.info(sep)
+        log.info("  Steps recorded : %d   latent shape : %s", S, tuple(z.shape[1:]))
+        log.info(
+            "  Conditioning   : start p=0..%d   end p=%d..%d   free-middle p=%d..%d",
+            k - 1, e, e + k - 1, k, e - 1,
+        )
+        log.info("")
+        log.info("  ‖z_t‖  per step : %s",
+                 "  ".join(f"{n:6.2f}" for n in z_step_norm.tolist()))
+        log.info("  ‖v‖    per step : %s",
+                 "  ".join(f"{n:6.2f}" for n in v_step_norm.tolist()))
+        log.info("  cos(Δ,Δ) / step : %s",
+                 "  ".join(f"{c:+.3f}" for c in cos_by_step.tolist()))
+        log.info("")
+        _fmt5 = lambda t: "  ".join(f"{v:5.2f}" for v in t.tolist())
+        log.info("  z_t   mean frame ‖ [F'=%d]: [%s]", F_prime, _fmt5(z_frame_mean))
+        log.info("  v_pred mean frame ‖ [F'=%d]: [%s]", F_prime, _fmt5(v_frame_mean))
+        if bnd and mid:
+            log.info("")
+            log.info("  Mid-frame norms vs. boundary (all steps):")
+            log.info("    z_t   avg — mid=%.3f  bnd=%.3f  ratio=%.2f",
+                     z[:, :, mid, :, :].norm() / (len(mid) * S),
+                     z[:, :, bnd, :, :].norm() / (len(bnd) * S),
+                     (z[:, :, mid].norm() / (len(mid) + 1e-8)) /
+                     (z[:, :, bnd].norm() / (len(bnd) + 1e-8) + 1e-8),
+            )
+            log.info("    v_pred avg — mid=%.3f  bnd=%.3f  ratio=%.2f",
+                     v[:, :, mid, :, :].norm() / (len(mid) * S),
+                     v[:, :, bnd, :, :].norm() / (len(bnd) * S),
+                     (v[:, :, mid].norm() / (len(mid) + 1e-8)) /
+                     (v[:, :, bnd].norm() / (len(bnd) + 1e-8) + 1e-8),
+            )
+        log.info(sep)
+
     def detach(self) -> None:
         """Restore the original class-level step and remove transformer hooks."""
         if not self.enabled:
@@ -312,15 +488,35 @@ class TrajectoryLogger:
 
     # ── per-sample lifecycle ──────────────────────────────────────────────────
 
-    def reset(self, total_steps: int) -> None:
-        """Clear per-sample state.  Call before each sample's Stage-1 call."""
+    def reset(
+        self,
+        total_steps: int,
+        k_lat:       int = 0,
+        end_idx:     int = 0,
+        sample_id:   str = "",
+    ) -> None:
+        """Clear per-sample state.  Call before each sample's Stage-1 call.
+
+        Args:
+            total_steps: expected number of denoising steps (for progress display).
+            k_lat:       number of conditioned latent frames per clip (start AND end).
+            end_idx:     latent frame index where the end clip begins.
+            sample_id:   name used in log messages.
+        """
         self._total_steps  = total_steps
+        self._k_lat        = k_lat
+        self._end_idx      = end_idx
+        self._sample_id    = sample_id
         self._step_count   = 0
         self._timesteps    = []
         self._z_t_list     = []
         self._v_pred_list  = []
         self._z_final      = None
         self._hidden       = {}
+        log.info(
+            "TrajectoryLogger.reset: sample=%s  steps=%d  k_lat=%d  end_idx=%d",
+            sample_id, total_steps, k_lat, end_idx,
+        )
 
     def flush(self, sample_id: str, out_dir: pathlib.Path) -> pathlib.Path | None:
         """Stack collected tensors and save to *out_dir/<sample_id>_trajectory_stage1.pt*.
@@ -366,6 +562,10 @@ class TrajectoryLogger:
             tuple(z_t.shape),
             f", hidden@{sorted(self._hidden.keys())}" if self._hidden else "",
         )
+
+        # Full geometry summary (printed once per sample, after saving).
+        self._log_trajectory_summary(z_t, v_pred)
+
         return out_path
 
 
@@ -419,13 +619,13 @@ def main() -> None:
         # ── Condition Pipeline Generation (ltx2.md): load → offload → tiling ──
         # https://github.com/huggingface/diffusers/blob/main/docs/source/en/api/pipelines/ltx2.md#condition-pipeline-generation
         # Doc uses enable_sequential_cpu_offload; we use enable_model_cpu_offload (whole components).
+        log.info("GPU before model load : %s", _gpu_mem_str())
         log.info("Loading LTX2ConditionPipeline from %s …", model_id)
         t0   = time.perf_counter()
         pipe = LTX2ConditionPipeline.from_pretrained(model_id, torch_dtype=torch.bfloat16)
-        # Whole-component offload (see DiffusionPipeline.enable_model_cpu_offload docstring).
         pipe.enable_model_cpu_offload(device=DEVICE)
         pipe.vae.enable_tiling()
-        log.info("Pipeline loaded in %.1fs.", time.perf_counter() - t0)
+        log.info("Pipeline loaded in %.1fs.  GPU: %s", time.perf_counter() - t0, _gpu_mem_str())
 
         # Keep the default stage-1 scheduler so it can be restored each sample.
         stage1_scheduler = pipe.scheduler
@@ -453,6 +653,7 @@ def main() -> None:
         )
         upsample_pipe = LTX2LatentUpsamplePipeline(vae=pipe.vae, latent_upsampler=latent_upsampler)
         upsample_pipe.enable_model_cpu_offload(device=DEVICE)
+        log.info("All models ready.  GPU: %s", _gpu_mem_str())
 
         # ── Attach trajectory logger to Stage-1 scheduler ────────────────────
         # stage1_scheduler is the only scheduler that runs all 40 steps.
@@ -480,11 +681,19 @@ def main() -> None:
             print(f"[info] prompt : {prompt[:80]}…")
 
             start_frames, end_frames = load_clip_frames(sample, REPO_ROOT, num_clip_frames)
+            log.info(
+                "Clips loaded: start=%d frames  end=%d frames  size=%s",
+                len(start_frames), len(end_frames),
+                "%dx%d" % (start_frames[0].width, start_frames[0].height),
+            )
 
-            # LTX2VideoCondition — the core diffusers API for visual conditioning.
-            # frames: list[PIL.Image] → encoded by the pipeline VAE internally.
-            # index:  latent frame index where this clip's first token is placed.
-            # strength=1.0: fully clean anchor (no denoising applied to this region).
+            k_lat = (num_clip_frames - 1) // LTX_TEMPORAL_SCALE + 1
+            n_lat = (num_frames      - 1) // LTX_TEMPORAL_SCALE + 1
+            log.info(
+                "Latent layout: F'=%d  start=p[0..%d]  free=p[%d..%d]  end=p[%d..%d]",
+                n_lat, k_lat - 1, k_lat, end_idx - 1, end_idx, end_idx + k_lat - 1,
+            )
+
             conditions = [
                 LTX2VideoCondition(frames=start_frames, index=0,       strength=start_strength),
                 LTX2VideoCondition(frames=end_frames,   index=end_idx, strength=end_strength),
@@ -496,10 +705,21 @@ def main() -> None:
             # ── Stage 1 ───────────────────────────────────────────────────────
             pipe.scheduler = stage1_scheduler
             pipe.disable_lora()
-            log.info("Stage 1: %dx%d  %d steps  guidance=%.1f", height, width, num_steps, guidance_scale)
+            log.info(
+                "Stage 1 START: %dx%d → lat %dx%d  F'=%d  %d steps  guidance=%.1f  GPU: %s",
+                height, width,
+                height // 32, width // 32,
+                n_lat, num_steps, guidance_scale,
+                _gpu_mem_str(),
+            )
 
             # Reset logger BEFORE the call so step counter and lists are clean.
-            logger.reset(total_steps=num_steps)
+            logger.reset(
+                total_steps=num_steps,
+                k_lat=k_lat,
+                end_idx=end_idx,
+                sample_id=sample_id,
+            )
 
             video_latent, audio_latent = pipe(
                 conditions=conditions,
@@ -516,25 +736,43 @@ def main() -> None:
                 output_type="latent",
                 return_dict=False,
             )
-            log.info("Stage 1 done in %.1fs.", time.perf_counter() - t_infer)
+            t_s1_done = time.perf_counter()
+            log.info(
+                "Stage 1 DONE in %.1fs.  video_latent shape=%s  audio_latent shape=%s  GPU: %s",
+                t_s1_done - t_infer,
+                tuple(video_latent.shape),
+                tuple(audio_latent.shape) if audio_latent is not None else "none",
+                _gpu_mem_str(),
+            )
 
             # ── Save trajectory immediately after Stage 1 ─────────────────────
-            # Flush before Stage 2 (different scheduler, different tensor shapes).
             traj_path = logger.flush(sample_id=sample_id, out_dir=sample_dir)
 
             # ── Upsample ×2 spatial ───────────────────────────────────────────
             t_up = time.perf_counter()
+            log.info(
+                "Upsampler START: latent %s → …  GPU: %s",
+                tuple(video_latent.shape), _gpu_mem_str(),
+            )
             upscaled_latent = upsample_pipe(
                 latents=video_latent, output_type="latent", return_dict=False
             )[0]
-            log.info("Upsample done in %.1fs.", time.perf_counter() - t_up)
+            log.info(
+                "Upsampler DONE in %.1fs.  upscaled shape=%s  GPU: %s",
+                time.perf_counter() - t_up,
+                tuple(upscaled_latent.shape),
+                _gpu_mem_str(),
+            )
 
-            # ── Stage 2: distilled LoRA, 3 steps ─────────────────────────────
-            # Condition Pipeline FLF2V + Two-stages T2V: noise_scale from T2V (renoise); no negative_prompt
-            # at guidance_scale=1.0 (CFG disabled — see pipeline do_classifier_free_guidance).
+            # ── Stage 2 ───────────────────────────────────────────────────────
             pipe.scheduler = stage2_scheduler
             pipe.enable_lora()
-            log.info("Stage 2: 3 steps  guidance=1.0  %dx%d (distilled LoRA)", width * 2, height * 2)
+            log.info(
+                "Stage 2 START: %dx%d  3 steps  guidance=1.0  sigmas=%s  GPU: %s",
+                width * 2, height * 2,
+                [round(s, 4) for s in STAGE_2_DISTILLED_SIGMA_VALUES],
+                _gpu_mem_str(),
+            )
             t_s2 = time.perf_counter()
 
             video, audio = pipe(
@@ -543,7 +781,7 @@ def main() -> None:
                 prompt=prompt,
                 width=width * 2,
                 height=height * 2,
-                num_frames=num_frames,  # doc examples omit (default 121); explicit if config changes
+                num_frames=num_frames,
                 num_inference_steps=3,
                 noise_scale=STAGE_2_DISTILLED_SIGMA_VALUES[0],
                 sigmas=STAGE_2_DISTILLED_SIGMA_VALUES,
@@ -553,7 +791,12 @@ def main() -> None:
                 return_dict=False,
             )
             elapsed = time.perf_counter() - t_infer
-            log.info("Stage 2 done in %.1fs.  Total: %.1fs.", time.perf_counter() - t_s2, elapsed)
+            log.info(
+                "Stage 2 DONE in %.1fs.  Total sample: %.1fs.  video shape=%s  GPU: %s",
+                time.perf_counter() - t_s2, elapsed,
+                video[0].shape if video is not None else "none",
+                _gpu_mem_str(),
+            )
 
             # ── Save video ────────────────────────────────────────────────────
             video_path = sample_dir / f"s{seed}_K{num_clip_frames}_steps{num_steps}.mp4"
@@ -564,7 +807,7 @@ def main() -> None:
                 audio_sample_rate=pipe.vocoder.config.output_sampling_rate,
                 output_path=str(video_path),
             )
-            log.info("Saved %s", video_path)
+            log.info("Saved %s  (%.1f MB)", video_path, video_path.stat().st_size / 1e6)
 
             # ── Config snapshot ───────────────────────────────────────────────
             with (sample_dir / "config_snapshot.yaml").open("w") as f:
@@ -604,10 +847,15 @@ def main() -> None:
             yaml.safe_dump({"run_id": run_id, "samples": summary}, f, sort_keys=False, allow_unicode=True)
 
         total = sum(s["elapsed_s"] for s in summary)
-        log.info("All %d samples done.  Total inference: %.1fs", len(summary), total)
+        log.info(
+            "All %d samples done.  Total inference: %.1fs  avg=%.1fs/sample  GPU: %s",
+            len(summary), total, total / max(len(summary), 1), _gpu_mem_str(),
+        )
+        log.info("─" * 70)
         for s in summary:
             traj_note = f"  traj→ {pathlib.Path(s['trajectory']).name}" if s.get("trajectory") else ""
-            print(f"[done] {s['sample_id']}  →  {s['video']}{traj_note}")
+            log.info("[done] %-45s  %.1fs%s", s["sample_id"], s["elapsed_s"], traj_note)
+        log.info("─" * 70)
 
 
 if __name__ == "__main__":

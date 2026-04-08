@@ -39,6 +39,10 @@ trajectory:
   # Set to true when running Experiment E5 (PCA of temporal differences).
   save_hidden_states: false
 
+  # Console verbosity: print a diagnostics line every N denoising steps.
+  # 1 = every step (default, most verbose), 5 = every 5th step, etc.
+  log_every_n_steps: 1
+
   hidden_state_config:
     # Relative depth positions in transformer block list to hook.
     # 0.0 = first block, 1.0 = last block.
