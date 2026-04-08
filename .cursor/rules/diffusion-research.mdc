@@ -5,9 +5,27 @@ alwaysApply: true
 
 # diffusion-research Project Rules
 
-## Learning & notes
+## Knowledge bank workflow
 
-When we learn **theory**, **model mechanics**, or **implementation details**, add them to `/workspace/diffusion-research/notes/{model-or-topic}.md` only if not already there. One file per model/topic; one concept per `##` section; keep atomic, concrete, and end with "From chat: … (date)." After explaining something new, add or extend the relevant note file.
+`notes/INDEX.md` is the **single entry point** for everything learned in this project (model mechanics, API quirks, experiment findings, theory).
+
+**Before implementing anything non-trivial:**
+1. Open `notes/INDEX.md` and scan the quick-scan table.
+2. If a relevant file exists, read it before writing code or answering.
+3. This avoids re-deriving known facts (e.g. latent geometry, scheduler shift, conditioning index semantics).
+
+**After validating new knowledge** (a mechanism was confirmed, a bug was understood, a finding was replicated):
+1. Find the correct note file (or create one — see below).
+2. Add the new content as a clean `##` section. Be atomic and concrete.
+3. Update the entry in `notes/INDEX.md` (description or table row).
+
+**Creating a new note file:**
+- Choose the right subdirectory: `models/<name>/`, `theory/`, `papers/`, or root `notes/` for dataset/benchmark notes.
+- Add a row to the quick-scan table in `notes/INDEX.md` and an entry in the relevant area section.
+
+Do **not** dump raw chat transcript. Write clean, factual notes a future reader can trust.
+
+---
 
 ## Repo layout (never violate)
 
@@ -17,35 +35,37 @@ When we learn **theory**, **model mechanics**, or **implementation details**, ad
 - `data/raw/` — immutable. `data/processed/` — derived inputs.
 - `tests/` — shape, indexing, and determinism checks for `src/`.
 
+---
+
 ## Starting a new experiment
 
 1. Next number = `max(existing exp_NNN) + 1`. Pad to 3 digits: `exp_012_…`.
 2. Copy the closest prior experiment as a starting point or write a new one; never mutate old ones.
 3. Every experiment must have:
-   - `config.yaml` 
+   - `config.yaml`
    - `run.py`
    - `README.md` with `## Question`, `## Setup`, `## How to run`, `## Expected outcome` / `## Outputs`.
 4. Output dir in config: `"outputs/videos/exp_NNN_<slug>"`.
 5. Output filename must encode distinguishing hyperparams (seed, steps, cfg, anchor_frames, …).
 6. Always save a `config_snapshot.yaml` alongside the video.
 
+---
+
 ## config.yaml conventions
 
 ```yaml
 model:
-  repo_id: "Wan-AI/..."
+  model_id: "org/model-name"      # HF Hub ID
 
 inputs:
   # paths relative to REPO_ROOT
 
 inference:
-  height: 480       
-  width: 832
-  # or something like
-  max_area: 399360
-  num_frames: 25     # must satisfy (num_frames - 1) % 4 == 0
-  num_inference_steps: 15
-  guidance_scale: 5.5
+  height: 512
+  width: 768
+  num_frames: 121
+  num_inference_steps: 40
+  guidance_scale: 4.0
 
 runtime:
   seed: 42
@@ -55,8 +75,10 @@ runtime:
 
 outputs:
   dir: "outputs/videos/exp_NNN_<slug>"
-  fps: 16
+  fps: 24
 ```
+
+---
 
 ## run.py conventions
 
@@ -91,15 +113,7 @@ outputs:
 - Generator: `torch.Generator(device=device).manual_seed(seed)`.
 - Print `[info]` lines for key inputs, resolution, and `[done] run_id → path` at the end.
 
-## Wan 2.1 / C2V specifics
-
-- VAE temporal scale = 4, spatial scale = 8.
-- `num_frames` constraint: `(num_frames - 1) % 4 == 0`.
-- `anchor_frames` constraint: `anchor_frames * 2 < num_frames`.
-- Transformer input shape: `(B, 36, T_lat, H_lat, W_lat)` where `T_lat = (num_frames-1)//4 + 1`.
-- Conditioning channel split: 16 noisy latents | 4 mask | 16 VAE condition = 36.
-- Mask build order: pixel-frame ones → repeat first-frame group ×4 → concat → view(B, T_lat, 4, H, W) → transpose(1,2).
-- CLIP image embed for FLF2V/C2V always encodes exactly **two** frames: `[start_frame, end_frame]`.
+---
 
 ## What belongs in src/ vs experiments/
 
