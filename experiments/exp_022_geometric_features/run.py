@@ -376,8 +376,15 @@ def _cond_shade(ax, F_prime: int, k_lat: int, end_idx: int, alpha: float = 0.12)
 
 
 def _heatmap(ax, data: np.ndarray, title: str, cmap: str, vmin=None, vmax=None,
-             k_lat: int = 0, end_idx: int = 0, diverging: bool = False) -> None:
-    """Draw one (τ × p) heatmap panel with conditioning markers."""
+             k_lat: int = 0, end_idx: int = 0, diverging: bool = False,
+             F_prime: int = 0) -> None:
+    """Draw one (τ × p) heatmap panel with conditioning markers.
+
+    Args:
+        F_prime: full latent frame count (16).  Used to compute boundary positions
+                 for features shorter than F' (speed = F'-1, curvature/angular = F'-2).
+                 Pass 0 to use the raw k_lat/end_idx values without adjustment.
+    """
     if diverging:
         vmin, vmax = -1.0, 1.0
     else:
@@ -388,18 +395,27 @@ def _heatmap(ax, data: np.ndarray, title: str, cmap: str, vmin=None, vmax=None,
     im = ax.imshow(
         data, aspect="auto", cmap=cmap, vmin=vmin, vmax=vmax,
         origin="upper", interpolation="nearest",
-        extent=[-0.5, P - 0.5, S - 0.5, -0.5],   # x=frames, y=steps (0=noisy top)
+        extent=[-0.5, P - 0.5, S - 0.5, -0.5],   # x=columns, y=steps (0=noisy top)
     )
     ax.set_title(title, fontsize=8, pad=3)
     ax.set_xlabel("frame  p", fontsize=7)
-    ax.set_ylabel("denoise step  τ →", fontsize=7)
+    # τ=0 (noisy) is the top row; τ increases downward toward clean.
+    ax.set_ylabel("denoise step  τ  (0 = noisy)", fontsize=7)
     ax.tick_params(labelsize=7)
     ax.set_xticks(range(P))
 
-    # Conditioning boundary lines on heatmap (vertical)
-    for bnd, col in [(k_lat - 0.5, "#00BCD4"), (end_idx - 0.5, "#E91E63")]:
-        if 0 < bnd < P:
-            ax.axvline(bnd, color=col, linewidth=1.2, linestyle="--", alpha=0.85)
+    # Conditioning boundary lines — adjusted for features shorter than F'.
+    # For a feature of length P = F' - offset, column i represents the
+    # window centred at frame  i + offset/2 (offset=0 → norm/pred/step,
+    # offset=0.5 → speed, offset=1 → curvature/angular).
+    # The frame-space boundaries are k_lat-0.5 and end_idx-0.5, so in
+    # column space they shift by  -(F'-P)/2 = -offset/2.
+    offset = (F_prime - P) if F_prime > 0 else 0   # 0, 1, or 2
+    shift  = offset / 2.0                            # 0, 0.5, or 1.0
+    for bnd_frame, col in [(k_lat - 0.5, "#00BCD4"), (end_idx - 0.5, "#E91E63")]:
+        bnd_col = bnd_frame - shift
+        if -0.5 < bnd_col < P - 0.5:
+            ax.axvline(bnd_col, color=col, linewidth=1.2, linestyle="--", alpha=0.85)
 
     plt.colorbar(im, ax=ax, shrink=0.75, pad=0.02)
 
@@ -418,6 +434,8 @@ def plot_heatmaps(feats: dict, sample_id: str, cls: str,
     )
     gs = gridspec.GridSpec(3, 2, figure=fig, hspace=0.45, wspace=0.35)
 
+    F = feats["F"]
+
     panels = [
         # (key, title, cmap, diverging)
         ("norm_z",      "‖z_t(p)‖ — noise level per frame",             "PuBu_r",   False),
@@ -430,7 +448,8 @@ def plot_heatmaps(feats: dict, sample_id: str, cls: str,
 
     for i, (key, title, cmap, div) in enumerate(panels):
         ax = fig.add_subplot(gs[i // 2, i % 2])
-        _heatmap(ax, feats[key], title, cmap, k_lat=k_lat, end_idx=end_idx, diverging=div)
+        _heatmap(ax, feats[key], title, cmap, k_lat=k_lat, end_idx=end_idx,
+                 diverging=div, F_prime=F)
 
     plt.savefig(out_path, dpi=130, bbox_inches="tight")
     plt.close(fig)
@@ -729,7 +748,8 @@ def plot_curvature_heatmap_grid(all_samples: list[dict], out_dir: pathlib.Path) 
         sid  = s["sample_id"].replace(f"class{cls}__", "")
 
         _heatmap(ax, s["feats"]["curvature_z"],
-                 f"[C{cls}] {sid}", "hot", vmax=global_vmax, k_lat=k, end_idx=e)
+                 f"[C{cls}] {sid}", "hot", vmax=global_vmax, k_lat=k, end_idx=e,
+                 F_prime=F)
 
     # Hide unused axes
     for ax in axes[n:]:
