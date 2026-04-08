@@ -1,7 +1,9 @@
-# LTX-2 Conditioning Mechanism
+# LTX-2: Conditioning Mechanism (Deep Reference)
 
-> Notes from experiments exp_014 (keyframe interpolation) and exp_015 (clip-to-video C2V).
-> Code lives in `src/LTX-2/packages/ltx-core` and `src/LTX-2/packages/ltx-pipelines`.
+> Covers VAE encoding, patchification, RoPE positions, denoise mask, attention mask, and the
+> two conditioning injection patterns (in-grid vs appended guiding latents).
+> Sourced from exp_014 (keyframe interpolation) and exp_015 (clip-to-video C2V).
+> Code: `src/LTX-2/packages/ltx-core` and `src/LTX-2/packages/ltx-pipelines`.
 
 ---
 
