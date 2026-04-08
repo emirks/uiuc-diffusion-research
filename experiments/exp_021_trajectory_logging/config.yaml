@@ -37,7 +37,7 @@ trajectory:
 
   # Transformer hidden-state snapshots — expensive, disabled by default.
   # Set to true when running Experiment E5 (PCA of temporal differences).
-  save_hidden_states: false
+  save_hidden_states: true
 
   # Console verbosity: print a diagnostics line every N denoising steps.
   # 1 = every step (default, most verbose), 5 = every 5th step, etc.

@@ -202,6 +202,10 @@ class TrajectoryLogger:
         self._k_lat:       int = 0   # conditioned clip length in latent frames
         self._end_idx:     int = 0   # latent frame index where end clip starts
         self._sample_id:   str = ""
+        # Spatial layout (F', H', W') used to unpack packed-sequence latents.
+        # LTX-2 passes latents to the scheduler as [B, F'*H'*W', C]; we
+        # reshape to [C, F', H', W'] so all downstream analysis keeps working.
+        self._lat_shape:   tuple[int, int, int] | None = None
         self._timesteps:   list[float]        = []
         self._z_t_list:    list[torch.Tensor] = []
         self._v_pred_list: list[torch.Tensor] = []
@@ -242,8 +246,8 @@ class TrajectoryLogger:
 
             if should_log:
                 t_val = timestep.item() if torch.is_tensor(timestep) else float(timestep)
-                z_cpu = sample.detach().cpu().to(torch.bfloat16)
-                v_cpu = model_output.detach().cpu().to(torch.bfloat16)
+                z_cpu = logger._unpack_if_packed(sample.detach().cpu().to(torch.bfloat16))
+                v_cpu = logger._unpack_if_packed(model_output.detach().cpu().to(torch.bfloat16))
                 logger._timesteps.append(t_val)
                 logger._z_t_list.append(z_cpu)
                 logger._v_pred_list.append(v_cpu)
@@ -259,7 +263,9 @@ class TrajectoryLogger:
                     z_next = result.prev_sample
                 else:
                     z_next = result
-                logger._z_final = z_next.detach().cpu().to(torch.bfloat16)
+                logger._z_final = logger._unpack_if_packed(
+                    z_next.detach().cpu().to(torch.bfloat16)
+                )
 
                 step_idx = logger._step_count
                 logger._step_count += 1
@@ -494,6 +500,7 @@ class TrajectoryLogger:
         k_lat:       int = 0,
         end_idx:     int = 0,
         sample_id:   str = "",
+        lat_shape:   tuple[int, int, int] | None = None,
     ) -> None:
         """Clear per-sample state.  Call before each sample's Stage-1 call.
 
@@ -502,11 +509,16 @@ class TrajectoryLogger:
             k_lat:       number of conditioned latent frames per clip (start AND end).
             end_idx:     latent frame index where the end clip begins.
             sample_id:   name used in log messages.
+            lat_shape:   (F', H', W') spatial dims of the latent.  Required when the
+                         pipeline uses packed-sequence latents [B, F'*H'*W', C] —
+                         e.g. LTX-2 — so that tensors can be reshaped to
+                         [C, F', H', W'] before per-frame analysis.
         """
         self._total_steps  = total_steps
         self._k_lat        = k_lat
         self._end_idx      = end_idx
         self._sample_id    = sample_id
+        self._lat_shape    = lat_shape
         self._step_count   = 0
         self._timesteps    = []
         self._z_t_list     = []
@@ -516,6 +528,67 @@ class TrajectoryLogger:
         log.info(
             "TrajectoryLogger.reset: sample=%s  steps=%d  k_lat=%d  end_idx=%d",
             sample_id, total_steps, k_lat, end_idx,
+        )
+
+    # ── latent unpacking ──────────────────────────────────────────────────────
+
+    def _unpack_if_packed(self, t: torch.Tensor) -> torch.Tensor:
+        """Return t reshaped to [C, F', H', W'] regardless of input layout.
+
+        LTX-2 passes latents to the scheduler as packed sequences
+        ``[B, F'*H'*W', C]``.  We reshape to ``[C, F', H', W']`` so that all
+        per-frame analysis (norm per frame, temporal deltas, mid/bnd ratios)
+        works unchanged.
+
+        Handled shapes
+        --------------
+        ``[C, F', H', W']``       → returned as-is
+        ``[B, C, F', H', W']``    → batch squeezed, returned as 4-D
+        ``[B, seq_len, C]``       → batch squeezed to ``[seq_len, C]``, then unpacked
+        ``[seq_len, C]``          → unpacked to ``[C, F', H', W']`` via ``_lat_shape``
+        """
+        # 5-D: [B, C, F', H', W'] — squeeze batch (only batch=1 supported)
+        if t.ndim == 5:
+            if t.shape[0] != 1:
+                raise ValueError(
+                    f"_unpack_if_packed: 5-D latent with batch={t.shape[0]} not supported."
+                )
+            return t.squeeze(0)   # → [C, F', H', W']
+
+        # 4-D: already [C, F', H', W']
+        if t.ndim == 4:
+            return t
+
+        # 3-D: packed [B, seq_len, C] — squeeze batch, fall through to 2-D handling
+        if t.ndim == 3:
+            if t.shape[0] != 1:
+                raise ValueError(
+                    f"_unpack_if_packed: 3-D latent with batch={t.shape[0]} not supported."
+                )
+            t = t.squeeze(0)   # → [seq_len, C]
+
+        # 2-D: packed [seq_len, C] — need lat_shape to reconstruct spatial dims
+        if t.ndim == 2:
+            if self._lat_shape is None:
+                raise ValueError(
+                    "TrajectoryLogger received a packed latent [seq_len, C] but "
+                    "'lat_shape' was not supplied to reset().  Pass "
+                    "lat_shape=(F', H', W') when calling reset()."
+                )
+            F_prime, H_prime, W_prime = self._lat_shape
+            seq_len, C = t.shape
+            expected_seq = F_prime * H_prime * W_prime
+            if seq_len != expected_seq:
+                raise ValueError(
+                    f"Packed latent seq_len={seq_len} does not match "
+                    f"F'*H'*W'={F_prime}*{H_prime}*{W_prime}={expected_seq}.  "
+                    "Check lat_shape passed to reset()."
+                )
+            # [seq_len, C] → [F', H', W', C] → [C, F', H', W']
+            return t.reshape(F_prime, H_prime, W_prime, C).permute(3, 0, 1, 2).contiguous()
+
+        raise ValueError(
+            f"_unpack_if_packed: unexpected latent ndim={t.ndim}, shape={tuple(t.shape)}"
         )
 
     def flush(self, sample_id: str, out_dir: pathlib.Path) -> pathlib.Path | None:
@@ -714,11 +787,16 @@ def main() -> None:
             )
 
             # Reset logger BEFORE the call so step counter and lists are clean.
+            # Pass lat_shape so that packed [B, F'*H'*W', C] latents can be
+            # reshaped to [C, F', H', W'] before per-frame analysis.
+            lat_h = height // 32
+            lat_w = width  // 32
             logger.reset(
                 total_steps=num_steps,
                 k_lat=k_lat,
                 end_idx=end_idx,
                 sample_id=sample_id,
+                lat_shape=(n_lat, lat_h, lat_w),
             )
 
             video_latent, audio_latent = pipe(
