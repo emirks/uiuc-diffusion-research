@@ -1,0 +1,36 @@
+# exp_022 — Geometric Feature Extraction
+# ──────────────────────────────────────────────────────────────────────────────
+# Points to a completed exp_021 run directory that contains trajectory .pt files.
+# Change `trajectory_dir` to point at a different run.
+
+# Path relative to REPO_ROOT (or absolute)
+trajectory_dir: "outputs/videos/exp_021_trajectory_logging/run_0002"
+
+outputs:
+  dir: "outputs/analysis/exp_022_geometric_features"
+
+plot:
+  dpi: 130
+  save_heatmaps: true          # per-sample (τ × p) heatmap grids
+  save_dissolve_profiles: true # per-sample final-step dissolve signals
+  save_comparison: true        # cross-sample overlay — THE key diagnostic figure
+
+# LTX-2 architecture constants (used to unpack packed token tensors)
+ltx:
+  temporal_scale: 8   # VAE temporal downsampling factor
+  spatial_scale: 32   # VAE spatial downsampling factor
+  vae_channels: 128   # channel count of packed tokens
+
+# Ground truth dissolve times (seconds) annotated by manual video inspection.
+# Null means not annotated. Times are relative to video start (total duration ~5.04 s).
+ground_truth:
+  class1__blackswan__mallard-water:          1.50
+  class2__mallard-fly__mallard-water:        2.82
+  class2__motocross-bumps__motocross-jump:   2.27
+  class2__paragliding-launch__paragliding:   2.79
+  class5__breakdance-flare__breakdance:      2.49
+  class5__car-roundabout__bus:               2.76
+  class5__car-turn__car-shadow:              null   # no visible dissolve annotated
+  class5__lucia__hike:                       2.44
+  class6__longboard__kite-surf:              2.50
+  class8__blackswan__boat:                   3.48
