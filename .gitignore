@@ -23,5 +23,8 @@ data/processed/
 # model weights
 *.pt
 
+# local LTX-2 source tree (nested repo / large checkout)
+src/LTX-2/
+
 # gradio
 *.pem
