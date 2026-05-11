@@ -54,7 +54,11 @@ The transformer does not operate on a 5D tensor. The patchifier flattens the lat
 ```
 
 - Temporal patch size `p1 = 1` (no temporal grouping — every latent frame is its own token group)
-- Spatial patch size `p2 = p3 = P` (typically P=2, grouping 2×2 latent cells into one token)
+- Spatial patch size `p2 = p3 = P`
+
+**P varies by model variant:**
+- LTX-Video (smaller model): P=2 → 2×2 latent cells per token
+- **LTX-2 19B (exp_021+): P=1** → every individual latent cell is its own token
 
 **Token count:**
 
@@ -62,12 +66,20 @@ The transformer does not operate on a 5D tensor. The patchifier flattens the lat
 N_tokens = F_lat × (H_lat / P) × (W_lat / P)
 ```
 
-For a 97-frame, 512×768 video (P=2):
+For a 97-frame, 512×768 video (P=2, smaller model):
 
 - `F_lat=13`, `H_lat=16`, `W_lat=24`
 - `N = 13 × 8 × 12 = 1248 tokens`
 
-Each token has dimension `D = 128 × P² = 512`.
+For a 121-frame, 512×768 video (P=1, LTX-2 19B):
+
+- `F_lat=16`, `H_lat=16`, `W_lat=24`
+- `N = 16 × 16 × 24 = 6144 tokens`
+
+Each token has dimension `D = 128 × P²`:  `512` for P=2,  `128` for P=1 (then projected to 4096 hidden dim).
+
+> See `spatial_locality.md` for why P=1 means each token corresponds exactly to one VAE latent cell,
+> and how spatial correspondence is maintained through 48 global-attention blocks.
 
 ---
 

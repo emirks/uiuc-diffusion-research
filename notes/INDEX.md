@@ -11,6 +11,7 @@ Single entry point for everything learned in this project.
 |------|------|-------------|
 | [`models/ltx2/pipeline_api.md`](models/ltx2/pipeline_api.md) | LTX-2 | Diffusers API classes, two-stage recipe, C2V index formulas, conditioning patterns summary, pitfalls & fixes |
 | [`models/ltx2/conditioning.md`](models/ltx2/conditioning.md) | LTX-2 | VAE encoding, patchification, RoPE positions, denoise mask, in-grid vs guiding-latent conditioning (deep reference) |
+| [`models/ltx2/spatial_locality.md`](models/ltx2/spatial_locality.md) | LTX-2 | P=1 vs P=2 patch geometry; token-to-pixel brick mapping; why global attention still yields localized representations (exp_021+) |
 | [`models/ltx2/denoising_schedule.md`](models/ltx2/denoising_schedule.md) | LTX-2 | Dynamic sigma shift, why step_size is large at end, three generation phases (coarse/content/cleanup) |
 | [`models/wan21/overview.md`](models/wan21/overview.md) | Wan 2.1 | Latent geometry, conditioning channels, C2V setup, VC-Bench benchmark performance, Hub IDs |
 | [`theory/transformer_architecture.md`](theory/transformer_architecture.md) | Theory | Token embeddings, self-attention mechanics, MLP blocks, output projection, training vs inference pipeline |
@@ -25,13 +26,16 @@ Single entry point for everything learned in this project.
 
 ### LTX-2 (`models/ltx2/`)
 
-Three files with clear separation of concerns:
+Four files with clear separation of concerns:
 
 **`pipeline_api.md`** — *Quick lookup reference.*  
 Diffusers pipeline classes (`LTX2ConditionPipeline`, `LTX2Pipeline`, `LTX2LatentUpsamplePipeline`, `LTX2VideoCondition`); two-stage production recipe; distilled LoRA role; C2V end-clip latent index formula (`end_idx = N_lat - K_lat`); Stage 2 shape & scheduler alignment; CPU offload patterns; packed latent unpack fix; pitfalls table.
 
 **`conditioning.md`** — *Deep mechanics reference.*  
 Causal VAE geometry (`F_lat = (F_pix-1)//8+1`); patchification & packed token format `[B, N, C]`; 3D RoPE position bounding boxes; denoise mask vs attention mask semantics; in-grid conditioning (Diffusers) vs appended guiding-latent conditioning (vendored `KeyframeInterpolationPipeline`); mask naming inversion between stacks; training strategy alignment notes.
+
+**`spatial_locality.md`** — *Token geometry & interpretability.*  
+Spatial patch size by variant (LTX-2 19B uses P=1); one-token-one-latent-cell correspondence; 32×32×8-frame pixel bricks; how residual streams and RoPE preserve locality through global self-attention; ties to trajectory analysis.
 
 **`denoising_schedule.md`** — *Scheduler behaviour.*  
 Scheduler JSON config (`use_dynamic_shifting=true`, `base_shift=0.95`, `max_shift=2.05`, `time_shift_type=exponential`); dynamic shift formula; non-uniform dt table; why `pred_mag` is large early but `step_size_z` is large late; three generation phases with σ ranges; practical heatmap interpretation for exp_021/022.
