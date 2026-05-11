@@ -5,6 +5,14 @@ alwaysApply: true
 
 # diffusion-research Project Rules
 
+## Changelog
+
+`CHANGELOG.md` lives at the repo root. **Update it whenever you complete something meaningful** — a bug fix, a new experiment, a significant code change, a documented finding, or an infrastructure change.
+
+Format: newest entry at top, under a `## YYYY-MM-DD` date heading. Each entry is a **`HH:MM` timestamp** followed by a plain-language sentence or two — what changed and why it matters. Get the current time with `date '+%Y-%m-%d %H:%M'` if needed. Include code specifics (file names, function names) only when they help locate the change. Do not log trivial edits.
+
+---
+
 ## Knowledge bank workflow
 
 `notes/INDEX.md` is the **single entry point** for everything learned in this project (model mechanics, API quirks, experiment findings, theory).
