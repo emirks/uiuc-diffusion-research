@@ -1,0 +1,671 @@
+model:
+  model_id: "Lightricks/LTX-2"
+  distilled_lora_strength: 1.0
+
+# Prompt optimization sweep — 6 categories × 10 DAVIS pairs = 60 runs.
+# Everything fixed except prompt text.  Same clip pairs as exp_020.
+#
+# Category key:
+#   A_empty   — empty string (model floor)
+#   A_word    — "transition" (minimal signal)
+#   B         — generic cinematic structure, no named mechanism
+#   C         — abstract transition descriptor, object-agnostic (same text for all pairs)
+#   D         — typed creative transition with explicit source/target reference
+#   E         — timed version of B with explicit "at 4s / by 6s" language
+#
+# Note: D_enhanced (enhance_prompt=True) is not supported by LTX2ConditionPipeline
+# in Diffusers — omitted here.  All runs use enhance_prompt=False.
+
+samples:
+
+  # ── Class 1: similar context / similar category / similar movement ──────────
+  - sample_id: "class1__blackswan__mallard-water"
+    class: "1_similar_context_similar_category_similar_movement"
+    start_clip: "data/processed/DAVIS/blackswan/2s.mp4"
+    end_clip:   "data/processed/DAVIS/mallard-water/2s.mp4"
+    prompt_variants:
+
+      - category: "A_empty"
+        text: ""
+
+      - category: "A_word"
+        text: "transition"
+
+      - category: "B"
+        text: >-
+          Wide establishing shot, a black swan glides steadily across dark green canal water,
+          its reflection trailing in slow ripples. As the bird moves forward, the deep black
+          of its plumage brightens at the edges — individual feathers lightening from jet to
+          warm chestnut and brown, a shimmer of iridescent green growing along the crown of
+          the head. The neck shortens incrementally and the bill rounds and deepens in color,
+          the bird's silhouette reshaping from the angular grace of the swan into the stockier
+          proportions of a mallard. The dark canal water brightens around the transformed bird
+          as overcast light warms to sunlit afternoon, and the bird — now a mallard duck —
+          floats calmly on gently rippling water, its brown and green plumage fully settled.
+          The camera holds tripod-locked on a 35mm lens at f/4, static frame. Silent.
+
+      - category: "C"
+        text: >-
+          Wide frame, the visual content of the opening moment drifts in continuous
+          lateral motion, edges softening as the image plane begins a slow outward
+          expansion. The dominant movement of the first subject carries forward into the
+          transition as a streak of motion blur along the primary axis, coherent for the
+          first two seconds before fragmenting into directional smears. The smeared frame
+          coalesces around a new anchor point, a second form asserting itself from the
+          motion haze, its silhouette sharpening as peripheral blur drains away. The
+          camera holds tripod-locked on a 35mm lens at f/2.8, static throughout. Natural
+          motion blur throughout, 180-degree shutter equivalent. Silent.
+
+      - category: "D"
+        text: >-
+          Wide shot, a black swan glides across still dark green canal water, its broad
+          wings fanning open and pressing downward in a single slow powerful stroke,
+          sending a radial sheet of water droplets across the surface in all directions.
+          The droplets catch flat overcast light as they arc outward, each one a small
+          bright point against the dark water, expanding into a translucent curtain of
+          spray. Through the thinning curtain a mallard duck emerges, its brown and
+          iridescent green plumage catching warm sunlit light as it bobs gently on
+          rippling water, the spray fully draining from the frame as the mallard settles.
+          The camera holds tripod-locked on a 50mm lens at f/2.8, static frame. Cool
+          overcast canal light transitions to warm afternoon waterlight. Silent.
+
+      - category: "E"
+        text: >-
+          Wide frame, a black swan glides steadily across dark green canal water for the
+          first four seconds, neck arching forward, its reflection trailing in slow
+          undulating ripples behind it. At 4 seconds the swan's wings spread and a burst
+          of water spray radiates outward across the frame, a moving curtain of droplets
+          obscuring the canal. By 6 seconds the spray thins and a mallard duck floats on
+          sunlit rippling water, the droplets fully draining and the new scene stable. The
+          camera holds tripod-locked on a 35mm lens at f/4, static throughout. Cool
+          overcast canal light shifts to warm sunlit waterlight. Silent.
+
+  # ── Class 2: similar context / similar category / different movement ─────────
+  - sample_id: "class2__paragliding-launch__paragliding"
+    class: "2_similar_context_similar_category_different_movement"
+    start_clip: "data/processed/DAVIS/paragliding-launch/2s.mp4"
+    end_clip:   "data/processed/DAVIS/paragliding/2s.mp4"
+    prompt_variants:
+
+      - category: "A_empty"
+        text: ""
+
+      - category: "A_word"
+        text: "transition"
+
+      - category: "B"
+        text: >-
+          Wide establishing shot, a paraglider in full harness sprints hard down a steep
+          grassy hillside, the colorful canopy billowing and swelling overhead as the wing
+          fills with air and the shoulder harness pulls taut. Both feet strike the ground
+          in long accelerating strides as the hillside drops sharply with each step. In one
+          continuous forward motion both feet kick into open air and the hillside falls
+          entirely away beneath, the harness swinging gently as the body rises from a
+          running lean into a stable suspended glide. The canopy tightens from a billowing
+          mass into a smooth taut wing, and patchwork valleys and forested ridges spread
+          open far below as the soaring phase settles. The camera holds tripod-locked on a
+          35mm lens at f/5.6, static frame. Warm midday light throughout. Silent.
+
+      - category: "C"
+        text: >-
+          Wide frame, the visual content of the opening moment drifts in continuous
+          lateral motion, edges softening as the image plane begins a slow outward
+          expansion. The dominant movement of the first subject carries forward into the
+          transition as a streak of motion blur along the primary axis, coherent for the
+          first two seconds before fragmenting into directional smears. The smeared frame
+          coalesces around a new anchor point, a second form asserting itself from the
+          motion haze, its silhouette sharpening as peripheral blur drains away. The
+          camera holds tripod-locked on a 35mm lens at f/2.8, static throughout. Natural
+          motion blur throughout, 180-degree shutter equivalent. Silent.
+
+      - category: "D"
+        text: >-
+          Wide shot, a paraglider sprints hard down a steep grassy hillside, the canopy
+          fully inflated and straining overhead, the final footfall leaving the ground as
+          both feet kick forward into open air and the hillside falls rapidly away beneath.
+          The sudden drop-off generates a clean shear line across the frame as the ground
+          disappears, replaced by a wide aerial view of green valleys and forested ridges
+          unfolding below. The paraglider is now fully airborne, gliding with the wing taut
+          and steady, open sky above and landscape below. The camera pushes slowly forward
+          on a 50mm lens at chest height, tracking the launch. Warm midday light
+          throughout, no shadow shift. Silent.
+
+      - category: "E"
+        text: >-
+          Wide frame, a paraglider sprints hard down a steep grassy hillside for the first
+          four seconds, colorful canopy billowing overhead as it catches the wind during
+          the launch run. At 4 seconds both feet leave the ground as the hillside drops
+          away and the soaring phase begins, the canopy fully taut above and open terrain
+          spreading below. By 6 seconds the paraglider glides freely above a patchwork of
+          green valleys and forested ridges, the hillside absent and only sky and landscape
+          visible. The camera holds tripod-locked on a 35mm lens at f/5.6, static
+          throughout. Warm midday light throughout. Silent.
+
+  - sample_id: "class2__motocross-bumps__motocross-jump"
+    class: "2_similar_context_similar_category_different_movement"
+    start_clip: "data/processed/DAVIS/motocross-bumps/2s.mp4"
+    end_clip:   "data/processed/DAVIS/motocross-jump/2s.mp4"
+    prompt_variants:
+
+      - category: "A_empty"
+        text: ""
+
+      - category: "A_word"
+        text: "transition"
+
+      - category: "B"
+        text: >-
+          Wide establishing shot, a motocross rider in full protective gear hammers through
+          a series of closely spaced dirt bumps, the bike chassis bouncing hard with each
+          wheel impact as clumps of earth spray outward behind. The rider's elbows are up
+          and weight forward, absorbing each impact in a rapid rhythmic sequence. The bumps
+          shorten in succession and the track surface smooths into a clean ramp face, and
+          in one unbroken forward motion the rider hits the takeoff, both wheels leaving the
+          ground simultaneously as the chassis lifts into open air. All oscillation stops
+          at once, the bike hanging level against an open sky for a suspended moment, the
+          ramp already below frame and the rider settled into a controlled airborne stance.
+          The camera holds tripod-locked on a 35mm lens at f/5.6, static frame. Bright
+          afternoon light throughout. Silent.
+
+      - category: "C"
+        text: >-
+          Wide frame, the visual content of the opening moment drifts in continuous
+          lateral motion, edges softening as the image plane begins a slow outward
+          expansion. The dominant movement of the first subject carries forward into the
+          transition as a streak of motion blur along the primary axis, coherent for the
+          first two seconds before fragmenting into directional smears. The smeared frame
+          coalesces around a new anchor point, a second form asserting itself from the
+          motion haze, its silhouette sharpening as peripheral blur drains away. The
+          camera holds tripod-locked on a 35mm lens at f/2.8, static throughout. Natural
+          motion blur throughout, 180-degree shutter equivalent. Silent.
+
+      - category: "D"
+        text: >-
+          Wide shot, a motocross rider hammers through a final rough bump, the rear wheel
+          slamming down and then lifting free as the track surface abruptly transitions
+          from irregular dirt to a smooth ramp face, the front wheel rising sharply as the
+          rider hits the takeoff and both wheels leave the ground simultaneously. The bike
+          launches cleanly into open air, wheels hanging level for a moment against an open
+          sky, all ground contact gone, the ramp already below frame. The rider holds the
+          bars steady in a clean jump, both wheels off and the trajectory arcing upward at
+          mid-frame. The camera holds tripod-locked on a 50mm lens at f/4, static frame.
+          Bright afternoon light throughout. The final bump impact gives way to near
+          silence in the air.
+
+      - category: "E"
+        text: >-
+          Wide frame, a motocross rider powers aggressively through a series of closely
+          spaced dirt bumps for the first four seconds, the bike bouncing hard with each
+          impact as earth sprays from the rear wheel. At 4 seconds the rough track gives
+          way to a smooth ramp face and the rider hits the takeoff, both wheels leaving the
+          ground in a clean launch. By 6 seconds the bike is fully airborne, both wheels
+          off the ground and the rider suspended mid-air against open sky, the launch ramp
+          already below frame. The camera holds tripod-locked on a 35mm lens at f/5.6,
+          static throughout. Bright afternoon light throughout. Silent.
+
+  - sample_id: "class2__mallard-fly__mallard-water"
+    class: "2_similar_context_similar_category_different_movement"
+    start_clip: "data/processed/DAVIS/mallard-fly/2s.mp4"
+    end_clip:   "data/processed/DAVIS/mallard-water/2s.mp4"
+    prompt_variants:
+
+      - category: "A_empty"
+        text: ""
+
+      - category: "A_word"
+        text: "transition"
+
+      - category: "B"
+        text: >-
+          Wide establishing shot, a mallard duck beats its wings in a shallow banking
+          descent over open water, each stroke slowing as the bird angles its body back and
+          extends its feet forward in preparation for landing. Both feet touch the water
+          surface simultaneously with a small burst of spray that fans outward in a
+          spreading ring. The momentum drains as the wings fold back along the body in a
+          single smooth motion, and the duck settles into a calm forward float on gently
+          rippling water. Warm afternoon light reflects in shifting patterns across the
+          surface as the landing rings spread and fade and the mallard holds its resting
+          position. The camera holds tripod-locked on a 35mm lens at f/4, static frame.
+          Warm diffused afternoon light throughout. Silent.
+
+      - category: "C"
+        text: >-
+          Wide frame, the visual content of the opening moment drifts in continuous
+          lateral motion, edges softening as the image plane begins a slow outward
+          expansion. The dominant movement of the first subject carries forward into the
+          transition as a streak of motion blur along the primary axis, coherent for the
+          first two seconds before fragmenting into directional smears. The smeared frame
+          coalesces around a new anchor point, a second form asserting itself from the
+          motion haze, its silhouette sharpening as peripheral blur drains away. The
+          camera holds tripod-locked on a 35mm lens at f/2.8, static throughout. Natural
+          motion blur throughout, 180-degree shutter equivalent. Silent.
+
+      - category: "D"
+        text: >-
+          Wide shot, a mallard duck walks steadily along a grassy riverbank, its feet
+          pressing into the grass at the water's edge, and in a single unhurried motion
+          steps off the bank, its body dropping and then leveling as it lands on the water
+          surface, both wings fanning briefly outward to slow the descent before folding
+          back as the duck settles into a float. The landing sends a small ring of ripples
+          spreading outward from the point of contact, the water surface brightening with
+          reflected afternoon light as the rings move away from the duck's body. The camera
+          holds tripod-locked on a 50mm lens at f/4, static frame. Warm afternoon light
+          throughout, reflected in the ripples. Silent.
+
+      - category: "E"
+        text: >-
+          Wide frame, a mallard duck walks alertly along a grassy riverbank for the first
+          four seconds, wings tucked and head turning as its orange feet press steadily into
+          the grass at the water's edge. At 4 seconds the duck steps off the bank and its
+          body drops onto the water surface, wings fanning briefly before folding as it
+          settles. By 6 seconds the mallard floats calmly on gently rippling water,
+          surrounded by shimmering reflected afternoon light, fully settled and stable. The
+          camera holds tripod-locked on a 35mm lens at f/4, static throughout. Warm
+          afternoon light throughout. Silent.
+
+  # ── Class 5: different context / similar category / similar movement ─────────
+  - sample_id: "class5__car-roundabout__bus"
+    class: "5_different_context_similar_category_similar_movement"
+    start_clip: "data/processed/DAVIS/car-roundabout/2s.mp4"
+    end_clip:   "data/processed/DAVIS/bus/2s.mp4"
+    prompt_variants:
+
+      - category: "A_empty"
+        text: ""
+
+      - category: "A_word"
+        text: "transition"
+
+      - category: "B"
+        text: >-
+          Wide establishing shot, a compact city car navigates the circular lane of a busy
+          urban roundabout, following the curve of the grey road as buildings and parked
+          vehicles pass steadily behind. As the car traces the arc, its silhouette begins
+          to expand — the roofline rising, the flanks widening and flattening, the compact
+          rear stretching into a full chassis. The proportions of a city bus grow from
+          within the car's form: windows regularize into an evenly spaced row, curved
+          panels flatten into vertical advertisement-covered planes, and the wheelbase
+          extends as the roundabout falls behind and a wide straight urban street opens
+          ahead. The bus now occupies the full center of the lane, moving steadily past a
+          row of bus stops. The camera holds tripod-locked on a 35mm lens at f/5.6, static
+          frame. Neutral midday urban light throughout. Silent.
+
+      - category: "C"
+        text: >-
+          Wide frame, the visual content of the opening moment drifts in continuous
+          lateral motion, edges softening as the image plane begins a slow outward
+          expansion. The dominant movement of the first subject carries forward into the
+          transition as a streak of motion blur along the primary axis, coherent for the
+          first two seconds before fragmenting into directional smears. The smeared frame
+          coalesces around a new anchor point, a second form asserting itself from the
+          motion haze, its silhouette sharpening as peripheral blur drains away. The
+          camera holds tripod-locked on a 35mm lens at f/2.8, static throughout. Natural
+          motion blur throughout, 180-degree shutter equivalent. Silent.
+
+      - category: "D"
+        text: >-
+          Wide shot, a compact city car navigates the final arc of a roundabout and as it
+          exits the curve and straightens onto the approach road its compact form expands,
+          the scale of the vehicle growing, the roof rising, the body widening, as if the
+          forward motion of the car exiting the roundabout pulls the proportions of a large
+          city bus into view from behind. The bus occupies the full width of a wide urban
+          street, its advertisement-covered flank filling the frame as it passes a bus stop.
+          The camera holds tripod-locked on a 50mm lens at f/5.6, static frame. Neutral
+          midday urban light throughout. Silent.
+
+      - category: "E"
+        text: >-
+          Wide frame, a compact city car follows the circular lane of a busy urban
+          roundabout for the first four seconds, buildings and parked cars visible in the
+          background as the vehicle curves through the intersection. At 4 seconds the
+          roundabout transitions to a wide straight urban street and the vehicle scale
+          shifts, a large city bus entering frame. By 6 seconds the city bus occupies the
+          full center of frame, moving steadily along the street past a bus stop, its
+          advertisement-covered sides reflecting the surroundings. The camera holds
+          tripod-locked on a 35mm lens at f/5.6, static throughout. Neutral midday urban
+          light throughout. Silent.
+
+  - sample_id: "class5__car-turn__car-shadow"
+    class: "5_different_context_similar_category_similar_movement"
+    start_clip: "data/processed/DAVIS/car-turn/2s.mp4"
+    end_clip:   "data/processed/DAVIS/car-shadow/2s.mp4"
+    prompt_variants:
+
+      - category: "A_empty"
+        text: ""
+
+      - category: "A_word"
+        text: "transition"
+
+      - category: "B"
+        text: >-
+          Wide establishing shot, an SUV takes a smooth bend on a forested mountain road,
+          sunlight filtering through the tree canopy and dappled patches of light tracking
+          across the roof and hood. As the car straightens, the tree canopy thins and pulls
+          back from both sides of the road — individual trees receding out of frame and the
+          sky opening overhead — until the dense forest gives way to pale city tarmac with
+          white lane markings. The diffuse forest light compresses into a single hard
+          overhead source, casting a long crisp shadow from the moving vehicle across the
+          road surface below. A small hatchback rolls forward in the open urban scene, its
+          shadow stretching geometrically across white pedestrian crossing stripes in hard
+          midday sun. The camera holds tripod-locked on a 35mm lens at f/5.6, static frame.
+          Silent.
+
+      - category: "C"
+        text: >-
+          Wide frame, the visual content of the opening moment drifts in continuous
+          lateral motion, edges softening as the image plane begins a slow outward
+          expansion. The dominant movement of the first subject carries forward into the
+          transition as a streak of motion blur along the primary axis, coherent for the
+          first two seconds before fragmenting into directional smears. The smeared frame
+          coalesces around a new anchor point, a second form asserting itself from the
+          motion haze, its silhouette sharpening as peripheral blur drains away. The
+          camera holds tripod-locked on a 35mm lens at f/2.8, static throughout. Natural
+          motion blur throughout, 180-degree shutter equivalent. Silent.
+
+      - category: "D"
+        text: >-
+          Wide shot, an SUV takes a smooth mountain road bend, its roof catching a band of
+          direct sunlight through a gap in the canopy, and as the car clears the curve and
+          straightens the trees recede rapidly from frame and the environment opens, dark
+          forest giving way to pale city tarmac with white road markings as the vehicle
+          transitions from mountain road to urban street in a continuous forward motion. A
+          small hatchback rolls forward in the new scene, its long shadow stretching hard
+          and sharp across white pedestrian crossing markings in bright midday sun, the
+          shadow's edge crisp and geometrically aligned with the road stripes. The camera
+          holds tripod-locked on a 50mm lens at f/4, static frame. Dappled forest light
+          gives way to hard overhead urban sun. Silent.
+
+      - category: "E"
+        text: >-
+          Wide frame, an SUV takes a smooth bend on a forested mountain road for the first
+          four seconds, sunlight filtering through the tree canopy as the body leans
+          slightly into the curve. At 4 seconds the forest road transitions to an urban
+          street in bright midday sun, the trees replaced by city buildings and the road
+          surface becoming pale tarmac with white markings. By 6 seconds a small hatchback
+          rolls forward on the city street, its long shadow stretching across white road
+          markings beneath hard overhead light. The camera holds tripod-locked on a 35mm
+          lens at f/5.6, static throughout. Dappled forest light gives way to direct
+          midday urban sun. Silent.
+
+  - sample_id: "class5__lucia__hike"
+    class: "5_different_context_similar_category_similar_movement"
+    start_clip: "data/processed/DAVIS/lucia/2s.mp4"
+    end_clip:   "data/processed/DAVIS/hike/2s.mp4"
+    prompt_variants:
+
+      - category: "A_empty"
+        text: ""
+
+      - category: "A_word"
+        text: "transition"
+
+      - category: "B"
+        text: >-
+          Wide establishing shot, a woman in a light summer dress strolls along a smooth
+          park path at an unhurried pace, dappled light from the tree canopy above playing
+          across the ground and her clothing. As she continues walking without breaking
+          stride, the fabric of her dress thickens and darkens — the light material gaining
+          weight and structure, hemline rising, sleeves lengthening into a full jacket. A
+          pack materializes incrementally on her back, shoulder straps forming and settling
+          under load, while trekking poles extend in her hands and her footwear solidifies
+          into heavy hiking boots. The paved park path beneath her narrows and roughens from
+          smooth concrete to packed dirt to loose mountain rock, and the tree canopy opens
+          into alpine sky with jagged peaks rising in the background. The camera holds
+          tripod-locked on a 35mm lens at f/4, static frame. Silent.
+
+      - category: "C"
+        text: >-
+          Wide frame, the visual content of the opening moment drifts in continuous
+          lateral motion, edges softening as the image plane begins a slow outward
+          expansion. The dominant movement of the first subject carries forward into the
+          transition as a streak of motion blur along the primary axis, coherent for the
+          first two seconds before fragmenting into directional smears. The smeared frame
+          coalesces around a new anchor point, a second form asserting itself from the
+          motion haze, its silhouette sharpening as peripheral blur drains away. The
+          camera holds tripod-locked on a 35mm lens at f/2.8, static throughout. Natural
+          motion blur throughout, 180-degree shutter equivalent. Silent.
+
+      - category: "D"
+        text: >-
+          Wide shot, a woman in a light summer dress strolls along a shaded park path, her
+          footsteps silent on smooth pavement, and as she moves forward the paved surface
+          roughens, smooth tarmac giving way to packed dirt then loose rock, the tree
+          canopy thinning and the sky widening as the park dissolves into open mountain
+          landscape. A hiker in full backpacking gear emerges from this transition, trekking
+          poles planted on a loose rocky uphill slope, a heavy pack riding high on the
+          shoulders as jagged peaks rise in the background. The camera holds tripod-locked
+          on a 50mm lens at f/4, static frame. Warm dappled park light opens into cool
+          high-altitude mountain light. Silent.
+
+      - category: "E"
+        text: >-
+          Wide frame, a woman in a light summer dress strolls along a shaded park path for
+          the first four seconds, dappled light playing across the ground as her steps are
+          even and unhurried. At 4 seconds the smooth paved path gives way to loose rocky
+          mountain terrain and the figure's clothing and pack appear, the park environment
+          dissolving into an open mountain slope. By 6 seconds a hiker in full backpacking
+          gear walks steadily uphill on a rocky trail, trekking poles in hand and jagged
+          peaks rising in the background. The camera holds tripod-locked on a 35mm lens at
+          f/4, static throughout. Warm park light transitions to cool open mountain light.
+          Silent.
+
+  - sample_id: "class5__breakdance-flare__breakdance"
+    class: "5_different_context_similar_category_similar_movement"
+    start_clip: "data/processed/DAVIS/breakdance-flare/2s.mp4"
+    end_clip:   "data/processed/DAVIS/breakdance/2s.mp4"
+    prompt_variants:
+
+      - category: "A_empty"
+        text: ""
+
+      - category: "A_word"
+        text: "transition"
+
+      - category: "B"
+        text: >-
+          Wide establishing shot, a breakdancer performs a flare on a cobblestone courtyard,
+          legs sweeping in wide circular arcs with both hands planted on the stones and the
+          body spinning low to the ground. The centrifugal reach of each extended leg pushes
+          the courtyard walls progressively further from frame with each rotation, as if the
+          spin itself is clearing space outward in all directions. The intimate enclosed
+          yard opens with each pass — the surrounding walls retreating until the space
+          widens into a broad town square. A second dancer steps forward from the newly
+          opened periphery and both face each other at the center, a crowd assembled at the
+          edges, the original flare's rotation carrying forward as a shared energy between
+          them. The camera holds tripod-locked on a 35mm lens at f/4, static frame. Warm
+          afternoon light throughout. Ambient crowd noise builds from silence.
+
+      - category: "C"
+        text: >-
+          Wide frame, the visual content of the opening moment drifts in continuous
+          lateral motion, edges softening as the image plane begins a slow outward
+          expansion. The dominant movement of the first subject carries forward into the
+          transition as a streak of motion blur along the primary axis, coherent for the
+          first two seconds before fragmenting into directional smears. The smeared frame
+          coalesces around a new anchor point, a second form asserting itself from the
+          motion haze, its silhouette sharpening as peripheral blur drains away. The
+          camera holds tripod-locked on a 35mm lens at f/2.8, static throughout. Natural
+          motion blur throughout, 180-degree shutter equivalent. Silent.
+
+      - category: "D"
+        text: >-
+          Wide shot, a breakdancer finishes a flare on a cobblestone courtyard, the final
+          circular sweep of the legs generating a rotating arc across frame, and as the
+          spin decelerates the cobblestones spread outward, the intimate enclosed space
+          opening into a wide town square as the field of view expands. A second dancer
+          enters from the side and both face each other before a large crowd assembled
+          around the edges of the square, performing dynamic freezes and power moves. The
+          camera holds tripod-locked on a 35mm lens at f/4, static frame. Warm afternoon
+          light throughout. Ambient crowd noise builds from silence.
+
+      - category: "E"
+        text: >-
+          Wide frame, a breakdancer performs a flare on a cobblestone courtyard for the
+          first four seconds, legs sweeping in wide circular arcs as the body rotates low
+          to the ground. At 4 seconds the flare decelerates and the intimate courtyard
+          opens into a wide public town square, a second breakdancer entering the space
+          from the side. By 6 seconds two breakdancers face each other in the open square
+          before a large assembled crowd, the setting bright and expansive in afternoon
+          sunlight. The camera holds tripod-locked on a 35mm lens at f/4, static
+          throughout. Warm afternoon light throughout. Ambient crowd noise builds.
+
+  # ── Class 6: different context / similar category / different movement ────────
+  - sample_id: "class6__longboard__kite-surf"
+    class: "6_different_context_similar_category_different_movement"
+    start_clip: "data/processed/DAVIS/longboard/2s.mp4"
+    end_clip:   "data/processed/DAVIS/kite-surf/2s.mp4"
+    prompt_variants:
+
+      - category: "A_empty"
+        text: ""
+
+      - category: "A_word"
+        text: "transition"
+
+      - category: "B"
+        text: >-
+          Wide establishing shot, a longboarder cruises down a narrow tree-lined road,
+          leaning into a gentle curve as the board rolls over smooth tarmac and the green
+          canopy blurs past on both sides. As the board straightens, the rider's arms lift
+          slowly from their sides and reach upward, palms opening as a kite control bar
+          materializes between the outstretched hands, the cross-bracing forming in the
+          grip. The tarmac beneath the wheels lightens and softens, breaking into ocean
+          water as the wheels lift free and the board reshapes beneath the rider's feet
+          into a kiteboard riding on open swell. The tree canopy retreats to a flat blue
+          horizon and the kite fills overhead, pulling the rider forward above turquoise
+          waves. The camera holds tripod-locked on a 35mm lens at f/4, static frame.
+          Dappled road light opens into bright coastal sun. Silent.
+
+      - category: "C"
+        text: >-
+          Wide frame, the visual content of the opening moment drifts in continuous
+          lateral motion, edges softening as the image plane begins a slow outward
+          expansion. The dominant movement of the first subject carries forward into the
+          transition as a streak of motion blur along the primary axis, coherent for the
+          first two seconds before fragmenting into directional smears. The smeared frame
+          coalesces around a new anchor point, a second form asserting itself from the
+          motion haze, its silhouette sharpening as peripheral blur drains away. The
+          camera holds tripod-locked on a 35mm lens at f/2.8, static throughout. Natural
+          motion blur throughout, 180-degree shutter equivalent. Silent.
+
+      - category: "D"
+        text: >-
+          Wide shot, a longboarder leans into a curve on a narrow tree-lined road, and as
+          the board exits the bend and rolls forward the road surface dissolves, solid
+          asphalt giving way to the textured surface of open ocean, the tree canopy
+          replaced by bright open sky, the leafy walls collapsing to a flat horizon as the
+          longboard's wheels lift free and the rider's posture shifts from a lean into an
+          upright stance, arms extending upward to grip the bar of a large colorful kite
+          already pulling them skyward above churning turquoise waves. The camera holds
+          tripod-locked on a 50mm lens at f/5.6, static frame. Dappled road light opens
+          into bright coastal blue-sky light. Silent.
+
+      - category: "E"
+        text: >-
+          Wide frame, a longboarder cruises down a narrow tree-lined road for the first
+          four seconds, leaning into a gentle curve as the lush canopy blurs past on both
+          sides. At 4 seconds the road surface and tree environment dissolve, replaced by
+          the texture of open ocean water and bright open sky. By 6 seconds a kite surfer
+          carves aggressively across turquoise ocean waves, a large colorful kite pulling
+          them skyward against a clear blue sky, the road and trees fully absent. The
+          camera holds tripod-locked on a 35mm lens at f/4, static throughout. Dappled
+          road light opens into bright coastal sunlight. Silent.
+
+  # ── Class 8: different context / different category / different movement ──────
+  - sample_id: "class8__blackswan__boat"
+    class: "8_different_context_different_category_different_movement"
+    start_clip: "data/processed/DAVIS/blackswan/2s.mp4"
+    end_clip:   "data/processed/DAVIS/boat/2s.mp4"
+    prompt_variants:
+
+      - category: "A_empty"
+        text: ""
+
+      - category: "A_word"
+        text: "transition"
+
+      - category: "B"
+        text: >-
+          Wide shot, a black swan moves steadily along a narrow stone-edged canal, its neck
+          held upright and feet pressing beneath the dark water in a slow deliberate glide.
+          As the bird moves forward its body expands outward — the broad chest hardening and
+          widening, the black plumage thickening into planks of weathered wood as the neck
+          straightens and flattens into the shape of a vessel's prow. The graceful avian
+          silhouette gives way to the angular hull form of a boat pressing forward through
+          the water, the stone canal walls falling below frame as the vessel grows in scale
+          and the confined canal opens into the grey chop of open ocean. A weathered fishing
+          boat cuts forward through blue-green swells, its white wake spreading behind it
+          and a rocky coastline visible at the horizon. The camera holds tripod-locked on a
+          50mm lens at f/4, static frame. Cool canal overcast light opens into bright
+          open-sea light. Silent.
+
+      - category: "C"
+        text: >-
+          Wide frame, the visual content of the opening moment drifts in continuous
+          lateral motion, edges softening as the image plane begins a slow outward
+          expansion. The dominant movement of the first subject carries forward into the
+          transition as a streak of motion blur along the primary axis, coherent for the
+          first two seconds before fragmenting into directional smears. The smeared frame
+          coalesces around a new anchor point, a second form asserting itself from the
+          motion haze, its silhouette sharpening as peripheral blur drains away. The
+          camera holds tripod-locked on a 35mm lens at f/2.8, static throughout. Natural
+          motion blur throughout, 180-degree shutter equivalent. Silent.
+
+      - category: "D"
+        text: >-
+          Wide shot, a black swan moves along a narrow stone-edged canal, its wings
+          spreading in a single explosive stroke that sends a radial burst of water and
+          white feathers upward against the stone walls, the confined splash filling the
+          frame with a dense curtain of white spray against the dark canal water. Through
+          the dissipating spray the stone walls expand outward and the enclosed green canal
+          becomes choppy open ocean as the spray thins, revealing a weathered fishing boat
+          cutting through blue-green waves, its hull generating a white wake as it heads
+          toward a rocky coastline, the canal walls entirely replaced by open sea. The
+          camera holds tripod-locked on a 50mm lens at f/2.8, static frame. Cool canal
+          overcast light transitions to bright open-sea light. Silent.
+
+      - category: "E"
+        text: >-
+          Wide frame, a black swan moves steadily along a narrow stone-edged canal for the
+          first four seconds, dark plumage contrasting against algae-green water and rough
+          stone walls. At 4 seconds the swan's wings spread and a burst of spray fills the
+          frame, obscuring the canal and the stone walls. By 6 seconds the spray clears to
+          reveal a weathered fishing boat cutting through choppy blue-green ocean waves,
+          its white wake spreading behind it, the canal fully replaced by open sea. The
+          camera holds tripod-locked on a 35mm lens at f/4, static throughout. Cool canal
+          overcast light transitions to bright open-sea light. Silent.
+
+inputs:
+  # Number of pixel frames loaded from each clip.
+  # LTX temporal scale = 8: (25-1)//8+1 = 4 latent frames per clip.
+  # end_clip_index = latent_num_frames - clip_latent_frames = 25 - 4 = 21.
+  num_clip_frames: 25
+  start_clip_strength: 1.0
+  end_clip_strength: 1.0
+  # Negative prompt per LTX-2 specification for prompt sweep experiments.
+  # "morphing" and "warping" removed — Category B prompts now explicitly describe
+  # semantic morphing; including them in the negative prompt would fight the intent.
+  negative_prompt: >
+    distortion, flicker, jitter, stutter, shaky camera, erratic motion,
+    temporal artifacts, frame blending, low quality, jpeg artifacts,
+    text, watermark, logo, cartoon, anime, CGI
+
+inference:
+  height: 512
+  width: 768
+  # 193 frames at 24 fps ≈ 8 s.  (193-1) % 8 == 0 ✓  → 25 latent frames.
+  num_frames: 193
+  frame_rate: 24.0
+  num_inference_steps: 40
+  # CFG 3.2 per Step 4 specification (was 4.0 in exp_020).
+  guidance_scale: 3.2
+  # Set to false to skip upsampler + Stage 2 and output Stage 1 only (512×768).
+  # Useful for fast iteration once Stage 1 quality is confirmed sufficient.
+  run_stage2: true
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_024_ltx2_prompt_sweep"
