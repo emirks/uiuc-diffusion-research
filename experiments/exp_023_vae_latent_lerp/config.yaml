@@ -1,0 +1,162 @@
+### exp_023: VAE latent linear interpolation — dissolve-cause probe
+#
+# Hypothesis: the dissolve transition in exp_020's C2V output is caused by the
+# straight-path nature of LTX-2's rectified flow (the model moves linearly in
+# latent space from the start-clip representation to the end-clip representation).
+#
+# Test: skip diffusion entirely.  Encode start/end clips with the VAE, build the
+# full video by linearly interpolating between the two clip latents, then decode
+# directly.  If the decoded video shows the same dissolve artefact, the
+# straight-path mechanism is sufficient to explain it.
+#
+# Same samples and spatial/temporal resolution as exp_020.
+
+model:
+  # Only the VAE (and video_processor) are used; transformer is never called.
+  model_id: "Lightricks/LTX-2"
+
+# DAVIS class-pair evaluation — same samples as exp_016 config_davis.yaml.
+# start_clip / end_clip: pre-processed 2s MP4 clips under data/processed/DAVIS/.
+# First num_clip_frames frames of start_clip → start conditioning.
+# Last  num_clip_frames frames of end_clip   → end conditioning.
+#
+# Class taxonomy:
+#   1 – similar context  / similar category   / similar movement
+#   2 – similar context  / similar category   / different movement
+#   5 – different context / similar category  / similar movement
+#   6 – different context / similar category  / different movement
+#   8 – different context / different category / different movement
+
+samples:
+
+  # ── Class 1: similar context / similar category / similar movement ──────────
+  - sample_id: "class1__blackswan__mallard-water"
+    class: "1_similar_context_similar_category_similar_movement"
+    start_clip: "data/processed/DAVIS/blackswan/2s.mp4"
+    end_clip:   "data/processed/DAVIS/mallard-water/2s.mp4"
+    prompt: >
+      A black swan glides serenely across dark green water near a stone embankment,
+      its elegant neck curved and feathers glistening. The calm reflective surface
+      gradually gives way to a mallard duck paddling through sunlit rippling water,
+      its brown and iridescent green plumage catching the light as concentric
+      ripples spread around it.
+
+  # ── Class 2: similar context / similar category / different movement ─────────
+  - sample_id: "class2__paragliding-launch__paragliding"
+    class: "2_similar_context_similar_category_different_movement"
+    start_clip: "data/processed/DAVIS/paragliding-launch/2s.mp4"
+    end_clip:   "data/processed/DAVIS/paragliding/2s.mp4"
+    prompt: >
+      A paraglider sprints down a steep grassy hillside, harness straining, colorful
+      canopy billowing overhead as it catches the wind during launch. The ground drops
+      away and the scene transitions to a paraglider soaring freely high above a
+      patchwork of green valleys and forested ridges, gliding smoothly through
+      clear air with the wing fully inflated.
+
+  - sample_id: "class2__motocross-bumps__motocross-jump"
+    class: "2_similar_context_similar_category_different_movement"
+    start_clip: "data/processed/DAVIS/motocross-bumps/2s.mp4"
+    end_clip:   "data/processed/DAVIS/motocross-jump/2s.mp4"
+    prompt: >
+      A motocross rider in full protective gear powers aggressively through a rough
+      dirt track, the bike bouncing hard over a series of closely spaced bumps as
+      clumps of earth spray outward. The rough terrain opens into a launch ramp and
+      the rider launches the bike into the air, both wheels leaving the ground in a
+      clean jump against an open sky.
+
+  - sample_id: "class2__mallard-fly__mallard-water"
+    class: "2_similar_context_similar_category_different_movement"
+    start_clip: "data/processed/DAVIS/mallard-fly/2s.mp4"
+    end_clip:   "data/processed/DAVIS/mallard-water/2s.mp4"
+    prompt: >
+      A mallard duck moves alertly across a grassy riverbank, its wings tucked and
+      head turning as it navigates the ground. The scene transitions smoothly to a
+      mallard floating on gently rippling water, its body rocking softly with the
+      current, surrounded by shimmering reflections of light on the surface.
+
+  # ── Class 5: different context / similar category / similar movement ─────────
+  - sample_id: "class5__car-roundabout__bus"
+    class: "5_different_context_similar_category_similar_movement"
+    start_clip: "data/processed/DAVIS/car-roundabout/2s.mp4"
+    end_clip:   "data/processed/DAVIS/bus/2s.mp4"
+    prompt: >
+      A compact city car navigates a busy roundabout in an urban square, buildings
+      and parked cars visible in the background as it follows the circular lane.
+      The scene transitions to a large city bus occupying most of the frame,
+      moving steadily along a wide urban street past a bus stop, its
+      advertisement-covered sides reflecting the surroundings.
+
+  - sample_id: "class5__car-turn__car-shadow"
+    class: "5_different_context_similar_category_similar_movement"
+    start_clip: "data/processed/DAVIS/car-turn/2s.mp4"
+    end_clip:   "data/processed/DAVIS/car-shadow/2s.mp4"
+    prompt: >
+      An SUV takes a smooth bend on a forested mountain road, its body leaning
+      slightly as sunlight filters through the trees and the tires grip the tarmac.
+      The winding road gives way to a quiet city street where a small hatchback
+      rolls past a pedestrian crossing, its long shadow stretching across white
+      road markings in bright midday sun.
+
+  - sample_id: "class5__lucia__hike"
+    class: "5_different_context_similar_category_similar_movement"
+    start_clip: "data/processed/DAVIS/lucia/2s.mp4"
+    end_clip:   "data/processed/DAVIS/hike/2s.mp4"
+    prompt: >
+      A woman in a summer dress strolls along a shaded park path, her steps
+      unhurried as dappled light plays across the ground and a wooden bench sits
+      nearby. The tranquil park dissolves into a rugged mountain trail where a
+      hiker in full backpacking gear walks steadily uphill across loose rocky
+      terrain, trekking poles in hand and jagged peaks rising in the background.
+
+  - sample_id: "class5__breakdance-flare__breakdance"
+    class: "5_different_context_similar_category_similar_movement"
+    start_clip: "data/processed/DAVIS/breakdance-flare/2s.mp4"
+    end_clip:   "data/processed/DAVIS/breakdance/2s.mp4"
+    prompt: >
+      A breakdancer performs a flare on a cobblestone square in front of a
+      flower-decorated building, legs sweeping in wide circular arcs as the body
+      spins low to the ground. The intimate courtyard setting transitions to an
+      open town square where two breakdancers face off before a large crowd,
+      performing dynamic freezes and power moves in bright afternoon sunlight.
+
+  # ── Class 6: different context / similar category / different movement ────────
+  - sample_id: "class6__longboard__kite-surf"
+    class: "6_different_context_similar_category_different_movement"
+    start_clip: "data/processed/DAVIS/longboard/2s.mp4"
+    end_clip:   "data/processed/DAVIS/kite-surf/2s.mp4"
+    prompt: >
+      A longboarder cruises down a narrow tree-lined road, leaning into a gentle
+      curve as the lush green canopy blurs past on both sides. The road and trees
+      dissolve into open turquoise ocean where a kite surfer carves aggressively
+      across the waves at high speed, a large colorful kite pulling them skyward
+      against a bright blue sky.
+
+  # ── Class 8: different context / different category / different movement ──────
+  - sample_id: "class8__blackswan__boat"
+    class: "8_different_context_different_category_different_movement"
+    start_clip: "data/processed/DAVIS/blackswan/2s.mp4"
+    end_clip:   "data/processed/DAVIS/boat/2s.mp4"
+    prompt: >
+      A black swan moves gracefully along a narrow stone-edged canal, its dark
+      plumage contrasting with the algae-green water and the textured wall behind
+      it. The still enclosed waterway opens into a wide sunlit sea where a
+      weathered fishing boat cuts through choppy blue-green waves, its hull
+      generating a white wake as it heads toward a rocky coastline.
+
+inputs:
+  # Number of pixel frames loaded from each clip.
+  # LTX temporal scale = 8 → (25-1)//8+1 = 4 latent frames per clip.
+  num_clip_frames: 25
+
+inference:
+  height: 512   # matches exp_020 Stage 1 resolution; decoded at this resolution (no upsampler)
+  width: 768
+  # 121 frames at 24 fps ≈ 5 s.  (121-1) % 8 == 0 ✓  → 16 latent frames.
+  num_frames: 57
+  frame_rate: 24.0
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_023_vae_latent_lerp"
