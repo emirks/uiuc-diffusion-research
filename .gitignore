@@ -25,6 +25,7 @@ data/processed/
 
 # Jupyter
 .ipynb_checkpoints/
+*_BACKUP.ipynb
 
 # model weights
 *.pt
