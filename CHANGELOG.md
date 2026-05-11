@@ -2,6 +2,8 @@
 
 ## 2026-05-11
 
+**11:01** — Cleared saved cell outputs from `notebooks/exp021_trajectory_analysis.ipynb` (~176 MB → ~118 KB) so GitHub accepts the blob under its 100 MB limit; re-run the notebook locally to regenerate plots.
+
 **10:57** — Published exp_023 (VAE latent interpolation) and exp_024 (LTX-2 prompt sweep) with configs and run scripts; added Jupyter notebooks under `notebooks/` for exp_021 trajectory analysis (`trajectory_utils`, programmatic notebook generator) and exp_024 prompt exploration. Documented LTX-2 19B P=1 patch geometry and token locality in `spatial_locality.md` with matching updates to `conditioning.md` and the knowledge index. Added root `CHANGELOG.md`, Cursor rule for keeping it current, repo-wide `CLAUDE.md` guidance, experiment-wide `experiments/CLAUDE.md`, and gitignore entries for `.claude/` and `.ipynb_checkpoints/`.
 
 ## 2026-05-05
