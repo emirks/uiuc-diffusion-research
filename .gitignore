@@ -20,6 +20,12 @@ data/processed/
 .vscode/
 .idea/
 
+# local agent / IDE
+.claude/
+
+# Jupyter
+.ipynb_checkpoints/
+
 # model weights
 *.pt
 
