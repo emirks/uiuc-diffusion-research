@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-05-11
+
+**10:57** — Published exp_023 (VAE latent interpolation) and exp_024 (LTX-2 prompt sweep) with configs and run scripts; added Jupyter notebooks under `notebooks/` for exp_021 trajectory analysis (`trajectory_utils`, programmatic notebook generator) and exp_024 prompt exploration. Documented LTX-2 19B P=1 patch geometry and token locality in `spatial_locality.md` with matching updates to `conditioning.md` and the knowledge index. Added root `CHANGELOG.md`, Cursor rule for keeping it current, repo-wide `CLAUDE.md` guidance, experiment-wide `experiments/CLAUDE.md`, and gitignore entries for `.claude/` and `.ipynb_checkpoints/`.
+
 ## 2026-05-05
 
 **16:45** — exp_024 prompt update: rewrote all 10 Category B prompts to describe continuous semantic morphing (feathers changing color and shape, bus form growing from a car silhouette, clothing materializing mid-walk) instead of scene cuts. Removed "morphing" and "warping" from the negative prompt since they fight the new B intent. Added Stage 1 video save to `run.py` so each run now outputs both a Stage 1 preview (512×768, silent) and the final Stage 2 output (1536×1024), enabling faster iteration decisions. Created `ltx2_prompting_notes.md` in the experiment folder documenting the format rules, transformation mechanism principles, and what prompt language to avoid.
