@@ -151,7 +151,12 @@ inputs:
 inference:
   height: 512   # matches exp_020 Stage 1 resolution; decoded at this resolution (no upsampler)
   width: 768
-  # 121 frames at 24 fps ≈ 5 s.  (121-1) % 8 == 0 ✓  → 16 latent frames.
+  # num_frames sweep performed across {121, 73, 57}:
+  #   121  → (121-1)/8+1 = 16 latent frames (matches exp_020/021 free-middle of 8)
+  #    73  → ( 73-1)/8+1 =  10 latent frames (free-middle of 2)
+  #    57  → ( 57-1)/8+1 =   8 latent frames (no free-middle — start clip → end clip directly)
+  # Must satisfy (num_frames - 1) % 8 == 0 (LTX-2 temporal scale).
+  # Current value 57 = tightest setting from the sweep: maximally aggressive cross-blend.
   num_frames: 57
   frame_rate: 24.0
 

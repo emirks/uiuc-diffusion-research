@@ -299,7 +299,8 @@ def main() -> None:
             log.info("Sample done in %.1fs.", elapsed)
 
             # ── Step 5: Save ──────────────────────────────────────────────────
-            video_path = sample_dir / f"s{seed}_K{num_clip_frames}_lerp.mp4"
+            # Filename encodes the swept hyperparam num_frames (N) alongside seed and K.
+            video_path = sample_dir / f"s{seed}_K{num_clip_frames}_N{num_frames}_lerp.mp4"
             encode_video(
                 video_np[0],
                 fps=int(frame_rate),
