@@ -1,0 +1,100 @@
+# exp_028 — VAE latent composition with held boundaries + pixel-anchored bridge
+#
+# Fork of exp_023 with two fixes to the dissolve / flicker:
+#
+#   (1) "Hold" the start and end clip latents pure in the start/end regions of
+#       the timeline, so the dissolve cannot bleed into the clean playback
+#       windows. In exp_023 the lerp's `alpha = t / (T_total - 1)` ramps from
+#       0 across the whole timeline, so at t=1 there is already a 14% mix
+#       with `end_lat[0]` — the start clip never gets to play clean.
+#
+#   (2) Replace the in-the-middle latent-space lerp with a VAE-encoded pixel
+#       cross-fade. exp_023 blends `start_lat[-1]` (a *motion* latent encoding
+#       pixel frames 17-24 of the start clip) with `end_lat[0]` (a *key-frame*
+#       latent encoding pixel frame 0 of the end clip alone). That mixes two
+#       different latent semantics — the VAE was never trained on this kind
+#       of latent — and produces flicker on decode. The pixel-bridge mode
+#       instead lets the VAE produce its own coherent latent volume for the
+#       cross-fade.
+#
+# Three modes run per sample (configurable list) so we can compare side by side:
+#   - "naive"            : exp_023 behavior (baseline of the problem)
+#   - "hold_lerp_hold"   : hold start/end, latent-space lerp in the middle
+#   - "hold_bridge_hold" : hold start/end, VAE-encoded pixel cross-fade in the middle
+
+model:
+  model_id: "Lightricks/LTX-2"
+
+# Same easy / mid / hard subset used by exp_027 (3 DAVIS pairs). Prompts kept
+# for cross-experiment parity but never read by run.py — exp_028 is VAE-only.
+samples:
+
+  - sample_id: "class2__mallard-fly__mallard-water"
+    class: "2_similar_context_similar_category_different_movement"
+    difficulty: "easy"
+    start_clip: "data/processed/DAVIS/mallard-fly/2s.mp4"
+    end_clip:   "data/processed/DAVIS/mallard-water/2s.mp4"
+    prompt: >
+      A mallard duck moves alertly across a grassy riverbank, its wings tucked and
+      head turning as it navigates the ground. The scene transitions smoothly to a
+      mallard floating on gently rippling water, its body rocking softly with the
+      current, surrounded by shimmering reflections of light on the surface.
+
+  - sample_id: "class5__car-roundabout__bus"
+    class: "5_different_context_similar_category_similar_movement"
+    difficulty: "mid"
+    start_clip: "data/processed/DAVIS/car-roundabout/2s.mp4"
+    end_clip:   "data/processed/DAVIS/bus/2s.mp4"
+    prompt: >
+      A compact city car navigates a busy roundabout in an urban square, buildings
+      and parked cars visible in the background as it follows the circular lane.
+      The scene transitions to a large city bus occupying most of the frame,
+      moving steadily along a wide urban street past a bus stop, its
+      advertisement-covered sides reflecting the surroundings.
+
+  - sample_id: "class8__blackswan__boat"
+    class: "8_different_context_different_category_different_movement"
+    difficulty: "hard"
+    start_clip: "data/processed/DAVIS/blackswan/2s.mp4"
+    end_clip:   "data/processed/DAVIS/boat/2s.mp4"
+    prompt: >
+      A black swan moves gracefully along a narrow stone-edged canal, its dark
+      plumage contrasting with the algae-green water and the textured wall behind
+      it. The still enclosed waterway opens into a wide sunlit sea where a
+      weathered fishing boat cuts through choppy blue-green waves, its hull
+      generating a white wake as it heads toward a rocky coastline.
+
+inputs:
+  # Pixel frames per clip → (25-1)//8+1 = 4 latent frames per clip.
+  num_clip_frames: 25
+
+inference:
+  # Sweep three total-video lengths to characterise how bridge-region size
+  # affects perceived dissolve quality. With T_clip=4 (from 25 pixel input):
+  #   121 → T_total=16 → M=8  (long bridge,  ~2.67s of cross-fade @24fps)
+  #    89 → T_total=12 → M=4  (mid bridge,   ~1.33s)
+  #    65 → T_total= 9 → M=1  (single-latent bridge — fastest transition possible
+  #                            while keeping both clips fully held)
+  height: 512
+  width: 768
+  num_frames_sweep: [121, 89, 65]
+  frame_rate: 24.0
+
+composition:
+  # Which composition strategies to run per sample. All three produce one
+  # mp4 per sample, named with the mode in the filename for easy comparison.
+  modes:
+    - "naive"
+    - "hold_lerp_hold"
+    - "hold_bridge_hold"
+  # Optional knob for `hold_bridge_hold`: the source pixel cross-fade is a
+  # linear blend between *last frame of start* and *first frame of end*. If
+  # you want to extend it to use the last/first K frames as anchors instead,
+  # add a `bridge_anchor_frames: K` here — currently unused (single-frame
+  # anchors only).
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_028_vae_latent_composition"
