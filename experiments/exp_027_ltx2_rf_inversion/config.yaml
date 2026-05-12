@@ -1,0 +1,101 @@
+# exp_027 — LTX-2 RF-Solver Flow Inversion
+#
+# Step 6 of the editing pipeline: take a freshly-generated Stage-1 latent z₀
+# and invert it back to a noise endpoint z₁ via RF-Solver (2nd-order midpoint)
+# such that re-denoising z₁ with the same solver recovers z₀ tightly (target
+# LPIPS < 0.05 between decode(z₀) and decode(z₀_recon)).
+#
+# Each sample runs:
+#   (a) Stage-1 generation (40 steps, CFG=4) → packed clean latent z₀
+#   (b) Inversion (30 RF-Solver midpoint steps, CFG=1, σ: 0→1) → z₁ + checkpoints
+#   (c) Reconstruction (30 RF-Solver midpoint steps, CFG=1, σ: 1→0) → z₀_recon
+#   (d) Decode both through VAE, per-frame LPIPS
+#   (e) If mean LPIPS > threshold, automatically retry inversion+recon at 50 steps
+#
+# NOT in scope:
+#   - audio stream is inverted (zero stream passed through transformer, not stepped)
+#   - upsampler / Stage 2 (inversion runs purely on Stage-1 latents)
+#   - distilled LoRA (off during inversion)
+
+model:
+  model_id: "Lightricks/LTX-2"
+  distilled_lora_strength: 1.0  # only relevant for the optional Stage 2 preview
+
+# Diagnostic subset: 3 DAVIS pairs spanning easy / mid / hard transition difficulty.
+# Identical clip pairs and prompts to exp_020 (matched-conditioning inversion).
+samples:
+
+  - sample_id: "class2__mallard-fly__mallard-water"
+    class: "2_similar_context_similar_category_different_movement"
+    difficulty: "easy"
+    start_clip: "data/processed/DAVIS/mallard-fly/2s.mp4"
+    end_clip:   "data/processed/DAVIS/mallard-water/2s.mp4"
+    prompt: >
+      A mallard duck moves alertly across a grassy riverbank, its wings tucked and
+      head turning as it navigates the ground. The scene transitions smoothly to a
+      mallard floating on gently rippling water, its body rocking softly with the
+      current, surrounded by shimmering reflections of light on the surface.
+
+  - sample_id: "class5__car-roundabout__bus"
+    class: "5_different_context_similar_category_similar_movement"
+    difficulty: "mid"
+    start_clip: "data/processed/DAVIS/car-roundabout/2s.mp4"
+    end_clip:   "data/processed/DAVIS/bus/2s.mp4"
+    prompt: >
+      A compact city car navigates a busy roundabout in an urban square, buildings
+      and parked cars visible in the background as it follows the circular lane.
+      The scene transitions to a large city bus occupying most of the frame,
+      moving steadily along a wide urban street past a bus stop, its
+      advertisement-covered sides reflecting the surroundings.
+
+  - sample_id: "class8__blackswan__boat"
+    class: "8_different_context_different_category_different_movement"
+    difficulty: "hard"
+    start_clip: "data/processed/DAVIS/blackswan/2s.mp4"
+    end_clip:   "data/processed/DAVIS/boat/2s.mp4"
+    prompt: >
+      A black swan moves gracefully along a narrow stone-edged canal, its dark
+      plumage contrasting with the algae-green water and the textured wall behind
+      it. The still enclosed waterway opens into a wide sunlit sea where a
+      weathered fishing boat cuts through choppy blue-green waves, its hull
+      generating a white wake as it heads toward a rocky coastline.
+
+inputs:
+  # LTX-2 temporal scale = 8: (25-1)//8+1 = 4 latent frames per clip.
+  num_clip_frames: 25
+  start_clip_strength: 1.0
+  end_clip_strength: 1.0
+  # Negative prompt used only by Stage-1 generation (the "ground-truth" source).
+  # Inversion runs at CFG=1 so the negative prompt is unused there.
+  negative_prompt: >
+    blurry, out of focus, overexposed, underexposed, low contrast, washed out colors,
+    excessive noise, grainy texture, poor lighting, flickering, motion blur, distorted
+    proportions, unnatural skin tones, deformed facial features, extra limbs, disfigured
+    hands, artifacts, inconsistent perspective, camera shake, jittery movement, AI artifacts.
+
+inference:
+  # Stage-1 generation (the source-of-truth pass)
+  height: 512
+  width: 768
+  num_frames: 121
+  frame_rate: 24.0
+  num_inference_steps: 40
+  guidance_scale: 4.0
+
+inversion:
+  # RF-Solver midpoint inversion (paper setting)
+  num_steps: 30
+  guidance_scale: 1.0           # uncond only (60 NFE total = 30 steps × 2 calls)
+  solver: "rf_solver_midpoint_2nd"
+  # Diagnostic checkpoints — saved at the inversion step whose σ is closest to each value.
+  cache_sigma_checkpoints: [0.25, 0.50, 0.75]
+  # Auto-escalation if LPIPS gate fails on the canonical 30-step run.
+  escalation:
+    lpips_threshold: 0.05
+    retry_num_steps: 50
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_027_ltx2_rf_inversion"
