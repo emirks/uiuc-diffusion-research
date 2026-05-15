@@ -1,0 +1,98 @@
+# exp_033 — LTX-2 RF-Solver inversion with end-clip first-latent-frame dropout.
+#
+# Iteration It-2 of the RF-inversion research loop (notes/rf_inversion_loop.md).
+# Fork of exp_032 with EXACTLY ONE change (in run.py): restore production
+# sub-clip anchors (deployable, sub-clip-isolated as in exp_030) but zero out
+# the conditioning mask at the first latent frame of the end sub-clip — the
+# token position that is maximally discontinuous between standalone sub-clip
+# encode and full-clip encode (causal-VAE asymmetry). Tests whether this one
+# position carries most of the production-anchor cost, with the rest within
+# reach of exp_032's perceptual bar (8/10 pass, PSNR median ~41).
+#
+# Per sample: VAE-encode the clip → z0, then
+#   (a) Invert      z0  → z1   (midpoint, CFG=1)
+#   (b) Reconstruct z1  → z0_recon (midpoint, CFG=1)  — solver self-consistency
+#   (c) Regenerate  z1  → z0_regen (Euler,    CFG=4)  — production-trajectory recovery
+#
+# VC conditioning: first 1s (25 frames) and last 1s (25 frames) of the SAME
+# video define the mask geometry. Anchors come from separately re-encoded
+# sub-clips (production / deployable). The token at the end-clip first latent
+# frame (i.e. latent index N_lat-K_lat) is masked OUT (mask=0) so the solver
+# fills it freely. Source clips are 5s @ 24fps from data/processed/transitions/
+# shadow_smoke (shadow_smoke_2.mp4 is 10s; we use its first 5s).
+#
+# Prompt strategy: deliberately minimal — LTX-2 follows visual conditioning
+# better when the text channel doesn't over-specify.
+#
+# Audio: one fixed audio context (encoded silent mel through pipe.audio_vae)
+# built once per sample, used unchanged across invert / recon / regen.
+
+model:
+  model_id: "Lightricks/LTX-2"
+
+samples:
+  - sample_id: "shadow_smoke_1"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4"
+  - sample_id: "shadow_smoke_2"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_2.mp4"
+  - sample_id: "shadow_smoke_3"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_3.mp4"
+  - sample_id: "shadow_smoke_4"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_4.mp4"
+  - sample_id: "shadow_smoke_5"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_5.mp4"
+  - sample_id: "shadow_smoke_6"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4"
+  - sample_id: "shadow_smoke_7"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_7.mp4"
+  - sample_id: "shadow_smoke_8"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_8.mp4"
+  - sample_id: "shadow_smoke_9"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_9.mp4"
+  - sample_id: "shadow_smoke_0"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke.mp4"
+
+inputs:
+  num_clip_frames: 25                # 1 second @ 24 fps for both endpoints
+  start_clip_strength: 1.0
+  end_clip_strength: 1.0
+  # One shared short prompt — the transition motif in a single sentence.
+  # Compact on purpose: LTX-2 follows visual conditioning better when the
+  # text channel doesn't over-specify.
+  prompt: "A floating black smoke transition between objects."
+  negative_prompt: "blurry, distorted, low quality."
+
+inference:
+  # max_area + ref_image lets resolve_resolution auto-orient per clip
+  # (portrait vs landscape source). 512*768 = 393216.
+  max_area: 393216
+  num_frames: 121                    # 5s @ 24fps; (121-1) % 4 == 0
+  frame_rate: 24.0
+  num_inference_steps: 40            # used by inversion/recon step count (no Stage-1)
+  guidance_scale: 4.0                # used by regen
+
+inversion:
+  num_steps: 40
+  guidance_scale: 1.0                # mandatory for RF inversion
+  solver: "rf_solver_midpoint_2nd"
+  cache_sigma_checkpoints: [0.25, 0.50, 0.75]
+  # Audio handling: a single fixed audio context (encoded silent mel through
+  # pipe.audio_vae) is built once per sample and used unchanged across
+  # invert / reconstruct / regenerate. No knob, no zeros, no capture.
+  gate:
+    # Informational thresholds (logged per condition; no retry).
+    latent_rel_max: 0.10
+    latent_cos_min: 0.99
+    latent_rel_max_regen_mult: 2.0
+    latent_cos_min_regen: 0.97
+
+regeneration:
+  num_steps: 40
+  guidance_scale: 4.0
+  solver: "euler"
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_033_ltx2_rf_inv_drop1"
