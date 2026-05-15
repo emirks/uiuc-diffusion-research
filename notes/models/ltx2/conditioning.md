@@ -611,6 +611,41 @@ The transformer is a "fill-in-the-blank" machine:
 
 ---
 
+## 14-b. Self-conditioning anchor rule for RF-Solver inversion (exp_030→032)
+
+**When inverting a real clip with in-grid C2V conditioning, build `clean_latents`
+by slicing the SAME full-clip encode that produced z₀ — never by separately
+re-encoding the conditioning sub-clips.**
+
+The LTX-2 video VAE is **causal** (`F_lat = (F_pix−1)//8 + 1`; each latent frame
+depends on preceding temporal context). Therefore `vae.encode(first-1s sub-clip)`
+≠ the first few latent frames of `vae.encode(full clip)`. They differ by a real,
+systematic amount.
+
+RF-Solver inversion hard-pins the conditioned token positions to `clean_latents`
+at **every** solver step (x0-clamp + hard re-clamp). If `clean_latents` came from
+re-encoded sub-clips, the solver is pinned to anchors that **do not match z₀'s own
+conditioned positions** — it is being asked to find noise consistent with a
+contradiction. This was the dominant cause of exp_030's collapse.
+
+**Evidence (exp_031 ladder + exp_032 confirmation):**
+- exp_030 (re-encoded sub-clip anchors): shadow_smoke recon_rel ≈ 0.68, **0/10**
+  clips pass the perceptual bar, recon PSNR median ~18.
+- exp_032 (true self-conditioning: `clean_latents` = exact slices of z₀): same
+  pipeline otherwise — recon_rel median ≈ 0.105, **8/10** pass, PSNR median 40.9.
+- Implementation: after `apply_visual_conditioning(...)` builds the conditioning
+  *mask geometry*, discard its `clean_latents` output and use `z0_packed.clone()`.
+  The inverter only reads `clean_latents` where the mask is 1, so the full z₀ is
+  equivalent to slicing — and exact by construction (`z0_cond == clean_latents`).
+
+**Corollaries from the same ladder (exp_031 R0→R5):**
+- Conditioning is **load-bearing** — vanilla midpoint RF inversion of a
+  VAE-encoded latent with *no* conditioning diverges (free_rel 1.1–1.65). The
+  hard-pinned anchors + x0-clamp are what keep the solver on-manifold.
+- VAE-encoder **provenance** and real **natural** content are *not* the problem:
+  `encode(real clip)` + true self-conditioning inverts essentially perfectly
+  (free_rel 0.015–0.062). Stylized content adds only mild cost.
+
 ## 15. Key Source Files Reference
 
 
