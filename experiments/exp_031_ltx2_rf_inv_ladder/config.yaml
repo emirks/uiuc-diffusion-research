@@ -1,0 +1,162 @@
+# exp_031 — LTX-2 RF-Solver inversion: the R0→R5 localization ladder.
+#
+# Iteration It-0 of the RF-inversion research loop (notes/rf_inversion_loop.md).
+# Goal: localize WHERE degradation enters between exp_029 (works on generated
+# latents, inv_recon_rel ~0.01) and exp_030 (collapsed on real clips, ~0.68).
+#
+# Six rungs. Each changes EXACTLY ONE variable from a well-defined predecessor:
+#
+#   R0  z0 = exp_029 z0.pt (direct)        + external DAVIS conditioning
+#         └ baseline; re-runs exp_029 in this unified harness. HALT gate:
+#           if R0 free-rel > ~0.05 the harness diverges from exp_029 — stop.
+#   R1  z0 = encode(decode(z0.pt))         + external DAVIS conditioning
+#         └ Δ provenance: transformer-output latent → VAE-encoder-output latent
+#   R2  z0 = encode(decode(z0.pt))         + NO conditioning
+#         └ Δ conditioning off (vanilla inversion)
+#   R3  z0 = encode(decode(z0.pt))         + self conditioning (own endpoints)
+#         └ Δ conditioning source: external → self
+#   R4  z0 = encode(real DAVIS clip)       + self conditioning
+#         └ Δ content: decoded-generation → real natural camera footage
+#   R5  z0 = encode(shadow_smoke clip)     + self conditioning
+#         └ Δ content: real natural → real stylized
+#
+# Held FIXED across every rung (so never a confound): resolution 512x768,
+# 121 frames, 40 invert + 40 recon midpoint steps, CFG=1, zeros audio,
+# seed 42, 3 samples/rung, invert+recon only (no regen).
+#
+# Primary metric: FREE-positions-only latent rel/cos. Conditioned positions are
+# hard-pinned every solver step in both directions, so their round-trip error
+# is trivially ~0 — including them (exp_030's all-positions metric) just adds a
+# constant offset. Also logged: all-positions + cond-positions latent, and
+# perceptual PSNR/SSIM/LPIPS on the decoded recon.
+
+model:
+  model_id: "Lightricks/LTX-2"
+
+# ── The ladder ───────────────────────────────────────────────────────────────
+# sample_set: which sample list this rung iterates (davis = the 3 exp_029
+# pairs, R0-R4; shadow_smoke = the 3 stylized clips, R5).
+# z0_source:  gen_latent | decode_encode | encode_clip
+# conditioning: external | none | self
+ladder:
+  - rung: R0
+    z0_source: gen_latent
+    conditioning: external
+    sample_set: davis
+    note: "exp_029 baseline reproduced in unified harness (HALT gate)"
+  - rung: R1
+    z0_source: decode_encode
+    conditioning: external
+    sample_set: davis
+    note: "isolates VAE round-trip / on-manifold-ness"
+  - rung: R2
+    z0_source: decode_encode
+    conditioning: none
+    sample_set: davis
+    note: "isolates C2V cost (vanilla inversion)"
+  - rung: R3
+    z0_source: decode_encode
+    conditioning: self
+    sample_set: davis
+    note: "isolates conditioning source (external vs self)"
+  - rung: R4
+    z0_source: encode_clip
+    conditioning: self
+    sample_set: davis
+    clip_field: davis_solo_clip
+    prompt_field: davis_solo_prompt
+    note: "isolates real natural content (edge-padded DAVIS clip)"
+  - rung: R5
+    z0_source: encode_clip
+    conditioning: self
+    sample_set: shadow_smoke
+    clip_field: clip
+    prompt_field: prompt
+    note: "isolates real stylized content"
+
+# ── DAVIS samples (R0-R4) — identity, prompts, conditioning clips ────────────
+# z0.pt for R0/R1/R2/R3 is reused from exp_029 run_0002 (decode-as-fake-real
+# trick). davis_solo_* is the real single clip used for R4 (the END clip of the
+# pair, a genuine natural video — edge-padded to num_frames inside run.py).
+davis:
+  z0_run_dir: "outputs/videos/exp_029_ltx2_rf_inversion_v2/run_0002"
+  samples:
+    - sample_id: "class2__mallard-fly__mallard-water"
+      start_clip: "data/processed/DAVIS/mallard-fly/2s.mp4"
+      end_clip:   "data/processed/DAVIS/mallard-water/2s.mp4"
+      prompt: >
+        A mallard duck moves alertly across a grassy riverbank, its wings tucked and
+        head turning as it navigates the ground. The scene transitions smoothly to a
+        mallard floating on gently rippling water, its body rocking softly with the
+        current, surrounded by shimmering reflections of light on the surface.
+      davis_solo_clip: "data/processed/DAVIS/mallard-water/full.mp4"
+      davis_solo_prompt: "A mallard duck floats on gently rippling water, surrounded by shimmering reflections."
+    - sample_id: "class5__car-roundabout__bus"
+      start_clip: "data/processed/DAVIS/car-roundabout/2s.mp4"
+      end_clip:   "data/processed/DAVIS/bus/2s.mp4"
+      prompt: >
+        A compact city car navigates a busy roundabout in an urban square, buildings
+        and parked cars visible in the background as it follows the circular lane.
+        The scene transitions to a large city bus occupying most of the frame,
+        moving steadily along a wide urban street past a bus stop, its
+        advertisement-covered sides reflecting the surroundings.
+      davis_solo_clip: "data/processed/DAVIS/bus/full.mp4"
+      davis_solo_prompt: "A large city bus moves steadily along a wide urban street past a bus stop."
+    - sample_id: "class8__blackswan__boat"
+      start_clip: "data/processed/DAVIS/blackswan/2s.mp4"
+      end_clip:   "data/processed/DAVIS/boat/2s.mp4"
+      prompt: >
+        A black swan moves gracefully along a narrow stone-edged canal, its dark
+        plumage contrasting with the algae-green water and the textured wall behind
+        it. The still enclosed waterway opens into a wide sunlit sea where a
+        weathered fishing boat cuts through choppy blue-green waves, its hull
+        generating a white wake as it heads toward a rocky coastline.
+      davis_solo_clip: "data/processed/DAVIS/boat/full.mp4"
+      davis_solo_prompt: "A weathered fishing boat cuts through choppy blue-green waves toward a rocky coastline."
+
+# ── shadow_smoke samples (R5) — real stylized clips ─────────────────────────
+shadow_smoke:
+  samples:
+    - sample_id: "shadow_smoke_1"
+      clip: "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4"
+      prompt: "A floating black smoke transition between objects."
+    - sample_id: "shadow_smoke_3"
+      clip: "data/processed/transitions/shadow_smoke/shadow_smoke_3.mp4"
+      prompt: "A floating black smoke transition between objects."
+    - sample_id: "shadow_smoke_4"
+      clip: "data/processed/transitions/shadow_smoke/shadow_smoke_4.mp4"
+      prompt: "A floating black smoke transition between objects."
+
+inputs:
+  num_clip_frames: 25
+  start_clip_strength: 1.0
+  end_clip_strength: 1.0
+  # negative_prompt unused: invert/recon run at CFG=1 (uncond branch never computed).
+  negative_prompt: ""
+
+inference:
+  # FIXED across all rungs — never a confound. Matches exp_029's generation grid.
+  height: 512
+  width: 768
+  num_frames: 121
+  frame_rate: 24.0
+
+inversion:
+  num_steps: 40
+  guidance_scale: 1.0           # RF-Solver invertibility requirement (always CFG=1 here)
+  solver: "rf_solver_midpoint_2nd"
+  cache_sigma_checkpoints: [0.25, 0.50, 0.75]
+  # Audio: zeros — proven non-breaking in exp_029, held constant across all rungs.
+  audio_strategy: "zeros"
+  # HALT gate: R0 free-rel must reproduce exp_029 within ~2x.
+  r0_halt_free_rel_max: 0.05
+
+runtime:
+  seed: 42
+  device: cuda
+  dtype: bfloat16
+  cpu_offload: true
+
+outputs:
+  dir: "outputs/videos/exp_031_ltx2_rf_inv_ladder"
+  fps: 24
