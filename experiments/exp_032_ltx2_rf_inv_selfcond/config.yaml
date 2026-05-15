@@ -1,0 +1,95 @@
+# exp_032 — LTX-2 RF-Solver inversion on real clips, with TRUE self-conditioning.
+#
+# Iteration It-1 of the RF-inversion research loop (notes/rf_inversion_loop.md).
+# Fork of exp_030 with EXACTLY ONE change (in run.py): `clean_latents` is now
+# the exact slices of z0 itself, not separately re-encoded sub-clips. exp_031's
+# R0→R5 ladder localized exp_030's collapse (recon_rel ~0.68, 0/10) to that
+# causal-VAE sub-clip mismatch ("fault #2"); exp_031 R5 validated the fix on 3
+# clips (free_rel 0.68 → ~0.11, 2/3 pass). exp_032 confirms on the full 10-clip
+# set — a direct attempt at loop exit ①.
+#
+# Per sample: VAE-encode the clip → z0, then
+#   (a) Invert      z0  → z1   (midpoint, CFG=1)
+#   (b) Reconstruct z1  → z0_recon (midpoint, CFG=1)  — solver self-consistency
+#   (c) Regenerate  z1  → z0_regen (Euler,    CFG=4)  — production-trajectory recovery
+#
+# VC conditioning: first 1s (25 frames) and last 1s (25 frames) of the SAME
+# video define the mask geometry; the anchors pinned there are z0's own
+# conditioned positions. Source clips are 5s @ 24fps from data/processed/
+# transitions/shadow_smoke (shadow_smoke_2.mp4 is 10s; we use its first 5s).
+#
+# Prompt strategy: deliberately minimal — LTX-2 follows visual conditioning
+# better when the text channel doesn't over-specify.
+#
+# Audio: one fixed audio context (encoded silent mel through pipe.audio_vae)
+# built once per sample, used unchanged across invert / recon / regen.
+
+model:
+  model_id: "Lightricks/LTX-2"
+
+samples:
+  - sample_id: "shadow_smoke_1"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4"
+  - sample_id: "shadow_smoke_2"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_2.mp4"
+  - sample_id: "shadow_smoke_3"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_3.mp4"
+  - sample_id: "shadow_smoke_4"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_4.mp4"
+  - sample_id: "shadow_smoke_5"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_5.mp4"
+  - sample_id: "shadow_smoke_6"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4"
+  - sample_id: "shadow_smoke_7"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_7.mp4"
+  - sample_id: "shadow_smoke_8"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_8.mp4"
+  - sample_id: "shadow_smoke_9"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_9.mp4"
+  - sample_id: "shadow_smoke_0"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke.mp4"
+
+inputs:
+  num_clip_frames: 25                # 1 second @ 24 fps for both endpoints
+  start_clip_strength: 1.0
+  end_clip_strength: 1.0
+  # One shared short prompt — the transition motif in a single sentence.
+  # Compact on purpose: LTX-2 follows visual conditioning better when the
+  # text channel doesn't over-specify.
+  prompt: "A floating black smoke transition between objects."
+  negative_prompt: "blurry, distorted, low quality."
+
+inference:
+  # max_area + ref_image lets resolve_resolution auto-orient per clip
+  # (portrait vs landscape source). 512*768 = 393216.
+  max_area: 393216
+  num_frames: 121                    # 5s @ 24fps; (121-1) % 4 == 0
+  frame_rate: 24.0
+  num_inference_steps: 40            # used by inversion/recon step count (no Stage-1)
+  guidance_scale: 4.0                # used by regen
+
+inversion:
+  num_steps: 40
+  guidance_scale: 1.0                # mandatory for RF inversion
+  solver: "rf_solver_midpoint_2nd"
+  cache_sigma_checkpoints: [0.25, 0.50, 0.75]
+  # Audio handling: a single fixed audio context (encoded silent mel through
+  # pipe.audio_vae) is built once per sample and used unchanged across
+  # invert / reconstruct / regenerate. No knob, no zeros, no capture.
+  gate:
+    # Informational thresholds (logged per condition; no retry).
+    latent_rel_max: 0.10
+    latent_cos_min: 0.99
+    latent_rel_max_regen_mult: 2.0
+    latent_cos_min_regen: 0.97
+
+regeneration:
+  num_steps: 40
+  guidance_scale: 4.0
+  solver: "euler"
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_032_ltx2_rf_inv_selfcond"
