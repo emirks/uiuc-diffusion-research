@@ -81,6 +81,23 @@ Doc: [Two-stages Generation](https://github.com/huggingface/diffusers/blob/main/
 
 ---
 
+## 6b. CFG (positive / negative prompt) in `LTX2ConditionPipeline`
+
+Vanilla cond/uncond CFG, batched in one forward pass (file: `diffusers/pipelines/ltx2/pipeline_ltx2_condition.py`).
+
+| Aspect | Detail |
+| ------ | ------ |
+| Switch | `do_classifier_free_guidance = guidance_scale > 1.0` (property). |
+| Encode | `encode_prompt` runs Gemma twice: `prompt` → `prompt_embeds`, `negative_prompt or ""` → `negative_prompt_embeds` (only if CFG on). |
+| Batch layout | `prompt_embeds = cat([neg, pos], dim=0)` — **uncond first**. RoPE coords, attn mask, conditioning mask all duplicated. |
+| Forward | One transformer call per step on `cat([latents]*2)`; cache scope `cond_uncond`. Same for audio. |
+| Combine | `chunk(2)` → `(uncond, text)`; `ε = ε_uncond + s·(ε_text − ε_uncond)`. Audio uses the **same** `guidance_scale`. |
+| Rescale | `guidance_rescale > 0` → `rescale_noise_cfg` (paper 2305.08891). Off by default. |
+| `guidance_scale = 1.0` | CFG fully off — no uncond pass, `negative_prompt` ignored, batch is `1×B` (Stage 2 case). |
+| vs. clip conditioning | `LTX2VideoCondition.strength` blends `denoised_sample` with `clean_latents` via `conditioning_mask` **after** CFG — independent mechanism, no uncond involved. |
+
+---
+
 ## 7. Conditioning patterns (quick summary)
 
 | Pattern | API | What happens |
