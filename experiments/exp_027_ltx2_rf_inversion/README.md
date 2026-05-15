@@ -8,11 +8,22 @@ Step 7 (feature injection from known-good transitions).
 ## Question
 
 Can RF-Solver (2nd-order midpoint, 30 steps) invert an LTX-2 Stage-1 latent
-under our C2V conditioning so that the round-trip
-**decode(z₀) ↔ decode(invert→denoise(z₀))** closes to **LPIPS < 0.05**?
+under our C2V conditioning so that the round-trip is healthy across both
+**latent space** (z₀ ≈ z₀_recon) and **pixel space** (decode(z₀) ≈
+decode(z₀_recon))?
 
-If yes → cache (z₀, z₁, σ-checkpoints) and proceed to Step 7. If no → escalate
-to 50 steps; if still failing, fall back to 3rd-order RK.
+Gate (latent-space, decode-free):
+
+- `‖z₀_recon − z₀‖₂ / ‖z₀‖₂ < 0.10`
+- `cos(z₀_recon, z₀) > 0.99`
+
+Reported (decoded-space): per-frame PSNR (dB), SSIM, LPIPS (AlexNet), and
+temporal-consistency flicker `|Δsrc(t,t+1) − Δrec(t,t+1)|`. Per-frame arrays
+and the worst-frame index are saved so a single bad frame is debuggable
+without re-running.
+
+If the latent gate passes → cache (z₀, z₁, σ-checkpoints) and proceed to Step 7.
+If it fails → escalate to 50 steps; if still failing, fall back to 3rd-order RK.
 
 ## Method
 
@@ -36,10 +47,15 @@ For each sample (3 DAVIS pairs spanning easy/mid/hard):
   `LTX2ConditionPipeline` runs generation).
   - Audio stream passed as zeros; not stepped.
 3. **Reconstruct** z₁ → z₀_recon with the **same midpoint solver, reversed σ grid**.
-4. **Validate**: decode both z₀ and z₀_recon through the VAE; compute per-frame
-  LPIPS (AlexNet backbone). Gate: `mean(LPIPS) < 0.05`.
-5. **Escalation**: if the gate fails, automatically retry inversion+reconstruction
-  at 50 steps. The 3rd-order RK switch is a separate config (not auto-triggered).
+4. **Validate**: run the unified `MetricSuite` (`run.py:480`) on both the
+  packed latents (`z₀` vs `z₀_recon`) and the decoded videos:
+  - **Primary gate (latent-space)** — `latent_rel < 0.10` AND `latent_cos > 0.99`.
+    Decode-free: isolates inversion error from VAE-decode loss.
+  - **Reported (decoded-space)** — PSNR (dB), SSIM, LPIPS, temporal flicker.
+    Each metric ships per-frame array + worst-frame index in `inv_meta.yaml`.
+5. **Escalation**: if either latent condition fails, automatically retry
+  inversion+reconstruction at 50 steps. The 3rd-order RK switch is a separate
+  config (not auto-triggered).
 
 ## Math (RF-Solver Eq. 9, midpoint form)
 
@@ -92,8 +108,9 @@ not auto-triggered) is the next escalation.
 samples       : 3 DAVIS pairs (easy / mid / hard)
 generation    : 40 steps, CFG=4 (Stage 1 only; no upsample, no Stage 2)
 inversion     : 30 steps, CFG=1, midpoint 2nd-order, audio = zeros
-metric        : per-frame LPIPS on decode(z₀) vs decode(z₀_recon)
-gate          : mean LPIPS < 0.05; auto-retry at 50 steps if missed
+gate          : latent_rel < 0.10  AND  latent_cos > 0.99
+                (auto-retry at 50 steps if either fails)
+reported      : PSNR / SSIM / LPIPS / temporal-flicker — per-frame + summary
 ```
 
 ## How to run
@@ -116,7 +133,9 @@ run_dir/
     z_t_50.pt         # σ ≈ 0.50
     z_t_75.pt         # σ ≈ 0.75
     inv_meta.yaml     # prompt, seed, scheduler config dump, σ grid, NFE,
-                      # LPIPS mean/std/max, gate pass/fail, retry status
+                      # full metrics block (psnr / ssim / lpips / temporal /
+                      # latent — each with per-frame array + worst-frame index),
+                      # gate pass/fail + thresholds, retry status
     source_video.mp4  # decode(z₀) — the source-of-truth
     recon_video.mp4   # decode(z₀_recon) — the round-tripped reconstruction
   config_snapshot.yaml

@@ -89,9 +89,15 @@ inversion:
   solver: "rf_solver_midpoint_2nd"
   # Diagnostic checkpoints — saved at the inversion step whose σ is closest to each value.
   cache_sigma_checkpoints: [0.25, 0.50, 0.75]
-  # Auto-escalation if LPIPS gate fails on the canonical 30-step run.
+  # Auto-escalation gate. Primary check operates in *latent space* (decode-free),
+  # which isolates inversion error from VAE-decode loss. Decoded-space metrics
+  # (PSNR / SSIM / LPIPS / temporal flicker) are reported in inv_meta.yaml and
+  # summary.yaml but do not gate the retry. Retry fires only if either latent
+  # condition fails on the canonical 30-step run.
   escalation:
-    lpips_threshold: 0.05
+    latent_rel_max: 0.10      # ‖z0_recon − z0‖₂ / ‖z0‖₂ must be < this to pass
+    latent_cos_min: 0.99      # cos(z0_recon, z0)            must be > this to pass
+    lpips_threshold: 0.05     # reported only (back-compat); not used for gating
     retry_num_steps: 50
 
 runtime:
