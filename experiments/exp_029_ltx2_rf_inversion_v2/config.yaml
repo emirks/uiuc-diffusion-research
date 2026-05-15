@@ -1,0 +1,140 @@
+# exp_029 — LTX-2 RF-Solver Flow Inversion (strict-consistency v2)
+#
+# Fork of exp_027 with six targeted fixes — see README "Why a v2" section.
+#
+# Per sample, four phases now run:
+#   (a) Stage-1 generation       (40 steps, CFG=4, AUDIO trajectory captured) → z0
+#   (b) Inversion                (40 RF-Solver midpoint steps, CFG=1, audio replay reversed) → z1
+#   (c) Reconstruction           (40 RF-Solver midpoint steps, CFG=1, audio replay forward)  → z0_recon
+#   (d) Regeneration             (40 Euler steps,             CFG=4, audio replay forward)   → z0_regen
+#   (e) Metrics + dual gate: inv_recon (b→c)  AND  inv_regen (b→d)
+#
+# Inversion + reconstruction continue to test SOLVER SELF-CONSISTENCY at CFG=1.
+# Regeneration tests GENERATION-TRAJECTORY RECOVERY at the same CFG as the
+# source-of-truth pass — the test that actually matters for Step 7 feature
+# injection, where downstream code will re-denoise z1 with full CFG.
+
+model:
+  model_id: "Lightricks/LTX-2"
+  distilled_lora_strength: 1.0  # only relevant for the optional Stage 2 preview
+
+# Diagnostic subset: 3 DAVIS pairs spanning easy / mid / hard transition difficulty.
+# Identical clip pairs and prompts to exp_020 and exp_027.
+samples:
+
+  - sample_id: "class2__mallard-fly__mallard-water"
+    class: "2_similar_context_similar_category_different_movement"
+    difficulty: "easy"
+    start_clip: "data/processed/DAVIS/mallard-fly/2s.mp4"
+    end_clip:   "data/processed/DAVIS/mallard-water/2s.mp4"
+    prompt: >
+      A mallard duck moves alertly across a grassy riverbank, its wings tucked and
+      head turning as it navigates the ground. The scene transitions smoothly to a
+      mallard floating on gently rippling water, its body rocking softly with the
+      current, surrounded by shimmering reflections of light on the surface.
+
+  - sample_id: "class5__car-roundabout__bus"
+    class: "5_different_context_similar_category_similar_movement"
+    difficulty: "mid"
+    start_clip: "data/processed/DAVIS/car-roundabout/2s.mp4"
+    end_clip:   "data/processed/DAVIS/bus/2s.mp4"
+    prompt: >
+      A compact city car navigates a busy roundabout in an urban square, buildings
+      and parked cars visible in the background as it follows the circular lane.
+      The scene transitions to a large city bus occupying most of the frame,
+      moving steadily along a wide urban street past a bus stop, its
+      advertisement-covered sides reflecting the surroundings.
+
+  - sample_id: "class8__blackswan__boat"
+    class: "8_different_context_different_category_different_movement"
+    difficulty: "hard"
+    start_clip: "data/processed/DAVIS/blackswan/2s.mp4"
+    end_clip:   "data/processed/DAVIS/boat/2s.mp4"
+    prompt: >
+      A black swan moves gracefully along a narrow stone-edged canal, its dark
+      plumage contrasting with the algae-green water and the textured wall behind
+      it. The still enclosed waterway opens into a wide sunlit sea where a
+      weathered fishing boat cuts through choppy blue-green waves, its hull
+      generating a white wake as it heads toward a rocky coastline.
+
+inputs:
+  num_clip_frames: 25
+  start_clip_strength: 1.0
+  end_clip_strength: 1.0
+  # Negative prompt: used by Stage-1 generation (CFG=4) and regeneration (CFG=4).
+  # Dropped in inversion+reconstruction (CFG=1 → uncond branch never computed).
+  negative_prompt: >
+    blurry, out of focus, overexposed, underexposed, low contrast, washed out colors,
+    excessive noise, grainy texture, poor lighting, flickering, motion blur, distorted
+    proportions, unnatural skin tones, deformed facial features, extra limbs, disfigured
+    hands, artifacts, inconsistent perspective, camera shake, jittery movement, AI artifacts.
+
+inference:
+  # Stage-1 generation (the source-of-truth pass)
+  height: 512
+  width: 768
+  num_frames: 121
+  frame_rate: 24.0
+  num_inference_steps: 40
+  guidance_scale: 4.0
+
+inversion:
+  # RF-Solver midpoint inversion — Fix #1: match generation step count.
+  # 40 inversion steps sample σ at the exact points generation visited
+  # (just in reverse). 30→40 closes the largest first-order source of
+  # round-trip drift: discretization mismatch between forward and inverse
+  # passes on a strongly-non-uniform dynamic-shifted σ grid.
+  num_steps: 40
+  guidance_scale: 1.0           # See PHASES_AND_CONTRACTS.md §1 — CFG=1 is mandatory for RF inversion.
+  solver: "rf_solver_midpoint_2nd"
+  cache_sigma_checkpoints: [0.25, 0.50, 0.75]
+
+  # Audio handling — Fix #4 (revised).
+  # Our DAVIS source clips are SILENT; LTX-2's audio stream is co-generated
+  # internally and discarded. We want z1 to be a useful cache for Step 7
+  # (feature injection) where a NEW pipe(...) call will init its own audio
+  # context — so tying inversion to base-gen's specific audio trajectory
+  # is over-fitting to one roll. exp_027 evidence: samples 1+2 round-tripped
+  # tightly (rel≈0.017) despite audio mismatch → video transformer is robust
+  # to audio context for silent training data.
+  #
+  # Options:
+  #   zeros               : pass torch.zeros(...) at every transformer call. Audio
+  #                         cross-attention contributes a zero vector → effectively
+  #                         "audio off" for invert/reconstruct/regen. DEFAULT.
+  #   capture_and_replay  : record audio_hidden_states during base gen and replay
+  #                         across phases. Kept as opt-in for ablation studies of
+  #                         "does audio context actually matter for round-trip?".
+  #
+  # NOTE: exp_027 used a path that LOOKED like zeros (prepare_audio_latents with
+  # noise_scale=0, latents=None) but actually returned a fixed-random tensor
+  # (because _create_noised_state computes 0*noise + 1*randn). exp_029's "zeros"
+  # mode uses torch.zeros — reproducible and truly inactive.
+  audio_strategy: "zeros"
+
+  gate:
+    # Latent-space gate — applies to BOTH inv_recon and inv_regen.
+    # INFORMATIONAL ONLY: each condition is logged with PASS/FAIL per sample;
+    # no retry. inv_regen ceiling = latent_rel_max * latent_rel_max_regen_mult
+    # since generation-trajectory recovery is strictly harder than solver
+    # self-consistency (CFG=1 invert ↔ CFG=gen regen flow mismatch).
+    latent_rel_max: 0.10              # ‖Δ‖ / ‖z0‖ for inv_recon
+    latent_cos_min: 0.99
+    latent_rel_max_regen_mult: 2.0    # → inv_regen tolerated up to 0.20
+    latent_cos_min_regen: 0.97        # inv_regen cos floor (slightly looser)
+
+# Regeneration — Fix #3: the test that actually matters for Step 7.
+# Take z1 (inversion endpoint) and run the FULL pipeline forward with the
+# same CFG, step count, prompt+neg, seed, and clip conditioning that
+# produced z0. If z1 truly inverts z0, z0_regen should land back near z0.
+# Uses Euler integration (matches pipeline exactly — no midpoint reuse).
+regeneration:
+  num_steps: 40
+  guidance_scale: 4.0
+  solver: "euler"
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_029_ltx2_rf_inversion_v2"
