@@ -18,7 +18,7 @@
     - VAE Lerp between endpoints seem like the dissolve transitions produced by LTX-2.
     - Will check with different transition region lenghts, and state the result better.
 
-### Exp 27, Flow Inversion
+### Exp 27, Flow Inversion Consistency Check
 * Flow inversion is working. 
     Results:
         __main__  ──────────────────────────────────────────────────────────────────────
@@ -28,3 +28,19 @@
         __main__    [PASS] class8__blackswan__boat                        LPIPS mean=0.0128  max=0.0513  steps=30
         __main__  ──────────────────────────────────────────────────────────────────────
 
+
+* Need to match the steps, trajectory changes! 30 - 40
+* Doing the inversion & reconstruction at CFG=1 is okay, only positive prompt effect is occuring.
+
+
+### Exp 29, Improved Flow Inversion for Better & Matching Settings
+* Fixed 
+    - Generation step: 40
+    - CFG=1 is fixed for inversion-reconstruction round-trip.
+    - Added a regeneration path, in generation settings starting from inverted noise, cfg=3.2
+    - Audio was randn, made zeros!
+    - Added more granular logging.
+
+* Still for generated videos, not out-of-distribution inversion&reconsturcion test.
+    Results:
+    
