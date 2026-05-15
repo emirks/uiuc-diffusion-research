@@ -124,3 +124,30 @@ outputs:
 | One-off run script, config, I/O | → `experiments/exp_NNN_…/` |
 | Dataset download / prep | → `scripts/` |
 | Generated files | → `outputs/` |
+
+---
+
+## RunPod
+
+**Before any pod-lifecycle operation, invoke the `runpod-pod-init` skill
+first.** That skill is the source of truth for:
+
+- account / volume / key facts (`sy54sawkcs`, EU-RO-1, the SSH key pair, the
+  shared HF cache, `pod_init.sh`)
+- the `PUBLIC_KEY` env trap (raw GraphQL `podFindAndDeployOnDemand` calls
+  silently leave sshd unstarted without it)
+- the EU-RO-1 capacity poller (raw GraphQL, GPU list with VRAM gating,
+  15 s cadence, heartbeat every 10 cycles)
+- Route A (spin up, hand off) vs Route B (spin up, run experiment via tmux,
+  tear down) playbooks
+- tmux-pane snapshot Monitor pattern (`capture-pane -p ... -S -400 | tail -50`)
+  — pane is ground truth, not the log file
+- `runpodctl` vs raw GraphQL, why `stop pod` + `start pod` loses GPU slots in
+  supply-tight DCs, and other lifecycle gotchas
+
+Triggers (non-exhaustive): "spin up a pod", "give me an A100", any
+`runpodctl create|stop|remove`, any GraphQL `podFindAndDeployOnDemand` /
+`podEditJob`, capacity polling, on-air sshd recovery.
+
+This is broader than auth — the skill captures lessons from past pod-lifecycle
+bugs that aren't obvious from the API surface.
