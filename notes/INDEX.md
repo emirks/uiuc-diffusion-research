@@ -17,9 +17,11 @@ Single entry point for everything learned in this project.
 | [`models/wan21/overview.md`](models/wan21/overview.md) | Wan 2.1 | Latent geometry, conditioning channels, C2V setup, VC-Bench benchmark performance, Hub IDs |
 | [`theory/transformer_architecture.md`](theory/transformer_architecture.md) | Theory | Token embeddings, self-attention mechanics, MLP blocks, output projection, training vs inference pipeline |
 | [`theory/video_diffusion_spaces.md`](theory/video_diffusion_spaces.md) | Theory | The three geometries (video-time, denoising-time, representation), VAE latent vs patch vs transformer hidden space, semantic reasoning |
-| [`rf_inversion_loop.md`](rf_inversion_loop.md) | Process | **ACTIVE** autonomous research loop for real-clip RF-Solver inversion — protocol, success/exit criteria, pod-hour budget, live pre-registration Ledger |
+| [`rf_inversion_loop.md`](rf_inversion_loop.md) | Process | CLOSED autonomous research loop for real-clip RF-Solver inversion — protocol, success/exit criteria, pod-hour budget, full pre-registration Ledger |
+| [`rf_inversion_postmortem.md`](rf_inversion_postmortem.md) | Process | Explanatory complement to the Ledger — narrates the four intervention families, the reasoning behind each, the named cause, paths forward |
 | [`dataset/vc_bench.md`](dataset/vc_bench.md) | Dataset | VC-Bench task definition, class taxonomy (1/2/5/6/8), dataset structure, 9 eval metrics (VQS/SECS/TSS), transfer approach |
 | [`dataset/vc_bench_exploration.md`](dataset/vc_bench_exploration.md) | Dataset | Interactive tools for browsing VC-Bench (FiftyOne, Gradio, options compared) |
+| [`dataset/autotransition.md`](dataset/autotransition.md) | Dataset | AutoTransition (HF, 35k templates, 107 transition names, ~52.9 GB) — JSON schema, split-tar-not-gzip gotcha, partial-download recipe |
 | [`ideas.md`](ideas.md) | Research | Hypothesis / minimal-experiment sketches |
 
 ---
@@ -64,12 +66,19 @@ Temporal VAE scale 4 / spatial scale 8; `num_frames` and `anchor_frames` constra
 
 ### Process
 
-**`rf_inversion_loop.md`** — *Live.* The autonomous research loop bridging exp_029
-(RF-Solver inversion works on generated latents) → exp_030's goal (real clips,
-where it collapsed). Holds the COLD→HOT→COLD iteration protocol, the four exit
-conditions (perceptual success / scientific floor / wall / 8-pod-hour budget),
-pod lifecycle rules, and the growing Ledger of pre-registered iterations. Read
-this before resuming any RF-inversion work.
+**`rf_inversion_loop.md`** — *Closed 2026-05-16 via exit ②.* The autonomous
+research loop bridging exp_029 (RF-Solver inversion on generated latents) →
+exp_030's goal (real clips, where it collapsed). Holds the COLD→HOT→COLD
+iteration protocol, the four exit conditions, pod lifecycle rules, and the
+full Ledger of all 9 deployable recipes tested. Read this before resuming any
+RF-inversion work.
+
+**`rf_inversion_postmortem.md`** — *Closed-loop explanatory report.* Narrates
+what was tried and why: the four intervention families (anchor-quality,
+model-bootstrap middle, solver step-escalation, σ-conditional release), the
+mechanism behind each, why each one failed, the named cause (free-middle cost
+coupled to anchor quality through velocity coupling), and three paths forward
+outside §0. Designed for a reader who wasn't in the room.
 
 ### Research
 
