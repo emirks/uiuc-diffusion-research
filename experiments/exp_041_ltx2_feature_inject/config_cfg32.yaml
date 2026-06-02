@@ -1,0 +1,50 @@
+# exp_041 — CFG=3.2 variant of the first feature-injection experiment.
+#
+# Identical to config.yaml except the edit pass runs at the production-style
+# guidance scale (3.2) instead of CFG=1. This follows the RF-Edit convention:
+#   - the SOURCE cache (exp_040) was taken at CFG=1 (faithful round-trip),
+#   - the EDIT pass runs at CFG>1 (production), injecting the CFG=1-cached K,V
+#     into BOTH the [uncond, cond] branches (FeatureInjector cfg_batch=True).
+#
+# CAVEAT — reference mismatch. The reference (z0_recon) is a CFG=1 source
+# recon. At CFG=3.2 the edit pass diverges from that reference even without
+# perturbation, so the absolute PSNR-vs-reference is muddied by the CFG gap
+# and the null test D is NOT an exact identity here. The headline remains
+# C - B on the free middle (both at CFG=3.2; injection is the only difference),
+# which isolates the injection effect at production CFG.
+#
+# This run reuses the 4-layer ss4 cache and is primarily a CFG-plumbing check;
+# the dense lever lives in config_dense_*.yaml.
+
+model:
+  model_id: "Lightricks/LTX-2"
+
+source:
+  cache_run_dir: "outputs/videos/exp_040_ltx2_feature_cache/run_0001/shadow_smoke_4"
+  sample_id: "shadow_smoke_4"
+
+inference:
+  num_frames: 121
+  frame_rate: 24.0
+  num_inference_steps: 40
+  guidance_scale: 3.2            # production-style CFG on the edit pass
+
+perturb:
+  free_middle_latent_frames: [4, 5, 6, 7, 8, 9, 10, 11]
+  seed: 1234
+  match_rms: true
+
+injection:
+  phase: "recon"
+  substep: "predictor"
+  layers: [11, 19, 28, 37]
+  steps:  [0, 4, 9, 14, 19, 24, 29, 34, 39]
+  sites:  ["attn1_k", "attn1_v"]
+  strength: 1.0
+  region: "free_middle"
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_041_ltx2_feature_inject"

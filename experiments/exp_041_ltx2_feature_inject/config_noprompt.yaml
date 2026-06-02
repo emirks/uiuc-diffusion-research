@@ -1,0 +1,58 @@
+# exp_041 — No-prompt isolation of K,V injection.
+#
+# Question:
+#   Does emptying the positive AND negative prompts isolate the injection
+#   signal? With prompt=neg="" and CFG=1, the only signals driving the free
+#   middle are (a) the noise content of z1_pert, (b) the clamped anchor
+#   conditioning, and (c) the injected K,V. C - B at the free middle is then
+#   purely "what injection adds on top of an unguided reconstruction."
+#
+# Design:
+#   * Three samples (ss0, ss4, ss8) — all that exp_040 run_0002 cached with
+#     K,V sites.
+#   * Two variants per sample, both CFG=1, both K,V:
+#       cfg1_kv          — keeps the cached source prompt + LTX neg
+#       cfg1_kv_nop      — prompt="" and negative_prompt=""  (the test)
+#   * Cache: exp_040 run_0002 (K,V at dense layers/steps, free-middle scoped).
+#
+# Performance note:
+#   run.py B-cache deduplicates the no-inject baseline across variants that
+#   share (gscale, prompt, neg). Here the two variants have different prompts
+#   so B runs twice per sample — but the no-prompt B IS the headline reference
+#   for cfg1_kv_nop, so that's required.
+
+model:
+  model_id: "Lightricks/LTX-2"
+
+source:
+  cache_run_dir: "outputs/videos/exp_040_ltx2_feature_cache/run_0002"
+  samples: ["shadow_smoke_0", "shadow_smoke_4", "shadow_smoke_8"]
+
+inference:
+  num_frames: 121
+  frame_rate: 24.0
+  num_inference_steps: 40
+  guidance_scale: 1.0
+  variants:
+    - {name: "cfg1_kv",     guidance_scale: 1.0, sites: ["attn1_k", "attn1_v"]}
+    - {name: "cfg1_kv_nop", guidance_scale: 1.0, sites: ["attn1_k", "attn1_v"], prompt: "", negative_prompt: ""}
+
+perturb:
+  free_middle_latent_frames: [4, 5, 6, 7, 8, 9, 10, 11]
+  seed: 1234
+  match_rms: true
+
+injection:
+  phase: "recon"
+  substep: "predictor"
+  layers: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+  steps:  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+  sites:  ["attn1_k", "attn1_v"]
+  strength: 1.0
+  region: "free_middle"
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_041_ltx2_feature_inject"

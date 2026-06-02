@@ -1,0 +1,82 @@
+# exp_041 — block_out SATURATION test: 4 timestep-window variants over one
+# full-coverage cache.
+#
+# Question: with block_out (heaviest possible site — the post-block video
+# residual stream) injected at ALL 48 layers and strength=1.0, does ANY
+# timestep window move C-B vs the perturbed baseline?
+#
+# All variants share the same single sample, gscale, prompt, and neg_prompt
+# → run.py B-cache deduplicates: total = 1 B + 4 C + 4 D = 9 recons.
+#
+# Cache: exp_040 config_blockout_dense.yaml output (ss4 only, 48L × 40T,
+# block_out, predictor, free-middle scope).
+#
+# Variants:
+#   all_steps  — [0..39]  (40 steps)   saturation upper bound
+#   early      — [0..13]  (14 steps)   σ≈1.0→0.65, content-forming
+#   mid        — [14..26] (13 steps)   σ≈0.65→0.25, refinement
+#   late       — [27..39] (13 steps)   σ≈0.25→0,    detail/cleanup
+#
+# Strength: 1.0 (hard replace) for all four — saturation first; if anything
+# moves, strength sweep follows.
+
+model:
+  model_id: "Lightricks/LTX-2"
+
+source:
+  # Patched by the launcher to point at the actual cache run dir
+  # (e.g. run_0004) after exp_040 completes.
+  cache_run_dir: "outputs/videos/exp_040_ltx2_feature_cache/run_0003"
+  samples: ["shadow_smoke_4"]
+
+inference:
+  num_frames: 121
+  frame_rate: 24.0
+  num_inference_steps: 40
+  guidance_scale: 1.0
+  variants:
+    # ── Validation block: layer-coverage equivalence test at all timesteps ──
+    # Theory: any subset of layers, at strength=1.0, should force velocity≈source
+    # because once block_out at any layer is overwritten, downstream natural-forward
+    # layers reproduce source's outputs (text/σ/audio match). Deviation is set by
+    # AUDIO-stream drift (audio is never overwritten, so its evolution under
+    # v2a(audio_Q_edit, video_K,V) leaks edit-pass info forward).
+    # Expected: all six validation variants give very close ΔPSNR (close to noise
+    # floor oracle). NOT byte-identical due to audio drift.
+    - {name: "all48_alltime",  guidance_scale: 1.0, sites: ["block_out"], inject_layers: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47], inject_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]}
+    - {name: "last47_alltime", guidance_scale: 1.0, sites: ["block_out"], inject_layers: [47], inject_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]}
+    - {name: "first10",        guidance_scale: 1.0, sites: ["block_out"], inject_layers: [0,1,2,3,4,5,6,7,8,9], inject_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]}
+    - {name: "single10",       guidance_scale: 1.0, sites: ["block_out"], inject_layers: [10], inject_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]}
+    - {name: "first20",        guidance_scale: 1.0, sites: ["block_out"], inject_layers: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19], inject_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]}
+    - {name: "first0",         guidance_scale: 1.0, sites: ["block_out"], inject_layers: [0], inject_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]}
+    # ── Timestep sweep on all48 coverage (early/mid/late σ windows) at CFG=1 ──
+    - {name: "all48_early",    guidance_scale: 1.0, sites: ["block_out"], inject_layers: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47], inject_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13]}
+    - {name: "all48_mid",      guidance_scale: 1.0, sites: ["block_out"], inject_layers: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47], inject_steps: [14,15,16,17,18,19,20,21,22,23,24,25,26]}
+    - {name: "all48_late",     guidance_scale: 1.0, sites: ["block_out"], inject_layers: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47], inject_steps: [27,28,29,30,31,32,33,34,35,36,37,38,39]}
+    # ── CFG=3.2 production-guidance variants (cond-only inject so guidance mix
+    #     is preserved at injected layers; default both-rows-write collapses
+    #     v_cond - v_uncond to 0 at injection sites → effective CFG=1 there). ──
+    - {name: "all48_alltime_cfg32", guidance_scale: 3.2, sites: ["block_out"], cond_only_at_cfg: true, inject_layers: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47], inject_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]}
+    - {name: "all48_early_cfg32",   guidance_scale: 3.2, sites: ["block_out"], cond_only_at_cfg: true, inject_layers: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47], inject_steps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13]}
+
+perturb:
+  free_middle_latent_frames: [4, 5, 6, 7, 8, 9, 10, 11]
+  seed: 1234
+  match_rms: true
+
+# Top-level injection block — variants inherit layers/strength/region
+# and override `inject_steps` per the variants list above.
+injection:
+  phase: "recon"
+  substep: "predictor"
+  layers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]
+  steps:  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]
+  sites:  ["block_out"]
+  strength: 1.0
+  region: "free_middle"
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_041_ltx2_feature_inject"

@@ -1,0 +1,52 @@
+# exp_041 — first feature-injection experiment (MasaCtrl-style self-attn K,V).
+#
+# Reads the recon-pass cache produced by exp_040 (config_recon_ss4.yaml) for
+# shadow_smoke_4 and injects the source self-attention K,V into the FREE
+# MIDDLE of a re-noised reconstruction. Tests one direction:
+#   "Do source self-attn K,V transport the source transition into a free
+#    middle that was re-noised with a different seed?"
+#
+# Passes (all CFG=1 midpoint recon, matching the cached pass):
+#   reference = z0_recon.pt  (source recon, from exp_040 cache run)
+#   B  perturbed baseline    : reconstruct(z1_perturbed)            no injection
+#   C  perturbed + injection : reconstruct(z1_perturbed) + source K,V injected
+#   D  self-injection (null) : reconstruct(z1) + source K,V injected  (≈ reference)
+#
+# Injection works iff  C ≫ B  in similarity to the reference on the free
+# middle, and  D ≈ reference  (plumbing sanity).
+
+model:
+  model_id: "Lightricks/LTX-2"
+
+# Source of the cache + the frozen sample artifacts (z1, z0_recon, static).
+source:
+  cache_run_dir: "outputs/videos/exp_040_ltx2_feature_cache/run_0001/shadow_smoke_4"
+  sample_id: "shadow_smoke_4"
+
+inference:
+  num_frames: 121
+  frame_rate: 24.0
+  num_inference_steps: 40        # recon midpoint steps (CFG=1)
+  guidance_scale: 1.0            # CFG=1 to match the cached recon pass
+
+# Perturbation of the free-middle latent frames of z1.
+perturb:
+  free_middle_latent_frames: [4, 5, 6, 7, 8, 9, 10, 11]   # the C2V free middle
+  seed: 1234                                               # different from gen seed 42
+  match_rms: true                                          # keep noise level correct
+
+# Injection: MasaCtrl-style self-attn K,V at mid layers, free-middle tokens.
+injection:
+  phase: "recon"
+  substep: "predictor"
+  layers: [11, 19, 28, 37]
+  steps:  [0, 4, 9, 14, 19, 24, 29, 34, 39]   # all cached recon steps
+  sites: ["block_out", "attn1_q", "attn1_k", "attn1_v"]
+  strength: 1.0                                # hard replace
+  region: "free_middle"                        # token scope = free-middle frames
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_041_ltx2_feature_inject"
