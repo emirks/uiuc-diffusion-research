@@ -1,0 +1,89 @@
+model:
+  model_id: "Lightricks/LTX-2"
+
+# All clips encoded at the SAME resolution + frame count → packed-token shape
+# [1, 5776, 128] (16 latent frames × 19×19 spatial × 128 channels), matching
+# the shadow_smoke z0/z1 cached in exp_033 / exp_037.
+inference:
+  height: 608
+  width: 608
+  num_frames: 121
+  frame_rate: 24.0
+
+runtime:
+  seed: 42
+
+# ── Inputs ───────────────────────────────────────────────────────────────────
+inputs:
+  # 1. Shadow smoke source clips — VAE-encoded to z0.
+  # Note: clip file mapping mirrors exp_033's config — `shadow_smoke_0`
+  # uses the un-suffixed `shadow_smoke.mp4`, the rest use _1..9.
+  shadow_smoke:
+    samples:
+      - {name: shadow_smoke_0, clip: "data/processed/transitions/shadow_smoke/shadow_smoke.mp4"}
+      - {name: shadow_smoke_1, clip: "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4"}
+      - {name: shadow_smoke_2, clip: "data/processed/transitions/shadow_smoke/shadow_smoke_2.mp4"}
+      - {name: shadow_smoke_3, clip: "data/processed/transitions/shadow_smoke/shadow_smoke_3.mp4"}
+      - {name: shadow_smoke_4, clip: "data/processed/transitions/shadow_smoke/shadow_smoke_4.mp4"}
+      - {name: shadow_smoke_5, clip: "data/processed/transitions/shadow_smoke/shadow_smoke_5.mp4"}
+      - {name: shadow_smoke_6, clip: "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4"}
+      - {name: shadow_smoke_7, clip: "data/processed/transitions/shadow_smoke/shadow_smoke_7.mp4"}
+      - {name: shadow_smoke_8, clip: "data/processed/transitions/shadow_smoke/shadow_smoke_8.mp4"}
+      - {name: shadow_smoke_9, clip: "data/processed/transitions/shadow_smoke/shadow_smoke_9.mp4"}
+
+  # 2. Existing RF-inverted noises — copied verbatim (no re-inversion).
+  smoke_z1_source:
+    dir: "outputs/videos/exp_033_ltx2_rf_inv_drop1/run_0001"
+    samples:
+      - shadow_smoke_0
+      - shadow_smoke_1
+      - shadow_smoke_2
+      - shadow_smoke_3
+      - shadow_smoke_4
+      - shadow_smoke_5
+      - shadow_smoke_6
+      - shadow_smoke_7
+      - shadow_smoke_8
+      - shadow_smoke_9
+
+  # 3. DAVIS A_word generations from exp_024 (Stage-1 = pre-upsample = natural
+  #    LTX-2 latent geometry). One pair per class (1, 2, 5, 6, 8).
+  davis_generations:
+    base_dir: "outputs/videos/exp_024_ltx2_prompt_sweep/run_0003"
+    pairs:
+      - class1__blackswan__mallard-water
+      - class2__mallard-fly__mallard-water
+      - class5__breakdance-flare__breakdance
+      - class6__longboard__kite-surf
+      - class8__blackswan__boat
+    # Use the Stage-1 outputs (pre-upscale) so the latents are in-distribution
+    # for the LTX-2 VAE (Stage-2 upscale may add artifacts).
+    file_template: "{pair}/A_word/s42_catA_word_steps40_stage1.mp4"
+
+  # 4. exp_041 run_0007 block_out injection outputs (ss4 only). Encode the three
+  #    roles per variant: reference recon, perturbed baseline, perturbed inject.
+  exp_041_injection:
+    base_dir: "outputs/videos/exp_041_ltx2_feature_inject/run_0007/shadow_smoke_4"
+    variants:
+      - all48_alltime
+      - last47_alltime
+      - first10
+      - single10
+      - first20
+      - first0
+      - all48_early
+      - all48_mid
+      - all48_late
+      - all48_alltime_cfg32
+      - all48_early_cfg32
+    roles:
+      - reference_recon
+      - perturbed_baseline
+      - perturbed_inject
+
+  # 5. Gaussian noise — sampled in script, not from disk.
+  gaussian:
+    n_samples: 50
+
+outputs:
+  dir: "outputs/latent_pca/exp_043_latent_pca_inspection"
