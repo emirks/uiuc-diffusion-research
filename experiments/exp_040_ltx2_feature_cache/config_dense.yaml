@@ -1,0 +1,88 @@
+# exp_040 — DENSE contiguous-block recon cache, top-3 exp_033 samples.
+#
+# Motivation (exp_041 result): injecting K,V at 4 SPREAD mid layers over 9
+# steps was far too sparse to hold a transplanted representation — the ~12
+# free layers between each injected layer washed the graft out (ΔPSNR ≈ 0).
+# This cache fixes the sparsity: a CONTIGUOUS block of 12 early-mid layers
+# (10..21) over the first 24 recon steps (the high-σ region where coarse
+# structure forms), so the dense inject (exp_041 config_dense_*.yaml) can
+# hold structure across adjacent layers and most of the trajectory.
+#
+# Token scoping: we cache ONLY the free-middle tokens (latent frames 4..11),
+# the region we inject into. Anchors are hard-pinned by the C2V mask and are
+# never injected, so caching them is wasted I/O. This roughly halves the
+# cache and the per-step load during injection. The injector auto-detects
+# the scoped cache (token count) and verifies it against its token_ids.
+#
+# Sites: attn1_k + attn1_v ONLY (MasaCtrl). We deliberately do NOT cache
+# block_out: set_step loads the whole per-step file on every injection, so
+# caching block_out would slow every K,V inject load by ~33% for a feature
+# we're deferring ("self-attention first"). If a PnP-style block_out
+# comparison is wanted later, re-run this cache with block_out added.
+#
+# Disk (free-middle scope, ss4: 8·361 = 2888 tokens, [1,2888,4096] bf16 ≈
+# 23.6 MB): 12 layers × 24 steps × 2 sites × 23.6 MB ≈ 13.6 GB / sample,
+# ~41 GB for three samples (disk has 617 TB free).
+
+model:
+  model_id: "Lightricks/LTX-2"
+
+samples:
+  # Top-3 exp_033 samples by recon PSNR (run_0001 summary.yaml).
+  - sample_id: "shadow_smoke_4"      # 33.12 dB
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_4.mp4"
+  - sample_id: "shadow_smoke_8"      # 29.58 dB
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_8.mp4"
+  - sample_id: "shadow_smoke_0"      # 29.32 dB
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke.mp4"
+
+inputs:
+  num_clip_frames: 25
+  start_clip_strength: 1.0
+  end_clip_strength: 1.0
+  prompt: "A floating black smoke transition between objects."
+  negative_prompt: "blurry, distorted, low quality."
+
+inference:
+  max_area: 393216
+  num_frames: 121
+  frame_rate: 24.0
+  num_inference_steps: 40
+  guidance_scale: 4.0
+
+inversion:
+  num_steps: 40
+  guidance_scale: 1.0
+  solver: "rf_solver_midpoint_2nd"
+  cache_sigma_checkpoints: [0.25, 0.50, 0.75]
+  gate:
+    latent_rel_max: 0.10
+    latent_cos_min: 0.99
+    latent_rel_max_regen_mult: 2.0
+    latent_cos_min_regen: 0.97
+
+regeneration:
+  num_steps: 40
+  guidance_scale: 4.0
+  solver: "euler"
+
+# Dense recon-only cache: contiguous layers 10..21, first 24 recon steps,
+# predictor substep, free-middle tokens only.
+feature_cache:
+  enabled: true
+  dtype: "bfloat16"
+  layer_indices: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+  step_indices_invert: []
+  step_indices_recon:  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+  step_indices_regen:  []
+  substeps_midpoint:   ["predictor"]
+  token_scope_free_middle_frames: [4, 5, 6, 7, 8, 9, 10, 11]
+  sites:
+    - attn1_k
+    - attn1_v
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_040_ltx2_feature_cache"

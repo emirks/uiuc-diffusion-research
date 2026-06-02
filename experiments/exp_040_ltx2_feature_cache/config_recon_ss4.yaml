@@ -1,0 +1,76 @@
+# exp_040 — recon-only feature cache, single best sample (shadow_smoke_4).
+#
+# Purpose: gather the injection-load-bearing cache for the FIRST injection
+# experiment. We cache the RECONSTRUCTION pass only — the descending-σ
+# denoising trajectory that the edit pass will mirror — at CFG=1 midpoint.
+# Inversion and regeneration still RUN (we need z1, and regen gives a
+# reference video) but their hidden states are NOT cached.
+#
+# Why recon (not invert, not regen): injection replays features at matching
+# σ along a denoising pass. The edit pass descends σ, so the reference
+# features must come from a descending pass. Recon is the highest-fidelity
+# descending pass available (CFG=1 round-trips tightly; exp_033 recon PSNR
+# for ss4 = 33.12, the batch best). regen would match the production sampler
+# but is lossier (CFG=4 imperfect recovery). We start from the clean cache.
+#
+# Disk: 4 layers × 9 steps × 4 sites × 50 MB ≈ 7.2 GB (one sample).
+
+model:
+  model_id: "Lightricks/LTX-2"
+
+samples:
+  # Best exp_033 sample by recon PSNR (33.12) — see exp_033 run_0001 summary.yaml.
+  - sample_id: "shadow_smoke_4"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_4.mp4"
+
+inputs:
+  num_clip_frames: 25
+  start_clip_strength: 1.0
+  end_clip_strength: 1.0
+  prompt: "A floating black smoke transition between objects."
+  negative_prompt: "blurry, distorted, low quality."
+
+inference:
+  max_area: 393216
+  num_frames: 121
+  frame_rate: 24.0
+  num_inference_steps: 40
+  guidance_scale: 4.0
+
+inversion:
+  num_steps: 40
+  guidance_scale: 1.0
+  solver: "rf_solver_midpoint_2nd"
+  cache_sigma_checkpoints: [0.25, 0.50, 0.75]
+  gate:
+    latent_rel_max: 0.10
+    latent_cos_min: 0.99
+    latent_rel_max_regen_mult: 2.0
+    latent_cos_min_regen: 0.97
+
+regeneration:
+  num_steps: 40
+  guidance_scale: 4.0
+  solver: "euler"
+
+# Recon-only cache. Q,K,V + block output at 4 mid layers, 9 σ-spaced steps,
+# predictor substep (the σ_curr pass — the one that σ-matches an edit step).
+feature_cache:
+  enabled: true
+  dtype: "bfloat16"
+  layer_indices: [11, 19, 28, 37]
+  step_indices_invert: []
+  step_indices_recon:  [0, 4, 9, 14, 19, 24, 29, 34, 39]
+  step_indices_regen:  []
+  substeps_midpoint:   ["predictor"]
+  sites:
+    - block_out
+    - attn1_q
+    - attn1_k
+    - attn1_v
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_040_ltx2_feature_cache"

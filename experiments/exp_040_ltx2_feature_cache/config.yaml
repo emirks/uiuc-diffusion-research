@@ -1,0 +1,107 @@
+# exp_040 — LTX-2 RF-Solver inversion + comprehensive feature cache.
+#
+# Inversion recipe is exp_033 (drop1) verbatim — the deployable §0 floor
+# from the RF-inversion post-mortem. The new axis is feature caching:
+# forward hooks on the LTX-2 transformer capture block outputs and self-
+# attention Q/K/V tokens (and optional extras) during every phase
+# (invert / reconstruct / regenerate) at the configured step × layer grid.
+#
+# See README.md for full schema, dimensions, and reload recipes.
+
+model:
+  model_id: "Lightricks/LTX-2"
+
+samples:
+  - sample_id: "shadow_smoke_1"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4"
+  - sample_id: "shadow_smoke_2"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_2.mp4"
+  - sample_id: "shadow_smoke_3"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_3.mp4"
+  - sample_id: "shadow_smoke_4"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_4.mp4"
+  - sample_id: "shadow_smoke_5"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_5.mp4"
+  - sample_id: "shadow_smoke_6"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4"
+  - sample_id: "shadow_smoke_7"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_7.mp4"
+  - sample_id: "shadow_smoke_8"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_8.mp4"
+  - sample_id: "shadow_smoke_9"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_9.mp4"
+  - sample_id: "shadow_smoke_0"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke.mp4"
+
+inputs:
+  num_clip_frames: 25
+  start_clip_strength: 1.0
+  end_clip_strength: 1.0
+  prompt: "A floating black smoke transition between objects."
+  negative_prompt: "blurry, distorted, low quality."
+
+inference:
+  max_area: 393216             # 512 × 768
+  num_frames: 121
+  frame_rate: 24.0
+  num_inference_steps: 40
+  guidance_scale: 4.0
+
+inversion:
+  num_steps: 40
+  guidance_scale: 1.0
+  solver: "rf_solver_midpoint_2nd"
+  cache_sigma_checkpoints: [0.25, 0.50, 0.75]
+  gate:
+    latent_rel_max: 0.10
+    latent_cos_min: 0.99
+    latent_rel_max_regen_mult: 2.0
+    latent_cos_min_regen: 0.97
+
+regeneration:
+  num_steps: 40
+  guidance_scale: 4.0
+  solver: "euler"
+
+# ── Feature cache config ───────────────────────────────────────────────────
+#
+# Layer indices: which transformer blocks (0..47) get hooked. Defaults to
+# 6 well-spread anchors: shallow / shallow-mid / mid-low / mid-high /
+# late-mid / final. Set to "all" to hook every block (then disk grows ~8×).
+#
+# Step indices per phase: which outer-step indices save their hooked
+# tensors. Defaults to 9 steps per phase (every 5 + final), giving good
+# σ-coverage without 8× the disk of a full-40-step grid. Set to "all"
+# for every step.
+#
+# Substeps for midpoint phases: which RF-Solver substep to keep.
+#   - "predictor" (default): the σ_curr pass — matches the σ a CFG=4 regen
+#     pass uses at the same step. Recommended for injection-style replay.
+#   - "corrector": the σ_mid pass — useful if you want pairwise predictor/
+#     corrector deltas (i.e. raw RF-Solver velocity asymmetry).
+# Regen always uses substep "euler" (one transformer call per step) and
+# is unconditional within a saved step.
+#
+# Sites: which forward hooks fire. User-requested defaults are the four
+# core sites (block_out + self-attn Q,K,V). Add "attn2_q/k/v" for text
+# cross-attn (P2P-style work) or "ff_out" for FFN activations
+# (FreeControl-style PCA).
+feature_cache:
+  enabled: true
+  dtype: "bfloat16"
+  layer_indices: [3, 11, 19, 28, 37, 46]
+  step_indices_invert: [0, 4, 9, 14, 19, 24, 29, 34, 39]
+  step_indices_recon:  [0, 4, 9, 14, 19, 24, 29, 34, 39]
+  step_indices_regen:  [0, 4, 9, 14, 19, 24, 29, 34, 39]
+  substeps_midpoint:   ["predictor"]
+  sites:
+    - block_out
+    - attn1_q
+    - attn1_k
+    - attn1_v
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_040_ltx2_feature_cache"
