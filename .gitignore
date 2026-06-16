@@ -35,3 +35,22 @@ src/LTX-2/
 
 # gradio
 *.pem
+
+# --- large / regenerable artifacts (not source) ---
+# wandb run logs + media
+wandb/
+
+# regenerable decode / precompute caches
+**/.precomputed/
+**/.precomputed_clips/
+**/decoded_videos/
+
+# nested upstream LTX-2 working copy (its own .git; old checkout)
+src/LTX-2_OLD/
+
+# additional model-weight / large-tensor formats
+*.safetensors
+*.ckpt
+*.pth
+*.onnx
+*.gguf

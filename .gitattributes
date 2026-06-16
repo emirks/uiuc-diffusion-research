@@ -1,0 +1,4 @@
+# Input dataset clips are versioned via Git LFS.
+# Regenerable decode/precompute caches are gitignored, so only real
+# dataset .mp4 inputs ever get staged and routed here.
+*.mp4 filter=lfs diff=lfs merge=lfs -text
