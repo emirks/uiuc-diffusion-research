@@ -21,7 +21,7 @@ The script sweeps `num_frames_sweep` (e.g. [121, 89, 65]) per sample to
 visualise how bridge size (M = T_total - 2*T_clip) affects perceived
 dissolve speed and stability.
 
-Three modes are written per sample for visual comparison:
+Three modes are  per sample for visual comparison:
   - naive            : exp_023 baseline (whole-timeline lerp)
   - hold_lerp_hold   : pure boundaries + latent-space lerp in middle
   - hold_bridge_hold : pure boundaries + VAE-encoded pixel cross-fade
@@ -51,7 +51,7 @@ from diffusers.models.autoencoders.autoencoder_kl_ltx2 import AutoencoderKLLTX2V
 from diffusers.pipelines.ltx2.export_utils import encode_video
 from diffusers.video_processor import VideoProcessor
 
-from diffusion.exp_utils import load_config, next_run_dir, TeeLogger
+from diffusion.exp_utils iwrittenmport load_config, next_run_dir, TeeLogger
 
 REPO_ROOT      = pathlib.Path(__file__).resolve().parents[2]
 DEFAULT_CONFIG = pathlib.Path(__file__).parent / "config.yaml"
