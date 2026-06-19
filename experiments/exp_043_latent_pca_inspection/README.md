@@ -76,3 +76,71 @@ The notebook produces a chart matrix:
 - `[9b]` All-variants injection overlay
 
 Per-channel z1 vs N(0,1) mean/std + scree plots accompany the joint PCAs.
+
+---
+
+# Addendum — `inverted_noise_vs_gaussian.py` (z1-vs-Gaussian deviation)
+
+## Question
+
+RF-inverted noise z1 reconstructs a shadow-smoke video; fresh generation starts
+from white Gaussian N(0,I). **What in z1 deviates from a matched Gaussian, and is
+that deviation the "smoke signature" concentrated in the free-middle frames?**
+Goal (not implemented): at production, add the signature to a fresh Gaussian
+sample. So the deviation must be characterized as (a) localized, (b) shared
+across clips, (c) injectable.
+
+## Setup
+
+Standalone CPU/numpy analysis — reads the cached `z1.pt` / `z0.pt` from
+`exp_033_ltx2_rf_inv_drop1/run_0001/<sample>/` directly (no pipeline, no GPU).
+
+**Geometry (verified, not assumed):** packed `[1,N,128]`, P=P_t=1 → token order
+`n = f·(H·W) + h·W + w`; unpack = `reshape(F=16, H, W, 128)` with the clip's own
+(H,W). Orientation groups: portrait 22×16 (clips 0,2,3,6,8), landscape 16×22
+(1,5,7,9), square 19×19 (4). **Never group by N** (portrait/landscape share
+N=5632 with swapped H,W). Free-middle latent frames = **4..12** (drop1 frees
+frame 12); anchors = **0-3, 13-15** (hard-pinned to z0 during inversion). Verified
+from `exp_033/run.py:end_clip_index` (n_lat=16, k_lat=4).
+
+**Nulls (per metric, plotted alongside z1):** white N(0,1) of identical shape, and
+a variance-matched white null scaled to z1's per-(frame,channel) std (isolates
+structure from variance). All structural metrics (power spectrum, autocorr,
+temporal corr) use raw values with mean-removal only; distributional metrics
+(skew/kurtosis) standardize per channel.
+
+**Battery:** (1) per-channel marginal moments + KS/QQ; (2) radial power spectrum
++ isotropic spatial autocorrelation; (3) adjacent-frame temporal correlation;
+(4) per-frame / per-channel energy + low-frequency power fraction (signature
+localization); (5) within-group cross-clip cosine of the free-middle structured
+map + cross-clip radial-spectrum cosine; (6) free-middle vs anchor split
+throughout. Cross-orientation comparisons use only radial / per-frame scalars.
+
+## How to run
+
+```bash
+# on the GPU pod (CPU-only analysis):
+python experiments/exp_043_latent_pca_inspection/inverted_noise_vs_gaussian.py \
+    --tensor z1 --groups portrait,landscape,square
+# z0 control (source latent, same battery):
+python experiments/exp_043_latent_pca_inspection/inverted_noise_vs_gaussian.py \
+    --tensor z0 --groups portrait,landscape,square
+```
+
+Args: `--data_dir` (default exp_033 run_0001), `--tensor {z1,z0}`, `--groups`,
+`--seed`, `--out_subdir`. Uses `next_run_dir` + `TeeLogger`.
+
+## Outputs
+
+`outputs/latent_pca/exp_043_inverted_noise_vs_gaussian/run_NNNN/`:
+`summary.json` + `charts/{01_marginal,02_spatial,03_temporal,04_localization,
+05_crossclip,06_qq}_{portrait,landscape,square}.png` — each chart overlays z1 vs
+the Gaussian null, per orientation group.
+
+## Headline result (HYPOTHESIS REFUTED)
+
+The "smoke signature" is **NOT** in z1's free-middle — it has been **erased**
+there. RF-inversion re-Gaussianizes the free-middle and leaves structure only in
+the clamped anchors (which are just slices of z0). See
+`notes/exp/exp_043_inverted_noise_vs_gaussian.md` for the full report and the
+production recommendation (the signature lives in z0, not z1).
