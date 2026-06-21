@@ -1,0 +1,64 @@
+# exp_044 — smoke-transition regen CFG sweep (regen-only, token-localized CFG).
+#
+# Goal: the free-middle latent frames (the shadow_smoke transition) regenerate
+# at PSNR 11-18 dB under production regen (Euler, CFG=4, +neg prompt) even
+# though the inverted z1 ENCODES that smoke well (recon/CFG=1 reaches 27-38 dB
+# for 6/10 clips). Hypothesis: CFG=4 + negative prompt amplifies the generic
+# text direction over z1's source smoke in the UNCLAMPED free-middle tokens.
+#
+# This experiment loads the cached exp_033 z1 (no re-inversion) and sweeps the
+# regen guidance — global CFG and a NEW token-localized CFG (free-middle tokens
+# at low CFG to preserve z1's smoke; anchor tokens at full CFG to keep the
+# visible scene sharp). Metric: FREE-MIDDLE PSNR vs source (latent frames 4-12,
+# pixels ~[25:97]).
+#
+# PILOT (this config): ss0 (z1-rich, biggest recon→regen gap 20 dB),
+# ss7 (z1-rich, near the 18 dB threshold), ss5 (z1-poor control — recon itself
+# fails, so the CFG lever should NOT help it; confirms it needs the Phase-2
+# cross-clip smoke prior).
+
+model:
+  model_id: "Lightricks/LTX-2"
+
+# z1 tensors are loaded from this prior run (skip the expensive inversion).
+z1_source:
+  run_dir: "outputs/videos/exp_033_ltx2_rf_inv_drop1/run_0001"
+
+samples:
+  - sample_id: "shadow_smoke_0"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke.mp4"
+  - sample_id: "shadow_smoke_7"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_7.mp4"
+  - sample_id: "shadow_smoke_5"
+    clip: "data/processed/transitions/shadow_smoke/shadow_smoke_5.mp4"
+
+inputs:
+  num_clip_frames: 25
+  start_clip_strength: 1.0
+  end_clip_strength: 1.0
+  prompt: "A floating black smoke transition between objects."
+  negative_prompt: "blurry, distorted, low quality."
+
+inference:
+  max_area: 393216
+  num_frames: 121
+  frame_rate: 24.0
+  num_inference_steps: 40
+
+regeneration:
+  num_steps: 40
+
+# Variant sweep. mode=global → scalar CFG (no per-token); mode=localized →
+# per-token CFG (anchor_cfg on mask>0, free_cfg on mask==0 free-middle tokens).
+regen_variants:
+  - {name: "cfg4_global",  mode: "global",    guidance_scale: 4.0}   # V0: reproduce exp_033 regen (sanity)
+  - {name: "cfg1_global",  mode: "global",    guidance_scale: 1.0}   # V1: pure positive — should approach recon
+  - {name: "cfg2_global",  mode: "global",    guidance_scale: 2.0}   # V2: intermediate
+  - {name: "loc_f1_a4",    mode: "localized", anchor_cfg: 4.0, free_cfg: 1.0}  # V3: deployable recipe
+  - {name: "loc_f1.5_a4",  mode: "localized", anchor_cfg: 4.0, free_cfg: 1.5}  # V4: mild free guidance
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_044_smoke_regen_cfg"
