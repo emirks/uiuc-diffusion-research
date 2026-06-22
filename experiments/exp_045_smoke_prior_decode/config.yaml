@@ -1,0 +1,61 @@
+# exp_045 — middle-prior DECODE feasibility sweep.
+#
+# exp_044 refuted the CFG hypothesis: the production sampler cannot recover the
+# free-middle smoke from z1 (recon→regen gap is solver self-consistency, not
+# CFG). So the smoke must be INJECTED. Before building generative injection,
+# this measures the CEILING of any pin/inject approach: assemble the latent
+# with PERFECT anchors (z0) and a candidate MIDDLE PRIOR, decode, and measure
+# free-middle PSNR vs source. No solver — pure VAE decode.
+#
+# If a deployable smoke-family prior decodes to >18 free-mid here, pinning/
+# injecting it is viable. If not, pinning is dead and we need a finer substrate.
+#
+# Priors (free latent frames 4-12):
+#   src                       — recipient's own z0 middle (sanity: ~perfect)
+#   gauss                     — rms-matched noise (worst case)
+#   endpoint_hold             — freeze start-anchor frame across middle
+#   endpoint_interp           — linear morph start→end anchor (generic interp baseline)
+#   smoke_bcast_loo           — leave-one-out smoke-family, spatial-broadcast channel-state (DEPLOYABLE)
+#   smoke_bcast_all           — smoke-family incl. self, broadcast (broadcast upper bound)
+#   smoke_spatial_loo         — leave-one-out smoke-family, spatially-resolved (same-grid donors, DEPLOYABLE)
+#   smoke_bcast_loo_keepspatial — endpoint-interp spatial structure + shared smoke channel-state (DEPLOYABLE)
+
+model:
+  model_id: "Lightricks/LTX-2"
+
+z0_source:
+  run_dir: "outputs/videos/exp_033_ltx2_rf_inv_drop1/run_0001"
+
+# free (unconditioned) latent frames in exp_033's drop1 recipe.
+free_frames: [4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+priors:
+  - src
+  - gauss
+  - endpoint_hold
+  - endpoint_interp
+  - smoke_bcast_loo
+  - smoke_bcast_all
+  - smoke_spatial_loo
+  - smoke_bcast_loo_keepspatial
+
+samples:
+  - {sample_id: "shadow_smoke_0"}
+  - {sample_id: "shadow_smoke_1"}
+  - {sample_id: "shadow_smoke_2"}
+  - {sample_id: "shadow_smoke_3"}
+  - {sample_id: "shadow_smoke_4"}
+  - {sample_id: "shadow_smoke_5"}
+  - {sample_id: "shadow_smoke_6"}
+  - {sample_id: "shadow_smoke_7"}
+  - {sample_id: "shadow_smoke_8"}
+  - {sample_id: "shadow_smoke_9"}
+
+inference:
+  frame_rate: 24.0
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_045_smoke_prior_decode"
