@@ -1,0 +1,26 @@
+model:
+  model_id: "Lightricks/LTX-2"
+z0_source:
+  run_dir: "outputs/videos/exp_033_ltx2_rf_inv_drop1/run_0001"
+donor_pool: [shadow_smoke_0, shadow_smoke_2, shadow_smoke_5, shadow_smoke_7, shadow_smoke_8]
+free_frames: [4, 5, 6, 7, 8, 9, 10, 11, 12]
+priors:
+  - src
+  - "donor:shadow_smoke_0"
+  - "smokedelta:shadow_smoke_0"
+  - "tempblend:shadow_smoke_0"
+  - "tempblend:shadow_smoke_0:1.4"
+  - "tempdelta:shadow_smoke_0:2.0"
+  - "donor:shadow_smoke_5"
+  - "tempblend:shadow_smoke_5"
+  - "tempblend:shadow_smoke_5:1.4"
+  - "tempdelta:shadow_smoke_5:2.0"
+samples:
+  - {sample_id: "shadow_smoke_6"}
+  - {sample_id: "shadow_smoke_1"}
+inference:
+  frame_rate: 24.0
+runtime:
+  seed: 42
+outputs:
+  dir: "outputs/videos/exp_046_smoke_perceptual_inject"

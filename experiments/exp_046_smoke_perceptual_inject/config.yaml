@@ -1,0 +1,68 @@
+# exp_046 — PERCEPTUAL donor-smoke injection (decode-based).
+#
+# Pivot (user 2026-06-02): success = the generated transition LOOKS like real
+# smoke (perceptual), not pixel-PSNR to a specific clip (information-limited per
+# exp_045). exp_044 showed the prompt-only baseline darkens like smoke but lacks
+# billowing DYNAMICS (tdiff 0.039 vs real 0.063) and has color artifacts on hard
+# clips. Here we EXTRACT a single donor sample's REAL free-middle smoke (real
+# texture + dynamics) and INJECT it (pin) into the target — judged perceptually
+# (visual + lum/tex/sat/tdiff signatures + LPIPS to source) vs the REAL source
+# and the BASELINE (exp_033 prompt-only regen, auto-loaded per clip).
+#
+# Same-grid donor/target required (token alignment). Groups:
+#   portrait 22x16:  ss0, ss2, ss3, ss6, ss8
+#   landscape 16x22: ss1, ss5, ss7, ss9
+#   ss4 (19x19): alone — no same-grid donor (donor priors skip).
+#
+# Priors: src (sanity), endpoint_interp (endpoints-only baseline), and several
+# single-donor injections + soft blends. donor:<id> pins that donor's real
+# middle; donorblend:<id>:<alpha> blends donor with endpoint-interp.
+
+model:
+  model_id: "Lightricks/LTX-2"
+
+z0_source:
+  run_dir: "outputs/videos/exp_033_ltx2_rf_inv_drop1/run_0001"
+
+# all clips available to extract donor smoke from (precomputed regardless of targets)
+donor_pool:
+  - shadow_smoke_0
+  - shadow_smoke_1
+  - shadow_smoke_2
+  - shadow_smoke_3
+  - shadow_smoke_5
+  - shadow_smoke_6
+  - shadow_smoke_7
+  - shadow_smoke_8
+  - shadow_smoke_9
+
+free_frames: [4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+# priors applied to every clip; donor:<id> auto-skips if donor grid != target grid.
+priors:
+  - src
+  - endpoint_interp
+  - "donor:shadow_smoke_0"
+  - "donor:shadow_smoke_2"
+  - "donor:shadow_smoke_8"
+  - "donor:shadow_smoke_5"
+  - "donor:shadow_smoke_7"
+  - "donorblend:shadow_smoke_0:0.7"
+  - "donorblend:shadow_smoke_5:0.7"
+
+# Pilot: one target per grid group spanning easy/hard. ss6 (portrait, hard/artifacts),
+# ss0 (portrait, easy), ss9 (landscape, hard), ss1 (landscape, hard).
+samples:
+  - {sample_id: "shadow_smoke_6"}
+  - {sample_id: "shadow_smoke_0"}
+  - {sample_id: "shadow_smoke_9"}
+  - {sample_id: "shadow_smoke_1"}
+
+inference:
+  frame_rate: 24.0
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_046_smoke_perceptual_inject"
