@@ -1,0 +1,37 @@
+# exp_047 — velocity-guided smoke GENERATION.
+# Run the production sampler (Euler) but steer the free-middle's clean (x0)
+# prediction toward the extracted tempblend smoke target each step, so the MODEL
+# synthesizes coherent, seamless smoke following the donor's darkening/dynamics
+# (vs exp_046's static latent splice). guide_weight g sweeps donor↔model blend;
+# schedule const|lowsigma|highsigma. Deployable: target endpoints + a donor sample.
+model:
+  model_id: "Lightricks/LTX-2"
+z1_source:
+  run_dir: "outputs/videos/exp_033_ltx2_rf_inv_drop1/run_0001"
+samples:
+  - {sample_id: "shadow_smoke_6", clip: "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4", donor: "shadow_smoke_0"}
+  - {sample_id: "shadow_smoke_1", clip: "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4", donor: "shadow_smoke_5"}
+inputs:
+  num_clip_frames: 25
+  start_clip_strength: 1.0
+  end_clip_strength: 1.0
+  prompt: "A floating black smoke transition between objects."
+  negative_prompt: "blurry, distorted, low quality."
+inference:
+  max_area: 393216
+  num_frames: 121
+  frame_rate: 24.0
+  num_inference_steps: 40
+regeneration:
+  num_steps: 40
+smoke_window_sigma: 2.0
+regen_variants:
+  - {name: "base_cfg4",   guidance_scale: 4.0, guide_weight: 0.0}
+  - {name: "g0.5_cfg4",   guidance_scale: 4.0, guide_weight: 0.5, schedule: "const"}
+  - {name: "g0.8_cfg4",   guidance_scale: 4.0, guide_weight: 0.8, schedule: "const"}
+  - {name: "g0.8_lowsig", guidance_scale: 4.0, guide_weight: 0.8, schedule: "lowsigma"}
+  - {name: "g0.8_cfg1",   guidance_scale: 1.0, guide_weight: 0.8, schedule: "const"}
+runtime:
+  seed: 42
+outputs:
+  dir: "outputs/videos/exp_047_smoke_velocity_guide"
