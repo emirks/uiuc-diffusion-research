@@ -1,0 +1,62 @@
+# exp_049 — σ-matched per-step RECON x̂₀-trajectory injection (self + donor),
+# with an injection-window sweep (early / mid / late / all).
+#
+# Consumes the exp_040 recon trajectory cache (config_recon_traj17.yaml):
+# x̂₀(σ_i) = z_in − v_pred·σ_i per recon step. During production Euler regen, for
+# steps i in the window, blend the free-token clean prediction toward x̂₀(σ_i)
+# (weight g). recon & regen share the σ grid → step i is σ-matched.
+#
+# Hypothesis: exp_048 injected the STATIC final z0_recon every step → self
+# free-mid 13.05 @ g=1 (off-manifold). The σ-matched trajectory should recover
+# ~recon for self (mechanism check), and the window sweep locates where the
+# transition is actually carried (It-4: late σ ~steps 27-39).
+#   - self  → free-mid PSNR vs own clip (mechanism; expect ≫ 13.05 at all/g1).
+#   - donor → perceptual (lum/tex/sat/tdiff + visual); PSNR informational only
+#     (exp_045 information wall: donor lacks the target's specific turbulence).
+# Donor must share the orientation grid (token alignment): portrait 22×16
+# {ss0,2,3,6,8}, landscape 16×22 {ss1,5,7,9}, square 19×19 {ss4 alone}.
+
+model:
+  model_id: "Lightricks/LTX-2"
+
+cache_source:
+  run_dir: "outputs/videos/exp_040_ltx2_feature_cache/run_0002"
+
+samples:
+  - {sample_id: "shadow_smoke_6", clip: "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4", donor: "shadow_smoke_0"}
+  - {sample_id: "shadow_smoke_0", clip: "data/processed/transitions/shadow_smoke/shadow_smoke.mp4",   donor: "shadow_smoke_2"}
+  - {sample_id: "shadow_smoke_1", clip: "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4", donor: "shadow_smoke_5"}
+
+inputs:
+  num_clip_frames: 17
+  start_clip_strength: 1.0
+  end_clip_strength: 1.0
+  prompt: "A floating black smoke transition between objects."
+  negative_prompt: "blurry, distorted, low quality."
+
+inference:
+  max_area: 393216
+  num_frames: 121
+  frame_rate: 24.0
+  num_inference_steps: 40
+
+regeneration:
+  num_steps: 40
+
+# source: self|donor ; window: all|early|mid|late ; guide_weight g blends x̂₀.
+regen_variants:
+  - {name: "base_g0",          guidance_scale: 4.0, guide_weight: 0.0}
+  - {name: "self_all_g1.0",    guidance_scale: 4.0, guide_weight: 1.0, source: "self",  window: "all"}
+  - {name: "self_early_g1.0",  guidance_scale: 4.0, guide_weight: 1.0, source: "self",  window: "early"}
+  - {name: "self_mid_g1.0",    guidance_scale: 4.0, guide_weight: 1.0, source: "self",  window: "mid"}
+  - {name: "self_late_g1.0",   guidance_scale: 4.0, guide_weight: 1.0, source: "self",  window: "late"}
+  - {name: "donor_all_g0.8",   guidance_scale: 4.0, guide_weight: 0.8, source: "donor", window: "all"}
+  - {name: "donor_early_g0.8", guidance_scale: 4.0, guide_weight: 0.8, source: "donor", window: "early"}
+  - {name: "donor_mid_g0.8",   guidance_scale: 4.0, guide_weight: 0.8, source: "donor", window: "mid"}
+  - {name: "donor_late_g0.8",  guidance_scale: 4.0, guide_weight: 0.8, source: "donor", window: "late"}
+
+runtime:
+  seed: 42
+
+outputs:
+  dir: "outputs/videos/exp_049_smoke_signature_inject"
