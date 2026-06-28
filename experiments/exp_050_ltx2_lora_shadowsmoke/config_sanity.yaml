@@ -1,0 +1,94 @@
+# exp_050 sanity config — one-sample 50-step dry run at target resolution.
+# Per the official train-model skill Phase 6: catches OOM/config errors cheaply
+# before the full preprocess + training. Checkpoints every 25 steps so the
+# resume path can be validated in the same job.
+
+model:
+  model_path: "/projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors"
+  text_encoder_path: "/projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
+  training_mode: "lora"
+  load_checkpoint: null
+
+lora:
+  rank: 32
+  alpha: 32
+  dropout: 0.0
+  target_modules:
+    - "attn1.to_k"
+    - "attn1.to_q"
+    - "attn1.to_v"
+    - "attn1.to_out.0"
+    - "attn2.to_k"
+    - "attn2.to_q"
+    - "attn2.to_v"
+    - "attn2.to_out.0"
+
+training_strategy:
+  name: "flexible"
+  video:
+    is_generated: true
+    latents_dir: "latents"
+
+optimization:
+  learning_rate: 1e-4
+  steps: 50
+  batch_size: 1
+  gradient_accumulation_steps: 1
+  max_grad_norm: 1.0
+  optimizer_type: "adamw"
+  scheduler_type: "linear"
+  scheduler_params: { }
+  enable_gradient_checkpointing: true
+
+acceleration:
+  mixed_precision_mode: "bf16"
+  quantization: null
+  load_text_encoder_in_8bit: false
+  offload_optimizer_during_validation: false
+
+data:
+  preprocessed_data_root: "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_050_ltx2_lora_shadowsmoke/overfit/.precomputed"
+  num_dataloader_workers: 2
+
+validation:
+  samples:
+    - prompt: >-
+        SHDWSMK A woman in a yellow raincoat stands on a wooden pier by the sea,
+        holding a red umbrella in the wind. A dense mass of black smoke sweeps
+        across the frame and engulfs her, and the scene transforms into a chef
+        in a white uniform plating a colorful dish in a busy restaurant kitchen.
+  negative_prompt: "worst quality, inconsistent motion, distorted, jittery"
+  video_dims: [ 480, 640, 121 ]
+  frame_rate: 24.0
+  seed: 42
+  inference_steps: 30
+  interval: 50
+  guidance_scale: 4.0
+  stg_scale: 1.0
+  stg_blocks: [29]
+  stg_mode: "stg_v"
+  generate_audio: false
+  skip_initial_validation: true
+
+checkpoints:
+  interval: 25
+  keep_last_n: -1
+  precision: "bfloat16"
+
+flow_matching:
+  timestep_sampling_mode: "shifted_logit_normal"
+  timestep_sampling_params: { }
+
+hub:
+  push_to_hub: false
+  hub_model_id: null
+
+wandb:
+  enabled: false
+  project: "ltx-2-trainer"
+  entity: null
+  tags: [ "ltx2", "lora", "sanity" ]
+  log_validation_videos: true
+
+seed: 42
+output_dir: "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_050_ltx2_lora_shadowsmoke/overfit/outputs/sanity"

@@ -1,0 +1,84 @@
+acceleration:
+  load_text_encoder_in_8bit: false
+  mixed_precision_mode: bf16
+  offload_optimizer_during_validation: false
+  quantization: null
+checkpoints:
+  interval: null
+  keep_last_n: -1
+  precision: bfloat16
+data:
+  num_dataloader_workers: 2
+  preprocessed_data_root: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_050_ltx2_lora_shadowsmoke/overfit/.precomputed
+flow_matching:
+  timestep_sampling_mode: shifted_logit_normal
+  timestep_sampling_params: {}
+hub:
+  hub_model_id: null
+  push_to_hub: false
+lora:
+  alpha: 32
+  dropout: 0.0
+  rank: 32
+  target_modules:
+  - attn1.to_k
+  - attn1.to_q
+  - attn1.to_v
+  - attn1.to_out.0
+  - attn2.to_k
+  - attn2.to_q
+  - attn2.to_v
+  - attn2.to_out.0
+model:
+  load_checkpoint: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_050_ltx2_lora_shadowsmoke/overfit/outputs/sanity
+  model_path: /projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors
+  text_encoder_path: /projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized
+  training_mode: lora
+optimization:
+  batch_size: 1
+  enable_gradient_checkpointing: true
+  gradient_accumulation_steps: 1
+  learning_rate: 1e-4
+  max_grad_norm: 1.0
+  optimizer_type: adamw
+  scheduler_params: {}
+  scheduler_type: linear
+  steps: 60
+output_dir: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_050_ltx2_lora_shadowsmoke/overfit/outputs/sanity_resume
+seed: 42
+training_strategy:
+  name: flexible
+  video:
+    is_generated: true
+    latents_dir: latents
+validation:
+  frame_rate: 24.0
+  generate_audio: false
+  guidance_scale: 4.0
+  inference_steps: 30
+  interval: null
+  negative_prompt: worst quality, inconsistent motion, distorted, jittery
+  samples:
+  - prompt: SHDWSMK A woman in a yellow raincoat stands on a wooden pier by the sea,
+      holding a red umbrella in the wind. A dense mass of black smoke sweeps across
+      the frame and engulfs her, and the scene transforms into a chef in a white uniform
+      plating a colorful dish in a busy restaurant kitchen.
+  seed: 42
+  skip_initial_validation: true
+  stg_blocks:
+  - 29
+  stg_mode: stg_v
+  stg_scale: 1.0
+  video_dims:
+  - 480
+  - 640
+  - 121
+wandb:
+  enabled: false
+  entity: null
+  log_validation_videos: true
+  project: ltx-2-trainer
+  tags:
+  - ltx2
+  - lora
+  - sanity

@@ -1,0 +1,106 @@
+# exp_050 — LTX-2 19B t2v LoRA baseline on 10 shadow-smoke transition clips.
+# Derived from the OFFICIAL LTX-2-official/packages/ltx-trainer/configs/t2v_lora.yaml
+# (commit 7809842). Deltas from official defaults, each with a reason:
+#   - model paths -> local staged weights
+#   - target_modules -> the official "video-only training" list (clips have no audio)
+#   - training_strategy -> video modality only (no audio block; official video-only pattern)
+#   - data root -> preprocessed shadow-smoke latents (3 AR buckets, 480x640/640x480/576x576, F=121)
+#   - validation -> 2 prompts (in-style w/ SHDWSMK trigger + out-of-style drift check),
+#     video dims match the portrait bucket, 24 fps like the clips, stg_v, no audio
+#   - output_dir -> repo outputs/training/exp_050.../baseline
+# Everything else (rank 32, alpha 32, lr 1e-4, 2000 steps, bs 1, adamw, linear,
+# grad checkpointing, bf16, no quantization, checkpoints every 250) is the
+# official 80GB-tier default, unchanged.
+
+model:
+  model_path: "/projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors"
+  text_encoder_path: "/projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
+  training_mode: "lora"
+  load_checkpoint: null
+
+lora:
+  rank: 32
+  alpha: 32
+  dropout: 0.0
+  target_modules:
+    - "attn1.to_k"
+    - "attn1.to_q"
+    - "attn1.to_v"
+    - "attn1.to_out.0"
+    - "attn2.to_k"
+    - "attn2.to_q"
+    - "attn2.to_v"
+    - "attn2.to_out.0"
+
+training_strategy:
+  name: "flexible"
+  video:
+    is_generated: true
+    latents_dir: "latents"
+
+optimization:
+  learning_rate: 1e-4
+  steps: 2000
+  batch_size: 1
+  gradient_accumulation_steps: 1
+  max_grad_norm: 1.0
+  optimizer_type: "adamw"
+  scheduler_type: "linear"
+  scheduler_params: { }
+  enable_gradient_checkpointing: true
+
+acceleration:
+  mixed_precision_mode: "bf16"
+  quantization: null
+  load_text_encoder_in_8bit: false
+  offload_optimizer_during_validation: false
+
+data:
+  preprocessed_data_root: "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_050_ltx2_lora_shadowsmoke/dataset/.precomputed"
+  num_dataloader_workers: 2
+
+validation:
+  samples:
+    - prompt: >-
+        SHDWSMK A woman in a yellow raincoat stands on a wooden pier by the sea,
+        holding a red umbrella in the wind. A dense mass of black smoke sweeps
+        across the frame and engulfs her, and the scene transforms into a chef
+        in a white uniform plating a colorful dish in a busy restaurant kitchen.
+    - prompt: >-
+        A golden retriever runs across a sunny park lawn, chasing a red frisbee
+        thrown by its owner, with tall trees and a fountain in the background.
+  negative_prompt: "worst quality, inconsistent motion, distorted, jittery"
+  video_dims: [ 480, 640, 121 ]
+  frame_rate: 24.0
+  seed: 42
+  inference_steps: 30
+  interval: 250
+  guidance_scale: 4.0
+  stg_scale: 1.0
+  stg_blocks: [29]
+  stg_mode: "stg_v"
+  generate_audio: false
+  skip_initial_validation: false
+
+checkpoints:
+  interval: 250
+  keep_last_n: -1
+  precision: "bfloat16"
+
+flow_matching:
+  timestep_sampling_mode: "shifted_logit_normal"
+  timestep_sampling_params: { }
+
+hub:
+  push_to_hub: false
+  hub_model_id: null
+
+wandb:
+  enabled: false
+  project: "ltx-2-trainer"
+  entity: null
+  tags: [ "ltx2", "lora", "t2v", "exp_050", "shadow_smoke" ]
+  log_validation_videos: true
+
+seed: 42
+output_dir: "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/training/exp_050_ltx2_lora_shadowsmoke/baseline"
