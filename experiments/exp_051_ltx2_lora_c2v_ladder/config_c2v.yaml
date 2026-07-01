@@ -1,0 +1,126 @@
+# exp_051 — C2V LoRA arm: LTX-2 19B LoRA on the 10 shadow-smoke clips, conditioned
+# during training on the FIRST 2 + LAST 1 latent frames (= first 9 + last 8 pixel
+# frames) of every clip; the model learns to generate only the middle (the transition).
+#
+# Identical to exp_050 config_baseline.yaml (official t2v_lora.yaml 80GB defaults,
+# video-only attention targets, same data/captions/trigger via the exp_050
+# .precomputed latents) EXCEPT:
+#   - training_strategy.video.conditions: prefix(2 latent) + suffix(1 latent), both
+#     probability 1.0 — the official video-extension conditions, stacked. Conditions
+#     are applied at train time on the ordinary latents (no re-preprocessing needed).
+#   - validation sample 1 is a true C2V sample: prefix = first 9 px frames of the
+#     earth_wave_0 test clip (bookstore scene), suffix = last 8 px frames (staircase
+#     scene), landscape dims to match; step-0 sample doubles as the base-model rung
+#     of the capability ladder.
+#   - output_dir -> exp_051/c2v
+
+model:
+  model_path: "/projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors"
+  text_encoder_path: "/projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
+  training_mode: "lora"
+  load_checkpoint: null
+
+lora:
+  rank: 32
+  alpha: 32
+  dropout: 0.0
+  target_modules:
+    - "attn1.to_k"
+    - "attn1.to_q"
+    - "attn1.to_v"
+    - "attn1.to_out.0"
+    - "attn2.to_k"
+    - "attn2.to_q"
+    - "attn2.to_v"
+    - "attn2.to_out.0"
+
+training_strategy:
+  name: "flexible"
+  video:
+    is_generated: true
+    latents_dir: "latents"
+    conditions:
+      - type: prefix
+        temporal_boundary: 2   # latent frames -> first (2-1)*8+1 = 9 pixel frames clean
+        probability: 1.0
+      - type: suffix
+        temporal_boundary: 1   # latent frames -> last 1*8 = 8 pixel frames clean
+        probability: 1.0
+
+optimization:
+  learning_rate: 1e-4
+  steps: 2000
+  batch_size: 1
+  gradient_accumulation_steps: 1
+  max_grad_norm: 1.0
+  optimizer_type: "adamw"
+  scheduler_type: "linear"
+  scheduler_params: { }
+  enable_gradient_checkpointing: true
+
+acceleration:
+  mixed_precision_mode: "bf16"
+  quantization: null
+  load_text_encoder_in_8bit: false
+  offload_optimizer_during_validation: false
+
+data:
+  preprocessed_data_root: "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_050_ltx2_lora_shadowsmoke/dataset/.precomputed"
+  num_dataloader_workers: 2
+
+validation:
+  samples:
+    - prompt: >-
+        SHDWSMK A young woman with slicked-back dark hair, white futuristic
+        wraparound sunglasses and a black leather jacket with white piping stands
+        in a narrow bookstore aisle between tall shelves packed with colorful
+        books, seen from a high angle. A dense mass of black smoke sweeps across
+        the frame and engulfs her, and the scene transforms into a woman with a
+        voluminous afro and dark sunglasses, wearing a black crop top and a silver
+        choker, holding the metal railings of a sunlit concrete staircase beneath
+        tall bright windows, looking up at the camera.
+      conditions:
+        - type: prefix
+          video: "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_start9.mp4"
+          num_frames: 9    # pixel frames, %8==1 -> 2 latent frames at position 0
+        - type: suffix
+          video: "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_end9.mp4"
+          num_frames: 8    # pixel frames, %8==0 -> last 1 latent frame at the end
+    - prompt: >-
+        A golden retriever runs across a sunny park lawn, chasing a red frisbee
+        thrown by its owner, with tall trees and a fountain in the background.
+  negative_prompt: "worst quality, inconsistent motion, distorted, jittery"
+  video_dims: [ 640, 480, 121 ]
+  frame_rate: 24.0
+  seed: 42
+  inference_steps: 30
+  interval: 250
+  guidance_scale: 4.0
+  stg_scale: 1.0
+  stg_blocks: [29]
+  stg_mode: "stg_v"
+  generate_audio: false
+  skip_initial_validation: false
+
+checkpoints:
+  interval: 250
+  keep_last_n: -1
+  precision: "bfloat16"
+
+flow_matching:
+  timestep_sampling_mode: "shifted_logit_normal"
+  timestep_sampling_params: { }
+
+hub:
+  push_to_hub: false
+  hub_model_id: null
+
+wandb:
+  enabled: true
+  project: "creative-transition-transfer"
+  entity: null
+  tags: [ "ltx2", "lora", "c2v", "exp_051", "shadow_smoke" ]
+  log_validation_videos: true
+
+seed: 42
+output_dir: "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/training/exp_051_ltx2_lora_c2v_ladder/c2v"
