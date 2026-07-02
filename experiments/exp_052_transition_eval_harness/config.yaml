@@ -1,0 +1,39 @@
+data:
+  transitions_root: "data/processed/transitions"
+  exclude: ["higgsfield"]
+
+features:
+  model: "facebook/dinov2-base"
+  short_side: 256          # decode-time resize; DINO processor crops 224 from this
+  cache_dir: "outputs/eval/cache"
+
+morph:
+  n_prefix: 9              # px frames = first 2 latent frames (C2V contract)
+  n_suffix: 8              # px frames = last 1 latent frame
+  resample_points: 96
+
+motion:
+  grid_size: 20
+  max_side: 384
+  n_steps: 64
+
+judge:
+  enabled: true            # EXPERIMENTAL until human-validated (see README)
+  model_path: "$LAB/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
+  n_frames: 8
+
+wandb:
+  enabled: true
+  project: "creative-transition-transfer"
+
+runtime:
+  device: cuda
+
+outputs:
+  dir: "outputs/eval/exp_052"
+
+# --smoke overrides (applied in the runners)
+smoke:
+  styles: ["shadow_smoke", "earth_wave", "melt_transition"]
+  clips_per_style: 2
+  max_items: 4

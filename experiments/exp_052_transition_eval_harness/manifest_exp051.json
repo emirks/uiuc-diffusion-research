@@ -1,0 +1,386 @@
+[
+  {
+    "item_id": "base_ew0_trigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/base/samples/step_000000_1.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "base",
+    "notes": "exp_051 ladder; SHDWSMK prompt"
+  },
+  {
+    "item_id": "base_ew0_notrigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/base/samples/step_000000_2.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "base",
+    "notes": "exp_051 ladder; no trigger token"
+  },
+  {
+    "item_id": "base_ew1_trigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/base/samples/step_000000_3.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew1_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "base",
+    "notes": "exp_051 ladder; SHDWSMK prompt"
+  },
+  {
+    "item_id": "base_ew1_notrigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/base/samples/step_000000_4.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew1_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "base",
+    "notes": "exp_051 ladder; no trigger token"
+  },
+  {
+    "item_id": "base_ew2_trigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/base/samples/step_000000_5.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew2_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "base",
+    "notes": "exp_051 ladder; SHDWSMK prompt"
+  },
+  {
+    "item_id": "base_ew2_notrigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/base/samples/step_000000_6.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew2_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "base",
+    "notes": "exp_051 ladder; no trigger token"
+  },
+  {
+    "item_id": "t2v_ew0_trigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/t2v/samples/step_002000_1.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "t2v",
+    "notes": "exp_051 ladder; SHDWSMK prompt"
+  },
+  {
+    "item_id": "t2v_ew0_notrigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/t2v/samples/step_002000_2.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "t2v",
+    "notes": "exp_051 ladder; no trigger token"
+  },
+  {
+    "item_id": "t2v_ew1_trigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/t2v/samples/step_002000_3.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew1_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "t2v",
+    "notes": "exp_051 ladder; SHDWSMK prompt"
+  },
+  {
+    "item_id": "t2v_ew1_notrigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/t2v/samples/step_002000_4.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew1_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "t2v",
+    "notes": "exp_051 ladder; no trigger token"
+  },
+  {
+    "item_id": "t2v_ew2_trigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/t2v/samples/step_002000_5.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew2_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "t2v",
+    "notes": "exp_051 ladder; SHDWSMK prompt"
+  },
+  {
+    "item_id": "t2v_ew2_notrigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/t2v/samples/step_002000_6.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew2_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "t2v",
+    "notes": "exp_051 ladder; no trigger token"
+  },
+  {
+    "item_id": "i2v_ff05_ew0_trigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/i2v_ff05/samples/step_002000_1.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "i2v_ff05",
+    "notes": "exp_051 ladder; SHDWSMK prompt"
+  },
+  {
+    "item_id": "i2v_ff05_ew0_notrigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/i2v_ff05/samples/step_002000_2.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "i2v_ff05",
+    "notes": "exp_051 ladder; no trigger token"
+  },
+  {
+    "item_id": "i2v_ff05_ew1_trigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/i2v_ff05/samples/step_002000_3.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew1_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "i2v_ff05",
+    "notes": "exp_051 ladder; SHDWSMK prompt"
+  },
+  {
+    "item_id": "i2v_ff05_ew1_notrigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/i2v_ff05/samples/step_002000_4.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew1_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "i2v_ff05",
+    "notes": "exp_051 ladder; no trigger token"
+  },
+  {
+    "item_id": "i2v_ff05_ew2_trigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/i2v_ff05/samples/step_002000_5.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew2_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "i2v_ff05",
+    "notes": "exp_051 ladder; SHDWSMK prompt"
+  },
+  {
+    "item_id": "i2v_ff05_ew2_notrigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/i2v_ff05/samples/step_002000_6.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew2_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "i2v_ff05",
+    "notes": "exp_051 ladder; no trigger token"
+  },
+  {
+    "item_id": "c2v_ew0_trigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/c2v/samples/step_002000_1.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "c2v",
+    "notes": "exp_051 ladder; SHDWSMK prompt"
+  },
+  {
+    "item_id": "c2v_ew0_notrigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/c2v/samples/step_002000_2.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew0_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "c2v",
+    "notes": "exp_051 ladder; no trigger token"
+  },
+  {
+    "item_id": "c2v_ew1_trigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/c2v/samples/step_002000_3.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew1_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "c2v",
+    "notes": "exp_051 ladder; SHDWSMK prompt"
+  },
+  {
+    "item_id": "c2v_ew1_notrigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/c2v/samples/step_002000_4.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew1_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "c2v",
+    "notes": "exp_051 ladder; no trigger token"
+  },
+  {
+    "item_id": "c2v_ew2_trigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/c2v/samples/step_002000_5.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew2_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "c2v",
+    "notes": "exp_051 ladder; SHDWSMK prompt"
+  },
+  {
+    "item_id": "c2v_ew2_notrigger",
+    "generated_video": "outputs/videos/exp_051_ltx2_lora_c2v_ladder/c2v/samples/step_002000_6.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_051_ltx2_lora_c2v_ladder/dataset/cond_ew2_end9.mp4",
+      "num_frames": 8
+    },
+    "arm": "c2v",
+    "notes": "exp_051 ladder; no trigger token"
+  }
+]
