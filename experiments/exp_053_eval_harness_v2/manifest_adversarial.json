@@ -1,0 +1,418 @@
+[
+  {
+    "item_id": "src_copy_shadow_smoke_0_prior_src",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0002/shadow_smoke_0/prior_src.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke.mp4",
+      "num_frames": 8
+    },
+    "arm": "src_copy",
+    "notes": "recon of ss0 itself"
+  },
+  {
+    "item_id": "src_copy_shadow_smoke_1_prior_src",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0002/shadow_smoke_1/prior_src.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 8
+    },
+    "arm": "src_copy",
+    "notes": "recon of ss1 itself"
+  },
+  {
+    "item_id": "src_copy_shadow_smoke_6_prior_src",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0002/shadow_smoke_6/prior_src.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4",
+      "num_frames": 8
+    },
+    "arm": "src_copy",
+    "notes": "recon of ss6 itself"
+  },
+  {
+    "item_id": "src_copy_shadow_smoke_9_prior_src",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0002/shadow_smoke_9/prior_src.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_9.mp4",
+      "num_frames": 8
+    },
+    "arm": "src_copy",
+    "notes": "recon of ss9 itself"
+  },
+  {
+    "item_id": "donor_pin_shadow_smoke_0_prior_donor-shadow_smoke_2",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0002/shadow_smoke_0/prior_donor:shadow_smoke_2.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke.mp4",
+      "num_frames": 8
+    },
+    "arm": "donor_pin",
+    "notes": "ss2 smoke in ss0"
+  },
+  {
+    "item_id": "donor_pin_shadow_smoke_0_prior_donor-shadow_smoke_8",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0002/shadow_smoke_0/prior_donor:shadow_smoke_8.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke.mp4",
+      "num_frames": 8
+    },
+    "arm": "donor_pin",
+    "notes": "ss8 smoke in ss0"
+  },
+  {
+    "item_id": "donor_pin_shadow_smoke_1_prior_donor-shadow_smoke_5",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0002/shadow_smoke_1/prior_donor:shadow_smoke_5.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 8
+    },
+    "arm": "donor_pin",
+    "notes": "ss5 smoke in ss1"
+  },
+  {
+    "item_id": "donor_pin_shadow_smoke_1_prior_donor-shadow_smoke_7",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0002/shadow_smoke_1/prior_donor:shadow_smoke_7.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 8
+    },
+    "arm": "donor_pin",
+    "notes": "ss7 smoke in ss1"
+  },
+  {
+    "item_id": "donor_pin_shadow_smoke_6_prior_donor-shadow_smoke_0",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0002/shadow_smoke_6/prior_donor:shadow_smoke_0.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4",
+      "num_frames": 8
+    },
+    "arm": "donor_pin",
+    "notes": "ss0 smoke in ss6"
+  },
+  {
+    "item_id": "donor_pin_shadow_smoke_6_prior_donor-shadow_smoke_2",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0002/shadow_smoke_6/prior_donor:shadow_smoke_2.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4",
+      "num_frames": 8
+    },
+    "arm": "donor_pin",
+    "notes": "ss2 smoke in ss6"
+  },
+  {
+    "item_id": "donor_pin_shadow_smoke_6_prior_donor-shadow_smoke_8",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0002/shadow_smoke_6/prior_donor:shadow_smoke_8.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4",
+      "num_frames": 8
+    },
+    "arm": "donor_pin",
+    "notes": "ss8 smoke in ss6"
+  },
+  {
+    "item_id": "donor_pin_shadow_smoke_9_prior_donor-shadow_smoke_5",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0002/shadow_smoke_9/prior_donor:shadow_smoke_5.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_9.mp4",
+      "num_frames": 8
+    },
+    "arm": "donor_pin",
+    "notes": "ss5 smoke in ss9"
+  },
+  {
+    "item_id": "donor_blend_shadow_smoke_1_prior_donorblend-shadow_smoke_5-0.7",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0002/shadow_smoke_1/prior_donorblend:shadow_smoke_5:0.7.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 8
+    },
+    "arm": "donor_blend",
+    "notes": "ss5 blend 0.7"
+  },
+  {
+    "item_id": "donor_blend_shadow_smoke_6_prior_donorblend-shadow_smoke_0-0.7",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0002/shadow_smoke_6/prior_donorblend:shadow_smoke_0:0.7.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4",
+      "num_frames": 8
+    },
+    "arm": "donor_blend",
+    "notes": "ss0 blend 0.7"
+  },
+  {
+    "item_id": "donor_blend_shadow_smoke_9_prior_donorblend-shadow_smoke_5-0.7",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0002/shadow_smoke_9/prior_donorblend:shadow_smoke_5:0.7.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_9.mp4",
+      "num_frames": 8
+    },
+    "arm": "donor_blend",
+    "notes": "ss5 blend 0.7"
+  },
+  {
+    "item_id": "self_inject_g1_shadow_smoke_0_regen_g1.0",
+    "generated_video": "outputs/videos/exp_048_smoke_self_recon_inject/run_0002/shadow_smoke_0/regen_g1.0.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke.mp4",
+      "num_frames": 8
+    },
+    "arm": "self_inject_g1",
+    "notes": "self recon-inject g=1.0"
+  },
+  {
+    "item_id": "self_inject_g1_shadow_smoke_1_regen_g1.0",
+    "generated_video": "outputs/videos/exp_048_smoke_self_recon_inject/run_0002/shadow_smoke_1/regen_g1.0.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 8
+    },
+    "arm": "self_inject_g1",
+    "notes": "self recon-inject g=1.0"
+  },
+  {
+    "item_id": "self_inject_g1_shadow_smoke_2_regen_g1.0",
+    "generated_video": "outputs/videos/exp_048_smoke_self_recon_inject/run_0002/shadow_smoke_2/regen_g1.0.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_2.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_2.mp4",
+      "num_frames": 8
+    },
+    "arm": "self_inject_g1",
+    "notes": "self recon-inject g=1.0"
+  },
+  {
+    "item_id": "self_inject_g08_shadow_smoke_0_regen_g0.8",
+    "generated_video": "outputs/videos/exp_048_smoke_self_recon_inject/run_0002/shadow_smoke_0/regen_g0.8.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke.mp4",
+      "num_frames": 8
+    },
+    "arm": "self_inject_g08",
+    "notes": "self recon-inject g=0.8"
+  },
+  {
+    "item_id": "self_inject_g08_shadow_smoke_1_regen_g0.8",
+    "generated_video": "outputs/videos/exp_048_smoke_self_recon_inject/run_0002/shadow_smoke_1/regen_g0.8.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 8
+    },
+    "arm": "self_inject_g08",
+    "notes": "self recon-inject g=0.8"
+  },
+  {
+    "item_id": "neg_velguide_shadow_smoke_1_regen_base_cfg4",
+    "generated_video": "outputs/videos/exp_047_smoke_velocity_guide/run_0001/shadow_smoke_1/regen_base_cfg4.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 8
+    },
+    "arm": "neg_velguide",
+    "notes": "production baseline"
+  },
+  {
+    "item_id": "neg_velguide_shadow_smoke_6_regen_base_cfg4",
+    "generated_video": "outputs/videos/exp_047_smoke_velocity_guide/run_0001/shadow_smoke_6/regen_base_cfg4.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4",
+      "num_frames": 8
+    },
+    "arm": "neg_velguide",
+    "notes": "production baseline"
+  },
+  {
+    "item_id": "neg_velguide_shadow_smoke_1_regen_g0.8_cfg4",
+    "generated_video": "outputs/videos/exp_047_smoke_velocity_guide/run_0001/shadow_smoke_1/regen_g0.8_cfg4.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 8
+    },
+    "arm": "neg_velguide",
+    "notes": "velocity-guided g0.8"
+  },
+  {
+    "item_id": "neg_velguide_shadow_smoke_6_regen_g0.8_cfg4",
+    "generated_video": "outputs/videos/exp_047_smoke_velocity_guide/run_0001/shadow_smoke_6/regen_g0.8_cfg4.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4",
+      "num_frames": 8
+    },
+    "arm": "neg_velguide",
+    "notes": "velocity-guided g0.8"
+  },
+  {
+    "item_id": "neg_tempblend_shadow_smoke_1_prior_tempblend-shadow_smoke_5",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0004/shadow_smoke_1/prior_tempblend:shadow_smoke_5.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_1.mp4",
+      "num_frames": 8
+    },
+    "arm": "neg_tempblend",
+    "notes": "temporal-blend winning recipe"
+  },
+  {
+    "item_id": "neg_tempblend_shadow_smoke_6_prior_tempblend-shadow_smoke_0",
+    "generated_video": "outputs/videos/exp_046_smoke_perceptual_inject/run_0004/shadow_smoke_6/prior_tempblend:shadow_smoke_0.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "data/processed/transitions/shadow_smoke/shadow_smoke_6.mp4",
+      "num_frames": 8
+    },
+    "arm": "neg_tempblend",
+    "notes": "temporal-blend winning recipe"
+  }
+]
