@@ -1,0 +1,38 @@
+# exp_055 — eval viewer bundle builder.
+# Pure front-end + data-packaging (no model, no GPU). `run.py` reads this to
+# build the example bundle from the existing exp_053 results; build_viewer.py
+# is the general CLI (any run — point it at a fresh validation dir + items).
+
+model:
+  model_id: "n/a — packaging task, no model loaded"
+
+inputs:
+  # everything the viewer consumes (paths relative to REPO_ROOT)
+  validation:    "outputs/eval/exp_052/validation/run_0001"        # results.json + distance_matrices.npz + exam figures
+  items:         "outputs/eval/exp_052/ladder/run_0001/items.jsonl" # scored ladder items (M1–M6 scalars, norm/floor/ceiling)
+  manifest:      "experiments/exp_052_transition_eval_harness/manifest_exp051.json"  # item_id -> generated/condition videos
+  ceilings:      "outputs/eval/exp_052/ladder/run_0001/ceilings.json"
+  judge_summary: "outputs/eval/exp_053/judge_gemini_ladder/run_0004/judge_summary.json"
+  judge_results: "outputs/eval/exp_053/judge_gemini_ladder/run_0004/judge_results.json"
+  checks:        "outputs/eval/exp_053/checks/run_0001"             # checks.json + adversarial.jsonl + checkC_audit.json
+  report:        "outputs/eval/exp_053/ladder_v2/run_0002/report.md"
+  dedup:         "outputs/eval/exp_053/dedup/duplicates.json"
+  controls:      "outputs/eval/exp_052/controls"                    # per-style lerp floor mp4s
+  figures_dirs:                                                     # extra PNG dirs (validation/checks/report auto-included)
+    - "outputs/eval/exp_053/pair_examples"
+    - "outputs/eval/exp_053/dedup"
+  transitions_root: "data/processed/transitions"
+  cache_dir:     "outputs/eval/cache"                               # DINO feature cache (read-only)
+  exclude: ["higgsfield"]
+
+inference:
+  # packaging knobs (no diffusion inference here)
+  short_side: 256          # feature-cache key component; do not change (must match features.short_side)
+  filmstrip_cell: [150, 104]
+
+runtime:
+  device: cpu
+
+outputs:
+  dir: "outputs/eval/exp_053/viewer"     # example bundle location
+  label: "exp_053 — ladder_v2 (24 items)"
