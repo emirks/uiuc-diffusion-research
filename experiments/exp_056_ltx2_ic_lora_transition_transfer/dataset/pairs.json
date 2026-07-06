@@ -1,0 +1,788 @@
+[
+  {
+    "id": "air_bending/air_bending_0__ref_air_bending_1",
+    "class": "air_bending",
+    "target": "air_bending_0",
+    "reference": "air_bending_1"
+  },
+  {
+    "id": "air_bending/air_bending_0__ref_air_bending_2",
+    "class": "air_bending",
+    "target": "air_bending_0",
+    "reference": "air_bending_2"
+  },
+  {
+    "id": "air_bending/air_bending_0__ref_air_bending_3",
+    "class": "air_bending",
+    "target": "air_bending_0",
+    "reference": "air_bending_3"
+  },
+  {
+    "id": "air_bending/air_bending_1__ref_air_bending_2",
+    "class": "air_bending",
+    "target": "air_bending_1",
+    "reference": "air_bending_2"
+  },
+  {
+    "id": "air_bending/air_bending_1__ref_air_bending_3",
+    "class": "air_bending",
+    "target": "air_bending_1",
+    "reference": "air_bending_3"
+  },
+  {
+    "id": "air_bending/air_bending_1__ref_air_bending_0",
+    "class": "air_bending",
+    "target": "air_bending_1",
+    "reference": "air_bending_0"
+  },
+  {
+    "id": "air_bending/air_bending_2__ref_air_bending_3",
+    "class": "air_bending",
+    "target": "air_bending_2",
+    "reference": "air_bending_3"
+  },
+  {
+    "id": "air_bending/air_bending_2__ref_air_bending_0",
+    "class": "air_bending",
+    "target": "air_bending_2",
+    "reference": "air_bending_0"
+  },
+  {
+    "id": "air_bending/air_bending_2__ref_air_bending_1",
+    "class": "air_bending",
+    "target": "air_bending_2",
+    "reference": "air_bending_1"
+  },
+  {
+    "id": "air_bending/air_bending_3__ref_air_bending_0",
+    "class": "air_bending",
+    "target": "air_bending_3",
+    "reference": "air_bending_0"
+  },
+  {
+    "id": "air_bending/air_bending_3__ref_air_bending_1",
+    "class": "air_bending",
+    "target": "air_bending_3",
+    "reference": "air_bending_1"
+  },
+  {
+    "id": "air_bending/air_bending_3__ref_air_bending_2",
+    "class": "air_bending",
+    "target": "air_bending_3",
+    "reference": "air_bending_2"
+  },
+  {
+    "id": "display_transition/display_transition_1__ref_display_transition_2",
+    "class": "display_transition",
+    "target": "display_transition_1",
+    "reference": "display_transition_2"
+  },
+  {
+    "id": "display_transition/display_transition_1__ref_display_transition_3",
+    "class": "display_transition",
+    "target": "display_transition_1",
+    "reference": "display_transition_3"
+  },
+  {
+    "id": "display_transition/display_transition_2__ref_display_transition_3",
+    "class": "display_transition",
+    "target": "display_transition_2",
+    "reference": "display_transition_3"
+  },
+  {
+    "id": "display_transition/display_transition_2__ref_display_transition_1",
+    "class": "display_transition",
+    "target": "display_transition_2",
+    "reference": "display_transition_1"
+  },
+  {
+    "id": "display_transition/display_transition_3__ref_display_transition_1",
+    "class": "display_transition",
+    "target": "display_transition_3",
+    "reference": "display_transition_1"
+  },
+  {
+    "id": "display_transition/display_transition_3__ref_display_transition_2",
+    "class": "display_transition",
+    "target": "display_transition_3",
+    "reference": "display_transition_2"
+  },
+  {
+    "id": "earth_wave/earth_wave_0__ref_earth_wave_1",
+    "class": "earth_wave",
+    "target": "earth_wave_0",
+    "reference": "earth_wave_1"
+  },
+  {
+    "id": "earth_wave/earth_wave_0__ref_earth_wave_2",
+    "class": "earth_wave",
+    "target": "earth_wave_0",
+    "reference": "earth_wave_2"
+  },
+  {
+    "id": "earth_wave/earth_wave_0__ref_earth_wave_3",
+    "class": "earth_wave",
+    "target": "earth_wave_0",
+    "reference": "earth_wave_3"
+  },
+  {
+    "id": "earth_wave/earth_wave_1__ref_earth_wave_2",
+    "class": "earth_wave",
+    "target": "earth_wave_1",
+    "reference": "earth_wave_2"
+  },
+  {
+    "id": "earth_wave/earth_wave_1__ref_earth_wave_3",
+    "class": "earth_wave",
+    "target": "earth_wave_1",
+    "reference": "earth_wave_3"
+  },
+  {
+    "id": "earth_wave/earth_wave_1__ref_earth_wave_4",
+    "class": "earth_wave",
+    "target": "earth_wave_1",
+    "reference": "earth_wave_4"
+  },
+  {
+    "id": "earth_wave/earth_wave_2__ref_earth_wave_3",
+    "class": "earth_wave",
+    "target": "earth_wave_2",
+    "reference": "earth_wave_3"
+  },
+  {
+    "id": "earth_wave/earth_wave_2__ref_earth_wave_4",
+    "class": "earth_wave",
+    "target": "earth_wave_2",
+    "reference": "earth_wave_4"
+  },
+  {
+    "id": "earth_wave/earth_wave_2__ref_earth_wave_0",
+    "class": "earth_wave",
+    "target": "earth_wave_2",
+    "reference": "earth_wave_0"
+  },
+  {
+    "id": "earth_wave/earth_wave_3__ref_earth_wave_4",
+    "class": "earth_wave",
+    "target": "earth_wave_3",
+    "reference": "earth_wave_4"
+  },
+  {
+    "id": "earth_wave/earth_wave_3__ref_earth_wave_0",
+    "class": "earth_wave",
+    "target": "earth_wave_3",
+    "reference": "earth_wave_0"
+  },
+  {
+    "id": "earth_wave/earth_wave_3__ref_earth_wave_1",
+    "class": "earth_wave",
+    "target": "earth_wave_3",
+    "reference": "earth_wave_1"
+  },
+  {
+    "id": "earth_wave/earth_wave_4__ref_earth_wave_0",
+    "class": "earth_wave",
+    "target": "earth_wave_4",
+    "reference": "earth_wave_0"
+  },
+  {
+    "id": "earth_wave/earth_wave_4__ref_earth_wave_1",
+    "class": "earth_wave",
+    "target": "earth_wave_4",
+    "reference": "earth_wave_1"
+  },
+  {
+    "id": "earth_wave/earth_wave_4__ref_earth_wave_2",
+    "class": "earth_wave",
+    "target": "earth_wave_4",
+    "reference": "earth_wave_2"
+  },
+  {
+    "id": "firelava/firelava_0__ref_firelava_1",
+    "class": "firelava",
+    "target": "firelava_0",
+    "reference": "firelava_1"
+  },
+  {
+    "id": "firelava/firelava_0__ref_firelava_2",
+    "class": "firelava",
+    "target": "firelava_0",
+    "reference": "firelava_2"
+  },
+  {
+    "id": "firelava/firelava_0__ref_firelava_3",
+    "class": "firelava",
+    "target": "firelava_0",
+    "reference": "firelava_3"
+  },
+  {
+    "id": "firelava/firelava_1__ref_firelava_2",
+    "class": "firelava",
+    "target": "firelava_1",
+    "reference": "firelava_2"
+  },
+  {
+    "id": "firelava/firelava_1__ref_firelava_3",
+    "class": "firelava",
+    "target": "firelava_1",
+    "reference": "firelava_3"
+  },
+  {
+    "id": "firelava/firelava_1__ref_firelava_4",
+    "class": "firelava",
+    "target": "firelava_1",
+    "reference": "firelava_4"
+  },
+  {
+    "id": "firelava/firelava_2__ref_firelava_3",
+    "class": "firelava",
+    "target": "firelava_2",
+    "reference": "firelava_3"
+  },
+  {
+    "id": "firelava/firelava_2__ref_firelava_4",
+    "class": "firelava",
+    "target": "firelava_2",
+    "reference": "firelava_4"
+  },
+  {
+    "id": "firelava/firelava_2__ref_firelava_5",
+    "class": "firelava",
+    "target": "firelava_2",
+    "reference": "firelava_5"
+  },
+  {
+    "id": "firelava/firelava_3__ref_firelava_4",
+    "class": "firelava",
+    "target": "firelava_3",
+    "reference": "firelava_4"
+  },
+  {
+    "id": "firelava/firelava_3__ref_firelava_5",
+    "class": "firelava",
+    "target": "firelava_3",
+    "reference": "firelava_5"
+  },
+  {
+    "id": "firelava/firelava_3__ref_firelava_0",
+    "class": "firelava",
+    "target": "firelava_3",
+    "reference": "firelava_0"
+  },
+  {
+    "id": "firelava/firelava_4__ref_firelava_5",
+    "class": "firelava",
+    "target": "firelava_4",
+    "reference": "firelava_5"
+  },
+  {
+    "id": "firelava/firelava_4__ref_firelava_0",
+    "class": "firelava",
+    "target": "firelava_4",
+    "reference": "firelava_0"
+  },
+  {
+    "id": "firelava/firelava_4__ref_firelava_1",
+    "class": "firelava",
+    "target": "firelava_4",
+    "reference": "firelava_1"
+  },
+  {
+    "id": "firelava/firelava_5__ref_firelava_0",
+    "class": "firelava",
+    "target": "firelava_5",
+    "reference": "firelava_0"
+  },
+  {
+    "id": "firelava/firelava_5__ref_firelava_1",
+    "class": "firelava",
+    "target": "firelava_5",
+    "reference": "firelava_1"
+  },
+  {
+    "id": "firelava/firelava_5__ref_firelava_2",
+    "class": "firelava",
+    "target": "firelava_5",
+    "reference": "firelava_2"
+  },
+  {
+    "id": "flame/flame_transition_0__ref_flame_transition_1",
+    "class": "flame",
+    "target": "flame_transition_0",
+    "reference": "flame_transition_1"
+  },
+  {
+    "id": "flame/flame_transition_1__ref_flame_transition_0",
+    "class": "flame",
+    "target": "flame_transition_1",
+    "reference": "flame_transition_0"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_1__ref_flying_cam_transition_2",
+    "class": "flying_cam_transition",
+    "target": "flying_cam_transition_1",
+    "reference": "flying_cam_transition_2"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_1__ref_flying_cam_transition_3",
+    "class": "flying_cam_transition",
+    "target": "flying_cam_transition_1",
+    "reference": "flying_cam_transition_3"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_1__ref_flying_cam_transition_4",
+    "class": "flying_cam_transition",
+    "target": "flying_cam_transition_1",
+    "reference": "flying_cam_transition_4"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_2__ref_flying_cam_transition_3",
+    "class": "flying_cam_transition",
+    "target": "flying_cam_transition_2",
+    "reference": "flying_cam_transition_3"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_2__ref_flying_cam_transition_4",
+    "class": "flying_cam_transition",
+    "target": "flying_cam_transition_2",
+    "reference": "flying_cam_transition_4"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_2__ref_flying_cam_transition_1",
+    "class": "flying_cam_transition",
+    "target": "flying_cam_transition_2",
+    "reference": "flying_cam_transition_1"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_3__ref_flying_cam_transition_4",
+    "class": "flying_cam_transition",
+    "target": "flying_cam_transition_3",
+    "reference": "flying_cam_transition_4"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_3__ref_flying_cam_transition_1",
+    "class": "flying_cam_transition",
+    "target": "flying_cam_transition_3",
+    "reference": "flying_cam_transition_1"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_3__ref_flying_cam_transition_2",
+    "class": "flying_cam_transition",
+    "target": "flying_cam_transition_3",
+    "reference": "flying_cam_transition_2"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_4__ref_flying_cam_transition_1",
+    "class": "flying_cam_transition",
+    "target": "flying_cam_transition_4",
+    "reference": "flying_cam_transition_1"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_4__ref_flying_cam_transition_2",
+    "class": "flying_cam_transition",
+    "target": "flying_cam_transition_4",
+    "reference": "flying_cam_transition_2"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_4__ref_flying_cam_transition_3",
+    "class": "flying_cam_transition",
+    "target": "flying_cam_transition_4",
+    "reference": "flying_cam_transition_3"
+  },
+  {
+    "id": "melt_transition/melt_transition_1__ref_melt_transition_2",
+    "class": "melt_transition",
+    "target": "melt_transition_1",
+    "reference": "melt_transition_2"
+  },
+  {
+    "id": "melt_transition/melt_transition_1__ref_melt_transition_3",
+    "class": "melt_transition",
+    "target": "melt_transition_1",
+    "reference": "melt_transition_3"
+  },
+  {
+    "id": "melt_transition/melt_transition_1__ref_melt_transition_4",
+    "class": "melt_transition",
+    "target": "melt_transition_1",
+    "reference": "melt_transition_4"
+  },
+  {
+    "id": "melt_transition/melt_transition_2__ref_melt_transition_3",
+    "class": "melt_transition",
+    "target": "melt_transition_2",
+    "reference": "melt_transition_3"
+  },
+  {
+    "id": "melt_transition/melt_transition_2__ref_melt_transition_4",
+    "class": "melt_transition",
+    "target": "melt_transition_2",
+    "reference": "melt_transition_4"
+  },
+  {
+    "id": "melt_transition/melt_transition_2__ref_melt_transition_1",
+    "class": "melt_transition",
+    "target": "melt_transition_2",
+    "reference": "melt_transition_1"
+  },
+  {
+    "id": "melt_transition/melt_transition_3__ref_melt_transition_4",
+    "class": "melt_transition",
+    "target": "melt_transition_3",
+    "reference": "melt_transition_4"
+  },
+  {
+    "id": "melt_transition/melt_transition_3__ref_melt_transition_1",
+    "class": "melt_transition",
+    "target": "melt_transition_3",
+    "reference": "melt_transition_1"
+  },
+  {
+    "id": "melt_transition/melt_transition_3__ref_melt_transition_2",
+    "class": "melt_transition",
+    "target": "melt_transition_3",
+    "reference": "melt_transition_2"
+  },
+  {
+    "id": "melt_transition/melt_transition_4__ref_melt_transition_1",
+    "class": "melt_transition",
+    "target": "melt_transition_4",
+    "reference": "melt_transition_1"
+  },
+  {
+    "id": "melt_transition/melt_transition_4__ref_melt_transition_2",
+    "class": "melt_transition",
+    "target": "melt_transition_4",
+    "reference": "melt_transition_2"
+  },
+  {
+    "id": "melt_transition/melt_transition_4__ref_melt_transition_3",
+    "class": "melt_transition",
+    "target": "melt_transition_4",
+    "reference": "melt_transition_3"
+  },
+  {
+    "id": "raven_transition/raven_transition_0__ref_raven_transition_1",
+    "class": "raven_transition",
+    "target": "raven_transition_0",
+    "reference": "raven_transition_1"
+  },
+  {
+    "id": "raven_transition/raven_transition_0__ref_raven_transition_2",
+    "class": "raven_transition",
+    "target": "raven_transition_0",
+    "reference": "raven_transition_2"
+  },
+  {
+    "id": "raven_transition/raven_transition_0__ref_raven_transition_3",
+    "class": "raven_transition",
+    "target": "raven_transition_0",
+    "reference": "raven_transition_3"
+  },
+  {
+    "id": "raven_transition/raven_transition_1__ref_raven_transition_2",
+    "class": "raven_transition",
+    "target": "raven_transition_1",
+    "reference": "raven_transition_2"
+  },
+  {
+    "id": "raven_transition/raven_transition_1__ref_raven_transition_3",
+    "class": "raven_transition",
+    "target": "raven_transition_1",
+    "reference": "raven_transition_3"
+  },
+  {
+    "id": "raven_transition/raven_transition_1__ref_raven_transition_0",
+    "class": "raven_transition",
+    "target": "raven_transition_1",
+    "reference": "raven_transition_0"
+  },
+  {
+    "id": "raven_transition/raven_transition_2__ref_raven_transition_3",
+    "class": "raven_transition",
+    "target": "raven_transition_2",
+    "reference": "raven_transition_3"
+  },
+  {
+    "id": "raven_transition/raven_transition_2__ref_raven_transition_0",
+    "class": "raven_transition",
+    "target": "raven_transition_2",
+    "reference": "raven_transition_0"
+  },
+  {
+    "id": "raven_transition/raven_transition_2__ref_raven_transition_1",
+    "class": "raven_transition",
+    "target": "raven_transition_2",
+    "reference": "raven_transition_1"
+  },
+  {
+    "id": "raven_transition/raven_transition_3__ref_raven_transition_0",
+    "class": "raven_transition",
+    "target": "raven_transition_3",
+    "reference": "raven_transition_0"
+  },
+  {
+    "id": "raven_transition/raven_transition_3__ref_raven_transition_1",
+    "class": "raven_transition",
+    "target": "raven_transition_3",
+    "reference": "raven_transition_1"
+  },
+  {
+    "id": "raven_transition/raven_transition_3__ref_raven_transition_2",
+    "class": "raven_transition",
+    "target": "raven_transition_3",
+    "reference": "raven_transition_2"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_0__ref_shadow_smoke_1",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_0",
+    "reference": "shadow_smoke_1"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_0__ref_shadow_smoke_2",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_0",
+    "reference": "shadow_smoke_2"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_0__ref_shadow_smoke_3",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_0",
+    "reference": "shadow_smoke_3"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_1__ref_shadow_smoke_2",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_1",
+    "reference": "shadow_smoke_2"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_1__ref_shadow_smoke_3",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_1",
+    "reference": "shadow_smoke_3"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_1__ref_shadow_smoke_4",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_1",
+    "reference": "shadow_smoke_4"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_2__ref_shadow_smoke_3",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_2",
+    "reference": "shadow_smoke_3"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_2__ref_shadow_smoke_4",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_2",
+    "reference": "shadow_smoke_4"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_2__ref_shadow_smoke_5",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_2",
+    "reference": "shadow_smoke_5"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_3__ref_shadow_smoke_4",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_3",
+    "reference": "shadow_smoke_4"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_3__ref_shadow_smoke_5",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_3",
+    "reference": "shadow_smoke_5"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_3__ref_shadow_smoke_6",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_3",
+    "reference": "shadow_smoke_6"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_4__ref_shadow_smoke_5",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_4",
+    "reference": "shadow_smoke_5"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_4__ref_shadow_smoke_6",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_4",
+    "reference": "shadow_smoke_6"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_4__ref_shadow_smoke_7",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_4",
+    "reference": "shadow_smoke_7"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_5__ref_shadow_smoke_6",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_5",
+    "reference": "shadow_smoke_6"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_5__ref_shadow_smoke_7",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_5",
+    "reference": "shadow_smoke_7"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_5__ref_shadow_smoke_8",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_5",
+    "reference": "shadow_smoke_8"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_6__ref_shadow_smoke_7",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_6",
+    "reference": "shadow_smoke_7"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_6__ref_shadow_smoke_8",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_6",
+    "reference": "shadow_smoke_8"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_6__ref_shadow_smoke_9",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_6",
+    "reference": "shadow_smoke_9"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_7__ref_shadow_smoke_8",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_7",
+    "reference": "shadow_smoke_8"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_7__ref_shadow_smoke_9",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_7",
+    "reference": "shadow_smoke_9"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_7__ref_shadow_smoke_0",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_7",
+    "reference": "shadow_smoke_0"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_8__ref_shadow_smoke_9",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_8",
+    "reference": "shadow_smoke_9"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_8__ref_shadow_smoke_0",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_8",
+    "reference": "shadow_smoke_0"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_8__ref_shadow_smoke_1",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_8",
+    "reference": "shadow_smoke_1"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_9__ref_shadow_smoke_0",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_9",
+    "reference": "shadow_smoke_0"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_9__ref_shadow_smoke_1",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_9",
+    "reference": "shadow_smoke_1"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_9__ref_shadow_smoke_2",
+    "class": "shadow_smoke",
+    "target": "shadow_smoke_9",
+    "reference": "shadow_smoke_2"
+  },
+  {
+    "id": "water_bending/water_bending_0__ref_water_bending_1",
+    "class": "water_bending",
+    "target": "water_bending_0",
+    "reference": "water_bending_1"
+  },
+  {
+    "id": "water_bending/water_bending_0__ref_water_bending_2",
+    "class": "water_bending",
+    "target": "water_bending_0",
+    "reference": "water_bending_2"
+  },
+  {
+    "id": "water_bending/water_bending_0__ref_water_bending_3",
+    "class": "water_bending",
+    "target": "water_bending_0",
+    "reference": "water_bending_3"
+  },
+  {
+    "id": "water_bending/water_bending_1__ref_water_bending_2",
+    "class": "water_bending",
+    "target": "water_bending_1",
+    "reference": "water_bending_2"
+  },
+  {
+    "id": "water_bending/water_bending_1__ref_water_bending_3",
+    "class": "water_bending",
+    "target": "water_bending_1",
+    "reference": "water_bending_3"
+  },
+  {
+    "id": "water_bending/water_bending_1__ref_water_bending_0",
+    "class": "water_bending",
+    "target": "water_bending_1",
+    "reference": "water_bending_0"
+  },
+  {
+    "id": "water_bending/water_bending_2__ref_water_bending_3",
+    "class": "water_bending",
+    "target": "water_bending_2",
+    "reference": "water_bending_3"
+  },
+  {
+    "id": "water_bending/water_bending_2__ref_water_bending_0",
+    "class": "water_bending",
+    "target": "water_bending_2",
+    "reference": "water_bending_0"
+  },
+  {
+    "id": "water_bending/water_bending_2__ref_water_bending_1",
+    "class": "water_bending",
+    "target": "water_bending_2",
+    "reference": "water_bending_1"
+  },
+  {
+    "id": "water_bending/water_bending_3__ref_water_bending_0",
+    "class": "water_bending",
+    "target": "water_bending_3",
+    "reference": "water_bending_0"
+  },
+  {
+    "id": "water_bending/water_bending_3__ref_water_bending_1",
+    "class": "water_bending",
+    "target": "water_bending_3",
+    "reference": "water_bending_1"
+  },
+  {
+    "id": "water_bending/water_bending_3__ref_water_bending_2",
+    "class": "water_bending",
+    "target": "water_bending_3",
+    "reference": "water_bending_2"
+  }
+]

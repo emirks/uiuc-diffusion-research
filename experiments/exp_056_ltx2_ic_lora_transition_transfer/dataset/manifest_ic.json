@@ -1,0 +1,876 @@
+[
+  {
+    "item_id": "ic_inclass_new__shadow_smoke_0__ref_shadow_smoke_9",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_inclass_new__shadow_smoke_0__ref_shadow_smoke_9.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/shadow_smoke_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/shadow_smoke_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_9.mp4"
+    },
+    "arm": "ic_inclass_new",
+    "notes": "endpoints=shadow_smoke_0 (shadow_smoke); reference=shadow_smoke_9 (shadow_smoke); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_inclass_new__shadow_smoke_5__ref_shadow_smoke_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_inclass_new__shadow_smoke_5__ref_shadow_smoke_1.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/shadow_smoke_5_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/shadow_smoke_5_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_1.mp4"
+    },
+    "arm": "ic_inclass_new",
+    "notes": "endpoints=shadow_smoke_5 (shadow_smoke); reference=shadow_smoke_1 (shadow_smoke); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_inclass_new__firelava_0__ref_firelava_5",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_inclass_new__firelava_0__ref_firelava_5.mp4",
+    "style": "firelava",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/firelava_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/firelava_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/firelava/firelava_5.mp4"
+    },
+    "arm": "ic_inclass_new",
+    "notes": "endpoints=firelava_0 (firelava); reference=firelava_5 (firelava); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_inclass_new__firelava_3__ref_firelava_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_inclass_new__firelava_3__ref_firelava_1.mp4",
+    "style": "firelava",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/firelava_3_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/firelava_3_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/firelava/firelava_1.mp4"
+    },
+    "arm": "ic_inclass_new",
+    "notes": "endpoints=firelava_3 (firelava); reference=firelava_1 (firelava); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_inclass_new__earth_wave_0__ref_earth_wave_4",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_inclass_new__earth_wave_0__ref_earth_wave_4.mp4",
+    "style": "earth_wave",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/earth_wave_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/earth_wave_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/earth_wave/earth_wave_4.mp4"
+    },
+    "arm": "ic_inclass_new",
+    "notes": "endpoints=earth_wave_0 (earth_wave); reference=earth_wave_4 (earth_wave); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_inclass_new__earth_wave_3__ref_earth_wave_2",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_inclass_new__earth_wave_3__ref_earth_wave_2.mp4",
+    "style": "earth_wave",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/earth_wave_3_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/earth_wave_3_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/earth_wave/earth_wave_2.mp4"
+    },
+    "arm": "ic_inclass_new",
+    "notes": "endpoints=earth_wave_3 (earth_wave); reference=earth_wave_2 (earth_wave); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_inclass_trained__air_bending_1__ref_air_bending_2",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_inclass_trained__air_bending_1__ref_air_bending_2.mp4",
+    "style": "air_bending",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/air_bending_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/air_bending_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/air_bending/air_bending_2.mp4"
+    },
+    "arm": "ic_inclass_trained",
+    "notes": "endpoints=air_bending_1 (air_bending); reference=air_bending_2 (air_bending); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_inclass_trained__water_bending_0__ref_water_bending_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_inclass_trained__water_bending_0__ref_water_bending_1.mp4",
+    "style": "water_bending",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/water_bending_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/water_bending_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/water_bending/water_bending_1.mp4"
+    },
+    "arm": "ic_inclass_trained",
+    "notes": "endpoints=water_bending_0 (water_bending); reference=water_bending_1 (water_bending); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_inclass_trained__raven_transition_0__ref_raven_transition_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_inclass_trained__raven_transition_0__ref_raven_transition_1.mp4",
+    "style": "raven_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/raven_transition_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/raven_transition_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/raven_transition/raven_transition_1.mp4"
+    },
+    "arm": "ic_inclass_trained",
+    "notes": "endpoints=raven_transition_0 (raven_transition); reference=raven_transition_1 (raven_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_inclass_trained__melt_transition_1__ref_melt_transition_2",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_inclass_trained__melt_transition_1__ref_melt_transition_2.mp4",
+    "style": "melt_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/melt_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/melt_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/melt_transition/melt_transition_2.mp4"
+    },
+    "arm": "ic_inclass_trained",
+    "notes": "endpoints=melt_transition_1 (melt_transition); reference=melt_transition_2 (melt_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_inclass_trained__flying_cam_transition_1__ref_flying_cam_transition_2",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_inclass_trained__flying_cam_transition_1__ref_flying_cam_transition_2.mp4",
+    "style": "flying_cam_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/flying_cam_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/flying_cam_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/flying_cam_transition/flying_cam_transition_2.mp4"
+    },
+    "arm": "ic_inclass_trained",
+    "notes": "endpoints=flying_cam_transition_1 (flying_cam_transition); reference=flying_cam_transition_2 (flying_cam_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_inclass_trained__display_transition_1__ref_display_transition_2",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_inclass_trained__display_transition_1__ref_display_transition_2.mp4",
+    "style": "display_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/display_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/display_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/display_transition/display_transition_2.mp4"
+    },
+    "arm": "ic_inclass_trained",
+    "notes": "endpoints=display_transition_1 (display_transition); reference=display_transition_2 (display_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_inclass_trained__flame_transition_0__ref_flame_transition_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_inclass_trained__flame_transition_0__ref_flame_transition_1.mp4",
+    "style": "flame",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/flame_transition_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/flame_transition_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/flame/flame_transition_1.mp4"
+    },
+    "arm": "ic_inclass_trained",
+    "notes": "endpoints=flame_transition_0 (flame); reference=flame_transition_1 (flame); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__display_transition_1__ref_air_bending_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__display_transition_1__ref_air_bending_1.mp4",
+    "style": "air_bending",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/display_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/display_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/air_bending/air_bending_1.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=display_transition_1 (display_transition); reference=air_bending_1 (air_bending); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__flame_transition_0__ref_air_bending_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__flame_transition_0__ref_air_bending_1.mp4",
+    "style": "air_bending",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/flame_transition_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/flame_transition_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/air_bending/air_bending_1.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=flame_transition_0 (flame); reference=air_bending_1 (air_bending); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__earth_wave_0__ref_display_transition_2",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__earth_wave_0__ref_display_transition_2.mp4",
+    "style": "display_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/earth_wave_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/earth_wave_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/display_transition/display_transition_2.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=earth_wave_0 (earth_wave); reference=display_transition_2 (display_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__flying_cam_transition_1__ref_display_transition_2",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__flying_cam_transition_1__ref_display_transition_2.mp4",
+    "style": "display_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/flying_cam_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/flying_cam_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/display_transition/display_transition_2.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=flying_cam_transition_1 (flying_cam_transition); reference=display_transition_2 (display_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__firelava_0__ref_earth_wave_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__firelava_0__ref_earth_wave_1.mp4",
+    "style": "earth_wave",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/firelava_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/firelava_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/earth_wave/earth_wave_1.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=firelava_0 (firelava); reference=earth_wave_1 (earth_wave); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__melt_transition_1__ref_earth_wave_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__melt_transition_1__ref_earth_wave_1.mp4",
+    "style": "earth_wave",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/melt_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/melt_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/earth_wave/earth_wave_1.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=melt_transition_1 (melt_transition); reference=earth_wave_1 (earth_wave); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__flame_transition_0__ref_firelava_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__flame_transition_0__ref_firelava_1.mp4",
+    "style": "firelava",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/flame_transition_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/flame_transition_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/firelava/firelava_1.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=flame_transition_0 (flame); reference=firelava_1 (firelava); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__raven_transition_0__ref_firelava_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__raven_transition_0__ref_firelava_1.mp4",
+    "style": "firelava",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/raven_transition_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/raven_transition_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/firelava/firelava_1.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=raven_transition_0 (raven_transition); reference=firelava_1 (firelava); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__flying_cam_transition_1__ref_flame_transition_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__flying_cam_transition_1__ref_flame_transition_1.mp4",
+    "style": "flame",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/flying_cam_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/flying_cam_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/flame/flame_transition_1.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=flying_cam_transition_1 (flying_cam_transition); reference=flame_transition_1 (flame); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__shadow_smoke_0__ref_flame_transition_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__shadow_smoke_0__ref_flame_transition_1.mp4",
+    "style": "flame",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/shadow_smoke_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/shadow_smoke_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/flame/flame_transition_1.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=shadow_smoke_0 (shadow_smoke); reference=flame_transition_1 (flame); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__melt_transition_1__ref_flying_cam_transition_2",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__melt_transition_1__ref_flying_cam_transition_2.mp4",
+    "style": "flying_cam_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/melt_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/melt_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/flying_cam_transition/flying_cam_transition_2.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=melt_transition_1 (melt_transition); reference=flying_cam_transition_2 (flying_cam_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__water_bending_0__ref_flying_cam_transition_2",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__water_bending_0__ref_flying_cam_transition_2.mp4",
+    "style": "flying_cam_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/water_bending_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/water_bending_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/flying_cam_transition/flying_cam_transition_2.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=water_bending_0 (water_bending); reference=flying_cam_transition_2 (flying_cam_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__raven_transition_0__ref_melt_transition_2",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__raven_transition_0__ref_melt_transition_2.mp4",
+    "style": "melt_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/raven_transition_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/raven_transition_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/melt_transition/melt_transition_2.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=raven_transition_0 (raven_transition); reference=melt_transition_2 (melt_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__air_bending_0__ref_melt_transition_2",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__air_bending_0__ref_melt_transition_2.mp4",
+    "style": "melt_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/air_bending_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/air_bending_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/melt_transition/melt_transition_2.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=air_bending_0 (air_bending); reference=melt_transition_2 (melt_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__shadow_smoke_0__ref_raven_transition_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__shadow_smoke_0__ref_raven_transition_1.mp4",
+    "style": "raven_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/shadow_smoke_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/shadow_smoke_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/raven_transition/raven_transition_1.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=shadow_smoke_0 (shadow_smoke); reference=raven_transition_1 (raven_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__display_transition_1__ref_raven_transition_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__display_transition_1__ref_raven_transition_1.mp4",
+    "style": "raven_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/display_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/display_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/raven_transition/raven_transition_1.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=display_transition_1 (display_transition); reference=raven_transition_1 (raven_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__water_bending_0__ref_shadow_smoke_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__water_bending_0__ref_shadow_smoke_1.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/water_bending_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/water_bending_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_1.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=water_bending_0 (water_bending); reference=shadow_smoke_1 (shadow_smoke); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__earth_wave_0__ref_shadow_smoke_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__earth_wave_0__ref_shadow_smoke_1.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/earth_wave_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/earth_wave_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_1.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=earth_wave_0 (earth_wave); reference=shadow_smoke_1 (shadow_smoke); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__air_bending_0__ref_water_bending_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__air_bending_0__ref_water_bending_1.mp4",
+    "style": "water_bending",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/air_bending_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/air_bending_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/water_bending/water_bending_1.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=air_bending_0 (air_bending); reference=water_bending_1 (water_bending); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_cross__firelava_0__ref_water_bending_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_cross__firelava_0__ref_water_bending_1.mp4",
+    "style": "water_bending",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/firelava_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/firelava_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/water_bending/water_bending_1.mp4"
+    },
+    "arm": "ic_cross",
+    "notes": "endpoints=firelava_0 (firelava); reference=water_bending_1 (water_bending); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_unseen__earth_wave_0__ref_jump_transition_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_unseen__earth_wave_0__ref_jump_transition_1.mp4",
+    "style": "jump_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/earth_wave_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/earth_wave_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/jump_transition/jump_transition_1.mp4"
+    },
+    "arm": "ic_unseen",
+    "notes": "endpoints=earth_wave_0 (earth_wave); reference=jump_transition_1 (jump_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_unseen__shadow_smoke_0__ref_jump_transition_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_unseen__shadow_smoke_0__ref_jump_transition_1.mp4",
+    "style": "jump_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/shadow_smoke_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/shadow_smoke_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/jump_transition/jump_transition_1.mp4"
+    },
+    "arm": "ic_unseen",
+    "notes": "endpoints=shadow_smoke_0 (shadow_smoke); reference=jump_transition_1 (jump_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_unseen__firelava_2__ref_jump_transition_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_unseen__firelava_2__ref_jump_transition_1.mp4",
+    "style": "jump_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/firelava_2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/firelava_2_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/jump_transition/jump_transition_1.mp4"
+    },
+    "arm": "ic_unseen",
+    "notes": "endpoints=firelava_2 (firelava); reference=jump_transition_1 (jump_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_unseen__melt_transition_3__ref_jump_transition_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_unseen__melt_transition_3__ref_jump_transition_1.mp4",
+    "style": "jump_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/melt_transition_3_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/melt_transition_3_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/jump_transition/jump_transition_1.mp4"
+    },
+    "arm": "ic_unseen",
+    "notes": "endpoints=melt_transition_3 (melt_transition); reference=jump_transition_1 (jump_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "ic_reverse__jump_transition_1__ref_shadow_smoke_3",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/ic_lora/quads/ic_reverse__jump_transition_1__ref_shadow_smoke_3.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/jump_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/jump_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_3.mp4"
+    },
+    "arm": "ic_reverse",
+    "notes": "endpoints=jump_transition_1 (jump_transition); reference=shadow_smoke_3 (shadow_smoke); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "base_inclass_new__shadow_smoke_0__ref_shadow_smoke_9",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/base/quads/base_inclass_new__shadow_smoke_0__ref_shadow_smoke_9.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/shadow_smoke_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/shadow_smoke_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_9.mp4"
+    },
+    "arm": "base_inclass_new",
+    "notes": "endpoints=shadow_smoke_0 (shadow_smoke); reference=shadow_smoke_9 (shadow_smoke); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "base_inclass_new__firelava_0__ref_firelava_5",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/base/quads/base_inclass_new__firelava_0__ref_firelava_5.mp4",
+    "style": "firelava",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/firelava_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/firelava_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/firelava/firelava_5.mp4"
+    },
+    "arm": "base_inclass_new",
+    "notes": "endpoints=firelava_0 (firelava); reference=firelava_5 (firelava); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "base_inclass_trained__air_bending_1__ref_air_bending_2",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/base/quads/base_inclass_trained__air_bending_1__ref_air_bending_2.mp4",
+    "style": "air_bending",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/air_bending_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/air_bending_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/air_bending/air_bending_2.mp4"
+    },
+    "arm": "base_inclass_trained",
+    "notes": "endpoints=air_bending_1 (air_bending); reference=air_bending_2 (air_bending); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "base_cross__earth_wave_0__ref_shadow_smoke_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/base/quads/base_cross__earth_wave_0__ref_shadow_smoke_1.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/earth_wave_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/earth_wave_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_1.mp4"
+    },
+    "arm": "base_cross",
+    "notes": "endpoints=earth_wave_0 (earth_wave); reference=shadow_smoke_1 (shadow_smoke); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "base_cross__melt_transition_1__ref_earth_wave_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/base/quads/base_cross__melt_transition_1__ref_earth_wave_1.mp4",
+    "style": "earth_wave",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/melt_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/melt_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/earth_wave/earth_wave_1.mp4"
+    },
+    "arm": "base_cross",
+    "notes": "endpoints=melt_transition_1 (melt_transition); reference=earth_wave_1 (earth_wave); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "base_cross__shadow_smoke_0__ref_raven_transition_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/base/quads/base_cross__shadow_smoke_0__ref_raven_transition_1.mp4",
+    "style": "raven_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/shadow_smoke_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/shadow_smoke_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/raven_transition/raven_transition_1.mp4"
+    },
+    "arm": "base_cross",
+    "notes": "endpoints=shadow_smoke_0 (shadow_smoke); reference=raven_transition_1 (raven_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "base_unseen__earth_wave_0__ref_jump_transition_1",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/base/quads/base_unseen__earth_wave_0__ref_jump_transition_1.mp4",
+    "style": "jump_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/earth_wave_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/earth_wave_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/jump_transition/jump_transition_1.mp4"
+    },
+    "arm": "base_unseen",
+    "notes": "endpoints=earth_wave_0 (earth_wave); reference=jump_transition_1 (jump_transition); type-blind prompt, transition style only in reference"
+  },
+  {
+    "item_id": "base_reverse__jump_transition_1__ref_shadow_smoke_3",
+    "generated_video": "outputs/videos/exp_056_ltx2_ic_lora_transition_transfer/base/quads/base_reverse__jump_transition_1__ref_shadow_smoke_3.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/jump_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_056_ltx2_ic_lora_transition_transfer/dataset/cond_q/jump_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_3.mp4"
+    },
+    "arm": "base_reverse",
+    "notes": "endpoints=jump_transition_1 (jump_transition); reference=shadow_smoke_3 (shadow_smoke); type-blind prompt, transition style only in reference"
+  }
+]

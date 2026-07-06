@@ -1,0 +1,69 @@
+# exp_056 eval config — exp_053 v2 harness config with outputs redirected.
+# validation_run stays the exp_054 full-corpus run_0002 (47 clips / 11 styles).
+data:
+  transitions_root: "data/processed/transitions"
+  exclude: ["higgsfield"]
+
+features:
+  model: "facebook/dinov2-base"
+  short_side: 256
+  cache_dir: "outputs/eval/cache"
+
+morph:
+  n_prefix: 9          # default endpoint windows; manifests override per item
+  n_suffix: 8
+  resample_points: 96
+
+motion:
+  grid_size: 20
+  max_side: 384
+  n_steps: 64
+
+# exp_052 validation run this iteration builds on (distance matrices, exam
+# results for trust flags). Re-point after any future re-validation.
+# 2026-07-07 (exp_054): repointed to run_0002 = full-corpus revalidation
+# (47 clips, 11 styles: 37 deduped + air_bending + firelava). run_0001 was the
+# pre-dedup 41-clip / 9-style exam.
+validation_run: "outputs/eval/exp_052/validation/run_0002"
+
+trust:
+  motion_recall_min: 0.5
+  min_ceiling_clips: 4
+
+checks:
+  allframes_adopt:      # pre-registered check-A adoption bar
+    min_acc: 0.88
+    min_sep_frac: 0.90
+    min_sep_d: 1.0
+  adversarial:          # check-C hard bar
+    copy_min_leak: 0.88
+    # AUDITED 2026-07-07: self_inject_g1 removed from the hard bar. exp_049
+    # (CHANGELOG 2026-06-03 14:29) documents exp_048's static-target injection
+    # as info-limited and ss1/ss6 as z1-poor ("nothing to recover", ss1 PSNR
+    # 11.88) — those outputs genuinely diverge from the source, so they are
+    # not ground-truth copies. The harness independently reproduced the
+    # dichotomy (ss0 leak .951 / ss2 .934 vs ss1 .742 with appearance also
+    # collapsed) — the metric was right, the item label was wrong. Hard bar
+    # stays on the unambiguous copies: literal decodes + literal splices.
+    hard_bar_arms: ["src_copy", "donor_pin"]
+    diagnostic_arms: ["self_inject_g1", "self_inject_g08", "donor_blend",
+                      "neg_tempblend", "neg_velguide"]
+
+judge_gemini:
+  # Pinned. gemini-3.5-flash (GA) was first choice but its video path 503'd
+  # persistently on 2026-07-07 ("high demand"); gemini-3-flash-preview serves
+  # video reliably and is what the iteration plan named. model_version is
+  # recorded in every cached response — swap back when 3.5 capacity settles.
+  model: "gemini-3-flash-preview"
+  fps: 8
+  cache_dir: "outputs/eval/exp_053/judge_cache"
+
+wandb:
+  enabled: true
+  project: "creative-transition-transfer"
+
+runtime:
+  device: cuda
+
+outputs:
+  dir: "outputs/eval/exp_056"

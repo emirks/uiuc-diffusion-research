@@ -1,0 +1,416 @@
+[
+  {
+    "id": "ic_inclass_new__shadow_smoke_0__ref_shadow_smoke_9",
+    "arm": "ic_inclass_new",
+    "endpoints": "shadow_smoke_0",
+    "endpoints_class": "shadow_smoke",
+    "reference": "shadow_smoke_9",
+    "reference_class": "shadow_smoke",
+    "prompt": "ICTRANS A young man with curly dark hair and a mustache, wearing a dark green cardigan over a white collared shirt and a patterned tie, lies in a field of yellow wildflowers below rocky mountains reading a large newspaper, seen from a close low frontal angle. The scene transforms into a bearded man in a black suit and sunglasses riding an orange BMX bike down a sunlit suburban street with his legs spread wide, cars parked along the road behind him."
+  },
+  {
+    "id": "ic_inclass_new__shadow_smoke_5__ref_shadow_smoke_1",
+    "arm": "ic_inclass_new",
+    "endpoints": "shadow_smoke_5",
+    "endpoints_class": "shadow_smoke",
+    "reference": "shadow_smoke_1",
+    "reference_class": "shadow_smoke",
+    "prompt": "ICTRANS A young man in a navy polo shirt, a navy cap with sunglasses on the brim, a pearl necklace and orange shorts crouches on a green outdoor court, staring up into the camera from a high angle. The scene transforms into a group of young men in streetwear gathered around metal stairs in a grey back alley, the one at center standing in a blue and black soccer jersey and black shorts with an afro."
+  },
+  {
+    "id": "ic_inclass_new__firelava_0__ref_firelava_5",
+    "arm": "ic_inclass_new",
+    "endpoints": "firelava_0",
+    "endpoints_class": "firelava",
+    "reference": "firelava_5",
+    "reference_class": "firelava",
+    "prompt": "ICTRANS A young man with curly hair in a dark navy puffer jacket and black pants sprawls asleep in a chair beneath a fuel pump at a deserted gas station at night, lit by cold teal fluorescent light and seen from a low wide angle with his sneaker looming near the camera. The scene transforms into a young man with a short fade haircut in a dark jacket holding a bright blue payphone handset to his ear beside a blue-tiled wall on a city street at night, glancing sideways at the camera in close-up."
+  },
+  {
+    "id": "ic_inclass_new__firelava_3__ref_firelava_1",
+    "arm": "ic_inclass_new",
+    "endpoints": "firelava_3",
+    "endpoints_class": "firelava",
+    "reference": "firelava_1",
+    "reference_class": "firelava",
+    "prompt": "ICTRANS A man in a black beanie and red mirrored sunglasses, wearing a black fleece with a blue-and-cream panel, kneels in deep snow gripping a snowball, with jagged white mountain peaks rising behind him under a clear blue sky. The scene transforms into a man in a dark suit seen from behind, leaping through waist-high golden grass with a brown briefcase in hand as a low sun flares on the horizon of the open plain."
+  },
+  {
+    "id": "ic_inclass_new__earth_wave_0__ref_earth_wave_4",
+    "arm": "ic_inclass_new",
+    "endpoints": "earth_wave_0",
+    "endpoints_class": "earth_wave",
+    "reference": "earth_wave_4",
+    "reference_class": "earth_wave",
+    "prompt": "ICTRANS A young woman with slicked-back dark hair in braided buns, wraparound sunglasses, and a cropped black leather jacket with white piping stands in a narrow bookstore aisle between tall shelves packed with colorful books, seen from a high angle. The scene transforms into a woman with a voluminous dark afro, black sport sunglasses, and a silver chain choker standing on a sunlit concrete staircase beneath tall bright windows, gazing up toward the camera."
+  },
+  {
+    "id": "ic_inclass_new__earth_wave_3__ref_earth_wave_2",
+    "arm": "ic_inclass_new",
+    "endpoints": "earth_wave_3",
+    "endpoints_class": "earth_wave",
+    "reference": "earth_wave_2",
+    "reference_class": "earth_wave",
+    "prompt": "ICTRANS A woman with a platinum blonde bob in a black leather jacket over a gray hoodie sits atop a green street-corner newspaper box beneath ONE WAY signs, her silver sneakers and white socks raised against a bright blue sky, seen from a low angle. The scene transforms into a young woman with short brown hair in a green button-up blouse reclining across the seats of a dim night train, one arm raised to a metal pole beneath a glowing orange destination sign."
+  },
+  {
+    "id": "ic_inclass_trained__air_bending_1__ref_air_bending_2",
+    "arm": "ic_inclass_trained",
+    "endpoints": "air_bending_1",
+    "endpoints_class": "air_bending",
+    "reference": "air_bending_2",
+    "reference_class": "air_bending",
+    "prompt": "ICTRANS A figure in a white knit balaclava and bright red hoodie leans against the hood of a blue car in a dusky parking lot, cradling a black motorcycle helmet in red-gloved hands. The scene transforms into a young man with dark hair in an oversized brown shirt smoking a cigarette against a white railing inside a green-lit pedestrian tunnel at night."
+  },
+  {
+    "id": "ic_inclass_trained__water_bending_0__ref_water_bending_1",
+    "arm": "ic_inclass_trained",
+    "endpoints": "water_bending_0",
+    "endpoints_class": "water_bending",
+    "reference": "water_bending_1",
+    "reference_class": "water_bending",
+    "prompt": "ICTRANS A blonde woman in a gold sequined halter top and flowing black pants with chunky black sneakers towers over the camera on a rooftop terrace at sunset, metal railings glinting behind her. The scene transforms into a person with a voluminous curly afro and blue-tinted sunglasses in a color-blocked denim jacket crouching atop a stone ledge against a brilliant blue sky, one hand planted near the low camera."
+  },
+  {
+    "id": "ic_inclass_trained__raven_transition_0__ref_raven_transition_1",
+    "arm": "ic_inclass_trained",
+    "endpoints": "raven_transition_0",
+    "endpoints_class": "raven_transition",
+    "reference": "raven_transition_1",
+    "reference_class": "raven_transition",
+    "prompt": "ICTRANS A man with long dark braids and sunglasses stands in a black leather zip-up vest and wide black trousers on a dark studio floor, a cool spotlight pooling at his feet. The scene transforms into a woman in a flowing orange satin robe, her face veiled by long beaded braids, standing with hands on her hips in a sunlit stone courtyard lined with classical columns."
+  },
+  {
+    "id": "ic_inclass_trained__melt_transition_1__ref_melt_transition_2",
+    "arm": "ic_inclass_trained",
+    "endpoints": "melt_transition_1",
+    "endpoints_class": "melt_transition",
+    "reference": "melt_transition_2",
+    "reference_class": "melt_transition",
+    "prompt": "ICTRANS A woman in a red cowboy hat, amber sunglasses, and a red-and-navy striped rugby shirt reclines on stacked hay bales in red cowboy boots, swinging a rope overhead against dusky mountains. The scene transforms into a blonde woman in a black beanie and an American-flag crop top with a white varsity-numbered skirt, posing mid-turn on a green playing field beneath heavy storm clouds and a distant floodlight."
+  },
+  {
+    "id": "ic_inclass_trained__flying_cam_transition_1__ref_flying_cam_transition_2",
+    "arm": "ic_inclass_trained",
+    "endpoints": "flying_cam_transition_1",
+    "endpoints_class": "flying_cam_transition",
+    "reference": "flying_cam_transition_2",
+    "reference_class": "flying_cam_transition",
+    "prompt": "ICTRANS A lone figure walks across a rust-orange desert toward a hazy city skyline shrouded in amber smog, an old station wagon and a low futuristic sports car parked on the barren ground. The scene transforms into a blonde woman in an oversized beige blazer and blue jeans sitting on the shaggy orange carpet of a retro living room with mustard-yellow curtains, examining a small camera in her hands."
+  },
+  {
+    "id": "ic_inclass_trained__display_transition_1__ref_display_transition_2",
+    "arm": "ic_inclass_trained",
+    "endpoints": "display_transition_1",
+    "endpoints_class": "display_transition",
+    "reference": "display_transition_2",
+    "reference_class": "display_transition",
+    "prompt": "ICTRANS A woman with voluminous dark curls in a long black leather coat sits on the asphalt leaning against the side of a teal vintage car with whitewall tires in warm afternoon light. The scene transforms into a woman with a sleek gelled curl on her forehead posing in a black hooded deep-plunge romper and stacked silver bracelets against a bare concrete wall."
+  },
+  {
+    "id": "ic_inclass_trained__flame_transition_0__ref_flame_transition_1",
+    "arm": "ic_inclass_trained",
+    "endpoints": "flame_transition_0",
+    "endpoints_class": "flame",
+    "reference": "flame_transition_1",
+    "reference_class": "flame",
+    "prompt": "ICTRANS A blonde woman with a short bob, wearing a glossy red latex turtleneck and a sheer black tulle skirt with gold sneakers, crouches on a brick garden wall beside a fruit-laden orange tree with green hills in the distance. The scene transforms into a woman with long windblown dark curls in a fluffy black coat, crouched low in tall grass with her chin resting on folded hands, staring into the camera beneath a cloud-streaked blue sky."
+  },
+  {
+    "id": "ic_cross__display_transition_1__ref_air_bending_1",
+    "arm": "ic_cross",
+    "endpoints": "display_transition_1",
+    "endpoints_class": "display_transition",
+    "reference": "air_bending_1",
+    "reference_class": "air_bending",
+    "prompt": "ICTRANS A woman with voluminous dark curls in a long black leather coat sits on the asphalt leaning against the side of a teal vintage car with whitewall tires in warm afternoon light. The scene transforms into a woman with a sleek gelled curl on her forehead posing in a black hooded deep-plunge romper and stacked silver bracelets against a bare concrete wall."
+  },
+  {
+    "id": "ic_cross__flame_transition_0__ref_air_bending_1",
+    "arm": "ic_cross",
+    "endpoints": "flame_transition_0",
+    "endpoints_class": "flame",
+    "reference": "air_bending_1",
+    "reference_class": "air_bending",
+    "prompt": "ICTRANS A blonde woman with a short bob, wearing a glossy red latex turtleneck and a sheer black tulle skirt with gold sneakers, crouches on a brick garden wall beside a fruit-laden orange tree with green hills in the distance. The scene transforms into a woman with long windblown dark curls in a fluffy black coat, crouched low in tall grass with her chin resting on folded hands, staring into the camera beneath a cloud-streaked blue sky."
+  },
+  {
+    "id": "ic_cross__earth_wave_0__ref_display_transition_2",
+    "arm": "ic_cross",
+    "endpoints": "earth_wave_0",
+    "endpoints_class": "earth_wave",
+    "reference": "display_transition_2",
+    "reference_class": "display_transition",
+    "prompt": "ICTRANS A young woman with slicked-back dark hair in braided buns, wraparound sunglasses, and a cropped black leather jacket with white piping stands in a narrow bookstore aisle between tall shelves packed with colorful books, seen from a high angle. The scene transforms into a woman with a voluminous dark afro, black sport sunglasses, and a silver chain choker standing on a sunlit concrete staircase beneath tall bright windows, gazing up toward the camera."
+  },
+  {
+    "id": "ic_cross__flying_cam_transition_1__ref_display_transition_2",
+    "arm": "ic_cross",
+    "endpoints": "flying_cam_transition_1",
+    "endpoints_class": "flying_cam_transition",
+    "reference": "display_transition_2",
+    "reference_class": "display_transition",
+    "prompt": "ICTRANS A lone figure walks across a rust-orange desert toward a hazy city skyline shrouded in amber smog, an old station wagon and a low futuristic sports car parked on the barren ground. The scene transforms into a blonde woman in an oversized beige blazer and blue jeans sitting on the shaggy orange carpet of a retro living room with mustard-yellow curtains, examining a small camera in her hands."
+  },
+  {
+    "id": "ic_cross__firelava_0__ref_earth_wave_1",
+    "arm": "ic_cross",
+    "endpoints": "firelava_0",
+    "endpoints_class": "firelava",
+    "reference": "earth_wave_1",
+    "reference_class": "earth_wave",
+    "prompt": "ICTRANS A young man with curly hair in a dark navy puffer jacket and black pants sprawls asleep in a chair beneath a fuel pump at a deserted gas station at night, lit by cold teal fluorescent light and seen from a low wide angle with his sneaker looming near the camera. The scene transforms into a young man with a short fade haircut in a dark jacket holding a bright blue payphone handset to his ear beside a blue-tiled wall on a city street at night, glancing sideways at the camera in close-up."
+  },
+  {
+    "id": "ic_cross__melt_transition_1__ref_earth_wave_1",
+    "arm": "ic_cross",
+    "endpoints": "melt_transition_1",
+    "endpoints_class": "melt_transition",
+    "reference": "earth_wave_1",
+    "reference_class": "earth_wave",
+    "prompt": "ICTRANS A woman in a red cowboy hat, amber sunglasses, and a red-and-navy striped rugby shirt reclines on stacked hay bales in red cowboy boots, swinging a rope overhead against dusky mountains. The scene transforms into a blonde woman in a black beanie and an American-flag crop top with a white varsity-numbered skirt, posing mid-turn on a green playing field beneath heavy storm clouds and a distant floodlight."
+  },
+  {
+    "id": "ic_cross__flame_transition_0__ref_firelava_1",
+    "arm": "ic_cross",
+    "endpoints": "flame_transition_0",
+    "endpoints_class": "flame",
+    "reference": "firelava_1",
+    "reference_class": "firelava",
+    "prompt": "ICTRANS A blonde woman with a short bob, wearing a glossy red latex turtleneck and a sheer black tulle skirt with gold sneakers, crouches on a brick garden wall beside a fruit-laden orange tree with green hills in the distance. The scene transforms into a woman with long windblown dark curls in a fluffy black coat, crouched low in tall grass with her chin resting on folded hands, staring into the camera beneath a cloud-streaked blue sky."
+  },
+  {
+    "id": "ic_cross__raven_transition_0__ref_firelava_1",
+    "arm": "ic_cross",
+    "endpoints": "raven_transition_0",
+    "endpoints_class": "raven_transition",
+    "reference": "firelava_1",
+    "reference_class": "firelava",
+    "prompt": "ICTRANS A man with long dark braids and sunglasses stands in a black leather zip-up vest and wide black trousers on a dark studio floor, a cool spotlight pooling at his feet. The scene transforms into a woman in a flowing orange satin robe, her face veiled by long beaded braids, standing with hands on her hips in a sunlit stone courtyard lined with classical columns."
+  },
+  {
+    "id": "ic_cross__flying_cam_transition_1__ref_flame_transition_1",
+    "arm": "ic_cross",
+    "endpoints": "flying_cam_transition_1",
+    "endpoints_class": "flying_cam_transition",
+    "reference": "flame_transition_1",
+    "reference_class": "flame",
+    "prompt": "ICTRANS A lone figure walks across a rust-orange desert toward a hazy city skyline shrouded in amber smog, an old station wagon and a low futuristic sports car parked on the barren ground. The scene transforms into a blonde woman in an oversized beige blazer and blue jeans sitting on the shaggy orange carpet of a retro living room with mustard-yellow curtains, examining a small camera in her hands."
+  },
+  {
+    "id": "ic_cross__shadow_smoke_0__ref_flame_transition_1",
+    "arm": "ic_cross",
+    "endpoints": "shadow_smoke_0",
+    "endpoints_class": "shadow_smoke",
+    "reference": "flame_transition_1",
+    "reference_class": "flame",
+    "prompt": "ICTRANS A young man with curly dark hair and a mustache, wearing a dark green cardigan over a white collared shirt and a patterned tie, lies in a field of yellow wildflowers below rocky mountains reading a large newspaper, seen from a close low frontal angle. The scene transforms into a bearded man in a black suit and sunglasses riding an orange BMX bike down a sunlit suburban street with his legs spread wide, cars parked along the road behind him."
+  },
+  {
+    "id": "ic_cross__melt_transition_1__ref_flying_cam_transition_2",
+    "arm": "ic_cross",
+    "endpoints": "melt_transition_1",
+    "endpoints_class": "melt_transition",
+    "reference": "flying_cam_transition_2",
+    "reference_class": "flying_cam_transition",
+    "prompt": "ICTRANS A woman in a red cowboy hat, amber sunglasses, and a red-and-navy striped rugby shirt reclines on stacked hay bales in red cowboy boots, swinging a rope overhead against dusky mountains. The scene transforms into a blonde woman in a black beanie and an American-flag crop top with a white varsity-numbered skirt, posing mid-turn on a green playing field beneath heavy storm clouds and a distant floodlight."
+  },
+  {
+    "id": "ic_cross__water_bending_0__ref_flying_cam_transition_2",
+    "arm": "ic_cross",
+    "endpoints": "water_bending_0",
+    "endpoints_class": "water_bending",
+    "reference": "flying_cam_transition_2",
+    "reference_class": "flying_cam_transition",
+    "prompt": "ICTRANS A blonde woman in a gold sequined halter top and flowing black pants with chunky black sneakers towers over the camera on a rooftop terrace at sunset, metal railings glinting behind her. The scene transforms into a person with a voluminous curly afro and blue-tinted sunglasses in a color-blocked denim jacket crouching atop a stone ledge against a brilliant blue sky, one hand planted near the low camera."
+  },
+  {
+    "id": "ic_cross__raven_transition_0__ref_melt_transition_2",
+    "arm": "ic_cross",
+    "endpoints": "raven_transition_0",
+    "endpoints_class": "raven_transition",
+    "reference": "melt_transition_2",
+    "reference_class": "melt_transition",
+    "prompt": "ICTRANS A man with long dark braids and sunglasses stands in a black leather zip-up vest and wide black trousers on a dark studio floor, a cool spotlight pooling at his feet. The scene transforms into a woman in a flowing orange satin robe, her face veiled by long beaded braids, standing with hands on her hips in a sunlit stone courtyard lined with classical columns."
+  },
+  {
+    "id": "ic_cross__air_bending_0__ref_melt_transition_2",
+    "arm": "ic_cross",
+    "endpoints": "air_bending_0",
+    "endpoints_class": "air_bending",
+    "reference": "melt_transition_2",
+    "reference_class": "melt_transition",
+    "prompt": "ICTRANS A young woman with dark space buns and wispy bangs, purple-tinted sunglasses, and a gray ribbed collared sweater takes a mirror selfie with a sticker-covered phone while flashing a peace sign against a plain beige wall. The scene transforms into a pale woman with a tousled black bob and winged eyeliner in a black cutout halter top, biting the fingertip of her long black latex glove beside a bright curtained window."
+  },
+  {
+    "id": "ic_cross__shadow_smoke_0__ref_raven_transition_1",
+    "arm": "ic_cross",
+    "endpoints": "shadow_smoke_0",
+    "endpoints_class": "shadow_smoke",
+    "reference": "raven_transition_1",
+    "reference_class": "raven_transition",
+    "prompt": "ICTRANS A young man with curly dark hair and a mustache, wearing a dark green cardigan over a white collared shirt and a patterned tie, lies in a field of yellow wildflowers below rocky mountains reading a large newspaper, seen from a close low frontal angle. The scene transforms into a bearded man in a black suit and sunglasses riding an orange BMX bike down a sunlit suburban street with his legs spread wide, cars parked along the road behind him."
+  },
+  {
+    "id": "ic_cross__display_transition_1__ref_raven_transition_1",
+    "arm": "ic_cross",
+    "endpoints": "display_transition_1",
+    "endpoints_class": "display_transition",
+    "reference": "raven_transition_1",
+    "reference_class": "raven_transition",
+    "prompt": "ICTRANS A woman with voluminous dark curls in a long black leather coat sits on the asphalt leaning against the side of a teal vintage car with whitewall tires in warm afternoon light. The scene transforms into a woman with a sleek gelled curl on her forehead posing in a black hooded deep-plunge romper and stacked silver bracelets against a bare concrete wall."
+  },
+  {
+    "id": "ic_cross__water_bending_0__ref_shadow_smoke_1",
+    "arm": "ic_cross",
+    "endpoints": "water_bending_0",
+    "endpoints_class": "water_bending",
+    "reference": "shadow_smoke_1",
+    "reference_class": "shadow_smoke",
+    "prompt": "ICTRANS A blonde woman in a gold sequined halter top and flowing black pants with chunky black sneakers towers over the camera on a rooftop terrace at sunset, metal railings glinting behind her. The scene transforms into a person with a voluminous curly afro and blue-tinted sunglasses in a color-blocked denim jacket crouching atop a stone ledge against a brilliant blue sky, one hand planted near the low camera."
+  },
+  {
+    "id": "ic_cross__earth_wave_0__ref_shadow_smoke_1",
+    "arm": "ic_cross",
+    "endpoints": "earth_wave_0",
+    "endpoints_class": "earth_wave",
+    "reference": "shadow_smoke_1",
+    "reference_class": "shadow_smoke",
+    "prompt": "ICTRANS A young woman with slicked-back dark hair in braided buns, wraparound sunglasses, and a cropped black leather jacket with white piping stands in a narrow bookstore aisle between tall shelves packed with colorful books, seen from a high angle. The scene transforms into a woman with a voluminous dark afro, black sport sunglasses, and a silver chain choker standing on a sunlit concrete staircase beneath tall bright windows, gazing up toward the camera."
+  },
+  {
+    "id": "ic_cross__air_bending_0__ref_water_bending_1",
+    "arm": "ic_cross",
+    "endpoints": "air_bending_0",
+    "endpoints_class": "air_bending",
+    "reference": "water_bending_1",
+    "reference_class": "water_bending",
+    "prompt": "ICTRANS A young woman with dark space buns and wispy bangs, purple-tinted sunglasses, and a gray ribbed collared sweater takes a mirror selfie with a sticker-covered phone while flashing a peace sign against a plain beige wall. The scene transforms into a pale woman with a tousled black bob and winged eyeliner in a black cutout halter top, biting the fingertip of her long black latex glove beside a bright curtained window."
+  },
+  {
+    "id": "ic_cross__firelava_0__ref_water_bending_1",
+    "arm": "ic_cross",
+    "endpoints": "firelava_0",
+    "endpoints_class": "firelava",
+    "reference": "water_bending_1",
+    "reference_class": "water_bending",
+    "prompt": "ICTRANS A young man with curly hair in a dark navy puffer jacket and black pants sprawls asleep in a chair beneath a fuel pump at a deserted gas station at night, lit by cold teal fluorescent light and seen from a low wide angle with his sneaker looming near the camera. The scene transforms into a young man with a short fade haircut in a dark jacket holding a bright blue payphone handset to his ear beside a blue-tiled wall on a city street at night, glancing sideways at the camera in close-up."
+  },
+  {
+    "id": "ic_unseen__earth_wave_0__ref_jump_transition_1",
+    "arm": "ic_unseen",
+    "endpoints": "earth_wave_0",
+    "endpoints_class": "earth_wave",
+    "reference": "jump_transition_1",
+    "reference_class": "jump_transition",
+    "prompt": "ICTRANS A young woman with slicked-back dark hair in braided buns, wraparound sunglasses, and a cropped black leather jacket with white piping stands in a narrow bookstore aisle between tall shelves packed with colorful books, seen from a high angle. The scene transforms into a woman with a voluminous dark afro, black sport sunglasses, and a silver chain choker standing on a sunlit concrete staircase beneath tall bright windows, gazing up toward the camera."
+  },
+  {
+    "id": "ic_unseen__shadow_smoke_0__ref_jump_transition_1",
+    "arm": "ic_unseen",
+    "endpoints": "shadow_smoke_0",
+    "endpoints_class": "shadow_smoke",
+    "reference": "jump_transition_1",
+    "reference_class": "jump_transition",
+    "prompt": "ICTRANS A young man with curly dark hair and a mustache, wearing a dark green cardigan over a white collared shirt and a patterned tie, lies in a field of yellow wildflowers below rocky mountains reading a large newspaper, seen from a close low frontal angle. The scene transforms into a bearded man in a black suit and sunglasses riding an orange BMX bike down a sunlit suburban street with his legs spread wide, cars parked along the road behind him."
+  },
+  {
+    "id": "ic_unseen__firelava_2__ref_jump_transition_1",
+    "arm": "ic_unseen",
+    "endpoints": "firelava_2",
+    "endpoints_class": "firelava",
+    "reference": "jump_transition_1",
+    "reference_class": "jump_transition",
+    "prompt": "ICTRANS A woman with pink hair and dark sunglasses, wearing a white t-shirt, red wide-leg pants, and a crossbody bag, stands on a metal ladder atop a rooftop at sunset, seen from a low angle with a glass office building glowing behind her. The scene transforms into a woman with long braids under a paisley headscarf, wearing a denim halter vest, flared jeans, and stacks of chunky bracelets, propping one chunky sneaker on a white perforated ledge before towering skyscrapers and a bright blue sky."
+  },
+  {
+    "id": "ic_unseen__melt_transition_3__ref_jump_transition_1",
+    "arm": "ic_unseen",
+    "endpoints": "melt_transition_3",
+    "endpoints_class": "melt_transition",
+    "reference": "jump_transition_1",
+    "reference_class": "jump_transition",
+    "prompt": "ICTRANS A woman with long dark hair in a sheer green hooded top and purple satin skirt crouches with clasped hands in front of a market stall piled with oranges, garlic, and bananas marked by handwritten price signs. The scene transforms into a woman with a dark bob lying on a lawn in golden evening light, wrapped in a rainbow-striped feathery coat and sipping from a wine glass."
+  },
+  {
+    "id": "ic_reverse__jump_transition_1__ref_shadow_smoke_3",
+    "arm": "ic_reverse",
+    "endpoints": "jump_transition_1",
+    "endpoints_class": "jump_transition",
+    "reference": "shadow_smoke_3",
+    "reference_class": "shadow_smoke",
+    "prompt": "ICTRANS A man in an olive-green suit and dark sunglasses stands with hands behind his back on a stone slab amid mossy ancient temple ruins beneath dramatic storm clouds pierced by sunlight. The scene transforms into a man in a black suit and tie with dark sunglasses standing on the pink-tiled deck of a turquoise pool lined with pink loungers and a palm tree under a vivid blue sky."
+  },
+  {
+    "id": "base_inclass_new__shadow_smoke_0__ref_shadow_smoke_9",
+    "arm": "base_inclass_new",
+    "endpoints": "shadow_smoke_0",
+    "endpoints_class": "shadow_smoke",
+    "reference": "shadow_smoke_9",
+    "reference_class": "shadow_smoke",
+    "prompt": "ICTRANS A young man with curly dark hair and a mustache, wearing a dark green cardigan over a white collared shirt and a patterned tie, lies in a field of yellow wildflowers below rocky mountains reading a large newspaper, seen from a close low frontal angle. The scene transforms into a bearded man in a black suit and sunglasses riding an orange BMX bike down a sunlit suburban street with his legs spread wide, cars parked along the road behind him."
+  },
+  {
+    "id": "base_inclass_new__firelava_0__ref_firelava_5",
+    "arm": "base_inclass_new",
+    "endpoints": "firelava_0",
+    "endpoints_class": "firelava",
+    "reference": "firelava_5",
+    "reference_class": "firelava",
+    "prompt": "ICTRANS A young man with curly hair in a dark navy puffer jacket and black pants sprawls asleep in a chair beneath a fuel pump at a deserted gas station at night, lit by cold teal fluorescent light and seen from a low wide angle with his sneaker looming near the camera. The scene transforms into a young man with a short fade haircut in a dark jacket holding a bright blue payphone handset to his ear beside a blue-tiled wall on a city street at night, glancing sideways at the camera in close-up."
+  },
+  {
+    "id": "base_inclass_trained__air_bending_1__ref_air_bending_2",
+    "arm": "base_inclass_trained",
+    "endpoints": "air_bending_1",
+    "endpoints_class": "air_bending",
+    "reference": "air_bending_2",
+    "reference_class": "air_bending",
+    "prompt": "ICTRANS A figure in a white knit balaclava and bright red hoodie leans against the hood of a blue car in a dusky parking lot, cradling a black motorcycle helmet in red-gloved hands. The scene transforms into a young man with dark hair in an oversized brown shirt smoking a cigarette against a white railing inside a green-lit pedestrian tunnel at night."
+  },
+  {
+    "id": "base_cross__earth_wave_0__ref_shadow_smoke_1",
+    "arm": "base_cross",
+    "endpoints": "earth_wave_0",
+    "endpoints_class": "earth_wave",
+    "reference": "shadow_smoke_1",
+    "reference_class": "shadow_smoke",
+    "prompt": "ICTRANS A young woman with slicked-back dark hair in braided buns, wraparound sunglasses, and a cropped black leather jacket with white piping stands in a narrow bookstore aisle between tall shelves packed with colorful books, seen from a high angle. The scene transforms into a woman with a voluminous dark afro, black sport sunglasses, and a silver chain choker standing on a sunlit concrete staircase beneath tall bright windows, gazing up toward the camera."
+  },
+  {
+    "id": "base_cross__melt_transition_1__ref_earth_wave_1",
+    "arm": "base_cross",
+    "endpoints": "melt_transition_1",
+    "endpoints_class": "melt_transition",
+    "reference": "earth_wave_1",
+    "reference_class": "earth_wave",
+    "prompt": "ICTRANS A woman in a red cowboy hat, amber sunglasses, and a red-and-navy striped rugby shirt reclines on stacked hay bales in red cowboy boots, swinging a rope overhead against dusky mountains. The scene transforms into a blonde woman in a black beanie and an American-flag crop top with a white varsity-numbered skirt, posing mid-turn on a green playing field beneath heavy storm clouds and a distant floodlight."
+  },
+  {
+    "id": "base_cross__shadow_smoke_0__ref_raven_transition_1",
+    "arm": "base_cross",
+    "endpoints": "shadow_smoke_0",
+    "endpoints_class": "shadow_smoke",
+    "reference": "raven_transition_1",
+    "reference_class": "raven_transition",
+    "prompt": "ICTRANS A young man with curly dark hair and a mustache, wearing a dark green cardigan over a white collared shirt and a patterned tie, lies in a field of yellow wildflowers below rocky mountains reading a large newspaper, seen from a close low frontal angle. The scene transforms into a bearded man in a black suit and sunglasses riding an orange BMX bike down a sunlit suburban street with his legs spread wide, cars parked along the road behind him."
+  },
+  {
+    "id": "base_unseen__earth_wave_0__ref_jump_transition_1",
+    "arm": "base_unseen",
+    "endpoints": "earth_wave_0",
+    "endpoints_class": "earth_wave",
+    "reference": "jump_transition_1",
+    "reference_class": "jump_transition",
+    "prompt": "ICTRANS A young woman with slicked-back dark hair in braided buns, wraparound sunglasses, and a cropped black leather jacket with white piping stands in a narrow bookstore aisle between tall shelves packed with colorful books, seen from a high angle. The scene transforms into a woman with a voluminous dark afro, black sport sunglasses, and a silver chain choker standing on a sunlit concrete staircase beneath tall bright windows, gazing up toward the camera."
+  },
+  {
+    "id": "base_reverse__jump_transition_1__ref_shadow_smoke_3",
+    "arm": "base_reverse",
+    "endpoints": "jump_transition_1",
+    "endpoints_class": "jump_transition",
+    "reference": "shadow_smoke_3",
+    "reference_class": "shadow_smoke",
+    "prompt": "ICTRANS A man in an olive-green suit and dark sunglasses stands with hands behind his back on a stone slab amid mossy ancient temple ruins beneath dramatic storm clouds pierced by sunlight. The scene transforms into a man in a black suit and tie with dark sunglasses standing on the pink-tiled deck of a turquoise pool lined with pink loungers and a palm tree under a vivid blue sky."
+  }
+]
