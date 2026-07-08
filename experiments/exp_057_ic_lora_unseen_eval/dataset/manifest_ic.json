@@ -1,0 +1,971 @@
+[
+  {
+    "item_id": "ic_os_inclass__hero_flight_2__ref_hero_flight_4",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__hero_flight_2__ref_hero_flight_4.mp4",
+    "style": "hero_flight",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/hero_flight_2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/hero_flight_2_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/hero_flight/hero_flight_4.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=hero_flight_2 (hero_flight); reference=hero_flight_4 (hero_flight; camera/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_inclass__hero_flight_6__ref_hero_flight_0",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__hero_flight_6__ref_hero_flight_0.mp4",
+    "style": "hero_flight",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/hero_flight_6_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/hero_flight_6_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/hero_flight/hero_flight_0.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=hero_flight_6 (hero_flight); reference=hero_flight_0 (hero_flight; camera/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_inclass__super_fast_run_2__ref_super_fast_run_5",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__super_fast_run_2__ref_super_fast_run_5.mp4",
+    "style": "super_fast_run",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/super_fast_run_2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/super_fast_run_2_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/super_fast_run/super_fast_run_5.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=super_fast_run_2 (super_fast_run); reference=super_fast_run_5 (super_fast_run; camera/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_inclass__super_fast_run_10__ref_super_fast_run_0",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__super_fast_run_10__ref_super_fast_run_0.mp4",
+    "style": "super_fast_run",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/super_fast_run_10_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/super_fast_run_10_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/super_fast_run/super_fast_run_0.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=super_fast_run_10 (super_fast_run); reference=super_fast_run_0 (super_fast_run; camera/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_inclass__plasma_explosion_0__ref_plasma_explosion_2",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__plasma_explosion_0__ref_plasma_explosion_2.mp4",
+    "style": "plasma_explosion",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/plasma_explosion_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/plasma_explosion_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/plasma_explosion/plasma_explosion_2.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=plasma_explosion_0 (plasma_explosion); reference=plasma_explosion_2 (plasma_explosion; camera/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_inclass__plasma_explosion_4__ref_plasma_explosion_1",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__plasma_explosion_4__ref_plasma_explosion_1.mp4",
+    "style": "plasma_explosion",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/plasma_explosion_4_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/plasma_explosion_4_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/plasma_explosion/plasma_explosion_1.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=plasma_explosion_4 (plasma_explosion); reference=plasma_explosion_1 (plasma_explosion; camera/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_inclass__shadow_10__ref_shadow_13",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__shadow_10__ref_shadow_13.mp4",
+    "style": "shadow",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/shadow_10_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/shadow_10_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/shadow/shadow_13.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=shadow_10 (shadow); reference=shadow_13 (shadow; style/onesided/cousin:shadow_smoke)"
+  },
+  {
+    "item_id": "ic_os_inclass__shadow_2__ref_shadow_0",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__shadow_2__ref_shadow_0.mp4",
+    "style": "shadow",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/shadow_2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/shadow_2_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/shadow/shadow_0.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=shadow_2 (shadow); reference=shadow_0 (shadow; style/onesided/cousin:shadow_smoke)"
+  },
+  {
+    "item_id": "ic_os_inclass__fire_element_0__ref_fire_element_2",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__fire_element_0__ref_fire_element_2.mp4",
+    "style": "fire_element",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/fire_element_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/fire_element_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/fire_element/fire_element_2.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=fire_element_0 (fire_element); reference=fire_element_2 (fire_element; style/onesided/cousin:firelava)"
+  },
+  {
+    "item_id": "ic_os_inclass__fire_element_4__ref_fire_element_1",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__fire_element_4__ref_fire_element_1.mp4",
+    "style": "fire_element",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/fire_element_4_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/fire_element_4_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/fire_element/fire_element_1.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=fire_element_4 (fire_element); reference=fire_element_1 (fire_element; style/onesided/cousin:firelava)"
+  },
+  {
+    "item_id": "ic_os_inclass__wireframe_5__ref_wireframe_4",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__wireframe_5__ref_wireframe_4.mp4",
+    "style": "wireframe",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/wireframe_5_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/wireframe_5_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/wireframe/wireframe_4.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=wireframe_5 (wireframe); reference=wireframe_4 (wireframe; style/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_inclass__wireframe_7__ref_wireframe_2",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__wireframe_7__ref_wireframe_2.mp4",
+    "style": "wireframe",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/wireframe_7_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/wireframe_7_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/wireframe/wireframe_2.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=wireframe_7 (wireframe); reference=wireframe_2 (wireframe; style/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_inclass__illustration_scene_4__ref_illustration_scene_2",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__illustration_scene_4__ref_illustration_scene_2.mp4",
+    "style": "illustration_scene",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/illustration_scene_4_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/illustration_scene_4_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/illustration_scene/illustration_scene_2.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=illustration_scene_4 (illustration_scene); reference=illustration_scene_2 (illustration_scene; style/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_inclass__illustration_scene_7__ref_illustration_scene_5",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__illustration_scene_7__ref_illustration_scene_5.mp4",
+    "style": "illustration_scene",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/illustration_scene_7_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/illustration_scene_7_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/illustration_scene/illustration_scene_5.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=illustration_scene_7 (illustration_scene); reference=illustration_scene_5 (illustration_scene; style/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_inclass__animalization_0__ref_animalization_5",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__animalization_0__ref_animalization_5.mp4",
+    "style": "animalization",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/animalization_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/animalization_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/animalization/animalization_5.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=animalization_0 (animalization); reference=animalization_5 (animalization; object/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_inclass__animalization_3__ref_animalization_7",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__animalization_3__ref_animalization_7.mp4",
+    "style": "animalization",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/animalization_3_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/animalization_3_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/animalization/animalization_7.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=animalization_3 (animalization); reference=animalization_7 (animalization; object/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_inclass__gas_transformation_2__ref_gas_transformation_6",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__gas_transformation_2__ref_gas_transformation_6.mp4",
+    "style": "gas_transformation",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/gas_transformation_2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/gas_transformation_2_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/gas_transformation/gas_transformation_6.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=gas_transformation_2 (gas_transformation); reference=gas_transformation_6 (gas_transformation; object/onesided/novel-vanish)"
+  },
+  {
+    "item_id": "ic_os_inclass__gas_transformation_7__ref_gas_transformation_3",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__gas_transformation_7__ref_gas_transformation_3.mp4",
+    "style": "gas_transformation",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/gas_transformation_7_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/gas_transformation_7_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/gas_transformation/gas_transformation_3.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=gas_transformation_7 (gas_transformation); reference=gas_transformation_3 (gas_transformation; object/onesided/novel-vanish)"
+  },
+  {
+    "item_id": "ic_os_inclass__portal_11__ref_portal_13",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__portal_11__ref_portal_13.mp4",
+    "style": "portal",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/portal_11_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/portal_11_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/portal/portal_13.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=portal_11 (portal); reference=portal_13 (portal; object/onesided/novel-vanish)"
+  },
+  {
+    "item_id": "ic_os_inclass__portal_12__ref_portal_5",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__portal_12__ref_portal_5.mp4",
+    "style": "portal",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/portal_12_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/portal_12_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/portal/portal_5.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=portal_12 (portal); reference=portal_5 (portal; object/onesided/novel-vanish)"
+  },
+  {
+    "item_id": "ic_os_inclass__giant_grab_1__ref_giant_grab_3",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__giant_grab_1__ref_giant_grab_3.mp4",
+    "style": "giant_grab",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/giant_grab_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/giant_grab_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/giant_grab/giant_grab_3.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=giant_grab_1 (giant_grab); reference=giant_grab_3 (giant_grab; object/onesided/novel-vanish)"
+  },
+  {
+    "item_id": "ic_os_inclass__giant_grab_4__ref_giant_grab_2",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__giant_grab_4__ref_giant_grab_2.mp4",
+    "style": "giant_grab",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/giant_grab_4_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/giant_grab_4_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/giant_grab/giant_grab_2.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=giant_grab_4 (giant_grab); reference=giant_grab_2 (giant_grab; object/onesided/novel-vanish)"
+  },
+  {
+    "item_id": "ic_os_inclass__money_rain_2__ref_money_rain_6",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_inclass__money_rain_2__ref_money_rain_6.mp4",
+    "style": "money_rain",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/money_rain_2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/money_rain_2_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/money_rain/money_rain_6.mp4"
+    },
+    "arm": "ic_os_inclass",
+    "notes": "endpoints=money_rain_2 (money_rain); reference=money_rain_6 (money_rain; object/onesided/novel-degenerate-endpoints)"
+  },
+  {
+    "item_id": "ic_os_to2s__earth_wave_0__ref_hero_flight_4",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_to2s__earth_wave_0__ref_hero_flight_4.mp4",
+    "style": "hero_flight",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/hero_flight/hero_flight_4.mp4"
+    },
+    "arm": "ic_os_to2s",
+    "notes": "endpoints=earth_wave_0 (earth_wave); reference=hero_flight_4 (hero_flight; camera/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_to2s__melt_transition_1__ref_super_fast_run_5",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_to2s__melt_transition_1__ref_super_fast_run_5.mp4",
+    "style": "super_fast_run",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/melt_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/melt_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/super_fast_run/super_fast_run_5.mp4"
+    },
+    "arm": "ic_os_to2s",
+    "notes": "endpoints=melt_transition_1 (melt_transition); reference=super_fast_run_5 (super_fast_run; camera/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_to2s__water_bending_0__ref_plasma_explosion_2",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_to2s__water_bending_0__ref_plasma_explosion_2.mp4",
+    "style": "plasma_explosion",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/water_bending_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/water_bending_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/plasma_explosion/plasma_explosion_2.mp4"
+    },
+    "arm": "ic_os_to2s",
+    "notes": "endpoints=water_bending_0 (water_bending); reference=plasma_explosion_2 (plasma_explosion; camera/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_to2s__earth_wave_0__ref_shadow_13",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_to2s__earth_wave_0__ref_shadow_13.mp4",
+    "style": "shadow",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/shadow/shadow_13.mp4"
+    },
+    "arm": "ic_os_to2s",
+    "notes": "endpoints=earth_wave_0 (earth_wave); reference=shadow_13 (shadow; style/onesided/cousin:shadow_smoke)"
+  },
+  {
+    "item_id": "ic_os_to2s__melt_transition_1__ref_wireframe_4",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_to2s__melt_transition_1__ref_wireframe_4.mp4",
+    "style": "wireframe",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/melt_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/melt_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/wireframe/wireframe_4.mp4"
+    },
+    "arm": "ic_os_to2s",
+    "notes": "endpoints=melt_transition_1 (melt_transition); reference=wireframe_4 (wireframe; style/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_to2s__water_bending_0__ref_illustration_scene_2",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_to2s__water_bending_0__ref_illustration_scene_2.mp4",
+    "style": "illustration_scene",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/water_bending_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/water_bending_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/illustration_scene/illustration_scene_2.mp4"
+    },
+    "arm": "ic_os_to2s",
+    "notes": "endpoints=water_bending_0 (water_bending); reference=illustration_scene_2 (illustration_scene; style/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_to2s__earth_wave_0__ref_fire_element_2",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_to2s__earth_wave_0__ref_fire_element_2.mp4",
+    "style": "fire_element",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/fire_element/fire_element_2.mp4"
+    },
+    "arm": "ic_os_to2s",
+    "notes": "endpoints=earth_wave_0 (earth_wave); reference=fire_element_2 (fire_element; style/onesided/cousin:firelava)"
+  },
+  {
+    "item_id": "ic_os_to2s__melt_transition_1__ref_animalization_5",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_to2s__melt_transition_1__ref_animalization_5.mp4",
+    "style": "animalization",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/melt_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/melt_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/animalization/animalization_5.mp4"
+    },
+    "arm": "ic_os_to2s",
+    "notes": "endpoints=melt_transition_1 (melt_transition); reference=animalization_5 (animalization; object/onesided/novel)"
+  },
+  {
+    "item_id": "ic_os_to2s__water_bending_0__ref_gas_transformation_6",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_to2s__water_bending_0__ref_gas_transformation_6.mp4",
+    "style": "gas_transformation",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/water_bending_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/water_bending_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/gas_transformation/gas_transformation_6.mp4"
+    },
+    "arm": "ic_os_to2s",
+    "notes": "endpoints=water_bending_0 (water_bending); reference=gas_transformation_6 (gas_transformation; object/onesided/novel-vanish)"
+  },
+  {
+    "item_id": "ic_os_to2s__earth_wave_0__ref_portal_13",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_to2s__earth_wave_0__ref_portal_13.mp4",
+    "style": "portal",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/portal/portal_13.mp4"
+    },
+    "arm": "ic_os_to2s",
+    "notes": "endpoints=earth_wave_0 (earth_wave); reference=portal_13 (portal; object/onesided/novel-vanish)"
+  },
+  {
+    "item_id": "ic_os_to2s__melt_transition_1__ref_giant_grab_3",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_to2s__melt_transition_1__ref_giant_grab_3.mp4",
+    "style": "giant_grab",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/melt_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/melt_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/giant_grab/giant_grab_3.mp4"
+    },
+    "arm": "ic_os_to2s",
+    "notes": "endpoints=melt_transition_1 (melt_transition); reference=giant_grab_3 (giant_grab; object/onesided/novel-vanish)"
+  },
+  {
+    "item_id": "ic_os_to2s__water_bending_0__ref_money_rain_6",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_os_to2s__water_bending_0__ref_money_rain_6.mp4",
+    "style": "money_rain",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/water_bending_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/water_bending_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/money_rain/money_rain_6.mp4"
+    },
+    "arm": "ic_os_to2s",
+    "notes": "endpoints=water_bending_0 (water_bending); reference=money_rain_6 (money_rain; object/onesided/novel-degenerate-endpoints)"
+  },
+  {
+    "item_id": "ic_ts_unseen__hole_transition_0__ref_hole_transition_1",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_ts_unseen__hole_transition_0__ref_hole_transition_1.mp4",
+    "style": "hole_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/hole_transition_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/hole_transition_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/hole_transition/hole_transition_1.mp4"
+    },
+    "arm": "ic_ts_unseen",
+    "notes": "endpoints=hole_transition_0 (hole_transition); reference=hole_transition_1 (hole_transition; object/twosided/novel)"
+  },
+  {
+    "item_id": "ic_ts_unseen__earth_wave_0__ref_hole_transition_1",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_ts_unseen__earth_wave_0__ref_hole_transition_1.mp4",
+    "style": "hole_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/hole_transition/hole_transition_1.mp4"
+    },
+    "arm": "ic_ts_unseen",
+    "notes": "endpoints=earth_wave_0 (earth_wave); reference=hole_transition_1 (hole_transition; object/twosided/novel)"
+  },
+  {
+    "item_id": "ic_ts_unseen__earth_wave_0__ref_seamless_transition_0",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_ts_unseen__earth_wave_0__ref_seamless_transition_0.mp4",
+    "style": "seamless_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/seamless_transition/seamless_transition_0.mp4"
+    },
+    "arm": "ic_ts_unseen",
+    "notes": "endpoints=earth_wave_0 (earth_wave); reference=seamless_transition_0 (seamless_transition; camera/twosided/novel)"
+  },
+  {
+    "item_id": "ic_anchor__earth_wave_0__ref_shadow_smoke_1",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_anchor__earth_wave_0__ref_shadow_smoke_1.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_1.mp4"
+    },
+    "arm": "ic_anchor",
+    "notes": "endpoints=earth_wave_0 (earth_wave); reference=shadow_smoke_1 (shadow_smoke; trained/twosided/trained)"
+  },
+  {
+    "item_id": "ic_anchor__melt_transition_1__ref_earth_wave_1",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/ic_lora/quads/ic_anchor__melt_transition_1__ref_earth_wave_1.mp4",
+    "style": "earth_wave",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/melt_transition_1_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/melt_transition_1_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/earth_wave/earth_wave_1.mp4"
+    },
+    "arm": "ic_anchor",
+    "notes": "endpoints=melt_transition_1 (melt_transition); reference=earth_wave_1 (earth_wave; trained/twosided/trained)"
+  },
+  {
+    "item_id": "base_os_inclass__shadow_10__ref_shadow_13",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/base/quads/base_os_inclass__shadow_10__ref_shadow_13.mp4",
+    "style": "shadow",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/shadow_10_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/shadow_10_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/shadow/shadow_13.mp4"
+    },
+    "arm": "base_os_inclass",
+    "notes": "endpoints=shadow_10 (shadow); reference=shadow_13 (shadow; style/onesided/cousin:shadow_smoke)"
+  },
+  {
+    "item_id": "base_os_inclass__wireframe_5__ref_wireframe_4",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/base/quads/base_os_inclass__wireframe_5__ref_wireframe_4.mp4",
+    "style": "wireframe",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/wireframe_5_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/wireframe_5_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/wireframe/wireframe_4.mp4"
+    },
+    "arm": "base_os_inclass",
+    "notes": "endpoints=wireframe_5 (wireframe); reference=wireframe_4 (wireframe; style/onesided/novel)"
+  },
+  {
+    "item_id": "base_os_inclass__animalization_0__ref_animalization_5",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/base/quads/base_os_inclass__animalization_0__ref_animalization_5.mp4",
+    "style": "animalization",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/animalization_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/animalization_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/animalization/animalization_5.mp4"
+    },
+    "arm": "base_os_inclass",
+    "notes": "endpoints=animalization_0 (animalization); reference=animalization_5 (animalization; object/onesided/novel)"
+  },
+  {
+    "item_id": "base_os_inclass__gas_transformation_2__ref_gas_transformation_6",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/base/quads/base_os_inclass__gas_transformation_2__ref_gas_transformation_6.mp4",
+    "style": "gas_transformation",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/gas_transformation_2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/gas_transformation_2_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/gas_transformation/gas_transformation_6.mp4"
+    },
+    "arm": "base_os_inclass",
+    "notes": "endpoints=gas_transformation_2 (gas_transformation); reference=gas_transformation_6 (gas_transformation; object/onesided/novel-vanish)"
+  },
+  {
+    "item_id": "base_os_inclass__hero_flight_2__ref_hero_flight_4",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/base/quads/base_os_inclass__hero_flight_2__ref_hero_flight_4.mp4",
+    "style": "hero_flight",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/hero_flight_2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/hero_flight_2_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/hero_flight/hero_flight_4.mp4"
+    },
+    "arm": "base_os_inclass",
+    "notes": "endpoints=hero_flight_2 (hero_flight); reference=hero_flight_4 (hero_flight; camera/onesided/novel)"
+  },
+  {
+    "item_id": "base_os_inclass__super_fast_run_2__ref_super_fast_run_5",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/base/quads/base_os_inclass__super_fast_run_2__ref_super_fast_run_5.mp4",
+    "style": "super_fast_run",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/super_fast_run_2_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/super_fast_run_2_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/super_fast_run/super_fast_run_5.mp4"
+    },
+    "arm": "base_os_inclass",
+    "notes": "endpoints=super_fast_run_2 (super_fast_run); reference=super_fast_run_5 (super_fast_run; camera/onesided/novel)"
+  },
+  {
+    "item_id": "base_os_to2s__water_bending_0__ref_illustration_scene_2",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/base/quads/base_os_to2s__water_bending_0__ref_illustration_scene_2.mp4",
+    "style": "illustration_scene",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/water_bending_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/water_bending_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/illustration_scene/illustration_scene_2.mp4"
+    },
+    "arm": "base_os_to2s",
+    "notes": "endpoints=water_bending_0 (water_bending); reference=illustration_scene_2 (illustration_scene; style/onesided/novel)"
+  },
+  {
+    "item_id": "base_os_to2s__earth_wave_0__ref_portal_13",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/base/quads/base_os_to2s__earth_wave_0__ref_portal_13.mp4",
+    "style": "portal",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/portal/portal_13.mp4"
+    },
+    "arm": "base_os_to2s",
+    "notes": "endpoints=earth_wave_0 (earth_wave); reference=portal_13 (portal; object/onesided/novel-vanish)"
+  },
+  {
+    "item_id": "base_os_to2s__earth_wave_0__ref_fire_element_2",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/base/quads/base_os_to2s__earth_wave_0__ref_fire_element_2.mp4",
+    "style": "fire_element",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/fire_element/fire_element_2.mp4"
+    },
+    "arm": "base_os_to2s",
+    "notes": "endpoints=earth_wave_0 (earth_wave); reference=fire_element_2 (fire_element; style/onesided/cousin:firelava)"
+  },
+  {
+    "item_id": "base_ts_unseen__hole_transition_0__ref_hole_transition_1",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/base/quads/base_ts_unseen__hole_transition_0__ref_hole_transition_1.mp4",
+    "style": "hole_transition",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/hole_transition_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/hole_transition_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/hole_transition/hole_transition_1.mp4"
+    },
+    "arm": "base_ts_unseen",
+    "notes": "endpoints=hole_transition_0 (hole_transition); reference=hole_transition_1 (hole_transition; object/twosided/novel)"
+  },
+  {
+    "item_id": "base_anchor__earth_wave_0__ref_shadow_smoke_1",
+    "generated_video": "outputs/videos/exp_057_ic_lora_unseen_eval/base/quads/base_anchor__earth_wave_0__ref_shadow_smoke_1.mp4",
+    "style": "shadow_smoke",
+    "n_endpoints": 2,
+    "condition_prefix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_start9.mp4",
+      "num_frames": 9
+    },
+    "condition_suffix": {
+      "video": "experiments/exp_057_ic_lora_unseen_eval/dataset/cond_q/earth_wave_0_end9.mp4",
+      "num_frames": 8
+    },
+    "condition_reference": {
+      "video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_1.mp4"
+    },
+    "arm": "base_anchor",
+    "notes": "endpoints=earth_wave_0 (earth_wave); reference=shadow_smoke_1 (shadow_smoke; trained/twosided/trained)"
+  }
+]

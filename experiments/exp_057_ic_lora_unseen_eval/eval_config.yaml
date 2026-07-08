@@ -1,0 +1,50 @@
+# exp_057 eval config — exp_056 config with the reference corpus repointed.
+#
+# transitions_root moves to transitions_std121: (a) the user reorganized raw
+# transitions/ into {onesided,twosided}_transitions/<label_dir>/ (breaks
+# scan_references' one-dir-per-style layout), (b) the new unseen classes are
+# standardized there, extending the corpus to 25 style dirs (11 trained + 14
+# new). Ceilings therefore differ slightly from exp_056 run_0002 (raw clips) —
+# anchors are qualitative links, noted in the report.
+data:
+  transitions_root: "data/processed/transitions_std121"
+  exclude: ["higgsfield"]
+
+features:
+  model: "facebook/dinov2-base"
+  short_side: 256
+  cache_dir: "outputs/eval/cache"
+
+morph:
+  n_prefix: 9
+  n_suffix: 8
+  resample_points: 96
+
+motion:
+  grid_size: 20
+  max_side: 384
+  n_steps: 64
+
+# trust flags still come from the exp_054 validation exam (47 trained-era
+# clips) — the 14 new styles were never exam'd, so motion_trusted=False (†)
+# for all of them. Correct and expected; raw metrics carry the burden there.
+validation_run: "outputs/eval/exp_052/validation/run_0002"
+
+trust:
+  motion_recall_min: 0.5
+  min_ceiling_clips: 4
+
+judge_gemini:
+  model: "gemini-3-flash-preview"
+  fps: 8
+  cache_dir: "outputs/eval/exp_053/judge_cache"
+
+wandb:
+  enabled: true
+  project: "creative-transition-transfer"
+
+runtime:
+  device: cuda
+
+outputs:
+  dir: "outputs/eval/exp_057"

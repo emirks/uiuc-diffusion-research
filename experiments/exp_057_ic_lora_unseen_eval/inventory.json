@@ -1,0 +1,8168 @@
+{
+ "clips": [
+  {
+   "path": "onesided_transitions/onesided_camera_eyes-in/eyes_in_0.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 562,
+   "decodable": true,
+   "ahash": [
+    18430827489979891792,
+    9230251106005092608,
+    216172782114013183
+   ],
+   "md5": "10ef59f9d9a149c302b04cd69d428b44",
+   "bytes": 722192,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "eyes_in",
+   "label_dir": "onesided_camera_eyes-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_eyes-in/eyes_in_1.mp4",
+   "frames": 81,
+   "fps": 16.0,
+   "w": 320,
+   "h": 132,
+   "decodable": true,
+   "ahash": [
+    16204198715729174752,
+    18229692715913223308,
+    9476561543421743103
+   ],
+   "md5": "22eeff924c2f62bcb4018a42242a8d3e",
+   "bytes": 55430,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "eyes_in",
+   "label_dir": "onesided_camera_eyes-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_eyes-in/eyes_in_10.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 432,
+   "decodable": true,
+   "ahash": [
+    8830924380420,
+    6949327386839119872,
+    18374620250269280243
+   ],
+   "md5": "07acf86e8849686e9dc9191ce02627fc",
+   "bytes": 311057,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "eyes_in",
+   "label_dir": "onesided_camera_eyes-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_eyes-in/eyes_in_11.mp4",
+   "frames": 81,
+   "fps": 16.0,
+   "w": 320,
+   "h": 176,
+   "decodable": true,
+   "ahash": [
+    18222949805092242444,
+    4918002145262107772,
+    2757964674227403836
+   ],
+   "md5": "aaaddce1327e3c95bb40cd2917401d1d",
+   "bytes": 108794,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "eyes_in",
+   "label_dir": "onesided_camera_eyes-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_eyes-in/eyes_in_2.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 320,
+   "decodable": true,
+   "ahash": [
+    58414920244398104,
+    18167556316312083772,
+    108086944063415295
+   ],
+   "md5": "2e5e31ea9387be67b13d9e6a9b9bd5eb",
+   "bytes": 192797,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "eyes_in",
+   "label_dir": "onesided_camera_eyes-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_eyes-in/eyes_in_3.mp4",
+   "frames": 81,
+   "fps": 16.0,
+   "w": 320,
+   "h": 218,
+   "decodable": true,
+   "ahash": [
+    8970274168861366480,
+    14013020684225574727,
+    4667559628117638015
+   ],
+   "md5": "60db3af2db3f580117513984b82a59a1",
+   "bytes": 157554,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "eyes_in",
+   "label_dir": "onesided_camera_eyes-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_eyes-in/eyes_in_4.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 176,
+   "decodable": true,
+   "ahash": [
+    304582442401006088,
+    4048771490839339040,
+    14105767446315263999
+   ],
+   "md5": "6b0084a8374599b30d8d789dd4b561f7",
+   "bytes": 240020,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "eyes_in",
+   "label_dir": "onesided_camera_eyes-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_eyes-in/eyes_in_5.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 562,
+   "decodable": true,
+   "ahash": [
+    18428888781067190271,
+    71635523289939967,
+    56155371052781535
+   ],
+   "md5": "9e47bde5e197e9e2548d6bec9a766bdb",
+   "bytes": 650706,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "eyes_in",
+   "label_dir": "onesided_camera_eyes-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_eyes-in/eyes_in_6.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 176,
+   "decodable": true,
+   "ahash": [
+    289387114804438588,
+    16353259032599005141,
+    13889313189762695167
+   ],
+   "md5": "21e3b37470c04f296c741b9d11f2706b",
+   "bytes": 139492,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "eyes_in",
+   "label_dir": "onesided_camera_eyes-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_eyes-in/eyes_in_7.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 176,
+   "decodable": true,
+   "ahash": [
+    18367621292831802380,
+    15476292568341941254,
+    217020519086927747
+   ],
+   "md5": "e04d24b899f5984208f9d0cb632eb3b4",
+   "bytes": 118399,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "eyes_in",
+   "label_dir": "onesided_camera_eyes-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_eyes-in/eyes_in_8.mp4",
+   "frames": 81,
+   "fps": 16.0,
+   "w": 320,
+   "h": 180,
+   "decodable": true,
+   "ahash": [
+    17942051662162092256,
+    6919952952767031296,
+    14394564079576638975
+   ],
+   "md5": "f5b1df42052f93219a287611d5d93fee",
+   "bytes": 93996,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "eyes_in",
+   "label_dir": "onesided_camera_eyes-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_eyes-in/eyes_in_9.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 176,
+   "decodable": true,
+   "ahash": [
+    58493792092881664,
+    10127476289301856768,
+    7251572496617963264
+   ],
+   "md5": "de358228c49aa10bf1d1e33ec4065ae6",
+   "bytes": 154630,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "eyes_in",
+   "label_dir": "onesided_camera_eyes-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_hero-flight/hero_flight_0.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    65283977695071804,
+    16412868072421339260,
+    18446741050192501512
+   ],
+   "md5": "e2afd195384f8bbdb6081d68ad5e1f42",
+   "bytes": 1159115,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "hero_flight",
+   "label_dir": "onesided_camera_hero-flight"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_hero-flight/hero_flight_1.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 832,
+   "h": 1120,
+   "decodable": true,
+   "ahash": [
+    4611455426223471855,
+    6891351857305741281,
+    10088063161149325440
+   ],
+   "md5": "267f4907b6c495470c9c7d544f34eccd",
+   "bytes": 4960596,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "hero_flight",
+   "label_dir": "onesided_camera_hero-flight"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_hero-flight/hero_flight_2.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 832,
+   "h": 1120,
+   "decodable": true,
+   "ahash": [
+    10371995554266742993,
+    15699437182430511106,
+    13835057708513951744
+   ],
+   "md5": "673a28a503d27c615e4beecc1d235ff3",
+   "bytes": 2420364,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "hero_flight",
+   "label_dir": "onesided_camera_hero-flight"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_hero-flight/hero_flight_3.mp4",
+   "frames": 241,
+   "fps": 24.0,
+   "w": 832,
+   "h": 1120,
+   "decodable": true,
+   "ahash": [
+    13907084622274355680,
+    18446555060991705088,
+    18410715268905959552
+   ],
+   "md5": "7ec20b5c1ac7a5582529334d9175578f",
+   "bytes": 4328822,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "hero_flight",
+   "label_dir": "onesided_camera_hero-flight"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_hero-flight/hero_flight_4.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1248,
+   "h": 1664,
+   "decodable": true,
+   "ahash": [
+    16646460943689169210,
+    18446467308043108485,
+    18446743984597630979
+   ],
+   "md5": "ae77fa08c0833158408ed0dd85fee454",
+   "bytes": 3371549,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "hero_flight",
+   "label_dir": "onesided_camera_hero-flight"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_hero-flight/hero_flight_5.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1664,
+   "h": 1248,
+   "decodable": true,
+   "ahash": [
+    16715101186440567808,
+    13283010911197081702,
+    18446499432456718083
+   ],
+   "md5": "83bd70dcd391149e515809824f1bbc01",
+   "bytes": 4856722,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "hero_flight",
+   "label_dir": "onesided_camera_hero-flight"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_hero-flight/hero_flight_6.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1664,
+   "h": 1248,
+   "decodable": true,
+   "ahash": [
+    17005248735691727343,
+    6764368522707474488,
+    16055470994634211584
+   ],
+   "md5": "1ba32d83da7bd7c62ca4490597c7fd05",
+   "bytes": 5039312,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "hero_flight",
+   "label_dir": "onesided_camera_hero-flight"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_hero-flight/hero_flight_7.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1248,
+   "h": 1664,
+   "decodable": true,
+   "ahash": [
+    17362493890953936127,
+    13774259738394427382,
+    18446599213733645852
+   ],
+   "md5": "d5947ae2bc46b4236db7b72cacf34333",
+   "bytes": 5167077,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "hero_flight",
+   "label_dir": "onesided_camera_hero-flight"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_hero-flight/hero_flight_8.mp4",
+   "frames": 241,
+   "fps": 24.0,
+   "w": 1664,
+   "h": 1248,
+   "decodable": true,
+   "ahash": [
+    8943053751107723280,
+    18446465983435702528,
+    18410714250210181152
+   ],
+   "md5": "408dbf8b9258c6fc8f23a5ff33e4370f",
+   "bytes": 7576788,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "hero_flight",
+   "label_dir": "onesided_camera_hero-flight"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_hero-flight/hero_flight_9.mp4",
+   "frames": 241,
+   "fps": 24.0,
+   "w": 1248,
+   "h": 1664,
+   "decodable": true,
+   "ahash": [
+    16023775669977153152,
+    9221545921257733372,
+    18338305807927476360
+   ],
+   "md5": "2972085c9636816e5e103e39dc58fba9",
+   "bytes": 8092759,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "hero_flight",
+   "label_dir": "onesided_camera_hero-flight"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_mouth-in/mouth_in_0.mp4",
+   "frames": 81,
+   "fps": 16.0,
+   "w": 320,
+   "h": 174,
+   "decodable": true,
+   "ahash": [
+    4050565014072541833,
+    3350184887708796036,
+    27022150015565502
+   ],
+   "md5": "b8db4d6dbadaa767f94887d457196c9e",
+   "bytes": 104679,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "mouth_in",
+   "label_dir": "onesided_camera_mouth-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_mouth-in/mouth_in_1.mp4",
+   "frames": 94,
+   "fps": 24.0,
+   "w": 320,
+   "h": 180,
+   "decodable": true,
+   "ahash": [
+    1736445636026910784,
+    2023264256899016508,
+    9215351655787634563
+   ],
+   "md5": "6132a92a4cb06cf3d7c13813d01d5b20",
+   "bytes": 119876,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "mouth_in",
+   "label_dir": "onesided_camera_mouth-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_mouth-in/mouth_in_10.mp4",
+   "frames": 81,
+   "fps": 16.0,
+   "w": 320,
+   "h": 180,
+   "decodable": true,
+   "ahash": [
+    17940644032653885440,
+    17358247015739293728,
+    9259542124353075356
+   ],
+   "md5": "7b7a08342d710b01bdb5277857f002bc",
+   "bytes": 114276,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "mouth_in",
+   "label_dir": "onesided_camera_mouth-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_mouth-in/mouth_in_11.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 320,
+   "h": 180,
+   "decodable": true,
+   "ahash": [
+    4565827403689474,
+    4619633512821823488,
+    14105697351368819075
+   ],
+   "md5": "4627f6ce15519c99c50f3675ddc3ba3b",
+   "bytes": 119581,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "mouth_in",
+   "label_dir": "onesided_camera_mouth-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_mouth-in/mouth_in_12.mp4",
+   "frames": 101,
+   "fps": 24.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    6781822485137408,
+    17791122071599185871,
+    10450629668309812163
+   ],
+   "md5": "7a39bd8192d76ea9229f14973eb8206f",
+   "bytes": 126443,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "mouth_in",
+   "label_dir": "onesided_camera_mouth-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_mouth-in/mouth_in_13.mp4",
+   "frames": 81,
+   "fps": 16.0,
+   "w": 320,
+   "h": 236,
+   "decodable": true,
+   "ahash": [
+    13889611181666533697,
+    10271531820348735744,
+    16267424066805997087
+   ],
+   "md5": "388209a09b65cdd9d395f09a11e46e2f",
+   "bytes": 146357,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "mouth_in",
+   "label_dir": "onesided_camera_mouth-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_mouth-in/mouth_in_14.mp4",
+   "frames": 83,
+   "fps": 24.0,
+   "w": 320,
+   "h": 180,
+   "decodable": true,
+   "ahash": [
+    9096970515740295168,
+    16709449627639972352,
+    13925130151382630078
+   ],
+   "md5": "8c60c68ce5aaa102b477dc3255b6c3cc",
+   "bytes": 99981,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "mouth_in",
+   "label_dir": "onesided_camera_mouth-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_mouth-in/mouth_in_15.mp4",
+   "frames": 59,
+   "fps": 24.0,
+   "w": 320,
+   "h": 180,
+   "decodable": true,
+   "ahash": [
+    9187200493242286080,
+    7443937949669654528,
+    5908722711111712255
+   ],
+   "md5": "dd0104b8f7ef1dade84978b791b666ff",
+   "bytes": 54744,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "mouth_in",
+   "label_dir": "onesided_camera_mouth-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_mouth-in/mouth_in_2.mp4",
+   "frames": 87,
+   "fps": 24.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    2020999780758338608,
+    25944249304535521,
+    1850845
+   ],
+   "md5": "9ad79da08a0dc11e0c95ec0708cdbf1a",
+   "bytes": 120922,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "mouth_in",
+   "label_dir": "onesided_camera_mouth-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_mouth-in/mouth_in_3.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    16425696394453580016,
+    18333116558109153185,
+    18393933163437693953
+   ],
+   "md5": "aa23887cff3a4d84004710ec756f5244",
+   "bytes": 235528,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "mouth_in",
+   "label_dir": "onesided_camera_mouth-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_mouth-in/mouth_in_4.mp4",
+   "frames": 81,
+   "fps": 16.0,
+   "w": 320,
+   "h": 218,
+   "decodable": true,
+   "ahash": [
+    236174066584121809,
+    234734676780579056,
+    13925200416575209023
+   ],
+   "md5": "db1e4f1c38d30445bf550b9e5b49d769",
+   "bytes": 108831,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "mouth_in",
+   "label_dir": "onesided_camera_mouth-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_mouth-in/mouth_in_5.mp4",
+   "frames": 87,
+   "fps": 24.0,
+   "w": 320,
+   "h": 180,
+   "decodable": true,
+   "ahash": [
+    18444359849442760972,
+    123259393417597927,
+    1014923263
+   ],
+   "md5": "cd846e7cc5decc426551af5e7b91b6fa",
+   "bytes": 84859,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "mouth_in",
+   "label_dir": "onesided_camera_mouth-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_mouth-in/mouth_in_6.mp4",
+   "frames": 115,
+   "fps": 24.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    9108636297760347136,
+    11566799179830140444,
+    16209726910628630092
+   ],
+   "md5": "016450bc1723bdf283db9dc8a866efaa",
+   "bytes": 184499,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "mouth_in",
+   "label_dir": "onesided_camera_mouth-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_mouth-in/mouth_in_7.mp4",
+   "frames": 81,
+   "fps": 16.0,
+   "w": 320,
+   "h": 236,
+   "decodable": true,
+   "ahash": [
+    4195121196941272613,
+    4196550147758292487,
+    18436542805233777281
+   ],
+   "md5": "6aed96061327c72acb23a7fd177a6d6c",
+   "bytes": 177106,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "mouth_in",
+   "label_dir": "onesided_camera_mouth-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_mouth-in/mouth_in_8.mp4",
+   "frames": 152,
+   "fps": 24.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    2021021248159747076,
+    4396359590977945375,
+    9223372037362253695
+   ],
+   "md5": "39250188512cbd0dbcbec411103c6bc5",
+   "bytes": 93089,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "mouth_in",
+   "label_dir": "onesided_camera_mouth-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_mouth-in/mouth_in_9.mp4",
+   "frames": 99,
+   "fps": 25.0,
+   "w": 320,
+   "h": 180,
+   "decodable": true,
+   "ahash": [
+    6949177783493865785,
+    1738429039662365948,
+    0
+   ],
+   "md5": "f825e5c4938690ca054bf4d96fc8c192",
+   "bytes": 100278,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "mouth_in",
+   "label_dir": "onesided_camera_mouth-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_plasma-explosion/plasma_explosion_0.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    17172039464856429879,
+    12517373875267973761,
+    11582553967860124707
+   ],
+   "md5": "75944bc60864614c1fee731b3412c4a2",
+   "bytes": 1523077,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "plasma_explosion",
+   "label_dir": "onesided_camera_plasma-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_plasma-explosion/plasma_explosion_1.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1916,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    17361623820029148160,
+    17941486544242090016,
+    17941495384518821376
+   ],
+   "md5": "71d0b62fba11dfca866c9ee17a1f9143",
+   "bytes": 2631286,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "plasma_explosion",
+   "label_dir": "onesided_camera_plasma-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_plasma-explosion/plasma_explosion_2.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1920,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    18446501229505302688,
+    9015536967397025797,
+    5915718466454683135
+   ],
+   "md5": "e02f15056f1197c1258241ab470adedf",
+   "bytes": 4464220,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "plasma_explosion",
+   "label_dir": "onesided_camera_plasma-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_plasma-explosion/plasma_explosion_3.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1920,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    13515086084915486726,
+    9091145113574055468,
+    17364926743118480397
+   ],
+   "md5": "8883e6e4ce13ebbab950ab464534989d",
+   "bytes": 5741722,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "plasma_explosion",
+   "label_dir": "onesided_camera_plasma-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_plasma-explosion/plasma_explosion_4.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1920,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    2346508446563710976,
+    2025525804256623740,
+    8952133773211205632
+   ],
+   "md5": "099d3b64715ef1a860b7c60c7d4eafc3",
+   "bytes": 4908106,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "plasma_explosion",
+   "label_dir": "onesided_camera_plasma-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_super-fast-run/super_fast_run_0.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    6879150043556462976,
+    9169072676931391488,
+    18446531898301235328
+   ],
+   "md5": "d71a6101e89eb8c4b082f314971e6d39",
+   "bytes": 1297368,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "super_fast_run",
+   "label_dir": "onesided_camera_super-fast-run"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_super-fast-run/super_fast_run_1.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    522276494839971840,
+    1098736630679732480,
+    8793896128012416
+   ],
+   "md5": "3609b8835285093a2ebfdf0abb04236e",
+   "bytes": 2999167,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "super_fast_run",
+   "label_dir": "onesided_camera_super-fast-run"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_super-fast-run/super_fast_run_10.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1022,
+   "h": 768,
+   "decodable": true,
+   "ahash": [
+    11592255497812866302,
+    16052767383478500991,
+    10143483931957428093
+   ],
+   "md5": "d4480488767e43dd97458460589154f6",
+   "bytes": 1319597,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "super_fast_run",
+   "label_dir": "onesided_camera_super-fast-run"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_super-fast-run/super_fast_run_11.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    522276769717878784,
+    1096453082590519296,
+    441195339925455040
+   ],
+   "md5": "d67335ef808c3411851f8dc663ddf75a",
+   "bytes": 2844389,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "super_fast_run",
+   "label_dir": "onesided_camera_super-fast-run"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_super-fast-run/super_fast_run_12.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    1087390689231356903,
+    872856187298117629,
+    4398688539569025271
+   ],
+   "md5": "a0bf9e1a0d653f485e147a85a50848b5",
+   "bytes": 4258234,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "super_fast_run",
+   "label_dir": "onesided_camera_super-fast-run"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_super-fast-run/super_fast_run_2.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    1764795951277130727,
+    2598968290080650171,
+    17361784640788073679
+   ],
+   "md5": "41c0d181e2cf2c6a1c1da7a34616116d",
+   "bytes": 1914437,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "super_fast_run",
+   "label_dir": "onesided_camera_super-fast-run"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_super-fast-run/super_fast_run_3.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    17815387200192,
+    37704190749222903,
+    18446730914034087927
+   ],
+   "md5": "7bdb18729ba66bdba812cf22d178a34a",
+   "bytes": 1243003,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "super_fast_run",
+   "label_dir": "onesided_camera_super-fast-run"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_super-fast-run/super_fast_run_4.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1918,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    18446743253354020864,
+    11524693819643127552,
+    18442213982253584129
+   ],
+   "md5": "534dbb1f21ea458c21825a00acad6cc0",
+   "bytes": 2516334,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "super_fast_run",
+   "label_dir": "onesided_camera_super-fast-run"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_super-fast-run/super_fast_run_5.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1438,
+   "decodable": true,
+   "ahash": [
+    18446716589188640960,
+    16709418841316261896,
+    17365572193414594560
+   ],
+   "md5": "7b7cc502add49412da1fd87dabc9f1ba",
+   "bytes": 2737041,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "super_fast_run",
+   "label_dir": "onesided_camera_super-fast-run"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_super-fast-run/super_fast_run_6.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    17293684374249775553,
+    18424088636888970231,
+    18446330726058035159
+   ],
+   "md5": "536e29a305ab40f53cdd372177310957",
+   "bytes": 2886629,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "super_fast_run",
+   "label_dir": "onesided_camera_super-fast-run"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_super-fast-run/super_fast_run_7.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1620,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    18446735174331797504,
+    17868018275772792832,
+    18446744035054845952
+   ],
+   "md5": "0be130730ef9d26f2ae0b2aab6cb5e15",
+   "bytes": 3083774,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "super_fast_run",
+   "label_dir": "onesided_camera_super-fast-run"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_super-fast-run/super_fast_run_8.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1022,
+   "h": 768,
+   "decodable": true,
+   "ahash": [
+    18408313012363485240,
+    18446655561949773864,
+    2242774910677423628
+   ],
+   "md5": "35ba48a48e945392fbc504dc331b645b",
+   "bytes": 948414,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "super_fast_run",
+   "label_dir": "onesided_camera_super-fast-run"
+  },
+  {
+   "path": "onesided_transitions/onesided_camera_super-fast-run/super_fast_run_9.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1022,
+   "h": 768,
+   "decodable": true,
+   "ahash": [
+    18446708869490016767,
+    18444465816442664960,
+    17940071454673248256
+   ],
+   "md5": "5c7d2c3e978461da08e28dd6dc3b0608",
+   "bytes": 1378801,
+   "sided": "onesided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "super_fast_run",
+   "label_dir": "onesided_camera_super-fast-run"
+  },
+  {
+   "path": "onesided_transitions/onesided_object-monstrosity/monstrosity_0.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    18446716861348315138,
+    18446743077277204480,
+    18446601683201949744
+   ],
+   "md5": "bd2194d595dc39e46a609741506af839",
+   "bytes": 1283927,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "monstrosity",
+   "label_dir": "onesided_object-monstrosity"
+  },
+  {
+   "path": "onesided_transitions/onesided_object-monstrosity/monstrosity_1.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    9223372036824367104,
+    9223372036840095744,
+    9223371965032040456
+   ],
+   "md5": "c75ec3793bb3d5cee3473348c7dc99ae",
+   "bytes": 1079495,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "monstrosity",
+   "label_dir": "onesided_object-monstrosity"
+  },
+  {
+   "path": "onesided_transitions/onesided_object-monstrosity/monstrosity_2.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    18446506321768352798,
+    18446602369987772420,
+    18446743863520395264
+   ],
+   "md5": "eff8d78a070da5ceae5ad365e448129b",
+   "bytes": 2448950,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "monstrosity",
+   "label_dir": "onesided_object-monstrosity"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_animalization/animalization_0.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    18372425830157566658,
+    3529977626874658848,
+    2377055073991195900
+   ],
+   "md5": "fc8d74cdb28ace727a2335e75cda71b3",
+   "bytes": 912107,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "animalization",
+   "label_dir": "onesided_object_animalization"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_animalization/animalization_1.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    18446743009900134400,
+    18446462927839185920,
+    18446498268436234240
+   ],
+   "md5": "9357918f43595042c2f5411bc5589f7c",
+   "bytes": 2933358,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "animalization",
+   "label_dir": "onesided_object_animalization"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_animalization/animalization_2.mp4",
+   "frames": 241,
+   "fps": 24.0,
+   "w": 960,
+   "h": 960,
+   "decodable": true,
+   "ahash": [
+    18446530850378417597,
+    18374670399331494910,
+    18446317531967979497
+   ],
+   "md5": "e55d3b8d99f7315b42912a2593c2609a",
+   "bytes": 3065488,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "animalization",
+   "label_dir": "onesided_object_animalization"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_animalization/animalization_3.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18402001657801401315,
+    3423586859170631567,
+    4543598014695485183
+   ],
+   "md5": "89c076bbe5aeb32d728700039bdfb463",
+   "bytes": 2618383,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "animalization",
+   "label_dir": "onesided_object_animalization"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_animalization/animalization_4.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18446717578377042974,
+    18446743434128654848,
+    18446533238265495808
+   ],
+   "md5": "d35b5a9ad0117c9ebc29c03dcf38cc10",
+   "bytes": 3922949,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "animalization",
+   "label_dir": "onesided_object_animalization"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_animalization/animalization_5.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    6789551849678679,
+    4630265562984341791,
+    9499500988083149576
+   ],
+   "md5": "b7b39087c87de79e01929d2fc42a9ce7",
+   "bytes": 3988688,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "animalization",
+   "label_dir": "onesided_object_animalization"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_animalization/animalization_6.mp4",
+   "frames": 241,
+   "fps": 24.0,
+   "w": 720,
+   "h": 1280,
+   "decodable": true,
+   "ahash": [
+    9151314442704521216,
+    35747163648622635,
+    17028132180199937
+   ],
+   "md5": "76f2cd5b2f555ce1cdfbc4800eedbf57",
+   "bytes": 1475481,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "animalization",
+   "label_dir": "onesided_object_animalization"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_animalization/animalization_7.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    8513755350794743,
+    30872292698111,
+    63314384951195647
+   ],
+   "md5": "af8f29dfea757ddf8e2d3afe6f535aab",
+   "bytes": 2308238,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "animalization",
+   "label_dir": "onesided_object_animalization"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_camera_earth-zoom-out/earth_zoom_out_0.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 236,
+   "decodable": true,
+   "ahash": [
+    553602639335552,
+    9151332554441285792,
+    27487642589184
+   ],
+   "md5": "d56852692ae74c33983c50b151cf3e3f",
+   "bytes": 424528,
+   "sided": "onesided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "earth_zoom_out",
+   "label_dir": "onesided_object_camera_earth-zoom-out"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_camera_earth-zoom-out/earth_zoom_out_1.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 242,
+   "decodable": true,
+   "ahash": [
+    9280904399347434,
+    3400357898140746496,
+    13898355834007584768
+   ],
+   "md5": "346919858eda0db2bcd03ea3bbaf6257",
+   "bytes": 376626,
+   "sided": "onesided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "earth_zoom_out",
+   "label_dir": "onesided_object_camera_earth-zoom-out"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_camera_earth-zoom-out/earth_zoom_out_2.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    9187183909569837116,
+    18446428244413973249,
+    9807854747611308160
+   ],
+   "md5": "6d52d311e5f93ac326f255729506937a",
+   "bytes": 320461,
+   "sided": "onesided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "earth_zoom_out",
+   "label_dir": "onesided_object_camera_earth-zoom-out"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_camera_earth-zoom-out/earth_zoom_out_3.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 486,
+   "decodable": true,
+   "ahash": [
+    9223354408755085571,
+    16642907253057331055,
+    17924468348028977152
+   ],
+   "md5": "5633fa20f9e70c126ca8673f08581cea",
+   "bytes": 888295,
+   "sided": "onesided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "earth_zoom_out",
+   "label_dir": "onesided_object_camera_earth-zoom-out"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_camera_earth-zoom-out/earth_zoom_out_4.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 486,
+   "decodable": true,
+   "ahash": [
+    18056300682833518,
+    138660083148001569,
+    16176930945761804288
+   ],
+   "md5": "5fcda4e5ba766eb18b31cbcf91a63f10",
+   "bytes": 721892,
+   "sided": "onesided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "earth_zoom_out",
+   "label_dir": "onesided_object_camera_earth-zoom-out"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_camera_live-concert/live_concert_0.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    8572516068222943553,
+    216524625822531584,
+    15828828156854272
+   ],
+   "md5": "ba9192a6879ad690ad2ecdb4b8b5fcca",
+   "bytes": 1659779,
+   "sided": "onesided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "live_concert",
+   "label_dir": "onesided_object_camera_live-concert"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_camera_live-concert/live_concert_1.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    5259001438478123328,
+    4828281012733939968,
+    6821628893724672
+   ],
+   "md5": "a755d4d07802a26514577f448d000a06",
+   "bytes": 4740652,
+   "sided": "onesided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "live_concert",
+   "label_dir": "onesided_object_camera_live-concert"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_camera_live-concert/live_concert_2.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    1757660042254371352,
+    4070970931356106752,
+    17517687655628800
+   ],
+   "md5": "8617e8f09002946e4692e9744a9be447",
+   "bytes": 3061310,
+   "sided": "onesided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "live_concert",
+   "label_dir": "onesided_object_camera_live-concert"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_camera_live-concert/live_concert_3.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1438,
+   "decodable": true,
+   "ahash": [
+    6782299162918979,
+    18446602784305119232,
+    139635825704960
+   ],
+   "md5": "556a757bb912a4c649399cdf5224d82d",
+   "bytes": 3133296,
+   "sided": "onesided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "live_concert",
+   "label_dir": "onesided_object_camera_live-concert"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_camera_live-concert/live_concert_4.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    6773389163495467,
+    2251797603319808,
+    137424961798272
+   ],
+   "md5": "dc47e55a92cb10dd311ae632bb740149",
+   "bytes": 4703046,
+   "sided": "onesided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "live_concert",
+   "label_dir": "onesided_object_camera_live-concert"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_camera_live-concert/live_concert_5.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    4107032568107425792,
+    13775751002127988,
+    68156668839936
+   ],
+   "md5": "f6f9191874e6300b138c7d4c4519b8b6",
+   "bytes": 4236240,
+   "sided": "onesided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "live_concert",
+   "label_dir": "onesided_object_camera_live-concert"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_camera_live-concert/live_concert_6.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    2237742686639476588,
+    4052182427714478880,
+    82258022138324228
+   ],
+   "md5": "5d3a822906d941eaa8b8be629300b947",
+   "bytes": 4900250,
+   "sided": "onesided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "live_concert",
+   "label_dir": "onesided_object_camera_live-concert"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_camera_live-concert/live_concert_7.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1620,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    17249565048137875456,
+    9280971174051840,
+    260854251520
+   ],
+   "md5": "d0fc0ff1df77026a535302cda8cc1778",
+   "bytes": 4265913,
+   "sided": "onesided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "live_concert",
+   "label_dir": "onesided_object_camera_live-concert"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_color-rain/color_rain_0.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    18445613646401827121,
+    18445613646402875697,
+    18445611516099059760
+   ],
+   "md5": "04d11ac2e0fefe9bd0ec63d2a6088939",
+   "bytes": 787580,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "color_rain",
+   "label_dir": "onesided_object_color-rain"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_color-rain/color_rain_1.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    17863430207835209792,
+    17575199831683497984,
+    17575199831012475074
+   ],
+   "md5": "b72dc38f9f97e797fcb792994e40deb8",
+   "bytes": 2556311,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "color_rain",
+   "label_dir": "onesided_object_color-rain"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_color-rain/color_rain_2.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18446732120391958592,
+    18444430584852775105,
+    18442174120694153248
+   ],
+   "md5": "f48a5ecae5e650cc1f5652b2ee638911",
+   "bytes": 2697087,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "color_rain",
+   "label_dir": "onesided_object_color-rain"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_color-rain/color_rain_3.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    13902889072419377544,
+    17938963126623953351,
+    17363909715379170082
+   ],
+   "md5": "dcb4a525b740676944870803005aea92",
+   "bytes": 3775491,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "color_rain",
+   "label_dir": "onesided_object_color-rain"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_color-rain/color_rain_5.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18412694840874664064,
+    18432952294644417160,
+    18439712143671591048
+   ],
+   "md5": "b72375a04bc0960e6ee321918fde6638",
+   "bytes": 3360584,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "color_rain",
+   "label_dir": "onesided_object_color-rain"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_color-rain/color_rain_6.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1764,
+   "h": 1176,
+   "decodable": true,
+   "ahash": [
+    17348007052885900862,
+    17348015883338661438,
+    17348016088960252984
+   ],
+   "md5": "227e23a307c35208277a3d1d5bdfce5c",
+   "bytes": 2810501,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "color_rain",
+   "label_dir": "onesided_object_color-rain"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_color-rain/color_rain_7.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    17718782730083106799,
+    17700768330365663215,
+    17718782738638633967
+   ],
+   "md5": "e242e3142eafa175007a1b0872fc5e12",
+   "bytes": 2157860,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "color_rain",
+   "label_dir": "onesided_object_color-rain"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_color-rain/color_rain_8.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    235104391511485,
+    7024586545540541,
+    2898317963975014817
+   ],
+   "md5": "e431c04d7d2e2893b00d617497fb950b",
+   "bytes": 3249947,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "color_rain",
+   "label_dir": "onesided_object_color-rain"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_cotton-cloud/cotton_cloud_0.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    2369139867074314239,
+    2336074541772519423,
+    9419252146197479992
+   ],
+   "md5": "d17ede3fbe0e8249b8ed1ce7b797d644",
+   "bytes": 477726,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "cotton_cloud",
+   "label_dir": "onesided_object_cotton-cloud"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_cotton-cloud/cotton_cloud_1.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    13835031562271522816,
+    18446152429016858624,
+    6881473739193040896
+   ],
+   "md5": "6e394d829e78b51099e4cf99ed2aebed",
+   "bytes": 2067068,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "cotton_cloud",
+   "label_dir": "onesided_object_cotton-cloud"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_cotton-cloud/cotton_cloud_2.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1440,
+   "h": 1440,
+   "decodable": true,
+   "ahash": [
+    18392139028394418151,
+    17815115705444250144,
+    14411237330309091840
+   ],
+   "md5": "c454ebf938a92a2e1b0f2e113ca61440",
+   "bytes": 1843518,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "cotton_cloud",
+   "label_dir": "onesided_object_cotton-cloud"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_cotton-cloud/cotton_cloud_4.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18374459289276252160,
+    18374599889725161472,
+    17726152736747028480
+   ],
+   "md5": "8ab4ab403f71f8a645893e5b14b7c976",
+   "bytes": 2061334,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "cotton_cloud",
+   "label_dir": "onesided_object_cotton-cloud"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_cotton-cloud/cotton_cloud_6.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    8935148288500303872,
+    2019308663700777667,
+    268359348775012672
+   ],
+   "md5": "c7be387565af848416905b0d94ccc592",
+   "bytes": 1843188,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "cotton_cloud",
+   "label_dir": "onesided_object_cotton-cloud"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_cotton-cloud/cotton_cloud_8.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    8372971084912247555,
+    17362175663600026371,
+    18443356979499876608
+   ],
+   "md5": "fb189a0557af6938640a90c318368e34",
+   "bytes": 1276035,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "cotton_cloud",
+   "label_dir": "onesided_object_cotton-cloud"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_disintegration/disintegration_0.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    216460063064657459,
+    508066185121056707,
+    216463336031875907
+   ],
+   "md5": "bd3935d04285b95c6f4f303f188c5a33",
+   "bytes": 222267,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "disintegration",
+   "label_dir": "onesided_object_disintegration"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_disintegration/disintegration_1.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 424,
+   "decodable": true,
+   "ahash": [
+    18446739674621002496,
+    18446695151901590272,
+    18446735018910270208
+   ],
+   "md5": "4f46ba0cad8aaa33993a7103f5caeac0",
+   "bytes": 728900,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "disintegration",
+   "label_dir": "onesided_object_disintegration"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_disintegration/disintegration_10.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 486,
+   "decodable": true,
+   "ahash": [
+    18446743955656933375,
+    18446743980294045831,
+    18446726408508862688
+   ],
+   "md5": "7f5798810db2c058488ca068e6e32952",
+   "bytes": 980381,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "disintegration",
+   "label_dir": "onesided_object_disintegration"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_disintegration/disintegration_11.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    18442212882809613154,
+    18442213963459707331,
+    9183934689111498978
+   ],
+   "md5": "af4cf868f9716d57ddf422601d1f7d99",
+   "bytes": 267064,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "disintegration",
+   "label_dir": "onesided_object_disintegration"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_disintegration/disintegration_2.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    4123937343495208960,
+    16783502813178101760,
+    17364449597715906560
+   ],
+   "md5": "2768db78aea7c6509f33642d1c8598c8",
+   "bytes": 139463,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "disintegration",
+   "label_dir": "onesided_object_disintegration"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_disintegration/disintegration_3.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    7410048422700623831,
+    17221698745658409411,
+    18369025932958352231
+   ],
+   "md5": "221733c7e4b67ac04e915e12aadc0cd6",
+   "bytes": 374947,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "disintegration",
+   "label_dir": "onesided_object_disintegration"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_disintegration/disintegration_4.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 486,
+   "decodable": true,
+   "ahash": [
+    8767915307837713087,
+    13808564844265234623,
+    8501103382084481140
+   ],
+   "md5": "e04206cfafb2d54e313866cf9c642576",
+   "bytes": 237806,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "disintegration",
+   "label_dir": "onesided_object_disintegration"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_disintegration/disintegration_5.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    18415192384540442944,
+    17270991089415298872,
+    18150334365908016668
+   ],
+   "md5": "3956a4d6f647180c2c19820bec5642fc",
+   "bytes": 216901,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "disintegration",
+   "label_dir": "onesided_object_disintegration"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_disintegration/disintegration_6.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 486,
+   "decodable": true,
+   "ahash": [
+    18439988416134250496,
+    18434222568035600384,
+    18442178640696852480
+   ],
+   "md5": "312efeca981021a181ea6423cc73891d",
+   "bytes": 1013188,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "disintegration",
+   "label_dir": "onesided_object_disintegration"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_disintegration/disintegration_7.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 486,
+   "decodable": true,
+   "ahash": [
+    18428575685078417408,
+    18442046894013153344,
+    18435369759318999040
+   ],
+   "md5": "960fa2bae327307aed9e284918dc27a1",
+   "bytes": 431511,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "disintegration",
+   "label_dir": "onesided_object_disintegration"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_disintegration/disintegration_8.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 486,
+   "decodable": true,
+   "ahash": [
+    85761020340994048,
+    35517765688229888,
+    16958009367855120
+   ],
+   "md5": "708da178159e47c408cc32f59a5db600",
+   "bytes": 434926,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "disintegration",
+   "label_dir": "onesided_object_disintegration"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_disintegration/disintegration_9.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    108371393010735152,
+    74618602240618551,
+    76874817482800703
+   ],
+   "md5": "7ac8d7da8beeba78e2f0c07f496efa31",
+   "bytes": 213163,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "disintegration",
+   "label_dir": "onesided_object_disintegration"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_gas-transformation/gas_transformation_0.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    9295279119545139234,
+    9295288035429056514,
+    9295428531381088318
+   ],
+   "md5": "bc7ebcb255d47457b0b42fbd17c96514",
+   "bytes": 336117,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "gas_transformation",
+   "label_dir": "onesided_object_gas-transformation"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_gas-transformation/gas_transformation_1.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 768,
+   "h": 1152,
+   "decodable": true,
+   "ahash": [
+    9294850089160753672,
+    71478052037571336,
+    71478086968621056
+   ],
+   "md5": "bf667ac8ef3213e55f5677cfe81bd106",
+   "bytes": 2781122,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "gas_transformation",
+   "label_dir": "onesided_object_gas-transformation"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_gas-transformation/gas_transformation_2.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    17755284358262326831,
+    18018651477975139887,
+    6488855872520760895
+   ],
+   "md5": "909cc1428b726a5f8f45240e8a010dbf",
+   "bytes": 2289494,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "gas_transformation",
+   "label_dir": "onesided_object_gas-transformation"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_gas-transformation/gas_transformation_3.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    2251656946835521536,
+    2251656946371002386,
+    2269671275884449814
+   ],
+   "md5": "f20d2d165491606f69da607a08e8b153",
+   "bytes": 2986699,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "gas_transformation",
+   "label_dir": "onesided_object_gas-transformation"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_gas-transformation/gas_transformation_4.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1438,
+   "decodable": true,
+   "ahash": [
+    18439820462017013920,
+    18444350462799967838,
+    18444350437030166110
+   ],
+   "md5": "c05b0b5c40232b7fd751c979d84b37e3",
+   "bytes": 1074132,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "gas_transformation",
+   "label_dir": "onesided_object_gas-transformation"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_gas-transformation/gas_transformation_5.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    18446678086239916032,
+    18430915487150913560,
+    18446739555418650632
+   ],
+   "md5": "206b6c9bb63ffb36d66ac7b4ec8f8873",
+   "bytes": 1007760,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "gas_transformation",
+   "label_dir": "onesided_object_gas-transformation"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_gas-transformation/gas_transformation_6.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    288220764084649735,
+    288220785491427079,
+    576459940697849607
+   ],
+   "md5": "c4fec451ff32635dd354fdc626640516",
+   "bytes": 2077737,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "gas_transformation",
+   "label_dir": "onesided_object_gas-transformation"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_gas-transformation/gas_transformation_7.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    2260647850018999,
+    3413017707415743,
+    2170172135806471359
+   ],
+   "md5": "54a18f34ff388b3a85a2f5007c138342",
+   "bytes": 841785,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "gas_transformation",
+   "label_dir": "onesided_object_gas-transformation"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_gas-transformation/gas_transformation_8.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    4611684989112682496,
+    4539486828916377600,
+    4539487137145290814
+   ],
+   "md5": "58edd1ef48cbdaf2ea0d4c166dfa5e0e",
+   "bytes": 1009078,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "gas_transformation",
+   "label_dir": "onesided_object_gas-transformation"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_gas-transformation/gas_transformation_9.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    252201576028995584,
+    2031824966549504,
+    2040620619196192
+   ],
+   "md5": "60448fd1a9c7e0a983f02114c43a7fac",
+   "bytes": 2327696,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "gas_transformation",
+   "label_dir": "onesided_object_gas-transformation"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_giant-grab/giant_grab_0.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    218850657775073280,
+    218859557081452088,
+    219989863608027192
+   ],
+   "md5": "a35093cb559b5490a5b67b601c380090",
+   "bytes": 368978,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "giant_grab",
+   "label_dir": "onesided_object_giant-grab"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_giant-grab/giant_grab_1.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18445178506724785658,
+    17868717616848190971,
+    17868717616848191483
+   ],
+   "md5": "28eb74dea6d1c7fd722911cd895aa3aa",
+   "bytes": 1555396,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "giant_grab",
+   "label_dir": "onesided_object_giant-grab"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_giant-grab/giant_grab_2.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1108,
+   "h": 828,
+   "decodable": true,
+   "ahash": [
+    983214128639,
+    1086559682047,
+    4943473920511
+   ],
+   "md5": "14e8eecddb1ba6106d233542be9ffe6d",
+   "bytes": 495833,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "giant_grab",
+   "label_dir": "onesided_object_giant-grab"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_giant-grab/giant_grab_3.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 828,
+   "h": 1108,
+   "decodable": true,
+   "ahash": [
+    18446717170034409472,
+    18446743523953737728,
+    18446743523953737728
+   ],
+   "md5": "16bbcba475765c12af7f3a0ac2b53023",
+   "bytes": 676307,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "giant_grab",
+   "label_dir": "onesided_object_giant-grab"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_giant-grab/giant_grab_4.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1440,
+   "h": 1440,
+   "decodable": true,
+   "ahash": [
+    18440793220831518592,
+    18445332004426745604,
+    18446413923935585924
+   ],
+   "md5": "6b6798492c4f1c90c0756c1e61372ce6",
+   "bytes": 2806603,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "giant_grab",
+   "label_dir": "onesided_object_giant-grab"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_giant-grab/giant_grab_5.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    218850657775073306,
+    218859557081452080,
+    219989863608027184
+   ],
+   "md5": "5c3e0e882cac56662b761965b3aaa24c",
+   "bytes": 1427391,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "giant_grab",
+   "label_dir": "onesided_object_giant-grab"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_0.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    54272952537117440,
+    54272926633095936,
+    54272935223030528
+   ],
+   "md5": "538dc0d5e287f0f14ab55ed623580101",
+   "bytes": 89687,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_1.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    18369119540308082816,
+    17216804966136545408,
+    18369730903015424000
+   ],
+   "md5": "a2ef8fe97056769dab835864b72093ab",
+   "bytes": 104696,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_10.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    4358497851955218440,
+    9006177379950267400,
+    8970139786771175440
+   ],
+   "md5": "5f53bb86c7a03674317b662ef0e5aea0",
+   "bytes": 116760,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_11.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 320,
+   "decodable": true,
+   "ahash": [
+    18438015068143977668,
+    18428805902359675972,
+    18428832222980408418
+   ],
+   "md5": "9255892815eb6aa1007e09a7d78e5eb7",
+   "bytes": 163522,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_12.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 236,
+   "decodable": true,
+   "ahash": [
+    18446720984376525123,
+    18439956790591472579,
+    18439956788443988931
+   ],
+   "md5": "37a703bcaa74f8e3b42146b123d5ca93",
+   "bytes": 162936,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_13.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    18446695573928093030,
+    18446704473100330086,
+    18446704473100330342
+   ],
+   "md5": "276fc31ab9a24d51430889de9beb80d7",
+   "bytes": 160791,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_14.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 236,
+   "decodable": true,
+   "ahash": [
+    18446726219530510592,
+    17870221486829076736,
+    17866887784787345664
+   ],
+   "md5": "0878a4c99c65934abcdafef1bccf4abf",
+   "bytes": 153571,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_15.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 568,
+   "decodable": true,
+   "ahash": [
+    18446677010001481887,
+    18446717142146527420,
+    18446681957774573718
+   ],
+   "md5": "a0037716da5599ae9571b983f730dad6",
+   "bytes": 539883,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_16.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    4774451480732263038,
+    4758901018675278462,
+    4758936203047363198
+   ],
+   "md5": "2604879a952cd5cd84abc1ff49419c81",
+   "bytes": 127784,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_17.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 568,
+   "decodable": true,
+   "ahash": [
+    38552068099177552,
+    56566316083509469,
+    38561813714975964
+   ],
+   "md5": "f49bd15f861a271ba2589b8edf704039",
+   "bytes": 709141,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_18.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    13834890268125849215,
+    13828133769173165695,
+    13828098172685525631
+   ],
+   "md5": "f880f909ff54c0ea018c824a66e11b21",
+   "bytes": 177235,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_2.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 242,
+   "decodable": true,
+   "ahash": [
+    13892692121711837216,
+    13889340741953552384,
+    9349702421422571568
+   ],
+   "md5": "c99bec8e589b114622fe74a029a686c1",
+   "bytes": 175140,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_3.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 136,
+   "decodable": true,
+   "ahash": [
+    18371984310193776358,
+    18374165466385376864,
+    18371984310193776224
+   ],
+   "md5": "87d1917684b4d3fc76847883014a9590",
+   "bytes": 87520,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_4.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 320,
+   "decodable": true,
+   "ahash": [
+    18370402782424581087,
+    18370393986601049051,
+    18370393986869199811
+   ],
+   "md5": "5dcaece942f64b45b9831cd31f5ae178",
+   "bytes": 277241,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_5.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    6982946019875251236,
+    8140388681802605604,
+    8140382119125083172
+   ],
+   "md5": "1eba1ca6735be38f4060a5a78dfd051e",
+   "bytes": 145937,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_6.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    877107002969817304,
+    881610474284908760,
+    881610474284908760
+   ],
+   "md5": "8e485923db0e58189c840bb74ee3663a",
+   "bytes": 107987,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_7.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 236,
+   "decodable": true,
+   "ahash": [
+    510902470298379041,
+    508650670484685601,
+    508650662498730785
+   ],
+   "md5": "d801658d486c68afaf75347d2b7bf048",
+   "bytes": 120575,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_8.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 236,
+   "decodable": true,
+   "ahash": [
+    17938013927564647554,
+    18226208569622470306,
+    17938013790159837824
+   ],
+   "md5": "6af1d8378d04c9b6017db4504e25cff4",
+   "bytes": 101212,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_head-explosion/head_explosion_9.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    8967905339671869560,
+    8968046078938607736,
+    8967922931488815228
+   ],
+   "md5": "4a0bfaef203461dca39069b4529262cd",
+   "bytes": 127803,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "head_explosion",
+   "label_dir": "onesided_object_head-explosion"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_money-rain/money_rain_0.mp4",
+   "frames": 131,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    64356147456,
+    140842645975808,
+    17628624834816
+   ],
+   "md5": "2d8a3b743c9e61cfcdd7fcb2ea3101df",
+   "bytes": 532435,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "money_rain",
+   "label_dir": "onesided_object_money-rain"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_money-rain/money_rain_1.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    17424740215090120944,
+    17389344771261385064,
+    12813106424001849608
+   ],
+   "md5": "15dc161b35ceeb57f26c722e50a559a7",
+   "bytes": 1603493,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "money_rain",
+   "label_dir": "onesided_object_money-rain"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_money-rain/money_rain_2.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    4575502702428950771,
+    5764330046925772800,
+    3420276398181002024
+   ],
+   "md5": "ddd87506127b5238b7d6ecb80cc25652",
+   "bytes": 1627288,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "money_rain",
+   "label_dir": "onesided_object_money-rain"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_money-rain/money_rain_3.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    13474769815718854712,
+    3345608225397428244,
+    2053218079349420032
+   ],
+   "md5": "e8f98abcc4bd38747740d195af61d6fd",
+   "bytes": 1829961,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "money_rain",
+   "label_dir": "onesided_object_money-rain"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_money-rain/money_rain_4.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1620,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    18229439866479837184,
+    18229160591012921344,
+    2052372511830588416
+   ],
+   "md5": "2da34ddb236a7aeaab658839b938185d",
+   "bytes": 2155674,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "money_rain",
+   "label_dir": "onesided_object_money-rain"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_money-rain/money_rain_6.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    18441082567039009221,
+    18410542944366091836,
+    135009918707007478
+   ],
+   "md5": "5da635c9387d9bd536ba56b6ede262b1",
+   "bytes": 4663512,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "money_rain",
+   "label_dir": "onesided_object_money-rain"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_money-rain/money_rain_7.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    513301564036347899,
+    9266601091491230183,
+    18338199212177148875
+   ],
+   "md5": "b8189da934ee01466c4713de2ca250b0",
+   "bytes": 3766511,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "money_rain",
+   "label_dir": "onesided_object_money-rain"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_mystification/mystification_0.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    9184923520790627323,
+    9187170922826236923,
+    2197544580574832511
+   ],
+   "md5": "33ac17cd21dc16fc36fd19f1e4e6bfbe",
+   "bytes": 510445,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "mystification",
+   "label_dir": "onesided_object_mystification"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_mystification/mystification_2.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    9204721628878022655,
+    9132664103691694079,
+    8988548915616890879
+   ],
+   "md5": "ad81ce7ef620bf51f4067eb2f98aaad4",
+   "bytes": 1288624,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "mystification",
+   "label_dir": "onesided_object_mystification"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_mystification/mystification_3.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    3458751797699085056,
+    3422722725733666576,
+    3422701079100855344
+   ],
+   "md5": "8b687ec6abe5535cac8614ae5d36690e",
+   "bytes": 2946557,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "mystification",
+   "label_dir": "onesided_object_mystification"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_mystification/mystification_4.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    8538519947045641276,
+    9115004167586714128,
+    18446744070475612160
+   ],
+   "md5": "9a52244a5d2e99ac0484b3a7311a9a09",
+   "bytes": 1708500,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "mystification",
+   "label_dir": "onesided_object_mystification"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_mystification/mystification_5.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18446729672686305280,
+    18446742966548567040,
+    18446739654188205056
+   ],
+   "md5": "6583147fd7c61845d13676085572db83",
+   "bytes": 2483462,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "mystification",
+   "label_dir": "onesided_object_mystification"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_nature-bloom/nature_bloom_0.mp4",
+   "frames": 241,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    72085081338988748,
+    2314333441668764,
+    7387199856854902
+   ],
+   "md5": "82d12e55b24e32fb5f5bc7641b8928fd",
+   "bytes": 1346355,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "nature_bloom",
+   "label_dir": "onesided_object_nature-bloom"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_nature-bloom/nature_bloom_2.mp4",
+   "frames": 241,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    234187285186673279,
+    4035227665146769663,
+    18209619788258226
+   ],
+   "md5": "d9a042d607e9fca2e6a7238d172ea269",
+   "bytes": 5496173,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "nature_bloom",
+   "label_dir": "onesided_object_nature-bloom"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_portal/portal_0.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    7185629856767957252,
+    9150825741639642112,
+    16715775325078364476
+   ],
+   "md5": "a4aa926874dd7f065da238813d84f3f9",
+   "bytes": 1463615,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "portal",
+   "label_dir": "onesided_object_portal"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_portal/portal_1.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    16956901024596256,
+    14094467515200129024,
+    1746972718231511840
+   ],
+   "md5": "0df177486429d792b4e24187f4b9e78a",
+   "bytes": 3082559,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "portal",
+   "label_dir": "onesided_object_portal"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_portal/portal_10.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    109733296011312224,
+    4359060916033952768,
+    278167835723832
+   ],
+   "md5": "72f58692aab6f201e8dcb16d9749021a",
+   "bytes": 4367081,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "portal",
+   "label_dir": "onesided_object_portal"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_portal/portal_11.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    18337804934493771800,
+    8954948897544502296,
+    18163282262710288384
+   ],
+   "md5": "f6dae5ba508ec01cf02e50476cce6cfa",
+   "bytes": 4009252,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "portal",
+   "label_dir": "onesided_object_portal"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_portal/portal_12.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    4580587711825506488,
+    4520767842273112592,
+    2233943875778302107
+   ],
+   "md5": "981ce4236bf345439b8c0231d57471d1",
+   "bytes": 3860559,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "portal",
+   "label_dir": "onesided_object_portal"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_portal/portal_13.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    18444483356533031424,
+    18439947519253869792,
+    2242580716913377024
+   ],
+   "md5": "b9dbb027fe553b91948ae8ee97819099",
+   "bytes": 3681102,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "portal",
+   "label_dir": "onesided_object_portal"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_portal/portal_2.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    13168680318494333984,
+    4537261311541206831,
+    35163399444524092
+   ],
+   "md5": "1a5951238dc1af42b8934289d9f803ac",
+   "bytes": 3369069,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "portal",
+   "label_dir": "onesided_object_portal"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_portal/portal_4.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    4611930635540714496,
+    4359176317862556672,
+    6917669800567240230
+   ],
+   "md5": "6a64285e7e135ad0b1ce888250606425",
+   "bytes": 4359440,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "portal",
+   "label_dir": "onesided_object_portal"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_portal/portal_5.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    16104646743138893824,
+    14115397953751425792,
+    14114672241924863492
+   ],
+   "md5": "6ebe63b9af8af1c6f98e9299c26b4c2c",
+   "bytes": 3508538,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "portal",
+   "label_dir": "onesided_object_portal"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_portal/portal_6.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    12461180783109932668,
+    13762691836826045952,
+    13842972531063084544
+   ],
+   "md5": "aa7473ff9f356cc73ac5e2818dd7acec",
+   "bytes": 6026879,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "portal",
+   "label_dir": "onesided_object_portal"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_portal/portal_7.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    2419303882203905,
+    1765129475469042176,
+    2341590227706904378
+   ],
+   "md5": "94e1f688913e0532c046515d858fdee9",
+   "bytes": 3555881,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "portal",
+   "label_dir": "onesided_object_portal"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_portal/portal_8.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    132194150826879,
+    13024672518195008,
+    62036877639033982
+   ],
+   "md5": "852f29feaa6973ab08789eae30e15d1c",
+   "bytes": 3142584,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "portal",
+   "label_dir": "onesided_object_portal"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_portal/portal_9.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    1137122597257308,
+    4359202852547182608,
+    31054735704084
+   ],
+   "md5": "bfb16536af25940c68a0fca3e7bfd8ba",
+   "bytes": 3042755,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "portal",
+   "label_dir": "onesided_object_portal"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_saint-glow/saint_glow_0.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    194329234562845,
+    2305861415505674235,
+    13529171082788847
+   ],
+   "md5": "f43de7d07f05e4c0feb63bca3b2dfcbe",
+   "bytes": 669688,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "saint_glow",
+   "label_dir": "onesided_object_saint-glow"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_saint-glow/saint_glow_1.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18442239635424690176,
+    18439978970764804096,
+    18223789215007507456
+   ],
+   "md5": "7512c3f7b5260d0fb03b57a870f39426",
+   "bytes": 1818277,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "saint_glow",
+   "label_dir": "onesided_object_saint-glow"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_saint-glow/saint_glow_2.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18446717415799709763,
+    18444465823750856775,
+    18446717655768637474
+   ],
+   "md5": "70d80203a68be4ad1aca78c00f8d1d8c",
+   "bytes": 1932541,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "saint_glow",
+   "label_dir": "onesided_object_saint-glow"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_saint-glow/saint_glow_3.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    1312825698958140985,
+    1312825802037224976,
+    1168684234290636320
+   ],
+   "md5": "6e8203c4af7f9430932875a516f1719e",
+   "bytes": 2188573,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "saint_glow",
+   "label_dir": "onesided_object_saint-glow"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_sakura-petals/sakura_petals_0.mp4",
+   "frames": 241,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    18410231640425644818,
+    18446563759209073160,
+    18446599076822667776
+   ],
+   "md5": "f6a17469ae9ab73c4ddb38f436fd4445",
+   "bytes": 2712331,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "sakura_petals",
+   "label_dir": "onesided_object_sakura-petals"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_sakura-petals/sakura_petals_1.mp4",
+   "frames": 241,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18407979840612221714,
+    18446554963116050984,
+    18446599076822667808
+   ],
+   "md5": "f0c2a97979ad21a13dbf9f715de3f5c0",
+   "bytes": 8872190,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "sakura_petals",
+   "label_dir": "onesided_object_sakura-petals"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_sakura-petals/sakura_petals_2.mp4",
+   "frames": 241,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    9149592469311376303,
+    7640342237252811518,
+    69818446188094
+   ],
+   "md5": "19fd8445c12097ef4df18a781e61e313",
+   "bytes": 9342636,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "sakura_petals",
+   "label_dir": "onesided_object_sakura-petals"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_thunder-god/thunder_god_0.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 486,
+   "decodable": true,
+   "ahash": [
+    2265214125829019,
+    2282733641390203,
+    2317782348319193
+   ],
+   "md5": "5d1b0cb2bbf4a80830e9d6f2f762a19b",
+   "bytes": 272114,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "thunder_god",
+   "label_dir": "onesided_object_thunder-god"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_thunder-god/thunder_god_1.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    4497449123306805264,
+    8970746244776857612,
+    4340472114498513464
+   ],
+   "md5": "0bc8d14ca03aa6955c22d8f2c2951d95",
+   "bytes": 219874,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "thunder_god",
+   "label_dir": "onesided_object_thunder-god"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_thunder-god/thunder_god_2.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 242,
+   "decodable": true,
+   "ahash": [
+    9114782233321144899,
+    9096767870142120002,
+    9186875011099525698
+   ],
+   "md5": "1d1d655226ed87401f8da4d1523e9813",
+   "bytes": 196957,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "thunder_god",
+   "label_dir": "onesided_object_thunder-god"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_thunder-god/thunder_god_3.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    4323482134040593347,
+    2024394524064531139,
+    9096774303339045601
+   ],
+   "md5": "ece4ee9d69c6211d74d8ecdf748a6110",
+   "bytes": 252328,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "thunder_god",
+   "label_dir": "onesided_object_thunder-god"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_thunder-god/thunder_god_4.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    17863500877680100350,
+    16710570680663408740,
+    17289265640594473024
+   ],
+   "md5": "d5ae0d63ad62aa941ec138793e9a424a",
+   "bytes": 268590,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "thunder_god",
+   "label_dir": "onesided_object_thunder-god"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_thunder-god/thunder_god_5.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 242,
+   "decodable": true,
+   "ahash": [
+    18442213944119755523,
+    9223372034011398144,
+    4575512588496052256
+   ],
+   "md5": "2fb93bb12c708061852b1799f874f7e3",
+   "bytes": 131948,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "thunder_god",
+   "label_dir": "onesided_object_thunder-god"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_thunder-god/thunder_god_6.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    29538353857749044,
+    4768517318931002,
+    247325506430076
+   ],
+   "md5": "3434360e1441e6460ff1edf1061fd7fa",
+   "bytes": 120891,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "thunder_god",
+   "label_dir": "onesided_object_thunder-god"
+  },
+  {
+   "path": "onesided_transitions/onesided_object_thunder-god/thunder_god_7.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 486,
+   "decodable": true,
+   "ahash": [
+    5763384556868350048,
+    5764607468013682688,
+    5764607503446835457
+   ],
+   "md5": "e7ea90151fdbbb6e17b1c7a48fe85dd6",
+   "bytes": 464888,
+   "sided": "onesided",
+   "tags": [
+    "object"
+   ],
+   "cls": "thunder_god",
+   "label_dir": "onesided_object_thunder-god"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_earth-element/earth_element_0.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    13891218485475672065,
+    13303854200027511854,
+    9728918070946164623
+   ],
+   "md5": "91f2b269414af1529e47850d5fa7ab05",
+   "bytes": 1231216,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "earth_element",
+   "label_dir": "onesided_style_camera_earth-element"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_earth-element/earth_element_1.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    18223815029473677368,
+    18446075438502526992,
+    17863501439205113957
+   ],
+   "md5": "50493de626c4d600a1ac16848c0efd69",
+   "bytes": 4411745,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "earth_element",
+   "label_dir": "onesided_style_camera_earth-element"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_earth-element/earth_element_2.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    206561083391,
+    18370739202610491584,
+    18442186905829179392
+   ],
+   "md5": "61014aba8721ddb5f1146217b7a158d6",
+   "bytes": 3361018,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "earth_element",
+   "label_dir": "onesided_style_camera_earth-element"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_earth-element/earth_element_3.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    2269805381607201024,
+    18446737416274542592,
+    11529215011707625472
+   ],
+   "md5": "e234bc5e693df0ce605a2c85f5353134",
+   "bytes": 3976208,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "earth_element",
+   "label_dir": "onesided_style_camera_earth-element"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_earth-element/earth_element_4.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    9186071261246652416,
+    11182358591175525376,
+    9216350558943150402
+   ],
+   "md5": "ea8132cb4bb578333f3f3fb323c1ce2f",
+   "bytes": 3769531,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "earth_element",
+   "label_dir": "onesided_style_camera_earth-element"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_earth-element/earth_element_6.mp4",
+   "frames": 241,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    1081709435873879011,
+    16510267293132877053,
+    10890314451784632364
+   ],
+   "md5": "4a56c70c78005dece7e8b2d8b0323ecb",
+   "bytes": 9061805,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "earth_element",
+   "label_dir": "onesided_style_camera_earth-element"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_0.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    18444448226888450304,
+    15817098996155908095,
+    512015897065356003
+   ],
+   "md5": "fb0ba48a10786d381c0fc7f70dd1bda1",
+   "bytes": 1137811,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "illustration_scene",
+   "label_dir": "onesided_style_camera_illustration-scene"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_1.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    9264169330386157616,
+    9259551256496371434,
+    20420701177510910
+   ],
+   "md5": "30d6b9d0f834610cbb7a38c23bdd14a9",
+   "bytes": 1948961,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "illustration_scene",
+   "label_dir": "onesided_style_camera_illustration-scene"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_2.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    2144557975098090432,
+    2018738804506805063,
+    4396921938868037607
+   ],
+   "md5": "485f03968899a021627d9918fc832d31",
+   "bytes": 2084043,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "illustration_scene",
+   "label_dir": "onesided_style_camera_illustration-scene"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_3.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    5769111365197234176,
+    17888258240980983808,
+    17762177173501780996
+   ],
+   "md5": "fd6170868b81e700cad53cb7f98e0e55",
+   "bytes": 2088093,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "illustration_scene",
+   "label_dir": "onesided_style_camera_illustration-scene"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_4.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1918,
+   "decodable": true,
+   "ahash": [
+    54250473009302491,
+    4327990150188841815,
+    6799899502198061
+   ],
+   "md5": "fa143c2e04c9754e8599816fd9d48a45",
+   "bytes": 3367194,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "illustration_scene",
+   "label_dir": "onesided_style_camera_illustration-scene"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_5.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    16212676114129612543,
+    18374390738967782910,
+    72029080693571583
+   ],
+   "md5": "3153dae46e3505aa294a2fdb5326ebd0",
+   "bytes": 3136782,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "illustration_scene",
+   "label_dir": "onesided_style_camera_illustration-scene"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_6.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    9182686959540436992,
+    9179448619748473855,
+    1010508978150506755
+   ],
+   "md5": "a42f1b4902a738975ed051e36b7fcc29",
+   "bytes": 2940710,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "illustration_scene",
+   "label_dir": "onesided_style_camera_illustration-scene"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_7.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1918,
+   "decodable": true,
+   "ahash": [
+    18297835564945637603,
+    18445925252322827264,
+    18153955527841561724
+   ],
+   "md5": "e95179fd0476272505444aa81a8be164",
+   "bytes": 6128123,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "illustration_scene",
+   "label_dir": "onesided_style_camera_illustration-scene"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_8.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    2321897155192160352,
+    4525782166596002020,
+    10111817856745268292
+   ],
+   "md5": "135bd12a162b194a06ca1fafae6f114b",
+   "bytes": 2256208,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "illustration_scene",
+   "label_dir": "onesided_style_camera_illustration-scene"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_9.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    2321897155192160352,
+    2742426284649758494,
+    508642236686564464
+   ],
+   "md5": "77604d2c4efc7ff579729f73361f0aab",
+   "bytes": 2998899,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "illustration_scene",
+   "label_dir": "onesided_style_camera_illustration-scene"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_polygon/polygon_0.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    5125940903412180871,
+    10335510696682265608,
+    2197223904773013512
+   ],
+   "md5": "4cf3d3a2e3f63dd505833b29629e2d5c",
+   "bytes": 419861,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "polygon",
+   "label_dir": "onesided_style_camera_polygon"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_polygon/polygon_1.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    18304902678965649663,
+    18381472789990483197,
+    18390479987097774320
+   ],
+   "md5": "ec5d5805c9b59ab93d254b2f7454fee7",
+   "bytes": 1445067,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "polygon",
+   "label_dir": "onesided_style_camera_polygon"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_polygon/polygon_2.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1918,
+   "decodable": true,
+   "ahash": [
+    30820700243907,
+    35425410320383,
+    122270221199
+   ],
+   "md5": "f9de4e56340be6354bf86fd1e5dbbbd6",
+   "bytes": 1206253,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "polygon",
+   "label_dir": "onesided_style_camera_polygon"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_polygon/polygon_3.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    7423903745544013782,
+    9114734914975985152,
+    8717866192979573760
+   ],
+   "md5": "2291d98c70d19d66b902d3c437d26dac",
+   "bytes": 1473925,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "polygon",
+   "label_dir": "onesided_style_camera_polygon"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_polygon/polygon_4.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1918,
+   "decodable": true,
+   "ahash": [
+    8896292740506529827,
+    17438585954179733499,
+    13387792538866216939
+   ],
+   "md5": "5126e7a5bc320431bd6026af0ae1c8c8",
+   "bytes": 5492658,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "polygon",
+   "label_dir": "onesided_style_camera_polygon"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_polygon/polygon_5.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    4048151334500172032,
+    9223641412908416764,
+    4775174687620862
+   ],
+   "md5": "99802bd29e3e2f74932e69ed7e026fb1",
+   "bytes": 1436681,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "polygon",
+   "label_dir": "onesided_style_camera_polygon"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_polygon/polygon_6.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1438,
+   "decodable": true,
+   "ahash": [
+    18352634560174458755,
+    6539429926859043808,
+    8602527130883977408
+   ],
+   "md5": "bad8e5812ee4953cd4ce1afeadd114a5",
+   "bytes": 4348356,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "polygon",
+   "label_dir": "onesided_style_camera_polygon"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_polygon/polygon_7.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    2245981077688668656,
+    6782029185711871,
+    2278844568239358
+   ],
+   "md5": "f6da8f28b3e18edf9ca2a55c8fbd2198",
+   "bytes": 985734,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "polygon",
+   "label_dir": "onesided_style_camera_polygon"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_polygon/polygon_8.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1438,
+   "decodable": true,
+   "ahash": [
+    4565430999513340,
+    1746902416870539199,
+    1746339191898832623
+   ],
+   "md5": "641279c1e7a38f1af6d047d530aeff2e",
+   "bytes": 1222906,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "polygon",
+   "label_dir": "onesided_style_camera_polygon"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_run-set-on-fire/action_run_setonfire_0.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 424,
+   "decodable": true,
+   "ahash": [
+    8081146617407176431,
+    4335897959200651128,
+    4406812007453933102
+   ],
+   "md5": "9e32c700b5c0cb930958164f3efd1308",
+   "bytes": 1073493,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "run_set_on_fire",
+   "label_dir": "onesided_style_camera_run-set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_run-set-on-fire/action_run_setonfire_1.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 424,
+   "decodable": true,
+   "ahash": [
+    17863180209516242704,
+    16140864526927017984,
+    9108244012152088576
+   ],
+   "md5": "ae9d756c29694e626d9fd15ad5a75249",
+   "bytes": 849854,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "run_set_on_fire",
+   "label_dir": "onesided_style_camera_run-set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_run-set-on-fire/action_run_setonfire_2.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 424,
+   "decodable": true,
+   "ahash": [
+    18141620558520090940,
+    1909067192321882160,
+    4336513987528506368
+   ],
+   "md5": "6fdf3d59b866ea1884cc86ddc045d0f3",
+   "bytes": 842303,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "run_set_on_fire",
+   "label_dir": "onesided_style_camera_run-set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_run-set-on-fire/action_run_setonfire_3.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 424,
+   "decodable": true,
+   "ahash": [
+    2053499859412811518,
+    3754961669456407854,
+    4340598318412590956
+   ],
+   "md5": "c473249393d2e8d32d7ede9193bbd3ff",
+   "bytes": 769008,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "run_set_on_fire",
+   "label_dir": "onesided_style_camera_run-set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_run-set-on-fire/action_run_setonfire_4.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 242,
+   "decodable": true,
+   "ahash": [
+    18355824913958552551,
+    13618162243143470244,
+    9115091502585004992
+   ],
+   "md5": "dde017acd7c7ab52c8107d0d6143f962",
+   "bytes": 563005,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "run_set_on_fire",
+   "label_dir": "onesided_style_camera_run-set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_run-set-on-fire/action_run_setonfire_5.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 242,
+   "decodable": true,
+   "ahash": [
+    9746924591961629812,
+    8952056659727711804,
+    6357281923416293052
+   ],
+   "md5": "e9f0acd7edc2748a51d66edf4385350f",
+   "bytes": 544487,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "run_set_on_fire",
+   "label_dir": "onesided_style_camera_run-set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_run-set-on-fire/action_run_setonfire_6.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 1104,
+   "h": 832,
+   "decodable": true,
+   "ahash": [
+    89005689944956930,
+    4340410146340224026,
+    4484528839384119816
+   ],
+   "md5": "773df12d8b4463b3ab9af9ec085d8ca8",
+   "bytes": 9656800,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "run_set_on_fire",
+   "label_dir": "onesided_style_camera_run-set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_run-set-on-fire/action_run_setonfire_7.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 1168,
+   "h": 768,
+   "decodable": true,
+   "ahash": [
+    9503694622296342528,
+    1736305047267458076,
+    1736288914791578684
+   ],
+   "md5": "65efaf8b73b4425905767e4946690cbb",
+   "bytes": 11284287,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "run_set_on_fire",
+   "label_dir": "onesided_style_camera_run-set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_turning-metal-eyes-in/turning_metal_eyes_in_0.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    218177325982297096,
+    3108435484611602,
+    162699421490298556
+   ],
+   "md5": "cfb79323228dd360b627f45a8ce1d7d1",
+   "bytes": 250992,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "turning_metal_eyes_in",
+   "label_dir": "onesided_style_camera_turning-metal-eyes-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_turning-metal-eyes-in/turning_metal_eyes_in_1.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 320,
+   "decodable": true,
+   "ahash": [
+    7730394508557,
+    29719147543037,
+    3461016419481607324
+   ],
+   "md5": "d644aa65399826d9f93ddf0c683bba8c",
+   "bytes": 384119,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "turning_metal_eyes_in",
+   "label_dir": "onesided_style_camera_turning-metal-eyes-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_turning-metal-eyes-in/turning_metal_eyes_in_2.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 562,
+   "decodable": true,
+   "ahash": [
+    4556255016289044229,
+    1258520312347627680,
+    9727784823598023680
+   ],
+   "md5": "2c533ab7e43486367b655420d862b20b",
+   "bytes": 754089,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "turning_metal_eyes_in",
+   "label_dir": "onesided_style_camera_turning-metal-eyes-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_camera_turning-metal-eyes-in/turning_metal_eyes_in_3.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 562,
+   "decodable": true,
+   "ahash": [
+    18446540971163511038,
+    16646933182720180464,
+    18429715943589529503
+   ],
+   "md5": "b91025845c21023b36feabd4728e00a0",
+   "bytes": 688408,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "cls": "turning_metal_eyes_in",
+   "label_dir": "onesided_style_camera_turning-metal-eyes-in"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_fire-element/fire_element_0.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    18446713025525186816,
+    9007146299987853322,
+    291337543223477057
+   ],
+   "md5": "11dd6cfcf78352806bac326559158606",
+   "bytes": 1213402,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "fire_element",
+   "label_dir": "onesided_style_fire-element"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_fire-element/fire_element_1.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    69779283378584584,
+    9221681906972631076,
+    9221106919966785601
+   ],
+   "md5": "c3dac6f2f7c0de8b01dc18a037ab32e5",
+   "bytes": 4449799,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "fire_element",
+   "label_dir": "onesided_style_fire-element"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_fire-element/fire_element_2.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    18446523076167335936,
+    18444264765990641664,
+    18446739448379998212
+   ],
+   "md5": "0584dc1a688c78ac013515a8a30f8295",
+   "bytes": 3328878,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "fire_element",
+   "label_dir": "onesided_style_fire-element"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_fire-element/fire_element_4.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18367622958207321026,
+    5212063018294355029,
+    18013845753478144
+   ],
+   "md5": "2bf788f2bc1057f5a830f6ab93068ab9",
+   "bytes": 6370030,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "fire_element",
+   "label_dir": "onesided_style_fire-element"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_object_luminous-gaze/luminous_gaze_0.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    18443353058812526606,
+    18443335466610494560,
+    18445617121535722496
+   ],
+   "md5": "d78fcf5652707363786ddb981e981b5e",
+   "bytes": 569564,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "object"
+   ],
+   "cls": "luminous_gaze",
+   "label_dir": "onesided_style_object_luminous-gaze"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_object_luminous-gaze/luminous_gaze_1.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    6346234177112540380,
+    1158016693505398524,
+    8092402769733204
+   ],
+   "md5": "1e5eb0726cc717abc0ba19a0dfdbea4a",
+   "bytes": 2368732,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "object"
+   ],
+   "cls": "luminous_gaze",
+   "label_dir": "onesided_style_object_luminous-gaze"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_object_luminous-gaze/luminous_gaze_2.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1440,
+   "h": 1440,
+   "decodable": true,
+   "ahash": [
+    18223472740973933024,
+    2046823384895082672,
+    31099652907487768
+   ],
+   "md5": "ae4a8a5860e5ce4407ce260126a57bb3",
+   "bytes": 2187340,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "object"
+   ],
+   "cls": "luminous_gaze",
+   "label_dir": "onesided_style_object_luminous-gaze"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_object_luminous-gaze/luminous_gaze_3.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18446717549602668640,
+    18446611034010562881,
+    11519969884169339952
+   ],
+   "md5": "48d587874bbd76ea6790acdda02c213c",
+   "bytes": 2581369,
+   "sided": "onesided",
+   "tags": [
+    "style",
+    "object"
+   ],
+   "cls": "luminous_gaze",
+   "label_dir": "onesided_style_object_luminous-gaze"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_set-on-fire/set_on_fire_0.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    2324609057636224,
+    6854614194265624,
+    2280645858328190
+   ],
+   "md5": "aa34231663f456c679c1592399c152dc",
+   "bytes": 167422,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "set_on_fire",
+   "label_dir": "onesided_style_set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_set-on-fire/set_on_fire_1.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    4052193861238789985,
+    2034567225776022620,
+    1736168566094068798
+   ],
+   "md5": "26313404ae6131f8799b86a53b25b420",
+   "bytes": 349268,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "set_on_fire",
+   "label_dir": "onesided_style_set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_set-on-fire/set_on_fire_10.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    18439979757711098752,
+    1736146711157169448,
+    1736146712260258876
+   ],
+   "md5": "fea034c7a2922310a59193b25c665445",
+   "bytes": 354775,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "set_on_fire",
+   "label_dir": "onesided_style_set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_set-on-fire/set_on_fire_2.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    4065882831885352960,
+    1159738994192038932,
+    1157522930376916028
+   ],
+   "md5": "532cf1c6635ba9267c4ea65d0bc4a875",
+   "bytes": 312048,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "set_on_fire",
+   "label_dir": "onesided_style_set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_set-on-fire/set_on_fire_3.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 486,
+   "decodable": true,
+   "ahash": [
+    18446742974601625600,
+    7386777821657148,
+    6823837532175400
+   ],
+   "md5": "843f3e5b19a17a987d7fa56ff06776d7",
+   "bytes": 593687,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "set_on_fire",
+   "label_dir": "onesided_style_set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_set-on-fire/set_on_fire_4.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 486,
+   "decodable": true,
+   "ahash": [
+    17851599981000228864,
+    2029233697872622719,
+    584737831914564378
+   ],
+   "md5": "f22ce8fd648f8a52def7111bf1db9ebc",
+   "bytes": 709178,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "set_on_fire",
+   "label_dir": "onesided_style_set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_set-on-fire/set_on_fire_5.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 242,
+   "decodable": true,
+   "ahash": [
+    31600480108088079,
+    583277983137300086,
+    578739207711194974
+   ],
+   "md5": "f9a540085747f940298274d8e841ee4c",
+   "bytes": 481287,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "set_on_fire",
+   "label_dir": "onesided_style_set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_set-on-fire/set_on_fire_6.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    18390378448720987107,
+    2563061315489643,
+    508729977025789969
+   ],
+   "md5": "2d6d9fca7409bcabf6f51379068c94a8",
+   "bytes": 362441,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "set_on_fire",
+   "label_dir": "onesided_style_set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_set-on-fire/set_on_fire_7.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    1212717422315796736,
+    1159738718160821768,
+    1736155352627291686
+   ],
+   "md5": "5723bf898036b4892b03dd404c38e19e",
+   "bytes": 284937,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "set_on_fire",
+   "label_dir": "onesided_style_set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_set-on-fire/set_on_fire_8.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    9279092089602688,
+    11539488320659488,
+    2412460417891880
+   ],
+   "md5": "ac4dcb2bf0d0965f58ec355fa8d0425b",
+   "bytes": 259539,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "set_on_fire",
+   "label_dir": "onesided_style_set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_set-on-fire/set_on_fire_9.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 210,
+   "decodable": true,
+   "ahash": [
+    18085161352784658688,
+    8798668345776700940,
+    8821274511669736464
+   ],
+   "md5": "cbb22f97e232a717ec23cdbe8c0c4761",
+   "bytes": 388318,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "set_on_fire",
+   "label_dir": "onesided_style_set-on-fire"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_shadow/shadow_0.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    25051015229146880,
+    72343260767389440,
+    18374687595958830848
+   ],
+   "md5": "3ce9846c80ec5a9f8223c103d00005cb",
+   "bytes": 879723,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "shadow",
+   "label_dir": "onesided_style_shadow"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_shadow/shadow_1.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1152,
+   "h": 768,
+   "decodable": true,
+   "ahash": [
+    18446419547462852672,
+    18446419547193368640,
+    18439637656259280960
+   ],
+   "md5": "c3e4ec8c6648837c0cbe0222eadff158",
+   "bytes": 713129,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "shadow",
+   "label_dir": "onesided_style_shadow"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_shadow/shadow_10.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1918,
+   "decodable": true,
+   "ahash": [
+    13763009362520174311,
+    13805512086148809091,
+    18412695050455613441
+   ],
+   "md5": "0d6f796949379ac90125b74b1d4d4eee",
+   "bytes": 1606086,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "shadow",
+   "label_dir": "onesided_style_shadow"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_shadow/shadow_11.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1022,
+   "h": 768,
+   "decodable": true,
+   "ahash": [
+    26388280130815,
+    26388548562159,
+    8796093034239
+   ],
+   "md5": "376ac8d7cc4c4b8c9127e1ba990e5832",
+   "bytes": 241382,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "shadow",
+   "label_dir": "onesided_style_shadow"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_shadow/shadow_12.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1022,
+   "h": 768,
+   "decodable": true,
+   "ahash": [
+    9223372054107448317,
+    9223372122834240509,
+    9223372036934960125
+   ],
+   "md5": "9481097dff023c14268af664f22d2f42",
+   "bytes": 292889,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "shadow",
+   "label_dir": "onesided_style_shadow"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_shadow/shadow_13.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1022,
+   "h": 768,
+   "decodable": true,
+   "ahash": [
+    18439962216865717217,
+    18439962216326743009,
+    16710540187951940595
+   ],
+   "md5": "611b89335160a4138b7258df4df4c987",
+   "bytes": 674011,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "shadow",
+   "label_dir": "onesided_style_shadow"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_shadow/shadow_14.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1022,
+   "h": 768,
+   "decodable": true,
+   "ahash": [
+    14983898451109470274,
+    14983898450841034818,
+    14980520751120498754
+   ],
+   "md5": "21c071c4552fd1673452b069444aded4",
+   "bytes": 753471,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "shadow",
+   "label_dir": "onesided_style_shadow"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_shadow/shadow_2.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    18446717581936427008,
+    18446717581936427008,
+    18446735036079342336
+   ],
+   "md5": "7551c0c8373b9584f87b5d7718af2c43",
+   "bytes": 1283019,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "shadow",
+   "label_dir": "onesided_style_shadow"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_shadow/shadow_3.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    4568729383459641352,
+    4568760410169147392,
+    17863461416543977537
+   ],
+   "md5": "2da84181bdbd3022840f3ee646ca6156",
+   "bytes": 984832,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "shadow",
+   "label_dir": "onesided_style_shadow"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_shadow/shadow_4.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1022,
+   "h": 768,
+   "decodable": true,
+   "ahash": [
+    117574381348366,
+    31783513226739712,
+    6986459489879064576
+   ],
+   "md5": "46c2898cbb43915a63b9492af277accf",
+   "bytes": 1144174,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "shadow",
+   "label_dir": "onesided_style_shadow"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_shadow/shadow_5.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    506405407779658519,
+    510891415757853463,
+    510882998003634967
+   ],
+   "md5": "c92e51399c84b9bb6fc9eec9821a17c7",
+   "bytes": 1323162,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "shadow",
+   "label_dir": "onesided_style_shadow"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_shadow/shadow_6.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    18433175833016337923,
+    18430941675951031088,
+    18433171174017138720
+   ],
+   "md5": "fedc819aea4f5aea8485ecd61a6403be",
+   "bytes": 1428487,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "shadow",
+   "label_dir": "onesided_style_shadow"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_shadow/shadow_7.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    1663859332107477504,
+    3980970136475009280,
+    8644575522988326912
+   ],
+   "md5": "746af9df32286da3a701ea2f84084d32",
+   "bytes": 1380037,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "shadow",
+   "label_dir": "onesided_style_shadow"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_shadow/shadow_8.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    1152930745646286840,
+    3467772192987251584,
+    1173050826668049152
+   ],
+   "md5": "d84393389f9335fb87ca3c00fe0666e3",
+   "bytes": 1893103,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "shadow",
+   "label_dir": "onesided_style_shadow"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_shadow/shadow_9.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    4359441458764248259,
+    4539585443590632903,
+    18158470716826109827
+   ],
+   "md5": "b86909717e539669bb9346e72724eabb",
+   "bytes": 903457,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "shadow",
+   "label_dir": "onesided_style_shadow"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal/turning_metal_0.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 424,
+   "decodable": true,
+   "ahash": [
+    18439962250178561153,
+    18446646934922347968,
+    18442240351818252418
+   ],
+   "md5": "6a9319bf38520ff4d5d5150f4ca164e6",
+   "bytes": 439989,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal",
+   "label_dir": "onesided_style_turning-metal"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal/turning_metal_1.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 424,
+   "decodable": true,
+   "ahash": [
+    18442231626232561664,
+    18439975428387237888,
+    18444479027999342592
+   ],
+   "md5": "c946bc21f65ecfab01a0f3ad69dd8b0e",
+   "bytes": 288727,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal",
+   "label_dir": "onesided_style_turning-metal"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal/turning_metal_10.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 486,
+   "decodable": true,
+   "ahash": [
+    17852763582802820344,
+    17781029124518232770,
+    17348133941413855424
+   ],
+   "md5": "5f40ce262794c4d340ea0612d4d41549",
+   "bytes": 408270,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal",
+   "label_dir": "onesided_style_turning-metal"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal/turning_metal_2.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 424,
+   "decodable": true,
+   "ahash": [
+    14123281669037318192,
+    16704910412528812034,
+    16414426305128374272
+   ],
+   "md5": "898e65db10898b8c963509828e9d77cc",
+   "bytes": 421977,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal",
+   "label_dir": "onesided_style_turning-metal"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal/turning_metal_3.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 424,
+   "decodable": true,
+   "ahash": [
+    16956728959450047,
+    16954727404992407,
+    2322744822754246462
+   ],
+   "md5": "eb8b0146a7134acbd9ac226cd6eb477f",
+   "bytes": 443084,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal",
+   "label_dir": "onesided_style_turning-metal"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal/turning_metal_4.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 470,
+   "decodable": true,
+   "ahash": [
+    18443348571492892768,
+    18438845078509953120,
+    18438845075255853185
+   ],
+   "md5": "e3920fb6c3065418f32e912db1dcf2c8",
+   "bytes": 342311,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal",
+   "label_dir": "onesided_style_turning-metal"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal/turning_metal_5.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 486,
+   "decodable": true,
+   "ahash": [
+    9269586165760,
+    6817506922346496,
+    1735043084596552192
+   ],
+   "md5": "5a8052bc16bc257ad5133a596058790c",
+   "bytes": 411941,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal",
+   "label_dir": "onesided_style_turning-metal"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal/turning_metal_6.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 242,
+   "decodable": true,
+   "ahash": [
+    2034521000221215984,
+    4339238109960345600,
+    2315998107399227416
+   ],
+   "md5": "65b1552bfb47c8e944830a83d01a209b",
+   "bytes": 124030,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal",
+   "label_dir": "onesided_style_turning-metal"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal/turning_metal_7.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 424,
+   "decodable": true,
+   "ahash": [
+    3530650497130185024,
+    16211485226134667344,
+    2649176404897043456
+   ],
+   "md5": "d45fd93fb7c59161aa82deb547300d90",
+   "bytes": 356306,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal",
+   "label_dir": "onesided_style_turning-metal"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal/turning_metal_8.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    2163573660236087305,
+    145451025577508993,
+    434640141911556481
+   ],
+   "md5": "d1163eb5cfcfb09603ff01bb4c2a0db9",
+   "bytes": 108913,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal",
+   "label_dir": "onesided_style_turning-metal"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal/turning_metal_9.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 424,
+   "decodable": true,
+   "ahash": [
+    16423497414049233665,
+    16423471034176569369,
+    16423471034117328896
+   ],
+   "md5": "f15dd7080020db3ddb64e9591527ffc1",
+   "bytes": 353039,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal",
+   "label_dir": "onesided_style_turning-metal"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal-melting/turning_metal_melting_0.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 424,
+   "decodable": true,
+   "ahash": [
+    18439804544993985024,
+    18410497720368372766,
+    2267318321621172094
+   ],
+   "md5": "8212c70c19c229c2b51fc16a4958357f",
+   "bytes": 352946,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal_melting",
+   "label_dir": "onesided_style_turning-metal-melting"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal-melting/turning_metal_melting_1.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 424,
+   "decodable": true,
+   "ahash": [
+    80255129843990785,
+    75786697404907776,
+    74660746764288260
+   ],
+   "md5": "8fdd02aaf7275a5443b876f4e36c592b",
+   "bytes": 282325,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal_melting",
+   "label_dir": "onesided_style_turning-metal-melting"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal-melting/turning_metal_melting_2.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 424,
+   "decodable": true,
+   "ahash": [
+    18446731983394439168,
+    18443365450587840512,
+    18443356732039106080
+   ],
+   "md5": "60f3d258123b70d89542106d494d4638",
+   "bytes": 441230,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal_melting",
+   "label_dir": "onesided_style_turning-metal-melting"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal-melting/turning_metal_melting_3.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    6747813934591246396,
+    2282213422617460796,
+    6367836444273936559
+   ],
+   "md5": "fe5134c53d5d2dbea2cc374f8934901b",
+   "bytes": 472233,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal_melting",
+   "label_dir": "onesided_style_turning-metal-melting"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal-melting/turning_metal_melting_4.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    2025498934675769344,
+    872604024775383056,
+    881646391222863872
+   ],
+   "md5": "f3d2d67536e898b6c6e0f81bae27ed60",
+   "bytes": 206616,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal_melting",
+   "label_dir": "onesided_style_turning-metal-melting"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal-melting/turning_metal_melting_5.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    4035243861989879382,
+    1729409133728988766,
+    2096439250129724002
+   ],
+   "md5": "7b5c383f0f6c311e8bc90bbc5979e5ef",
+   "bytes": 159406,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal_melting",
+   "label_dir": "onesided_style_turning-metal-melting"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_turning-metal-melting/turning_metal_melting_6.mp4",
+   "frames": 161,
+   "fps": 30.0,
+   "w": 320,
+   "h": 182,
+   "decodable": true,
+   "ahash": [
+    6849725484642861055,
+    17266520601796018175,
+    13803278909912990092
+   ],
+   "md5": "b6c0cee67f28d126519142e96f71bf49",
+   "bytes": 166392,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "turning_metal_melting",
+   "label_dir": "onesided_style_turning-metal-melting"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_water-element/water_element_0.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    5842127307402235,
+    10961904450217436139,
+    651045422570797055
+   ],
+   "md5": "017afe39cb3b41d2931b55c96cea3e54",
+   "bytes": 1081812,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "water_element",
+   "label_dir": "onesided_style_water-element"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_water-element/water_element_1.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    4504699003462081,
+    4522256963977665,
+    9792189613001
+   ],
+   "md5": "afdf88adc174c65e9b04e0dcfb295361",
+   "bytes": 3152619,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "water_element",
+   "label_dir": "onesided_style_water-element"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_water-element/water_element_2.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18429829083327621081,
+    17942314274247929328,
+    71749653552430256
+   ],
+   "md5": "a1db45686877c355855cfe956fbef7e7",
+   "bytes": 3529944,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "water_element",
+   "label_dir": "onesided_style_water-element"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_water-element/water_element_4.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    13834784401492144128,
+    18427965777032252936,
+    4570511611424280740
+   ],
+   "md5": "f44a0f271bd2a49c546d7a33035f612b",
+   "bytes": 4610165,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "water_element",
+   "label_dir": "onesided_style_water-element"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_water-element/water_element_5.mp4",
+   "frames": 121,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    18368608811441985560,
+    18368626798765021240,
+    17792131083815884824
+   ],
+   "md5": "5109f7ea5168ad35f9a53b946523a60d",
+   "bytes": 5193914,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "water_element",
+   "label_dir": "onesided_style_water-element"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_wireframe/wireframe_0.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    216511103197216639,
+    53310174265344,
+    16732060261044715520
+   ],
+   "md5": "928952cbb6918c44c31b588247fb75b9",
+   "bytes": 357870,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "wireframe",
+   "label_dir": "onesided_style_wireframe"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_wireframe/wireframe_1.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1438,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    1729502055330263100,
+    35805275398336,
+    17695266832384
+   ],
+   "md5": "3094916931a82b31d226a635b296d8d5",
+   "bytes": 1060300,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "wireframe",
+   "label_dir": "onesided_style_wireframe"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_wireframe/wireframe_2.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    138797173706752,
+    138797173706752,
+    2390596986343432
+   ],
+   "md5": "76d8c7b42ec92d730d48fad4734471dc",
+   "bytes": 1559578,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "wireframe",
+   "label_dir": "onesided_style_wireframe"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_wireframe/wireframe_3.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    72224461164838430,
+    104088469504,
+    1168121291795595264
+   ],
+   "md5": "4455fc055c538fc366f08c1865ea808d",
+   "bytes": 1610107,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "wireframe",
+   "label_dir": "onesided_style_wireframe"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_wireframe/wireframe_4.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1918,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    17867507197424710246,
+    17862968429732704870,
+    30872696520772
+   ],
+   "md5": "e3d5d4840dacbc1f4f18c8cffcd541ff",
+   "bytes": 2057092,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "wireframe",
+   "label_dir": "onesided_style_wireframe"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_wireframe/wireframe_5.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    18297009011258556416,
+    4529988048664608,
+    4530110019282976
+   ],
+   "md5": "6e6993c8747ca83aea7eb53f671fcce7",
+   "bytes": 2611076,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "wireframe",
+   "label_dir": "onesided_style_wireframe"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_wireframe/wireframe_6.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    6506038760404847,
+    4526960847714153,
+    4545518712988543
+   ],
+   "md5": "2848653fe86a8b5d9650daf78fd1c4d3",
+   "bytes": 1880963,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "wireframe",
+   "label_dir": "onesided_style_wireframe"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_wireframe/wireframe_7.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1620,
+   "decodable": true,
+   "ahash": [
+    17732836417136641,
+    105201470998,
+    8900933844662
+   ],
+   "md5": "f469d391d57fe643388af87f8f596aea",
+   "bytes": 3503168,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "wireframe",
+   "label_dir": "onesided_style_wireframe"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_wireframe/wireframe_8.mp4",
+   "frames": 141,
+   "fps": 24.0,
+   "w": 1080,
+   "h": 1918,
+   "decodable": true,
+   "ahash": [
+    9153597544288820236,
+    2252892295470237,
+    131415757273
+   ],
+   "md5": "37ca323cc7c18da653d2279c504e96a6",
+   "bytes": 2972495,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "wireframe",
+   "label_dir": "onesided_style_wireframe"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_wonderland/wonderland_0.mp4",
+   "frames": 241,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    16894181389378249727,
+    10640358040186155083,
+    5831768697263072946
+   ],
+   "md5": "5aafeaa2c4519b91a6dac41375323b55",
+   "bytes": 3518547,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "wonderland",
+   "label_dir": "onesided_style_wonderland"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_wonderland/wonderland_1.mp4",
+   "frames": 241,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    16894181389378249727,
+    11214566993212764235,
+    5831768697254704306
+   ],
+   "md5": "aacf1c882add7184a54e88551ab89a20",
+   "bytes": 11445191,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "wonderland",
+   "label_dir": "onesided_style_wonderland"
+  },
+  {
+   "path": "onesided_transitions/onesided_style_wonderland/wonderland_2.mp4",
+   "frames": 241,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    17938101365924466714,
+    4050060413725110759,
+    13509154977242183734
+   ],
+   "md5": "c0f7172c7a76417036766e4173977704",
+   "bytes": 5683918,
+   "sided": "onesided",
+   "tags": [
+    "style"
+   ],
+   "cls": "wonderland",
+   "label_dir": "onesided_style_wonderland"
+  },
+  {
+   "path": "twosided_transitions/twosided_camera_flying-cam-transition/flying_cam_transition_1.mp4",
+   "frames": 242,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18446744069414584320,
+    134665855582208,
+    9142024586937272320
+   ],
+   "md5": "5b10b7ce1e0ad78742f9ef01c926c068",
+   "bytes": 4738170,
+   "sided": "twosided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "flying_cam_transition",
+   "label_dir": "twosided_camera_flying-cam-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_camera_flying-cam-transition/flying_cam_transition_2.mp4",
+   "frames": 242,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    14114820985047746560,
+    18446725927607009280,
+    17365589768388742916
+   ],
+   "md5": "027748b07bdde389f9bcb9f04d3a6603",
+   "bytes": 10010085,
+   "sided": "twosided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "flying_cam_transition",
+   "label_dir": "twosided_camera_flying-cam-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_camera_flying-cam-transition/flying_cam_transition_3.mp4",
+   "frames": 242,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    9122389471264767,
+    280372228063744,
+    278176435277824
+   ],
+   "md5": "da0b97bb02f11aadcdd39c77c0717006",
+   "bytes": 4251466,
+   "sided": "twosided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "flying_cam_transition",
+   "label_dir": "twosided_camera_flying-cam-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_camera_flying-cam-transition/flying_cam_transition_4.mp4",
+   "frames": 242,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    18410315089625279453,
+    18374387928989171712,
+    1236387901562456
+   ],
+   "md5": "cdc5a4cfbcbcbb8ecc4a4ede29ff7ff7",
+   "bytes": 7054410,
+   "sided": "twosided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "flying_cam_transition",
+   "label_dir": "twosided_camera_flying-cam-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_camera_jump-transition/jump_transition_1.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1228,
+   "h": 1684,
+   "decodable": true,
+   "ahash": [
+    18374095973245714464,
+    27273282445081852,
+    17986940815533030
+   ],
+   "md5": "b76921327ae21a1c53c49d77eaa77081",
+   "bytes": 3232117,
+   "sided": "twosided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "jump_transition",
+   "label_dir": "twosided_camera_jump-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_camera_seamless-transition/seamless_transition_0.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    2162884542151138304,
+    16204207511818002656,
+    16712800818824733440
+   ],
+   "md5": "9ec6011fbcd1276191095bc91e9e3b97",
+   "bytes": 624497,
+   "sided": "twosided",
+   "tags": [
+    "camera"
+   ],
+   "cls": "seamless_transition",
+   "label_dir": "twosided_camera_seamless-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_air-bending/air_bending_0.mp4",
+   "frames": 242,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    72057477336711650,
+    54311476178778352,
+    7406120967237386625
+   ],
+   "md5": "ed874ae0b799d2e3a7bc57ae573b51bb",
+   "bytes": 1052929,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "air_bending",
+   "label_dir": "twosided_object_camera_air-bending"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_air-bending/air_bending_1.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1228,
+   "h": 1684,
+   "decodable": true,
+   "ahash": [
+    4503437410307592,
+    71768354766979202,
+    8646931021056558286
+   ],
+   "md5": "b6a866dea542ed59817915b47743f04a",
+   "bytes": 2165951,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "air_bending",
+   "label_dir": "twosided_object_camera_air-bending"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_air-bending/air_bending_2.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1248,
+   "h": 1656,
+   "decodable": true,
+   "ahash": [
+    8700021227246608384,
+    4657218993917034624,
+    941070256191365152
+   ],
+   "md5": "b8528498f74ba6f4be4dd4ccc353efa1",
+   "bytes": 3145789,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "air_bending",
+   "label_dir": "twosided_object_camera_air-bending"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_air-bending/air_bending_3.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1440,
+   "h": 1440,
+   "decodable": true,
+   "ahash": [
+    8894177297736655622,
+    13827175918960963808,
+    4143073162194331679
+   ],
+   "md5": "24b3fca543507f6f52062d5092e64bc4",
+   "bytes": 5339419,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "air_bending",
+   "label_dir": "twosided_object_camera_air-bending"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_earth-wave/earth_wave_0.mp4",
+   "frames": 242,
+   "fps": 24.0,
+   "w": 1920,
+   "h": 1080,
+   "decodable": true,
+   "ahash": [
+    13234164529569537084,
+    2242518896267518049,
+    13684120951608836993
+   ],
+   "md5": "cb2582041d4241857bba19218dbfda56",
+   "bytes": 8846771,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "earth_wave",
+   "label_dir": "twosided_object_camera_earth-wave"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_earth-wave/earth_wave_1.mp4",
+   "frames": 242,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    4485064227717375975,
+    10777835406717091568,
+    18427424630076678400
+   ],
+   "md5": "443aabbe7b4d0722d4969e00ef4ef3d8",
+   "bytes": 8157049,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "earth_wave",
+   "label_dir": "twosided_object_camera_earth-wave"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_earth-wave/earth_wave_2.mp4",
+   "frames": 242,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    14290556704224,
+    287983001387712243,
+    17266536732216877869
+   ],
+   "md5": "0712f742f2db4438d592c8224cd87721",
+   "bytes": 7181598,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "earth_wave",
+   "label_dir": "twosided_object_camera_earth-wave"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_earth-wave/earth_wave_3.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    17870137546818061316,
+    17361570631152892991,
+    13580727822459501632
+   ],
+   "md5": "8c5b1485f7d751bb1f8489ef6fc021d0",
+   "bytes": 4734274,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "earth_wave",
+   "label_dir": "twosided_object_camera_earth-wave"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_earth-wave/earth_wave_4.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    18428724741419401473,
+    17653262800743575552,
+    17940361103113715712
+   ],
+   "md5": "28c2a21959a264bdf732a0a4f4d79e89",
+   "bytes": 2417399,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "earth_wave",
+   "label_dir": "twosided_object_camera_earth-wave"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_firelava/firelava_0.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    9029727095376355658,
+    648942337434385660,
+    18228583873996914688
+   ],
+   "md5": "9ceeb12dc30bfe638f6eed162ef8db62",
+   "bytes": 875612,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "firelava",
+   "label_dir": "twosided_object_camera_firelava"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_firelava/firelava_1.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18446743274862411776,
+    18374668877824000000,
+    9007036987345928
+   ],
+   "md5": "35b2e62b9f50b7a67f4cd72bda0bb7d9",
+   "bytes": 3076279,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "firelava",
+   "label_dir": "twosided_object_camera_firelava"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_firelava/firelava_2.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    6755158172238436,
+    9436151111923760896,
+    2432672021800951
+   ],
+   "md5": "88b1b470b4a0a4d0a4eab18d629c0bf0",
+   "bytes": 6195329,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "firelava",
+   "label_dir": "twosided_object_camera_firelava"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_firelava/firelava_3.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    72001552294461585,
+    11373156091025351,
+    18446743970127036416
+   ],
+   "md5": "a409d2eac287a70a93ab8954f1f960ee",
+   "bytes": 3536513,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "firelava",
+   "label_dir": "twosided_object_camera_firelava"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_firelava/firelava_4.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    1785915212178594621,
+    16204204407321396479,
+    655290333048355872
+   ],
+   "md5": "5d18a7bbfc401ca154e22b5fd4e85ff6",
+   "bytes": 3458137,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "firelava",
+   "label_dir": "twosided_object_camera_firelava"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_firelava/firelava_5.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1248,
+   "h": 1656,
+   "decodable": true,
+   "ahash": [
+    18445613660263156760,
+    109139981368097792,
+    510920510771560510
+   ],
+   "md5": "dd22d3242378ae249495480b2c6eecfa",
+   "bytes": 3819313,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "firelava",
+   "label_dir": "twosided_object_camera_firelava"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_hole-transition/hole_transition_0.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    1188213952086023184,
+    18411569603965878142,
+    144137285451855928
+   ],
+   "md5": "b40dee8598080c0a09acbc93e3889bac",
+   "bytes": 717081,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "hole_transition",
+   "label_dir": "twosided_object_camera_hole-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_hole-transition/hole_transition_1.mp4",
+   "frames": 242,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18374659982967701504,
+    18229945424112533504,
+    181412208574424
+   ],
+   "md5": "aa3e1c73167973b3b04f8c9efed9d0fb",
+   "bytes": 4679645,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "hole_transition",
+   "label_dir": "twosided_object_camera_hole-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_raven-transition/raven_transition_0.mp4",
+   "frames": 242,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    26388279125759,
+    9037713212424790007,
+    18374712005887590785
+   ],
+   "md5": "22013ce8ba7f568c68487df86a095a91",
+   "bytes": 1715401,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "raven_transition",
+   "label_dir": "twosided_object_camera_raven-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_raven-transition/raven_transition_1.mp4",
+   "frames": 242,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    17732725458921511,
+    2290049076596629696,
+    81050506167554047
+   ],
+   "md5": "e5e59055ebd962e3f527d9e20b63dc3d",
+   "bytes": 5928134,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "raven_transition",
+   "label_dir": "twosided_object_camera_raven-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_raven-transition/raven_transition_3.mp4",
+   "frames": 242,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    70077339033272400,
+    4575657219781033984,
+    18446743970216673280
+   ],
+   "md5": "bab42b1dab3b29a2b4921d32daddbc22",
+   "bytes": 5491853,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "raven_transition",
+   "label_dir": "twosided_object_camera_raven-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_raven-transition/raven_transiton_2.mp4",
+   "frames": 150,
+   "fps": 24.0,
+   "w": 600,
+   "h": 450,
+   "decodable": true,
+   "ahash": [
+    9223300906894753792,
+    9223372036688582656,
+    1030252100856
+   ],
+   "md5": "59024ececca49c02166e5e2eaf3ed5cf",
+   "bytes": 678262,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "raven_transition",
+   "label_dir": "twosided_object_camera_raven-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18445618605449047294,
+    72340173425180479,
+    18407549670623162380
+   ],
+   "md5": "fa8e27d661aa43bd370d7c16a2bd667c",
+   "bytes": 5777619,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "shadow_smoke",
+   "label_dir": "twosided_object_camera_shadow-smoke"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_1.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    4340344218103314431,
+    17933545100569682431,
+    1180053469922850815
+   ],
+   "md5": "3427df4ebc283c643d87a4b67041af76",
+   "bytes": 4097725,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "shadow_smoke",
+   "label_dir": "twosided_object_camera_shadow-smoke"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_2.mp4",
+   "frames": 242,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18439957961773187232,
+    538149316853710719,
+    31498705620657927
+   ],
+   "md5": "027bd40b1b7f29e4eb0fb2edc8620208",
+   "bytes": 4003654,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "shadow_smoke",
+   "label_dir": "twosided_object_camera_shadow-smoke"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_3.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    9270866684780859,
+    2945602104526635007,
+    16492710584257547809
+   ],
+   "md5": "28bb2d08ac5adff3d495265a09d19039",
+   "bytes": 3540770,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "shadow_smoke",
+   "label_dir": "twosided_object_camera_shadow-smoke"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_4.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1440,
+   "h": 1440,
+   "decodable": true,
+   "ahash": [
+    17250452966392794128,
+    2240269239591051230,
+    2251803924020847
+   ],
+   "md5": "fabe4d60126c1dff957057a216bf0084",
+   "bytes": 3480066,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "shadow_smoke",
+   "label_dir": "twosided_object_camera_shadow-smoke"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_5.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    18439979619466868856,
+    13961655561086816015,
+    2242545255169858304
+   ],
+   "md5": "54821fc6d97a69c391364f4c54bb089f",
+   "bytes": 3140867,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "shadow_smoke",
+   "label_dir": "twosided_object_camera_shadow-smoke"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_6.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    794048705592233947,
+    18149647239565295423,
+    13105674906512098219
+   ],
+   "md5": "0bcb3dddc227515da97f414733806040",
+   "bytes": 3058203,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "shadow_smoke",
+   "label_dir": "twosided_object_camera_shadow-smoke"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_7.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    15789927369532406,
+    17323941505617493116,
+    18444479026146374720
+   ],
+   "md5": "c24447e3807a0cb4048fa7b2cf40bb3b",
+   "bytes": 3028312,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "shadow_smoke",
+   "label_dir": "twosided_object_camera_shadow-smoke"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_8.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18372712839659790464,
+    2241386339077398527,
+    16204202018559029495
+   ],
+   "md5": "772989718ab55917c91457aba3e495ef",
+   "bytes": 3019620,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "shadow_smoke",
+   "label_dir": "twosided_object_camera_shadow-smoke"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_9.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    18446726481119265280,
+    17361411748437981308,
+    35219108855616
+   ],
+   "md5": "2a5cf51e5e635f67395532e23ff69bc8",
+   "bytes": 2602154,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "shadow_smoke",
+   "label_dir": "twosided_object_camera_shadow-smoke"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_water-bending/water_bending_0.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 600,
+   "h": 800,
+   "decodable": true,
+   "ahash": [
+    18439962182572572672,
+    18230571014586650624,
+    496462819229679
+   ],
+   "md5": "4a3c144127f12c5038d6091f95dc68bc",
+   "bytes": 913634,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "water_bending",
+   "label_dir": "twosided_object_camera_water-bending"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_water-bending/water_bending_1.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1248,
+   "h": 1656,
+   "decodable": true,
+   "ahash": [
+    18376954854369703150,
+    4503050129489851644,
+    18439961070516568064
+   ],
+   "md5": "4c9446f82db1bccbc384fba369aa10bb",
+   "bytes": 3200113,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "water_bending",
+   "label_dir": "twosided_object_camera_water-bending"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_water-bending/water_bending_2.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1656,
+   "h": 1248,
+   "decodable": true,
+   "ahash": [
+    18209872235204716578,
+    19148296159231998,
+    1114790069905981079
+   ],
+   "md5": "8d7431d64fee2d7dd0994cb29045fdb9",
+   "bytes": 3635129,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "water_bending",
+   "label_dir": "twosided_object_camera_water-bending"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_camera_water-bending/water_bending_3.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    506416789711437571,
+    13898605757835496672,
+    2262846774613901312
+   ],
+   "md5": "3df34fce04158d57f3a4c52dbe72f1f8",
+   "bytes": 4193717,
+   "sided": "twosided",
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "cls": "water_bending",
+   "label_dir": "twosided_object_camera_water-bending"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_display-transition/display_transition_1.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    12695504428090884379,
+    4030541179086176256,
+    17837574971814273800
+   ],
+   "md5": "1bc1012a1d0e275c2139070407e2e041",
+   "bytes": 2301476,
+   "sided": "twosided",
+   "tags": [
+    "object"
+   ],
+   "cls": "display_transition",
+   "label_dir": "twosided_object_display-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_display-transition/display_transition_2.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18374862105766756929,
+    18374690333358683011,
+    18365613270012842112
+   ],
+   "md5": "ae5c6aafdc818cb5abe39261bba311e1",
+   "bytes": 3151910,
+   "sided": "twosided",
+   "tags": [
+    "object"
+   ],
+   "cls": "display_transition",
+   "label_dir": "twosided_object_display-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_display-transition/display_transition_3.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18410980848430235648,
+    508983973714984960,
+    18445452701769470224
+   ],
+   "md5": "56bb3aaa8e52f02ad0ed4293921733d5",
+   "bytes": 2349189,
+   "sided": "twosided",
+   "tags": [
+    "object"
+   ],
+   "cls": "display_transition",
+   "label_dir": "twosided_object_display-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_flame-transition/flame_transition_0.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    8011802596012515537,
+    886729598836866560,
+    18439790496994443392
+   ],
+   "md5": "8cbda328e7b3609d781589f21f5cf094",
+   "bytes": 3557878,
+   "sided": "twosided",
+   "tags": [
+    "object"
+   ],
+   "cls": "flame_transition",
+   "label_dir": "twosided_object_flame-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_flame-transition/flame_transition_1.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    9295340949233476608,
+    2123567097341446,
+    18402555908424394496
+   ],
+   "md5": "715d4becbbe7cce9ca7a5659bc183eb7",
+   "bytes": 3378803,
+   "sided": "twosided",
+   "tags": [
+    "object"
+   ],
+   "cls": "flame_transition",
+   "label_dir": "twosided_object_flame-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_melt-transition/melt_transition_1.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18446526099651362816,
+    17939199746488190851,
+    17790454169402608696
+   ],
+   "md5": "5ce1ce39e3e01815c355ae8a44ce47c5",
+   "bytes": 3035709,
+   "sided": "twosided",
+   "tags": [
+    "object"
+   ],
+   "cls": "melt_transition",
+   "label_dir": "twosided_object_melt-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_melt-transition/melt_transition_2.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    18110113197987004287,
+    5913235648218611583,
+    6783133554712575
+   ],
+   "md5": "4e231035ccbc9b897491ce0a31600ee5",
+   "bytes": 2672873,
+   "sided": "twosided",
+   "tags": [
+    "object"
+   ],
+   "cls": "melt_transition",
+   "label_dir": "twosided_object_melt-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_melt-transition/melt_transition_3.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1244,
+   "h": 1660,
+   "decodable": true,
+   "ahash": [
+    577998972604056063,
+    9709780954495934694,
+    18227194557424853378
+   ],
+   "md5": "db5293f128f6a4cbc4c7d60a8cce7883",
+   "bytes": 3485028,
+   "sided": "twosided",
+   "tags": [
+    "object"
+   ],
+   "cls": "melt_transition",
+   "label_dir": "twosided_object_melt-transition"
+  },
+  {
+   "path": "twosided_transitions/twosided_object_melt-transition/melt_transition_4.mp4",
+   "frames": 122,
+   "fps": 24.0,
+   "w": 1660,
+   "h": 1244,
+   "decodable": true,
+   "ahash": [
+    1159703399563251399,
+    5698768702438912,
+    4341046178506214912
+   ],
+   "md5": "4124e0ebbd38c260f35a5d8351764182",
+   "bytes": 2101019,
+   "sided": "twosided",
+   "tags": [
+    "object"
+   ],
+   "cls": "melt_transition",
+   "label_dir": "twosided_object_melt-transition"
+  }
+ ],
+ "classes": {
+  "onesided/animalization": {
+   "n": 8,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    121,
+    241
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "1660x1244",
+    "600x800",
+    "720x1280",
+    "960x960"
+   ],
+   "usable_len": 8
+  },
+  "onesided/color_rain": {
+   "n": 8,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    121
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "1660x1244",
+    "1764x1176",
+    "600x800"
+   ],
+   "usable_len": 8
+  },
+  "onesided/cotton_cloud": {
+   "n": 6,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    121
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "1440x1440",
+    "1660x1244",
+    "600x800"
+   ],
+   "usable_len": 6
+  },
+  "onesided/disintegration": {
+   "n": 12,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    161
+   ],
+   "fps": [
+    30.0
+   ],
+   "res": [
+    "320x182",
+    "320x210",
+    "320x424",
+    "320x486"
+   ],
+   "usable_len": 12
+  },
+  "onesided/earth_element": {
+   "n": 6,
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "frames": [
+    121,
+    241
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "1660x1244",
+    "600x800"
+   ],
+   "usable_len": 6
+  },
+  "onesided/earth_zoom_out": {
+   "n": 5,
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "frames": [
+    161
+   ],
+   "fps": [
+    30.0
+   ],
+   "res": [
+    "320x210",
+    "320x236",
+    "320x242",
+    "320x486"
+   ],
+   "usable_len": 5
+  },
+  "onesided/eyes_in": {
+   "n": 12,
+   "tags": [
+    "camera"
+   ],
+   "frames": [
+    81,
+    161
+   ],
+   "fps": [
+    16.0,
+    30.0
+   ],
+   "res": [
+    "320x132",
+    "320x176",
+    "320x180",
+    "320x218",
+    "320x320",
+    "320x432",
+    "320x562"
+   ],
+   "usable_len": 8
+  },
+  "onesided/fire_element": {
+   "n": 4,
+   "tags": [
+    "style"
+   ],
+   "frames": [
+    121
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "1660x1244",
+    "600x800"
+   ],
+   "usable_len": 4
+  },
+  "onesided/gas_transformation": {
+   "n": 10,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    141
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1080x1438",
+    "1080x1620",
+    "1438x1080",
+    "600x800",
+    "768x1152"
+   ],
+   "usable_len": 10
+  },
+  "onesided/giant_grab": {
+   "n": 6,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    121
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1108x828",
+    "1244x1660",
+    "1440x1440",
+    "600x800",
+    "828x1108"
+   ],
+   "usable_len": 6
+  },
+  "onesided/head_explosion": {
+   "n": 19,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    161
+   ],
+   "fps": [
+    30.0
+   ],
+   "res": [
+    "320x136",
+    "320x182",
+    "320x210",
+    "320x236",
+    "320x242",
+    "320x320",
+    "320x568"
+   ],
+   "usable_len": 19
+  },
+  "onesided/hero_flight": {
+   "n": 10,
+   "tags": [
+    "camera"
+   ],
+   "frames": [
+    121,
+    241
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1248x1664",
+    "1664x1248",
+    "600x800",
+    "832x1120"
+   ],
+   "usable_len": 10
+  },
+  "onesided/illustration_scene": {
+   "n": 10,
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "frames": [
+    141
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1080x1620",
+    "1080x1918",
+    "1438x1080",
+    "600x800"
+   ],
+   "usable_len": 10
+  },
+  "onesided/live_concert": {
+   "n": 8,
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "frames": [
+    141
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1080x1438",
+    "1080x1620",
+    "1438x1080",
+    "1620x1080",
+    "600x800"
+   ],
+   "usable_len": 8
+  },
+  "onesided/luminous_gaze": {
+   "n": 4,
+   "tags": [
+    "style",
+    "object"
+   ],
+   "frames": [
+    121
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "1440x1440",
+    "1660x1244",
+    "600x800"
+   ],
+   "usable_len": 4
+  },
+  "onesided/money_rain": {
+   "n": 7,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    131,
+    141
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1080x1080",
+    "1080x1620",
+    "1438x1080",
+    "1620x1080",
+    "600x800"
+   ],
+   "usable_len": 7
+  },
+  "onesided/monstrosity": {
+   "n": 3,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    121
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1660x1244",
+    "600x800"
+   ],
+   "usable_len": 3
+  },
+  "onesided/mouth_in": {
+   "n": 16,
+   "tags": [
+    "camera"
+   ],
+   "frames": [
+    59,
+    81,
+    83,
+    87,
+    94,
+    99,
+    101,
+    115,
+    121,
+    152,
+    161
+   ],
+   "fps": [
+    16.0,
+    24.0,
+    25.0,
+    30.0
+   ],
+   "res": [
+    "320x174",
+    "320x180",
+    "320x182",
+    "320x210",
+    "320x218",
+    "320x236"
+   ],
+   "usable_len": 3
+  },
+  "onesided/mystification": {
+   "n": 5,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    121
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "1660x1244",
+    "600x800"
+   ],
+   "usable_len": 5
+  },
+  "onesided/nature_bloom": {
+   "n": 2,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    241
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1660x1244",
+    "600x800"
+   ],
+   "usable_len": 2
+  },
+  "onesided/plasma_explosion": {
+   "n": 5,
+   "tags": [
+    "camera"
+   ],
+   "frames": [
+    121
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1916x1080",
+    "1920x1080",
+    "600x800"
+   ],
+   "usable_len": 5
+  },
+  "onesided/polygon": {
+   "n": 9,
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "frames": [
+    141
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1080x1438",
+    "1080x1620",
+    "1080x1918",
+    "1438x1080",
+    "600x800"
+   ],
+   "usable_len": 9
+  },
+  "onesided/portal": {
+   "n": 13,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    141
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1080x1620",
+    "1438x1080",
+    "600x800"
+   ],
+   "usable_len": 13
+  },
+  "onesided/run_set_on_fire": {
+   "n": 8,
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "frames": [
+    161
+   ],
+   "fps": [
+    30.0
+   ],
+   "res": [
+    "1104x832",
+    "1168x768",
+    "320x242",
+    "320x424"
+   ],
+   "usable_len": 8
+  },
+  "onesided/saint_glow": {
+   "n": 4,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    121
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "600x800"
+   ],
+   "usable_len": 4
+  },
+  "onesided/sakura_petals": {
+   "n": 3,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    241
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "600x800"
+   ],
+   "usable_len": 3
+  },
+  "onesided/set_on_fire": {
+   "n": 11,
+   "tags": [
+    "style"
+   ],
+   "frames": [
+    161
+   ],
+   "fps": [
+    30.0
+   ],
+   "res": [
+    "320x182",
+    "320x210",
+    "320x242",
+    "320x486"
+   ],
+   "usable_len": 11
+  },
+  "onesided/shadow": {
+   "n": 15,
+   "tags": [
+    "style"
+   ],
+   "frames": [
+    141
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1022x768",
+    "1080x1620",
+    "1080x1918",
+    "1152x768",
+    "1438x1080",
+    "600x800"
+   ],
+   "usable_len": 15
+  },
+  "onesided/super_fast_run": {
+   "n": 13,
+   "tags": [
+    "camera"
+   ],
+   "frames": [
+    141
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1022x768",
+    "1080x1080",
+    "1080x1438",
+    "1080x1620",
+    "1438x1080",
+    "1620x1080",
+    "1918x1080",
+    "600x800"
+   ],
+   "usable_len": 13
+  },
+  "onesided/thunder_god": {
+   "n": 8,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    161
+   ],
+   "fps": [
+    30.0
+   ],
+   "res": [
+    "320x182",
+    "320x210",
+    "320x242",
+    "320x486"
+   ],
+   "usable_len": 8
+  },
+  "onesided/turning_metal": {
+   "n": 11,
+   "tags": [
+    "style"
+   ],
+   "frames": [
+    161
+   ],
+   "fps": [
+    30.0
+   ],
+   "res": [
+    "320x182",
+    "320x242",
+    "320x424",
+    "320x470",
+    "320x486"
+   ],
+   "usable_len": 11
+  },
+  "onesided/turning_metal_eyes_in": {
+   "n": 4,
+   "tags": [
+    "style",
+    "camera"
+   ],
+   "frames": [
+    161
+   ],
+   "fps": [
+    30.0
+   ],
+   "res": [
+    "320x182",
+    "320x320",
+    "320x562"
+   ],
+   "usable_len": 4
+  },
+  "onesided/turning_metal_melting": {
+   "n": 7,
+   "tags": [
+    "style"
+   ],
+   "frames": [
+    161
+   ],
+   "fps": [
+    30.0
+   ],
+   "res": [
+    "320x182",
+    "320x424"
+   ],
+   "usable_len": 7
+  },
+  "onesided/water_element": {
+   "n": 5,
+   "tags": [
+    "style"
+   ],
+   "frames": [
+    121
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "1660x1244",
+    "600x800"
+   ],
+   "usable_len": 5
+  },
+  "onesided/wireframe": {
+   "n": 9,
+   "tags": [
+    "style"
+   ],
+   "frames": [
+    141
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1080x1080",
+    "1080x1620",
+    "1080x1918",
+    "1438x1080",
+    "1918x1080",
+    "600x800"
+   ],
+   "usable_len": 9
+  },
+  "onesided/wonderland": {
+   "n": 3,
+   "tags": [
+    "style"
+   ],
+   "frames": [
+    241
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "1660x1244",
+    "600x800"
+   ],
+   "usable_len": 3
+  },
+  "twosided/air_bending": {
+   "n": 4,
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "frames": [
+    122,
+    242
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1228x1684",
+    "1248x1656",
+    "1440x1440",
+    "600x800"
+   ],
+   "usable_len": 4
+  },
+  "twosided/display_transition": {
+   "n": 3,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    122
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660"
+   ],
+   "usable_len": 3
+  },
+  "twosided/earth_wave": {
+   "n": 5,
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "frames": [
+    122,
+    242
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "1660x1244",
+    "1920x1080"
+   ],
+   "usable_len": 5
+  },
+  "twosided/firelava": {
+   "n": 6,
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "frames": [
+    122
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "1248x1656",
+    "600x800"
+   ],
+   "usable_len": 6
+  },
+  "twosided/flame_transition": {
+   "n": 2,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    122
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660"
+   ],
+   "usable_len": 2
+  },
+  "twosided/flying_cam_transition": {
+   "n": 4,
+   "tags": [
+    "camera"
+   ],
+   "frames": [
+    242
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "1660x1244"
+   ],
+   "usable_len": 4
+  },
+  "twosided/hole_transition": {
+   "n": 2,
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "frames": [
+    122,
+    242
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "600x800"
+   ],
+   "usable_len": 2
+  },
+  "twosided/jump_transition": {
+   "n": 1,
+   "tags": [
+    "camera"
+   ],
+   "frames": [
+    122
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1228x1684"
+   ],
+   "usable_len": 1
+  },
+  "twosided/melt_transition": {
+   "n": 4,
+   "tags": [
+    "object"
+   ],
+   "frames": [
+    122
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "1660x1244"
+   ],
+   "usable_len": 4
+  },
+  "twosided/raven_transition": {
+   "n": 4,
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "frames": [
+    150,
+    242
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "1660x1244",
+    "600x450",
+    "600x800"
+   ],
+   "usable_len": 4
+  },
+  "twosided/seamless_transition": {
+   "n": 1,
+   "tags": [
+    "camera"
+   ],
+   "frames": [
+    122
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "600x800"
+   ],
+   "usable_len": 1
+  },
+  "twosided/shadow_smoke": {
+   "n": 10,
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "frames": [
+    122,
+    242
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "1440x1440",
+    "1660x1244"
+   ],
+   "usable_len": 10
+  },
+  "twosided/water_bending": {
+   "n": 4,
+   "tags": [
+    "object",
+    "camera"
+   ],
+   "frames": [
+    122
+   ],
+   "fps": [
+    24.0
+   ],
+   "res": [
+    "1244x1660",
+    "1248x1656",
+    "1656x1248",
+    "600x800"
+   ],
+   "usable_len": 4
+  }
+ }
+}
