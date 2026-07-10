@@ -1,0 +1,59 @@
+# Pre-registered certification bars (SPEC §6, OPEN O3).
+#
+# STATUS: EVERY NUMBER BELOW IS DRAFT — placeholders carrying the *shape* of
+# the pre-registration so certify/ code can be written and dry-run against
+# them. The health-design session freezes real values, and the freeze MUST
+# happen before the first certification run executes (a bar set after seeing
+# the number is not a bar). Draft provenance for each placeholder is noted.
+status: DRAFT
+frozen: false          # flip only at the health-design session, in its own commit
+
+exam:
+  # LOO 1-NN retrieval on the full corpus manifest (223 clips / 39 classes),
+  # per metric, per contested variant. Chance ≈ 0.067 (15/223).
+  metrics: [m1a_appearance, m1b_camera, m1c_object]
+  variants:
+    core_mask: [v2_envelope, v3_sided, all_frames]   # SPEC §3 S
+    motion: [v2_mfs_incumbent, v3_decomposed]        # M1b/M1c vs old M2
+  adoption_rule:
+    overall: ">= incumbent accuracy"                  # form locked; margins DRAFT
+    target_stratum: "> incumbent by >= 0.05"          # one-sided classes (core mask),
+                                                      # camera classes (M1b) — DRAFT margin
+    regression_guard: "no previously-trusted class recall drops below trust_min"
+  trust_min_recall: 0.5          # carried from v2 (exam-validated convention)
+  min_ceiling_clips: 4           # carried from v2
+
+probes:
+  copy_splices:                  # M2a ground truth (exp_053 check-C pattern)
+    n_per_class: 2               # DRAFT — health session sets coverage
+    construction: "replace generated mid-segment with the reference's mid-segment"
+    bar: "100% of splices >= tau_copy; honest-set max clearly below (gap >= 0.05 DRAFT)"
+    tau_copy_recalibration: "set tau_copy at the midpoint of the splice-min /
+      honest-max gap; current 0.88 is the v2 check-C carryover"
+  cross_label:                   # M2b ground truth
+    n_items: 20                  # DRAFT
+    construction: "rescore existing generations with a deliberately wrong
+      reference class of a DIFFERENT texture family"
+    bar: "margin < 0 naming the true class in >= 90% (DRAFT)"
+  controls:
+    bar: "lerp/static-hold arms land at the M1a floor of their sidedness group
+      and trip core_degenerate/timing flags in >= 95% (DRAFT)"
+
+twins:
+  bar: "copy-regime base twins flagged (near_copy OR max_seam_z > 3) in 100%"
+  precedent: "exp_057: 11/11"
+
+stability:
+  warm_cache_rerun: "bit-identical items.jsonl"
+  cold_cache_tolerance: 0.005    # DRAFT — abs delta per headline metric
+  anchor_reproduction: 0.04      # raw, established precedent (exp_057 §4c)
+
+seeds:                           # O6 — measured here, consumed as MDE
+  probe_items: 12                # DRAFT — stratified across sidedness x taxonomy
+  n_seeds: 5
+  output: "sigma_seed.json per headline metric; deltas reported against
+    MDE = 1.96 * sigma_seed * sqrt(2/n)"
+
+judge:
+  certification: exempt          # advisory until human-calibrated (O9)
+  human_bar: "Spearman >= 0.8 vs human labels on 50-100 items"

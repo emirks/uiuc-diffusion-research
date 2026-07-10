@@ -1,0 +1,3950 @@
+{
+ "built_by": "src/diffusion/transition_eval/build_corpus_manifest.py",
+ "classes": {
+  "air_bending": {
+   "dedup_pass": "exp_053/054",
+   "n_clips": 4,
+   "raw_dir": "data/processed/transitions/twosided_transitions/twosided_object_camera_air-bending",
+   "sidedness": "twosided",
+   "tags": [
+    "camera",
+    "object"
+   ]
+  },
+  "animalization": {
+   "dedup_pass": "exp_057",
+   "n_clips": 8,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_object_animalization",
+   "sidedness": "onesided",
+   "tags": [
+    "object"
+   ]
+  },
+  "color_rain": {
+   "dedup_pass": "exp_058",
+   "n_clips": 8,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_object_color-rain",
+   "sidedness": "onesided",
+   "tags": [
+    "object"
+   ]
+  },
+  "cotton_cloud": {
+   "dedup_pass": "exp_058",
+   "n_clips": 6,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_object_cotton-cloud",
+   "sidedness": "onesided",
+   "tags": [
+    "object"
+   ]
+  },
+  "display_transition": {
+   "dedup_pass": "exp_053/054",
+   "n_clips": 3,
+   "raw_dir": "data/processed/transitions/twosided_transitions/twosided_object_display-transition",
+   "sidedness": "twosided",
+   "tags": [
+    "object"
+   ]
+  },
+  "earth_element": {
+   "dedup_pass": "exp_058",
+   "n_clips": 6,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_style_camera_earth-element",
+   "sidedness": "onesided",
+   "tags": [
+    "camera",
+    "style"
+   ]
+  },
+  "earth_wave": {
+   "dedup_pass": "exp_053/054",
+   "n_clips": 5,
+   "raw_dir": "data/processed/transitions/twosided_transitions/twosided_object_camera_earth-wave",
+   "sidedness": "twosided",
+   "tags": [
+    "camera",
+    "object"
+   ]
+  },
+  "fire_element": {
+   "dedup_pass": "exp_057",
+   "n_clips": 4,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_style_fire-element",
+   "sidedness": "onesided",
+   "tags": [
+    "style"
+   ]
+  },
+  "firelava": {
+   "dedup_pass": "exp_053/054",
+   "n_clips": 6,
+   "raw_dir": "data/processed/transitions/twosided_transitions/twosided_object_camera_firelava",
+   "sidedness": "twosided",
+   "tags": [
+    "camera",
+    "object"
+   ]
+  },
+  "flame": {
+   "dedup_pass": "exp_053/054",
+   "n_clips": 2,
+   "raw_dir": "data/processed/transitions/twosided_transitions/twosided_object_flame-transition",
+   "sidedness": "twosided",
+   "tags": [
+    "object"
+   ]
+  },
+  "flying_cam_transition": {
+   "dedup_pass": "exp_053/054",
+   "n_clips": 4,
+   "raw_dir": "data/processed/transitions/twosided_transitions/twosided_camera_flying-cam-transition",
+   "sidedness": "twosided",
+   "tags": [
+    "camera"
+   ]
+  },
+  "gas_transformation": {
+   "dedup_pass": "exp_057",
+   "n_clips": 10,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_object_gas-transformation",
+   "sidedness": "onesided",
+   "tags": [
+    "object"
+   ]
+  },
+  "giant_grab": {
+   "dedup_pass": "exp_057",
+   "n_clips": 5,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_object_giant-grab",
+   "sidedness": "onesided",
+   "tags": [
+    "object"
+   ]
+  },
+  "hero_flight": {
+   "dedup_pass": "exp_057",
+   "n_clips": 10,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_camera_hero-flight",
+   "sidedness": "onesided",
+   "tags": [
+    "camera"
+   ]
+  },
+  "hole_transition": {
+   "dedup_pass": "exp_057",
+   "n_clips": 2,
+   "raw_dir": "data/processed/transitions/twosided_transitions/twosided_object_camera_hole-transition",
+   "sidedness": "twosided",
+   "tags": [
+    "camera",
+    "object"
+   ]
+  },
+  "illustration_scene": {
+   "dedup_pass": "exp_057",
+   "n_clips": 10,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_style_camera_illustration-scene",
+   "sidedness": "onesided",
+   "tags": [
+    "camera",
+    "style"
+   ]
+  },
+  "jump_transition": {
+   "dedup_pass": "exp_053/054",
+   "n_clips": 1,
+   "raw_dir": "data/processed/transitions/twosided_transitions/twosided_camera_jump-transition",
+   "sidedness": "twosided",
+   "tags": [
+    "camera"
+   ]
+  },
+  "live_concert": {
+   "dedup_pass": "exp_058",
+   "n_clips": 8,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_object_camera_live-concert",
+   "sidedness": "onesided",
+   "tags": [
+    "camera",
+    "object"
+   ]
+  },
+  "luminous_gaze": {
+   "dedup_pass": "exp_058",
+   "n_clips": 4,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_style_object_luminous-gaze",
+   "sidedness": "onesided",
+   "tags": [
+    "object",
+    "style"
+   ]
+  },
+  "melt_transition": {
+   "dedup_pass": "exp_053/054",
+   "n_clips": 4,
+   "raw_dir": "data/processed/transitions/twosided_transitions/twosided_object_melt-transition",
+   "sidedness": "twosided",
+   "tags": [
+    "object"
+   ]
+  },
+  "money_rain": {
+   "dedup_pass": "exp_057",
+   "n_clips": 7,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_object_money-rain",
+   "sidedness": "onesided",
+   "tags": [
+    "object"
+   ]
+  },
+  "monstrosity": {
+   "dedup_pass": "exp_058",
+   "n_clips": 3,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_object-monstrosity",
+   "sidedness": "onesided",
+   "tags": [
+    "object"
+   ]
+  },
+  "mystification": {
+   "dedup_pass": "exp_058",
+   "n_clips": 5,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_object_mystification",
+   "sidedness": "onesided",
+   "tags": [
+    "object"
+   ]
+  },
+  "nature_bloom": {
+   "dedup_pass": "exp_058",
+   "n_clips": 2,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_object_nature-bloom",
+   "sidedness": "onesided",
+   "tags": [
+    "object"
+   ]
+  },
+  "plasma_explosion": {
+   "dedup_pass": "exp_057",
+   "n_clips": 4,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_camera_plasma-explosion",
+   "sidedness": "onesided",
+   "tags": [
+    "camera"
+   ]
+  },
+  "polygon": {
+   "dedup_pass": "exp_058",
+   "n_clips": 9,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_style_camera_polygon",
+   "sidedness": "onesided",
+   "tags": [
+    "camera",
+    "style"
+   ]
+  },
+  "portal": {
+   "dedup_pass": "exp_057",
+   "n_clips": 13,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_object_portal",
+   "sidedness": "onesided",
+   "tags": [
+    "object"
+   ]
+  },
+  "raven_transition": {
+   "dedup_pass": "exp_053/054",
+   "n_clips": 4,
+   "raw_dir": "data/processed/transitions/twosided_transitions/twosided_object_camera_raven-transition",
+   "sidedness": "twosided",
+   "tags": [
+    "camera",
+    "object"
+   ]
+  },
+  "run_set_on_fire": {
+   "dedup_pass": "exp_058",
+   "n_clips": 2,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_style_camera_run-set-on-fire",
+   "sidedness": "onesided",
+   "tags": [
+    "camera",
+    "style"
+   ]
+  },
+  "saint_glow": {
+   "dedup_pass": "exp_058",
+   "n_clips": 4,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_object_saint-glow",
+   "sidedness": "onesided",
+   "tags": [
+    "object"
+   ]
+  },
+  "sakura_petals": {
+   "dedup_pass": "exp_058",
+   "n_clips": 2,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_object_sakura-petals",
+   "sidedness": "onesided",
+   "tags": [
+    "object"
+   ]
+  },
+  "seamless_transition": {
+   "dedup_pass": "exp_057",
+   "n_clips": 1,
+   "raw_dir": "data/processed/transitions/twosided_transitions/twosided_camera_seamless-transition",
+   "sidedness": "twosided",
+   "tags": [
+    "camera"
+   ]
+  },
+  "shadow": {
+   "dedup_pass": "exp_057",
+   "n_clips": 15,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_style_shadow",
+   "sidedness": "onesided",
+   "tags": [
+    "style"
+   ]
+  },
+  "shadow_smoke": {
+   "dedup_pass": "exp_053/054",
+   "n_clips": 10,
+   "raw_dir": "data/processed/transitions/twosided_transitions/twosided_object_camera_shadow-smoke",
+   "sidedness": "twosided",
+   "tags": [
+    "camera",
+    "object"
+   ]
+  },
+  "super_fast_run": {
+   "dedup_pass": "exp_057",
+   "n_clips": 12,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_camera_super-fast-run",
+   "sidedness": "onesided",
+   "tags": [
+    "camera"
+   ]
+  },
+  "water_bending": {
+   "dedup_pass": "exp_053/054",
+   "n_clips": 4,
+   "raw_dir": "data/processed/transitions/twosided_transitions/twosided_object_camera_water-bending",
+   "sidedness": "twosided",
+   "tags": [
+    "camera",
+    "object"
+   ]
+  },
+  "water_element": {
+   "dedup_pass": "exp_058",
+   "n_clips": 5,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_style_water-element",
+   "sidedness": "onesided",
+   "tags": [
+    "style"
+   ]
+  },
+  "wireframe": {
+   "dedup_pass": "exp_057",
+   "n_clips": 9,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_style_wireframe",
+   "sidedness": "onesided",
+   "tags": [
+    "style"
+   ]
+  },
+  "wonderland": {
+   "dedup_pass": "exp_058",
+   "n_clips": 2,
+   "raw_dir": "data/processed/transitions/onesided_transitions/onesided_style_wonderland",
+   "sidedness": "onesided",
+   "tags": [
+    "style"
+   ]
+  }
+ },
+ "clips": {
+  "air_bending/air_bending_0.mp4": {
+   "class": "air_bending",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_air-bending/air_bending_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "air_bending/air_bending_1.mp4": {
+   "class": "air_bending",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_air-bending/air_bending_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1228,
+    1684
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "air_bending/air_bending_2.mp4": {
+   "class": "air_bending",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_air-bending/air_bending_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1248,
+    1656
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "air_bending/air_bending_3.mp4": {
+   "class": "air_bending",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_air-bending/air_bending_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1440,
+    1440
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "animalization/animalization_0.mp4": {
+   "class": "animalization",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_animalization/animalization_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "animalization/animalization_1.mp4": {
+   "class": "animalization",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_animalization/animalization_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "animalization/animalization_2.mp4": {
+   "class": "animalization",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_animalization/animalization_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    960,
+    960
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "animalization/animalization_3.mp4": {
+   "class": "animalization",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_animalization/animalization_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "animalization/animalization_4.mp4": {
+   "class": "animalization",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_animalization/animalization_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "animalization/animalization_5.mp4": {
+   "class": "animalization",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_animalization/animalization_5.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "animalization/animalization_6.mp4": {
+   "class": "animalization",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_animalization/animalization_6.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    720,
+    1280
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "animalization/animalization_7.mp4": {
+   "class": "animalization",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_animalization/animalization_7.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "color_rain/color_rain_0.mp4": {
+   "class": "color_rain",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_color-rain/color_rain_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "color_rain/color_rain_1.mp4": {
+   "class": "color_rain",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_color-rain/color_rain_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "color_rain/color_rain_2.mp4": {
+   "class": "color_rain",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_color-rain/color_rain_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "color_rain/color_rain_3.mp4": {
+   "class": "color_rain",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_color-rain/color_rain_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "color_rain/color_rain_5.mp4": {
+   "class": "color_rain",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_color-rain/color_rain_5.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "color_rain/color_rain_6.mp4": {
+   "class": "color_rain",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_color-rain/color_rain_6.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1764,
+    1176
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "color_rain/color_rain_7.mp4": {
+   "class": "color_rain",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_color-rain/color_rain_7.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "color_rain/color_rain_8.mp4": {
+   "class": "color_rain",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_color-rain/color_rain_8.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "cotton_cloud/cotton_cloud_0.mp4": {
+   "class": "cotton_cloud",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_cotton-cloud/cotton_cloud_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "cotton_cloud/cotton_cloud_1.mp4": {
+   "class": "cotton_cloud",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_cotton-cloud/cotton_cloud_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "cotton_cloud/cotton_cloud_2.mp4": {
+   "class": "cotton_cloud",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_cotton-cloud/cotton_cloud_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1440,
+    1440
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "cotton_cloud/cotton_cloud_4.mp4": {
+   "class": "cotton_cloud",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_cotton-cloud/cotton_cloud_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "cotton_cloud/cotton_cloud_6.mp4": {
+   "class": "cotton_cloud",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_cotton-cloud/cotton_cloud_6.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "cotton_cloud/cotton_cloud_8.mp4": {
+   "class": "cotton_cloud",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_cotton-cloud/cotton_cloud_8.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "display_transition/display_transition_1.mp4": {
+   "class": "display_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_display-transition/display_transition_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "display_transition/display_transition_2.mp4": {
+   "class": "display_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_display-transition/display_transition_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "display_transition/display_transition_3.mp4": {
+   "class": "display_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_display-transition/display_transition_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "earth_element/earth_element_0.mp4": {
+   "class": "earth_element",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_earth-element/earth_element_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "earth_element/earth_element_1.mp4": {
+   "class": "earth_element",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_earth-element/earth_element_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "earth_element/earth_element_2.mp4": {
+   "class": "earth_element",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_earth-element/earth_element_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "earth_element/earth_element_3.mp4": {
+   "class": "earth_element",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_earth-element/earth_element_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "earth_element/earth_element_4.mp4": {
+   "class": "earth_element",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_earth-element/earth_element_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "earth_element/earth_element_6.mp4": {
+   "class": "earth_element",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_earth-element/earth_element_6.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "earth_wave/earth_wave_0.mp4": {
+   "class": "earth_wave",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_earth-wave/earth_wave_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1920,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "earth_wave/earth_wave_1.mp4": {
+   "class": "earth_wave",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_earth-wave/earth_wave_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "earth_wave/earth_wave_2.mp4": {
+   "class": "earth_wave",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_earth-wave/earth_wave_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "earth_wave/earth_wave_3.mp4": {
+   "class": "earth_wave",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_earth-wave/earth_wave_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "earth_wave/earth_wave_4.mp4": {
+   "class": "earth_wave",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_earth-wave/earth_wave_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "fire_element/fire_element_0.mp4": {
+   "class": "fire_element",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_fire-element/fire_element_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "fire_element/fire_element_1.mp4": {
+   "class": "fire_element",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_fire-element/fire_element_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "fire_element/fire_element_2.mp4": {
+   "class": "fire_element",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_fire-element/fire_element_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "fire_element/fire_element_4.mp4": {
+   "class": "fire_element",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_fire-element/fire_element_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "firelava/firelava_0.mp4": {
+   "class": "firelava",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_firelava/firelava_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "firelava/firelava_1.mp4": {
+   "class": "firelava",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_firelava/firelava_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "firelava/firelava_2.mp4": {
+   "class": "firelava",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_firelava/firelava_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "firelava/firelava_3.mp4": {
+   "class": "firelava",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_firelava/firelava_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "firelava/firelava_4.mp4": {
+   "class": "firelava",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_firelava/firelava_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "firelava/firelava_5.mp4": {
+   "class": "firelava",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_firelava/firelava_5.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1248,
+    1656
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "flame/flame_transition_0.mp4": {
+   "class": "flame",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_flame-transition/flame_transition_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "flame/flame_transition_1.mp4": {
+   "class": "flame",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_flame-transition/flame_transition_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "flying_cam_transition/flying_cam_transition_1.mp4": {
+   "class": "flying_cam_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_camera_flying-cam-transition/flying_cam_transition_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "flying_cam_transition/flying_cam_transition_2.mp4": {
+   "class": "flying_cam_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_camera_flying-cam-transition/flying_cam_transition_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "flying_cam_transition/flying_cam_transition_3.mp4": {
+   "class": "flying_cam_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_camera_flying-cam-transition/flying_cam_transition_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "flying_cam_transition/flying_cam_transition_4.mp4": {
+   "class": "flying_cam_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_camera_flying-cam-transition/flying_cam_transition_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "gas_transformation/gas_transformation_0.mp4": {
+   "class": "gas_transformation",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_gas-transformation/gas_transformation_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "gas_transformation/gas_transformation_1.mp4": {
+   "class": "gas_transformation",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_gas-transformation/gas_transformation_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    768,
+    1152
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "gas_transformation/gas_transformation_2.mp4": {
+   "class": "gas_transformation",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_gas-transformation/gas_transformation_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "gas_transformation/gas_transformation_3.mp4": {
+   "class": "gas_transformation",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_gas-transformation/gas_transformation_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "gas_transformation/gas_transformation_4.mp4": {
+   "class": "gas_transformation",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_gas-transformation/gas_transformation_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1438
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "gas_transformation/gas_transformation_5.mp4": {
+   "class": "gas_transformation",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_gas-transformation/gas_transformation_5.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "gas_transformation/gas_transformation_6.mp4": {
+   "class": "gas_transformation",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_gas-transformation/gas_transformation_6.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "gas_transformation/gas_transformation_7.mp4": {
+   "class": "gas_transformation",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_gas-transformation/gas_transformation_7.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "gas_transformation/gas_transformation_8.mp4": {
+   "class": "gas_transformation",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_gas-transformation/gas_transformation_8.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "gas_transformation/gas_transformation_9.mp4": {
+   "class": "gas_transformation",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_gas-transformation/gas_transformation_9.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "giant_grab/giant_grab_0.mp4": {
+   "class": "giant_grab",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_giant-grab/giant_grab_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "giant_grab/giant_grab_1.mp4": {
+   "class": "giant_grab",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_giant-grab/giant_grab_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "giant_grab/giant_grab_2.mp4": {
+   "class": "giant_grab",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_giant-grab/giant_grab_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1108,
+    828
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "giant_grab/giant_grab_3.mp4": {
+   "class": "giant_grab",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_giant-grab/giant_grab_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    828,
+    1108
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "giant_grab/giant_grab_4.mp4": {
+   "class": "giant_grab",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_giant-grab/giant_grab_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1440,
+    1440
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "hero_flight/hero_flight_0.mp4": {
+   "class": "hero_flight",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_hero-flight/hero_flight_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "hero_flight/hero_flight_1.mp4": {
+   "class": "hero_flight",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_hero-flight/hero_flight_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    832,
+    1120
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "hero_flight/hero_flight_2.mp4": {
+   "class": "hero_flight",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_hero-flight/hero_flight_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    832,
+    1120
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "hero_flight/hero_flight_3.mp4": {
+   "class": "hero_flight",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_hero-flight/hero_flight_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    832,
+    1120
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "hero_flight/hero_flight_4.mp4": {
+   "class": "hero_flight",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_hero-flight/hero_flight_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1248,
+    1664
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "hero_flight/hero_flight_5.mp4": {
+   "class": "hero_flight",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_hero-flight/hero_flight_5.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1664,
+    1248
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "hero_flight/hero_flight_6.mp4": {
+   "class": "hero_flight",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_hero-flight/hero_flight_6.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1664,
+    1248
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "hero_flight/hero_flight_7.mp4": {
+   "class": "hero_flight",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_hero-flight/hero_flight_7.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1248,
+    1664
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "hero_flight/hero_flight_8.mp4": {
+   "class": "hero_flight",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_hero-flight/hero_flight_8.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1664,
+    1248
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "hero_flight/hero_flight_9.mp4": {
+   "class": "hero_flight",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_hero-flight/hero_flight_9.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1248,
+    1664
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "hole_transition/hole_transition_0.mp4": {
+   "class": "hole_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_hole-transition/hole_transition_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "hole_transition/hole_transition_1.mp4": {
+   "class": "hole_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_hole-transition/hole_transition_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "illustration_scene/illustration_scene_0.mp4": {
+   "class": "illustration_scene",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "illustration_scene/illustration_scene_1.mp4": {
+   "class": "illustration_scene",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "illustration_scene/illustration_scene_2.mp4": {
+   "class": "illustration_scene",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "illustration_scene/illustration_scene_3.mp4": {
+   "class": "illustration_scene",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "illustration_scene/illustration_scene_4.mp4": {
+   "class": "illustration_scene",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1918
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "illustration_scene/illustration_scene_5.mp4": {
+   "class": "illustration_scene",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_5.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "illustration_scene/illustration_scene_6.mp4": {
+   "class": "illustration_scene",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_6.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "illustration_scene/illustration_scene_7.mp4": {
+   "class": "illustration_scene",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_7.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1918
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "illustration_scene/illustration_scene_8.mp4": {
+   "class": "illustration_scene",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_8.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "illustration_scene/illustration_scene_9.mp4": {
+   "class": "illustration_scene",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_illustration-scene/illustration_scene_9.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "jump_transition/jump_transition_1.mp4": {
+   "class": "jump_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_camera_jump-transition/jump_transition_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1228,
+    1684
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "live_concert/live_concert_0.mp4": {
+   "class": "live_concert",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_camera_live-concert/live_concert_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "live_concert/live_concert_1.mp4": {
+   "class": "live_concert",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_camera_live-concert/live_concert_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "live_concert/live_concert_2.mp4": {
+   "class": "live_concert",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_camera_live-concert/live_concert_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "live_concert/live_concert_3.mp4": {
+   "class": "live_concert",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_camera_live-concert/live_concert_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1438
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "live_concert/live_concert_4.mp4": {
+   "class": "live_concert",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_camera_live-concert/live_concert_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "live_concert/live_concert_5.mp4": {
+   "class": "live_concert",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_camera_live-concert/live_concert_5.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "live_concert/live_concert_6.mp4": {
+   "class": "live_concert",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_camera_live-concert/live_concert_6.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "live_concert/live_concert_7.mp4": {
+   "class": "live_concert",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_camera_live-concert/live_concert_7.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1620,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "luminous_gaze/luminous_gaze_0.mp4": {
+   "class": "luminous_gaze",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_object_luminous-gaze/luminous_gaze_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "luminous_gaze/luminous_gaze_1.mp4": {
+   "class": "luminous_gaze",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_object_luminous-gaze/luminous_gaze_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "luminous_gaze/luminous_gaze_2.mp4": {
+   "class": "luminous_gaze",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_object_luminous-gaze/luminous_gaze_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1440,
+    1440
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "luminous_gaze/luminous_gaze_3.mp4": {
+   "class": "luminous_gaze",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_object_luminous-gaze/luminous_gaze_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "melt_transition/melt_transition_1.mp4": {
+   "class": "melt_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_melt-transition/melt_transition_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "melt_transition/melt_transition_2.mp4": {
+   "class": "melt_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_melt-transition/melt_transition_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "melt_transition/melt_transition_3.mp4": {
+   "class": "melt_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_melt-transition/melt_transition_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "melt_transition/melt_transition_4.mp4": {
+   "class": "melt_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_melt-transition/melt_transition_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "money_rain/money_rain_0.mp4": {
+   "class": "money_rain",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_money-rain/money_rain_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "money_rain/money_rain_1.mp4": {
+   "class": "money_rain",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_money-rain/money_rain_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "money_rain/money_rain_2.mp4": {
+   "class": "money_rain",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_money-rain/money_rain_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "money_rain/money_rain_3.mp4": {
+   "class": "money_rain",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_money-rain/money_rain_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "money_rain/money_rain_4.mp4": {
+   "class": "money_rain",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_money-rain/money_rain_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1620,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "money_rain/money_rain_6.mp4": {
+   "class": "money_rain",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_money-rain/money_rain_6.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "money_rain/money_rain_7.mp4": {
+   "class": "money_rain",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_money-rain/money_rain_7.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "monstrosity/monstrosity_0.mp4": {
+   "class": "monstrosity",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object-monstrosity/monstrosity_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "monstrosity/monstrosity_1.mp4": {
+   "class": "monstrosity",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object-monstrosity/monstrosity_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "monstrosity/monstrosity_2.mp4": {
+   "class": "monstrosity",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object-monstrosity/monstrosity_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "mystification/mystification_0.mp4": {
+   "class": "mystification",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_mystification/mystification_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "mystification/mystification_2.mp4": {
+   "class": "mystification",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_mystification/mystification_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "mystification/mystification_3.mp4": {
+   "class": "mystification",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_mystification/mystification_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "mystification/mystification_4.mp4": {
+   "class": "mystification",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_mystification/mystification_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "mystification/mystification_5.mp4": {
+   "class": "mystification",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_mystification/mystification_5.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "nature_bloom/nature_bloom_0.mp4": {
+   "class": "nature_bloom",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_nature-bloom/nature_bloom_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "nature_bloom/nature_bloom_2.mp4": {
+   "class": "nature_bloom",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_nature-bloom/nature_bloom_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "plasma_explosion/plasma_explosion_0.mp4": {
+   "class": "plasma_explosion",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_plasma-explosion/plasma_explosion_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "plasma_explosion/plasma_explosion_1.mp4": {
+   "class": "plasma_explosion",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_plasma-explosion/plasma_explosion_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1916,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "plasma_explosion/plasma_explosion_2.mp4": {
+   "class": "plasma_explosion",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_plasma-explosion/plasma_explosion_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1920,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "plasma_explosion/plasma_explosion_4.mp4": {
+   "class": "plasma_explosion",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_plasma-explosion/plasma_explosion_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1920,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "polygon/polygon_0.mp4": {
+   "class": "polygon",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_polygon/polygon_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "polygon/polygon_1.mp4": {
+   "class": "polygon",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_polygon/polygon_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "polygon/polygon_2.mp4": {
+   "class": "polygon",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_polygon/polygon_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1918
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "polygon/polygon_3.mp4": {
+   "class": "polygon",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_polygon/polygon_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "polygon/polygon_4.mp4": {
+   "class": "polygon",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_polygon/polygon_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1918
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "polygon/polygon_5.mp4": {
+   "class": "polygon",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_polygon/polygon_5.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "polygon/polygon_6.mp4": {
+   "class": "polygon",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_polygon/polygon_6.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1438
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "polygon/polygon_7.mp4": {
+   "class": "polygon",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_polygon/polygon_7.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "polygon/polygon_8.mp4": {
+   "class": "polygon",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_polygon/polygon_8.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1438
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "portal/portal_0.mp4": {
+   "class": "portal",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_portal/portal_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "portal/portal_1.mp4": {
+   "class": "portal",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_portal/portal_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "portal/portal_10.mp4": {
+   "class": "portal",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_portal/portal_10.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "portal/portal_11.mp4": {
+   "class": "portal",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_portal/portal_11.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "portal/portal_12.mp4": {
+   "class": "portal",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_portal/portal_12.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "portal/portal_13.mp4": {
+   "class": "portal",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_portal/portal_13.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "portal/portal_2.mp4": {
+   "class": "portal",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_portal/portal_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "portal/portal_4.mp4": {
+   "class": "portal",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_portal/portal_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "portal/portal_5.mp4": {
+   "class": "portal",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_portal/portal_5.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "portal/portal_6.mp4": {
+   "class": "portal",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_portal/portal_6.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "portal/portal_7.mp4": {
+   "class": "portal",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_portal/portal_7.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "portal/portal_8.mp4": {
+   "class": "portal",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_portal/portal_8.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "portal/portal_9.mp4": {
+   "class": "portal",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_portal/portal_9.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "raven_transition/raven_transition_0.mp4": {
+   "class": "raven_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_raven-transition/raven_transition_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "raven_transition/raven_transition_1.mp4": {
+   "class": "raven_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_raven-transition/raven_transition_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "raven_transition/raven_transition_2.mp4": {
+   "class": "raven_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_raven-transition/raven_transiton_2.mp4",
+   "source_match": "fuzzy:raven_transiton_2.mp4",
+   "source_resolution": [
+    600,
+    450
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "raven_transition/raven_transition_3.mp4": {
+   "class": "raven_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_raven-transition/raven_transition_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "run_set_on_fire/action_run_setonfire_6.mp4": {
+   "class": "run_set_on_fire",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_run-set-on-fire/action_run_setonfire_6.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1104,
+    832
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "run_set_on_fire/action_run_setonfire_7.mp4": {
+   "class": "run_set_on_fire",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_camera_run-set-on-fire/action_run_setonfire_7.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1168,
+    768
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "saint_glow/saint_glow_0.mp4": {
+   "class": "saint_glow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_saint-glow/saint_glow_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "saint_glow/saint_glow_1.mp4": {
+   "class": "saint_glow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_saint-glow/saint_glow_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "saint_glow/saint_glow_2.mp4": {
+   "class": "saint_glow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_saint-glow/saint_glow_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "saint_glow/saint_glow_3.mp4": {
+   "class": "saint_glow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_saint-glow/saint_glow_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "sakura_petals/sakura_petals_0.mp4": {
+   "class": "sakura_petals",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_sakura-petals/sakura_petals_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "sakura_petals/sakura_petals_2.mp4": {
+   "class": "sakura_petals",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_object_sakura-petals/sakura_petals_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "seamless_transition/seamless_transition_0.mp4": {
+   "class": "seamless_transition",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_camera_seamless-transition/seamless_transition_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow/shadow_0.mp4": {
+   "class": "shadow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_shadow/shadow_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow/shadow_1.mp4": {
+   "class": "shadow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_shadow/shadow_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1152,
+    768
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow/shadow_10.mp4": {
+   "class": "shadow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_shadow/shadow_10.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1918
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow/shadow_11.mp4": {
+   "class": "shadow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_shadow/shadow_11.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1022,
+    768
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow/shadow_12.mp4": {
+   "class": "shadow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_shadow/shadow_12.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1022,
+    768
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow/shadow_13.mp4": {
+   "class": "shadow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_shadow/shadow_13.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1022,
+    768
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow/shadow_14.mp4": {
+   "class": "shadow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_shadow/shadow_14.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1022,
+    768
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow/shadow_2.mp4": {
+   "class": "shadow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_shadow/shadow_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow/shadow_3.mp4": {
+   "class": "shadow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_shadow/shadow_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow/shadow_4.mp4": {
+   "class": "shadow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_shadow/shadow_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1022,
+    768
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow/shadow_5.mp4": {
+   "class": "shadow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_shadow/shadow_5.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow/shadow_6.mp4": {
+   "class": "shadow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_shadow/shadow_6.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow/shadow_7.mp4": {
+   "class": "shadow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_shadow/shadow_7.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow/shadow_8.mp4": {
+   "class": "shadow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_shadow/shadow_8.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow/shadow_9.mp4": {
+   "class": "shadow",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_shadow/shadow_9.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow_smoke/shadow_smoke_0.mp4": {
+   "class": "shadow_smoke",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke.mp4",
+   "source_match": "fuzzy:shadow_smoke.mp4",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow_smoke/shadow_smoke_1.mp4": {
+   "class": "shadow_smoke",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow_smoke/shadow_smoke_2.mp4": {
+   "class": "shadow_smoke",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow_smoke/shadow_smoke_3.mp4": {
+   "class": "shadow_smoke",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow_smoke/shadow_smoke_4.mp4": {
+   "class": "shadow_smoke",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1440,
+    1440
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow_smoke/shadow_smoke_5.mp4": {
+   "class": "shadow_smoke",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_5.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow_smoke/shadow_smoke_6.mp4": {
+   "class": "shadow_smoke",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_6.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow_smoke/shadow_smoke_7.mp4": {
+   "class": "shadow_smoke",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_7.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow_smoke/shadow_smoke_8.mp4": {
+   "class": "shadow_smoke",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_8.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "shadow_smoke/shadow_smoke_9.mp4": {
+   "class": "shadow_smoke",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_shadow-smoke/shadow_smoke_9.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "super_fast_run/super_fast_run_0.mp4": {
+   "class": "super_fast_run",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_super-fast-run/super_fast_run_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "super_fast_run/super_fast_run_1.mp4": {
+   "class": "super_fast_run",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_super-fast-run/super_fast_run_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "super_fast_run/super_fast_run_10.mp4": {
+   "class": "super_fast_run",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_super-fast-run/super_fast_run_10.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1022,
+    768
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "super_fast_run/super_fast_run_12.mp4": {
+   "class": "super_fast_run",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_super-fast-run/super_fast_run_12.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "super_fast_run/super_fast_run_2.mp4": {
+   "class": "super_fast_run",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_super-fast-run/super_fast_run_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "super_fast_run/super_fast_run_3.mp4": {
+   "class": "super_fast_run",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_super-fast-run/super_fast_run_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "super_fast_run/super_fast_run_4.mp4": {
+   "class": "super_fast_run",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_super-fast-run/super_fast_run_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1918,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "super_fast_run/super_fast_run_5.mp4": {
+   "class": "super_fast_run",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_super-fast-run/super_fast_run_5.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1438
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "super_fast_run/super_fast_run_6.mp4": {
+   "class": "super_fast_run",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_super-fast-run/super_fast_run_6.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "super_fast_run/super_fast_run_7.mp4": {
+   "class": "super_fast_run",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_super-fast-run/super_fast_run_7.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1620,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "super_fast_run/super_fast_run_8.mp4": {
+   "class": "super_fast_run",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_super-fast-run/super_fast_run_8.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1022,
+    768
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "super_fast_run/super_fast_run_9.mp4": {
+   "class": "super_fast_run",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_camera_super-fast-run/super_fast_run_9.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1022,
+    768
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "water_bending/water_bending_0.mp4": {
+   "class": "water_bending",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_water-bending/water_bending_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "water_bending/water_bending_1.mp4": {
+   "class": "water_bending",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_water-bending/water_bending_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1248,
+    1656
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "water_bending/water_bending_2.mp4": {
+   "class": "water_bending",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_water-bending/water_bending_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1656,
+    1248
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "water_bending/water_bending_3.mp4": {
+   "class": "water_bending",
+   "contract_ok": true,
+   "source": "data/processed/transitions/twosided_transitions/twosided_object_camera_water-bending/water_bending_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "water_element/water_element_0.mp4": {
+   "class": "water_element",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_water-element/water_element_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "water_element/water_element_1.mp4": {
+   "class": "water_element",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_water-element/water_element_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "water_element/water_element_2.mp4": {
+   "class": "water_element",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_water-element/water_element_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "water_element/water_element_4.mp4": {
+   "class": "water_element",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_water-element/water_element_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1244,
+    1660
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "water_element/water_element_5.mp4": {
+   "class": "water_element",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_water-element/water_element_5.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "wireframe/wireframe_0.mp4": {
+   "class": "wireframe",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_wireframe/wireframe_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "wireframe/wireframe_1.mp4": {
+   "class": "wireframe",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_wireframe/wireframe_1.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1438,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "wireframe/wireframe_2.mp4": {
+   "class": "wireframe",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_wireframe/wireframe_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "wireframe/wireframe_3.mp4": {
+   "class": "wireframe",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_wireframe/wireframe_3.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "wireframe/wireframe_4.mp4": {
+   "class": "wireframe",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_wireframe/wireframe_4.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1918,
+    1080
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "wireframe/wireframe_5.mp4": {
+   "class": "wireframe",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_wireframe/wireframe_5.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "wireframe/wireframe_6.mp4": {
+   "class": "wireframe",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_wireframe/wireframe_6.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "wireframe/wireframe_7.mp4": {
+   "class": "wireframe",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_wireframe/wireframe_7.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1620
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "wireframe/wireframe_8.mp4": {
+   "class": "wireframe",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_wireframe/wireframe_8.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1080,
+    1918
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "wonderland/wonderland_0.mp4": {
+   "class": "wonderland",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_wonderland/wonderland_0.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    600,
+    800
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  },
+  "wonderland/wonderland_2.mp4": {
+   "class": "wonderland",
+   "contract_ok": true,
+   "source": "data/processed/transitions/onesided_transitions/onesided_style_wonderland/wonderland_2.mp4",
+   "source_match": "exact",
+   "source_resolution": [
+    1660,
+    1244
+   ],
+   "std": {
+    "fps": 24.0,
+    "frames": 121,
+    "height": 640,
+    "width": 480
+   }
+  }
+ },
+ "corpus_root": "data/processed/transitions_std121",
+ "n_classes": 39,
+ "n_clips": 223,
+ "problems": [],
+ "schema": 1,
+ "std_contract": {
+  "fps": 24,
+  "frames": 121,
+  "height": 640,
+  "width": 480
+ }
+}

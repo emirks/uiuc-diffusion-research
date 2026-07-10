@@ -1,6 +1,6 @@
 # Transition Eval Harness — Specification
 
-**Version: `transition-eval/3.0.0-draft.3`** (see `VERSION`; stamped by `versioning.py`)
+**Version: `transition-eval/3.0.0-draft.4`** (see `VERSION`; stamped by `versioning.py`)
 **Status: DRAFT — NOT CERTIFIED.** No number produced under a draft counts as a result.
 v2 (exp_053 conventions) is retired; v2↔v3 numbers are not comparable.
 
@@ -12,11 +12,11 @@ The two rules above all sections: **pin everything, stamp everything.**
 
 | id | item | severity | where resolved |
 |----|------|----------|----------------|
-| O1 | `corpus_manifest.json` — create the single source of truth (consolidates dir names / dataset jsons / ALLOCATION.md) | **lock** | §5 |
+| O1 | ~~Create corpus_manifest.json~~ **RESOLVED 2026-07-10**: built by `build_corpus_manifest.py` — 39 classes / 223 clips, all std-contract-verified (portrait 480w×640h×121f@24), sidedness+tags from the labeled tree, dedup provenance per class, 2 raw filename quirks recovered via logged fuzzy match, 0 problems | ~~lock~~ done | `data/processed/transitions_std121/corpus_manifest.json` (force-added; data/ is gitignored) |
 | O2 | ~~Freeze dep pins + stage checkpoints~~ **RESOLVED 2026-07-10**: DINOv2 rev `f9e44c81…`, CoTracker code pinned by content hash `868059fa…` + ckpt sha256 `2670d456…`; all staged in `$LAB/cache/` since 2026-07-06 | ~~lock~~ done | `versioning.PINS` |
-| O3 | Pre-register certification bars: τ_copy recalibration, core-fallback δ/k, M2b intrusion bar, exam adoption bars per contested variant | **lock** | §6 — health-design session |
-| O4 | Implement `certify/` (exam, adversarial probes, stability, σ_seed) | **lock** | §6/§9 — health phase |
-| O5 | v3 metric implementations: sidedness-aware core mask + flagged fallback; M2a/b/c restructure; M1b/c camera/object decomposition; static-hold control; `manifests.py` joins; `plan.py`/`score.py`; retire experiment-dir scorer forks | **lock** | §3/§9 |
+| O3 | Pre-register certification bars — **ADVANCED**: full bar structure drafted in `certify/bars.yaml` (`status: DRAFT`, `frozen: false`); the health-design session replaces placeholder numbers and flips `frozen` in its own commit. `certify/exam.py` refuses to run against unfrozen bars | **lock** | `certify/bars.yaml` |
+| O4 | Implement `certify/` — **ADVANCED (skeleton-complete)**: `exam.py` (variant retrieval exam, grading, refuses unfrozen bars), `probes.py` (splice/cross-label builders + graders), `stability.py` (rerun comparator), `seeds.py` (σ_seed→MDE). First execution = the certification run itself | **lock** | `certify/` |
+| O5 | v3 metrics + lifecycle — **ADVANCED (implemented, GPU-unexecuted)**: `s_structure.py` (sidedness-aware core + flagged fallback), `m1_transfer.py` (M1a/M1b/M1c), `m2_integrity.py` (M2a/b/c + provenance), `controls.make_static_hold`, `manifests_v3.py` (3 schemas + tier/sidedness derivation), `plan.py`, `score.py` (stamped, completeness-checked, control arms, paired table). Synthetic contract tests in `tests/test_transition_eval_v3.py`. First real-data run = certification; scorer forks retire at that moment | **lock** | §3/§9 |
 | O6 | σ_seed measurement (≈12 stratified items × 5 seeds) | cert | §4/§6 |
 | O7 | M1b robust global-fit weighting choice (Huber/IRLS/RANSAC-lite) | cert | §3 M1b |
 | O8 | Δ-novelty profile displacement test (vs depth + profile-DTW) | roster | §3 M1d / §6 |
@@ -39,7 +39,7 @@ Decision fed: **"is arm/checkpoint A better than B on identical inputs; does cap
 
 ## 2. Inputs — the contract
 
-**Videos** (generated, reference, conditions): 480×640, 121 frames, 24 fps, H.264 mp4 (`std121`). Condition clips: prefix `num_frames % 8 == 1`, suffix `% 8 == 0`.
+**Videos** (generated, reference, conditions): **width 480 × height 640 (portrait)**, 121 frames, 24 fps, H.264 mp4 (`std121`; probed uniform across all 223 corpus clips 2026-07-10). Condition clips: prefix `num_frames % 8 == 1`, suffix `% 8 == 0`.
 **Malformed input → reject loudly, never adapt**: wrong resolution/fps/length, `T < n_prefix + n_suffix + 4`, unknown manifest keys. Resizing is a metric decision, never input handling (the 320p-upscale confound is documented precedent).
 
 **Three documents; no fact stored twice:**
@@ -135,8 +135,8 @@ Each certification writes a committed record `certifications/v<X.Y>.md` (bars, n
 
 ## 8. Interface
 
-- `plan(corpus_manifest, training_manifest, design) → suite.json`
-- `score(eval_manifest, corpus_manifest[, training_manifest]) → run_XXXX/{results.json, items.jsonl, report.md, config_snapshot.yaml}`; `--from-items` re-report = login node, numpy-only.
+- `python -m diffusion.transition_eval.plan --design D --corpus C --out suite.json`
+- `python -m diffusion.transition_eval.score --manifest M --corpus C [--training T] [--suite suite.json] --label L → {results.json, items.jsonl}` (results embed the stamp, completeness, paired twin table); `--from-items`-style re-reporting = login node, numpy-only.
 - `python src/diffusion/transition_eval/versioning.py [--corpus PATH] [--check]` — print/verify the stamp (standalone stdlib; the `-m` form also works inside the diffusion env).
 - Judge: separate CLI, login node, resumable via response cache.
 - Runtime: 1× H100/L40S; ~50 items ≈ 10–15 min warm cache (measured 8:39/46); cold corpus featurization dominates first runs.
@@ -148,11 +148,19 @@ Each certification writes a committed record `certifications/v<X.Y>.md` (bars, n
 
 ```
 src/diffusion/transition_eval/
-├── SPEC.md  VERSION  versioning.py           # this spec + enforcement
-├── video_io.py  features.py  motion.py …      # substrate (v2 modules, restructure per O5)
-├── s_structure / m1_transfer / m2_integrity / m3_endpoints / m4_judge   # target layout (O5)
-├── controls.py  manifests.py  plan.py  score.py  report.py             # lifecycle (O5)
-├── certify/                                   # §6 as code (O4) — versions WITH the harness
+├── SPEC.md  VERSION  versioning.py            # this spec + enforcement stamp
+├── video_io.py features.py morph.py motion.py # substrate (v2, unchanged)
+│   endpoints.py appearance.py pipeline.py     #   endpoints = M3; appearance feeds M1a/M2b
+├── s_structure.py                             # S: sidedness-aware core mask + flags
+├── m1_transfer.py                             # M1a appearance · M1b camera · M1c object
+├── m2_integrity.py                            # M2a copy · M2b intrusion · M2c memorization
+├── rubric.py judge_gemini.py judge.py         # M4 (advisory)
+├── controls.py                                # lerp + static-hold degenerate controls
+├── manifests_v3.py                            # 3 schemas + tier/sidedness derivations
+├── plan.py  score.py                          # lifecycle CLIs (score = the ONE scorer)
+├── build_corpus_manifest.py                   # corpus manifest builder (O1 tooling)
+├── certify/                                   # §6 as code: bars.yaml (DRAFT), exam,
+│                                              #   probes, stability, seeds
 └── certifications/                            # committed records, one per certified version
 ```
 
@@ -174,6 +182,7 @@ Regeneration: annotated tag `eval/vX.Y` per certified release; `git worktree add
 
 ## Spec changelog
 
+- **3.0.0-draft.4** (2026-07-10): O1 resolved (corpus_manifest.json, 39/223, contract portrait-corrected to 480w×640h); O3/O4/O5 advanced to implemented-draft — `s_structure/m1_transfer/m2_integrity/manifests_v3/plan/score` + `certify/{bars.yaml DRAFT, exam, probes, stability, seeds}` + static-hold control + v3 synthetic test suite; §9 map updated to actual filenames.
 - **3.0.0-draft.3** (2026-07-10): consolidated in-repo; added §0 OPEN register, §9 implementation map + code versioning, §10 change protocol; `versioning.py` + `VERSION` land; package brought under VCS.
 - 3.0.0-draft.2: three-manifest model (sidedness/tier derived, not stored); plan→infer→score lifecycle; σ_seed-once seeds policy; metric IDs → task anatomy (S/M1/M2/M3/M4).
 - 3.0.0-draft.1: first full spec from the v3 design sessions (leakage 3-axis split, normalization demoted to controls, M2 camera/object decomposition, sidedness-aware core mask, Δ-novelty roster).

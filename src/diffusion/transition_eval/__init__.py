@@ -1,18 +1,21 @@
-"""Content-invariant evaluation harness for creative video transitions.
+"""Transition eval harness — reference-based creative transition transfer.
 
-A transition is a program that acts on content, not a set of pixels. Every
-metric here is computed relative to a video's OWN endpoints and frames, so two
-videos that share a transition style but nothing else remain comparable:
+SPEC.md in this package is the authoritative, versioned definition (purpose,
+input contract, metric formulas, certification, change protocol); VERSION +
+versioning.py stamp every result. v3 metric IDs mirror the task anatomy —
+*execute the reference's transition (M1) on your own endpoints (M3) without
+cheating (M2), and look right overall (M4)*:
 
-- morph:      Morph Profile a(t)/b(t) curves + transformation depth, timing,
-              identity hold, core-frame mask (M1)
-- motion:     Motion Fidelity via tracklet velocity correlation (M2)
-- appearance: effect-medium appearance on core frames + leakage retrieval (M3, M6)
-- endpoints:  conditioned-frame fidelity + boundary seam detection (M5)
-- judge:      checklist rubric VLM judge, experimental until human-validated (M4)
-- controls:   lerp (crossfade) floor synthesis
-- report:     floor/ceiling normalization + retrieval-based harness validation
+- s_structure:   S    curves, sidedness-aware core mask, timing scalars
+- m1_transfer:   M1a  appearance-to-reference · M1b camera · M1c object motion
+- m2_integrity:  M2a  copy · M2b intrusion (named) · M2c memorization (tiered)
+- endpoints:     M3a  endpoint fidelity · M3b seam flag
+- judge_gemini:  M4   rubric judge (ADVISORY until human-calibrated)
+- controls:      lerp / static-hold degenerate control arms (never divisors)
+- manifests_v3:  eval / corpus / training manifests + derivations
+- plan, score:   lifecycle CLIs (plan -> external inference -> score)
+- certify/:      the health-check system; its application IS certification
 
-Validated in exp_052 (style-discrimination exam on real clips before any
-method decision rests on these numbers).
+Legacy v2 modules (morph, motion, appearance, report) remain as substrate;
+legacy metric IDs (old M1–M6) are retired — IDs read per the stamped version.
 """
