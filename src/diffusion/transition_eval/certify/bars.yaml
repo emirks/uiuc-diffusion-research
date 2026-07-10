@@ -1,59 +1,121 @@
 # Pre-registered certification bars (SPEC §6, OPEN O3).
 #
-# STATUS: EVERY NUMBER BELOW IS DRAFT — placeholders carrying the *shape* of
-# the pre-registration so certify/ code can be written and dry-run against
-# them. The health-design session freezes real values, and the freeze MUST
+# STATUS: PROPOSED — full health-design-session proposal (2026-07-10), every
+# number carrying its provenance. NOTHING here is frozen: the user reviews the
+# five freeze decisions (stage split, bar values, wrong-class rule, M3 probe
+# scope, probe counts) and flips `frozen` in its own commit. The freeze MUST
 # happen before the first certification run executes (a bar set after seeing
-# the number is not a bar). Draft provenance for each placeholder is noted.
-status: DRAFT
-frozen: false          # flip only at the health-design session, in its own commit
+# the number is not a bar). exam.py refuses to run while frozen is false.
+#
+# Design frame (SPEC §6): a metric is trusted only where it has passed a test
+# whose correct answer was known before the run. Three owned evidence pools —
+# P1 corpus (223 clips / 39 classes), P2 archived generations (150 items,
+# exp_056-058), P3 synthetic constructions — grade three aspects per metric:
+# discriminates / stable / honest. Absolute bars ONLY where prior-corpus
+# precedent exists; relative bars everywhere else (both sides measured in the
+# same run, immune to bar-gaming).
+status: PROPOSED
+frozen: false          # flip only on user sign-off, in its own commit
 
-exam:
+# PROPOSED (freeze decision 1): two-stage certification.
+#   stage 1 "instrument" — checks exam/probes/twins/bridge/stability; zero
+#     model runs; PASS authorizes the eval/v3.0 tag.
+#   stage 2 "model-family calibration" — seeds (sigma_seed) at the first model
+#     eval per family; until measured, every reported delta is stamped
+#     "MDE uncalibrated". Rationale: sigma_seed is a property of the model
+#     family, not the instrument.
+stages:
+  instrument: [exam, probes, twins, bridge, stability]
+  model_family: [seeds]
+
+exam:                            # check 1 — P1, discriminates (+ trust flags)
   # LOO 1-NN retrieval on the full corpus manifest (223 clips / 39 classes),
-  # per metric, per contested variant. Chance ≈ 0.067 (15/223).
-  metrics: [m1a_appearance, m1b_camera, m1c_object]
-  variants:
+  # per metric, per contested variant, one shared feature pass (cache verified
+  # 100% warm 2026-07-10 — login-node numpy). Chance = 15/223 ~= 0.067.
+  # Singletons (jump_transition, seamless_transition) stay as distractors but
+  # are excluded from accuracy denominators (accuracy_testable).
+  metrics: [m1a_appearance, m1b_camera, m1c_object, timing]
+  variants:                      # THE variant-testing venue — nowhere else
     core_mask: [v2_envelope, v3_sided, all_frames]   # SPEC §3 S
-    motion: [v2_mfs_incumbent, v3_decomposed]        # M1b/M1c vs old M2
-  adoption_rule:
-    overall: ">= incumbent accuracy"                  # form locked; margins DRAFT
-    target_stratum: "> incumbent by >= 0.05"          # one-sided classes (core mask),
-                                                      # camera classes (M1b) — DRAFT margin
-    regression_guard: "no previously-trusted class recall drops below trust_min"
-  trust_min_recall: 0.5          # carried from v2 (exam-validated convention)
-  min_ceiling_clips: 4           # carried from v2
+    motion: [m_incumbent, decomposed]                # v2 MFS vs M1b/M1c
+    m1b_weighting: [trim2, huber]                    # O7, resolved here
+    timing: [timing_incumbent, timing_novelty]       # O8 Δ-novelty, resolved here
+  absolute_floor:                # catastrophe guard, NOT a quality target
+    m1a_accuracy_testable_min: 0.33   # ~5x chance (v2 achieved 4x chance, 0.851,
+                                      # on the far easier 47-clip corpus)
+    m1a_cohens_d_min: 1.5             # v2 precedent d=2.22 (exp_054), margin for
+                                      # the 4.7x harder 39-class corpus
+  adoption_rule:                 # relative — grades challengers vs incumbents
+    overall: ">= incumbent accuracy_1nn"
+    target_stratum_margin: 0.05  # stratum recall must beat incumbent by this;
+                                 # strata: one-sided classes (core mask, timing),
+                                 # camera-tagged (M1b), object-tagged (M1c)
+    regression_guard: "no incumbent-trusted class (recall >= trust_min) drops below trust_min"
+  trust_min_recall: 0.5          # v2 convention (exam-validated, exp_053/054)
+  min_ceiling_clips: 4           # v2 convention
 
-probes:
-  copy_splices:                  # M2a ground truth (exp_053 check-C pattern)
-    n_per_class: 2               # DRAFT — health session sets coverage
-    construction: "replace generated mid-segment with the reference's mid-segment"
-    bar: "100% of splices >= tau_copy; honest-set max clearly below (gap >= 0.05 DRAFT)"
-    tau_copy_recalibration: "set tau_copy at the midpoint of the splice-min /
-      honest-max gap; current 0.88 is the v2 check-C carryover"
-  cross_label:                   # M2b ground truth
-    n_items: 20                  # DRAFT
-    construction: "rescore existing generations with a deliberately wrong
-      reference class of a DIFFERENT texture family"
-    bar: "margin < 0 naming the true class in >= 90% (DRAFT)"
-  controls:
-    bar: "lerp/static-hold arms land at the M1a floor of their sidedness group
-      and trip core_degenerate/timing flags in >= 95% (DRAFT)"
+probes:                          # check 2 — P3, ground truth by construction
+  copy_splices:                  # M2a (exp_053 check-C pattern)
+    coverage: "2 per class having >= 1 archived honest generation (~16 classes,
+      ~32 splices; exact count recorded at build)"
+    construction: "replace generated mid-segment with the reference's
+      mid-segment, at contract resolution"
+    bar: "100% of splices >= tau_copy(recalibrated); splice-min/honest-max gap >= 0.05"
+    tau_copy_recalibration: "tau = midpoint of the splice-min / honest-max gap;
+      current 0.88 is the v2 check-C carryover and is replaced by this run"
+  cross_label:                   # M2b
+    coverage: "ALL eligible archived items (~40-60; rescoring is cached numpy)"
+    wrong_class_rule: "pick_far_class: bottom quartile of class-centroid
+      set-similarity to the true class, n_clips >= 2, median element —
+      pre-registered and automatic; cousins excluded by construction
+      (freeze decision 3: this rule vs a manual 39-class family sheet)"
+    bar: "margin < 0 AND intruder names the true class in >= 90%"
+  endpoint_swap:                 # M3a (freeze decision 4: bars vs roster-only)
+    n_items: 20
+    construction: "rescore existing conditioned items against another item's
+      condition clip (cyclic pairing)"
+    bar: "true pairing beats swapped pairing on prefix_dino in 100% of pairs"
+  hard_cut:                      # M3b (freeze decision 4: bars vs roster-only)
+    n_items: 20
+    construction: "corpus clip A's first 9 frames + clip B's remainder, no
+      blend — ground-truth seam at the handoff index, contract resolution"
+    bar: "max_seam_z > 3 fires in >= 95%"
+  controls:                      # S honesty + M1a floor
+    bar: "every control arm (lerp two-sided / static-hold one-sided &
+      prefix-only) scores below every honest arm of its sidedness group on
+      M1a, and core_degenerate fires in >= 95%"
+    precedent: "exp_054 lerp floor separation (real depth 0.939 vs lerp 0.636)"
 
-twins:
+twins:                           # check 3 — P2, real failure recall
   bar: "copy-regime base twins flagged (near_copy OR max_seam_z > 3) in 100%"
   precedent: "exp_057: 11/11"
 
-stability:
+bridge:                          # check 4 — P2, pre-registered predictions +
+                                 # v3 score.py's first-real-data shakedown
+  completeness: "all ~150 archived exp_056-058 items rescored under v3, zero
+    crashes, every row stamped — graded before B1/B2"
+  twosided_spearman_min: 0.8     # B1: v3 M1a vs v2 appearance_best rank-corr on
+                                 # two-sided items non-degenerate under both
+                                 # (same envelope rule -> continuity expected)
+  onesided_degenerate_max: 0.20  # B2: v3 core_degenerate rate on one-sided
+                                 # items (v2 proxy rate ~1.0, data-confirmed —
+                                 # THE claim that motivated v3, graded on real data)
+
+stability:                       # check 5
   warm_cache_rerun: "bit-identical items.jsonl"
-  cold_cache_tolerance: 0.005    # DRAFT — abs delta per headline metric
+  cold_cache_tolerance: 0.005    # abs delta per headline metric, 10-clip subset
   anchor_reproduction: 0.04      # raw, established precedent (exp_057 §4c)
 
-seeds:                           # O6 — measured here, consumed as MDE
-  probe_items: 12                # DRAFT — stratified across sidedness x taxonomy
+seeds:                           # check 6 — stage 2 (O6), the only model-side check
+  probe_items: 12                # stratified across sidedness x taxonomy tags
   n_seeds: 5
   output: "sigma_seed.json per headline metric; deltas reported against
-    MDE = 1.96 * sigma_seed * sqrt(2/n)"
+    MDE = 1.96 * sigma_seed * sqrt(2/n); until measured, results stamp
+    'MDE uncalibrated'"
 
-judge:
-  certification: exempt          # advisory until human-calibrated (O9)
-  human_bar: "Spearman >= 0.8 vs human labels on 50-100 items"
+waivers:                         # named, deliberate — the honest form of
+                                 # "collectively exhaustive" (SPEC §6 grid)
+  m1d_timing: "analysis tier; enters only via the O8 exam roster, no bar"
+  m2c_memorization: "audit-only; read via tier B/C contrasts, no bar"
+  m4_judge: "advisory; certification-exempt until human-calibrated (O9:
+    Spearman >= 0.8 vs human labels on 50-100 items)"

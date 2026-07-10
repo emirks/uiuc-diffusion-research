@@ -119,7 +119,9 @@ def git_state() -> dict:
     """Commit / branch / exact tag / instrument-scoped dirty state."""
     commit = _git("rev-parse", "HEAD")
     status = _git("status", "--porcelain", "--", *INSTRUMENT_PATHS)
-    dirty_files = [l[3:] for l in status.splitlines()] if status else []
+    # _git strips the output, eating the first line's leading status char —
+    # split on the XY-field/path whitespace instead of slicing a fixed width.
+    dirty_files = [l.split(maxsplit=1)[-1] for l in status.splitlines()] if status else []
     tag = _git("describe", "--exact-match", "--tags", "HEAD")
     return {
         "commit": commit,

@@ -10,8 +10,9 @@ M1b camera match — per-step robust similarity-transform fit on tracklets
 M1c object match — Yatim-style MFS velocity-direction correlation on RESIDUAL
                    velocities after removing the M1b global fit per step.
 
-Robust weighting for the M1b fit is a 2-round median trim — a placeholder
-pending O7 (Huber/IRLS/RANSAC decision at certification).
+Robust weighting for the M1b fit (O7): both candidates are implemented —
+'trim2' (incumbent 2-round median trim) and 'huber' (IRLS) — and graded
+against each other by the certification exam on the camera-tagged stratum.
 
 Pure numpy; GPU only upstream (tracking/features). Unit-tested synthetically.
 """
@@ -60,7 +61,45 @@ def _smooth_tracks(tracks: np.ndarray) -> np.ndarray:
     return np.apply_along_axis(lambda x: np.convolve(x, kern, mode="valid"), 0, pad)
 
 
-def camera_trajectory(tracks: np.ndarray, vis: np.ndarray) -> dict:
+def _fit_similarity_weighted(P: np.ndarray, Q: np.ndarray,
+                             w: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Weighted variant of _fit_similarity (weighted centroids + moments)."""
+    w = w / (w.sum() + 1e-12)
+    Pm, Qm = (w[:, None] * P).sum(axis=0), (w[:, None] * Q).sum(axis=0)
+    Pc, Qc = P - Pm, Q - Qm
+    denom = (w[:, None] * Pc ** 2).sum() + 1e-12
+    a = (w[:, None] * Pc * Qc).sum() / denom
+    b = (w * (Pc[:, 0] * Qc[:, 1] - Pc[:, 1] * Qc[:, 0])).sum() / denom
+    M = np.array([[a, -b], [b, a]])
+    t = Qm - M @ Pm
+    return M, t
+
+
+def _robust_fit(P: np.ndarray, Q: np.ndarray, weighting: str) -> tuple[np.ndarray, np.ndarray, int]:
+    """O7 roster: 'trim2' (incumbent 2-round median trim) vs 'huber' (IRLS,
+    k = 1.345·1.4826·MAD, 3 iterations). Both are graded by the certification
+    exam on the camera-tagged stratum; the winner ships. Returns (M, t, n_eff)."""
+    M, t = _fit_similarity(P, Q)
+    if weighting == "huber":
+        w = np.ones(len(P))
+        for _ in range(3):
+            res = np.linalg.norm(Q - (P @ M.T + t), axis=1)
+            mad = np.median(np.abs(res - np.median(res))) + 1e-9
+            k = 1.345 * 1.4826 * mad
+            w = np.where(res <= k, 1.0, k / (res + 1e-12))
+            M, t = _fit_similarity_weighted(P, Q, w)
+        return M, t, max(int(round((w > 0.5).sum())), MIN_FIT_POINTS)
+    # trim2 (incumbent): one trimmed refit on residual outliers
+    res = np.linalg.norm(Q - (P @ M.T + t), axis=1)
+    keep = res <= TRIM_FACTOR * (np.median(res) + 1e-9)
+    if keep.sum() >= MIN_FIT_POINTS and keep.sum() < len(P):
+        M, t = _fit_similarity(P[keep], Q[keep])
+    n_eff = int(keep.sum()) if keep.sum() >= MIN_FIT_POINTS else int(len(P))
+    return M, t, n_eff
+
+
+def camera_trajectory(tracks: np.ndarray, vis: np.ndarray,
+                      weighting: str = "trim2") -> dict:
     """Per-step global (camera) motion from tracklets.
 
     tracks [T,N,2] in normalized coords, vis [T,N]. Returns
@@ -80,13 +119,8 @@ def camera_trajectory(tracks: np.ndarray, vis: np.ndarray) -> dict:
         P, Q = tr[s][ok], tr[s + 1][ok]
         if len(P) < MIN_FIT_POINTS:
             continue
-        M, t = _fit_similarity(P, Q)
-        # robust placeholder (O7): one trimmed refit on residual outliers
-        res = np.linalg.norm(Q - (P @ M.T + t), axis=1)
-        keep = res <= TRIM_FACTOR * (np.median(res) + 1e-9)
-        if keep.sum() >= MIN_FIT_POINTS and keep.sum() < len(P):
-            M, t = _fit_similarity(P[keep], Q[keep])
-        n_pts[s] = int(keep.sum()) if keep.sum() >= MIN_FIT_POINTS else int(len(P))
+        M, t, n_eff = _robust_fit(P, Q, weighting)
+        n_pts[s] = n_eff
         Ms[s], ts[s] = M, t
         a, b = M[0, 0], M[1, 0]
         center_disp = Q.mean(axis=0) - P.mean(axis=0)   # interpretable translation
