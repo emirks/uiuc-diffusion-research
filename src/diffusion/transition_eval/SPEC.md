@@ -1,6 +1,6 @@
 # Transition Eval Harness — Specification
 
-**Version: `transition-eval/3.0.0-draft.4`** (see `VERSION`; stamped by `versioning.py`)
+**Version: `transition-eval/3.0.0-draft.5`** (see `VERSION`; stamped by `versioning.py`)
 **Status: DRAFT — NOT CERTIFIED.** No number produced under a draft counts as a result.
 v2 (exp_053 conventions) is retired; v2↔v3 numbers are not comparable.
 
@@ -154,7 +154,7 @@ src/diffusion/transition_eval/
 ├── s_structure.py                             # S: sidedness-aware core mask + flags
 ├── m1_transfer.py                             # M1a appearance · M1b camera · M1c object
 ├── m2_integrity.py                            # M2a copy · M2b intrusion · M2c memorization
-├── rubric.py judge_gemini.py judge.py         # M4 (advisory)
+├── rubric.py judge_gemini.py                  # M4 (advisory; Gemma backend retired)
 ├── controls.py                                # lerp + static-hold degenerate controls
 ├── manifests_v3.py                            # 3 schemas + tier/sidedness derivations
 ├── plan.py  score.py                          # lifecycle CLIs (score = the ONE scorer)
@@ -171,7 +171,7 @@ Regeneration: annotated tag `eval/vX.Y` per certified release; `git worktree add
 1. Branch `eval/<slug>` (worktree if other work is live in the checkout).
 2. Edit **code and SPEC.md together** — a metric change without its §3 block updated is an incomplete change. Update the §0 OPEN register.
 3. Bump `VERSION` (iterate as `X.Y.Z-draft.N`; certified releases drop the suffix).
-4. `pytest -q tests/test_transition_eval.py tests/test_versioning.py` — green.
+4. `PYTHONPATH=$PWD/src pytest -q tests/test_transition_eval*.py tests/test_versioning.py` — green. (PYTHONPATH matters in worktrees: the env's editable install points at the main checkout and silently shadows worktree code; every harness test file also carries a sys.path shim for the same reason.)
 5. `python -m diffusion.transition_eval.versioning --corpus <corpus_manifest>` — review the stamp.
 6. Run certification (§6) → committed record `certifications/v<X.Y>.md` + artifacts under `outputs/eval/certification/<version>/`. *(Until O4 lands: version stays draft; drafts cannot produce headline numbers.)*
 7. `CHANGELOG.md` entry (repo rule).
@@ -182,6 +182,7 @@ Regeneration: annotated tag `eval/vX.Y` per certified release; `git worktree add
 
 ## Spec changelog
 
+- **3.0.0-draft.5** (2026-07-10): stale v2 surface pruned per §3 "Deleted from v2" — `judge.py` (Gemma backend, superseded by Gemini), `manifest.py` (v2 schema, superseded by manifests_v3), `appearance.leakage`/`effect_similarity` (superseded by m2_integrity), `report.normalize_score`/`score_tables` (normalization removed); report.py reduced to exam machinery + trust flags. Package is now fully two-sided AND one-sided capable (sidedness-aware core, sidedness-appropriate controls, prefix-only support, no normalization dependency) — ready for the health-design session.
 - **3.0.0-draft.4** (2026-07-10): O1 resolved (corpus_manifest.json, 39/223, contract portrait-corrected to 480w×640h); O3/O4/O5 advanced to implemented-draft — `s_structure/m1_transfer/m2_integrity/manifests_v3/plan/score` + `certify/{bars.yaml DRAFT, exam, probes, stability, seeds}` + static-hold control + v3 synthetic test suite; §9 map updated to actual filenames.
 - **3.0.0-draft.3** (2026-07-10): consolidated in-repo; added §0 OPEN register, §9 implementation map + code versioning, §10 change protocol; `versioning.py` + `VERSION` land; package brought under VCS.
 - 3.0.0-draft.2: three-manifest model (sidedness/tier derived, not stored); plan→infer→score lifecycle; σ_seed-once seeds policy; metric IDs → task anatomy (S/M1/M2/M3/M4).

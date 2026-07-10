@@ -1,10 +1,13 @@
-"""Floor/ceiling normalization and the harness's own exam (retrieval eval).
+"""Exam machinery + trust flags (v3 surface).
 
-Raw metric values are uninterpretable ("is 0.71 good?"); every reported score
-is anchored between a floor control (lerp crossfade / base model) and a
-ceiling (real same-style clips, leave-one-out) run through the identical
-pipeline. No single composite number is produced — collapsing axes hides
-exactly the trade-offs the work is about.
+Kept: retrieval_eval (the LOO 1-NN style-discrimination exam — certify/exam.py
+runs it per metric per variant), wilson_interval (honest error bars for exam
+accuracies), trust_flags (per-style reliability from the certification exam),
+md_table (report rendering).
+
+Retired to git history (SPEC v3 §3 "Deleted from v2"): normalize_score and
+score_tables — floor/ceiling normalization no longer exists; v3 reports raw
+scores with control arms and the paired twin table (score.py).
 """
 
 from __future__ import annotations
@@ -12,19 +15,9 @@ from __future__ import annotations
 import numpy as np
 
 
-def normalize_score(raw: float, floor: float, ceiling: float, higher_better: bool = True) -> float:
-    """(raw - floor) / (ceiling - floor), clipped to [0, 1]; orientation-aware."""
-    if not higher_better:
-        raw, floor, ceiling = -raw, -floor, -ceiling
-    denom = ceiling - floor
-    if abs(denom) < 1e-9:
-        return float("nan")
-    return float(np.clip((raw - floor) / denom, 0.0, 1.0))
-
-
 def wilson_interval(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     """95% Wilson score interval for a binomial proportion — the honest error
-    bar for exam accuracies at n=41 and judge pass rates at n=6."""
+    bar for exam accuracies."""
     if n == 0:
         return (float("nan"), float("nan"))
     p = k / n
@@ -81,18 +74,17 @@ def md_table(headers: list[str], rows: list[list]) -> str:
     return "\n".join(lines)
 
 
-# --- trust flags + the standard score-report shape (exp_053) -----------------
+# --- trust flags ---------------------------------------------------------------
 #
-# The exam (run_validation) certifies each metric PER STYLE; scores on styles
-# where a metric failed its exam, or whose LOO ceiling rests on too few clips,
-# are printed but flagged — a number the exam couldn't certify must not look
-# like one it did.
+# The certification exam certifies each metric PER STYLE; scores on styles
+# where a metric failed its exam are printed but flagged — a number the exam
+# couldn't certify must not look like one it did.
 
 def trust_flags(validation_results: dict, ref_counts: dict[str, int],
                 motion_recall_min: float = 0.5, min_ceiling_clips: int = 4) -> dict:
-    """Per-style reliability from the validation run's results.json.
-    motion_trusted: the exam retrieved this style via motion fidelity.
-    ceiling_trusted: the LOO ceiling has >= min_ceiling_clips-1 neighbors."""
+    """Per-style reliability from the exam's results.json.
+    motion_trusted: the exam retrieved this style via motion.
+    ceiling_trusted: enough real clips for real-sibling context (SPEC §4)."""
     recall = validation_results["retrieval"]["motion_fidelity"]["per_class_recall"]
     flags = {}
     for style, n in ref_counts.items():
@@ -104,76 +96,3 @@ def trust_flags(validation_results: dict, ref_counts: dict[str, int],
             "motion_recall": None if r is None else float(r),
         }
     return flags
-
-
-def _mean_std(vals: list) -> tuple[float, float, int]:
-    v = np.array([x for x in vals if x is not None and np.isfinite(x)], dtype=float)
-    if len(v) == 0:
-        return float("nan"), float("nan"), 0
-    return float(v.mean()), float(v.std(ddof=1)) if len(v) > 1 else 0.0, len(v)
-
-
-def _cell(vals: list, flagged: bool = False) -> str:
-    m, s, n = _mean_std(vals)
-    if n == 0:
-        return "—"
-    txt = f"{m:.2f}±{s:.2f}"
-    return f"({txt})†" if flagged else txt
-
-
-def score_tables(rows: list[dict], trust: dict | None = None,
-                 judge_by_arm: dict | None = None) -> str:
-    """The standard two-table report: HEADLINE (the axes that discriminate
-    under endpoint conditioning — appearance / motion / judge / endpoints+seam
-    / leakage) and ANALYSIS (M1 profile/timing scalars — necessary-not-
-    sufficient there; they earn headline status only in unconditioned or
-    timing-focused comparisons). All cells mean±std over items; † = the exam
-    could not certify this metric for this item's style; ‡ = ceiling rests on
-    <4 reference clips."""
-    trust = trust or {}
-    arms = sorted({r["arm"] for r in rows})
-
-    def vals(sub, col):
-        return [r.get(col) for r in sub]
-
-    def arm_flag(sub, key):
-        st = {r["style"] for r in sub}
-        return any(not trust.get(s, {}).get(key, True) for s in st)
-
-    head_rows, ana_rows = [], []
-    for arm in arms:
-        sub = [r for r in rows if r["arm"] == arm]
-        mflag = arm_flag(sub, "motion_trusted")
-        cflag = arm_flag(sub, "ceiling_trusted")
-        ep = vals(sub, "prefix_dino") + vals(sub, "suffix_dino")
-        judge = (judge_by_arm or {}).get(arm, {})
-        jp = judge.get("all_pass")
-        head_rows.append([
-            arm, len(sub),
-            _cell(vals(sub, "norm_appearance_best"), flagged=cflag),
-            _cell(vals(sub, "norm_motion_fidelity_mean"), flagged=mflag or cflag),
-            f"{jp:.2f}" if jp is not None and np.isfinite(jp) else "—",
-            _cell(ep),
-            _cell(vals(sub, "max_seam_z")),
-            _cell(vals(sub, "leak_max_sim_target")),
-        ])
-        ana_rows.append([
-            arm,
-            _cell(vals(sub, "norm_profile_dtw_best"), flagged=cflag),
-            _cell(vals(sub, "scalar_depth")),
-            _cell(vals(sub, "scalar_depart")),
-            _cell(vals(sub, "scalar_arrive")),
-            _cell(vals(sub, "scalar_core_frac")),
-            _cell(vals(sub, "leak_excess")),
-            str(sum(1 for r in sub if r.get("scalar_cross_high"))),
-        ])
-
-    out = ["## Headline — discriminative axes (mean±std per arm)\n",
-           md_table(["arm", "n", "appearance", "motion", "judge pass",
-                     "endpoint DINO", "max seam z", "leak max sim"], head_rows),
-           "\n† metric not exam-certified for this style · ‡/() see trust flags · "
-           "seam z < 0 = no seam · leak max sim ≥ ~0.9 = near-copy regime\n",
-           "\n## Analysis — profile/timing scalars (saturate under endpoint conditioning)\n",
-           md_table(["arm", "profile DTW (norm)", "depth", "depart", "arrive",
-                     "core frac", "leak excess", "cross>0.85 items"], ana_rows)]
-    return "\n".join(out)

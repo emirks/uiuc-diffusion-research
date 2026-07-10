@@ -5,8 +5,16 @@ trajectories stand in for DINO embeddings: unit vectors moving between two
 anchor directions.
 """
 
+import pathlib
+import sys
+
 import numpy as np
 import pytest
+
+# Resolve the package from THIS checkout, not the env's editable install —
+# in a worktree the editable install points at the main checkout and would
+# silently test the wrong code (first import of `diffusion` binds the path).
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
 
 from diffusion.transition_eval.controls import make_lerp
 from diffusion.transition_eval.morph import (
@@ -14,7 +22,7 @@ from diffusion.transition_eval.morph import (
     resample_curve, znorm,
 )
 from diffusion.transition_eval.motion import motion_fidelity
-from diffusion.transition_eval.report import normalize_score, retrieval_eval
+from diffusion.transition_eval.report import retrieval_eval
 
 
 def _unit(v):
@@ -127,12 +135,6 @@ def test_lerp_control_shape_and_endpoints():
     assert (np.diff(mid) < 0).all()  # monotone fade
 
 
-def test_normalize_score_orientation():
-    assert normalize_score(0.5, floor=0.0, ceiling=1.0) == pytest.approx(0.5)
-    assert normalize_score(0.2, floor=0.8, ceiling=0.1, higher_better=False) == pytest.approx(6 / 7, abs=1e-6)
-    assert normalize_score(2.0, floor=0.0, ceiling=1.0) == 1.0  # clipped
-
-
 def test_retrieval_eval_perfect_and_chance():
     labels = ["x"] * 3 + ["y"] * 3
     D = np.ones((6, 6))
@@ -197,22 +199,6 @@ def test_trust_flags_logic():
     assert tf["water"]["motion_trusted"] and tf["water"]["ceiling_trusted"]
     assert not tf["earth"]["motion_trusted"] and tf["earth"]["ceiling_trusted"]
     assert tf["flame"]["motion_trusted"] and not tf["flame"]["ceiling_trusted"]
-
-
-def test_score_tables_shape_and_flags():
-    from diffusion.transition_eval.report import score_tables
-    rows = [{"arm": "a", "style": "flame", "norm_appearance_best": 0.7,
-             "norm_motion_fidelity_mean": 0.5, "prefix_dino": 0.98, "suffix_dino": 0.97,
-             "max_seam_z": -0.5, "leak_max_sim_target": 0.7, "norm_profile_dtw_best": 0.9,
-             "scalar_depth": 1.0, "scalar_depart": 0.2, "scalar_arrive": 0.6,
-             "scalar_core_frac": 0.4, "leak_excess": 0.2, "scalar_cross_high": True}
-            for _ in range(3)]
-    trust = {"flame": {"motion_trusted": False, "ceiling_trusted": False}}
-    out = score_tables(rows, trust=trust, judge_by_arm={"a": {"all_pass": 0.5}})
-    assert "## Headline" in out and "## Analysis" in out
-    assert ")†" in out          # motion cell flagged
-    assert "0.50" in out        # judge pass rendered
-    assert "±" in out           # uncertainty rendered
 
 
 def test_judge_pass_rate_all_pass():
