@@ -1,0 +1,56 @@
+# exp_059 — LTX-2 inference benchmark on H100.
+# Granular wall-clock timing of the two production pipelines at 720p/1080p, 5 s.
+#
+# "dev"  = TI2VidTwoStagesPipeline: full 19B checkpoint, stage 1 Euler 40 steps
+#          (CFG+STG guided) at half res, x2 spatial upsample, stage 2 = 3 steps
+#          with the distilled LoRA at full res.
+# "dist" = DistilledPipeline: distilled 19B checkpoint, stage 1 fixed 8 sigmas
+#          at half res (no guidance), x2 upsample, stage 2 fixed 3 sigmas.
+#
+# Resolutions are the closest multiples of 64 to nominal 720p/1080p (two-stage
+# pipelines require /64 so the half-res stage stays /32):
+#   720p  -> 1280x704,  1080p -> 1920x1088.
+# 5 s = 121 frames @ 24 fps (num_frames must be 8k+1).
+
+model:
+  dev_checkpoint: /projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors
+  distilled_checkpoint: /projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-19b-distilled.safetensors
+  distilled_lora: /projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-19b-distilled-lora-384.safetensors
+  distilled_lora_strength: 0.8   # official README quickstart value; strength does not affect speed (fused at load)
+  spatial_upsampler: /projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-spatial-upscaler-x2-1.0.safetensors
+  gemma_root: /projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized
+
+generation:
+  prompt: >-
+    A cinematic aerial shot of a lone red-sailed boat crossing a turquoise bay
+    at golden hour, gentle waves, seabirds circling, the camera slowly orbiting,
+    warm sunlight, gentle ambient music.
+  num_frames: 121
+  frame_rate: 24.0
+  cold_seed: 42
+  warm_seeds: [42, 43, 44]      # 3 warm repeats; seed does not affect timing
+  # dev-pipeline guidance = official LTX-2 defaults (constants.LTX_2_PARAMS)
+  num_inference_steps: 40
+  video_guider: {cfg_scale: 3.0, stg_scale: 1.0, rescale_scale: 0.7, modality_scale: 3.0, skip_step: 0, stg_blocks: [29]}
+  audio_guider: {cfg_scale: 7.0, stg_scale: 1.0, rescale_scale: 0.7, modality_scale: 3.0, skip_step: 0, stg_blocks: [29]}
+  max_batch_size: 4             # batch all guidance passes in one transformer call (fastest on 80 GB)
+
+arms:
+  # -- eager --
+  dev_720p_eager:    {pipeline: dev,  width: 1280, height: 704,  compile: none}
+  dev_1080p_eager:   {pipeline: dev,  width: 1920, height: 1088, compile: none}
+  dist_720p_eager:   {pipeline: dist, width: 1280, height: 704,  compile: none}
+  dist_1080p_eager:  {pipeline: dist, width: 1920, height: 1088, compile: none}
+  # -- torch.compile, CUDA graphs (the README's main latency lever) --
+  dev_720p_compile:  {pipeline: dev,  width: 1280, height: 704,  compile: reduce-overhead}
+  dev_1080p_compile: {pipeline: dev,  width: 1920, height: 1088, compile: reduce-overhead}
+  dist_720p_compile: {pipeline: dist, width: 1280, height: 704,  compile: reduce-overhead}
+  dist_1080p_compile: {pipeline: dist, width: 1920, height: 1088, compile: reduce-overhead}
+  # -- GPU-resident weights via StateDictRegistry: warm transformer_build ~0.3 s.
+  #    ONLY valid for the distilled pipeline (no LoRA fusion); the dev pipeline
+  #    OOMs at stage-2 (out-of-place fusion doubles the 39 GB). ~68 GB baseline. --
+  dist_720p_registry: {pipeline: dist, width: 1280, height: 704,  compile: none, registry: true}
+  dist_1080p_registry: {pipeline: dist, width: 1920, height: 1088, compile: none, registry: true}
+  # -- smoke (tiny, validates harness end-to-end; not part of the table) --
+  smoke_dist:        {pipeline: dist, width: 448,  height: 256,  compile: none, num_frames: 33, warm_repeats: 1}
+  smoke_dev:         {pipeline: dev,  width: 448,  height: 256,  compile: none, num_frames: 33, warm_repeats: 1, num_inference_steps: 8}
