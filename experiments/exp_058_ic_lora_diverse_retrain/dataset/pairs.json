@@ -1,0 +1,3222 @@
+[
+  {
+    "id": "air_bending/air_bending_0__ref_air_bending_1",
+    "class": "air_bending",
+    "sidedness": "twosided",
+    "target": "air_bending_0",
+    "reference": "air_bending_1"
+  },
+  {
+    "id": "air_bending/air_bending_0__ref_air_bending_2",
+    "class": "air_bending",
+    "sidedness": "twosided",
+    "target": "air_bending_0",
+    "reference": "air_bending_2"
+  },
+  {
+    "id": "air_bending/air_bending_0__ref_air_bending_3",
+    "class": "air_bending",
+    "sidedness": "twosided",
+    "target": "air_bending_0",
+    "reference": "air_bending_3"
+  },
+  {
+    "id": "air_bending/air_bending_1__ref_air_bending_2",
+    "class": "air_bending",
+    "sidedness": "twosided",
+    "target": "air_bending_1",
+    "reference": "air_bending_2"
+  },
+  {
+    "id": "air_bending/air_bending_1__ref_air_bending_3",
+    "class": "air_bending",
+    "sidedness": "twosided",
+    "target": "air_bending_1",
+    "reference": "air_bending_3"
+  },
+  {
+    "id": "air_bending/air_bending_1__ref_air_bending_0",
+    "class": "air_bending",
+    "sidedness": "twosided",
+    "target": "air_bending_1",
+    "reference": "air_bending_0"
+  },
+  {
+    "id": "air_bending/air_bending_2__ref_air_bending_3",
+    "class": "air_bending",
+    "sidedness": "twosided",
+    "target": "air_bending_2",
+    "reference": "air_bending_3"
+  },
+  {
+    "id": "air_bending/air_bending_2__ref_air_bending_0",
+    "class": "air_bending",
+    "sidedness": "twosided",
+    "target": "air_bending_2",
+    "reference": "air_bending_0"
+  },
+  {
+    "id": "air_bending/air_bending_2__ref_air_bending_1",
+    "class": "air_bending",
+    "sidedness": "twosided",
+    "target": "air_bending_2",
+    "reference": "air_bending_1"
+  },
+  {
+    "id": "air_bending/air_bending_3__ref_air_bending_0",
+    "class": "air_bending",
+    "sidedness": "twosided",
+    "target": "air_bending_3",
+    "reference": "air_bending_0"
+  },
+  {
+    "id": "air_bending/air_bending_3__ref_air_bending_1",
+    "class": "air_bending",
+    "sidedness": "twosided",
+    "target": "air_bending_3",
+    "reference": "air_bending_1"
+  },
+  {
+    "id": "air_bending/air_bending_3__ref_air_bending_2",
+    "class": "air_bending",
+    "sidedness": "twosided",
+    "target": "air_bending_3",
+    "reference": "air_bending_2"
+  },
+  {
+    "id": "animalization/animalization_1__ref_animalization_2",
+    "class": "animalization",
+    "sidedness": "onesided",
+    "target": "animalization_1",
+    "reference": "animalization_2"
+  },
+  {
+    "id": "animalization/animalization_1__ref_animalization_4",
+    "class": "animalization",
+    "sidedness": "onesided",
+    "target": "animalization_1",
+    "reference": "animalization_4"
+  },
+  {
+    "id": "animalization/animalization_1__ref_animalization_6",
+    "class": "animalization",
+    "sidedness": "onesided",
+    "target": "animalization_1",
+    "reference": "animalization_6"
+  },
+  {
+    "id": "animalization/animalization_2__ref_animalization_4",
+    "class": "animalization",
+    "sidedness": "onesided",
+    "target": "animalization_2",
+    "reference": "animalization_4"
+  },
+  {
+    "id": "animalization/animalization_2__ref_animalization_6",
+    "class": "animalization",
+    "sidedness": "onesided",
+    "target": "animalization_2",
+    "reference": "animalization_6"
+  },
+  {
+    "id": "animalization/animalization_2__ref_animalization_1",
+    "class": "animalization",
+    "sidedness": "onesided",
+    "target": "animalization_2",
+    "reference": "animalization_1"
+  },
+  {
+    "id": "animalization/animalization_4__ref_animalization_6",
+    "class": "animalization",
+    "sidedness": "onesided",
+    "target": "animalization_4",
+    "reference": "animalization_6"
+  },
+  {
+    "id": "animalization/animalization_4__ref_animalization_1",
+    "class": "animalization",
+    "sidedness": "onesided",
+    "target": "animalization_4",
+    "reference": "animalization_1"
+  },
+  {
+    "id": "animalization/animalization_4__ref_animalization_2",
+    "class": "animalization",
+    "sidedness": "onesided",
+    "target": "animalization_4",
+    "reference": "animalization_2"
+  },
+  {
+    "id": "animalization/animalization_6__ref_animalization_1",
+    "class": "animalization",
+    "sidedness": "onesided",
+    "target": "animalization_6",
+    "reference": "animalization_1"
+  },
+  {
+    "id": "animalization/animalization_6__ref_animalization_2",
+    "class": "animalization",
+    "sidedness": "onesided",
+    "target": "animalization_6",
+    "reference": "animalization_2"
+  },
+  {
+    "id": "animalization/animalization_6__ref_animalization_4",
+    "class": "animalization",
+    "sidedness": "onesided",
+    "target": "animalization_6",
+    "reference": "animalization_4"
+  },
+  {
+    "id": "color_rain/color_rain_0__ref_color_rain_1",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_0",
+    "reference": "color_rain_1"
+  },
+  {
+    "id": "color_rain/color_rain_0__ref_color_rain_2",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_0",
+    "reference": "color_rain_2"
+  },
+  {
+    "id": "color_rain/color_rain_0__ref_color_rain_3",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_0",
+    "reference": "color_rain_3"
+  },
+  {
+    "id": "color_rain/color_rain_1__ref_color_rain_2",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_1",
+    "reference": "color_rain_2"
+  },
+  {
+    "id": "color_rain/color_rain_1__ref_color_rain_3",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_1",
+    "reference": "color_rain_3"
+  },
+  {
+    "id": "color_rain/color_rain_1__ref_color_rain_5",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_1",
+    "reference": "color_rain_5"
+  },
+  {
+    "id": "color_rain/color_rain_2__ref_color_rain_3",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_2",
+    "reference": "color_rain_3"
+  },
+  {
+    "id": "color_rain/color_rain_2__ref_color_rain_5",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_2",
+    "reference": "color_rain_5"
+  },
+  {
+    "id": "color_rain/color_rain_2__ref_color_rain_6",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_2",
+    "reference": "color_rain_6"
+  },
+  {
+    "id": "color_rain/color_rain_3__ref_color_rain_5",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_3",
+    "reference": "color_rain_5"
+  },
+  {
+    "id": "color_rain/color_rain_3__ref_color_rain_6",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_3",
+    "reference": "color_rain_6"
+  },
+  {
+    "id": "color_rain/color_rain_3__ref_color_rain_7",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_3",
+    "reference": "color_rain_7"
+  },
+  {
+    "id": "color_rain/color_rain_5__ref_color_rain_6",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_5",
+    "reference": "color_rain_6"
+  },
+  {
+    "id": "color_rain/color_rain_5__ref_color_rain_7",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_5",
+    "reference": "color_rain_7"
+  },
+  {
+    "id": "color_rain/color_rain_5__ref_color_rain_8",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_5",
+    "reference": "color_rain_8"
+  },
+  {
+    "id": "color_rain/color_rain_6__ref_color_rain_7",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_6",
+    "reference": "color_rain_7"
+  },
+  {
+    "id": "color_rain/color_rain_6__ref_color_rain_8",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_6",
+    "reference": "color_rain_8"
+  },
+  {
+    "id": "color_rain/color_rain_6__ref_color_rain_0",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_6",
+    "reference": "color_rain_0"
+  },
+  {
+    "id": "color_rain/color_rain_7__ref_color_rain_8",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_7",
+    "reference": "color_rain_8"
+  },
+  {
+    "id": "color_rain/color_rain_7__ref_color_rain_0",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_7",
+    "reference": "color_rain_0"
+  },
+  {
+    "id": "color_rain/color_rain_7__ref_color_rain_1",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_7",
+    "reference": "color_rain_1"
+  },
+  {
+    "id": "color_rain/color_rain_8__ref_color_rain_0",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_8",
+    "reference": "color_rain_0"
+  },
+  {
+    "id": "color_rain/color_rain_8__ref_color_rain_1",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_8",
+    "reference": "color_rain_1"
+  },
+  {
+    "id": "color_rain/color_rain_8__ref_color_rain_2",
+    "class": "color_rain",
+    "sidedness": "onesided",
+    "target": "color_rain_8",
+    "reference": "color_rain_2"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_0__ref_cotton_cloud_1",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_0",
+    "reference": "cotton_cloud_1"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_0__ref_cotton_cloud_2",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_0",
+    "reference": "cotton_cloud_2"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_0__ref_cotton_cloud_4",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_0",
+    "reference": "cotton_cloud_4"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_1__ref_cotton_cloud_2",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_1",
+    "reference": "cotton_cloud_2"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_1__ref_cotton_cloud_4",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_1",
+    "reference": "cotton_cloud_4"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_1__ref_cotton_cloud_6",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_1",
+    "reference": "cotton_cloud_6"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_2__ref_cotton_cloud_4",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_2",
+    "reference": "cotton_cloud_4"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_2__ref_cotton_cloud_6",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_2",
+    "reference": "cotton_cloud_6"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_2__ref_cotton_cloud_8",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_2",
+    "reference": "cotton_cloud_8"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_4__ref_cotton_cloud_6",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_4",
+    "reference": "cotton_cloud_6"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_4__ref_cotton_cloud_8",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_4",
+    "reference": "cotton_cloud_8"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_4__ref_cotton_cloud_0",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_4",
+    "reference": "cotton_cloud_0"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_6__ref_cotton_cloud_8",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_6",
+    "reference": "cotton_cloud_8"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_6__ref_cotton_cloud_0",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_6",
+    "reference": "cotton_cloud_0"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_6__ref_cotton_cloud_1",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_6",
+    "reference": "cotton_cloud_1"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_8__ref_cotton_cloud_0",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_8",
+    "reference": "cotton_cloud_0"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_8__ref_cotton_cloud_1",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_8",
+    "reference": "cotton_cloud_1"
+  },
+  {
+    "id": "cotton_cloud/cotton_cloud_8__ref_cotton_cloud_2",
+    "class": "cotton_cloud",
+    "sidedness": "onesided",
+    "target": "cotton_cloud_8",
+    "reference": "cotton_cloud_2"
+  },
+  {
+    "id": "display_transition/display_transition_1__ref_display_transition_2",
+    "class": "display_transition",
+    "sidedness": "twosided",
+    "target": "display_transition_1",
+    "reference": "display_transition_2"
+  },
+  {
+    "id": "display_transition/display_transition_1__ref_display_transition_3",
+    "class": "display_transition",
+    "sidedness": "twosided",
+    "target": "display_transition_1",
+    "reference": "display_transition_3"
+  },
+  {
+    "id": "display_transition/display_transition_2__ref_display_transition_3",
+    "class": "display_transition",
+    "sidedness": "twosided",
+    "target": "display_transition_2",
+    "reference": "display_transition_3"
+  },
+  {
+    "id": "display_transition/display_transition_2__ref_display_transition_1",
+    "class": "display_transition",
+    "sidedness": "twosided",
+    "target": "display_transition_2",
+    "reference": "display_transition_1"
+  },
+  {
+    "id": "display_transition/display_transition_3__ref_display_transition_1",
+    "class": "display_transition",
+    "sidedness": "twosided",
+    "target": "display_transition_3",
+    "reference": "display_transition_1"
+  },
+  {
+    "id": "display_transition/display_transition_3__ref_display_transition_2",
+    "class": "display_transition",
+    "sidedness": "twosided",
+    "target": "display_transition_3",
+    "reference": "display_transition_2"
+  },
+  {
+    "id": "earth_element/earth_element_0__ref_earth_element_1",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_0",
+    "reference": "earth_element_1"
+  },
+  {
+    "id": "earth_element/earth_element_0__ref_earth_element_2",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_0",
+    "reference": "earth_element_2"
+  },
+  {
+    "id": "earth_element/earth_element_0__ref_earth_element_3",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_0",
+    "reference": "earth_element_3"
+  },
+  {
+    "id": "earth_element/earth_element_1__ref_earth_element_2",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_1",
+    "reference": "earth_element_2"
+  },
+  {
+    "id": "earth_element/earth_element_1__ref_earth_element_3",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_1",
+    "reference": "earth_element_3"
+  },
+  {
+    "id": "earth_element/earth_element_1__ref_earth_element_4",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_1",
+    "reference": "earth_element_4"
+  },
+  {
+    "id": "earth_element/earth_element_2__ref_earth_element_3",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_2",
+    "reference": "earth_element_3"
+  },
+  {
+    "id": "earth_element/earth_element_2__ref_earth_element_4",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_2",
+    "reference": "earth_element_4"
+  },
+  {
+    "id": "earth_element/earth_element_2__ref_earth_element_6",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_2",
+    "reference": "earth_element_6"
+  },
+  {
+    "id": "earth_element/earth_element_3__ref_earth_element_4",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_3",
+    "reference": "earth_element_4"
+  },
+  {
+    "id": "earth_element/earth_element_3__ref_earth_element_6",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_3",
+    "reference": "earth_element_6"
+  },
+  {
+    "id": "earth_element/earth_element_3__ref_earth_element_0",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_3",
+    "reference": "earth_element_0"
+  },
+  {
+    "id": "earth_element/earth_element_4__ref_earth_element_6",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_4",
+    "reference": "earth_element_6"
+  },
+  {
+    "id": "earth_element/earth_element_4__ref_earth_element_0",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_4",
+    "reference": "earth_element_0"
+  },
+  {
+    "id": "earth_element/earth_element_4__ref_earth_element_1",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_4",
+    "reference": "earth_element_1"
+  },
+  {
+    "id": "earth_element/earth_element_6__ref_earth_element_0",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_6",
+    "reference": "earth_element_0"
+  },
+  {
+    "id": "earth_element/earth_element_6__ref_earth_element_1",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_6",
+    "reference": "earth_element_1"
+  },
+  {
+    "id": "earth_element/earth_element_6__ref_earth_element_2",
+    "class": "earth_element",
+    "sidedness": "onesided",
+    "target": "earth_element_6",
+    "reference": "earth_element_2"
+  },
+  {
+    "id": "earth_wave/earth_wave_0__ref_earth_wave_1",
+    "class": "earth_wave",
+    "sidedness": "twosided",
+    "target": "earth_wave_0",
+    "reference": "earth_wave_1"
+  },
+  {
+    "id": "earth_wave/earth_wave_0__ref_earth_wave_2",
+    "class": "earth_wave",
+    "sidedness": "twosided",
+    "target": "earth_wave_0",
+    "reference": "earth_wave_2"
+  },
+  {
+    "id": "earth_wave/earth_wave_0__ref_earth_wave_3",
+    "class": "earth_wave",
+    "sidedness": "twosided",
+    "target": "earth_wave_0",
+    "reference": "earth_wave_3"
+  },
+  {
+    "id": "earth_wave/earth_wave_1__ref_earth_wave_2",
+    "class": "earth_wave",
+    "sidedness": "twosided",
+    "target": "earth_wave_1",
+    "reference": "earth_wave_2"
+  },
+  {
+    "id": "earth_wave/earth_wave_1__ref_earth_wave_3",
+    "class": "earth_wave",
+    "sidedness": "twosided",
+    "target": "earth_wave_1",
+    "reference": "earth_wave_3"
+  },
+  {
+    "id": "earth_wave/earth_wave_1__ref_earth_wave_4",
+    "class": "earth_wave",
+    "sidedness": "twosided",
+    "target": "earth_wave_1",
+    "reference": "earth_wave_4"
+  },
+  {
+    "id": "earth_wave/earth_wave_2__ref_earth_wave_3",
+    "class": "earth_wave",
+    "sidedness": "twosided",
+    "target": "earth_wave_2",
+    "reference": "earth_wave_3"
+  },
+  {
+    "id": "earth_wave/earth_wave_2__ref_earth_wave_4",
+    "class": "earth_wave",
+    "sidedness": "twosided",
+    "target": "earth_wave_2",
+    "reference": "earth_wave_4"
+  },
+  {
+    "id": "earth_wave/earth_wave_2__ref_earth_wave_0",
+    "class": "earth_wave",
+    "sidedness": "twosided",
+    "target": "earth_wave_2",
+    "reference": "earth_wave_0"
+  },
+  {
+    "id": "earth_wave/earth_wave_3__ref_earth_wave_4",
+    "class": "earth_wave",
+    "sidedness": "twosided",
+    "target": "earth_wave_3",
+    "reference": "earth_wave_4"
+  },
+  {
+    "id": "earth_wave/earth_wave_3__ref_earth_wave_0",
+    "class": "earth_wave",
+    "sidedness": "twosided",
+    "target": "earth_wave_3",
+    "reference": "earth_wave_0"
+  },
+  {
+    "id": "earth_wave/earth_wave_3__ref_earth_wave_1",
+    "class": "earth_wave",
+    "sidedness": "twosided",
+    "target": "earth_wave_3",
+    "reference": "earth_wave_1"
+  },
+  {
+    "id": "earth_wave/earth_wave_4__ref_earth_wave_0",
+    "class": "earth_wave",
+    "sidedness": "twosided",
+    "target": "earth_wave_4",
+    "reference": "earth_wave_0"
+  },
+  {
+    "id": "earth_wave/earth_wave_4__ref_earth_wave_1",
+    "class": "earth_wave",
+    "sidedness": "twosided",
+    "target": "earth_wave_4",
+    "reference": "earth_wave_1"
+  },
+  {
+    "id": "earth_wave/earth_wave_4__ref_earth_wave_2",
+    "class": "earth_wave",
+    "sidedness": "twosided",
+    "target": "earth_wave_4",
+    "reference": "earth_wave_2"
+  },
+  {
+    "id": "fire_element/fire_element_0__ref_fire_element_1",
+    "class": "fire_element",
+    "sidedness": "onesided",
+    "target": "fire_element_0",
+    "reference": "fire_element_1"
+  },
+  {
+    "id": "fire_element/fire_element_0__ref_fire_element_2",
+    "class": "fire_element",
+    "sidedness": "onesided",
+    "target": "fire_element_0",
+    "reference": "fire_element_2"
+  },
+  {
+    "id": "fire_element/fire_element_0__ref_fire_element_4",
+    "class": "fire_element",
+    "sidedness": "onesided",
+    "target": "fire_element_0",
+    "reference": "fire_element_4"
+  },
+  {
+    "id": "fire_element/fire_element_1__ref_fire_element_2",
+    "class": "fire_element",
+    "sidedness": "onesided",
+    "target": "fire_element_1",
+    "reference": "fire_element_2"
+  },
+  {
+    "id": "fire_element/fire_element_1__ref_fire_element_4",
+    "class": "fire_element",
+    "sidedness": "onesided",
+    "target": "fire_element_1",
+    "reference": "fire_element_4"
+  },
+  {
+    "id": "fire_element/fire_element_1__ref_fire_element_0",
+    "class": "fire_element",
+    "sidedness": "onesided",
+    "target": "fire_element_1",
+    "reference": "fire_element_0"
+  },
+  {
+    "id": "fire_element/fire_element_2__ref_fire_element_4",
+    "class": "fire_element",
+    "sidedness": "onesided",
+    "target": "fire_element_2",
+    "reference": "fire_element_4"
+  },
+  {
+    "id": "fire_element/fire_element_2__ref_fire_element_0",
+    "class": "fire_element",
+    "sidedness": "onesided",
+    "target": "fire_element_2",
+    "reference": "fire_element_0"
+  },
+  {
+    "id": "fire_element/fire_element_2__ref_fire_element_1",
+    "class": "fire_element",
+    "sidedness": "onesided",
+    "target": "fire_element_2",
+    "reference": "fire_element_1"
+  },
+  {
+    "id": "fire_element/fire_element_4__ref_fire_element_0",
+    "class": "fire_element",
+    "sidedness": "onesided",
+    "target": "fire_element_4",
+    "reference": "fire_element_0"
+  },
+  {
+    "id": "fire_element/fire_element_4__ref_fire_element_1",
+    "class": "fire_element",
+    "sidedness": "onesided",
+    "target": "fire_element_4",
+    "reference": "fire_element_1"
+  },
+  {
+    "id": "fire_element/fire_element_4__ref_fire_element_2",
+    "class": "fire_element",
+    "sidedness": "onesided",
+    "target": "fire_element_4",
+    "reference": "fire_element_2"
+  },
+  {
+    "id": "firelava/firelava_0__ref_firelava_1",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_0",
+    "reference": "firelava_1"
+  },
+  {
+    "id": "firelava/firelava_0__ref_firelava_2",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_0",
+    "reference": "firelava_2"
+  },
+  {
+    "id": "firelava/firelava_0__ref_firelava_3",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_0",
+    "reference": "firelava_3"
+  },
+  {
+    "id": "firelava/firelava_1__ref_firelava_2",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_1",
+    "reference": "firelava_2"
+  },
+  {
+    "id": "firelava/firelava_1__ref_firelava_3",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_1",
+    "reference": "firelava_3"
+  },
+  {
+    "id": "firelava/firelava_1__ref_firelava_4",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_1",
+    "reference": "firelava_4"
+  },
+  {
+    "id": "firelava/firelava_2__ref_firelava_3",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_2",
+    "reference": "firelava_3"
+  },
+  {
+    "id": "firelava/firelava_2__ref_firelava_4",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_2",
+    "reference": "firelava_4"
+  },
+  {
+    "id": "firelava/firelava_2__ref_firelava_5",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_2",
+    "reference": "firelava_5"
+  },
+  {
+    "id": "firelava/firelava_3__ref_firelava_4",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_3",
+    "reference": "firelava_4"
+  },
+  {
+    "id": "firelava/firelava_3__ref_firelava_5",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_3",
+    "reference": "firelava_5"
+  },
+  {
+    "id": "firelava/firelava_3__ref_firelava_0",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_3",
+    "reference": "firelava_0"
+  },
+  {
+    "id": "firelava/firelava_4__ref_firelava_5",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_4",
+    "reference": "firelava_5"
+  },
+  {
+    "id": "firelava/firelava_4__ref_firelava_0",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_4",
+    "reference": "firelava_0"
+  },
+  {
+    "id": "firelava/firelava_4__ref_firelava_1",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_4",
+    "reference": "firelava_1"
+  },
+  {
+    "id": "firelava/firelava_5__ref_firelava_0",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_5",
+    "reference": "firelava_0"
+  },
+  {
+    "id": "firelava/firelava_5__ref_firelava_1",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_5",
+    "reference": "firelava_1"
+  },
+  {
+    "id": "firelava/firelava_5__ref_firelava_2",
+    "class": "firelava",
+    "sidedness": "twosided",
+    "target": "firelava_5",
+    "reference": "firelava_2"
+  },
+  {
+    "id": "flame/flame_transition_0__ref_flame_transition_1",
+    "class": "flame",
+    "sidedness": "twosided",
+    "target": "flame_transition_0",
+    "reference": "flame_transition_1"
+  },
+  {
+    "id": "flame/flame_transition_1__ref_flame_transition_0",
+    "class": "flame",
+    "sidedness": "twosided",
+    "target": "flame_transition_1",
+    "reference": "flame_transition_0"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_1__ref_flying_cam_transition_2",
+    "class": "flying_cam_transition",
+    "sidedness": "twosided",
+    "target": "flying_cam_transition_1",
+    "reference": "flying_cam_transition_2"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_1__ref_flying_cam_transition_3",
+    "class": "flying_cam_transition",
+    "sidedness": "twosided",
+    "target": "flying_cam_transition_1",
+    "reference": "flying_cam_transition_3"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_1__ref_flying_cam_transition_4",
+    "class": "flying_cam_transition",
+    "sidedness": "twosided",
+    "target": "flying_cam_transition_1",
+    "reference": "flying_cam_transition_4"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_2__ref_flying_cam_transition_3",
+    "class": "flying_cam_transition",
+    "sidedness": "twosided",
+    "target": "flying_cam_transition_2",
+    "reference": "flying_cam_transition_3"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_2__ref_flying_cam_transition_4",
+    "class": "flying_cam_transition",
+    "sidedness": "twosided",
+    "target": "flying_cam_transition_2",
+    "reference": "flying_cam_transition_4"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_2__ref_flying_cam_transition_1",
+    "class": "flying_cam_transition",
+    "sidedness": "twosided",
+    "target": "flying_cam_transition_2",
+    "reference": "flying_cam_transition_1"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_3__ref_flying_cam_transition_4",
+    "class": "flying_cam_transition",
+    "sidedness": "twosided",
+    "target": "flying_cam_transition_3",
+    "reference": "flying_cam_transition_4"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_3__ref_flying_cam_transition_1",
+    "class": "flying_cam_transition",
+    "sidedness": "twosided",
+    "target": "flying_cam_transition_3",
+    "reference": "flying_cam_transition_1"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_3__ref_flying_cam_transition_2",
+    "class": "flying_cam_transition",
+    "sidedness": "twosided",
+    "target": "flying_cam_transition_3",
+    "reference": "flying_cam_transition_2"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_4__ref_flying_cam_transition_1",
+    "class": "flying_cam_transition",
+    "sidedness": "twosided",
+    "target": "flying_cam_transition_4",
+    "reference": "flying_cam_transition_1"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_4__ref_flying_cam_transition_2",
+    "class": "flying_cam_transition",
+    "sidedness": "twosided",
+    "target": "flying_cam_transition_4",
+    "reference": "flying_cam_transition_2"
+  },
+  {
+    "id": "flying_cam_transition/flying_cam_transition_4__ref_flying_cam_transition_3",
+    "class": "flying_cam_transition",
+    "sidedness": "twosided",
+    "target": "flying_cam_transition_4",
+    "reference": "flying_cam_transition_3"
+  },
+  {
+    "id": "giant_grab/giant_grab_0__ref_giant_grab_1",
+    "class": "giant_grab",
+    "sidedness": "onesided",
+    "target": "giant_grab_0",
+    "reference": "giant_grab_1"
+  },
+  {
+    "id": "giant_grab/giant_grab_0__ref_giant_grab_2",
+    "class": "giant_grab",
+    "sidedness": "onesided",
+    "target": "giant_grab_0",
+    "reference": "giant_grab_2"
+  },
+  {
+    "id": "giant_grab/giant_grab_0__ref_giant_grab_3",
+    "class": "giant_grab",
+    "sidedness": "onesided",
+    "target": "giant_grab_0",
+    "reference": "giant_grab_3"
+  },
+  {
+    "id": "giant_grab/giant_grab_1__ref_giant_grab_2",
+    "class": "giant_grab",
+    "sidedness": "onesided",
+    "target": "giant_grab_1",
+    "reference": "giant_grab_2"
+  },
+  {
+    "id": "giant_grab/giant_grab_1__ref_giant_grab_3",
+    "class": "giant_grab",
+    "sidedness": "onesided",
+    "target": "giant_grab_1",
+    "reference": "giant_grab_3"
+  },
+  {
+    "id": "giant_grab/giant_grab_1__ref_giant_grab_4",
+    "class": "giant_grab",
+    "sidedness": "onesided",
+    "target": "giant_grab_1",
+    "reference": "giant_grab_4"
+  },
+  {
+    "id": "giant_grab/giant_grab_2__ref_giant_grab_3",
+    "class": "giant_grab",
+    "sidedness": "onesided",
+    "target": "giant_grab_2",
+    "reference": "giant_grab_3"
+  },
+  {
+    "id": "giant_grab/giant_grab_2__ref_giant_grab_4",
+    "class": "giant_grab",
+    "sidedness": "onesided",
+    "target": "giant_grab_2",
+    "reference": "giant_grab_4"
+  },
+  {
+    "id": "giant_grab/giant_grab_2__ref_giant_grab_0",
+    "class": "giant_grab",
+    "sidedness": "onesided",
+    "target": "giant_grab_2",
+    "reference": "giant_grab_0"
+  },
+  {
+    "id": "giant_grab/giant_grab_3__ref_giant_grab_4",
+    "class": "giant_grab",
+    "sidedness": "onesided",
+    "target": "giant_grab_3",
+    "reference": "giant_grab_4"
+  },
+  {
+    "id": "giant_grab/giant_grab_3__ref_giant_grab_0",
+    "class": "giant_grab",
+    "sidedness": "onesided",
+    "target": "giant_grab_3",
+    "reference": "giant_grab_0"
+  },
+  {
+    "id": "giant_grab/giant_grab_3__ref_giant_grab_1",
+    "class": "giant_grab",
+    "sidedness": "onesided",
+    "target": "giant_grab_3",
+    "reference": "giant_grab_1"
+  },
+  {
+    "id": "giant_grab/giant_grab_4__ref_giant_grab_0",
+    "class": "giant_grab",
+    "sidedness": "onesided",
+    "target": "giant_grab_4",
+    "reference": "giant_grab_0"
+  },
+  {
+    "id": "giant_grab/giant_grab_4__ref_giant_grab_1",
+    "class": "giant_grab",
+    "sidedness": "onesided",
+    "target": "giant_grab_4",
+    "reference": "giant_grab_1"
+  },
+  {
+    "id": "giant_grab/giant_grab_4__ref_giant_grab_2",
+    "class": "giant_grab",
+    "sidedness": "onesided",
+    "target": "giant_grab_4",
+    "reference": "giant_grab_2"
+  },
+  {
+    "id": "live_concert/live_concert_0__ref_live_concert_1",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_0",
+    "reference": "live_concert_1"
+  },
+  {
+    "id": "live_concert/live_concert_0__ref_live_concert_2",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_0",
+    "reference": "live_concert_2"
+  },
+  {
+    "id": "live_concert/live_concert_0__ref_live_concert_3",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_0",
+    "reference": "live_concert_3"
+  },
+  {
+    "id": "live_concert/live_concert_1__ref_live_concert_2",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_1",
+    "reference": "live_concert_2"
+  },
+  {
+    "id": "live_concert/live_concert_1__ref_live_concert_3",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_1",
+    "reference": "live_concert_3"
+  },
+  {
+    "id": "live_concert/live_concert_1__ref_live_concert_4",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_1",
+    "reference": "live_concert_4"
+  },
+  {
+    "id": "live_concert/live_concert_2__ref_live_concert_3",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_2",
+    "reference": "live_concert_3"
+  },
+  {
+    "id": "live_concert/live_concert_2__ref_live_concert_4",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_2",
+    "reference": "live_concert_4"
+  },
+  {
+    "id": "live_concert/live_concert_2__ref_live_concert_5",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_2",
+    "reference": "live_concert_5"
+  },
+  {
+    "id": "live_concert/live_concert_3__ref_live_concert_4",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_3",
+    "reference": "live_concert_4"
+  },
+  {
+    "id": "live_concert/live_concert_3__ref_live_concert_5",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_3",
+    "reference": "live_concert_5"
+  },
+  {
+    "id": "live_concert/live_concert_3__ref_live_concert_6",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_3",
+    "reference": "live_concert_6"
+  },
+  {
+    "id": "live_concert/live_concert_4__ref_live_concert_5",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_4",
+    "reference": "live_concert_5"
+  },
+  {
+    "id": "live_concert/live_concert_4__ref_live_concert_6",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_4",
+    "reference": "live_concert_6"
+  },
+  {
+    "id": "live_concert/live_concert_4__ref_live_concert_7",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_4",
+    "reference": "live_concert_7"
+  },
+  {
+    "id": "live_concert/live_concert_5__ref_live_concert_6",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_5",
+    "reference": "live_concert_6"
+  },
+  {
+    "id": "live_concert/live_concert_5__ref_live_concert_7",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_5",
+    "reference": "live_concert_7"
+  },
+  {
+    "id": "live_concert/live_concert_5__ref_live_concert_0",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_5",
+    "reference": "live_concert_0"
+  },
+  {
+    "id": "live_concert/live_concert_6__ref_live_concert_7",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_6",
+    "reference": "live_concert_7"
+  },
+  {
+    "id": "live_concert/live_concert_6__ref_live_concert_0",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_6",
+    "reference": "live_concert_0"
+  },
+  {
+    "id": "live_concert/live_concert_6__ref_live_concert_1",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_6",
+    "reference": "live_concert_1"
+  },
+  {
+    "id": "live_concert/live_concert_7__ref_live_concert_0",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_7",
+    "reference": "live_concert_0"
+  },
+  {
+    "id": "live_concert/live_concert_7__ref_live_concert_1",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_7",
+    "reference": "live_concert_1"
+  },
+  {
+    "id": "live_concert/live_concert_7__ref_live_concert_2",
+    "class": "live_concert",
+    "sidedness": "onesided",
+    "target": "live_concert_7",
+    "reference": "live_concert_2"
+  },
+  {
+    "id": "luminous_gaze/luminous_gaze_0__ref_luminous_gaze_1",
+    "class": "luminous_gaze",
+    "sidedness": "onesided",
+    "target": "luminous_gaze_0",
+    "reference": "luminous_gaze_1"
+  },
+  {
+    "id": "luminous_gaze/luminous_gaze_0__ref_luminous_gaze_2",
+    "class": "luminous_gaze",
+    "sidedness": "onesided",
+    "target": "luminous_gaze_0",
+    "reference": "luminous_gaze_2"
+  },
+  {
+    "id": "luminous_gaze/luminous_gaze_0__ref_luminous_gaze_3",
+    "class": "luminous_gaze",
+    "sidedness": "onesided",
+    "target": "luminous_gaze_0",
+    "reference": "luminous_gaze_3"
+  },
+  {
+    "id": "luminous_gaze/luminous_gaze_1__ref_luminous_gaze_2",
+    "class": "luminous_gaze",
+    "sidedness": "onesided",
+    "target": "luminous_gaze_1",
+    "reference": "luminous_gaze_2"
+  },
+  {
+    "id": "luminous_gaze/luminous_gaze_1__ref_luminous_gaze_3",
+    "class": "luminous_gaze",
+    "sidedness": "onesided",
+    "target": "luminous_gaze_1",
+    "reference": "luminous_gaze_3"
+  },
+  {
+    "id": "luminous_gaze/luminous_gaze_1__ref_luminous_gaze_0",
+    "class": "luminous_gaze",
+    "sidedness": "onesided",
+    "target": "luminous_gaze_1",
+    "reference": "luminous_gaze_0"
+  },
+  {
+    "id": "luminous_gaze/luminous_gaze_2__ref_luminous_gaze_3",
+    "class": "luminous_gaze",
+    "sidedness": "onesided",
+    "target": "luminous_gaze_2",
+    "reference": "luminous_gaze_3"
+  },
+  {
+    "id": "luminous_gaze/luminous_gaze_2__ref_luminous_gaze_0",
+    "class": "luminous_gaze",
+    "sidedness": "onesided",
+    "target": "luminous_gaze_2",
+    "reference": "luminous_gaze_0"
+  },
+  {
+    "id": "luminous_gaze/luminous_gaze_2__ref_luminous_gaze_1",
+    "class": "luminous_gaze",
+    "sidedness": "onesided",
+    "target": "luminous_gaze_2",
+    "reference": "luminous_gaze_1"
+  },
+  {
+    "id": "luminous_gaze/luminous_gaze_3__ref_luminous_gaze_0",
+    "class": "luminous_gaze",
+    "sidedness": "onesided",
+    "target": "luminous_gaze_3",
+    "reference": "luminous_gaze_0"
+  },
+  {
+    "id": "luminous_gaze/luminous_gaze_3__ref_luminous_gaze_1",
+    "class": "luminous_gaze",
+    "sidedness": "onesided",
+    "target": "luminous_gaze_3",
+    "reference": "luminous_gaze_1"
+  },
+  {
+    "id": "luminous_gaze/luminous_gaze_3__ref_luminous_gaze_2",
+    "class": "luminous_gaze",
+    "sidedness": "onesided",
+    "target": "luminous_gaze_3",
+    "reference": "luminous_gaze_2"
+  },
+  {
+    "id": "melt_transition/melt_transition_1__ref_melt_transition_2",
+    "class": "melt_transition",
+    "sidedness": "twosided",
+    "target": "melt_transition_1",
+    "reference": "melt_transition_2"
+  },
+  {
+    "id": "melt_transition/melt_transition_1__ref_melt_transition_3",
+    "class": "melt_transition",
+    "sidedness": "twosided",
+    "target": "melt_transition_1",
+    "reference": "melt_transition_3"
+  },
+  {
+    "id": "melt_transition/melt_transition_1__ref_melt_transition_4",
+    "class": "melt_transition",
+    "sidedness": "twosided",
+    "target": "melt_transition_1",
+    "reference": "melt_transition_4"
+  },
+  {
+    "id": "melt_transition/melt_transition_2__ref_melt_transition_3",
+    "class": "melt_transition",
+    "sidedness": "twosided",
+    "target": "melt_transition_2",
+    "reference": "melt_transition_3"
+  },
+  {
+    "id": "melt_transition/melt_transition_2__ref_melt_transition_4",
+    "class": "melt_transition",
+    "sidedness": "twosided",
+    "target": "melt_transition_2",
+    "reference": "melt_transition_4"
+  },
+  {
+    "id": "melt_transition/melt_transition_2__ref_melt_transition_1",
+    "class": "melt_transition",
+    "sidedness": "twosided",
+    "target": "melt_transition_2",
+    "reference": "melt_transition_1"
+  },
+  {
+    "id": "melt_transition/melt_transition_3__ref_melt_transition_4",
+    "class": "melt_transition",
+    "sidedness": "twosided",
+    "target": "melt_transition_3",
+    "reference": "melt_transition_4"
+  },
+  {
+    "id": "melt_transition/melt_transition_3__ref_melt_transition_1",
+    "class": "melt_transition",
+    "sidedness": "twosided",
+    "target": "melt_transition_3",
+    "reference": "melt_transition_1"
+  },
+  {
+    "id": "melt_transition/melt_transition_3__ref_melt_transition_2",
+    "class": "melt_transition",
+    "sidedness": "twosided",
+    "target": "melt_transition_3",
+    "reference": "melt_transition_2"
+  },
+  {
+    "id": "melt_transition/melt_transition_4__ref_melt_transition_1",
+    "class": "melt_transition",
+    "sidedness": "twosided",
+    "target": "melt_transition_4",
+    "reference": "melt_transition_1"
+  },
+  {
+    "id": "melt_transition/melt_transition_4__ref_melt_transition_2",
+    "class": "melt_transition",
+    "sidedness": "twosided",
+    "target": "melt_transition_4",
+    "reference": "melt_transition_2"
+  },
+  {
+    "id": "melt_transition/melt_transition_4__ref_melt_transition_3",
+    "class": "melt_transition",
+    "sidedness": "twosided",
+    "target": "melt_transition_4",
+    "reference": "melt_transition_3"
+  },
+  {
+    "id": "money_rain/money_rain_0__ref_money_rain_1",
+    "class": "money_rain",
+    "sidedness": "onesided",
+    "target": "money_rain_0",
+    "reference": "money_rain_1"
+  },
+  {
+    "id": "money_rain/money_rain_0__ref_money_rain_3",
+    "class": "money_rain",
+    "sidedness": "onesided",
+    "target": "money_rain_0",
+    "reference": "money_rain_3"
+  },
+  {
+    "id": "money_rain/money_rain_0__ref_money_rain_4",
+    "class": "money_rain",
+    "sidedness": "onesided",
+    "target": "money_rain_0",
+    "reference": "money_rain_4"
+  },
+  {
+    "id": "money_rain/money_rain_1__ref_money_rain_3",
+    "class": "money_rain",
+    "sidedness": "onesided",
+    "target": "money_rain_1",
+    "reference": "money_rain_3"
+  },
+  {
+    "id": "money_rain/money_rain_1__ref_money_rain_4",
+    "class": "money_rain",
+    "sidedness": "onesided",
+    "target": "money_rain_1",
+    "reference": "money_rain_4"
+  },
+  {
+    "id": "money_rain/money_rain_1__ref_money_rain_7",
+    "class": "money_rain",
+    "sidedness": "onesided",
+    "target": "money_rain_1",
+    "reference": "money_rain_7"
+  },
+  {
+    "id": "money_rain/money_rain_3__ref_money_rain_4",
+    "class": "money_rain",
+    "sidedness": "onesided",
+    "target": "money_rain_3",
+    "reference": "money_rain_4"
+  },
+  {
+    "id": "money_rain/money_rain_3__ref_money_rain_7",
+    "class": "money_rain",
+    "sidedness": "onesided",
+    "target": "money_rain_3",
+    "reference": "money_rain_7"
+  },
+  {
+    "id": "money_rain/money_rain_3__ref_money_rain_0",
+    "class": "money_rain",
+    "sidedness": "onesided",
+    "target": "money_rain_3",
+    "reference": "money_rain_0"
+  },
+  {
+    "id": "money_rain/money_rain_4__ref_money_rain_7",
+    "class": "money_rain",
+    "sidedness": "onesided",
+    "target": "money_rain_4",
+    "reference": "money_rain_7"
+  },
+  {
+    "id": "money_rain/money_rain_4__ref_money_rain_0",
+    "class": "money_rain",
+    "sidedness": "onesided",
+    "target": "money_rain_4",
+    "reference": "money_rain_0"
+  },
+  {
+    "id": "money_rain/money_rain_4__ref_money_rain_1",
+    "class": "money_rain",
+    "sidedness": "onesided",
+    "target": "money_rain_4",
+    "reference": "money_rain_1"
+  },
+  {
+    "id": "money_rain/money_rain_7__ref_money_rain_0",
+    "class": "money_rain",
+    "sidedness": "onesided",
+    "target": "money_rain_7",
+    "reference": "money_rain_0"
+  },
+  {
+    "id": "money_rain/money_rain_7__ref_money_rain_1",
+    "class": "money_rain",
+    "sidedness": "onesided",
+    "target": "money_rain_7",
+    "reference": "money_rain_1"
+  },
+  {
+    "id": "money_rain/money_rain_7__ref_money_rain_3",
+    "class": "money_rain",
+    "sidedness": "onesided",
+    "target": "money_rain_7",
+    "reference": "money_rain_3"
+  },
+  {
+    "id": "monstrosity/monstrosity_0__ref_monstrosity_1",
+    "class": "monstrosity",
+    "sidedness": "onesided",
+    "target": "monstrosity_0",
+    "reference": "monstrosity_1"
+  },
+  {
+    "id": "monstrosity/monstrosity_0__ref_monstrosity_2",
+    "class": "monstrosity",
+    "sidedness": "onesided",
+    "target": "monstrosity_0",
+    "reference": "monstrosity_2"
+  },
+  {
+    "id": "monstrosity/monstrosity_1__ref_monstrosity_2",
+    "class": "monstrosity",
+    "sidedness": "onesided",
+    "target": "monstrosity_1",
+    "reference": "monstrosity_2"
+  },
+  {
+    "id": "monstrosity/monstrosity_1__ref_monstrosity_0",
+    "class": "monstrosity",
+    "sidedness": "onesided",
+    "target": "monstrosity_1",
+    "reference": "monstrosity_0"
+  },
+  {
+    "id": "monstrosity/monstrosity_2__ref_monstrosity_0",
+    "class": "monstrosity",
+    "sidedness": "onesided",
+    "target": "monstrosity_2",
+    "reference": "monstrosity_0"
+  },
+  {
+    "id": "monstrosity/monstrosity_2__ref_monstrosity_1",
+    "class": "monstrosity",
+    "sidedness": "onesided",
+    "target": "monstrosity_2",
+    "reference": "monstrosity_1"
+  },
+  {
+    "id": "mystification/mystification_0__ref_mystification_2",
+    "class": "mystification",
+    "sidedness": "onesided",
+    "target": "mystification_0",
+    "reference": "mystification_2"
+  },
+  {
+    "id": "mystification/mystification_0__ref_mystification_3",
+    "class": "mystification",
+    "sidedness": "onesided",
+    "target": "mystification_0",
+    "reference": "mystification_3"
+  },
+  {
+    "id": "mystification/mystification_0__ref_mystification_4",
+    "class": "mystification",
+    "sidedness": "onesided",
+    "target": "mystification_0",
+    "reference": "mystification_4"
+  },
+  {
+    "id": "mystification/mystification_2__ref_mystification_3",
+    "class": "mystification",
+    "sidedness": "onesided",
+    "target": "mystification_2",
+    "reference": "mystification_3"
+  },
+  {
+    "id": "mystification/mystification_2__ref_mystification_4",
+    "class": "mystification",
+    "sidedness": "onesided",
+    "target": "mystification_2",
+    "reference": "mystification_4"
+  },
+  {
+    "id": "mystification/mystification_2__ref_mystification_5",
+    "class": "mystification",
+    "sidedness": "onesided",
+    "target": "mystification_2",
+    "reference": "mystification_5"
+  },
+  {
+    "id": "mystification/mystification_3__ref_mystification_4",
+    "class": "mystification",
+    "sidedness": "onesided",
+    "target": "mystification_3",
+    "reference": "mystification_4"
+  },
+  {
+    "id": "mystification/mystification_3__ref_mystification_5",
+    "class": "mystification",
+    "sidedness": "onesided",
+    "target": "mystification_3",
+    "reference": "mystification_5"
+  },
+  {
+    "id": "mystification/mystification_3__ref_mystification_0",
+    "class": "mystification",
+    "sidedness": "onesided",
+    "target": "mystification_3",
+    "reference": "mystification_0"
+  },
+  {
+    "id": "mystification/mystification_4__ref_mystification_5",
+    "class": "mystification",
+    "sidedness": "onesided",
+    "target": "mystification_4",
+    "reference": "mystification_5"
+  },
+  {
+    "id": "mystification/mystification_4__ref_mystification_0",
+    "class": "mystification",
+    "sidedness": "onesided",
+    "target": "mystification_4",
+    "reference": "mystification_0"
+  },
+  {
+    "id": "mystification/mystification_4__ref_mystification_2",
+    "class": "mystification",
+    "sidedness": "onesided",
+    "target": "mystification_4",
+    "reference": "mystification_2"
+  },
+  {
+    "id": "mystification/mystification_5__ref_mystification_0",
+    "class": "mystification",
+    "sidedness": "onesided",
+    "target": "mystification_5",
+    "reference": "mystification_0"
+  },
+  {
+    "id": "mystification/mystification_5__ref_mystification_2",
+    "class": "mystification",
+    "sidedness": "onesided",
+    "target": "mystification_5",
+    "reference": "mystification_2"
+  },
+  {
+    "id": "mystification/mystification_5__ref_mystification_3",
+    "class": "mystification",
+    "sidedness": "onesided",
+    "target": "mystification_5",
+    "reference": "mystification_3"
+  },
+  {
+    "id": "nature_bloom/nature_bloom_0__ref_nature_bloom_2",
+    "class": "nature_bloom",
+    "sidedness": "onesided",
+    "target": "nature_bloom_0",
+    "reference": "nature_bloom_2"
+  },
+  {
+    "id": "nature_bloom/nature_bloom_2__ref_nature_bloom_0",
+    "class": "nature_bloom",
+    "sidedness": "onesided",
+    "target": "nature_bloom_2",
+    "reference": "nature_bloom_0"
+  },
+  {
+    "id": "plasma_explosion/plasma_explosion_0__ref_plasma_explosion_1",
+    "class": "plasma_explosion",
+    "sidedness": "onesided",
+    "target": "plasma_explosion_0",
+    "reference": "plasma_explosion_1"
+  },
+  {
+    "id": "plasma_explosion/plasma_explosion_0__ref_plasma_explosion_2",
+    "class": "plasma_explosion",
+    "sidedness": "onesided",
+    "target": "plasma_explosion_0",
+    "reference": "plasma_explosion_2"
+  },
+  {
+    "id": "plasma_explosion/plasma_explosion_0__ref_plasma_explosion_4",
+    "class": "plasma_explosion",
+    "sidedness": "onesided",
+    "target": "plasma_explosion_0",
+    "reference": "plasma_explosion_4"
+  },
+  {
+    "id": "plasma_explosion/plasma_explosion_1__ref_plasma_explosion_2",
+    "class": "plasma_explosion",
+    "sidedness": "onesided",
+    "target": "plasma_explosion_1",
+    "reference": "plasma_explosion_2"
+  },
+  {
+    "id": "plasma_explosion/plasma_explosion_1__ref_plasma_explosion_4",
+    "class": "plasma_explosion",
+    "sidedness": "onesided",
+    "target": "plasma_explosion_1",
+    "reference": "plasma_explosion_4"
+  },
+  {
+    "id": "plasma_explosion/plasma_explosion_1__ref_plasma_explosion_0",
+    "class": "plasma_explosion",
+    "sidedness": "onesided",
+    "target": "plasma_explosion_1",
+    "reference": "plasma_explosion_0"
+  },
+  {
+    "id": "plasma_explosion/plasma_explosion_2__ref_plasma_explosion_4",
+    "class": "plasma_explosion",
+    "sidedness": "onesided",
+    "target": "plasma_explosion_2",
+    "reference": "plasma_explosion_4"
+  },
+  {
+    "id": "plasma_explosion/plasma_explosion_2__ref_plasma_explosion_0",
+    "class": "plasma_explosion",
+    "sidedness": "onesided",
+    "target": "plasma_explosion_2",
+    "reference": "plasma_explosion_0"
+  },
+  {
+    "id": "plasma_explosion/plasma_explosion_2__ref_plasma_explosion_1",
+    "class": "plasma_explosion",
+    "sidedness": "onesided",
+    "target": "plasma_explosion_2",
+    "reference": "plasma_explosion_1"
+  },
+  {
+    "id": "plasma_explosion/plasma_explosion_4__ref_plasma_explosion_0",
+    "class": "plasma_explosion",
+    "sidedness": "onesided",
+    "target": "plasma_explosion_4",
+    "reference": "plasma_explosion_0"
+  },
+  {
+    "id": "plasma_explosion/plasma_explosion_4__ref_plasma_explosion_1",
+    "class": "plasma_explosion",
+    "sidedness": "onesided",
+    "target": "plasma_explosion_4",
+    "reference": "plasma_explosion_1"
+  },
+  {
+    "id": "plasma_explosion/plasma_explosion_4__ref_plasma_explosion_2",
+    "class": "plasma_explosion",
+    "sidedness": "onesided",
+    "target": "plasma_explosion_4",
+    "reference": "plasma_explosion_2"
+  },
+  {
+    "id": "polygon/polygon_0__ref_polygon_1",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_0",
+    "reference": "polygon_1"
+  },
+  {
+    "id": "polygon/polygon_0__ref_polygon_2",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_0",
+    "reference": "polygon_2"
+  },
+  {
+    "id": "polygon/polygon_0__ref_polygon_3",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_0",
+    "reference": "polygon_3"
+  },
+  {
+    "id": "polygon/polygon_1__ref_polygon_2",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_1",
+    "reference": "polygon_2"
+  },
+  {
+    "id": "polygon/polygon_1__ref_polygon_3",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_1",
+    "reference": "polygon_3"
+  },
+  {
+    "id": "polygon/polygon_1__ref_polygon_4",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_1",
+    "reference": "polygon_4"
+  },
+  {
+    "id": "polygon/polygon_2__ref_polygon_3",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_2",
+    "reference": "polygon_3"
+  },
+  {
+    "id": "polygon/polygon_2__ref_polygon_4",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_2",
+    "reference": "polygon_4"
+  },
+  {
+    "id": "polygon/polygon_2__ref_polygon_5",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_2",
+    "reference": "polygon_5"
+  },
+  {
+    "id": "polygon/polygon_3__ref_polygon_4",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_3",
+    "reference": "polygon_4"
+  },
+  {
+    "id": "polygon/polygon_3__ref_polygon_5",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_3",
+    "reference": "polygon_5"
+  },
+  {
+    "id": "polygon/polygon_3__ref_polygon_6",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_3",
+    "reference": "polygon_6"
+  },
+  {
+    "id": "polygon/polygon_4__ref_polygon_5",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_4",
+    "reference": "polygon_5"
+  },
+  {
+    "id": "polygon/polygon_4__ref_polygon_6",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_4",
+    "reference": "polygon_6"
+  },
+  {
+    "id": "polygon/polygon_4__ref_polygon_7",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_4",
+    "reference": "polygon_7"
+  },
+  {
+    "id": "polygon/polygon_5__ref_polygon_6",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_5",
+    "reference": "polygon_6"
+  },
+  {
+    "id": "polygon/polygon_5__ref_polygon_7",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_5",
+    "reference": "polygon_7"
+  },
+  {
+    "id": "polygon/polygon_5__ref_polygon_8",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_5",
+    "reference": "polygon_8"
+  },
+  {
+    "id": "polygon/polygon_6__ref_polygon_7",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_6",
+    "reference": "polygon_7"
+  },
+  {
+    "id": "polygon/polygon_6__ref_polygon_8",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_6",
+    "reference": "polygon_8"
+  },
+  {
+    "id": "polygon/polygon_6__ref_polygon_0",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_6",
+    "reference": "polygon_0"
+  },
+  {
+    "id": "polygon/polygon_7__ref_polygon_8",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_7",
+    "reference": "polygon_8"
+  },
+  {
+    "id": "polygon/polygon_7__ref_polygon_0",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_7",
+    "reference": "polygon_0"
+  },
+  {
+    "id": "polygon/polygon_7__ref_polygon_1",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_7",
+    "reference": "polygon_1"
+  },
+  {
+    "id": "polygon/polygon_8__ref_polygon_0",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_8",
+    "reference": "polygon_0"
+  },
+  {
+    "id": "polygon/polygon_8__ref_polygon_1",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_8",
+    "reference": "polygon_1"
+  },
+  {
+    "id": "polygon/polygon_8__ref_polygon_2",
+    "class": "polygon",
+    "sidedness": "onesided",
+    "target": "polygon_8",
+    "reference": "polygon_2"
+  },
+  {
+    "id": "portal/portal_0__ref_portal_1",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_0",
+    "reference": "portal_1"
+  },
+  {
+    "id": "portal/portal_0__ref_portal_10",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_0",
+    "reference": "portal_10"
+  },
+  {
+    "id": "portal/portal_0__ref_portal_2",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_0",
+    "reference": "portal_2"
+  },
+  {
+    "id": "portal/portal_1__ref_portal_10",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_1",
+    "reference": "portal_10"
+  },
+  {
+    "id": "portal/portal_1__ref_portal_2",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_1",
+    "reference": "portal_2"
+  },
+  {
+    "id": "portal/portal_1__ref_portal_4",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_1",
+    "reference": "portal_4"
+  },
+  {
+    "id": "portal/portal_10__ref_portal_2",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_10",
+    "reference": "portal_2"
+  },
+  {
+    "id": "portal/portal_10__ref_portal_4",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_10",
+    "reference": "portal_4"
+  },
+  {
+    "id": "portal/portal_10__ref_portal_6",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_10",
+    "reference": "portal_6"
+  },
+  {
+    "id": "portal/portal_2__ref_portal_4",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_2",
+    "reference": "portal_4"
+  },
+  {
+    "id": "portal/portal_2__ref_portal_6",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_2",
+    "reference": "portal_6"
+  },
+  {
+    "id": "portal/portal_2__ref_portal_7",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_2",
+    "reference": "portal_7"
+  },
+  {
+    "id": "portal/portal_4__ref_portal_6",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_4",
+    "reference": "portal_6"
+  },
+  {
+    "id": "portal/portal_4__ref_portal_7",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_4",
+    "reference": "portal_7"
+  },
+  {
+    "id": "portal/portal_4__ref_portal_8",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_4",
+    "reference": "portal_8"
+  },
+  {
+    "id": "portal/portal_6__ref_portal_7",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_6",
+    "reference": "portal_7"
+  },
+  {
+    "id": "portal/portal_6__ref_portal_8",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_6",
+    "reference": "portal_8"
+  },
+  {
+    "id": "portal/portal_6__ref_portal_9",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_6",
+    "reference": "portal_9"
+  },
+  {
+    "id": "portal/portal_7__ref_portal_8",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_7",
+    "reference": "portal_8"
+  },
+  {
+    "id": "portal/portal_7__ref_portal_9",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_7",
+    "reference": "portal_9"
+  },
+  {
+    "id": "portal/portal_7__ref_portal_0",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_7",
+    "reference": "portal_0"
+  },
+  {
+    "id": "portal/portal_8__ref_portal_9",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_8",
+    "reference": "portal_9"
+  },
+  {
+    "id": "portal/portal_8__ref_portal_0",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_8",
+    "reference": "portal_0"
+  },
+  {
+    "id": "portal/portal_8__ref_portal_1",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_8",
+    "reference": "portal_1"
+  },
+  {
+    "id": "portal/portal_9__ref_portal_0",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_9",
+    "reference": "portal_0"
+  },
+  {
+    "id": "portal/portal_9__ref_portal_1",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_9",
+    "reference": "portal_1"
+  },
+  {
+    "id": "portal/portal_9__ref_portal_10",
+    "class": "portal",
+    "sidedness": "onesided",
+    "target": "portal_9",
+    "reference": "portal_10"
+  },
+  {
+    "id": "run_set_on_fire/action_run_setonfire_6__ref_action_run_setonfire_7",
+    "class": "run_set_on_fire",
+    "sidedness": "onesided",
+    "target": "action_run_setonfire_6",
+    "reference": "action_run_setonfire_7"
+  },
+  {
+    "id": "run_set_on_fire/action_run_setonfire_7__ref_action_run_setonfire_6",
+    "class": "run_set_on_fire",
+    "sidedness": "onesided",
+    "target": "action_run_setonfire_7",
+    "reference": "action_run_setonfire_6"
+  },
+  {
+    "id": "saint_glow/saint_glow_0__ref_saint_glow_1",
+    "class": "saint_glow",
+    "sidedness": "onesided",
+    "target": "saint_glow_0",
+    "reference": "saint_glow_1"
+  },
+  {
+    "id": "saint_glow/saint_glow_0__ref_saint_glow_2",
+    "class": "saint_glow",
+    "sidedness": "onesided",
+    "target": "saint_glow_0",
+    "reference": "saint_glow_2"
+  },
+  {
+    "id": "saint_glow/saint_glow_0__ref_saint_glow_3",
+    "class": "saint_glow",
+    "sidedness": "onesided",
+    "target": "saint_glow_0",
+    "reference": "saint_glow_3"
+  },
+  {
+    "id": "saint_glow/saint_glow_1__ref_saint_glow_2",
+    "class": "saint_glow",
+    "sidedness": "onesided",
+    "target": "saint_glow_1",
+    "reference": "saint_glow_2"
+  },
+  {
+    "id": "saint_glow/saint_glow_1__ref_saint_glow_3",
+    "class": "saint_glow",
+    "sidedness": "onesided",
+    "target": "saint_glow_1",
+    "reference": "saint_glow_3"
+  },
+  {
+    "id": "saint_glow/saint_glow_1__ref_saint_glow_0",
+    "class": "saint_glow",
+    "sidedness": "onesided",
+    "target": "saint_glow_1",
+    "reference": "saint_glow_0"
+  },
+  {
+    "id": "saint_glow/saint_glow_2__ref_saint_glow_3",
+    "class": "saint_glow",
+    "sidedness": "onesided",
+    "target": "saint_glow_2",
+    "reference": "saint_glow_3"
+  },
+  {
+    "id": "saint_glow/saint_glow_2__ref_saint_glow_0",
+    "class": "saint_glow",
+    "sidedness": "onesided",
+    "target": "saint_glow_2",
+    "reference": "saint_glow_0"
+  },
+  {
+    "id": "saint_glow/saint_glow_2__ref_saint_glow_1",
+    "class": "saint_glow",
+    "sidedness": "onesided",
+    "target": "saint_glow_2",
+    "reference": "saint_glow_1"
+  },
+  {
+    "id": "saint_glow/saint_glow_3__ref_saint_glow_0",
+    "class": "saint_glow",
+    "sidedness": "onesided",
+    "target": "saint_glow_3",
+    "reference": "saint_glow_0"
+  },
+  {
+    "id": "saint_glow/saint_glow_3__ref_saint_glow_1",
+    "class": "saint_glow",
+    "sidedness": "onesided",
+    "target": "saint_glow_3",
+    "reference": "saint_glow_1"
+  },
+  {
+    "id": "saint_glow/saint_glow_3__ref_saint_glow_2",
+    "class": "saint_glow",
+    "sidedness": "onesided",
+    "target": "saint_glow_3",
+    "reference": "saint_glow_2"
+  },
+  {
+    "id": "sakura_petals/sakura_petals_0__ref_sakura_petals_2",
+    "class": "sakura_petals",
+    "sidedness": "onesided",
+    "target": "sakura_petals_0",
+    "reference": "sakura_petals_2"
+  },
+  {
+    "id": "sakura_petals/sakura_petals_2__ref_sakura_petals_0",
+    "class": "sakura_petals",
+    "sidedness": "onesided",
+    "target": "sakura_petals_2",
+    "reference": "sakura_petals_0"
+  },
+  {
+    "id": "shadow/shadow_1__ref_shadow_11",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_1",
+    "reference": "shadow_11"
+  },
+  {
+    "id": "shadow/shadow_1__ref_shadow_12",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_1",
+    "reference": "shadow_12"
+  },
+  {
+    "id": "shadow/shadow_1__ref_shadow_14",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_1",
+    "reference": "shadow_14"
+  },
+  {
+    "id": "shadow/shadow_11__ref_shadow_12",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_11",
+    "reference": "shadow_12"
+  },
+  {
+    "id": "shadow/shadow_11__ref_shadow_14",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_11",
+    "reference": "shadow_14"
+  },
+  {
+    "id": "shadow/shadow_11__ref_shadow_3",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_11",
+    "reference": "shadow_3"
+  },
+  {
+    "id": "shadow/shadow_12__ref_shadow_14",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_12",
+    "reference": "shadow_14"
+  },
+  {
+    "id": "shadow/shadow_12__ref_shadow_3",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_12",
+    "reference": "shadow_3"
+  },
+  {
+    "id": "shadow/shadow_12__ref_shadow_4",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_12",
+    "reference": "shadow_4"
+  },
+  {
+    "id": "shadow/shadow_14__ref_shadow_3",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_14",
+    "reference": "shadow_3"
+  },
+  {
+    "id": "shadow/shadow_14__ref_shadow_4",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_14",
+    "reference": "shadow_4"
+  },
+  {
+    "id": "shadow/shadow_14__ref_shadow_5",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_14",
+    "reference": "shadow_5"
+  },
+  {
+    "id": "shadow/shadow_3__ref_shadow_4",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_3",
+    "reference": "shadow_4"
+  },
+  {
+    "id": "shadow/shadow_3__ref_shadow_5",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_3",
+    "reference": "shadow_5"
+  },
+  {
+    "id": "shadow/shadow_3__ref_shadow_6",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_3",
+    "reference": "shadow_6"
+  },
+  {
+    "id": "shadow/shadow_4__ref_shadow_5",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_4",
+    "reference": "shadow_5"
+  },
+  {
+    "id": "shadow/shadow_4__ref_shadow_6",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_4",
+    "reference": "shadow_6"
+  },
+  {
+    "id": "shadow/shadow_4__ref_shadow_7",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_4",
+    "reference": "shadow_7"
+  },
+  {
+    "id": "shadow/shadow_5__ref_shadow_6",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_5",
+    "reference": "shadow_6"
+  },
+  {
+    "id": "shadow/shadow_5__ref_shadow_7",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_5",
+    "reference": "shadow_7"
+  },
+  {
+    "id": "shadow/shadow_5__ref_shadow_8",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_5",
+    "reference": "shadow_8"
+  },
+  {
+    "id": "shadow/shadow_6__ref_shadow_7",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_6",
+    "reference": "shadow_7"
+  },
+  {
+    "id": "shadow/shadow_6__ref_shadow_8",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_6",
+    "reference": "shadow_8"
+  },
+  {
+    "id": "shadow/shadow_6__ref_shadow_9",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_6",
+    "reference": "shadow_9"
+  },
+  {
+    "id": "shadow/shadow_7__ref_shadow_8",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_7",
+    "reference": "shadow_8"
+  },
+  {
+    "id": "shadow/shadow_7__ref_shadow_9",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_7",
+    "reference": "shadow_9"
+  },
+  {
+    "id": "shadow/shadow_7__ref_shadow_1",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_7",
+    "reference": "shadow_1"
+  },
+  {
+    "id": "shadow/shadow_8__ref_shadow_9",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_8",
+    "reference": "shadow_9"
+  },
+  {
+    "id": "shadow/shadow_8__ref_shadow_1",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_8",
+    "reference": "shadow_1"
+  },
+  {
+    "id": "shadow/shadow_8__ref_shadow_11",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_8",
+    "reference": "shadow_11"
+  },
+  {
+    "id": "shadow/shadow_9__ref_shadow_1",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_9",
+    "reference": "shadow_1"
+  },
+  {
+    "id": "shadow/shadow_9__ref_shadow_11",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_9",
+    "reference": "shadow_11"
+  },
+  {
+    "id": "shadow/shadow_9__ref_shadow_12",
+    "class": "shadow",
+    "sidedness": "onesided",
+    "target": "shadow_9",
+    "reference": "shadow_12"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_0__ref_shadow_smoke_2",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_0",
+    "reference": "shadow_smoke_2"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_0__ref_shadow_smoke_3",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_0",
+    "reference": "shadow_smoke_3"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_0__ref_shadow_smoke_4",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_0",
+    "reference": "shadow_smoke_4"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_2__ref_shadow_smoke_3",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_2",
+    "reference": "shadow_smoke_3"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_2__ref_shadow_smoke_4",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_2",
+    "reference": "shadow_smoke_4"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_2__ref_shadow_smoke_5",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_2",
+    "reference": "shadow_smoke_5"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_3__ref_shadow_smoke_4",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_3",
+    "reference": "shadow_smoke_4"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_3__ref_shadow_smoke_5",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_3",
+    "reference": "shadow_smoke_5"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_3__ref_shadow_smoke_6",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_3",
+    "reference": "shadow_smoke_6"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_4__ref_shadow_smoke_5",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_4",
+    "reference": "shadow_smoke_5"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_4__ref_shadow_smoke_6",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_4",
+    "reference": "shadow_smoke_6"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_4__ref_shadow_smoke_7",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_4",
+    "reference": "shadow_smoke_7"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_5__ref_shadow_smoke_6",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_5",
+    "reference": "shadow_smoke_6"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_5__ref_shadow_smoke_7",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_5",
+    "reference": "shadow_smoke_7"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_5__ref_shadow_smoke_8",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_5",
+    "reference": "shadow_smoke_8"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_6__ref_shadow_smoke_7",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_6",
+    "reference": "shadow_smoke_7"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_6__ref_shadow_smoke_8",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_6",
+    "reference": "shadow_smoke_8"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_6__ref_shadow_smoke_9",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_6",
+    "reference": "shadow_smoke_9"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_7__ref_shadow_smoke_8",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_7",
+    "reference": "shadow_smoke_8"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_7__ref_shadow_smoke_9",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_7",
+    "reference": "shadow_smoke_9"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_7__ref_shadow_smoke_0",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_7",
+    "reference": "shadow_smoke_0"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_8__ref_shadow_smoke_9",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_8",
+    "reference": "shadow_smoke_9"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_8__ref_shadow_smoke_0",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_8",
+    "reference": "shadow_smoke_0"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_8__ref_shadow_smoke_2",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_8",
+    "reference": "shadow_smoke_2"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_9__ref_shadow_smoke_0",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_9",
+    "reference": "shadow_smoke_0"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_9__ref_shadow_smoke_2",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_9",
+    "reference": "shadow_smoke_2"
+  },
+  {
+    "id": "shadow_smoke/shadow_smoke_9__ref_shadow_smoke_3",
+    "class": "shadow_smoke",
+    "sidedness": "twosided",
+    "target": "shadow_smoke_9",
+    "reference": "shadow_smoke_3"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_1__ref_super_fast_run_12",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_1",
+    "reference": "super_fast_run_12"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_1__ref_super_fast_run_3",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_1",
+    "reference": "super_fast_run_3"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_1__ref_super_fast_run_4",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_1",
+    "reference": "super_fast_run_4"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_12__ref_super_fast_run_3",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_12",
+    "reference": "super_fast_run_3"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_12__ref_super_fast_run_4",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_12",
+    "reference": "super_fast_run_4"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_12__ref_super_fast_run_6",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_12",
+    "reference": "super_fast_run_6"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_3__ref_super_fast_run_4",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_3",
+    "reference": "super_fast_run_4"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_3__ref_super_fast_run_6",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_3",
+    "reference": "super_fast_run_6"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_3__ref_super_fast_run_7",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_3",
+    "reference": "super_fast_run_7"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_4__ref_super_fast_run_6",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_4",
+    "reference": "super_fast_run_6"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_4__ref_super_fast_run_7",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_4",
+    "reference": "super_fast_run_7"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_4__ref_super_fast_run_8",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_4",
+    "reference": "super_fast_run_8"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_6__ref_super_fast_run_7",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_6",
+    "reference": "super_fast_run_7"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_6__ref_super_fast_run_8",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_6",
+    "reference": "super_fast_run_8"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_6__ref_super_fast_run_9",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_6",
+    "reference": "super_fast_run_9"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_7__ref_super_fast_run_8",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_7",
+    "reference": "super_fast_run_8"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_7__ref_super_fast_run_9",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_7",
+    "reference": "super_fast_run_9"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_7__ref_super_fast_run_1",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_7",
+    "reference": "super_fast_run_1"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_8__ref_super_fast_run_9",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_8",
+    "reference": "super_fast_run_9"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_8__ref_super_fast_run_1",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_8",
+    "reference": "super_fast_run_1"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_8__ref_super_fast_run_12",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_8",
+    "reference": "super_fast_run_12"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_9__ref_super_fast_run_1",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_9",
+    "reference": "super_fast_run_1"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_9__ref_super_fast_run_12",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_9",
+    "reference": "super_fast_run_12"
+  },
+  {
+    "id": "super_fast_run/super_fast_run_9__ref_super_fast_run_3",
+    "class": "super_fast_run",
+    "sidedness": "onesided",
+    "target": "super_fast_run_9",
+    "reference": "super_fast_run_3"
+  },
+  {
+    "id": "water_bending/water_bending_0__ref_water_bending_1",
+    "class": "water_bending",
+    "sidedness": "twosided",
+    "target": "water_bending_0",
+    "reference": "water_bending_1"
+  },
+  {
+    "id": "water_bending/water_bending_0__ref_water_bending_2",
+    "class": "water_bending",
+    "sidedness": "twosided",
+    "target": "water_bending_0",
+    "reference": "water_bending_2"
+  },
+  {
+    "id": "water_bending/water_bending_0__ref_water_bending_3",
+    "class": "water_bending",
+    "sidedness": "twosided",
+    "target": "water_bending_0",
+    "reference": "water_bending_3"
+  },
+  {
+    "id": "water_bending/water_bending_1__ref_water_bending_2",
+    "class": "water_bending",
+    "sidedness": "twosided",
+    "target": "water_bending_1",
+    "reference": "water_bending_2"
+  },
+  {
+    "id": "water_bending/water_bending_1__ref_water_bending_3",
+    "class": "water_bending",
+    "sidedness": "twosided",
+    "target": "water_bending_1",
+    "reference": "water_bending_3"
+  },
+  {
+    "id": "water_bending/water_bending_1__ref_water_bending_0",
+    "class": "water_bending",
+    "sidedness": "twosided",
+    "target": "water_bending_1",
+    "reference": "water_bending_0"
+  },
+  {
+    "id": "water_bending/water_bending_2__ref_water_bending_3",
+    "class": "water_bending",
+    "sidedness": "twosided",
+    "target": "water_bending_2",
+    "reference": "water_bending_3"
+  },
+  {
+    "id": "water_bending/water_bending_2__ref_water_bending_0",
+    "class": "water_bending",
+    "sidedness": "twosided",
+    "target": "water_bending_2",
+    "reference": "water_bending_0"
+  },
+  {
+    "id": "water_bending/water_bending_2__ref_water_bending_1",
+    "class": "water_bending",
+    "sidedness": "twosided",
+    "target": "water_bending_2",
+    "reference": "water_bending_1"
+  },
+  {
+    "id": "water_bending/water_bending_3__ref_water_bending_0",
+    "class": "water_bending",
+    "sidedness": "twosided",
+    "target": "water_bending_3",
+    "reference": "water_bending_0"
+  },
+  {
+    "id": "water_bending/water_bending_3__ref_water_bending_1",
+    "class": "water_bending",
+    "sidedness": "twosided",
+    "target": "water_bending_3",
+    "reference": "water_bending_1"
+  },
+  {
+    "id": "water_bending/water_bending_3__ref_water_bending_2",
+    "class": "water_bending",
+    "sidedness": "twosided",
+    "target": "water_bending_3",
+    "reference": "water_bending_2"
+  },
+  {
+    "id": "water_element/water_element_0__ref_water_element_1",
+    "class": "water_element",
+    "sidedness": "onesided",
+    "target": "water_element_0",
+    "reference": "water_element_1"
+  },
+  {
+    "id": "water_element/water_element_0__ref_water_element_2",
+    "class": "water_element",
+    "sidedness": "onesided",
+    "target": "water_element_0",
+    "reference": "water_element_2"
+  },
+  {
+    "id": "water_element/water_element_0__ref_water_element_4",
+    "class": "water_element",
+    "sidedness": "onesided",
+    "target": "water_element_0",
+    "reference": "water_element_4"
+  },
+  {
+    "id": "water_element/water_element_1__ref_water_element_2",
+    "class": "water_element",
+    "sidedness": "onesided",
+    "target": "water_element_1",
+    "reference": "water_element_2"
+  },
+  {
+    "id": "water_element/water_element_1__ref_water_element_4",
+    "class": "water_element",
+    "sidedness": "onesided",
+    "target": "water_element_1",
+    "reference": "water_element_4"
+  },
+  {
+    "id": "water_element/water_element_1__ref_water_element_5",
+    "class": "water_element",
+    "sidedness": "onesided",
+    "target": "water_element_1",
+    "reference": "water_element_5"
+  },
+  {
+    "id": "water_element/water_element_2__ref_water_element_4",
+    "class": "water_element",
+    "sidedness": "onesided",
+    "target": "water_element_2",
+    "reference": "water_element_4"
+  },
+  {
+    "id": "water_element/water_element_2__ref_water_element_5",
+    "class": "water_element",
+    "sidedness": "onesided",
+    "target": "water_element_2",
+    "reference": "water_element_5"
+  },
+  {
+    "id": "water_element/water_element_2__ref_water_element_0",
+    "class": "water_element",
+    "sidedness": "onesided",
+    "target": "water_element_2",
+    "reference": "water_element_0"
+  },
+  {
+    "id": "water_element/water_element_4__ref_water_element_5",
+    "class": "water_element",
+    "sidedness": "onesided",
+    "target": "water_element_4",
+    "reference": "water_element_5"
+  },
+  {
+    "id": "water_element/water_element_4__ref_water_element_0",
+    "class": "water_element",
+    "sidedness": "onesided",
+    "target": "water_element_4",
+    "reference": "water_element_0"
+  },
+  {
+    "id": "water_element/water_element_4__ref_water_element_1",
+    "class": "water_element",
+    "sidedness": "onesided",
+    "target": "water_element_4",
+    "reference": "water_element_1"
+  },
+  {
+    "id": "water_element/water_element_5__ref_water_element_0",
+    "class": "water_element",
+    "sidedness": "onesided",
+    "target": "water_element_5",
+    "reference": "water_element_0"
+  },
+  {
+    "id": "water_element/water_element_5__ref_water_element_1",
+    "class": "water_element",
+    "sidedness": "onesided",
+    "target": "water_element_5",
+    "reference": "water_element_1"
+  },
+  {
+    "id": "water_element/water_element_5__ref_water_element_2",
+    "class": "water_element",
+    "sidedness": "onesided",
+    "target": "water_element_5",
+    "reference": "water_element_2"
+  },
+  {
+    "id": "wireframe/wireframe_0__ref_wireframe_1",
+    "class": "wireframe",
+    "sidedness": "onesided",
+    "target": "wireframe_0",
+    "reference": "wireframe_1"
+  },
+  {
+    "id": "wireframe/wireframe_0__ref_wireframe_3",
+    "class": "wireframe",
+    "sidedness": "onesided",
+    "target": "wireframe_0",
+    "reference": "wireframe_3"
+  },
+  {
+    "id": "wireframe/wireframe_0__ref_wireframe_6",
+    "class": "wireframe",
+    "sidedness": "onesided",
+    "target": "wireframe_0",
+    "reference": "wireframe_6"
+  },
+  {
+    "id": "wireframe/wireframe_1__ref_wireframe_3",
+    "class": "wireframe",
+    "sidedness": "onesided",
+    "target": "wireframe_1",
+    "reference": "wireframe_3"
+  },
+  {
+    "id": "wireframe/wireframe_1__ref_wireframe_6",
+    "class": "wireframe",
+    "sidedness": "onesided",
+    "target": "wireframe_1",
+    "reference": "wireframe_6"
+  },
+  {
+    "id": "wireframe/wireframe_1__ref_wireframe_8",
+    "class": "wireframe",
+    "sidedness": "onesided",
+    "target": "wireframe_1",
+    "reference": "wireframe_8"
+  },
+  {
+    "id": "wireframe/wireframe_3__ref_wireframe_6",
+    "class": "wireframe",
+    "sidedness": "onesided",
+    "target": "wireframe_3",
+    "reference": "wireframe_6"
+  },
+  {
+    "id": "wireframe/wireframe_3__ref_wireframe_8",
+    "class": "wireframe",
+    "sidedness": "onesided",
+    "target": "wireframe_3",
+    "reference": "wireframe_8"
+  },
+  {
+    "id": "wireframe/wireframe_3__ref_wireframe_0",
+    "class": "wireframe",
+    "sidedness": "onesided",
+    "target": "wireframe_3",
+    "reference": "wireframe_0"
+  },
+  {
+    "id": "wireframe/wireframe_6__ref_wireframe_8",
+    "class": "wireframe",
+    "sidedness": "onesided",
+    "target": "wireframe_6",
+    "reference": "wireframe_8"
+  },
+  {
+    "id": "wireframe/wireframe_6__ref_wireframe_0",
+    "class": "wireframe",
+    "sidedness": "onesided",
+    "target": "wireframe_6",
+    "reference": "wireframe_0"
+  },
+  {
+    "id": "wireframe/wireframe_6__ref_wireframe_1",
+    "class": "wireframe",
+    "sidedness": "onesided",
+    "target": "wireframe_6",
+    "reference": "wireframe_1"
+  },
+  {
+    "id": "wireframe/wireframe_8__ref_wireframe_0",
+    "class": "wireframe",
+    "sidedness": "onesided",
+    "target": "wireframe_8",
+    "reference": "wireframe_0"
+  },
+  {
+    "id": "wireframe/wireframe_8__ref_wireframe_1",
+    "class": "wireframe",
+    "sidedness": "onesided",
+    "target": "wireframe_8",
+    "reference": "wireframe_1"
+  },
+  {
+    "id": "wireframe/wireframe_8__ref_wireframe_3",
+    "class": "wireframe",
+    "sidedness": "onesided",
+    "target": "wireframe_8",
+    "reference": "wireframe_3"
+  },
+  {
+    "id": "wonderland/wonderland_0__ref_wonderland_2",
+    "class": "wonderland",
+    "sidedness": "onesided",
+    "target": "wonderland_0",
+    "reference": "wonderland_2"
+  },
+  {
+    "id": "wonderland/wonderland_2__ref_wonderland_0",
+    "class": "wonderland",
+    "sidedness": "onesided",
+    "target": "wonderland_2",
+    "reference": "wonderland_0"
+  }
+]
