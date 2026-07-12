@@ -1,0 +1,41 @@
+# exp_060 σ_seed generation — snapshot of the exp_057 decision-generating
+# contract (the IC-LoRA arm scored in the archived exp_057 generations).
+# run.py hardcodes these constants (matching the exp_056/057/058 ValidationRunner
+# pattern; the trainer uv env has no diffusion.exp_utils). This file is the record.
+model:
+  base_model: "cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors"
+  text_encoder: "cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
+  lora: "outputs/training/exp_056_ltx2_ic_lora_transition_transfer/ic/checkpoints/lora_weights_step_03000.safetensors"
+  lora_rank: 32
+  lora_alpha: 32
+  target_modules: [attn1.to_k, attn1.to_q, attn1.to_v, attn1.to_out.0,
+                   attn2.to_k, attn2.to_q, attn2.to_v, attn2.to_out.0,
+                   ff.net.0.proj, ff.net.2]
+
+inputs:
+  selection: "experiments/exp_060_sigma_seed/dataset/selection.json"
+  cond_dir: "experiments/exp_060_sigma_seed/dataset/cond"
+
+inference:                 # exp_057 recipe verbatim
+  width: 480
+  height: 640
+  num_frames: 121
+  fps: 24
+  num_inference_steps: 30
+  guidance_scale: 4.0
+  stg_scale: 1.0
+  stg_blocks: [29]
+  stg_mode: "stg_v"
+  n_prefix: 9              # start9.mp4 (first 9 frames of clip A)
+  n_suffix: 8              # end9.mp4 (last 9 frames of clip A), consumed as 8
+  negative_prompt: "worst quality, inconsistent motion, distorted, jittery"
+  trigger: "ICTRANS"
+
+runtime:
+  seeds: [42, 43, 44, 45, 46]
+  device: cuda
+  dtype: bfloat16
+
+outputs:
+  dir: "outputs/videos/exp_060_sigma_seed"
+  fps: 24

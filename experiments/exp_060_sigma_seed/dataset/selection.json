@@ -1,0 +1,261 @@
+{
+  "selection_rule": "exp_060 \u2014 deterministic \u03c3_seed probe-item selection (SPEC \u00a74/\u00a76.4, O6).\n\nSelection rule (frozen here; no cherry-picking \u2014 same spirit as the anchor rule):\n\n  1. Restrict to n>=4-eligible classes (the exam's trust convention).\n  2. Strata = (twosided, onesided) x (camera-tagged, object-tagged,\n     style/untagged), membership by TAG PRESENCE (a class with tags\n     [camera,object] is a candidate in BOTH camera and object strata;\n     'style/untagged' = 'style' in tags OR no tags at all). Fixed stratum\n     order: twosided-{camera,object,style/untagged}, then\n     onesided-{camera,object,style/untagged}.\n  3. Fill 12 slots by cycling the strata in that fixed order (round-robin),\n     each visit taking the FIRST LEXICOGRAPHIC class in that stratum NOT\n     already picked globally; skip exhausted/empty strata. (Second visit to a\n     stratum therefore takes its second-lexicographic class, etc.)\n  4. For each picked class the probe item = the class's BAR PAIR\n     (max-endpoint-distance pair) exactly as certification defines it\n     (certify/probes.sibling_pairs). Clip A = generated_video of sib__<class>\n     (the endpoints / conditioning source), clip B = reference_video (the\n     reference). Read from the certified certification artifact so it is\n     byte-identical to what the instrument used; bar-pair selection is\n     corpus-only + pre-freeze, so the draft.8 artifact == the eval/v3.0.0 tag.\n\nWrites dataset/selection.json (picks + strata + bar pairs + captions +\nprovenance). Login-node / CPU only.\n",
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "n_items": 12,
+  "strata_members": {
+    "twosided-camera": [
+      "air_bending",
+      "earth_wave",
+      "firelava",
+      "flying_cam_transition",
+      "raven_transition",
+      "shadow_smoke",
+      "water_bending"
+    ],
+    "twosided-object": [
+      "air_bending",
+      "earth_wave",
+      "firelava",
+      "melt_transition",
+      "raven_transition",
+      "shadow_smoke",
+      "water_bending"
+    ],
+    "twosided-style/untagged": [],
+    "onesided-camera": [
+      "earth_element",
+      "hero_flight",
+      "illustration_scene",
+      "live_concert",
+      "plasma_explosion",
+      "polygon",
+      "super_fast_run"
+    ],
+    "onesided-object": [
+      "animalization",
+      "color_rain",
+      "cotton_cloud",
+      "gas_transformation",
+      "giant_grab",
+      "live_concert",
+      "luminous_gaze",
+      "money_rain",
+      "mystification",
+      "portal",
+      "saint_glow"
+    ],
+    "onesided-style/untagged": [
+      "earth_element",
+      "fire_element",
+      "illustration_scene",
+      "luminous_gaze",
+      "polygon",
+      "shadow",
+      "water_element",
+      "wireframe"
+    ]
+  },
+  "eligible_classes_n_ge_4": [
+    "air_bending",
+    "animalization",
+    "color_rain",
+    "cotton_cloud",
+    "earth_element",
+    "earth_wave",
+    "fire_element",
+    "firelava",
+    "flying_cam_transition",
+    "gas_transformation",
+    "giant_grab",
+    "hero_flight",
+    "illustration_scene",
+    "live_concert",
+    "luminous_gaze",
+    "melt_transition",
+    "money_rain",
+    "mystification",
+    "plasma_explosion",
+    "polygon",
+    "portal",
+    "raven_transition",
+    "saint_glow",
+    "shadow",
+    "shadow_smoke",
+    "super_fast_run",
+    "water_bending",
+    "water_element",
+    "wireframe"
+  ],
+  "siblings_artifact": "outputs/eval/certification/3.0.0-draft.8/manifests/siblings.json",
+  "items": [
+    {
+      "class": "air_bending",
+      "stratum": "twosided-camera",
+      "sidedness": "twosided",
+      "tags": [
+        "camera",
+        "object"
+      ],
+      "n_clips": 4,
+      "clip_a": "air_bending_2",
+      "clip_b": "air_bending_3",
+      "endpoint_dist": "bar pair; endpoint_dist=0.8309",
+      "caption_a": "A young man with shaggy dark hair in an oversized gray t-shirt and olive wide-leg trousers stands on wet asphalt at night, a house engulfed in roaring orange flames behind him. The scene transforms into an overhead view of a young man in a silky gray shirt reclining in a graffiti-painted leather armchair on a bare concrete floor, gazing calmly up at the camera."
+    },
+    {
+      "class": "earth_wave",
+      "stratum": "twosided-object",
+      "sidedness": "twosided",
+      "tags": [
+        "camera",
+        "object"
+      ],
+      "n_clips": 5,
+      "clip_a": "earth_wave_0",
+      "clip_b": "earth_wave_4",
+      "endpoint_dist": "bar pair; endpoint_dist=0.9406",
+      "caption_a": "A young woman with slicked-back dark hair in braided buns, wraparound sunglasses, and a cropped black leather jacket with white piping stands in a narrow bookstore aisle between tall shelves packed with colorful books, seen from a high angle. The scene transforms into a woman with a voluminous dark afro, black sport sunglasses, and a silver chain choker standing on a sunlit concrete staircase beneath tall bright windows, gazing up toward the camera."
+    },
+    {
+      "class": "earth_element",
+      "stratum": "onesided-camera",
+      "sidedness": "onesided",
+      "tags": [
+        "camera",
+        "style"
+      ],
+      "n_clips": 6,
+      "clip_a": "earth_element_4",
+      "clip_b": "earth_element_6",
+      "endpoint_dist": "bar pair; endpoint_dist=0.8902",
+      "caption_a": "A young man wearing a blue beanie, a blue varsity jacket, baggy white pants, and white sneakers with pink accents stands in front of a white SUV parked on a city street under soft daylight. The scene transforms into a large, muscular humanoid figure made of rough brown stone stands on an empty city street lined with multi-story buildings under overcast daylight."
+    },
+    {
+      "class": "animalization",
+      "stratum": "onesided-object",
+      "sidedness": "onesided",
+      "tags": [
+        "object"
+      ],
+      "n_clips": 8,
+      "clip_a": "animalization_1",
+      "clip_b": "animalization_3",
+      "endpoint_dist": "bar pair; endpoint_dist=0.9901",
+      "caption_a": "A woman wearing a long-sleeved black dress and white heels lies on her back with one hand resting on her stomach in a vast, undulating green moss-covered landscape under an overcast sky. The scene transforms into a fluffy, greyish-brown fox with a long bushy tail stands on a vast, undulating landscape covered in thick green moss under a cloudy sky."
+    },
+    {
+      "class": "fire_element",
+      "stratum": "onesided-style/untagged",
+      "sidedness": "onesided",
+      "tags": [
+        "style"
+      ],
+      "n_clips": 4,
+      "clip_a": "fire_element_1",
+      "clip_b": "fire_element_4",
+      "endpoint_dist": "bar pair; endpoint_dist=0.7061",
+      "caption_a": "An elderly man wearing sunglasses, a red and blue neckerchief, and a white Lipton polo shirt sits on a beach with the ocean and a clear blue sky in the background under warm sunlight. The scene transforms into a shirtless man wearing sunglasses and a necktie sits by the ocean under a clear blue sky, with his skin covered in a dark, cracked texture featuring bright orange and yellow veins resembling molten rock and wisps of orange smoke."
+    },
+    {
+      "class": "firelava",
+      "stratum": "twosided-camera",
+      "sidedness": "twosided",
+      "tags": [
+        "camera",
+        "object"
+      ],
+      "n_clips": 6,
+      "clip_a": "firelava_0",
+      "clip_b": "firelava_3",
+      "endpoint_dist": "bar pair; endpoint_dist=0.9652",
+      "caption_a": "A young man with curly hair in a dark navy puffer jacket and black pants sprawls asleep in a chair beneath a fuel pump at a deserted gas station at night, lit by cold teal fluorescent light and seen from a low wide angle with his sneaker looming near the camera. The scene transforms into a young man with a short fade haircut in a dark jacket holding a bright blue payphone handset to his ear beside a blue-tiled wall on a city street at night, glancing sideways at the camera in close-up."
+    },
+    {
+      "class": "melt_transition",
+      "stratum": "twosided-object",
+      "sidedness": "twosided",
+      "tags": [
+        "object"
+      ],
+      "n_clips": 4,
+      "clip_a": "melt_transition_1",
+      "clip_b": "melt_transition_2",
+      "endpoint_dist": "bar pair; endpoint_dist=0.9818",
+      "caption_a": "A woman in a red cowboy hat, amber sunglasses, and a red-and-navy striped rugby shirt reclines on stacked hay bales in red cowboy boots, swinging a rope overhead against dusky mountains. The scene transforms into a blonde woman in a black beanie and an American-flag crop top with a white varsity-numbered skirt, posing mid-turn on a green playing field beneath heavy storm clouds and a distant floodlight."
+    },
+    {
+      "class": "hero_flight",
+      "stratum": "onesided-camera",
+      "sidedness": "onesided",
+      "tags": [
+        "camera"
+      ],
+      "n_clips": 10,
+      "clip_a": "hero_flight_6",
+      "clip_b": "hero_flight_8",
+      "endpoint_dist": "bar pair; endpoint_dist=0.9905",
+      "caption_a": "A man in a green sweater and pink beanie stands outside a Parisian caf\u00e9 holding a shopping bag and a pink jacket. The scene transforms into a first-person aerial view above a narrow European street, a green-sleeved arm stretched out ahead."
+    },
+    {
+      "class": "color_rain",
+      "stratum": "onesided-object",
+      "sidedness": "onesided",
+      "tags": [
+        "object"
+      ],
+      "n_clips": 8,
+      "clip_a": "color_rain_0",
+      "clip_b": "color_rain_8",
+      "endpoint_dist": "bar pair; endpoint_dist=0.9278",
+      "caption_a": "A woman with long black hair and large sunglasses stands in a warm-lit kitchen, wearing a brown leather jacket, a light blue button-down shirt, and a brown skirt while holding a white telephone receiver to her ear. The scene transforms into a woman wearing sunglasses, a leather jacket, and a long skirt stands in a kitchen illuminated by warm orange light, holding a telephone receiver to her ear while red liquid drips down her and the surrounding room."
+    },
+    {
+      "class": "illustration_scene",
+      "stratum": "onesided-style/untagged",
+      "sidedness": "onesided",
+      "tags": [
+        "camera",
+        "style"
+      ],
+      "n_clips": 10,
+      "clip_a": "illustration_scene_1",
+      "clip_b": "illustration_scene_2",
+      "endpoint_dist": "bar pair; endpoint_dist=0.9484",
+      "caption_a": "A young man with a mustache, wearing a white bandana, a white t-shirt, grey shorts, and red and black sneakers, sits on a black equipment case next to a brick wall under bright flash lighting. The scene transforms into a young man with a mustache, wearing a patterned bandana, a t-shirt, and layered necklaces, sits next to a metal stand under vibrant orange and red lighting.",
+      "caption_a_provenance": "gemini:gemini-3.5-flash (exp_060, exp_058 pipeline)"
+    },
+    {
+      "class": "flying_cam_transition",
+      "stratum": "twosided-camera",
+      "sidedness": "twosided",
+      "tags": [
+        "camera"
+      ],
+      "n_clips": 4,
+      "clip_a": "flying_cam_transition_2",
+      "clip_b": "flying_cam_transition_3",
+      "endpoint_dist": "bar pair; endpoint_dist=0.9792",
+      "caption_a": "A hiker in khaki trousers and rugged boots strides away through tall sunlit grass toward hazy mountains, seen from a low angle just behind his heels. The scene transforms into a colossal woman with sculpted black finger-waved hair, long white gloves, and a tweed skirt kneeling in a vast golden field while tiny onlookers gather in the dry grass below her."
+    },
+    {
+      "class": "raven_transition",
+      "stratum": "twosided-object",
+      "sidedness": "twosided",
+      "tags": [
+        "camera",
+        "object"
+      ],
+      "n_clips": 4,
+      "clip_a": "raven_transition_1",
+      "clip_b": "raven_transition_3",
+      "endpoint_dist": "bar pair; endpoint_dist=0.9415",
+      "caption_a": "A young man with braided hair in a black, red, and white soccer jersey sits with arms spread along the back of a park bench on a sunlit running track, blue kit bags at his sides. The scene transforms into a young man in a colorful striped track jacket and yellow-and-blue trousers sitting on the floor with arms crossed against the chrome rear bumper of a vintage dark blue sedan in a beige studio."
+    }
+  ]
+}
