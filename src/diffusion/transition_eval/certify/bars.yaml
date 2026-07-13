@@ -8,9 +8,9 @@
 # stated in place — precedent-anchoring is the same method draft.7 used with
 # v2 numbers, now with a precedent measured on THIS corpus.
 # `frozen` flips to true in its own commit before the run.
-status: FROZEN
-frozen: true      # frozen 2026-07-13 (draft.8), before the second certification
-                  # run; changes henceforth = new draft version + full re-run
+status: FORMS_LOCKED_NUMBERS_FINAL_DRAFT8
+frozen: false     # flips in its own commit before the draft.8 run;
+                  # changes henceforth = new draft version + full re-run
 
 principles:
   truth_only: "hard bars only on constructed or human-verified truth; model-behavior
