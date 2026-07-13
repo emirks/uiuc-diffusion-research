@@ -54,7 +54,7 @@ def _ref_bundle_cache(corpus: dict, cache_dir, extractor, tracker):
     for key in sorted(corpus["clips"]):
         cls = corpus["clips"][key]["class"]
         b, _ = process_video_file(root / key, cache_dir, extractor, tracker,
-                                  short_side=SHORT_SIDE)
+                                  short_side=SHORT_SIDE, need_frames=False)
         mask, _meta = core_mask_v3(b.profile, corpus["classes"][cls]["sidedness"])
         bundles[key] = (b, mask)
         pools.setdefault(cls, []).append(b.feats[mask])

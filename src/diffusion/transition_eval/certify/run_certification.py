@@ -140,7 +140,8 @@ def main() -> int:
     for i, key in enumerate(keys):
         b, _ = process_video_file(REPO_ROOT / probe_root / key, cache_dir,
                                   extractor, tracker,
-                                  short_side=versioning.PINS["feature_short_side"])
+                                  short_side=versioning.PINS["feature_short_side"],
+                                  need_frames=False)
         bundles_by_key[key] = b
         if (i + 1) % 40 == 0:
             log(f"  corpus {i + 1}/{len(keys)}")
@@ -182,7 +183,8 @@ def main() -> int:
         vp = probes.build_reversed_video(REPO_ROOT / probe_root / p["ref"],
                                          probe_dir / f"rev__{p['class']}.mp4")
         rb, _ = process_video_file(vp, cache_dir, extractor, tracker,
-                                   short_side=versioning.PINS["feature_short_side"])
+                                   short_side=versioning.PINS["feature_short_side"],
+                                   need_frames=False)
         rev_cams[p["ref"]] = camera_trajectory(rb["tracks"], rb["vis"])
     extractor.free(); tracker.free()
 

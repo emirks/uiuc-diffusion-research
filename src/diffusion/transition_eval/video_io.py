@@ -10,6 +10,13 @@ import numpy as np
 from PIL import Image
 
 
+def probe_fps(path: pathlib.Path) -> float:
+    """Container-header fps without decoding any frames."""
+    with av.open(str(path)) as container:
+        stream = container.streams.video[0]
+        return float(stream.average_rate) if stream.average_rate else 24.0
+
+
 def load_frames(path: pathlib.Path, short_side: int | None = 256) -> tuple[np.ndarray, float]:
     """Decode a whole video. Frames are resized during decode (BILINEAR) so the
     shortest side equals `short_side` (never upscaled); returns (frames, fps)."""

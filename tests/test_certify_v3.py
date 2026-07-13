@@ -339,3 +339,71 @@ def test_grade_controls_floor_only():
            "error": "boom"}                             # error row = documented miss
     assert not probes.grade_controls({"sib__c": sib, err["item_id"]: err},
                                      ["c"], bars)["pass"]
+
+
+# --- perf changes: lazy decode + parallel motion matrices (numeric no-ops) ----------
+
+def test_process_video_file_skips_decode_when_warm(tmp_path, monkeypatch):
+    """need_frames=False + warm caches -> no decode, same bundle content."""
+    from diffusion.transition_eval import pipeline
+    from diffusion.transition_eval.features import feature_cache_path, file_key
+
+    vid = tmp_path / "v.mp4"
+    vid.write_bytes(b"not-a-real-video")          # never decoded on the warm path
+
+    class StubExtractor:
+        model_name = "stub-model"
+        def extract(self, frames):                # must never run
+            raise AssertionError("extract called despite warm cache")
+
+    ext = StubExtractor()
+    key = file_key(vid, ext.model_name, "256")
+    T, D = 12, 8
+    feats = np.random.default_rng(0).random((T, D)).astype(np.float32)
+    np.savez_compressed(feature_cache_path(key, tmp_path), feats=feats, src=key)
+
+    calls = {"decode": 0}
+    def fake_load(path, short_side=256):
+        calls["decode"] += 1
+        raise AssertionError("load_frames called despite need_frames=False + warm cache")
+    monkeypatch.setattr(pipeline, "load_frames", fake_load)
+    monkeypatch.setattr(pipeline, "probe_fps", lambda p: 24.0)
+
+    b, frames = pipeline.process_video_file(vid, tmp_path, ext, tracker=None,
+                                            short_side=256, need_frames=False,
+                                            n_prefix=2, n_suffix=2, n_endpoints=1)
+    assert frames is None and calls["decode"] == 0
+    assert np.array_equal(b["feats"], feats) and b["fps"] == 24.0
+
+    # cold cache must still decode (flag is opportunistic, never wrong)
+    vid2 = tmp_path / "v2.mp4"
+    vid2.write_bytes(b"x")
+    def fake_load2(path, short_side=256):
+        return np.zeros((T, 4, 4, 3), dtype=np.uint8), 24.0
+    monkeypatch.setattr(pipeline, "load_frames", fake_load2)
+    class StubExtractor2(StubExtractor):
+        def extract(self, frames):
+            return np.ones((len(frames), D), dtype=np.float32)
+    b2, f2 = pipeline.process_video_file(vid2, tmp_path, StubExtractor2(),
+                                         tracker=None, short_side=256,
+                                         need_frames=False,
+                                         n_prefix=2, n_suffix=2, n_endpoints=1)
+    assert f2 is not None and b2["feats"].shape == (T, D)
+
+
+def test_motion_distance_matrices_parallel_matches_serial():
+    """Fork-pool pairwise loop must be bit-identical to the serial loop."""
+    from diffusion.transition_eval.certify.exam import motion_distance_matrices
+
+    rng = np.random.default_rng(7)
+    bundles = []
+    for _ in range(9):
+        T, P = 20, 30
+        base = rng.random((1, P, 2)).astype(np.float32)
+        drift = rng.normal(0, 0.01, (T, P, 2)).astype(np.float32).cumsum(0)
+        bundles.append({"tracks": np.clip(base + drift, 0, 1),
+                        "vis": np.ones((T, P), dtype=np.float32)})
+    serial = motion_distance_matrices(bundles, n_jobs=1)
+    parallel = motion_distance_matrices(bundles, n_jobs=2, min_pairs_for_pool=1)
+    for k in serial:
+        np.testing.assert_array_equal(serial[k], parallel[k])

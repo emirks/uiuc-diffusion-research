@@ -75,24 +75,61 @@ def appearance_distance_matrix(bundles: list[dict], variant: str,
     return D
 
 
-def motion_distance_matrices(bundles: list[dict]) -> dict[str, np.ndarray]:
-    """Incumbent MFS distance vs decomposed camera/object distances."""
+_MOTION_STATE: dict = {}   # fork-inherited worker state for motion_distance_matrices
+
+
+def _motion_pair(pair: tuple[int, int]) -> tuple[float, float, float]:
+    """One (i, j) cell of the three motion matrices — numpy only, identical
+    whether run inline or in a forked worker."""
     from ..motion import motion_fidelity  # incumbent (v2)
+
+    i, j = pair
+    tracks, vis, cams = (_MOTION_STATE["tracks"], _MOTION_STATE["vis"],
+                         _MOTION_STATE["cams"])
+    mf = motion_fidelity(tracks[i], vis[i], tracks[j], vis[j])
+    cm = camera_match(cams[i], cams[j])
+    om = object_match(tracks[i], vis[i], tracks[j], vis[j], cams[i], cams[j])
+    return (1.0 - mf if np.isfinite(mf) else np.nan,
+            cm["cam_dtw"] if cm["cam_valid"] else np.nan,
+            1.0 - om if np.isfinite(om) else np.nan)
+
+
+def motion_distance_matrices(bundles: list[dict], n_jobs: int | None = None,
+                             min_pairs_for_pool: int = 256) -> dict[str, np.ndarray]:
+    """Incumbent MFS distance vs decomposed camera/object distances.
+
+    The pairwise loop is embarrassingly parallel (each cell independent, pure
+    numpy) and runs on a fork pool when the pair count justifies it; workers
+    never touch torch/CUDA. Results are identical to the serial path."""
+    import concurrent.futures
+    import multiprocessing
+    import os
 
     n = len(bundles)
     cams = [camera_trajectory(b["tracks"], b["vis"]) for b in bundles]
+    _MOTION_STATE.update(tracks=[b["tracks"] for b in bundles],
+                         vis=[b["vis"] for b in bundles], cams=cams)
+    pairs = list(itertools.combinations(range(n), 2))
+    if n_jobs is None:
+        n_jobs = min(16, os.cpu_count() or 1)
+    try:
+        if n_jobs > 1 and len(pairs) >= min_pairs_for_pool and hasattr(os, "fork"):
+            ctx = multiprocessing.get_context("fork")
+            with concurrent.futures.ProcessPoolExecutor(
+                    max_workers=n_jobs, mp_context=ctx) as ex:
+                results = list(ex.map(_motion_pair, pairs,
+                                      chunksize=max(1, len(pairs) // (n_jobs * 8))))
+        else:
+            results = [_motion_pair(p) for p in pairs]
+    finally:
+        _MOTION_STATE.clear()
     D_inc = np.full((n, n), np.nan)
     D_cam = np.full((n, n), np.nan)
     D_obj = np.full((n, n), np.nan)
-    for i, j in itertools.combinations(range(n), 2):
-        mf = motion_fidelity(bundles[i]["tracks"], bundles[i]["vis"],
-                             bundles[j]["tracks"], bundles[j]["vis"])
-        D_inc[i, j] = D_inc[j, i] = 1.0 - mf if np.isfinite(mf) else np.nan
-        cm = camera_match(cams[i], cams[j])
-        D_cam[i, j] = D_cam[j, i] = cm["cam_dtw"] if cm["cam_valid"] else np.nan
-        om = object_match(bundles[i]["tracks"], bundles[i]["vis"],
-                          bundles[j]["tracks"], bundles[j]["vis"], cams[i], cams[j])
-        D_obj[i, j] = D_obj[j, i] = 1.0 - om if np.isfinite(om) else np.nan
+    for (i, j), (d_inc, d_cam, d_obj) in zip(pairs, results):
+        D_inc[i, j] = D_inc[j, i] = d_inc
+        D_cam[i, j] = D_cam[j, i] = d_cam
+        D_obj[i, j] = D_obj[j, i] = d_obj
     return {"m_incumbent": D_inc, "m1b_camera": D_cam, "m1c_object": D_obj}
 
 

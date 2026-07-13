@@ -65,12 +65,19 @@ def video_features(path: pathlib.Path, cache_dir: pathlib.Path, extractor: DinoE
     return feats, fps
 
 
-def array_features(frames: np.ndarray, key: str, cache_dir: pathlib.Path,
+def feature_cache_path(key: str, cache_dir: pathlib.Path) -> pathlib.Path:
+    """Cache location for array_features under this key."""
+    return pathlib.Path(cache_dir) / f"dino_arr_{hashlib.sha1(key.encode()).hexdigest()[:16]}.npz"
+
+
+def array_features(frames: np.ndarray | None, key: str, cache_dir: pathlib.Path,
                    extractor: DinoExtractor) -> np.ndarray:
     """Cached features for an in-memory frame array (synthetic controls)."""
-    cache = pathlib.Path(cache_dir) / f"dino_arr_{hashlib.sha1(key.encode()).hexdigest()[:16]}.npz"
+    cache = feature_cache_path(key, cache_dir)
     if cache.exists():
         return np.load(cache)["feats"]
+    if frames is None:
+        raise RuntimeError(f"feature cache miss for {key} but no frames were decoded")
     feats = extractor.extract(frames)
     cache.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(cache, feats=feats, src=key)

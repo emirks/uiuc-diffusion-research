@@ -18,6 +18,12 @@ import numpy as np
 import torch
 
 
+def track_cache_path(final_key: str, cache_dir: pathlib.Path) -> pathlib.Path:
+    """Cache location for cached_track under the fully-composed key
+    (i.e. including the ':tracks:<CACHE_TAG>' suffix)."""
+    return pathlib.Path(cache_dir) / f"tracks_{hashlib.sha1(final_key.encode()).hexdigest()[:16]}.npz"
+
+
 class Tracker:
     """CoTracker3 offline wrapper with a per-video disk cache (normalized coords).
 
@@ -54,12 +60,14 @@ class Tracker:
         tracks = np.concatenate(all_tracks, axis=1) / np.array([rw, rh], dtype=np.float32)
         return tracks.astype(np.float32), np.concatenate(all_vis, axis=1).astype(np.float32)
 
-    def cached_track(self, frames: np.ndarray, key: str, cache_dir: pathlib.Path) -> tuple[np.ndarray, np.ndarray]:
+    def cached_track(self, frames: np.ndarray | None, key: str, cache_dir: pathlib.Path) -> tuple[np.ndarray, np.ndarray]:
         key = f"{key}:{self.CACHE_TAG}"
-        cache = pathlib.Path(cache_dir) / f"tracks_{hashlib.sha1(key.encode()).hexdigest()[:16]}.npz"
+        cache = track_cache_path(key, cache_dir)
         if cache.exists():
             z = np.load(cache)
             return z["tracks"], z["vis"]
+        if frames is None:
+            raise RuntimeError(f"track cache miss for {key} but no frames were decoded")
         tracks, vis = self.track(frames)
         cache.parent.mkdir(parents=True, exist_ok=True)
         np.savez_compressed(cache, tracks=tracks, vis=vis, src=key)

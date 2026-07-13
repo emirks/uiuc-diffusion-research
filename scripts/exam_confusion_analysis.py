@@ -116,7 +116,8 @@ def main() -> int:
     for i, key in enumerate(keys):
         b, _ = process_video_file(REPO_ROOT / probe_root / key, cache_dir,
                                   extractor, tracker,
-                                  short_side=versioning.PINS["feature_short_side"])
+                                  short_side=versioning.PINS["feature_short_side"],
+                                  need_frames=False)
         bundles.append(b)
         if (i + 1) % 40 == 0:
             print(f"[analysis]   corpus {i + 1}/{len(keys)}")
