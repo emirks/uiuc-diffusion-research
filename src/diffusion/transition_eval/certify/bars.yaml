@@ -4,8 +4,9 @@
 # below). `frozen` flips to true in its own commit — the very next one — and
 # BEFORE the first certification run executes. Failed cert -> new draft
 # version; bars are never adjusted after an outcome.
-status: NUMBERS_FINAL
-frozen: false
+status: FROZEN
+frozen: true      # frozen 2026-07-13, before the first certification run;
+                  # changes henceforth = new draft version + full re-run
 
 principles:
   truth_only: "hard bars only on constructed or human-verified truth; model-behavior
