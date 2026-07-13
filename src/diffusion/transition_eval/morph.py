@@ -45,23 +45,11 @@ def morph_profile(feats: np.ndarray, n_prefix: int = N_PREFIX, n_suffix: int = N
     denom = max(1.0 - cross, 1e-6)
     a_hat = np.clip((a - cross) / denom, -0.25, 1.25)
     b_hat = np.clip((b - cross) / denom, -0.25, 1.25) if b is not None else None
-    # Δ-novelty (SPEC §3 M1d, O8 roster candidate): per-frame residual norm off
-    # span{eA, eB} (off eA alone for 1-endpoint). Feats are unit vectors, so
-    # novelty = ||f − proj(f)|| ∈ [0, 1]; a crossfade stays ≈ 0, a third-state
-    # effect rises. eB is orthonormalized against eA; near-parallel endpoints
-    # (cross_high) collapse to the 1-D projection — flagged upstream anyway.
-    proj_sq = (feats @ eA) ** 2
-    if n_endpoints == 2:
-        u2 = eB - cross * eA
-        u2_norm = np.linalg.norm(u2)
-        if u2_norm > 1e-6:
-            proj_sq = proj_sq + (feats @ (u2 / u2_norm)) ** 2
-    novelty = np.sqrt(np.clip(1.0 - proj_sq, 0.0, None))
     # Edge guard: semantically-close endpoints (same subject before/after the
     # effect — common in portal-style clips) shrink the denominator and make
     # â/b̂ unstable. Downstream reports flag rather than trust these items.
     return {"a": a, "b": b, "a_hat": a_hat, "b_hat": b_hat, "cross": cross,
-            "cross_high": bool(cross > CROSS_HIGH_THRESH), "novelty": novelty,
+            "cross_high": bool(cross > CROSS_HIGH_THRESH),
             "n_prefix": n_prefix, "n_suffix": n_suffix, "n_endpoints": n_endpoints}
 
 
@@ -139,15 +127,11 @@ def dtw_distance(X: np.ndarray, Y: np.ndarray, band_frac: float = 0.15) -> float
     return float(D[n, n] / (2 * n))
 
 
-def profile_distance(p: dict, q: dict, n: int = 96, use_novelty: bool = False) -> dict:
+def profile_distance(p: dict, q: dict, n: int = 96) -> dict:
     """Compare two morph profiles on their shared channels (a always; b when
-    both have 2 endpoints; novelty when use_novelty — the O8 roster variant,
-    adopted only if it wins the certification exam). Returns DTW distance
-    (lower = more similar) and mean Pearson r on the linearly resampled
-    curves (no warping)."""
+    both have 2 endpoints). Returns DTW distance (lower = more similar) and
+    mean Pearson r on the linearly resampled curves (no warping)."""
     channels = ["a_hat"] + (["b_hat"] if (p["b_hat"] is not None and q["b_hat"] is not None) else [])
-    if use_novelty and "novelty" in p and "novelty" in q:
-        channels.append("novelty")
     P = np.stack([znorm(resample_curve(p[c], n)) for c in channels], axis=1)
     Q = np.stack([znorm(resample_curve(q[c], n)) for c in channels], axis=1)
     pearsons = []

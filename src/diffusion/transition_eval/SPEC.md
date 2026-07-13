@@ -14,18 +14,18 @@ The two rules above all sections: **pin everything, stamp everything.**
 |----|------|----------|----------------|
 | O1 | ~~Create corpus_manifest.json~~ **RESOLVED 2026-07-10**: built by `build_corpus_manifest.py` — 39 classes / 223 clips, all std-contract-verified (portrait 480w×640h×121f@24), sidedness+tags from the labeled tree, dedup provenance per class, 2 raw filename quirks recovered via logged fuzzy match, 0 problems | ~~lock~~ done | `data/processed/transitions_std121/corpus_manifest.json` (force-added; data/ is gitignored) |
 | O2 | ~~Freeze dep pins + stage checkpoints~~ **RESOLVED 2026-07-10**: DINOv2 rev `f9e44c81…`, CoTracker code pinned by content hash `868059fa…` + ckpt sha256 `2670d456…`; all staged in `$LAB/cache/` since 2026-07-06 | ~~lock~~ done | `versioning.PINS` |
-| O3 | Pre-register certification bars — **PROPOSED (2026-07-10 health-design session)**: full six-check proposal with provenance in `certify/bars.yaml` (`status: PROPOSED`, `frozen: false`). Awaiting the user's five freeze decisions (stage split · bar values · cross-label wrong-class rule · M3 probe scope · probe counts); `frozen` flips in its own commit. `certify/exam.py` refuses to run against unfrozen bars | **lock** | `certify/bars.yaml` |
-| O4 | Implement `certify/` — **COMPLETE (unexecuted)**: `exam.py` (full orchestration: all variant matrices in one cached pass, adoption grading, testable-accuracy singleton handling, refuses unfrozen bars), `probes.py` (splice at contract res, cross-label via pre-registered `pick_far_class`, endpoint-swap, hard-cut + graders), `bridge.py` (B1/B2 archived-rescore predictions), `stability.py`, `seeds.py`. First execution = the certification run itself | **lock** | `certify/` |
+| O3 | Pre-register certification bars — **FORMS LOCKED 2026-07-13** after a three-pass design review (proposal → red-team → external review): §6 is now the full health-assessment spec (8 hard bars, two-readout exam, two-kind calibration); `certify/bars.yaml` carries the locked forms with DRAFT numbers. Remaining: the freeze session sets the ~8 numbers and flips `frozen: true` in its own commit. `certify/exam.py` refuses to run against unfrozen bars | **lock** | §6 / `certify/bars.yaml` |
+| O4 | Implement `certify/` — **ADVANCED (skeleton, being aligned to locked §6)**: `exam.py` (R1 clip-level machinery; R2 pool-level readout + sign-test grading pending), `probes.py` (splice builder present, perturbation pending; sibling/reversal/endpoint-swap/hard-cut builders pending; cross-label removed per design review), `stability.py`, `seeds.py`. First execution = the certification run itself | **lock** | `certify/` |
 | O5 | v3 metrics + lifecycle — **ADVANCED (implemented, GPU-unexecuted)**: `s_structure.py` (sidedness-aware core + flagged fallback), `m1_transfer.py` (M1a/M1b/M1c), `m2_integrity.py` (M2a/b/c + provenance), `controls.make_static_hold`, `manifests_v3.py` (3 schemas + tier/sidedness derivation), `plan.py`, `score.py` (stamped, completeness-checked, control arms, paired table). Synthetic contract tests in `tests/test_transition_eval_v3.py`. First real-data run = certification; scorer forks retire at that moment | **lock** | §3/§9 |
-| O6 | σ_seed measurement (≈12 stratified items × 5 seeds) | cert | §4/§6 |
-| O7 | M1b robust global-fit weighting choice — both candidates implemented (`trim2` incumbent, `huber` IRLS in `m1_transfer._robust_fit`); decided by the exam's camera-stratum adoption rule | cert | §3 M1b / §6.1 |
-| O8 | Δ-novelty profile displacement test — implemented (`novelty` channel in `morph_profile`, `profile_distance(use_novelty=True)`); decided by the exam's timing-variant adoption rule | roster | §3 M1d / §6.1 |
+| O6 | σ_seed measurement (12 stratified items × 5 seeds, adapter arm) — **gates the first model report, not the tag** (§6.4) | cert | §4/§6.4 |
+| O7 | ~~M1b robust weighting choice~~ **RESOLVED 2026-07-13 by pre-registration**: median-trim ships as primary; Huber variant examined under the same adoption rule *iff* camera-stratum recall < trust floor (executes mechanically at certification) | ~~cert~~ done | §6.1 / `bars.yaml` |
+| O8 | Δ-novelty / difference-from-lerp candidate roster — **DEFERRED to post-lock (v3.1)**: certification scope = shipping headline metrics; candidates enter via a future exam cycle under the same adoption machinery | post-lock | §3 M1d / §6.1 |
 | O9 | Judge human-calibration set (~50–100 labels, Spearman ≥0.8) + q1 name-the-mechanism sharpening decision | post-lock | §3 M4 |
 | O10 | Rescore exp_056–058 archived items under certified v3 (continuity bridge) | post-lock | §7 |
 | O11 | Update repo guidelines (CLAUDE.md / skills) to the v3 workflow | post-lock | §10 |
 | O12 | Repo hygiene: commit the exp_044–059 backlog in the main checkout; single-writer discipline for CHANGELOG.md | advisory | out of spec |
 
-Severity: **lock** = blocks the `eval/v3.0` tag · cert = resolved during first certification run · roster = pre-registered test candidate · post-lock = scheduled after tagging.
+Severity: **lock** = blocks the `eval/v3.0` tag · cert = resolved during first certification run · post-lock = scheduled after tagging.
 
 ---
 
@@ -74,11 +74,11 @@ Substrate (pins §7): DINOv2-base CLS per frame, L2-normed, short_side 256 → `
 
 **M1a — Appearance transfer.** Symmetric mean-of-max cosine between gen-core and **reference**-core features. [−1,1], ↑. *Blind to:* copy-vs-transfer (M2a disambiguates); camera classes (taxonomy-flagged advisory); inherits core-mask health.
 
-**M1b — Camera motion match.** Per-step robust visibility-weighted similarity fit `(dx, dy, log s, θ)` on tracklets (weighting O7) → 4-channel trajectory, resample 64, z-norm → banded DTW (band 0.15) + correlation vs reference. ↑corr/↓DTW. *Blind to:* parallax/3D (SfM rejected: scenes are non-rigid/dissolving); flagged when trackable points < N.
+**M1b — Camera motion match.** Per-step robust visibility-weighted similarity fit `(dx, dy, log s, θ)` on tracklets (median-trim primary; Huber conditional per §6.1, O7) → 4-channel trajectory, resample 64, z-norm → banded DTW (band 0.15) + correlation vs reference. ↑corr/↓DTW. *Blind to:* parallax/3D (SfM rejected: scenes are non-rigid/dissolving); flagged when trackable points < N.
 
 **M1c — Object motion match.** MFS (bidirectional mean-of-max velocity-direction correlation; 64 steps, speed floor 0.1, min_vis 0.2, min_moving_frac 0.05) on **residual** velocities after removing the M1b global fit. ~[−1,1], ↑; NaN reported, never imputed. *Blind to:* magnitude, spatial arrangement; requires per-class exam trust.
 
-**M1d — Timing (analysis tier).** depart / arrive / depth from S. Candidate Δ-novelty (residual off span{eA,eB}) enters only by displacing depth + profile-DTW (O8).
+**M1d — Timing (analysis tier).** depart / arrive / depth from S. Candidate Δ-novelty (residual off span{eA,eB}) enters only by displacing depth + profile-DTW (O8, deferred post-lock — candidates enter via a future exam cycle).
 
 **M2a — Copy (reference → generation).** `max cos(gen_mid, ref_noncore)`; gen_mid = all frames outside conditioned windows (near-endpoint bleed is in scope — the exp_056 briefcase lesson). `near_copy` flag at τ_copy (0.88 draft, recalibrated O3). ↓. Argmax provenance (gen frame, ref frame) recorded. *Gray zone:* in-style layout tracking (0.85–0.9) — the base twin arbitrates.
 
@@ -103,7 +103,7 @@ Substrate (pins §7): DINOv2-base CLS per frame, L2-normed, short_side 256 → `
 
 **Inference & reporting:** paired deltas on identical inputs (`twin_of`, item-matched arms) are the inferential unit; sign tests at small n; **all scores raw** — nothing is divided by corpus statistics. Controls are arms in the same table: lerp (two-sided), static-hold (one-sided & prefix-only: prefix + endpoint-A held + suffix as given), base twin (**mandatory for capability claims**). Context row: real-sibling distribution (same-class real clips vs this item's reference; n≥2 classes only). Grouping: arm × tier × sidedness × tag; mean±std with n in every cell; no composite score, ever.
 
-**Seeds:** routine suites = 1 seed (42), fully paired. σ_seed certified once per model family (≈12 stratified items × 5 seeds at certification, O6); every reported delta carries the σ_seed-derived minimum detectable effect; within-noise decisions escalate to 3 seeds, targeted.
+**Seeds:** routine suites = 1 seed (42), fully paired. σ_seed certified once per model family (12 stratified items × 5 seeds on the adapter arm, O6; **gates the first model report, not the instrument tag** — §6.4); every reported delta carries the σ_seed-derived minimum detectable effect; within-noise decisions escalate to 3 seeds, targeted.
 
 **Headline table:** `arm | n | M1a | M2b (margin + intruder) | M2a | M1b | M1c | M3a | M3b` + flags (`†` exam-untrusted, `core_degenerate`, `near_copy`, `cross_high`, `camera-advisory`, `partial`, `UNCERTIFIED`). Analysis table: M1d, M2c, M4.
 
@@ -113,22 +113,56 @@ Substrate (pins §7): DINOv2-base CLS per frame, L2-normed, short_side 256 → `
 
 **Rules:** corpus additions require the order-invariant dedup gate (DINO set-sim ≥ 0.90 + dHash-bag confirm ≤ 10) and an exam re-run before first use; any corpus/split change → §6 re-certification; the corpus hash is stamped on every result.
 
-## 6. The health system & certification (bars: `certify/bars.yaml`, frozen *before* running — O3)
+## 6. Health assessment & certification (`certify/`; bars in `certify/bars.yaml`)
 
-**One principle: a metric is trusted only where it has passed a test whose correct answer was known before the run.** Three owned evidence pools supply known answers — **P1** the corpus (truth: class, sidedness, tags) · **P2** the archived exp_056–058 generations (truth: twin structure, known failure regimes, v2 precedents) · **P3** synthetic constructions (truth by construction). Three aspects per metric: **discriminates · stable · honest** (flags fire exactly where they should). Absolute bars only where prior-corpus precedent exists; relative bars everywhere else (both sides measured in the same run — immune to bar-gaming).
+The health system tests the **ruler, never the model**: generated videos enter it only as realistic inputs. **Certification = one stamped execution of the health system against bars frozen beforehand** (own commit, before any outcome is computed), producing the committed record that authorizes the version tag. It re-runs on every §7-relevant change; model evals never re-run it — they inherit its trust map and MDE.
 
-Six checks (`certify/` is §6 as code):
+Three rules bind every bar:
 
-1. **Exam** (P1 → discriminates): LOO 1-NN + Cohen's d + per-class recall → the trust-flag registry. **The single venue for every contested metric variant** — core mask {v2_envelope, v3_sided, all_frames}, motion {incumbent, decomposed}, M1b weighting {trim2, huber} (O7), timing {±Δ-novelty} (O8) — one cached feature pass, graded by the adoption rule: ≥ incumbent overall ∧ target stratum (+margin) ∧ no trusted-class regression. Singletons stay as distractors, excluded from accuracy denominators.
-2. **Adversarial probes** (P3 → discriminates where retrieval can't): M2a copy splices (100% ≥ τ; gap recalibrates τ_copy per exp_053 check C); M2b cross-label via the pre-registered `pick_far_class` rule (negative margin naming the true class); M3a endpoint swap (true pairing beats swapped, every pair); M3b hard cut (seam z fires); controls land at the M1a floor of their sidedness group and trip `core_degenerate`. Probes are scored by the same `score.py` at contract resolution — never a special path.
-3. **Twin sanity** (P2): copy-regime base twins detected 100% (near_copy ∨ seam), per the exp_057 11/11 precedent.
-4. **Bridge** (P2): all archived items rescored under v3 — `score.py`'s first-real-data shakedown, completeness graded first. Two pre-registered predictions: B1 two-sided continuity (v3 M1a rank-correlates with v2 appearance); B2 one-sided core-degeneracy collapse (v2 ~100% → v3 ≤ bar) — the claim that motivated v3, graded on real data.
-5. **Stability:** warm-cache rerun bit-identical; cold-cache subset within tolerance; anchors ±0.04. 
-6. **σ_seed** (O6) — the only model-side check: stratified probe items × seeds → per-metric MDE. *Stage split (PROPOSED, freeze decision): checks 1–5 = instrument certification, authorizes the tag; check 6 = per-model-family calibration at first eval, results stamped "MDE uncalibrated" until measured.*
+- **Hard bars only on constructed or human-verified truth.** Statements about model behavior (flag rates, margins on archived generations) are descriptive, never gating — a generation that fails to depart endpoint A *should* flag `core_degenerate`; gating on flag rates would punish the flag for working.
+- **Fail-forward.** Failed certification → diagnose → new draft version → re-freeze → full re-run. Bars and thresholds are never adjusted after seeing an outcome.
+- **Two-kind calibration.** *Corpus-only* calibration (core-fallback δ/k from envelope statistics, reversal-sensitivity enumeration, sibling-pair selection) may run **pre-freeze** — it reads real clips only, never a graded outcome. *Outcome-coupled* calibration (τ_copy) runs post-freeze under a frozen setting rule: the bar is on the gap, the rule sets the value.
 
-**Coverage:** every headline metric (S, M1a/b/c, M2a/b, M3a/b) is covered on all three aspects by ≥1 check; waivers are named in bars.yaml (M1d roster-only, M2c audit-only, M4 exempt until O9). Exhaustive = no empty headline cell ∧ every waiver named.
+### 6.1 Block A — EXAM (validity + variant selection; corpus only, cached features)
 
-**Gate & record:** any §7-relevant change → this suite re-runs before any model number is reported. Each certification writes a committed record `certifications/v<X.Y>.md` (bars, numbers, verdicts, corpus hash, artifact pointers) — the tag is authorized by that record. **FAIL = diagnose → revise → new draft → re-run; a bar never moves after its number is seen.**
+Two readouts, both computed with **imported deployed metric code** (never reimplemented; pytest guard: exam statistic ≡ `score.py` statistic on the same item):
+
+- **R1 clip-level:** LOO 1-NN retrieval + Cohen's d for M1a/M1b/M1c — the metrics deployed as clip-to-clip comparisons.
+- **R2 pool-level:** LOO class-pool margin classification for M2b — deployed as pool comparisons, clip excluded from its own pool. R1 trust does **not** transfer to M2b (different estimator); R2 exists because of that.
+
+**Trust map** (consumed by every model report): per-class recall on n≥4 classes only — n<4 auto-untrusted, the 2 singletons excluded from denominators and permanently untrusted; M1c trust additionally requires per-class definedness rate ≥ bar (NaN prevalence is a trust fact).
+
+**Variants (only these):** core mask {v2_envelope, v3_sided, all_frames}; motion {v2 MFS incumbent, v3 decomposed}. **Adoption (pre-registered):** per-class sign test on n≥4 classes with net wins ≥ bar ∧ no trusted class regresses below the trust floor ∧ (core mask only) non-degenerate cores on ≥ bar fraction of real one-sided clips. **O7 pre-registered conditional:** median-trim ships as primary; the Huber variant is examined under the same rule *iff* camera-stratum recall < trust floor.
+
+**Bar 1:** winning M1a variant clears LOO accuracy ≥ bar ∧ d ≥ bar (v2 precedent on this corpus: 0.851 / d≈2.2).
+
+### 6.2 Block B — PROBES (constructed truth; zero GPU inference)
+
+All probes are scored by the same `score.py` as real items — a probe path through special code would certify the special code, not the instrument.
+
+- **Siblings.** All within-class pairs of n≥2 classes are scored (feeding the content-invariance audit and distributions — descriptive). Hard bars attach only to the **max-endpoint-distance pair per class** — deterministic from cached features; same style, maximally different content, the constructional known-positive. (Lexicographic pairing rejected: filename adjacency correlates with shared source scenes, inflating M1a and legitimately firing M2a.) **Bar 2:** on those pairs, M1a > class control ∧ M2a silent, ≥ bar count of the 37 eligible classes.
+- **Controls.** lerp (two-sided) / static-hold (one-sided) per class. **Bar 3:** at the M1a floor ∧ degeneracy/timing flags fire, ≥ bar count of 39; misses documented — documentation never rescues a miss.
+- **Copy splices.** Reference **non-core** frames spliced into gen-mid (core-frame splices sit outside M2a's comparison pool and would fail spuriously — construction pinned); verbatim + exactly **one** pinned perturbation level (crop + color jitter — real model copying is re-rendered, never bit-exact). Honest set = the sibling M2a distribution (independent real footage provably does not copy its reference). **Bar 4:** 100% of splices (incl. perturbed) ≥ τ_copy ∧ gap(splice min − honest max) ≥ bar minimum in cosine units. **τ_copy := gap midpoint** (frozen rule); τ is *set* here and *tested* in Block C — a C miss means new draft, never a τ nudge.
+- **Reversal.** Reversal-sensitive camera pairs only, enumerated pre-freeze by each clip's corpus-only self-reversal trajectory distance (palindromic camera moves are legitimately reversal-invariant and must not sit in the denominator). **Bar 5:** reversed-reference M1b drops on those pairs — sign test if the enumerated n powers p<0.05, else fixed k-of-m; form frozen post-enumeration, pre-outcome.
+- **M3 panel. Bar 6:** endpoint-swap — true prefix beats a wrong-**class** prefix (cross-class swaps only: unambiguous truth; same-class swaps can tie via shared scenes), count-form — ∧ hard-cut — a constructed abrupt cut at the handoff index fires `max_seam_z > 3`, count-form.
+
+### 6.3 Block C — REALISM (the ~150 archived exp_056–058 generations; zero GPU inference)
+
+**Bar 7:** the 11 human-verified copy-regime base twins (exp_057) flagged 11/11 (`near_copy` ∨ `max_seam_z > 3`) — τ_copy's re-rendered test. Everything else is descriptive: per-arm distributions (saturation/degeneracy check), flag rates, margins, and the per-item v2↔v3 bridge (O10 head start). No bars on model behavior.
+
+### 6.4 Block D — STABILITY + CALIBRATION
+
+**Bar 8:** every planned A–D item scores without crash ∧ warm-cache rerun bit-identical (`items.jsonl` byte equality) ∧ the ~6 designated anchor items reproduce raw scores within the single reproduction tolerance after a cache wipe. **Calibration outputs** (constants with provenance, not pass/fail): τ_copy · core-fallback δ/k · per-sidedness control floors · the reversal-sensitive set · **σ_seed** (12 stratified items × 5 seeds on the decision-generating adapter arm; base assumed same-family, documented; ≈48 df, stated as *pooled*; **gates the first model report, not the tag** — the tag certifies the ruler, σ_seed calibrates the measured thing's noise).
+
+### 6.5 Sequence, record, gate
+
+Freeze bars (own commit) → A adjudicates variants → B and C run under the winners → D → `certifications/v<X.Y>.md`. Mechanical throughout — no human decision between freeze and record.
+
+The record must contain: bars.yaml sha · per-bar verdicts · trust map (recall + definedness, per class per metric) · **content-invariance audit** — within-class partial correlation of style-similarity (core frames) vs endpoint/content-similarity across all sibling pairs; expectation ≈ 0 (DINO is content-heavy and M1a claims style); alarm level noted, non-gating · archive distributions + bridge · calibration constants with provenance · anchor values · corpus hash + artifact pointers · the claims paragraph below, verbatim.
+
+**What certification claims, exactly:** *the instrument separates the styles it has seen (per-class trust map attached), refuses known-degenerate and copied inputs, is direction-sensitive on motion, runs deterministically end-to-end on real generations, and its blind spots are enumerated.* It does **not** claim: that metrics track human judgment (M4 exempt until O9); that pools/masks behave identically on generated-domain frames (untestable without labels — named limitation); M2c validity (validated at the first real training manifest); M1b absolute validity (injected-trajectory test = post-lock appendix).
+
+**Gate:** any §7-relevant change → full re-run before any model number is reported. M4 re-enters via O9 through this section.
 
 ## 7. Versioning & invariants
 
@@ -188,7 +222,7 @@ Regeneration: annotated tag `eval/vX.Y` per certified release; `git worktree add
 
 ## Spec changelog
 
-- **3.0.0-draft.6** (2026-07-10): health-design session output. §6 rewritten as the health system (one principle · three owned evidence pools P1/P2/P3 · three aspects · six checks · coverage grid · FAIL semantics); `certify/bars.yaml` rewritten to the full PROPOSED pre-registration with provenance (still `frozen: false` — five freeze decisions pending user sign-off, incl. the PROPOSED instrument/model-family stage split for σ_seed). `certify/` completed: `exam.py` fully wired (all variant matrices in one cached pass, adoption grading, singleton-aware testable accuracy, NaN→∞ coverage handling), `bridge.py` added (B1 continuity / B2 degeneracy-collapse predictions + Spearman), `probes.py` gains endpoint-swap (M3a) and hard-cut (M3b) builders/graders, contract-resolution splices (256px probes would have been rejected by score.py's own input contract — bug found at inventory), and the `pick_far_class` cross-label rule replacing the never-defined texture_families map. O7 (huber IRLS beside trim2) and O8 (Δ-novelty profile channel) implemented as exam-roster variants. Verified this session: 223/223 corpus clips warm in both caches; all 673 current-tag track caches dual-grid; v2 exam numbers are 47-clip-corpus facts used only as provenance for conservative absolute floors.
+- **3.0.0-draft.6** (2026-07-13): §6 rewritten as the full health-assessment spec after a three-pass design review (proposal → red-team → external review). Final shape: two-readout exam (R1 clip-level LOO 1-NN for M1a/M1b/M1c, R2 pool-level margin classification for M2b — R1 trust does not transfer to M2b, different estimator; exam must import deployed metric code), 8 hard bars on constructed/human-verified truth only, sibling probes hard-barred on max-endpoint-distance pairs (all pairs descriptive; lexicographic pairing rejected as scene-adjacent), splice perturbation level + minimum-gap requirement (τ_copy midpoint rule; set in B, tested in C, never nudged), reversal-sensitivity enumeration pre-freeze, M3 panel reinstated (endpoint-swap + hard-cut), content-invariance audit as required record artifact, two-kind calibration rule, σ_seed gates first model report not the tag. Killed with reasons: cross-label probe (≡ exam pool readout on real clips; circular on generations), self-memorization probe (unit test), enforcement probes (pytest), Block-C degeneracy bar (gated on model behavior), O8 roster (deferred v3.1). O7 resolved by pre-registered conditional. `bars.yaml`: forms locked, numbers DRAFT until the freeze session. `probes.py`: cross-label builder/grader removed; docstrings aligned.
 - **3.0.0-draft.5** (2026-07-10): stale v2 surface pruned per §3 "Deleted from v2" — `judge.py` (Gemma backend, superseded by Gemini), `manifest.py` (v2 schema, superseded by manifests_v3), `appearance.leakage`/`effect_similarity` (superseded by m2_integrity), `report.normalize_score`/`score_tables` (normalization removed); report.py reduced to exam machinery + trust flags. Package is now fully two-sided AND one-sided capable (sidedness-aware core, sidedness-appropriate controls, prefix-only support, no normalization dependency) — ready for the health-design session.
 - **3.0.0-draft.4** (2026-07-10): O1 resolved (corpus_manifest.json, 39/223, contract portrait-corrected to 480w×640h); O3/O4/O5 advanced to implemented-draft — `s_structure/m1_transfer/m2_integrity/manifests_v3/plan/score` + `certify/{bars.yaml DRAFT, exam, probes, stability, seeds}` + static-hold control + v3 synthetic test suite; §9 map updated to actual filenames.
 - **3.0.0-draft.3** (2026-07-10): consolidated in-repo; added §0 OPEN register, §9 implementation map + code versioning, §10 change protocol; `versioning.py` + `VERSION` land; package brought under VCS.
