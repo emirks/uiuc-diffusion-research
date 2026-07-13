@@ -139,6 +139,13 @@ def main() -> int:
     ap.add_argument("--suite", help="suite.json for completeness verification")
     ap.add_argument("--label", default="score_v3")
     ap.add_argument("--out-root", default="outputs/eval/v3")
+    ap.add_argument("--controls", choices=("auto", "off"), default="auto",
+                    help="auto: synthesize the degenerate control arm per item "
+                         "(SPEC §4); off: skip (probe suites that carry no "
+                         "floor claim, e.g. splices/swaps/hard-cuts)")
+    ap.add_argument("--cache-dir", default="outputs/eval/cache",
+                    help="feature/track cache (stability's cold-anchor rerun "
+                         "points this at a fresh directory)")
     args = ap.parse_args()
 
     stamp = versioning.stamp(args.corpus)
@@ -151,9 +158,11 @@ def main() -> int:
 
     out_dir = REPO_ROOT / args.out_root / args.label
     out_dir.mkdir(parents=True, exist_ok=True)
-    cache_dir = REPO_ROOT / "outputs/eval/cache"
+    cache_dir = REPO_ROOT / args.cache_dir
+    cache_dir.mkdir(parents=True, exist_ok=True)
 
-    device = "cuda"
+    import torch
+    device = "cuda" if torch.cuda.is_available() else "cpu"
     extractor = DinoExtractor(versioning.PINS["dino_model"], device=device)
     tracker = Tracker(device=device)
     lpips_scorer = LpipsScorer(device=device)
@@ -181,7 +190,7 @@ def main() -> int:
         row["provenance"] = {"harness": stamp["harness"], "certified": stamp["certified"]}
         rows.append(row)
 
-        if it.condition_prefix:  # control arm through the identical pipeline
+        if args.controls == "auto" and it.condition_prefix:  # control arm through the identical pipeline
             cframes, cname = control_frames(it, side, len(gframes))
             cb = process_video(cframes, gb.key + f":{cname}", cache_dir,
                                extractor, tracker)

@@ -45,6 +45,8 @@ TAG_PREFIX = "eval/v"
 INSTRUMENT_PATHS = (
     "src/diffusion/transition_eval",
     "tests/test_transition_eval.py",
+    "tests/test_transition_eval_v3.py",
+    "tests/test_certify_v3.py",
     "tests/test_versioning.py",
 )
 
@@ -118,10 +120,12 @@ def corpus_sha(manifest_path: str | pathlib.Path) -> str | None:
 def git_state() -> dict:
     """Commit / branch / exact tag / instrument-scoped dirty state."""
     commit = _git("rev-parse", "HEAD")
-    status = _git("status", "--porcelain", "--", *INSTRUMENT_PATHS)
-    # _git strips the output, eating the first line's leading status char —
-    # split on the XY-field/path whitespace instead of slicing a fixed width.
-    dirty_files = [l.split(maxsplit=1)[-1] for l in status.splitlines()] if status else []
+    # Path-only queries — no status-letter parsing to corrupt (porcelain output
+    # interacts badly with _git's strip()): tracked changes vs HEAD + untracked.
+    changed = _git("diff", "--name-only", "HEAD", "--", *INSTRUMENT_PATHS) or ""
+    untracked = _git("ls-files", "--others", "--exclude-standard", "--",
+                     *INSTRUMENT_PATHS) or ""
+    dirty_files = sorted({*changed.splitlines(), *untracked.splitlines()} - {""})
     tag = _git("describe", "--exact-match", "--tags", "HEAD")
     return {
         "commit": commit,

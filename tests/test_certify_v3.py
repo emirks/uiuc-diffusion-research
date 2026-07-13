@@ -1,0 +1,281 @@
+"""Synthetic contract tests for certify/ (SPEC §6) — CPU, no GPU, no corpus.
+Loads the REAL bars.yaml so schema drift between bars and graders fails here,
+not mid-certification."""
+
+import json
+import pathlib
+import sys
+
+import numpy as np
+import pytest
+
+REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO_ROOT / "src"))
+
+yaml = pytest.importorskip("yaml")
+
+from diffusion.transition_eval.certify import blockc, probes           # noqa: E402
+from diffusion.transition_eval.certify.exam import (                    # noqa: E402
+    class_sign_test, pool_margin_exam, sign_test_p, variant_core,
+)
+
+BARS = yaml.safe_load(
+    (REPO_ROOT / "src/diffusion/transition_eval/certify/bars.yaml").read_text())
+RNG = np.random.default_rng(11)
+
+
+def _unit(v):
+    return v / (np.linalg.norm(v, axis=-1, keepdims=True) + 1e-12)
+
+
+def fake_bundle(core_dir, eA_dir, eB_dir, T=40, n_pre=5, n_suf=5, dim=24, noise=0.02):
+    """Synthetic bundle: prefix frames near eA, suffix near eB, middle near core_dir."""
+    f = np.concatenate([
+        np.tile(eA_dir, (n_pre, 1)), np.tile(core_dir, (T - n_pre - n_suf, 1)),
+        np.tile(eB_dir, (n_suf, 1))])
+    f = _unit(f + noise * RNG.normal(size=f.shape)).astype(np.float32)
+    a_hat = np.concatenate([np.ones(n_pre), np.zeros(T - n_pre - n_suf), np.ones(n_suf)])
+    return {"feats": f,
+            "profile": {"a_hat": a_hat, "b_hat": a_hat.copy(), "cross": 0.1,
+                        "cross_high": False, "n_prefix": n_pre, "n_suffix": n_suf,
+                        "n_endpoints": 2}}
+
+
+# --- exam: sign test + adoption machinery -------------------------------------------
+
+def test_sign_test_p_exact():
+    assert sign_test_p(8, 0) == pytest.approx(1 / 256)
+    assert sign_test_p(0, 0) == 1.0
+    assert sign_test_p(5, 5) == pytest.approx(0.6230, abs=1e-4)
+    assert sign_test_p(9, 1) < 0.05 < sign_test_p(7, 3)
+
+
+def test_class_sign_test_counts_and_eligibility():
+    new = {"a": 0.9, "b": 0.8, "c": 0.5, "d": 0.5, "e": 1.0}
+    old = {"a": 0.5, "b": 0.9, "c": 0.5, "d": 0.2, "e": 0.9}
+    r = class_sign_test(new, old, eligible={"a", "b", "c", "d"})   # e excluded
+    assert (r["wins"], r["losses"], r["ties"]) == (2, 1, 1)
+    assert r["p_one_sided"] == sign_test_p(2, 1)
+
+
+def test_variant_core_all_frames_excludes_conditioned_windows():
+    b = fake_bundle(_unit(RNG.normal(size=24)), _unit(RNG.normal(size=24)),
+                    _unit(RNG.normal(size=24)))
+    m, meta = variant_core(b, "onesided", "all_frames")
+    assert not m[:5].any() and not m[-5:].any() and m[5:-5].all()
+    assert meta["core_degenerate"] is False
+
+
+def test_pool_margin_exam_loo_and_singletons():
+    dim = 24
+    dirs = {c: _unit(RNG.normal(size=dim)) for c in ("gas", "smoke", "lone")}
+    eA, eB = _unit(RNG.normal(size=dim)), _unit(RNG.normal(size=dim))
+    bundles, labels = [], []
+    for c, n in (("gas", 3), ("smoke", 3), ("lone", 1)):
+        for _ in range(n):
+            bundles.append(fake_bundle(dirs[c], eA, eB))
+            labels.append(c)
+    r = pool_margin_exam(bundles, labels, ["twosided"] * len(labels), "all_frames")
+    assert r["n_singleton_excluded"] == 1
+    assert r["accuracy"] == 1.0                      # own-pool (LOO) still nearest
+    assert r["per_class_recall"] == {"gas": 1.0, "smoke": 1.0}
+
+
+# --- sibling selection + audit --------------------------------------------------------
+
+def _mini_corpus(bundles_by_key):
+    classes = {}
+    for k in bundles_by_key:
+        classes.setdefault(k.split("/")[0], {"sidedness": "twosided", "tags": [],
+                                             "n_clips": 0})
+        classes[k.split("/")[0]]["n_clips"] += 1
+    return {"corpus_root": "data/x",
+            "clips": {k: {"class": k.split("/")[0]} for k in bundles_by_key},
+            "classes": classes}
+
+
+def test_bar_pair_is_max_endpoint_distance():
+    dim = 24
+    core = _unit(RNG.normal(size=dim))
+    e1, e2 = _unit(RNG.normal(size=dim)), _unit(RNG.normal(size=dim))
+    e_far = _unit(-e1 + 0.1 * RNG.normal(size=dim))
+    bk = {"c/a.mp4": fake_bundle(core, e1, e2), "c/b.mp4": fake_bundle(core, e1, e2),
+          "c/z.mp4": fake_bundle(core, e_far, e2)}
+    pairs = probes.sibling_pairs(bk, _mini_corpus(bk))
+    assert set(pairs["c"]["bar_pair"]) & {"c/z.mp4"}   # the far-endpoint clip is in it
+    assert len(pairs["c"]["pairs"]) == 3
+
+
+def test_content_invariance_audit_centering():
+    """Two classes at different mean levels but zero within-class relation ->
+    pooled partial correlation ~0 (the per-class centering is the 'partial')."""
+    dim = 32
+    bundles, corpus_clips = {}, {}
+    for cls, base_style in (("p", 0), ("q", 1)):
+        style_dir = _unit(RNG.normal(size=dim))
+        for i in range(6):
+            eA = _unit(RNG.normal(size=dim))          # content: random per clip
+            key = f"{cls}/{i}.mp4"
+            bundles[key] = fake_bundle(style_dir, eA, eA, noise=0.05)
+            corpus_clips[key] = {"class": cls}
+    corpus = {"corpus_root": "d", "clips": corpus_clips,
+              "classes": {"p": {"sidedness": "twosided", "tags": [], "n_clips": 6},
+                          "q": {"sidedness": "twosided", "tags": [], "n_clips": 6}}}
+    pairs = probes.sibling_pairs(bundles, corpus)
+    audit = probes.content_invariance_audit(bundles, corpus, pairs)
+    assert audit["n_pairs"] == 30
+    assert abs(audit["pooled_partial_corr"]) < 0.45
+
+
+# --- constructed probe videos ---------------------------------------------------------
+
+def _write_clip(path, value, T=40, hw=(64, 48)):
+    from diffusion.transition_eval.video_io import write_video
+    frames = np.full((T, *hw, 3), value, dtype=np.uint8)
+    write_video(frames, path)
+    return path
+
+
+def test_build_splice_uses_noncore_and_perturbs(tmp_path):
+    from diffusion.transition_eval.video_io import load_frames
+    gen = _write_clip(tmp_path / "gen.mp4", 100)
+    ref_frames = np.full((40, 64, 48, 3), 50, dtype=np.uint8)   # core value 50
+    ref_frames[:10] = 200                                       # non-core value 200
+    ref_frames[-10:] = 200
+    from diffusion.transition_eval.video_io import write_video
+    write_video(ref_frames, tmp_path / "ref.mp4")
+    ref_core = np.zeros(40, dtype=bool)
+    ref_core[10:30] = True
+    out = probes.build_splice(gen, tmp_path / "ref.mp4", ref_core,
+                              tmp_path / "spl.mp4", segment_frames=12,
+                              n_prefix=5, n_suffix=5)
+    frames, _ = load_frames(out, short_side=None)
+    mid = frames[len(frames) // 2].mean()
+    assert abs(mid - 200) < 25 and abs(mid - 50) > 60   # non-core content, not core
+    pert = BARS["probes"]["copy_splices"]["perturbation"]
+    out2 = probes.build_splice(gen, tmp_path / "ref.mp4", ref_core,
+                               tmp_path / "spl2.mp4", segment_frames=12,
+                               n_prefix=5, n_suffix=5, perturb=pert)
+    frames2, _ = load_frames(out2, short_side=None)
+    assert not np.array_equal(frames[len(frames) // 2], frames2[len(frames2) // 2])
+
+
+def test_build_hard_cut_switches_at_handoff(tmp_path):
+    from diffusion.transition_eval.video_io import load_frames
+    a = _write_clip(tmp_path / "a.mp4", 10)
+    b = _write_clip(tmp_path / "b.mp4", 240)
+    out = probes.build_hard_cut(a, b, tmp_path / "cut.mp4", n_prefix=9)
+    frames, _ = load_frames(out, short_side=None)
+    assert frames[7].mean() < 60 and frames[10].mean() > 180
+
+
+# --- reversal ------------------------------------------------------------------------
+
+def _cam(params):
+    T = len(params)
+    return {"params": np.asarray(params, dtype=np.float32),
+            "Ms": np.tile(np.eye(2, dtype=np.float32), (T, 1, 1)),
+            "ts": np.zeros((T, 2), dtype=np.float32),
+            "n_points": np.full(T, 50), "valid": np.ones(T, dtype=bool)}
+
+
+def test_reversal_sensitivity_asymmetric_vs_invariant():
+    """The deployed statistic z-norms channels, so time-antisymmetric velocity
+    profiles (constant pan, palindrome) are reversal-INVARIANT and must score
+    ~0; a time-asymmetric profile (early burst) must score clearly above them.
+    Absolute threshold validation happens on real cached tracks pre-freeze."""
+    T = 60
+    burst = np.zeros((T, 4)); burst[:8, 0] = 0.02                   # early event
+    const = np.zeros((T, 4)); const[:, 0] = 0.004                   # steady pan
+    pal = np.zeros((T, 4)); pal[:T // 2, 0] = 0.004; pal[T // 2:, 0] = -0.004
+    s_burst = probes.reversal_sensitivity(_cam(burst))
+    s_const = probes.reversal_sensitivity(_cam(const))
+    s_pal = probes.reversal_sensitivity(_cam(pal))
+    assert s_const == pytest.approx(0.0, abs=1e-6)
+    assert s_pal == pytest.approx(0.0, abs=1e-6)
+    assert s_burst > 10 * max(s_const, s_pal) and s_burst > 0.2
+
+
+def test_grade_reversal_all_must_drop_branch():
+    T = 60
+    burst_a = np.zeros((T, 4)); burst_a[:8, 0] = 0.02       # early-event move
+    burst_b = np.zeros((T, 4)); burst_b[1:9, 0] = 0.019     # same move, slight offset
+    cams = {"c/a": _cam(burst_a), "c/b": _cam(burst_b)}
+    rev_cams = {"c/b": probes.reversed_cam(_cam(burst_b))}
+    pairs = [{"class": "c", "gen": "c/a", "ref": "c/b", "self_reversal": {}}]
+    r = probes.grade_reversal(pairs, cams, rev_cams, BARS)
+    assert r["pass"] is True and r["wins"] == 1 and "all-must-drop" in r["rule"]
+
+
+# --- graders over rows -----------------------------------------------------------------
+
+def _bars_rows(cls="c"):
+    return {
+        f"sib__{cls}": {"item_id": f"sib__{cls}", "arm": "probe_sibling",
+                        "app_ref": 0.7, "near_copy": False, "copy_max": 0.62,
+                        "prefix_dino": 0.99, "sidedness": "twosided"},
+        f"control_lerp__sib__{cls}": {"item_id": f"control_lerp__sib__{cls}",
+                                      "arm": "control_lerp", "app_ref": 0.4,
+                                      "core_degenerate": True, "sidedness": "twosided"},
+        f"splice_verbatim__{cls}": {"item_id": f"splice_verbatim__{cls}",
+                                    "arm": "probe_splice_verbatim", "copy_max": 0.97},
+        f"splice_perturbed__{cls}": {"item_id": f"splice_perturbed__{cls}",
+                                     "arm": "probe_splice_perturbed", "copy_max": 0.93},
+        f"swap__{cls}": {"item_id": f"swap__{cls}", "arm": "probe_swap",
+                         "prefix_dino": 0.55},
+        f"hardcut__{cls}": {"item_id": f"hardcut__{cls}", "arm": "probe_hardcut",
+                            "max_seam_z": 9.4},
+    }
+
+
+def test_graders_pass_and_fail_paths():
+    import copy
+    bars = copy.deepcopy(BARS)
+    for key in ("siblings", "controls"):
+        bars["probes"][key][f"bar{2 if key == 'siblings' else 3}"]["min_classes"] = 1
+    bars["probes"]["m3_panel"]["bar6_endpoint_swap"]["min_classes"] = 1
+    bars["probes"]["m3_panel"]["bar6_hard_cut"]["min_classes"] = 1
+    rows = _bars_rows()
+    assert probes.grade_siblings(rows, ["c"], bars)["pass"]
+    assert probes.grade_controls(rows, ["c"], bars)["pass"]
+    spl = probes.grade_splices(rows, ["c"], bars)
+    assert spl["pass"] and spl["tau_recalibrated"] == pytest.approx(0.5 * (0.93 + 0.62))
+    assert probes.grade_m3_panel(rows, ["c"], bars)["pass"]
+    bad = {**rows, f"sib__c": {**rows["sib__c"], "near_copy": True}}
+    assert not probes.grade_siblings(bad, ["c"], bars)["pass"]
+    bad2 = {**rows, "splice_perturbed__c": {**rows["splice_perturbed__c"], "copy_max": 0.70}}
+    assert not probes.grade_splices(bad2, ["c"], bars)["pass"]
+
+
+# --- Block C ---------------------------------------------------------------------------
+
+def test_convert_v2_manifest_recovers_reference_and_excludes_loudly(tmp_path):
+    gen = tmp_path / "outputs/videos/g.mp4"
+    gen.parent.mkdir(parents=True)
+    gen.write_bytes(b"x")
+    man = [{"item_id": "ok", "generated_video": "outputs/videos/g.mp4",
+            "style": "hero", "n_endpoints": 2,
+            "condition_prefix": {"video": "exp/c.mp4", "num_frames": 9},
+            "condition_suffix": None, "arm": "ic",
+            "notes": "endpoints=hero_1 (hero); reference=hero_4 (hero; camera)"},
+           {"item_id": "missing_video", "generated_video": "outputs/videos/nope.mp4",
+            "style": "hero", "notes": "reference=hero_4"},
+           {"item_id": "no_ref", "generated_video": "outputs/videos/g.mp4",
+            "style": "hero", "notes": "no marker here"}]
+    (tmp_path / "m.json").write_text(json.dumps(man))
+    corpus = {"corpus_root": "data/t", "clips": {"hero/hero_4.mp4": {"class": "hero"}},
+              "classes": {"hero": {"sidedness": "onesided", "tags": [], "n_clips": 1}}}
+    items, excluded = blockc.convert_v2_manifest(tmp_path / "m.json", corpus, tmp_path)
+    assert len(items) == 1 and items[0]["item_id"] == "ok"
+    assert items[0]["reference_video"].endswith("hero/hero_4.mp4")
+    assert {e["item_id"] for e in excluded} == {"missing_video", "no_ref"}
+
+
+def test_grade_copy_twins_requires_all():
+    rows = {f"t{i}": {"near_copy": True, "max_seam_z": 0.1, "copy_max": 0.97}
+            for i in range(11)}
+    ids = [f"t{i}" for i in range(11)]
+    assert blockc.grade_copy_twins(rows, ids)["pass"]
+    rows["t3"] = {"near_copy": False, "max_seam_z": 1.2, "copy_max": 0.7}
+    r = blockc.grade_copy_twins(rows, ids)
+    assert not r["pass"] and r["n_pass"] == 10
