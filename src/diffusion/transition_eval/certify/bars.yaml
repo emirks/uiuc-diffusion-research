@@ -12,9 +12,9 @@
 # per-item ERROR ROWS (scoring isolates per item instead of dying per stage).
 # ALL thresholds unchanged — bar1 and bar3 are expected to fail again on
 # known draft.7 arithmetic; that is intentional.
-status: FROZEN_DRAFT8_MINIMAL
-frozen: false     # flips in its own commit before the draft.8 run;
-                  # changes henceforth = new draft version + full re-run
+status: FROZEN
+frozen: true      # frozen 2026-07-13 (draft.8 minimal), before the second
+                  # certification run; changes henceforth = new draft + re-run
 
 principles:
   truth_only: "hard bars only on constructed or human-verified truth; model-behavior
