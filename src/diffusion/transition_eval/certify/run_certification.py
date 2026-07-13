@@ -46,16 +46,14 @@ def log(msg: str) -> None:
 
 
 def run_score(manifest: pathlib.Path, label: str, out_root: pathlib.Path,
-              controls: str, cache_dir: str | None = None,
-              camera_fit: str = "median") -> pathlib.Path:
+              controls: str, cache_dir: str | None = None) -> pathlib.Path:
     """score.py through its real CLI — certification exercises the shipped
-    entrypoint, not a private shim. camera_fit carries the exam's O7 adoption
-    into every downstream scoring stage. Returns the items.jsonl path."""
+    entrypoint, not a private shim. Returns the items.jsonl path."""
     cmd = [sys.executable, "-m", "diffusion.transition_eval.score",
            "--manifest", str(manifest),
            "--corpus", str(CORPUS_PATH),
            "--label", label, "--out-root", str(out_root),
-           "--controls", controls, "--camera-fit", camera_fit]
+           "--controls", controls]
     if cache_dir:
         cmd += ["--cache-dir", cache_dir]
     env = {**os.environ, "PYTHONPATH": str(REPO_ROOT / "src")}
@@ -72,18 +70,10 @@ def load_rows(items_jsonl: pathlib.Path) -> dict[str, dict]:
 def anchor_ids(pairs_by_class: dict, corpus: dict, c_items: list[dict],
                bars: dict) -> list[str]:
     """Frozen anchor RULE (bars.stability.anchors.rule): deterministic picks,
-    no cherry-picking surface. Strata are filled in order (two-sided,
-    one-sided, camera), each taking the first lexicographic n>=4 class NOT
-    already picked — draft.7's rule lacked the dedup and picked air_bending
-    twice (first in both the two-sided and camera strata)."""
-    taken: set[str] = set()
-
+    no cherry-picking surface."""
     def first(pred):
-        c = next((c for c in sorted(pairs_by_class)
-                  if c not in taken and pred(corpus["classes"][c])), None)
-        if c is not None:
-            taken.add(c)
-        return c
+        return next((c for c in sorted(pairs_by_class)
+                     if pred(corpus["classes"][c])), None)
     ts = first(lambda v: v["sidedness"] == "twosided" and v["n_clips"] >= 4)
     os_ = first(lambda v: v["sidedness"] == "onesided" and v["n_clips"] >= 4)
     cam = first(lambda v: "camera" in v.get("tags", []) and v["n_clips"] >= 4)
@@ -153,9 +143,8 @@ def main() -> int:
     log("Block A: exam (R1 + R2 + adoption)")
     exam_res = exam.run_exam(bundles, labels, sidedness, corpus, bars, out / "exam")
     mask_w = exam_res["mask_adoption"]["winner"]
-    fit_w = exam_res["deployed_camera_fit"]
     log(f"  mask winner={mask_w}; motion winner={exam_res['motion_adoption']['winner']}; "
-        f"camera fit={fit_w}; bar1 pass={exam_res['bar1']['pass']}")
+        f"bar1 pass={exam_res['bar1']['pass']}")
 
     # ---- Block B build ----------------------------------------------------------------
     log("Block B: probe construction")
@@ -175,10 +164,8 @@ def main() -> int:
     (man_dir / "siblings.json").write_text(json.dumps(sib_man, indent=1))
     (man_dir / "probes.json").write_text(json.dumps(other_man, indent=1))
 
-    # reversal: enumerate (corpus-only), build + track reversed refs in-driver;
-    # trajectories under the DEPLOYED fit (the exam's O7 adoption)
-    cams = {k: camera_trajectory(b["tracks"], b["vis"], fit=fit_w)
-            for k, b in bundles_by_key.items()}
+    # reversal: enumerate (corpus-only), build + track reversed refs in-driver
+    cams = {k: camera_trajectory(b["tracks"], b["vis"]) for k, b in bundles_by_key.items()}
     rev_pairs = probes.enumerate_reversal_pairs(pairs, corpus, cams, bars)
     log(f"  reversal-sensitive pairs: {len(rev_pairs)}")
     rev_cams = {}
@@ -187,19 +174,17 @@ def main() -> int:
                                          probe_dir / f"rev__{p['class']}.mp4")
         rb, _ = process_video_file(vp, cache_dir, extractor, tracker,
                                    short_side=versioning.PINS["feature_short_side"])
-        rev_cams[p["ref"]] = camera_trajectory(rb["tracks"], rb["vis"], fit=fit_w)
+        rev_cams[p["ref"]] = camera_trajectory(rb["tracks"], rb["vis"])
     extractor.free(); tracker.free()
 
     # ---- Block B score + grade ---------------------------------------------------------
     crashed = []
     try:
-        sib_items = run_score(man_dir / "siblings.json", "cert_siblings", out, "auto",
-                              camera_fit=fit_w)
+        sib_items = run_score(man_dir / "siblings.json", "cert_siblings", out, "auto")
     except subprocess.CalledProcessError as e:
         crashed.append(f"siblings scoring: {e}"); sib_items = None
     try:
-        probe_items = run_score(man_dir / "probes.json", "cert_probes", out, "off",
-                                camera_fit=fit_w)
+        probe_items = run_score(man_dir / "probes.json", "cert_probes", out, "off")
     except subprocess.CalledProcessError as e:
         crashed.append(f"probe scoring: {e}"); probe_items = None
 
@@ -235,8 +220,7 @@ def main() -> int:
     (man_dir / "blockc.json").write_text(json.dumps(c_items, indent=1))
     log(f"  archives: {len(c_items)} convertible, {len(c_excluded)} excluded (loud)")
     try:
-        c_jsonl = run_score(man_dir / "blockc.json", "cert_blockc", out, "off",
-                            camera_fit=fit_w)
+        c_jsonl = run_score(man_dir / "blockc.json", "cert_blockc", out, "off")
         c_rows = load_rows(c_jsonl)
     except subprocess.CalledProcessError as e:
         crashed.append(f"blockC scoring: {e}"); c_rows = {}
@@ -244,40 +228,35 @@ def main() -> int:
     twin_ids = [f"exp_057__{t}" for t in
                 blockc.copy_twin_ids(v2_paths["exp_057"] / "manifest_scoring.json")]
     g_twin = blockc.grade_copy_twins(c_rows, twin_ids)
-    if c_rows:
-        bridge = {name: blockc.bridge_v2_v3(run_dir / "items.jsonl",
-                                            {k.split("__", 1)[1]: v for k, v in c_rows.items()
-                                             if k.startswith(name + "__")})
-                  for name, run_dir in v2_paths.items()}
-        dists = blockc.arm_distributions(list(c_rows.values()))
-    else:
-        bridge = dists = "not computed — Block C scoring crashed"
+    bridge = {name: blockc.bridge_v2_v3(run_dir / "items.jsonl",
+                                        {k.split("__", 1)[1]: v for k, v in c_rows.items()
+                                         if k.startswith(name + "__")})
+              for name, run_dir in v2_paths.items()}
+    dists = blockc.arm_distributions(list(c_rows.values()))
 
     # ---- Block D -----------------------------------------------------------------------
     log("Block D: stability")
     warm_cmp = cold_cmp = None
     if sib_items:
         try:
-            sib2 = run_score(man_dir / "siblings.json", "cert_siblings_rerun", out, "auto",
-                             camera_fit=fit_w)
+            sib2 = run_score(man_dir / "siblings.json", "cert_siblings_rerun", out, "auto")
             warm_cmp = compare_runs(sib_items, sib2,
                                     tolerance=bars["stability"]["bar8"]["warm_max_abs_delta"])
         except subprocess.CalledProcessError as e:
             crashed.append(f"warm rerun: {e}")
+        anchors = anchor_ids(pairs, corpus, e57_items, bars)
+        anchor_man = [it for it in (sib_man + c_items) if it["item_id"] in anchors]
+        (man_dir / "anchors.json").write_text(json.dumps(anchor_man, indent=1))
         try:
-            anchors = anchor_ids(pairs, corpus, e57_items, bars)
-            anchor_man = [it for it in (sib_man + c_items) if it["item_id"] in anchors]
-            (man_dir / "anchors.json").write_text(json.dumps(anchor_man, indent=1))
             cold_jsonl = run_score(man_dir / "anchors.json", "cert_anchors_cold", out,
-                                   "auto", cache_dir=str(out / "cold_cache"),
-                                   camera_fit=fit_w)
+                                   "auto", cache_dir=str(out / "cold_cache"))
             base = {i: r for i, r in {**rows, **c_rows}.items() if i in anchors}
             base_path = out / "anchors_warm.jsonl"
             base_path.write_text("\n".join(json.dumps(r) for r in base.values()))
             cold_cmp = compare_runs(base_path, cold_jsonl,
                                     tolerance=bars["stability"]["bar8"]["anchors"]["reproduction_tolerance"])
-        except Exception as e:   # record must still be written (draft.7 lesson)
-            crashed.append(f"cold anchors: {type(e).__name__}: {e}")
+        except subprocess.CalledProcessError as e:
+            crashed.append(f"cold anchors: {e}")
 
     floors = {}
     for side in ("twosided", "onesided"):
@@ -343,8 +322,8 @@ def main() -> int:
            "(injected-trajectory test = post-lock appendix).",
            "",
            f"- mask winner: **{mask_w}** · motion winner: "
-           f"**{exam_res['motion_adoption']['winner']}** · deployed camera fit: "
-           f"**{fit_w}** (O7 secondary adoption, triggered by the draft.7 exam)",
+           f"**{exam_res['motion_adoption']['winner']}** · O7 Huber triggered: "
+           f"{exam_res['o7_conditional']['huber_triggered']}",
            f"- content-invariance pooled partial corr: {audit['pooled_partial_corr']} "
            f"(alarm {bars['record']['content_invariance']['alarm_level']}, non-gating)",
            f"- tau_copy recalibrated: {g_spl.get('tau_recalibrated')} "

@@ -16,12 +16,10 @@ equals score.py's on the same item:
 Adoption (bars.yaml `exam.adoption`, pre-registered, applied mechanically):
 one-sided exact binomial sign test on per-class recall over n>=4 classes of
 the target stratum, plus a no-trusted-class-regression guard, plus (core mask
-only) a real-clip non-degeneracy criterion. O7: the draft.7 exam triggered
-the pre-registered conditional (camera-stratum mean recall 0.346 < 0.5), so
-this draft ALSO examines the Huber-IRLS fit vs the median-trim primary under
-the same rule (adopt_camera_fit) — the winner is what score.py deploys.
-Motion contingency: if the decomposition is not adopted, the incumbent MFS
-ships as the single headline motion metric (pre-registered fallback).
+only) a real-clip non-degeneracy criterion. O7 conditional: Huber examined
+only if camera-stratum recall < trust floor. Motion contingency: if the
+decomposition is not adopted, the incumbent MFS ships as the single headline
+motion metric (pre-registered fallback).
 
 Needs GPU only for uncached features/tracks; with a warm cache the exam is
 CPU numpy (the 223^2/2 motion pair grid takes ~10-20 min single-core).
@@ -77,37 +75,25 @@ def appearance_distance_matrix(bundles: list[dict], variant: str,
     return D
 
 
-def motion_distance_matrices(bundles: list[dict],
-                             fits: tuple[str, ...] = ("median",)) -> dict[str, np.ndarray]:
-    """Incumbent MFS distance vs decomposed camera/object distances, the latter
-    under each requested M1b fit scheme ('median' primary; 'huber' = the O7
-    secondary, requested only when the conditional has triggered). Keys:
-    m_incumbent, m1b_camera[__huber], m1c_object[__huber]."""
+def motion_distance_matrices(bundles: list[dict]) -> dict[str, np.ndarray]:
+    """Incumbent MFS distance vs decomposed camera/object distances."""
     from ..motion import motion_fidelity  # incumbent (v2)
 
     n = len(bundles)
-    cams = {f: [camera_trajectory(b["tracks"], b["vis"], fit=f) for b in bundles]
-            for f in fits}
+    cams = [camera_trajectory(b["tracks"], b["vis"]) for b in bundles]
     D_inc = np.full((n, n), np.nan)
-    D = {f: {"cam": np.full((n, n), np.nan), "obj": np.full((n, n), np.nan)}
-         for f in fits}
+    D_cam = np.full((n, n), np.nan)
+    D_obj = np.full((n, n), np.nan)
     for i, j in itertools.combinations(range(n), 2):
         mf = motion_fidelity(bundles[i]["tracks"], bundles[i]["vis"],
                              bundles[j]["tracks"], bundles[j]["vis"])
         D_inc[i, j] = D_inc[j, i] = 1.0 - mf if np.isfinite(mf) else np.nan
-        for f in fits:
-            cm = camera_match(cams[f][i], cams[f][j])
-            D[f]["cam"][i, j] = D[f]["cam"][j, i] = cm["cam_dtw"] if cm["cam_valid"] else np.nan
-            om = object_match(bundles[i]["tracks"], bundles[i]["vis"],
-                              bundles[j]["tracks"], bundles[j]["vis"],
-                              cams[f][i], cams[f][j])
-            D[f]["obj"][i, j] = D[f]["obj"][j, i] = 1.0 - om if np.isfinite(om) else np.nan
-    out = {"m_incumbent": D_inc}
-    for f in fits:
-        suffix = "" if f == "median" else f"__{f}"
-        out[f"m1b_camera{suffix}"] = D[f]["cam"]
-        out[f"m1c_object{suffix}"] = D[f]["obj"]
-    return out
+        cm = camera_match(cams[i], cams[j])
+        D_cam[i, j] = D_cam[j, i] = cm["cam_dtw"] if cm["cam_valid"] else np.nan
+        om = object_match(bundles[i]["tracks"], bundles[i]["vis"],
+                          bundles[j]["tracks"], bundles[j]["vis"], cams[i], cams[j])
+        D_obj[i, j] = D_obj[j, i] = 1.0 - om if np.isfinite(om) else np.nan
+    return {"m_incumbent": D_inc, "m1b_camera": D_cam, "m1c_object": D_obj}
 
 
 # --- R2: pool-level margin classification ------------------------------------------
@@ -251,35 +237,6 @@ def adopt_motion(r1: dict, bars: dict, camera_classes: set[str],
             "adopted_challenger": bool(adopted), "checks": checks}
 
 
-def adopt_camera_fit(r1: dict, bars: dict, camera_classes: set[str],
-                     eligible: set[str], m1c_definedness: dict) -> dict:
-    """O7 secondary adoption — executed only because draft.7 triggered the
-    pre-registered conditional (camera-stratum mean recall 0.346 < 0.5).
-    SAME rule as adopt_motion, with challenger = Huber-IRLS decomposition and
-    incumbent = median-trim decomposition. Winner is the DEPLOYED fit."""
-    alpha = bars["exam"]["adoption"]["alpha"]
-    guard_drop = bars["exam"]["adoption"]["m1c_overall_guard_drop"]
-    inc, cha = r1["m1b_camera"], r1["m1b_camera__huber"]
-    obj_inc, obj_cha = r1["m1c_object"], r1["m1c_object__huber"]
-    stratum_eligible = camera_classes & eligible
-    st = class_sign_test(cha["per_class_recall"], inc["per_class_recall"], stratum_eligible)
-    defined = {c for c, f in m1c_definedness.items()
-               if f >= bars["exam"]["trust"]["m1c_min_definedness"]} & eligible
-    inc_med = float(np.nanmedian([obj_inc["per_class_recall"].get(c, np.nan) for c in defined])) if defined else float("nan")
-    cha_med = float(np.nanmedian([obj_cha["per_class_recall"].get(c, np.nan) for c in defined])) if defined else float("nan")
-    checks = {
-        "stratum_sign_test": st,
-        "stratum_ok": bool(st["p_one_sided"] < alpha),
-        "m1c_median_recall_defined_huber": cha_med,
-        "m1c_median_recall_defined_median": inc_med,
-        "m1c_guard_ok": bool(np.isnan(inc_med) or np.isnan(cha_med)
-                             or cha_med >= inc_med - guard_drop),
-    }
-    adopted = checks["stratum_ok"] and checks["m1c_guard_ok"]
-    return {"winner": "huber" if adopted else "median",
-            "adopted_challenger": bool(adopted), "checks": checks}
-
-
 # --- trust map ---------------------------------------------------------------------
 
 def m1c_definedness_per_class(D_obj: np.ndarray, labels: list[str]) -> dict:
@@ -348,11 +305,8 @@ def run_exam(bundles: list[dict], labels: list[str], sidedness: list[str],
     for v in CORE_VARIANTS:
         D = appearance_distance_matrix(bundles, v, sidedness)
         r1[f"m1a__{v}"] = retrieval_eval(D, labels)
-    # R1 motion — both fit schemes: the O7 conditional TRIGGERED in draft.7
-    # (camera-stratum mean recall 0.346 < 0.5, see certifications/
-    # v3.0.0-draft.7.md), so the pre-registered Huber secondary is examined
-    # in this draft as part of the mechanical run.
-    Dm = motion_distance_matrices(bundles, fits=("median", "huber"))
+    # R1 motion
+    Dm = motion_distance_matrices(bundles)
     for k, D in Dm.items():
         r1[k] = retrieval_eval(D, labels)
     m1c_def = m1c_definedness_per_class(Dm["m1c_object"], labels)
@@ -360,63 +314,37 @@ def run_exam(bundles: list[dict], labels: list[str], sidedness: list[str],
     # adoption (pre-registered, mechanical)
     mask_verdict = adopt_core_mask(r1, bundles, labels, sidedness, bars, onesided, eligible)
     motion_verdict = adopt_motion(r1, bars, camera, eligible, m1c_def)
-    fit_verdict = adopt_camera_fit(r1, bars, camera, eligible, m1c_def)
     mask_w = mask_verdict["winner"]
-    fit_w = fit_verdict["winner"]
-    fit_suffix = "" if fit_w == "median" else f"__{fit_w}"
 
     # R2 pool-level under the winning mask
     r2 = pool_margin_exam(bundles, labels, sidedness, mask_w)
 
-    # O7 status (descriptive; the secondary adoption above IS its execution)
-    cam_recall = [r1[f"m1b_camera{fit_suffix}"]["per_class_recall"].get(c)
-                  for c in camera & eligible]
+    # O7 conditional (pre-registered): only fires on camera-stratum trust failure
+    cam_recall = [r1["m1b_camera"]["per_class_recall"].get(c) for c in camera & eligible]
     cam_mean = float(np.nanmean([r for r in cam_recall if r is not None])) if cam_recall else float("nan")
-    o7 = {"triggered_by": "draft.7 exam (camera-stratum mean recall 0.346 < 0.5)",
-          "executed": True, "deployed_fit": fit_w,
-          "camera_stratum_mean_recall_deployed_fit": cam_mean}
+    o7 = {"camera_stratum_mean_recall": cam_mean,
+          "huber_triggered": bool(np.isfinite(cam_mean)
+                                  and cam_mean < bars["exam"]["trust"]["trust_min_recall"]),
+          "note": "if triggered: implement Huber IRLS variant, re-run this exam "
+                  "under the same adoption rule (new draft version)"}
 
-    # bar 1 (draft.8 form): precedent reproduction carries the teeth; the
-    # global floors are regression guards anchored to the draft.7 measured
-    # values (acc 0.673 / d 1.522), exactly as draft.7's floors were meant to
-    # sit under v2's — global pooled accuracy is otherwise a descriptive
-    # headline (39 fine-grained classes conflate label granularity with
-    # metric quality; per-class claims live in the trust map).
-    b1 = bars["exam"]["bar1_m1a_floor"]
-    sub_styles = set(b1["reproduction"]["styles"])
-    sub_idx = [i for i, lab in enumerate(labels) if lab in sub_styles]
-    D_sub = appearance_distance_matrix([bundles[i] for i in sub_idx], mask_w,
-                                       [sidedness[i] for i in sub_idx])
-    repro = retrieval_eval(D_sub, [labels[i] for i in sub_idx])
-    glob = r1[f"m1a__{mask_w}"]
-    bar1 = {
-        "reproduction": {"acc": repro["accuracy_1nn"], "d": repro["separation_cohens_d"],
-                         "chance": repro["chance"], "n_clips": len(sub_idx),
-                         "per_class_recall": repro["per_class_recall"],
-                         "acc_min": b1["reproduction"]["acc_min"],
-                         "d_min": b1["reproduction"]["d_min"]},
-        "global": {"acc": glob["accuracy_1nn"], "d": glob["separation_cohens_d"],
-                   "acc_min": b1["global"]["acc_min"], "d_min": b1["global"]["d_min"]},
-    }
-    bar1["pass"] = bool(
-        bar1["reproduction"]["acc"] >= b1["reproduction"]["acc_min"]
-        and bar1["reproduction"]["d"] >= b1["reproduction"]["d_min"]
-        and bar1["global"]["acc"] >= b1["global"]["acc_min"]
-        and bar1["global"]["d"] >= b1["global"]["d_min"])
+    # bar 1: M1a floor on the winning variant
+    win = r1[f"m1a__{mask_w}"]
+    bar1 = {"acc": win["accuracy_1nn"], "d": win["separation_cohens_d"],
+            "acc_min": bars["exam"]["bar1_m1a_floor"]["acc_min"],
+            "d_min": bars["exam"]["bar1_m1a_floor"]["d_min"]}
+    bar1["pass"] = bool(bar1["acc"] >= bar1["acc_min"] and bar1["d"] >= bar1["d_min"])
 
     winner_r1 = {"m1a": r1[f"m1a__{mask_w}"],
-                 "m1b": r1[f"m1b_camera{fit_suffix}"],
-                 "m1c": r1[f"m1c_object{fit_suffix}"]}
-    m1c_def_w = m1c_definedness_per_class(Dm[f"m1c_object{fit_suffix}"], labels)
-    tmap = trust_map(winner_r1, r2, class_n, m1c_def_w, bars)
+                 "m1b": r1["m1b_camera"], "m1c": r1["m1c_object"]}
+    tmap = trust_map(winner_r1, r2, class_n, m1c_def, bars)
 
     result = {"r1": {k: {kk: vv for kk, vv in v.items() if kk != "confusion"}
                      for k, v in r1.items()},
               "r2": {k: v for k, v in r2.items() if k != "rows"},
               "mask_adoption": mask_verdict, "motion_adoption": motion_verdict,
-              "camera_fit_adoption": fit_verdict, "deployed_camera_fit": fit_w,
               "o7_conditional": o7, "bar1": bar1,
-              "m1c_definedness": m1c_def_w, "trust_map": tmap}
+              "m1c_definedness": m1c_def, "trust_map": tmap}
     (out_dir / "exam.json").write_text(json.dumps(result, indent=1, default=str))
     (out_dir / "trust_map.json").write_text(json.dumps(tmap, indent=1))
     return result

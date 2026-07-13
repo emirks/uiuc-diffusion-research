@@ -63,15 +63,14 @@ def _ref_bundle_cache(corpus: dict, cache_dir, extractor, tracker):
 
 
 def score_item(item, sidedness, gen_bundle, gen_frames, ref_bundle, ref_core,
-               pools, lpips_scorer, extractor, training_pools=None,
-               camera_fit="median"):
+               pools, lpips_scorer, extractor, training_pools=None):
     n_pre = item.condition_prefix.num_frames if item.condition_prefix else 9
     n_suf = item.condition_suffix.num_frames if item.condition_suffix else 0
     T = len(gen_frames)
     gcore, gmeta = core_mask_v3(gen_bundle.profile, sidedness)
     gmid = mid_mask(T, n_pre, n_suf)
-    ref_cam = camera_trajectory(ref_bundle.tracks, ref_bundle.vis, fit=camera_fit)
-    gen_cam = camera_trajectory(gen_bundle.tracks, gen_bundle.vis, fit=camera_fit)
+    ref_cam = camera_trajectory(ref_bundle.tracks, ref_bundle.vis)
+    gen_cam = camera_trajectory(gen_bundle.tracks, gen_bundle.vis)
 
     row = {
         "item_id": item.item_id, "arm": item.arm, "style": item.style,
@@ -147,9 +146,6 @@ def main() -> int:
     ap.add_argument("--cache-dir", default="outputs/eval/cache",
                     help="feature/track cache (stability's cold-anchor rerun "
                          "points this at a fresh directory)")
-    ap.add_argument("--camera-fit", choices=("median", "huber"), default="median",
-                    help="M1b robust fit scheme; the certification exam's O7 "
-                         "adoption decides which one is deployed")
     args = ap.parse_args()
 
     stamp = versioning.stamp(args.corpus)
@@ -188,8 +184,7 @@ def main() -> int:
                                          cache_dir, extractor, tracker,
                                          short_side=SHORT_SIDE)
         row = score_item(it, side, gb, gframes, rb, rcore, pools,
-                         lpips_scorer, extractor, training_pools,
-                         camera_fit=args.camera_fit)
+                         lpips_scorer, extractor, training_pools)
         row["tier"] = derive_tier(it, corpus, training)
         row["tags"] = tags_of(it.style, corpus)
         row["provenance"] = {"harness": stamp["harness"], "certified": stamp["certified"]}
@@ -200,8 +195,7 @@ def main() -> int:
             cb = process_video(cframes, gb.key + f":{cname}", cache_dir,
                                extractor, tracker)
             crow = score_item(it, side, cb, cframes, rb, rcore, pools,
-                              lpips_scorer, extractor, None,
-                              camera_fit=args.camera_fit)
+                              lpips_scorer, extractor, None)
             crow.update({"item_id": f"{cname}__{it.item_id}", "arm": cname,
                          "twin_of": None, "provenance": row["provenance"]})
             rows.append(crow)
