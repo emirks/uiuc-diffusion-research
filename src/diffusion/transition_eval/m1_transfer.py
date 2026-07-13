@@ -71,6 +71,13 @@ def camera_trajectory(tracks: np.ndarray, vis: np.ndarray) -> dict:
       n_points [T-1]    points used per step
       valid    [T-1]    fit had >= MIN_FIT_POINTS after trimming
     """
+    if tracks.shape[1] == 0:   # zero tracklets: all-invalid trajectory, no crash
+        T = len(tracks)
+        return {"params": np.full((T - 1, 4), np.nan, dtype=np.float32),
+                "Ms": np.tile(np.eye(2, dtype=np.float32), (T - 1, 1, 1)),
+                "ts": np.zeros((T - 1, 2), dtype=np.float32),
+                "n_points": np.zeros(T - 1, dtype=int),
+                "valid": np.zeros(T - 1, dtype=bool)}
     tr = _smooth_tracks(tracks)
     T = len(tr)
     params = np.full((T - 1, 4), np.nan, dtype=np.float32)
@@ -135,9 +142,9 @@ def _residual_directions(tracks: np.ndarray, vis: np.ndarray, cam: dict,
     step — same gating protocol as v2 motion (visibility, per-duration speed
     floor, moving fraction), so M1c differs from v2 M2 ONLY by residualization."""
     keep = vis.mean(axis=0) >= min_vis
+    if keep.sum() == 0:   # low-texture video (splice loops, near-static gens):
+        return np.zeros((0, n_steps, 2), dtype=np.float32)  # -> object_match NaN
     tr, vs = _smooth_tracks(tracks[:, keep, :]), vis[:, keep]
-    if tr.shape[1] == 0:
-        return np.zeros((0, n_steps, 2), dtype=np.float32)
     T = len(tr)
     v = np.diff(tr, axis=0)                                     # [T-1, N, 2]
     pred = np.einsum("sij,snj->sni", cam["Ms"], tr[:-1]) + cam["ts"][:, None, :] - tr[:-1]

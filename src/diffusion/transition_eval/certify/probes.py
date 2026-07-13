@@ -350,8 +350,14 @@ def grade_siblings(rows: dict[str, dict], classes: list[str], bars: dict) -> dic
 
 
 def grade_controls(rows: dict[str, dict], classes: list[str], bars: dict) -> dict:
-    """Bar 3: the control arm lands at the floor (M1a below its sibling — the
-    floor claim in the same units) AND trips core_degenerate. Count-form."""
+    """Bar 3 (draft.8): the control arm lands at the floor — M1a below its
+    sibling, the floor claim in the same units. Count-form. The draft.7
+    core_degenerate conjunct is REMOVED (owner decision, 2026-07-13): it was
+    vacuous as a truth claim — trivially true on holds (a static hold has no
+    non-endpoint frames by construction) and legitimately false on lerps
+    (DINO places pixel blends far from both endpoints, earning a real strict
+    core). The flag stays on every row and in the exam's mask-adoption
+    criterion, where it does carry information; here it is descriptive."""
     per = {}
     for cls in classes:
         sib = rows.get(f"sib__{cls}")
@@ -361,9 +367,9 @@ def grade_controls(rows: dict[str, dict], classes: list[str], bars: dict) -> dic
             per[cls] = {"pass": False, "reason": "missing row"}
             continue
         floored = (np.isfinite(ctrl.get("app_ref", np.nan))
+                   and np.isfinite(sib.get("app_ref", np.nan))
                    and ctrl["app_ref"] < sib["app_ref"])
-        flagged = bool(ctrl.get("core_degenerate"))
-        per[cls] = {"pass": bool(floored and flagged),
+        per[cls] = {"pass": bool(floored),
                     "control_m1a": ctrl.get("app_ref"), "sibling_m1a": sib.get("app_ref"),
                     "core_degenerate": ctrl.get("core_degenerate")}
     n_pass = sum(1 for v in per.values() if v["pass"])

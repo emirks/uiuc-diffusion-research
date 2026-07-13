@@ -279,3 +279,63 @@ def test_grade_copy_twins_requires_all():
     rows["t3"] = {"near_copy": False, "max_seam_z": 1.2, "copy_max": 0.7}
     r = blockc.grade_copy_twins(rows, ids)
     assert not r["pass"] and r["n_pass"] == 10
+
+
+# --- draft.8 minimal reliability fixes ---------------------------------------------------
+
+from diffusion.transition_eval.m1_transfer import (                     # noqa: E402
+    camera_trajectory, object_match,
+)
+
+
+def test_object_match_empty_keep_returns_nan():
+    """The draft.7 killer: low-texture video -> keep-filter empties -> must be
+    NaN, not an apply_along_axis crash (killed bars 4/6/7's data)."""
+    T, N = 30, 12
+    tracks = RNG.normal(size=(T, N, 2)).astype(np.float32)
+    vis_dead = np.zeros((T, N), dtype=np.float32)
+    vis_ok = np.ones((T, N), dtype=np.float32)
+    assert np.isnan(object_match(tracks, vis_dead, tracks, vis_ok))
+    assert np.isnan(object_match(tracks, vis_ok, tracks, vis_dead))
+
+
+def test_camera_trajectory_zero_tracklets_no_crash():
+    T = 20
+    cam = camera_trajectory(np.zeros((T, 0, 2), dtype=np.float32),
+                            np.zeros((T, 0), dtype=np.float32))
+    assert cam["valid"].sum() == 0 and len(cam["params"]) == T - 1
+
+
+def test_anchor_ids_dedup_across_strata():
+    from diffusion.transition_eval.certify.run_certification import anchor_ids
+    corpus = {"classes": {
+        "aa": {"sidedness": "twosided", "n_clips": 4, "tags": ["camera"]},
+        "bb": {"sidedness": "onesided", "n_clips": 5, "tags": []},
+        "cc": {"sidedness": "twosided", "n_clips": 6, "tags": ["camera"]},
+    }}
+    pairs = {"aa": {}, "bb": {}, "cc": {}}
+    c_items = [{"item_id": "exp_057__base_x", "arm": "base"},
+               {"item_id": "exp_057__ic_x", "arm": "ic"}]
+    ids = anchor_ids(pairs, corpus, c_items, BARS)
+    assert len(set(ids)) == 6
+    assert "sib__aa" in ids and "sib__bb" in ids and "sib__cc" in ids
+
+
+def test_grade_controls_floor_only():
+    """draft.8 bar 3: the floor claim alone gates; core_degenerate is
+    descriptive (owner decision — vacuous conjunct removed)."""
+    import copy
+    bars = copy.deepcopy(BARS)
+    bars["probes"]["controls"]["bar3"]["min_classes"] = 1
+    sib = {"item_id": "sib__c", "arm": "probe_sibling", "app_ref": 0.7}
+    ctrl = {"item_id": "control_lerp__sib__c", "arm": "control_lerp",
+            "app_ref": 0.4, "core_degenerate": False}   # draft.7 failure mode
+    assert probes.grade_controls({"sib__c": sib, ctrl["item_id"]: ctrl},
+                                 ["c"], bars)["pass"]
+    high = {**ctrl, "app_ref": 0.8}                     # floor clause still gates
+    assert not probes.grade_controls({"sib__c": sib, high["item_id"]: high},
+                                     ["c"], bars)["pass"]
+    err = {"item_id": "control_lerp__sib__c", "arm": "control_lerp",
+           "error": "boom"}                             # error row = documented miss
+    assert not probes.grade_controls({"sib__c": sib, err["item_id"]: err},
+                                     ["c"], bars)["pass"]

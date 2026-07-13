@@ -173,32 +173,45 @@ def main() -> int:
         training_pools = {k: ref_bundles[k][0].feats
                           for k in training["_clipset"] if k in ref_bundles}
 
-    rows = []
+    rows, n_errors = [], 0
     for it in items:
-        side = sidedness_of(it.style, corpus)
-        ref_key = "/".join(pathlib.Path(it.reference_video).parts[-2:])
-        if ref_key not in ref_bundles:
-            raise ValueError(f"{it.item_id}: reference {ref_key} not in corpus manifest")
-        rb, rcore = ref_bundles[ref_key]
-        gb, gframes = process_video_file(pathlib.Path(it.generated_video),
-                                         cache_dir, extractor, tracker,
-                                         short_side=SHORT_SIDE)
-        row = score_item(it, side, gb, gframes, rb, rcore, pools,
-                         lpips_scorer, extractor, training_pools)
-        row["tier"] = derive_tier(it, corpus, training)
-        row["tags"] = tags_of(it.style, corpus)
-        row["provenance"] = {"harness": stamp["harness"], "certified": stamp["certified"]}
-        rows.append(row)
+        # per-item isolation: one bad item yields an ERROR ROW, never a dead
+        # stage (draft.7 lesson — a single crash killed three bars' data).
+        # Error rows carry no metric keys, so graders count them as documented
+        # misses; certification counts them into bar 8's no-crash clause.
+        try:
+            side = sidedness_of(it.style, corpus)
+            ref_key = "/".join(pathlib.Path(it.reference_video).parts[-2:])
+            if ref_key not in ref_bundles:
+                raise ValueError(f"reference {ref_key} not in corpus manifest")
+            rb, rcore = ref_bundles[ref_key]
+            gb, gframes = process_video_file(pathlib.Path(it.generated_video),
+                                             cache_dir, extractor, tracker,
+                                             short_side=SHORT_SIDE)
+            row = score_item(it, side, gb, gframes, rb, rcore, pools,
+                             lpips_scorer, extractor, training_pools)
+            row["tier"] = derive_tier(it, corpus, training)
+            row["tags"] = tags_of(it.style, corpus)
+            row["provenance"] = {"harness": stamp["harness"], "certified": stamp["certified"]}
+            rows.append(row)
 
-        if args.controls == "auto" and it.condition_prefix:  # control arm through the identical pipeline
-            cframes, cname = control_frames(it, side, len(gframes))
-            cb = process_video(cframes, gb.key + f":{cname}", cache_dir,
-                               extractor, tracker)
-            crow = score_item(it, side, cb, cframes, rb, rcore, pools,
-                              lpips_scorer, extractor, None)
-            crow.update({"item_id": f"{cname}__{it.item_id}", "arm": cname,
-                         "twin_of": None, "provenance": row["provenance"]})
-            rows.append(crow)
+            if args.controls == "auto" and it.condition_prefix:  # control arm through the identical pipeline
+                cframes, cname = control_frames(it, side, len(gframes))
+                cb = process_video(cframes, gb.key + f":{cname}", cache_dir,
+                                   extractor, tracker)
+                crow = score_item(it, side, cb, cframes, rb, rcore, pools,
+                                  lpips_scorer, extractor, None)
+                crow.update({"item_id": f"{cname}__{it.item_id}", "arm": cname,
+                             "twin_of": None, "provenance": row["provenance"]})
+                rows.append(crow)
+        except Exception as e:  # noqa: BLE001 — isolation is the point; the row is loud
+            n_errors += 1
+            rows.append({"item_id": it.item_id, "arm": it.arm, "style": it.style,
+                         "twin_of": it.twin_of,
+                         "error": f"{type(e).__name__}: {e}",
+                         "provenance": {"harness": stamp["harness"],
+                                        "certified": stamp["certified"]}})
+            print(f"[error-row] {it.item_id}: {type(e).__name__}: {e}", flush=True)
 
     extractor.free(); tracker.free(); lpips_scorer.free()
 
@@ -212,7 +225,7 @@ def main() -> int:
                "paired": paired_table(rows),
                "n_items": len(rows)}
     (out_dir / "results.json").write_text(json.dumps(results, indent=2))
-    print(f"[done] {len(rows)} rows -> {out_dir}"
+    print(f"[done] {len(rows)} rows ({n_errors} error rows) -> {out_dir}"
           + ("" if stamp["certified"] else "  [UNCERTIFIED]"))
     return 0
 

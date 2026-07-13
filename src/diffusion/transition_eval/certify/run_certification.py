@@ -70,10 +70,19 @@ def load_rows(items_jsonl: pathlib.Path) -> dict[str, dict]:
 def anchor_ids(pairs_by_class: dict, corpus: dict, c_items: list[dict],
                bars: dict) -> list[str]:
     """Frozen anchor RULE (bars.stability.anchors.rule): deterministic picks,
-    no cherry-picking surface."""
+    no cherry-picking surface. Strata are filled in order (two-sided,
+    one-sided, camera), each taking the first lexicographic n>=4 class NOT
+    already picked — as written in draft.7 the rule produced 5 ids
+    (air_bending led two strata) and its own n=6 assertion refused; the dedup
+    makes the frozen rule executable without changing any pick semantics."""
+    taken: set[str] = set()
+
     def first(pred):
-        return next((c for c in sorted(pairs_by_class)
-                     if pred(corpus["classes"][c])), None)
+        c = next((c for c in sorted(pairs_by_class)
+                  if c not in taken and pred(corpus["classes"][c])), None)
+        if c is not None:
+            taken.add(c)
+        return c
     ts = first(lambda v: v["sidedness"] == "twosided" and v["n_clips"] >= 4)
     os_ = first(lambda v: v["sidedness"] == "onesided" and v["n_clips"] >= 4)
     cam = first(lambda v: "camera" in v.get("tags", []) and v["n_clips"] >= 4)
@@ -178,7 +187,19 @@ def main() -> int:
     extractor.free(); tracker.free()
 
     # ---- Block B score + grade ---------------------------------------------------------
+    # Every step from here on funnels failures into `crashed` so the record is
+    # ALWAYS written (draft.7's driver died at the anchor rule and the record
+    # had to be assembled post-hoc — never again).
     crashed = []
+
+    def safe(name, fn, default):
+        try:
+            return fn()
+        except Exception as e:  # noqa: BLE001 — recorded loudly, run continues
+            crashed.append(f"{name}: {type(e).__name__}: {e}")
+            return default
+
+    GRADER_CRASH = {"pass": False, "reason": "grader crashed (see bar8.crashes)"}
     try:
         sib_items = run_score(man_dir / "siblings.json", "cert_siblings", out, "auto")
     except subprocess.CalledProcessError as e:
@@ -193,11 +214,11 @@ def main() -> int:
         rows.update(load_rows(sib_items))
     if probe_items:
         rows.update(load_rows(probe_items))
-    g_sib = probes.grade_siblings(rows, classes, bars)
-    g_ctl = probes.grade_controls(rows, classes, bars)
-    g_spl = probes.grade_splices(rows, classes, bars)
-    g_rev = probes.grade_reversal(rev_pairs, cams, rev_cams, bars)
-    g_m3 = probes.grade_m3_panel(rows, classes, bars)
+    g_sib = safe("grade_siblings", lambda: probes.grade_siblings(rows, classes, bars), GRADER_CRASH)
+    g_ctl = safe("grade_controls", lambda: probes.grade_controls(rows, classes, bars), GRADER_CRASH)
+    g_spl = safe("grade_splices", lambda: probes.grade_splices(rows, classes, bars), GRADER_CRASH)
+    g_rev = safe("grade_reversal", lambda: probes.grade_reversal(rev_pairs, cams, rev_cams, bars), GRADER_CRASH)
+    g_m3 = safe("grade_m3_panel", lambda: probes.grade_m3_panel(rows, classes, bars), GRADER_CRASH)
 
     # ---- Block C -----------------------------------------------------------------------
     log("Block C: archives")
@@ -227,12 +248,16 @@ def main() -> int:
 
     twin_ids = [f"exp_057__{t}" for t in
                 blockc.copy_twin_ids(v2_paths["exp_057"] / "manifest_scoring.json")]
-    g_twin = blockc.grade_copy_twins(c_rows, twin_ids)
-    bridge = {name: blockc.bridge_v2_v3(run_dir / "items.jsonl",
-                                        {k.split("__", 1)[1]: v for k, v in c_rows.items()
-                                         if k.startswith(name + "__")})
-              for name, run_dir in v2_paths.items()}
-    dists = blockc.arm_distributions(list(c_rows.values()))
+    g_twin = safe("grade_copy_twins", lambda: blockc.grade_copy_twins(c_rows, twin_ids),
+                  GRADER_CRASH)
+    bridge = safe("bridge_v2_v3", lambda: {
+        name: blockc.bridge_v2_v3(run_dir / "items.jsonl",
+                                  {k.split("__", 1)[1]: v for k, v in c_rows.items()
+                                   if k.startswith(name + "__")})
+        for name, run_dir in v2_paths.items()}, "not computed — crashed")
+    dists = safe("arm_distributions",
+                 lambda: blockc.arm_distributions(list(c_rows.values())),
+                 "not computed — crashed")
 
     # ---- Block D -----------------------------------------------------------------------
     log("Block D: stability")
@@ -244,10 +269,10 @@ def main() -> int:
                                     tolerance=bars["stability"]["bar8"]["warm_max_abs_delta"])
         except subprocess.CalledProcessError as e:
             crashed.append(f"warm rerun: {e}")
-        anchors = anchor_ids(pairs, corpus, e57_items, bars)
-        anchor_man = [it for it in (sib_man + c_items) if it["item_id"] in anchors]
-        (man_dir / "anchors.json").write_text(json.dumps(anchor_man, indent=1))
         try:
+            anchors = anchor_ids(pairs, corpus, e57_items, bars)
+            anchor_man = [it for it in (sib_man + c_items) if it["item_id"] in anchors]
+            (man_dir / "anchors.json").write_text(json.dumps(anchor_man, indent=1))
             cold_jsonl = run_score(man_dir / "anchors.json", "cert_anchors_cold", out,
                                    "auto", cache_dir=str(out / "cold_cache"))
             base = {i: r for i, r in {**rows, **c_rows}.items() if i in anchors}
@@ -255,8 +280,8 @@ def main() -> int:
             base_path.write_text("\n".join(json.dumps(r) for r in base.values()))
             cold_cmp = compare_runs(base_path, cold_jsonl,
                                     tolerance=bars["stability"]["bar8"]["anchors"]["reproduction_tolerance"])
-        except subprocess.CalledProcessError as e:
-            crashed.append(f"cold anchors: {e}")
+        except Exception as e:  # noqa: BLE001 — the record must still be written
+            crashed.append(f"cold anchors: {type(e).__name__}: {e}")
 
     floors = {}
     for side in ("twosided", "onesided"):
@@ -267,9 +292,15 @@ def main() -> int:
         floors[side] = {"mean": float(np.mean(vals)), "n": len(vals)} if vals else None
 
     # ---- verdicts + record ---------------------------------------------------------------
-    bar8 = {"no_crash": not crashed, "crashes": crashed,
+    # error rows count against no_crash: per-item isolation keeps the DATA of
+    # the other bars alive, but an item that cannot score is still an
+    # instrument failure and must gate exactly as a crash did.
+    error_rows = {i: r["error"] for i, r in {**rows, **c_rows}.items() if r.get("error")}
+    bar8 = {"no_crash": bool(not crashed and not error_rows),
+            "crashes": crashed, "error_rows": error_rows,
             "warm": warm_cmp, "cold_anchors": cold_cmp,
-            "pass": bool(not crashed and warm_cmp and warm_cmp["pass"]
+            "pass": bool(not crashed and not error_rows
+                         and warm_cmp and warm_cmp["pass"]
                          and cold_cmp and cold_cmp["pass"])}
     verdicts = {
         "bar1_m1a_floor": exam_res["bar1"]["pass"],
