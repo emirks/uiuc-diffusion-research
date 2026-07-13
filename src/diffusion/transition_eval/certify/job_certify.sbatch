@@ -12,8 +12,8 @@
 #SBATCH --time=06:00:00
 #SBATCH --output=outputs/eval/certification/slurm-%j.log
 
-set -euo pipefail
-source ~/.bashrc                      # $LAB cache redirections
+source ~/.bashrc                      # $LAB cache redirections (before set -u:
+set -euo pipefail                     # /etc/bashrc trips on unbound BASHRCSOURCED)
 module load anaconda3/2024.10
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate "$LAB/envs/diffusion"
