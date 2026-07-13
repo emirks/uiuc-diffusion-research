@@ -153,7 +153,8 @@ def prep(cert: pathlib.Path) -> dict:
     return data
 
 
-HTML = r"""<title>transition-eval __VER__ — results explorer</title>
+HTML = r"""<meta charset="utf-8">
+<title>transition-eval __VER__ — results explorer</title>
 <style>
 :root{
   --bg:#F6F6F3; --surface:#FFFFFF; --ink:#21262B; --muted:#64707A;
@@ -464,14 +465,18 @@ function hero(){
   const floor=DATA.exam.bar1.acc_min;
   s+=`<line x1="${X(floor)}" y1="20" x2="${X(floor)}" y2="70" stroke="${css('--bad')}" stroke-dasharray="4 3"/>
       <text x="${X(floor)}" y="14" font-size="11" text-anchor="middle" fill="${css('--bad')}">bar-1 floor ${floor}</text>`;
-  const lanes={}; // avoid label collisions: alternate above axis
-  METRICS.forEach((m,i)=>{
+  const ms=[...METRICS].sort((a,b)=>DATA.metrics[a].acc-DATA.metrics[b].acc);
+  const lx={};                       // greedy label spread per lane (min 95px gap)
+  ms.forEach((m,i)=>{const lane=i%2, want=X(DATA.metrics[m].acc);
+    lx[m]=Math.max(want, (lx['_'+lane]||-1e9)+95); lx['_'+lane]=lx[m];});
+  ms.forEach((m,i)=>{
     const a=DATA.metrics[m].acc, star=m==='m1a__v3_sided';
-    const y=70, ly=[36,52][i%2];
-    s+=`<line x1="${X(a)}" y1="${ly+4}" x2="${X(a)}" y2="${y-5}" stroke="${css('--line')}"/>
+    const y=70, ly=[34,52][i%2];
+    s+=`<line x1="${X(a)}" y1="${ly+4}" x2="${lx[m]}" y2="${ly+4}" stroke="${css('--line')}"/>
+      <line x1="${X(a)}" y1="${ly+4}" x2="${X(a)}" y2="${y-5}" stroke="${css('--line')}"/>
       <circle cx="${X(a)}" cy="${y}" r="${star?6:4.5}" fill="${star?css('--acc'):css('--surface')}"
         stroke="${css('--acc')}" stroke-width="1.6"/>
-      <text x="${X(a)}" y="${ly}" font-size="11" text-anchor="middle"
+      <text x="${lx[m]}" y="${ly}" font-size="11" text-anchor="middle"
         ${star?`fill="${css('--acc')}" font-weight="600"`:''}>${esc(MLABEL[m].split(' · ')[1])} ${fmt(a,3)}</text>`;
   });
   $('#heroAxis').innerHTML=s+'</svg>';
@@ -651,7 +656,8 @@ function r1r2(){
     s+=`<circle cx="${X(a)}" cy="${Y(b)}" r="${4+DATA.n_by_class[c]/4}"
       fill="${dev?css('--bad'):css('--acc')}" fill-opacity="0.55" stroke="${dev?css('--bad'):css('--acc')}">
       <title>${esc(c)} · R1 ${fmt(a,2)} / R2 ${fmt(b,2)} · n=${DATA.n_by_class[c]}</title></circle>`;
-    if(dev) s+=`<text x="${X(a)+10}" y="${Y(b)+4}" font-size="11" fill="${css('--bad')}">${esc(c)}</text>`;});
+    if(dev){const right=X(a)>w-110;
+      s+=`<text x="${X(a)+(right?-10:10)}" y="${Y(b)+4}" font-size="11" text-anchor="${right?'end':'start'}" fill="${css('--bad')}">${esc(c)}</text>`;}});
   $('#r1r2').innerHTML=s+'</svg>';
 }
 function r2strip(){
@@ -735,9 +741,9 @@ function spliceStrip(){
   const lanes={honest:34,verbatim:84,perturbed:124};
   let s=svgEl(w,h);
   const cal=DATA.calibration;
-  [[cal.initial,'τ 0.88'],[cal.recalibrated,'τ→ '+fmt(cal.recalibrated,3)]].forEach(([t,lab],i)=>{
+  [[cal.initial,'τ 0.88','end'],[cal.recalibrated,'τ→ '+fmt(cal.recalibrated,3),'start']].forEach(([t,lab,anc],i)=>{
     s+=`<line x1="${X(t)}" y1="14" x2="${X(t)}" y2="${h-24}" stroke="${css('--warn')}" stroke-dasharray="${i?'5 3':'2 3'}"/>
-      <text x="${X(t)}" y="${10}" font-size="10.5" text-anchor="middle" fill="${css('--warn')}">${lab}</text>`;});
+      <text x="${X(t)+(anc==='end'?8:-8)}" y="${10}" font-size="10.5" text-anchor="${anc==='end'?'start':'end'}" fill="${css('--warn')}">${lab}</text>`;});
   Object.entries(lanes).forEach(([gname,y])=>{
     s+=`<text x="${x0-8}" y="${y+4}" font-size="11" text-anchor="end">${gname}</text>`;
     all.filter(a=>a.g===gname).forEach((a,k)=>{
@@ -871,7 +877,10 @@ function bridgeTable(){
   const br=DATA.blockc_meta.bridge;
   let rows='';
   Object.entries(br).forEach(([run,v])=>{
-    Object.entries(v.pairs||{}).forEach(([pair,p])=>{
+    const pairs=Object.entries(v.pairs||{}).filter(([,p])=>p.n>0);
+    if(!pairs.length){
+      rows+=`<tr><td class="mono">${esc(run)}</td><td class="kv" colspan="3">no shared items (all excluded)</td></tr>`;return;}
+    pairs.forEach(([pair,p])=>{
       rows+=`<tr><td class="mono">${esc(run)}</td><td class="mono">${esc(pair)}</td>
         <td class="num">${p.n}</td><td class="num">${fmt(p.spearman,3)}</td></tr>`;});});
   $('#bridgeTable').innerHTML=`<table><thead><tr><th>run</th><th>v2 → v3 pair</th>
