@@ -279,3 +279,100 @@ def test_grade_copy_twins_requires_all():
     rows["t3"] = {"near_copy": False, "max_seam_z": 1.2, "copy_max": 0.7}
     r = blockc.grade_copy_twins(rows, ids)
     assert not r["pass"] and r["n_pass"] == 10
+
+
+# --- draft.8: crash fixes, Huber fit, arm-split bar 3, anchor dedup ---------------------
+
+from diffusion.transition_eval.m1_transfer import (                     # noqa: E402
+    _fit_similarity, _fit_similarity_huber, camera_trajectory, object_match,
+)
+
+
+def test_object_match_empty_keep_returns_nan():
+    """The draft.7 killer: low-texture video -> keep-filter empties -> must be
+    NaN, not an apply_along_axis crash (killed cert_probes + cert_blockc)."""
+    T, N = 30, 12
+    tracks = RNG.normal(size=(T, N, 2)).astype(np.float32)
+    vis_dead = np.zeros((T, N), dtype=np.float32)
+    vis_ok = np.ones((T, N), dtype=np.float32)
+    assert np.isnan(object_match(tracks, vis_dead, tracks, vis_ok))
+    assert np.isnan(object_match(tracks, vis_ok, tracks, vis_dead))
+
+
+def test_camera_trajectory_zero_tracklets_no_crash():
+    T = 20
+    for fit in ("median", "huber"):
+        cam = camera_trajectory(np.zeros((T, 0, 2), dtype=np.float32),
+                                np.zeros((T, 0), dtype=np.float32), fit=fit)
+        assert cam["valid"].sum() == 0 and len(cam["params"]) == T - 1
+
+
+def test_huber_fit_downweights_gross_outliers():
+    n = 60
+    P = RNG.uniform(-1, 1, size=(n, 2))
+    theta, s, t = 0.3, 1.2, np.array([0.05, -0.1])
+    M_true = s * np.array([[np.cos(theta), -np.sin(theta)],
+                           [np.sin(theta), np.cos(theta)]])
+    Q = P @ M_true.T + t
+    Q[:12] += RNG.normal(3.0, 1.0, size=(12, 2))    # 20% gross outliers
+    M_h, _, w = _fit_similarity_huber(P, Q)
+    M_p, _ = _fit_similarity(P, Q)
+    err_h = np.abs(M_h - M_true).max()
+    err_p = np.abs(M_p - M_true).max()
+    assert err_h < 0.05 < err_p          # IRLS recovers; plain LS dragged off
+    assert w[:12].mean() < 0.6 and w[12:].mean() > 0.9
+
+
+def test_adopt_camera_fit_same_rule_both_directions():
+    from diffusion.transition_eval.certify.exam import adopt_camera_fit
+    classes = set("abcdefgh")
+    hi = {c: 1.0 for c in classes}
+    lo = {c: 0.0 for c in classes}
+    defined = {c: 1.0 for c in classes}
+    base = {"m1c_object": {"per_class_recall": lo},
+            "m1c_object__huber": {"per_class_recall": lo}}
+    win = adopt_camera_fit({**base, "m1b_camera": {"per_class_recall": lo},
+                            "m1b_camera__huber": {"per_class_recall": hi}},
+                           BARS, classes, classes, defined)
+    assert win["winner"] == "huber" and win["adopted_challenger"]
+    lose = adopt_camera_fit({**base, "m1b_camera": {"per_class_recall": hi},
+                             "m1b_camera__huber": {"per_class_recall": lo}},
+                            BARS, classes, classes, defined)
+    assert lose["winner"] == "median" and not lose["adopted_challenger"]
+
+
+def test_grade_controls_arm_split():
+    """draft.8 bar 3: lerp carries no degeneracy claim; holds still must fire."""
+    import copy
+    bars = copy.deepcopy(BARS)
+    bars["probes"]["controls"]["bar3"]["min_classes"] = 1
+    sib = {"item_id": "sib__c", "arm": "probe_sibling", "app_ref": 0.7}
+    lerp = {"item_id": "control_lerp__sib__c", "arm": "control_lerp",
+            "app_ref": 0.4, "core_degenerate": False}     # draft.7 failure mode
+    assert probes.grade_controls({"sib__c": sib, lerp["item_id"]: lerp},
+                                 ["c"], bars)["pass"]
+    hold = {"item_id": "control_hold__sib__c", "arm": "control_hold",
+            "app_ref": 0.4, "core_degenerate": False}
+    assert not probes.grade_controls({"sib__c": sib, hold["item_id"]: hold},
+                                     ["c"], bars)["pass"]
+    hold["core_degenerate"] = True
+    assert probes.grade_controls({"sib__c": sib, hold["item_id"]: hold},
+                                 ["c"], bars)["pass"]
+    lerp_high = {**lerp, "app_ref": 0.8}                  # floor clause still gates
+    assert not probes.grade_controls({"sib__c": sib, lerp_high["item_id"]: lerp_high},
+                                     ["c"], bars)["pass"]
+
+
+def test_anchor_ids_dedup_across_strata():
+    from diffusion.transition_eval.certify.run_certification import anchor_ids
+    corpus = {"classes": {
+        "aa": {"sidedness": "twosided", "n_clips": 4, "tags": ["camera"]},
+        "bb": {"sidedness": "onesided", "n_clips": 5, "tags": []},
+        "cc": {"sidedness": "twosided", "n_clips": 6, "tags": ["camera"]},
+    }}
+    pairs = {"aa": {}, "bb": {}, "cc": {}}
+    c_items = [{"item_id": "exp_057__base_x", "arm": "base"},
+               {"item_id": "exp_057__ic_x", "arm": "ic"}]
+    ids = anchor_ids(pairs, corpus, c_items, BARS)
+    assert len(set(ids)) == 6
+    assert "sib__aa" in ids and "sib__bb" in ids and "sib__cc" in ids

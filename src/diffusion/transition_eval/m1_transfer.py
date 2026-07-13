@@ -10,10 +10,11 @@ M1b camera match — per-step robust similarity-transform fit on tracklets
 M1c object match — Yatim-style MFS velocity-direction correlation on RESIDUAL
                    velocities after removing the M1b global fit per step.
 
-Robust weighting for the M1b fit is a 2-round median trim — PRIMARY per the
-O7 pre-registered conditional (SPEC §6.1): a Huber fallback is examined under
-the same adoption rule only if camera-stratum exam recall lands below the
-trust floor. No other weighting schemes enter.
+Robust weighting for the M1b fit: 2-round median trim (primary) or Huber
+IRLS (O7 secondary). The draft.7 exam triggered the O7 conditional
+(camera-stratum mean recall 0.346 < 0.5), so draft.8 examines Huber under
+the SAME pre-registered adoption rule; the exam's winner is what score.py
+deploys (--camera-fit). No other weighting schemes enter.
 
 Pure numpy; GPU only upstream (tracking/features). Unit-tested synthetically.
 """
@@ -53,6 +54,37 @@ def _fit_similarity(P: np.ndarray, Q: np.ndarray) -> tuple[np.ndarray, np.ndarra
     return M, t
 
 
+def _fit_similarity_weighted(P: np.ndarray, Q: np.ndarray,
+                             w: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Weighted closed form of _fit_similarity (Huber IRLS inner step)."""
+    ws = w.sum() + 1e-12
+    Pm, Qm = (w[:, None] * P).sum(axis=0) / ws, (w[:, None] * Q).sum(axis=0) / ws
+    Pc, Qc = P - Pm, Q - Qm
+    denom = (w[:, None] * Pc ** 2).sum() + 1e-12
+    a = (w[:, None] * Pc * Qc).sum() / denom
+    b = (w * (Pc[:, 0] * Qc[:, 1] - Pc[:, 1] * Qc[:, 0])).sum() / denom
+    M = np.array([[a, -b], [b, a]])
+    t = Qm - M @ Pm
+    return M, t
+
+
+def _fit_similarity_huber(P: np.ndarray, Q: np.ndarray, iters: int = 5,
+                          k: float = 1.345) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Huber IRLS similarity fit — the O7 pre-registered SECONDARY scheme,
+    examined under the same adoption rule only because the draft.7 exam
+    landed camera-stratum mean recall 0.346 < 0.5. MAD-scaled residuals,
+    standard k=1.345. Returns (M, t, final_weights)."""
+    M, t = _fit_similarity(P, Q)
+    w = np.ones(len(P))
+    for _ in range(iters):
+        res = np.linalg.norm(Q - (P @ M.T + t), axis=1)
+        s = 1.4826 * np.median(res) + 1e-12
+        u = res / (k * s)
+        w = np.where(u <= 1.0, 1.0, 1.0 / u)
+        M, t = _fit_similarity_weighted(P, Q, w)
+    return M, t, w
+
+
 def _smooth_tracks(tracks: np.ndarray) -> np.ndarray:
     """Box-smooth along time (same protocol as v2 motion) to kill sub-pixel jitter."""
     T = len(tracks)
@@ -62,15 +94,26 @@ def _smooth_tracks(tracks: np.ndarray) -> np.ndarray:
     return np.apply_along_axis(lambda x: np.convolve(x, kern, mode="valid"), 0, pad)
 
 
-def camera_trajectory(tracks: np.ndarray, vis: np.ndarray) -> dict:
+def camera_trajectory(tracks: np.ndarray, vis: np.ndarray, fit: str = "median") -> dict:
     """Per-step global (camera) motion from tracklets.
 
-    tracks [T,N,2] in normalized coords, vis [T,N]. Returns
+    tracks [T,N,2] in normalized coords, vis [T,N]. fit: 'median' (2-round
+    median trim, primary) or 'huber' (IRLS, O7 secondary — deployed only if
+    the exam's pre-registered adoption rule selects it). Returns
       params  [T-1, 4]  (dx, dy, dlog_scale, dtheta) per step — NaN where invalid
       Ms, ts            the fitted transforms (for residualization)
       n_points [T-1]    points used per step
       valid    [T-1]    fit had >= MIN_FIT_POINTS after trimming
     """
+    if fit not in ("median", "huber"):
+        raise ValueError(f"unknown fit scheme {fit!r}")
+    if tracks.shape[1] == 0:
+        T = len(tracks)
+        return {"params": np.full((T - 1, 4), np.nan, dtype=np.float32),
+                "Ms": np.tile(np.eye(2, dtype=np.float32), (T - 1, 1, 1)),
+                "ts": np.zeros((T - 1, 2), dtype=np.float32),
+                "n_points": np.zeros(T - 1, dtype=int),
+                "valid": np.zeros(T - 1, dtype=bool)}
     tr = _smooth_tracks(tracks)
     T = len(tr)
     params = np.full((T - 1, 4), np.nan, dtype=np.float32)
@@ -82,13 +125,17 @@ def camera_trajectory(tracks: np.ndarray, vis: np.ndarray) -> dict:
         P, Q = tr[s][ok], tr[s + 1][ok]
         if len(P) < MIN_FIT_POINTS:
             continue
-        M, t = _fit_similarity(P, Q)
-        # robust placeholder (O7): one trimmed refit on residual outliers
-        res = np.linalg.norm(Q - (P @ M.T + t), axis=1)
-        keep = res <= TRIM_FACTOR * (np.median(res) + 1e-9)
-        if keep.sum() >= MIN_FIT_POINTS and keep.sum() < len(P):
-            M, t = _fit_similarity(P[keep], Q[keep])
-        n_pts[s] = int(keep.sum()) if keep.sum() >= MIN_FIT_POINTS else int(len(P))
+        if fit == "huber":
+            M, t, w = _fit_similarity_huber(P, Q)
+            n_pts[s] = int((w >= 0.5).sum())
+        else:
+            M, t = _fit_similarity(P, Q)
+            # median trim (primary): one trimmed refit on residual outliers
+            res = np.linalg.norm(Q - (P @ M.T + t), axis=1)
+            keep = res <= TRIM_FACTOR * (np.median(res) + 1e-9)
+            if keep.sum() >= MIN_FIT_POINTS and keep.sum() < len(P):
+                M, t = _fit_similarity(P[keep], Q[keep])
+            n_pts[s] = int(keep.sum()) if keep.sum() >= MIN_FIT_POINTS else int(len(P))
         Ms[s], ts[s] = M, t
         a, b = M[0, 0], M[1, 0]
         center_disp = Q.mean(axis=0) - P.mean(axis=0)   # interpretable translation
@@ -135,9 +182,9 @@ def _residual_directions(tracks: np.ndarray, vis: np.ndarray, cam: dict,
     step — same gating protocol as v2 motion (visibility, per-duration speed
     floor, moving fraction), so M1c differs from v2 M2 ONLY by residualization."""
     keep = vis.mean(axis=0) >= min_vis
+    if keep.sum() == 0:   # low-texture video (splice loops, near-static gens):
+        return np.zeros((0, n_steps, 2), dtype=np.float32)  # -> object_match NaN
     tr, vs = _smooth_tracks(tracks[:, keep, :]), vis[:, keep]
-    if tr.shape[1] == 0:
-        return np.zeros((0, n_steps, 2), dtype=np.float32)
     T = len(tr)
     v = np.diff(tr, axis=0)                                     # [T-1, N, 2]
     pred = np.einsum("sij,snj->sni", cam["Ms"], tr[:-1]) + cam["ts"][:, None, :] - tr[:-1]

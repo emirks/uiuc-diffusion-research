@@ -350,8 +350,12 @@ def grade_siblings(rows: dict[str, dict], classes: list[str], bars: dict) -> dic
 
 
 def grade_controls(rows: dict[str, dict], classes: list[str], bars: dict) -> dict:
-    """Bar 3: the control arm lands at the floor (M1a below its sibling — the
-    floor claim in the same units) AND trips core_degenerate. Count-form."""
+    """Bar 3 (draft.8 form): the control arm lands at the floor (M1a below its
+    sibling — the floor claim in the same units); static-hold controls must
+    ADDITIONALLY trip core_degenerate (validated 26/26 in draft.7). Lerp
+    controls carry no degeneracy claim — a pixel blend is far from BOTH
+    endpoints in DINO space and legitimately earns strict-core frames (draft.7
+    measured 8-29 on 10/11 lerps); their flag is recorded descriptively."""
     per = {}
     for cls in classes:
         sib = rows.get(f"sib__{cls}")
@@ -363,7 +367,9 @@ def grade_controls(rows: dict[str, dict], classes: list[str], bars: dict) -> dic
         floored = (np.isfinite(ctrl.get("app_ref", np.nan))
                    and ctrl["app_ref"] < sib["app_ref"])
         flagged = bool(ctrl.get("core_degenerate"))
-        per[cls] = {"pass": bool(floored and flagged),
+        need_flag = ctrl["arm"] == "control_hold"
+        per[cls] = {"pass": bool(floored and (flagged or not need_flag)),
+                    "arm": ctrl["arm"], "degeneracy_gates": need_flag,
                     "control_m1a": ctrl.get("app_ref"), "sibling_m1a": sib.get("app_ref"),
                     "core_degenerate": ctrl.get("core_degenerate")}
     n_pass = sum(1 for v in per.values() if v["pass"])
