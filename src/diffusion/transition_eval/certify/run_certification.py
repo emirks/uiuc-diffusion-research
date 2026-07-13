@@ -32,7 +32,7 @@ from ..pipeline import process_video_file
 from . import blockc, exam, probes
 from .stability import compare_runs
 
-REPO_ROOT = pathlib.Path(__file__).resolve().parents[3]
+REPO_ROOT = pathlib.Path(__file__).resolve().parents[4]  # .../certify/ -> repo
 BARS_PATH = pathlib.Path(__file__).parent / "bars.yaml"
 
 CLAIMS = ("the instrument separates the styles it has seen (per-class trust map "

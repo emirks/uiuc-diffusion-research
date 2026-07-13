@@ -42,7 +42,7 @@ from .pipeline import process_video, process_video_file
 from .s_structure import core_mask_v3, structure_flags
 from .video_io import load_frames
 
-REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
+REPO_ROOT = pathlib.Path(__file__).resolve().parents[3]  # src/diffusion/transition_eval/ -> repo
 SHORT_SIDE = versioning.PINS["feature_short_side"]
 
 
