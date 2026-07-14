@@ -29,10 +29,19 @@ Kill rules honored are results, not failures (OPERATIONS §7).
   `distance_matrices.npz` (sha256 verified) through the frozen exam kernel.
 - `m1a__v3_sided` rebuilt from warm bundles with deployed code: **max|Δ| = 0.0**
   (bitwise).
-- The certified shared cache was **verifiably untouched** throughout: 1933 entries,
-  952 MB, newest mtime unchanged, **zero files touched**. Corpus reads go through a
-  `ReadOnlyExtractor` whose `extract()` raises, so polluting it is impossible by
-  construction rather than by discipline.
+- The workbench wrote **nothing** to the certified shared cache. Corpus reads go
+  through a `ReadOnlyExtractor` whose `extract()` raises, so polluting it is
+  impossible by construction rather than by discipline; the GPU job printed a
+  before/after cache canary and both read **1933 entries, 0 files touched**.
+
+  **Disclosed for accuracy:** the shared cache *did* grow later in the day — 1933 →
+  2233 entries, 300 files written between 12:58 and 13:03. That is **not** the
+  workbench. It coincides exactly with the owner's own `exp060_score` job
+  (12:57:43 → 13:03:18), and the certified harness writes feature caches into
+  `outputs/eval/cache` by design when scoring new generations. **All 223 corpus cache
+  entries this run depends on are untouched** (mtimes 2026-07-08), and the incumbent
+  bitwise round-trip **still reproduces `max|Δ| = 0.0`** against the frozen npz after
+  the fact. Every number in this report therefore stands.
 
 ### Amendment A4 — the drafted stratum recalls do not exist
 

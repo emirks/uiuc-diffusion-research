@@ -312,45 +312,58 @@ def cmd_acceptance(args) -> int:
     D_b = curves.distance_matrix(m1b_z)
     lab = np.array(labels)
 
-    # ---- test 2: injected-trajectory recovery -------------------------------
-    inj_rows, excluded = [], []
-    base_clips = []
-    for k in man["static_clips"]:
-        i = fkeys.index(k)
-        core = fits["core_pairs"][i]
-        below = float((tex[i][core] < tex_min).mean()) if tex is not None else 0.0
-        if below > m1b_flow.MAX_UNDEFINED_CORE:
-            excluded.append({"clip": k, "frac_core_pairs_below_texture_gate": below,
-                             "reason": "base clip is texture-gated by the frozen §3.2 "
-                                       "rule; not a valid constructed-truth substrate"})
-            log(f"  EXCLUDED base clip {k}: {below:.0%} of core pairs below the frozen "
-                f"texture gate")
-            continue
-        base_clips.append(k)
+    # ---- test 2: injected-trajectory recovery (LADDER + ORACLE, advisor C5-R) --
+    from . import probe_ladder
+    ladder = json.loads((paths.WB_OUT / "phase1/probe_ladder.json").read_text())
+    oracle = ladder["oracle_detail"]
 
-    noise = []
+    inj_rows, excluded, cells = [], [], {}
+    base_clips = [k for k in man["static_clips"]]
+    for sk in man.get("base_clips_skipped_texture", []):
+        excluded.append({"clip": sk["clip"],
+                         "frac_core_pairs_below_texture_gate": sk["frac_below_gate"],
+                         "reason": "base clip is texture-gated by the frozen §3.2 rule; "
+                                   "not a valid constructed-truth substrate"})
+
     for k in base_clips:
         for kind in man["inject_kinds"]:
-            z = np.load(build_probes.probe_path("inj", k, kind))
-            flow = z["flow"].astype(np.float32)
-            truth = z["truth"]
-            valid = z["valid"] if "valid" in z.files else None
-            traj = m1b_flow.clip_camera_trajectory(flow, valid=valid)
-            g = acceptance.grade_injection(traj["params"], truth, traj["defined"])
-            # noise floor: channels the trajectory NEVER moves are pure noise
-            for ci, nm in enumerate(m1b_flow.PARAM_NAMES):
-                if not g["params"][nm]["graded"]:
-                    v = traj["params"][:len(truth), ci][traj["defined"][:len(truth)]]
-                    if v.size:
-                        noise.append({"clip": k, "kind": kind, "channel": nm,
-                                      "sigma": float(np.nanstd(v))})
-            inj_rows.append({"clip": k, "kind": kind, "pass": g["pass"],
-                             "n_graded": g["n_graded"], "params": g["params"],
-                             "valid_frac": (float(valid.mean()) if valid is not None
-                                            else 1.0)})
-            log(f"  inject {kind:9s} {k[:26]:26s} pass={str(g['pass']):5s} "
+            by_rung, defined_by_rung = {}, {}
+            for rung in man["rungs"]:
+                z = np.load(build_probes.probe_path("inj", k, kind, rung))
+                flow = z["flow"].astype(np.float32)
+                truth = z["truth"]
+                valid = z["valid"] if "valid" in z.files else None
+                traj = m1b_flow.clip_camera_trajectory(flow, valid=valid)
+                # DEFINEDNESS under the FROZEN §3.2 gates (40% inlier on the valid
+                # region; > 30% undefined -> the row is undefined)
+                undef = float(1.0 - traj["defined"].mean())
+                defined_by_rung[rung] = bool(undef <= m1b_flow.MAX_UNDEFINED_CORE)
+                g = acceptance.grade_injection(traj["params"], truth, traj["defined"])
+                by_rung[rung] = {
+                    "pass": g["pass"], "n_graded": g["n_graded"], "params": g["params"],
+                    "undefined_frac": undef, "defined": defined_by_rung[rung],
+                    "valid_area_frac": (float(valid.mean()) if valid is not None else 1.0),
+                    "oracle_valid": bool(oracle[f"{k}|{kind}"][rung]["valid"]),
+                }
+            # THE ANTI-GAMING GUARD: rung selection sees ONLY the oracle simulation and
+            # the frozen-gate definedness. The metric's recovered parameters are not an
+            # argument to select_verdict_rung and cannot be.
+            orc = {r: {"valid": by_rung[r]["oracle_valid"]} for r in man["rungs"]}
+            sel = probe_ladder.select_verdict_rung(orc, defined_by_rung)
+            cells[f"{k}|{kind}"] = {"verdict_rung": sel["rung"],
+                                    "exclusion_reason": sel["reason"],
+                                    "by_rung": by_rung}
+            vr = sel["rung"]
+            if vr is None:
+                excluded.append({"clip": k, "kind": kind, "reason": sel["reason"]})
+                log(f"  inject {kind:9s} {k[:24]:24s} EXCLUDED — {sel['reason'][:60]}")
+                continue
+            row = by_rung[vr]
+            inj_rows.append({"clip": k, "kind": kind, "verdict_rung": vr, **row})
+            log(f"  inject {kind:9s} {k[:24]:24s} @{vr} pass={str(row['pass']):5s} "
+                f"valid_area={row['valid_area_frac']:.2f}  "
                 + "  ".join(f"{n}: r={v['corr']:.3f} amp={v['amp_err']:.3f}"
-                            for n, v in g["params"].items() if v["graded"]))
+                            for n, v in row["params"].items() if v["graded"]))
     inj_pass = bool(inj_rows) and all(r["pass"] for r in inj_rows)
 
     # ---- test 1: reversal ----------------------------------------------------
@@ -407,11 +420,19 @@ def cmd_acceptance(args) -> int:
                 "of either = fix or stop; the exam is not run on a metric that fails "
                 "constructed truth.",
         "injected_trajectory": {
-            "pass": inj_pass, "n": len(inj_rows), "rows": inj_rows,
-            "base_clips_used": base_clips, "base_clips_excluded": excluded,
-            "amplitudes": man.get("inject_amplitudes"),
+            "pass": inj_pass, "n_verdict_cells": len(inj_rows),
+            "verdict_rows": inj_rows,
+            "all_cells_all_rungs": cells,
+            "base_clips_used": base_clips, "excluded": excluded,
+            "rungs": man.get("rungs"),
+            "amplitudes_by_rung": man.get("inject_amplitudes_by_rung"),
             "amplitude_derivation": man.get("amplitude_derivation"),
-            "measured_noise_floor_unmoved_channels": noise,
+            "sigma_per_substrate_channel": ladder["sigma_per_substrate_channel"],
+            "verdict_rung_rule": "the HIGHEST rung that is both ORACLE-VALID and "
+                                 "DEFINED under the frozen §3.2 gates. "
+                                 "select_verdict_rung() reads ONLY the oracle sim and "
+                                 "the frozen-gate definedness — never the metric's "
+                                 "recovered parameters.",
             "thresholds": {"corr_min": acceptance.CORR_MIN,
                            "amp_err_max": acceptance.AMP_ERR_MAX,
                            "statistic": "amp_err = |max|recovered| - max|truth||/max|truth| "
