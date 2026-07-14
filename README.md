@@ -8,6 +8,16 @@ Use this repository to run disciplined, reproducible diffusion research. Treat i
 - `experiments/` is where hypotheses are tested.
 - `notes/` and `papers_drafts/` capture reasoning and communication.
 
+## Evaluation harness (transition-eval v3 — CERTIFIED `eval/v3.0.0`)
+
+All transition-generation scoring goes through the one certified instrument in
+`src/diffusion/transition_eval/` (`score.py` is the only scorer). Start at
+`notes/eval_harness_v3.md` (the map); the authoritative spec is
+`src/diffusion/transition_eval/SPEC.md`; committed certification records live
+in `src/diffusion/transition_eval/certifications/`. Certified numbers require
+a clean checkout at the `eval/v3.0.0` tag — anything else is stamped
+UNCERTIFIED by design.
+
 ## Folder scope (main folders)
 - `data/`: datasets and derived data used by experiments.
 - `src/`: reusable library code (core diffusion/video logic).

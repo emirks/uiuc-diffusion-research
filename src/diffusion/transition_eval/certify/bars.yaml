@@ -1,0 +1,183 @@
+# Pre-registered certification bars — machine-readable mirror of SPEC §6 (O3).
+#
+# 3.0.0 REVISION 2026-07-14, owner decisions at the draft.8 inspection
+# (closed list, nothing else rides along). Exactly TWO bar edits, and both
+# are OUTCOME-AWARE — the draft.8 numbers were on the table when the owner
+# decided, so neither counts as pre-registration for the draft.8 data; they
+# re-register for future runs, and the record states this in so many words:
+#   (1) bar 1 keeps ONLY the d >= 1.5 conjunct. The accuracy conjunct
+#       (>= 0.80) is DELETED: its floor was calibrated on the 47-clip /
+#       11-style v2 corpus (chance 0.213) and was never re-derived for the
+#       223-clip / 39-class exam (chance 0.067). The surviving d conjunct
+#       was pre-registered in draft.7/draft.8 and passed there (d 1.522)
+#       BEFORE this deletion. Accuracy remains reported, descriptive.
+#   (2) draft.8's bars 2 and 3 MERGE into one bar 2 — they gated the same
+#       inequality (sibling app_ref > control app_ref) from opposite sides.
+#       Form: per n>=4-eligible class, sibling > control AND M2a silent on
+#       the sibling; ALL eligible classes must pass (the old 35/37 and
+#       37/39 count floors were arbitrary headroom; eligibility reuses the
+#       exam's n>=4 trust convention). DISCLOSED PLAINLY: nature_bloom
+#       (n=2), draft.8's only floor inversion and bar-2 miss, leaves the
+#       denominator under this rule; its residual risk is documented in the
+#       record's nature_bloom / lerp blind-spot note. core_degenerate is
+#       removed from the certification bar path ENTIRELY — no conjunct, no
+#       silent per-class logging (owner: it was smoke-only; dead code in a
+#       certified instrument is worse than no code). The flag itself remains
+#       a live output of S (row flag, mask-adoption criterion, Block C
+#       descriptive rates) — those consumers are not certification gates.
+# Draft.8 history (2026-07-13) retained in git; this file's draft.8 header
+# documented the bar-3 conjunct removal and anchor dedup now folded above.
+status: FROZEN
+frozen: true      # re-frozen 2026-07-14 (3.0.0 revision, own commit);
+                  # changes henceforth = new version + re-run
+
+principles:
+  truth_only: "hard bars only on constructed or human-verified truth; model-behavior
+    statements are descriptive, never gating"
+  fail_forward: "failed cert -> diagnose -> new draft -> re-freeze -> full re-run"
+  two_kind_calibration: "corpus-only calibration (fallback delta/k, reversal
+    enumeration, sibling pair selection, anchor rule) may run pre-freeze;
+    outcome-coupled calibration (tau_copy) runs post-freeze under the frozen
+    midpoint rule"
+
+exam:                                # Block A (SPEC 6.1)
+  readouts:
+    r1_clip_level:
+      metrics: [m1a_appearance, m1b_camera, m1c_object]
+      form: "LOO 1-NN retrieval + cohens_d; deployed clip-to-clip statistics, IMPORTED"
+    r2_pool_level:
+      metrics: [m2b_intrusion]
+      form: "LOO class-pool margin classification via m2_integrity.intrusion_margin
+        (clip excluded from its own pool). R1 trust does NOT transfer to M2b."
+  trust:
+    min_class_n: 4                   # n<4 auto-untrusted; singletons excluded, permanently untrusted
+    trust_min_recall: 0.5            # v2 exam-validated convention (exp_053)
+    m1c_min_definedness: 0.5         # recall over <half-defined same-class pairs is not trust
+    min_ceiling_clips: 4             # carried from v2 (sibling-context eligibility)
+  variants:
+    core_mask: [v2_envelope, v3_sided, all_frames]
+    motion: [v2_mfs_incumbent, v3_decomposed]
+  adoption:                          # pre-registered; applied mechanically by exam.py
+    form: "one-sided exact binomial sign test on per-class recall, n>=4 classes
+      of the target stratum (one-sided classes for the mask; camera classes for
+      motion); non-tied classes only"
+    alpha: 0.05                      # standard; count-margin forms rejected as arbitrary
+    overall_tolerance: 0.02          # ~4.5 clips of 223 — plausible retrieval noise
+    regression_guard: "no previously-trusted class drops below trust_min_recall"
+    mask_nondegenerate_min: 0.80     # real one-sided clips genuinely dissolve A; 20%
+                                     # headroom for shallow/subtle effects (STRICT core)
+    m1c_overall_guard_drop: 0.10     # decomposed M1c median recall on defined classes
+                                     # may trail incumbent by at most this
+    motion_contingency: "if v3_decomposed is not adopted, incumbent MFS ships as
+      the single headline motion metric; M1b/M1c demote to analysis tier"
+  o7_conditional: "median-trim is primary; Huber IRLS examined under the SAME
+    adoption rule iff camera-stratum mean recall < trust_min_recall (new draft
+    version; pre-registered secondary analysis; no other weighting schemes)"
+  bar1_m1a_floor:                    # d ONLY (3.0.0, owner decision — see header).
+    d_min: 1.5                       # pre-registered since draft.7; passed at 1.522
+                                     # before the accuracy conjunct was deleted.
+                                     # Accuracy is reported descriptively, ungated.
+
+probes:                              # Block B (SPEC 6.2) — all scored by score.py
+  siblings:
+    audit: all_within_class_pairs_n_ge_2   # cached-feature statistics -> content-
+                                           # invariance audit (descriptive)
+    bar_pair: max_endpoint_distance        # per class, deterministic from cached
+                                           # features (corpus-only, pre-freeze)
+    bar2:                            # MERGED draft.8 bars 2+3 (3.0.0, owner decision —
+                                     # they gated the same inequality from both sides)
+      form: "per n>=4-eligible class: sibling M1a > its control arm's M1a AND
+        M2a silent (near_copy false) on the sibling; ALL eligible classes
+        must pass — no count headroom"
+      eligibility_min_n: 4           # the exam's existing trust convention; a 2-clip
+                                     # class yields one pair, no distributional basis.
+                                     # Ineligible classes stay scored + reported.
+  controls:
+    arms: {twosided: lerp, onesided: static_hold}
+                                     # controls are construction spec; they are graded
+                                     # inside bar2 (sibling > control), not separately
+  copy_splices:
+    construction: "reference NON-CORE frames into a centered gen-mid segment
+      (core-frame splices sit outside M2a's comparison pool: pinned)"
+    per_class: 1                     # 37 verbatim + 37 perturbed = 74 splices
+    segment_frames: 24               # ~1s of literal copied content mid-video
+    perturbation:                    # exactly ONE deterministic level (re-rendered proxy)
+      crop_frac: 0.90                # center-crop to 90%, resize back
+      color_gains: [1.08, 0.95, 1.02]  # fixed per-channel gains — no RNG anywhere
+    honest_set: bar_pair_sibling_m2a # independent real footage provably does not
+                                     # copy its reference; max-distance pairs avoid
+                                     # shared-scene contamination
+    tau_copy_initial: 0.88           # v2 check-C carryover; detection graded at this
+    bar4:
+      detect_all: true               # 100% of splices, verbatim AND perturbed
+      min_gap: 0.05                  # cosine units, splice_min - honest_max; a
+                                     # touching-distributions midpoint is garbage
+    tau_rule: "tau_copy := midpoint(splice_min, honest_max); SET here, TESTED by
+      bar7; a bar7 miss = new draft version, never a tau nudge"
+  reversal:
+    eligibility: "camera-tagged bar pairs where BOTH clips are reversal-sensitive;
+      sensitivity enumerated analytically from deployed trajectories
+      (params negated + time-reversed) — corpus-only, pre-freeze"
+    sensitivity_dtw_min: 0.5         # z-unit banded DTW of a clip vs its own reverse;
+                                     # palindromic moves score ~0 and are excluded
+    bar5:
+      form: "cam_corr(gen, ref) > cam_corr(gen, reversed ref) per pair"
+      n_signtest_min: 8              # >=8 pairs -> sign test; below, all must drop
+      alpha: 0.05
+  m3_panel:
+    bar6_endpoint_swap:
+      form: "true prefix_dino > wrong-CLASS prefix_dino (cross-class swaps only)"
+      min_classes: 35                # of 37; coincidental first-frame resemblance headroom
+    bar6_hard_cut:
+      form: "constructed cut at the handoff fires max_seam_z > 3"
+      min_classes: 35                # of 37
+
+realism:                             # Block C (SPEC 6.3) — archives, descriptive
+  bar7_copy_twins:
+    flagged: "11/11"                 # human-verified copy-regime base twins (exp_057 §4a)
+    flags: "near_copy OR max_seam_z > 3"
+  descriptive_only: [per_arm_distributions, flag_rates, m2b_margins, v2_v3_bridge]
+  exclusions: "unconvertible archived items are excluded LOUDLY and enumerated
+    in the record — never silently dropped"
+
+stability:                           # Block D (SPEC 6.4)
+  bar8:
+    no_crash: "every planned A-D item scores without crash; per-item ERROR
+      ROWS (draft.8 isolation — one bad item no longer kills a stage's data)
+      count against this clause exactly as crashes do"
+    warm_max_abs_delta: 1.0e-6       # LPIPS is recomputed every run; strict byte
+                                     # identity across GPU kernels is not a property
+                                     # the instrument has (v2 twin-job precedent: 1e-7)
+    anchors:
+      n: 6
+      rule: "deterministic picks, no cherry-surface: strata filled in order
+        (two-sided, one-sided, camera), each taking the FIRST lexicographic
+        n>=4 class NOT already picked (draft.8 dedup — draft.7's wording
+        produced 5 ids and its own assertion refused), plus the two-sided
+        sibling's lerp control, first exp_057 base item, first exp_057 ic item"
+      reproduction_tolerance: 0.04   # raw units, fresh cache (exp_057 §4c precedent)
+  calibration_outputs: [tau_copy, core_fallback_delta_k, sidedness_floors,
+                        reversal_sensitive_set, sigma_seed]
+  sigma_seed:
+    items: 12
+    seeds: 5
+    arm: adapter                     # the decision-generating arm; base assumed
+                                     # same-family, documented in the record
+    df_statement: pooled             # ~48 df pooled; never imply stratified precision
+    gates: first_model_report_not_tag
+
+record:                              # certifications/v<X.Y>.md required contents
+  required: [bars_sha, per_bar_verdicts, trust_map_recall_and_definedness,
+             content_invariance_audit, archive_distributions, v2_v3_bridge,
+             calibration_constants_with_provenance, anchor_values,
+             corpus_hash_and_artifact_pointers, claims_paragraph_verbatim]
+  content_invariance:
+    form: "within-class partial corr of style-sim (deployed M1a on core frames)
+      vs endpoint/content-sim, pooled after per-class centering, ALL sibling pairs"
+    expectation: "~0 (DINO is content-heavy; M1a claims style)"
+    alarm_level: 0.4                 # noted in record, NON-GATING
+    gating: false
+
+judge:
+  certification: exempt              # advisory until human-calibrated (O9)
+  human_bar: "Spearman >= 0.8 vs human labels on 50-100 items"
