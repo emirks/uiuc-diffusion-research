@@ -417,3 +417,80 @@ Probes rebuilt at all three rungs with per-channel amplitudes in their own units
 rung in the cache key (a key that ignored it would silently pair the first
 construction's flow with the second's ground truth), and exact border-validity masks.
 `max|·|`, 0.9/10%, the §3.2 gates, the aggregation rule and gates.yaml: untouched.
+
+---
+
+## C6 — 2026-07-14 14:05 · the terminal §3.4 verdict (STOP), and three corrections to my own reading
+
+**THREE COUNT-CORRECTIONS TO THE EXECUTOR'S SUMMARY, logged as corrections rather
+than silently repaired.** I reported the numbers wrong; the advisor reconstructed
+them from `acceptance.json` directly:
+
+1. Injected verdict cells: **29/35 PASS**, not 28. The passing envelope is
+   amp_err **0.0004–0.0996**, corr **0.9618–0.9998** — one passing cell sits within
+   0.0004 of the 0.10 bound. (I had written "typically 0.002–0.062".)
+2. Reversal leg B (descriptor distance): **passes 22/33**, fails 11. **I inverted
+   it.** The 11/33 I quoted is the JOINT row-level pass
+   (parameter_negation AND descriptor_distance).
+3. The dominant single killer of reversal rows is **leg A2**, not leg B. Leg A2 (the
+   per-channel negation-correlation floor of 0.90 over Bar-5-sensitive channels)
+   passes only **17/33**; of the 16 failures the minimum-correlation channel is
+   **rotation in 10, ty in 4, log_scale in 2**. All 33 graded rows pass leg A1
+   (closer-to-negated). My claim that "leg B's failure is exactly the z-norm blind
+   spot" is NOT supported by the artifact and must not appear as a mechanism claim in
+   any record.
+
+**Direction received — STOP, CONFIRMED.**
+- **The mixed case is a STOP.** Three verdict cells (mystification zoom 0.118 vs
+  post-hoc oracle median 0.055; mystification pan_zoom 0.117/0.138 vs 0.069/0.084;
+  saint_glow pan_zoom 0.119 vs 0.067) fail at rungs the POST-HOC oracle passes with
+  margin, under each probe's own realized σ. Under the C5-R pre-commitment those are
+  the metric failing constructed truth, and the frozen all-graded-must-pass
+  aggregation makes test 2 FAIL on validly-constructed cells alone.
+- **The 3 noise-limited cells are NOT re-run.** The fork's return path exists so a
+  metric verdict never rests on invalid construction; here the verdict rests entirely
+  on cells whose construction validity is post-hoc CONFIRMED. A third construction
+  could touch only the noise-limited cells, and under the frozen aggregation no
+  outcome of that work can change the verdict — construction expenditure with no
+  decision downstream, barred by C5's one-construction rule read with §9. **The
+  verdict is monotone under any reclassification of those 3 cells:** reclassifying any
+  as metric failures adds failures; excluding all three leaves 3 failures among 32
+  validly-constructed cells. Both directions STOP. This matters because two of the
+  noise-limited calls are razor-thin (post-hoc oracle median amp_err 0.1025 for
+  gas_transformation_4 ty and 0.1047 for wireframe_5 tx, against the 0.10 line) — the
+  record states those numbers AND states that the verdict does not depend on the
+  classification.
+- **Reversal leg B is a real measurement and fails the frozen form.** The advisor
+  checked the construction for a third defect and found none: the reversed flow comes
+  from actually-reversed frames, both descriptors now pass through the same corpus
+  scaler (the C5 z-scale bug is fixed), the within-class median uses finite same-label
+  distances, and §1.5 NaN discipline is correct (57 ungradable, counted, never
+  failed). The 11 failing clips sit at ratio **0.36–0.88** of their median
+  within-class distance to their own reverse. Leg B's form is frozen verbatim
+  (gates.yaml `descriptor_distance_exceeds: median_within_class_distance`), so
+  **reversal FAILS on leg B alone, independent of A2.**
+- **Leg A2 is DISCLOSED, NOT ADJUDICATED.** The 0.90 floor is frozen in gates.yaml
+  only under `injected_trajectory`; applying it to reversal negation correlations is
+  an executor operationalization, applied to real-clip channels whose amplitudes are
+  uncontrolled. The 16 failures cluster on the corpus's lowest-amplitude channel
+  (rotation, corpus p50 |Δ| = 0.00089/pair) — the structural signature of the very
+  noise-floor phenomenon C5-R demonstrated at p50. But **no oracle-validity guard was
+  pre-registered for reversal, and building one now, after watching the leg fail, is
+  exactly what the pre-commitment forbids.** It is also unnecessary: reversal does not
+  rest on A2 (leg B fails independently), and §3.4 does not rest on reversal (injected
+  fails independently). The record reports the full three-way decomposition with the
+  amplitude context beside it, attaches NO mechanism claim, and assigns the A2
+  sensitivity question to owner-side review (the C3 band_disclosure template).
+
+**PRE-DECLARED COMPUTATIONS (declared here before computing):** post-hoc oracle over
+ALL 35 verdict cells (no verdict column; a pass at a noise-limited rung remains a
+pass and is never relabelled); the reversal leg-A2 context table (per graded
+clip×channel: negation corr, channel Bar-5 DTW, the clip's own per-pair |Δc|
+median/max, corpus p50/p90 reference, identity σ); the leg-B per-clip table surfaced
+into the record; and the ungradable-reason breakdown.
+
+**Action taken.** STOP recorded. The Phase 1 exam is NOT run. M1b_flow and M1c_flow
+remain analysis-tier; no second attempt this cycle (§3.6, §9). Both constructions
+stay in the record. Prohibited from every record, per this ruling: "on the metric's
+own account", "unlucky", "would have passed if", and any mechanism attribution for
+the leg-B failures.
