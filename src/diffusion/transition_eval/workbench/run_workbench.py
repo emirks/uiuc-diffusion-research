@@ -168,13 +168,193 @@ def cmd_fit_motion(args) -> int:
     return 0
 
 
+# --- Phase 1: acceptance (§3.4) then the exam (§3.5/§3.6) ---------------------
+
+def _descriptors(keys, sidedness, bs, gates, tex, fits):
+    """m1b and m1c clip descriptors under the FROZEN gates."""
+    from . import flowcache
+
+    eps = gates["phase1"]["m1c_flow"]["energy_gate_epsilon"]
+    tex_min = gates["phase1"]["m1b_flow"]["min_pair_texture"]
+    m1b, m1c = [], []
+    for i, k in enumerate(keys):
+        flow = flowcache.load_clip_flow(paths.clip_path(k), paths.WB_CACHE).astype(np.float32)
+        traj = {"params": fits["params"][i], "defined": fits["defined"][i].copy(),
+                "inlier_frac": fits["inlier_frac"][i]}
+        if tex is not None:
+            traj["defined"] &= (tex[i] >= tex_min)          # §3.2 low-texture gate
+        core = fits["core_pairs"][i]
+        m1b.append(m1b_flow.clip_descriptor(traj, core))
+        m1c.append(m1c_flow.clip_curve(flow, traj, core, eps))
+    return m1b, m1c
+
+
+def cmd_phase1(args) -> int:
+    from . import acceptance, curves, flowcache
+
+    corpus, keys, labels, sidedness, gates, facts = _context()
+    if gates["phase1"]["m1c_flow"]["energy_gate_epsilon"] is None:
+        log("REFUSING: gates.yaml m1c_flow.energy_gate_epsilon is null. The §3.3 "
+            "calibration must be chosen from the corpus residual distribution and "
+            "FROZEN in its own commit before the exam runs.")
+        return 1
+    bs = bundles.load_corpus_bundles(keys)
+    fits = np.load(paths.WB_OUT / "phase1/camera_fits.npz")
+    tex_p = paths.WB_CACHE / "texture.npz"
+    tex = np.load(tex_p)["pair_texture"] if tex_p.exists() else None
+
+    log("building descriptors under the frozen gates")
+    m1b_raw, m1c_raw = _descriptors(keys, sidedness, bs, gates, tex, fits)
+    m1b_z = m1b_flow.corpus_descriptors(m1b_raw)
+    m1c_z = m1c_flow.corpus_descriptors(m1c_raw)
+    log(f"m1b_flow defined {sum(d['defined'] for d in m1b_raw)}/{len(keys)}; "
+        f"m1c_flow defined {sum(d['defined'] for d in m1c_raw)}/{len(keys)} "
+        f"({sum(d['n_gated'] for d in m1c_raw)} frames energy-gated)")
+
+    D_b = curves.distance_matrix(m1b_z)
+    D_c = curves.distance_matrix(m1c_z)
+
+    # ---- §3.4 ACCEPTANCE: both must pass BEFORE the exam runs ----------------
+    acc_path = paths.WB_OUT / "phase1/acceptance.json"
+    if not acc_path.exists():
+        log("REFUSING: §3.4 acceptance has not been graded. The exam is not run on "
+            "a metric that has not faced constructed truth. Run `acceptance` first.")
+        return 1
+    acc = json.loads(acc_path.read_text())
+    if not acc["pass"]:
+        log("§3.4 ACCEPTANCE FAILED — the exam is NOT run on a metric that fails "
+            "constructed truth (RUNBOOK §3.4). Recording and stopping.")
+        (paths.WB_OUT / "phase1" / "VERDICT.json").write_text(json.dumps({
+            "phase": 1, "status": "STOPPED at §3.4 acceptance",
+            "exam_run": False, "acceptance": acc}, indent=1))
+        return 0
+    log("§3.4 acceptance PASSED — the exam may run")
+
+    # ---- exam (frozen kernel) ------------------------------------------------
+    out = paths.WB_OUT / "phase1"
+    results = {}
+    for name, D, raws, stratum in (("m1b_flow", D_b, m1b_raw, "camera"),
+                                   ("m1c_flow", D_c, m1c_raw, "object")):
+        reasons = [d["reason"] for d in raws]
+        r = exam.evaluate(name, D, keys, labels, gates, facts, reasons, stratum)
+        inc = {"cohens_d": gates["phase1"]["adoption"][name]["beat_cohens_d"]}
+        v = exam.verdict_vs_incumbent(r, inc, gates, stratum)
+        r["verdict"] = v
+        results[name] = r
+        log(exam.summary_line(r))
+        sr = r["stratum_recalls"][stratum]
+        log(f"    {stratum}-stratum recall {sr['value']:.5f} vs incumbent "
+            f"{gates['stratum_targets'][stratum]['value']:.5f} "
+            f"({sr['n_classes']} eligible classes, {sr['n_classes_nan']} NaN)")
+        log(f"    §3.6 all conditions pass: {v['all_pass']}")
+        exam.save(out, name, D, r, {"verdict": v, "acceptance": acc})
+
+    (out / "VERDICT.json").write_text(json.dumps({
+        "phase": 1, "status": "exam run", "exam_run": True,
+        "acceptance": acc,
+        "verdicts": {n: r["verdict"] for n, r in results.items()},
+        "note": "Each §3.6 condition is a computed FACT. The adoption call is "
+                "owner-side (OPERATIONS §8).",
+    }, indent=1, default=str))
+    log(f"wrote {out / 'VERDICT.json'}")
+    return 0
+
+
+def cmd_acceptance(args) -> int:
+    """§3.4 — reversal + injected-trajectory, on constructed truth."""
+    from . import acceptance, build_probes, curves, flowcache
+
+    corpus, keys, labels, sidedness, gates, facts = _context()
+    bs = bundles.load_corpus_bundles(keys)
+    fits = np.load(paths.WB_OUT / "phase1/camera_fits.npz")
+    fkeys = [str(k) for k in fits["keys"]]
+    man = json.loads((paths.WB_CACHE / "probes/manifest.json").read_text())
+    tex_p = paths.WB_CACHE / "texture.npz"
+    tex = np.load(tex_p)["pair_texture"] if tex_p.exists() else None
+
+    # ---- test 2: injected-trajectory recovery -------------------------------
+    inj_rows = []
+    for k in man["static_clips"]:
+        for kind in man["inject_kinds"]:
+            p = build_probes.probe_path("inj", k, kind)
+            z = np.load(p)
+            flow = z["flow"].astype(np.float32)
+            truth = z["truth"]
+            traj = m1b_flow.clip_camera_trajectory(flow)
+            g = acceptance.grade_injection(traj["params"], truth, traj["defined"])
+            inj_rows.append({"clip": k, "kind": kind, "pass": g["pass"],
+                             "n_graded": g["n_graded"], "params": g["params"]})
+            log(f"  inject {kind:9s} {k[:28]:28s} pass={g['pass']} "
+                + "  ".join(f"{n}: r={v['corr']:.3f} amp={v['amp_err']:.3f}"
+                            for n, v in g["params"].items() if v["graded"]))
+    inj_pass = all(r["pass"] for r in inj_rows)
+
+    # ---- test 1: reversal ----------------------------------------------------
+    eps = gates["phase1"]["m1c_flow"]["energy_gate_epsilon"]
+    tex_min = gates["phase1"]["m1b_flow"]["min_pair_texture"]
+    m1b_raw, _ = _descriptors(keys, sidedness, bs, gates, tex, fits) if eps is not None \
+        else (None, None)
+    m1b_z = m1b_flow.corpus_descriptors(m1b_raw)
+    D_b = curves.distance_matrix(m1b_z)
+    lab = np.array(labels)
+
+    rev_rows = []
+    for k in man["reversed_clips"]:
+        i = fkeys.index(k)
+        fwd = {"params": fits["params"][i], "defined": fits["defined"][i]}
+        if not acceptance.reversal_sensitive(fwd["params"], fwd["defined"]):
+            rev_rows.append({"clip": k, "graded": False,
+                             "reason": "palindromic / not reversal-sensitive"})
+            continue
+        z = np.load(build_probes.probe_path("rev", k))
+        rtraj = m1b_flow.clip_camera_trajectory(z["flow"].astype(np.float32))
+        core = fits["core_pairs"][i]
+        rdesc = m1b_flow.clip_descriptor(rtraj, core[::-1])
+        same = np.flatnonzero((lab == labels[i]))
+        same = same[same != i]
+        within = [D_b[i, j] for j in same if np.isfinite(D_b[i, j])]
+        med = float(np.median(within)) if within else float("nan")
+        g = acceptance.grade_reversal(fwd, rtraj, m1b_z[i],
+                                      rdesc["curve"] if rdesc["defined"] else None, med)
+        rev_rows.append({"clip": k, "graded": True, "pass": g["pass"],
+                         "parameter_negation": g["parameter_negation"],
+                         "descriptor_distance": g["descriptor_distance"]})
+    graded_rev = [r for r in rev_rows if r.get("graded")]
+    rev_pass = bool(graded_rev and all(r["pass"] for r in graded_rev))
+    log(f"  reversal: {sum(r['pass'] for r in graded_rev)}/{len(graded_rev)} graded "
+        f"clips pass (of {len(rev_rows)} camera-tagged; "
+        f"{len(rev_rows) - len(graded_rev)} not reversal-sensitive)")
+
+    out = {
+        "rule": "RUNBOOK §3.4 — both tests must pass before the exam runs. Failure "
+                "of either = fix or stop; the exam is not run on a metric that fails "
+                "constructed truth.",
+        "injected_trajectory": {"pass": inj_pass, "n": len(inj_rows), "rows": inj_rows,
+                                "thresholds": {"corr_min": acceptance.CORR_MIN,
+                                               "amp_err_max": acceptance.AMP_ERR_MAX}},
+        "reversal": {"pass": rev_pass, "n_graded": len(graded_rev),
+                     "n_total": len(rev_rows), "rows": rev_rows},
+        "pass": bool(inj_pass and rev_pass),
+    }
+    p = paths.WB_OUT / "phase1/acceptance.json"
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(out, indent=1, default=str))
+    log(f"§3.4 ACCEPTANCE: injected={inj_pass} reversal={rev_pass} -> "
+        f"{'PASS — exam may run' if out['pass'] else 'FAIL — exam is NOT run'}")
+    log(f"wrote {p}")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("e1")
     sub.add_parser("fit-motion")
+    sub.add_parser("acceptance")
+    sub.add_parser("phase1")
     args = ap.parse_args()
-    return {"e1": cmd_e1, "fit-motion": cmd_fit_motion}[args.cmd](args)
+    return {"e1": cmd_e1, "fit-motion": cmd_fit_motion,
+            "acceptance": cmd_acceptance, "phase1": cmd_phase1}[args.cmd](args)
 
 
 if __name__ == "__main__":
