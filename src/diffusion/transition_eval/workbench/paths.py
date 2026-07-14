@@ -38,6 +38,24 @@ DINO_MODEL = "facebook/dinov2-base"
 FEATURE_SHORT_SIDE = 256
 
 
+GATES = pathlib.Path(__file__).parent / "gates.yaml"
+
+
+def load_gates(require_frozen: bool = True) -> dict:
+    """The frozen numeric gates. The driver REFUSES to run an exam against
+    unfrozen gates — the same reflex as certify/exam.py's frozen-bars check.
+    Running a candidate against gates that could still move would de-register
+    them, which is the one thing pre-registration exists to prevent."""
+    import yaml
+
+    g = yaml.safe_load(GATES.read_text())
+    if require_frozen and not g.get("frozen"):
+        raise RuntimeError(
+            "workbench/gates.yaml is not frozen (frozen: false) — freeze the "
+            "gates before running any candidate (OPERATIONS §4 item 6).")
+    return g
+
+
 def load_corpus() -> dict:
     return json.loads(CORPUS_MANIFEST.read_text())
 
