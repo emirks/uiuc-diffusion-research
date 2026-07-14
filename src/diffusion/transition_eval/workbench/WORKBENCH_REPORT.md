@@ -252,8 +252,13 @@ after its result was known.
 - **No frozen number was changed at any point, in either cycle.** `gates.yaml` is
   byte-identical since `8c38833`; `certify/bars.yaml` is untouched; the `eval/v3.0.0` tag
   (`50c0270`) was never reopened.
-- **Zero files outside `workbench/` were modified on this branch.** The certified package
-  is byte-identical.
+- **The certified package is byte-identical.** Inside
+  `src/diffusion/transition_eval/`, the number of files this branch modifies **outside**
+  `workbench/` is **zero** (verified: `git diff --name-only origin/main...HEAD --
+  src/diffusion/transition_eval/ | grep -v workbench/` → empty). The branch's complete
+  footprint is exactly four paths: `src/diffusion/transition_eval/workbench/`,
+  `outputs/eval/workbench*/` (artifacts), `tests/test_workbench*.py`, and the repo
+  `CHANGELOG.md`.
 - **155 tests pass** (139 from cycle 1 + 16 new), 1 skipped.
 - **Determinism:** the full E1′ run was executed **twice**; every gating number (all four
   arms' accuracy, Cohen's d, coverage, misretrieved; both IV accuracies) is

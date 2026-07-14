@@ -1,0 +1,83 @@
+{
+ "source": "readout of persisted acceptance.json + posthoc_oracle.json; NO re-run, NO recomputation",
+ "scope": "the 3 injected-trajectory verdict cells that FAIL where the post-hoc oracle PASSES with margin",
+ "cells": [
+  {
+   "clip": "mystification/mystification_5.mp4",
+   "kind": "pan_zoom",
+   "rung": "p90",
+   "failing_channels": [
+    "ty",
+    "log_scale"
+   ],
+   "detail": {
+    "ty": {
+     "corr": 0.9898369739388035,
+     "amp_err": 0.11717124027198052,
+     "corr_ok": true,
+     "amp_ok": false,
+     "oracle_median_amp_err": 0.06909032570839921
+    },
+    "log_scale": {
+     "corr": 0.9916665181998895,
+     "amp_err": 0.1376310005539927,
+     "corr_ok": true,
+     "amp_ok": false,
+     "oracle_median_amp_err": 0.08444321099030005
+    }
+   },
+   "channels_graded": [
+    "tx",
+    "ty",
+    "log_scale"
+   ]
+  },
+  {
+   "clip": "mystification/mystification_5.mp4",
+   "kind": "zoom",
+   "rung": "p90",
+   "failing_channels": [
+    "log_scale"
+   ],
+   "detail": {
+    "log_scale": {
+     "corr": 0.9962395106833103,
+     "amp_err": 0.1182123966325146,
+     "corr_ok": true,
+     "amp_ok": false,
+     "oracle_median_amp_err": 0.05535974953765645
+    }
+   },
+   "channels_graded": [
+    "log_scale"
+   ]
+  },
+  {
+   "clip": "saint_glow/saint_glow_3.mp4",
+   "kind": "pan_zoom",
+   "rung": "p90",
+   "failing_channels": [
+    "ty"
+   ],
+   "detail": {
+    "ty": {
+     "corr": 0.9939586887047868,
+     "amp_err": 0.11867769095106907,
+     "corr_ok": true,
+     "amp_ok": false,
+     "oracle_median_amp_err": 0.06736454935301531
+    }
+   },
+   "channels_graded": [
+    "tx",
+    "ty",
+    "log_scale"
+   ]
+  }
+ ],
+ "channel_tally": {
+  "ty": 2,
+  "log_scale": 2
+ },
+ "all_failures_are_amplitude_not_correlation": true
+}
