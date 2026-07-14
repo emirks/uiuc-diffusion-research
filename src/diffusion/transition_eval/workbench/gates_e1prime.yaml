@@ -138,9 +138,12 @@ min_d:
   percentile: 5.0              # == gates.yaml min_d.percentile (NOT re-chosen)
   space: raw                   # the persisted floor was fitted in WHITENED space and is
                                # meaningless under raw geometry -> recomputed
-  floor_value: null            # COMPUTED AND FROZEN IN ITS OWN COMMIT, before any
-                               # candidate distance exists. Corpus-only calibration:
-                               # reads the frozen corpus and nothing else.
+  floor_value: 0.603499        # FROZEN 2026-07-14 in its own commit, BEFORE any
+                               # candidate distance existed. Corpus-only calibration:
+                               # reads the frozen corpus and nothing else. 5th pct of
+                               # the raw chord distribution (min 0.3167 / p50 1.1476 /
+                               # max 1.4434) -> 12/223 clips flagged low_D.
+  n_low_D: 12
   scope: "low_D clips are FLAGGED and EXCLUDED from the gamma-signature (every channel
     divides by D) and NEVER zeroed. Coverage reported next to accuracy."
 
