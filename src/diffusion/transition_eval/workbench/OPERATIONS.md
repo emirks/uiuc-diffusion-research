@@ -7,6 +7,11 @@ adoption rule. Where they disagree, RUNBOOK wins on science, this file wins
 on paths and mechanics. The certified instrument is governed by `SPEC.md`
 and is out of scope for edits entirely.
 
+**Division of labor (binding):** this branch is executed by an
+implementation agent whose entire mandate is build → test → run → **report
+neutrally**. Interpretation, synthesis, strategy, and the §7 adoption call
+happen OUTSIDE this branch, in owner-side review. See §8.
+
 ---
 
 ## 1. Topology — what is writable, what is read-only
@@ -186,10 +191,13 @@ variant, exam, ablation, and acceptance test is CPU-on-cached-arrays
    pinned incumbent), E0 plots ride along → kill rule verdict → only on pass:
    E2 → (only if E2 adds over E1) E3 → ablations (§4.5) on the surviving
    rung → committed reports.
-6. **Final:** `WORKBENCH_REPORT.md` — every candidate vs pinned baselines,
-   coverage next to accuracy, hubness verdicts, prediction checks (§5),
-   adoption recommendation strictly per §7, and an explicit list of what was
-   NOT run and why (kill rules honored are results, not failures).
+6. **Final:** `WORKBENCH_REPORT.md` — a neutral data package: every
+   candidate vs pinned baselines, coverage next to accuracy, hubness
+   verdicts, prediction checks (§5), each §7 adoption condition computed as
+   a pass/fail FACT, and an explicit list of what was NOT run and why (kill
+   rules honored are results, not failures). NO adoption recommendation, NO
+   interpretation, NO strategy — the report ends at the facts; the catch is
+   made in owner-side review (§8).
 
 Phases 1 and 2 may interleave (both are cached-corpus work); the cache-build
 job serves both.
@@ -211,3 +219,32 @@ job serves both.
 - When blocked (owner decision, cluster failure, gate ambiguity): commit
   state, write the blocker into the running report, stop that track, continue
   any independent track.
+
+## 8. Division of labor — executor reports, reviewer concludes
+
+The executing agent's own evaluations are exactly the MECHANICAL ones:
+computing gate verdicts against frozen `gates.yaml` numbers, running the
+frozen exam kernel, checking §5 predictions as stated. Computing and stating
+those pass/fail facts is reporting, not judgment — do it fully and precisely.
+
+What the executor NEVER does, in any record, report, or commit message:
+
+- draw conclusions beyond the computed verdicts ("this suggests…", "the
+  program looks promising/dead…", "we should…");
+- recommend adoption, rejection, or next steps;
+- reframe, soften, or editorialize a result — a kill-rule fire is stated as
+  the rule text + the numbers, nothing more;
+- strategize about the paper, the v3.1 re-cert, or future cycles.
+
+The standing order that governed the draft.8 certification applies verbatim:
+**neutral report only, zero proposals — joint inspection is next.** The §7
+adoption call, all synthesis, and all strategy belong to owner-side review
+(the owner plus a separate reasoning session), which reads
+`WORKBENCH_REPORT.md` after this branch's work is complete. Reports must
+therefore be complete enough that the reviewer never needs a re-run to make
+the call — coverage, hubness, margins, and definedness sit next to every
+headline statistic, always.
+
+`IDEAS_NEXT_CYCLE.md` is the single sanctioned non-neutral file: a parking
+lot the executor may append to, clearly marked non-authoritative, never
+referenced by any record or verdict.
