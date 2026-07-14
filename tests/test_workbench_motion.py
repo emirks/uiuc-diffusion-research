@@ -258,3 +258,25 @@ def test_palindromic_move_is_excluded_from_reversal_grading():
     """A pan out and back genuinely IS its own reverse — grading it grades noise."""
     static = np.zeros((12, 4))
     assert not acceptance.reversal_sensitive(static, np.ones(12, bool))
+
+
+def test_reversal_definedness_mask_is_aligned_to_reversed_order():
+    """Index alignment: expect[j]/got[j] are the REVERSED clip's pair j, which is the
+    FORWARD clip's pair (n-1-j) inverted. The definedness mask must therefore be the
+    forward flags REVERSED. With an asymmetric undefined pattern, getting this
+    backwards silently grades the wrong pairs."""
+    T = 12
+    cum = acceptance.trajectory("pan_zoom", T + 1, amp=5.0)
+    fwd_p = acceptance.relative_params(cum)                 # varying, so misalignment shows
+    rev_p = acceptance.expected_reversed_params(fwd_p)      # an HONEST reversed fit
+
+    fdef = np.ones(T, bool)
+    fdef[:4] = False                                        # asymmetric: early pairs undefined
+    rdef = fdef[::-1].copy()                                # the same physical pairs
+
+    fwd = {"params": fwd_p, "defined": fdef}
+    rev = {"params": rev_p, "defined": rdef}
+    g = acceptance.grade_reversal(fwd, rev, np.zeros((32, 4)), np.ones((32, 4)), 0.1)
+    assert g["parameter_negation"]["pass"], g["parameter_negation"]
+    assert g["parameter_negation"]["n_pairs"] == 8          # 12 - 4, correctly aligned
+    assert g["parameter_negation"]["dist_to_negated"] < 1e-9

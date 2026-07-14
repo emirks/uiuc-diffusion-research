@@ -191,7 +191,11 @@ def grade_reversal(fwd: dict, rev: dict, descriptor_fwd: np.ndarray | None,
     its own reversal larger than the median within-class distance? If not, the
     metric cannot tell a clip from its own reverse, and any retrieval it does is
     direction-blind."""
-    both = fwd["defined"] & rev["defined"][::-1]      # pairs defined in both directions
+    # Index alignment matters and is easy to get backwards: expect[j] and got[j] are
+    # the REVERSED clip's pair j, which is the FORWARD clip's pair (n-1-j) inverted.
+    # So the definedness mask must be the forward flags REVERSED, ANDed with the
+    # reversed clip's own flags — not the other way round.
+    both = fwd["defined"][::-1] & rev["defined"]      # pairs defined in both directions
     expect = expected_reversed_params(fwd["params"])  # what an honest fit must return
     blind = fwd["params"][::-1]                       # what a DIRECTION-BLIND fit returns:
                                                       # same steps, re-ordered, NOT inverted
