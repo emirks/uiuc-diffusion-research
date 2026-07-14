@@ -28,8 +28,8 @@
 # Draft.8 history (2026-07-13) retained in git; this file's draft.8 header
 # documented the bar-3 conjunct removal and anchor dedup now folded above.
 status: FROZEN
-frozen: false     # flipped true in its own commit (re-freeze 2026-07-14,
-                  # 3.0.0 revision); changes henceforth = new version + re-run
+frozen: true      # re-frozen 2026-07-14 (3.0.0 revision, own commit);
+                  # changes henceforth = new version + re-run
 
 principles:
   truth_only: "hard bars only on constructed or human-verified truth; model-behavior
