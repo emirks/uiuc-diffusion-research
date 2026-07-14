@@ -4,10 +4,11 @@ KNOWN by construction, so the metrics are graded against truth, not vibes.
 Roster (bars.yaml `probes`):
   siblings      — all within-class pairs feed the content-invariance audit via
                   cached-feature statistics (deployed set_similarity, no full
-                  scoring); hard bars attach only to the max-endpoint-distance
-                  pair per class, which runs through full score.py (bar 2).
-  controls      — the sibling items' auto-synthesized lerp/static-hold arms:
-                  M1a floor + degeneracy/timing flags (bar 3).
+                  scoring); the hard bar attaches only to the max-endpoint-
+                  distance pair per class, which runs through full score.py
+                  together with its auto-synthesized lerp/static-hold control
+                  arm (bar 2: per n>=4-eligible class, sibling > control AND
+                  M2a silent on the sibling — draft.8's bars 2+3 merged).
   copy splices  — reference NON-CORE frames into a gen-mid segment (core-frame
                   splices sit outside M2a's comparison pool and would fail
                   spuriously); verbatim + ONE pinned deterministic perturbation
@@ -325,11 +326,20 @@ def _rows_by_id(items_jsonl: pathlib.Path) -> dict[str, dict]:
             (json.loads(l) for l in pathlib.Path(items_jsonl).read_text().splitlines() if l.strip())}
 
 
-def grade_siblings(rows: dict[str, dict], classes: list[str], bars: dict) -> dict:
-    """Bar 2: on the bar pair, M1a beats the class's own control arm AND M2a
-    stays silent. Count-form; misses documented, never rescued."""
+def grade_sibling_floor(rows: dict[str, dict], eligible: list[str], bars: dict,
+                        ineligible: dict[str, int] | None = None) -> dict:
+    """Bar 2 (owner decision 2026-07-14 — draft.8's bars 2+3 merged): per
+    n>=4-eligible class, the sibling beats its own control arm AND M2a stays
+    silent on the sibling. ALL eligible classes must pass — the old count
+    floors (35/37, 37/39) were arbitrary headroom; eligibility reuses the
+    exam's existing n>=4 trust convention (a 2-clip class yields exactly one
+    pair and no distributional basis for a hard claim). The two old bars
+    gated the SAME inequality (sibling app_ref > control app_ref) from
+    opposite sides, so the merge loses nothing; the M2a-silent conjunct is
+    bar 2's original second clause. Ineligible classes stay scored and
+    reported, never graded."""
     per = {}
-    for cls in classes:
+    for cls in eligible:
         sib = rows.get(f"sib__{cls}")
         ctrl = next((rows[k] for k in rows if k.endswith(f"__sib__{cls}")
                      and rows[k]["arm"].startswith("control")), None)
@@ -343,39 +353,10 @@ def grade_siblings(rows: dict[str, dict], classes: list[str], bars: dict) -> dic
                     "m1a_control": ctrl.get("app_ref"), "near_copy": sib.get("near_copy"),
                     "copy_max": sib.get("copy_max")}
     n_pass = sum(1 for v in per.values() if v["pass"])
-    need = bars["probes"]["siblings"]["bar2"]["min_classes"]
-    return {"pass": bool(n_pass >= need), "n_pass": n_pass, "n_classes": len(classes),
-            "min_classes": need, "per_class": per,
-            "misses": {c: v for c, v in per.items() if not v["pass"]}}
-
-
-def grade_controls(rows: dict[str, dict], classes: list[str], bars: dict) -> dict:
-    """Bar 3 (draft.8): the control arm lands at the floor — M1a below its
-    sibling, the floor claim in the same units. Count-form. The draft.7
-    core_degenerate conjunct is REMOVED (owner decision, 2026-07-13): it was
-    vacuous as a truth claim — trivially true on holds (a static hold has no
-    non-endpoint frames by construction) and legitimately false on lerps
-    (DINO places pixel blends far from both endpoints, earning a real strict
-    core). The flag stays on every row and in the exam's mask-adoption
-    criterion, where it does carry information; here it is descriptive."""
-    per = {}
-    for cls in classes:
-        sib = rows.get(f"sib__{cls}")
-        ctrl = next((rows[k] for k in rows if k.endswith(f"__sib__{cls}")
-                     and rows[k]["arm"].startswith("control")), None)
-        if sib is None or ctrl is None:
-            per[cls] = {"pass": False, "reason": "missing row"}
-            continue
-        floored = (np.isfinite(ctrl.get("app_ref", np.nan))
-                   and np.isfinite(sib.get("app_ref", np.nan))
-                   and ctrl["app_ref"] < sib["app_ref"])
-        per[cls] = {"pass": bool(floored),
-                    "control_m1a": ctrl.get("app_ref"), "sibling_m1a": sib.get("app_ref"),
-                    "core_degenerate": ctrl.get("core_degenerate")}
-    n_pass = sum(1 for v in per.values() if v["pass"])
-    need = bars["probes"]["controls"]["bar3"]["min_classes"]
-    return {"pass": bool(n_pass >= need), "n_pass": n_pass, "n_classes": len(classes),
-            "min_classes": need, "per_class": per,
+    return {"pass": bool(eligible and n_pass == len(eligible)),
+            "n_pass": n_pass, "n_eligible": len(eligible),
+            "rule": "all eligible (n>=4) classes must pass",
+            "ineligible_n_lt_4": ineligible or {}, "per_class": per,
             "misses": {c: v for c, v in per.items() if not v["pass"]}}
 
 

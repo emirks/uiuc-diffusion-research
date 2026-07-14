@@ -75,13 +75,14 @@ def fig_exam_accuracy(ana: dict, record: dict, path: pathlib.Path) -> None:
     names = list(ana["metrics"])
     accs = [ana["metrics"][m]["retrieval"]["accuracy_1nn"] for m in names]
     chance = ana["metrics"][names[0]]["retrieval"]["chance"]
-    floor = record["exam"]["bar1"]["acc_min"]
+    floor = record["exam"]["bar1"].get("acc_min")  # gone since 3.0.0 (d-only bar 1)
     fig, ax = plt.subplots(figsize=(6.4, 2.8))
     ys = range(len(names) - 1, -1, -1)
     ax.axvline(chance, color=MUTED, lw=1, ls=":")
-    ax.axvline(floor, color=BAD, lw=1, ls="--")
     ax.text(chance, len(names) - 0.3, f" chance {chance:.3f}", fontsize=8, color=MUTED)
-    ax.text(floor, len(names) - 0.3, f" bar-1 floor {floor:.2f}", fontsize=8, color=BAD)
+    if floor is not None:
+        ax.axvline(floor, color=BAD, lw=1, ls="--")
+        ax.text(floor, len(names) - 0.3, f" bar-1 floor {floor:.2f}", fontsize=8, color=BAD)
     ax.scatter(accs, list(ys), s=46, color=ACC, zorder=3)
     for a, y in zip(accs, ys):
         ax.text(a, y - 0.38, f"{a:.3f}", ha="center", fontsize=8, color=INK)

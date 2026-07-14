@@ -397,12 +397,14 @@ def run_exam(bundles: list[dict], labels: list[str], sidedness: list[str],
           "note": "if triggered: implement Huber IRLS variant, re-run this exam "
                   "under the same adoption rule (new draft version)"}
 
-    # bar 1: M1a floor on the winning variant
+    # bar 1: M1a separation floor on the winning variant — d only. The accuracy
+    # conjunct was deleted by owner decision at the draft.8 inspection with the
+    # outcome known (0.673 vs a 0.80 floor calibrated on the 11-style v2
+    # corpus); accuracy stays reported here as a descriptive statistic.
     win = r1[f"m1a__{mask_w}"]
     bar1 = {"acc": win["accuracy_1nn"], "d": win["separation_cohens_d"],
-            "acc_min": bars["exam"]["bar1_m1a_floor"]["acc_min"],
             "d_min": bars["exam"]["bar1_m1a_floor"]["d_min"]}
-    bar1["pass"] = bool(bar1["acc"] >= bar1["acc_min"] and bar1["d"] >= bar1["d_min"])
+    bar1["pass"] = bool(bar1["d"] >= bar1["d_min"])
 
     winner_r1 = {"m1a": r1[f"m1a__{mask_w}"],
                  "m1b": r1["m1b_camera"], "m1c": r1["m1c_object"]}

@@ -1,20 +1,35 @@
 # Pre-registered certification bars — machine-readable mirror of SPEC §6 (O3).
 #
-# DRAFT.8 MINIMAL REVISION 2026-07-13, after the draft.7 FAILED certification
-# (certifications/v3.0.0-draft.7.md). Scope deliberately minimal (owner
-# directive: reliability first, full data for inspection; bar reasoning
-# deferred): exactly TWO disclosed bar edits — (1) bar3 drops its
-# core_degenerate conjunct (owner: vacuous — trivially true on holds by
-# construction, legitimately false on lerps; the flag itself stays in S and
-# in the mask-adoption criterion); (2) the anchor rule gains the dedup that
-# makes it executable (draft.7's wording picked air_bending for two strata
-# and its own n=6 assertion refused). bar8's no-crash clause now also counts
-# per-item ERROR ROWS (scoring isolates per item instead of dying per stage).
-# ALL thresholds unchanged — bar1 and bar3 are expected to fail again on
-# known draft.7 arithmetic; that is intentional.
+# 3.0.0 REVISION 2026-07-14, owner decisions at the draft.8 inspection
+# (closed list, nothing else rides along). Exactly TWO bar edits, and both
+# are OUTCOME-AWARE — the draft.8 numbers were on the table when the owner
+# decided, so neither counts as pre-registration for the draft.8 data; they
+# re-register for future runs, and the record states this in so many words:
+#   (1) bar 1 keeps ONLY the d >= 1.5 conjunct. The accuracy conjunct
+#       (>= 0.80) is DELETED: its floor was calibrated on the 47-clip /
+#       11-style v2 corpus (chance 0.213) and was never re-derived for the
+#       223-clip / 39-class exam (chance 0.067). The surviving d conjunct
+#       was pre-registered in draft.7/draft.8 and passed there (d 1.522)
+#       BEFORE this deletion. Accuracy remains reported, descriptive.
+#   (2) draft.8's bars 2 and 3 MERGE into one bar 2 — they gated the same
+#       inequality (sibling app_ref > control app_ref) from opposite sides.
+#       Form: per n>=4-eligible class, sibling > control AND M2a silent on
+#       the sibling; ALL eligible classes must pass (the old 35/37 and
+#       37/39 count floors were arbitrary headroom; eligibility reuses the
+#       exam's n>=4 trust convention). DISCLOSED PLAINLY: nature_bloom
+#       (n=2), draft.8's only floor inversion and bar-2 miss, leaves the
+#       denominator under this rule; its residual risk is documented in the
+#       record's nature_bloom / lerp blind-spot note. core_degenerate is
+#       removed from the certification bar path ENTIRELY — no conjunct, no
+#       silent per-class logging (owner: it was smoke-only; dead code in a
+#       certified instrument is worse than no code). The flag itself remains
+#       a live output of S (row flag, mask-adoption criterion, Block C
+#       descriptive rates) — those consumers are not certification gates.
+# Draft.8 history (2026-07-13) retained in git; this file's draft.8 header
+# documented the bar-3 conjunct removal and anchor dedup now folded above.
 status: FROZEN
-frozen: true      # frozen 2026-07-13 (draft.8 minimal), before the second
-                  # certification run; changes henceforth = new draft + re-run
+frozen: false     # flipped true in its own commit (re-freeze 2026-07-14,
+                  # 3.0.0 revision); changes henceforth = new version + re-run
 
 principles:
   truth_only: "hard bars only on constructed or human-verified truth; model-behavior
@@ -58,9 +73,10 @@ exam:                                # Block A (SPEC 6.1)
   o7_conditional: "median-trim is primary; Huber IRLS examined under the SAME
     adoption rule iff camera-stratum mean recall < trust_min_recall (new draft
     version; pre-registered secondary analysis; no other weighting schemes)"
-  bar1_m1a_floor:
-    acc_min: 0.80                    # v2 precedent on this corpus: 0.851 — floor sits
-    d_min: 1.5                       #   below with margin (d precedent ~2.2)
+  bar1_m1a_floor:                    # d ONLY (3.0.0, owner decision — see header).
+    d_min: 1.5                       # pre-registered since draft.7; passed at 1.522
+                                     # before the accuracy conjunct was deleted.
+                                     # Accuracy is reported descriptively, ungated.
 
 probes:                              # Block B (SPEC 6.2) — all scored by score.py
   siblings:
@@ -68,22 +84,18 @@ probes:                              # Block B (SPEC 6.2) — all scored by scor
                                            # invariance audit (descriptive)
     bar_pair: max_endpoint_distance        # per class, deterministic from cached
                                            # features (corpus-only, pre-freeze)
-    bar2:
-      form: "M1a > class control AND M2a silent (near_copy false) on the bar pair"
-      min_classes: 35                # of 37 eligible: ~5% headroom for coarse class
-                                     # labels; misses documented, never rescued
+    bar2:                            # MERGED draft.8 bars 2+3 (3.0.0, owner decision —
+                                     # they gated the same inequality from both sides)
+      form: "per n>=4-eligible class: sibling M1a > its control arm's M1a AND
+        M2a silent (near_copy false) on the sibling; ALL eligible classes
+        must pass — no count headroom"
+      eligibility_min_n: 4           # the exam's existing trust convention; a 2-clip
+                                     # class yields one pair, no distributional basis.
+                                     # Ineligible classes stay scored + reported.
   controls:
     arms: {twosided: lerp, onesided: static_hold}
-    bar3:
-      form: "control app_ref below its sibling (floor in the same units)"
-                                     # draft.8: core_degenerate conjunct removed
-                                     # (owner decision — vacuous: true-by-construction
-                                     # on holds, legitimately false on lerps; flag
-                                     # stays descriptive on rows + in mask adoption)
-      min_classes: 37                # of 39 (~95%); UNCHANGED — draft.7 floor clause
-                                     # held 36/37 (nature_bloom inverts), so this is
-                                     # expected to fail again; count reasoning is
-                                     # deferred to the post-run inspection
+                                     # controls are construction spec; they are graded
+                                     # inside bar2 (sibling > control), not separately
   copy_splices:
     construction: "reference NON-CORE frames into a centered gen-mid segment
       (core-frame splices sit outside M2a's comparison pool: pinned)"

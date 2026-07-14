@@ -270,8 +270,12 @@ def main() -> int:
         rows.update(load_rows(sib_items))
     if probe_items:
         rows.update(load_rows(probe_items))
-    g_sib = safe("grade_siblings", lambda: probes.grade_siblings(rows, classes, bars), GRADER_CRASH)
-    g_ctl = safe("grade_controls", lambda: probes.grade_controls(rows, classes, bars), GRADER_CRASH)
+    min_n = bars["probes"]["siblings"]["bar2"]["eligibility_min_n"]
+    eligible = [c for c in classes if corpus["classes"][c]["n_clips"] >= min_n]
+    inelig = {c: corpus["classes"][c]["n_clips"] for c in classes if c not in eligible}
+    g_sib = safe("grade_sibling_floor",
+                 lambda: probes.grade_sibling_floor(rows, eligible, bars, inelig),
+                 GRADER_CRASH)
     g_spl = safe("grade_splices", lambda: probes.grade_splices(rows, classes, bars), GRADER_CRASH)
     g_rev = safe("grade_reversal", lambda: probes.grade_reversal(rev_pairs, cams, rev_cams, bars), GRADER_CRASH)
     g_m3 = safe("grade_m3_panel", lambda: probes.grade_m3_panel(rows, classes, bars), GRADER_CRASH)
@@ -349,8 +353,7 @@ def main() -> int:
                          and cold_cmp and cold_cmp["pass"])}
     verdicts = {
         "bar1_m1a_floor": exam_res["bar1"]["pass"],
-        "bar2_siblings": g_sib["pass"],
-        "bar3_controls": g_ctl["pass"],
+        "bar2_sibling_floor": g_sib["pass"],   # merged draft.8 bars 2+3 (3.0.0)
         "bar4_splices": g_spl["pass"],
         "bar5_reversal": g_rev["pass"],
         "bar6_m3_panel": g_m3["pass"],
@@ -372,7 +375,7 @@ def main() -> int:
     record = {"version": ver, "overall_pass": overall, "verdicts": verdicts,
               "stamp": stamp, "bars_sha256": versioning.sha256_file(BARS_PATH),
               "exam": {k: v for k, v in exam_res.items() if k != "trust_map"},
-              "grades": {"siblings": g_sib, "controls": g_ctl, "splices": g_spl,
+              "grades": {"sibling_floor": g_sib, "splices": g_spl,
                          "reversal": g_rev, "m3_panel": g_m3, "copy_twins": g_twin,
                          "bar8": bar8},
               "content_invariance": {**audit, "per_class": "see content_invariance.json",

@@ -463,9 +463,11 @@ function hero(){
   const ch=DATA.metrics[METRICS[0]].chance;
   s+=`<line x1="${X(ch)}" y1="20" x2="${X(ch)}" y2="70" stroke="${css('--muted')}" stroke-dasharray="3 3"/>
       <text x="${X(ch)}" y="14" font-size="11" text-anchor="middle">chance ${fmt(ch,3)}</text>`;
-  const floor=DATA.exam.bar1.acc_min;
-  s+=`<line x1="${X(floor)}" y1="20" x2="${X(floor)}" y2="70" stroke="${css('--bad')}" stroke-dasharray="4 3"/>
+  const floor=DATA.exam.bar1.acc_min;   // absent since 3.0.0 (bar 1 is d-only)
+  if(floor!==undefined&&floor!==null){
+    s+=`<line x1="${X(floor)}" y1="20" x2="${X(floor)}" y2="70" stroke="${css('--bad')}" stroke-dasharray="4 3"/>
       <text x="${X(floor)}" y="14" font-size="11" text-anchor="middle" fill="${css('--bad')}">bar-1 floor ${floor}</text>`;
+  }
   const ms=[...METRICS].sort((a,b)=>DATA.metrics[a].acc-DATA.metrics[b].acc);
   const lx={};                       // greedy label spread per lane (min 95px gap)
   ms.forEach((m,i)=>{const lane=i%2, want=X(DATA.metrics[m].acc);
@@ -911,15 +913,25 @@ function coldBars(){
 function barCards(){
   const V=DATA.verdicts, ex=DATA.exam, g=DATA.grades;
   const items=[
-    ['bar1_m1a_floor','M1a exam floor',`acc ${fmt(ex.bar1.acc,3)} vs ≥ ${ex.bar1.acc_min} · d ${fmt(ex.bar1.d,2)} vs ≥ ${ex.bar1.d_min}`,'#exam'],
-    ['bar2_siblings','Sibling separation',`${g.siblings.n_pass}/${g.siblings.n_classes} styles ≥ ${g.siblings.min_classes} · miss: nature_bloom`,'#probes'],
-    ['bar3_controls','Control floor',`${g.controls.n_pass}/${g.controls.n_classes} vs required ${g.controls.min_classes} · nature_bloom inverted`,'#probes'],
+    ['bar1_m1a_floor','M1a exam floor',
+      ex.bar1.acc_min!==undefined
+        ?`acc ${fmt(ex.bar1.acc,3)} vs ≥ ${ex.bar1.acc_min} · d ${fmt(ex.bar1.d,2)} vs ≥ ${ex.bar1.d_min}`
+        :`d ${fmt(ex.bar1.d,2)} vs ≥ ${ex.bar1.d_min} · acc ${fmt(ex.bar1.acc,3)} (descriptive)`,'#exam'],
+  ];
+  if(g.sibling_floor)                 // 3.0.0: merged bar 2 (old bars 2+3)
+    items.push(['bar2_sibling_floor','Sibling > control + M2a silent',
+      `${g.sibling_floor.n_pass}/${g.sibling_floor.n_eligible} eligible (n≥4) · all must pass`,'#probes']);
+  if(g.siblings)                      // pre-3.0.0 records
+    items.push(['bar2_siblings','Sibling separation',`${g.siblings.n_pass}/${g.siblings.n_classes} styles ≥ ${g.siblings.min_classes} · miss: nature_bloom`,'#probes']);
+  if(g.controls)
+    items.push(['bar3_controls','Control floor',`${g.controls.n_pass}/${g.controls.n_classes} vs required ${g.controls.min_classes} · nature_bloom inverted`,'#probes']);
+  items.push(
     ['bar4_splices','Splice detection',`74/74 at τ 0.88 · gap ${fmt(g.splices.gap,3)} ≥ 0.05`,'#probes'],
     ['bar5_reversal','Reversal sensitivity',`${g.reversal.wins}W/${g.reversal.losses}L · p 0.0176`,'#probes'],
     ['bar6_m3_panel','Swap + hard cut',`swap 37/37 · hard-cut 37/37 (z 5–234)`,'#probes'],
     ['bar7_copy_twins','Copy twins',`${g.twins.n_pass}/${g.twins.n_twins} flagged`,'#probes'],
     ['bar8_integration_determinism','Integration & determinism',`0 crashes · 0 error rows · warm Δ 0.0 · cold Δ ≤ 3.9e-4`,'#stability'],
-  ];
+  );
   $('#barCards').innerHTML=items.map(([k,t,d,href])=>{
     const p=V[k];
     return `<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline">

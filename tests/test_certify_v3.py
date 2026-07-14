@@ -231,18 +231,15 @@ def _bars_rows(cls="c"):
 def test_graders_pass_and_fail_paths():
     import copy
     bars = copy.deepcopy(BARS)
-    for key in ("siblings", "controls"):
-        bars["probes"][key][f"bar{2 if key == 'siblings' else 3}"]["min_classes"] = 1
     bars["probes"]["m3_panel"]["bar6_endpoint_swap"]["min_classes"] = 1
     bars["probes"]["m3_panel"]["bar6_hard_cut"]["min_classes"] = 1
     rows = _bars_rows()
-    assert probes.grade_siblings(rows, ["c"], bars)["pass"]
-    assert probes.grade_controls(rows, ["c"], bars)["pass"]
+    assert probes.grade_sibling_floor(rows, ["c"], bars)["pass"]
     spl = probes.grade_splices(rows, ["c"], bars)
     assert spl["pass"] and spl["tau_recalibrated"] == pytest.approx(0.5 * (0.93 + 0.62))
     assert probes.grade_m3_panel(rows, ["c"], bars)["pass"]
     bad = {**rows, f"sib__c": {**rows["sib__c"], "near_copy": True}}
-    assert not probes.grade_siblings(bad, ["c"], bars)["pass"]
+    assert not probes.grade_sibling_floor(bad, ["c"], bars)["pass"]
     bad2 = {**rows, "splice_perturbed__c": {**rows["splice_perturbed__c"], "copy_max": 0.70}}
     assert not probes.grade_splices(bad2, ["c"], bars)["pass"]
 
@@ -321,24 +318,35 @@ def test_anchor_ids_dedup_across_strata():
     assert "sib__aa" in ids and "sib__bb" in ids and "sib__cc" in ids
 
 
-def test_grade_controls_floor_only():
-    """draft.8 bar 3: the floor claim alone gates; core_degenerate is
-    descriptive (owner decision — vacuous conjunct removed)."""
-    import copy
-    bars = copy.deepcopy(BARS)
-    bars["probes"]["controls"]["bar3"]["min_classes"] = 1
-    sib = {"item_id": "sib__c", "arm": "probe_sibling", "app_ref": 0.7}
+def test_grade_sibling_floor_merged_bar():
+    """3.0.0 bar 2 (merged draft.8 bars 2+3): per eligible class, sibling >
+    control AND M2a silent; ALL eligible must pass; no core_degenerate
+    anywhere in the grade; error rows = documented misses."""
+    sib = {"item_id": "sib__c", "arm": "probe_sibling", "app_ref": 0.7,
+           "near_copy": False, "copy_max": 0.6}
     ctrl = {"item_id": "control_lerp__sib__c", "arm": "control_lerp",
-            "app_ref": 0.4, "core_degenerate": False}   # draft.7 failure mode
-    assert probes.grade_controls({"sib__c": sib, ctrl["item_id"]: ctrl},
-                                 ["c"], bars)["pass"]
-    high = {**ctrl, "app_ref": 0.8}                     # floor clause still gates
-    assert not probes.grade_controls({"sib__c": sib, high["item_id"]: high},
-                                     ["c"], bars)["pass"]
+            "app_ref": 0.4}
+    g = probes.grade_sibling_floor({"sib__c": sib, ctrl["item_id"]: ctrl},
+                                   ["c"], BARS, ineligible={"tiny": 2})
+    assert g["pass"] and g["n_pass"] == g["n_eligible"] == 1
+    assert g["ineligible_n_lt_4"] == {"tiny": 2}
+    assert "core_degenerate" not in json.dumps(g)       # removed ENTIRELY
+    high = {**ctrl, "app_ref": 0.8}                     # inverted floor
+    assert not probes.grade_sibling_floor({"sib__c": sib, high["item_id"]: high},
+                                          ["c"], BARS)["pass"]
+    loud = {**sib, "near_copy": True}                   # M2a not silent
+    assert not probes.grade_sibling_floor({"sib__c": loud, ctrl["item_id"]: ctrl},
+                                          ["c"], BARS)["pass"]
     err = {"item_id": "control_lerp__sib__c", "arm": "control_lerp",
            "error": "boom"}                             # error row = documented miss
-    assert not probes.grade_controls({"sib__c": sib, err["item_id"]: err},
-                                     ["c"], bars)["pass"]
+    assert not probes.grade_sibling_floor({"sib__c": sib, err["item_id"]: err},
+                                          ["c"], BARS)["pass"]
+    # one eligible miss fails the bar even with many passes (all-must-pass)
+    rows2 = {"sib__c": sib, ctrl["item_id"]: ctrl,
+             "sib__d": {**sib, "item_id": "sib__d"},
+             "control_lerp__sib__d": {**high, "item_id": "control_lerp__sib__d"}}
+    g2 = probes.grade_sibling_floor(rows2, ["c", "d"], BARS)
+    assert not g2["pass"] and g2["n_pass"] == 1 and list(g2["misses"]) == ["d"]
 
 
 # --- perf changes: lazy decode + parallel motion matrices (numeric no-ops) ----------
