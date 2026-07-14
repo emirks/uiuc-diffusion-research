@@ -272,8 +272,29 @@ def cmd_phase1(args) -> int:
 
 
 def cmd_acceptance(args) -> int:
-    """§3.4 — reversal + injected-trajectory, on constructed truth."""
-    from . import acceptance, build_probes, curves, flowcache
+    """§3.4 — reversal + injected-trajectory, on constructed truth.
+
+    SECOND CONSTRUCTION (advisor C5). The first construction FAILED and is committed
+    unmodified at f5d2790; the failure and its diagnosis stay in the record. The
+    frozen §3.4 thresholds (corr >= 0.9, amp err <= 10%), the max|.| amplitude
+    statistic, and the all-graded-must-pass aggregation are UNCHANGED. What is fixed
+    is the probe and the grader:
+      - the reversed descriptor is z-scored with the SAME corpus scaler as the
+        forward one (they were being compared raw-vs-scaled: a meaningless distance
+        that happened to be finite, and which FLATTERED the metric);
+      - an UNDEFINED leg is ungradable, not a failure (§1.5: undefined != zero);
+      - reversal sensitivity uses the certified Bar-5 screen (z-unit banded DTW of a
+        trajectory vs its own negated-reverse, floor 0.5 INHERITED from bars.yaml)
+        instead of a 1e-4 any-motion check that admitted clips with no direction to
+        detect;
+      - injected amplitudes are DERIVED from the corpus, not invented;
+      - the compound probe's channels use their own units (a single scalar across
+        channels put e**6 ~ 403x zoom into the "pan+zoom" probe);
+      - BORDER_REFLECT mirror pixels are excluded from the fit through §3.2's
+        "fit on its complement" pathway — they are content moving the wrong way and
+        were never part of the constructed truth.
+    """
+    from . import acceptance, build_probes, curves
 
     corpus, keys, labels, sidedness, gates, facts = _context()
     bs = bundles.load_corpus_bundles(keys)
@@ -282,15 +303,17 @@ def cmd_acceptance(args) -> int:
     man = json.loads((paths.WB_CACHE / "probes/manifest.json").read_text())
     tex_p = paths.WB_CACHE / "texture.npz"
     tex = np.load(tex_p)["pair_texture"] if tex_p.exists() else None
+    tex_min = gates["phase1"]["m1b_flow"]["min_pair_texture"]
+
+    # the corpus descriptors + THE scaler (both legs must use the same one)
+    m1b_raw = _m1b_descriptors(keys, gates, tex, fits)
+    scaler = m1b_flow.corpus_scaler(m1b_raw)
+    m1b_z = m1b_flow.corpus_descriptors(m1b_raw)
+    D_b = curves.distance_matrix(m1b_z)
+    lab = np.array(labels)
 
     # ---- test 2: injected-trajectory recovery -------------------------------
-    # The probe base clips must clear the SAME frozen gates the exam uses. A base
-    # clip the metric itself declares undefined (here: textureless) is not a valid
-    # substrate for constructed truth — grading on it would fail the acceptance test
-    # for a reason that has nothing to do with the metric's ability to recover a
-    # camera. Excluded EXPLICITLY and recorded, never silently dropped (§1.5).
-    tex_min = gates["phase1"]["m1b_flow"]["min_pair_texture"]
-    excluded = []
+    inj_rows, excluded = [], []
     base_clips = []
     for k in man["static_clips"]:
         i = fkeys.index(k)
@@ -305,66 +328,109 @@ def cmd_acceptance(args) -> int:
             continue
         base_clips.append(k)
 
-    inj_rows = []
+    noise = []
     for k in base_clips:
         for kind in man["inject_kinds"]:
-            p = build_probes.probe_path("inj", k, kind)
-            z = np.load(p)
+            z = np.load(build_probes.probe_path("inj", k, kind))
             flow = z["flow"].astype(np.float32)
             truth = z["truth"]
-            traj = m1b_flow.clip_camera_trajectory(flow)
+            valid = z["valid"] if "valid" in z.files else None
+            traj = m1b_flow.clip_camera_trajectory(flow, valid=valid)
             g = acceptance.grade_injection(traj["params"], truth, traj["defined"])
+            # noise floor: channels the trajectory NEVER moves are pure noise
+            for ci, nm in enumerate(m1b_flow.PARAM_NAMES):
+                if not g["params"][nm]["graded"]:
+                    v = traj["params"][:len(truth), ci][traj["defined"][:len(truth)]]
+                    if v.size:
+                        noise.append({"clip": k, "kind": kind, "channel": nm,
+                                      "sigma": float(np.nanstd(v))})
             inj_rows.append({"clip": k, "kind": kind, "pass": g["pass"],
-                             "n_graded": g["n_graded"], "params": g["params"]})
-            log(f"  inject {kind:9s} {k[:28]:28s} pass={g['pass']} "
+                             "n_graded": g["n_graded"], "params": g["params"],
+                             "valid_frac": (float(valid.mean()) if valid is not None
+                                            else 1.0)})
+            log(f"  inject {kind:9s} {k[:26]:26s} pass={str(g['pass']):5s} "
                 + "  ".join(f"{n}: r={v['corr']:.3f} amp={v['amp_err']:.3f}"
                             for n, v in g["params"].items() if v["graded"]))
-    inj_pass = all(r["pass"] for r in inj_rows)
+    inj_pass = bool(inj_rows) and all(r["pass"] for r in inj_rows)
 
     # ---- test 1: reversal ----------------------------------------------------
-    m1b_raw = _m1b_descriptors(keys, gates, tex, fits)   # no flow needed for m1b
-    m1b_z = m1b_flow.corpus_descriptors(m1b_raw)
-    D_b = curves.distance_matrix(m1b_z)
-    lab = np.array(labels)
-
     rev_rows = []
+    n_insensitive = n_undefined = 0
     for k in man["reversed_clips"]:
         i = fkeys.index(k)
-        fwd = {"params": fits["params"][i], "defined": fits["defined"][i]}
-        if not acceptance.reversal_sensitive(fwd["params"], fwd["defined"]):
-            rev_rows.append({"clip": k, "graded": False,
-                             "reason": "palindromic / not reversal-sensitive"})
+        fwd = {"params": fits["params"][i], "defined": _traj_of(i, gates, tex, fits)["defined"]}
+        sens = acceptance.sensitivity_dtw(fwd["params"], fwd["defined"], scaler)
+        if sens < acceptance.SENSITIVITY_DTW_MIN:
+            n_insensitive += 1
+            rev_rows.append({"clip": k, "graded": False, "sensitivity_dtw": sens,
+                             "reason": f"not reversal-sensitive (Bar-5 screen: "
+                                       f"{sens:.3f} < {acceptance.SENSITIVITY_DTW_MIN})"})
             continue
         z = np.load(build_probes.probe_path("rev", k))
         rtraj = m1b_flow.clip_camera_trajectory(z["flow"].astype(np.float32))
         core = fits["core_pairs"][i]
         rdesc = m1b_flow.clip_descriptor(rtraj, core[::-1])
-        same = np.flatnonzero((lab == labels[i]))
+        # THE BUG FIX: the reversed descriptor goes through the SAME corpus scaler
+        rdesc_z = (curves.zscore(rdesc["curve"], scaler)
+                   if (rdesc["defined"] and scaler is not None) else None)
+        same = np.flatnonzero(lab == labels[i])
         same = same[same != i]
         within = [D_b[i, j] for j in same if np.isfinite(D_b[i, j])]
         med = float(np.median(within)) if within else float("nan")
-        g = acceptance.grade_reversal(fwd, rtraj, m1b_z[i],
-                                      rdesc["curve"] if rdesc["defined"] else None, med)
-        rev_rows.append({"clip": k, "graded": True, "pass": g["pass"],
+        g = acceptance.grade_reversal(fwd, rtraj, m1b_z[i], rdesc_z, med, scaler)
+        if not g["gradable"]:
+            n_undefined += 1
+        rev_rows.append({"clip": k, "graded": bool(g["gradable"]),
+                         "sensitivity_dtw": sens,
+                         "pass": g["pass"],
                          "parameter_negation": g["parameter_negation"],
-                         "descriptor_distance": g["descriptor_distance"]})
+                         "descriptor_distance": g["descriptor_distance"],
+                         "reason": None if g["gradable"] else
+                                   g["descriptor_distance"]["reason"]})
     graded_rev = [r for r in rev_rows if r.get("graded")]
-    rev_pass = bool(graded_rev and all(r["pass"] for r in graded_rev))
-    log(f"  reversal: {sum(r['pass'] for r in graded_rev)}/{len(graded_rev)} graded "
-        f"clips pass (of {len(rev_rows)} camera-tagged; "
-        f"{len(rev_rows) - len(graded_rev)} not reversal-sensitive)")
+    rev_pass = bool(graded_rev) and all(r["pass"] for r in graded_rev)
+    closer = sum(1 for r in graded_rev
+                 if r["parameter_negation"]["closer_to_negated"])
+    log(f"  reversal waterfall: {len(rev_rows)} camera-tagged -> "
+        f"{len(rev_rows) - n_insensitive} sensitive -> {len(graded_rev)} gradable "
+        f"({n_undefined} undefined, §1.5: not failures) -> "
+        f"{sum(1 for r in graded_rev if r['pass'])} pass")
+    log(f"  reversal: {closer}/{len(graded_rev)} gradable clips are closer to the "
+        f"NEGATED trajectory than to the direction-blind one")
 
     out = {
+        "construction": "SECOND (advisor C5). The FIRST construction failed and is "
+                        "committed unmodified at f5d2790; both are in the record. "
+                        "Frozen §3.4 thresholds, the max|.| amplitude statistic and "
+                        "the aggregation rule are UNCHANGED.",
         "rule": "RUNBOOK §3.4 — both tests must pass before the exam runs. Failure "
                 "of either = fix or stop; the exam is not run on a metric that fails "
                 "constructed truth.",
-        "injected_trajectory": {"pass": inj_pass, "n": len(inj_rows), "rows": inj_rows,
-                                "base_clips_used": base_clips,
-                                "base_clips_excluded": excluded,
-                                "thresholds": {"corr_min": acceptance.CORR_MIN,
-                                               "amp_err_max": acceptance.AMP_ERR_MAX}},
-        "reversal": {"pass": rev_pass, "n_graded": len(graded_rev),
-                     "n_total": len(rev_rows), "rows": rev_rows},
+        "injected_trajectory": {
+            "pass": inj_pass, "n": len(inj_rows), "rows": inj_rows,
+            "base_clips_used": base_clips, "base_clips_excluded": excluded,
+            "amplitudes": man.get("inject_amplitudes"),
+            "amplitude_derivation": man.get("amplitude_derivation"),
+            "measured_noise_floor_unmoved_channels": noise,
+            "thresholds": {"corr_min": acceptance.CORR_MIN,
+                           "amp_err_max": acceptance.AMP_ERR_MAX,
+                           "statistic": "amp_err = |max|recovered| - max|truth||/max|truth| "
+                                        "(UNCHANGED from the first construction)"},
+        },
+        "reversal": {
+            "pass": rev_pass, "n_total": len(rev_rows),
+            "n_insensitive": n_insensitive, "n_undefined_ungradable": n_undefined,
+            "n_graded": len(graded_rev),
+            "n_closer_to_negated": closer,
+            "sensitivity_screen": {
+                "statistic": "z-unit banded DTW of the trajectory vs its own "
+                             "negated-reverse (certified Bar-5 screen)",
+                "floor": acceptance.SENSITIVITY_DTW_MIN,
+                "provenance": "INHERITED VERBATIM from certify/bars.yaml "
+                              "probes.reversal.sensitivity_dtw_min",
+            },
+            "rows": rev_rows,
+        },
         "pass": bool(inj_pass and rev_pass),
     }
     p = paths.WB_OUT / "phase1/acceptance.json"

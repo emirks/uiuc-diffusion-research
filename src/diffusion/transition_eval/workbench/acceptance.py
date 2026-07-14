@@ -72,7 +72,7 @@ def to_cv2_affine(M: np.ndarray, h: int, w: int) -> np.ndarray:
 
 # --- injected trajectories ----------------------------------------------------
 
-def trajectory(kind: str, T: int, amp: float) -> np.ndarray:
+def trajectory(kind: str, T: int, amp: float | dict) -> np.ndarray:
     """Ground-truth CUMULATIVE camera pose per frame [T, 4] = (tx, ty, log_s, theta).
 
     EASE-IN-OUT, not constant velocity. This is not decoration: a constant-velocity
@@ -81,21 +81,54 @@ def trajectory(kind: str, T: int, amp: float) -> np.ndarray:
     to grade the very channel under test. An eased profile makes the per-pair
     parameters vary over time, which is both what a real camera move does and what
     makes "the recovered trajectory tracks the true one" a statement with content.
+
+    AMPLITUDE IS PER CHANNEL, IN EACH CHANNEL'S OWN UNITS. `amp` may be a dict
+    {tx, ty, log_scale, rotation}. Passing one scalar across channels was a unit-
+    mixing bug that made the compound probe physically degenerate: a single
+    amp = 20.0 put 0.3 * 20 = 6.0 into LOG-scale, i.e. e**6 ~ 403x cumulative zoom,
+    so its late frames were 400x magnifications of nothing and its "translation"
+    ground truth was dominated by scale-coupling. Pixels and log-scale and radians
+    are not interchangeable.
     """
     u = np.linspace(0.0, 1.0, T)
     u = 0.5 * (1.0 - np.cos(np.pi * u))       # ease-in-out: velocity varies
     z = np.zeros(T)
+    A = amp if isinstance(amp, dict) else {k: amp for k in PARAM_KEYS}
     if kind == "pan_x":
-        return np.stack([amp * u, z, z, z], axis=1)
+        return np.stack([A["tx"] * u, z, z, z], axis=1)
     if kind == "pan_y":
-        return np.stack([z, amp * u, z, z], axis=1)
+        return np.stack([z, A["ty"] * u, z, z], axis=1)
     if kind == "zoom":
-        return np.stack([z, z, amp * u, z], axis=1)
+        return np.stack([z, z, A["log_scale"] * u, z], axis=1)
     if kind == "rotate":
-        return np.stack([z, z, z, amp * u], axis=1)
-    if kind == "pan_zoom":                       # a compound move, still known exactly
-        return np.stack([amp * u, 0.5 * amp * u, 0.3 * amp * u, z], axis=1)
+        return np.stack([z, z, z, A["rotation"] * u], axis=1)
+    if kind == "pan_zoom":                       # compound, each channel in its own units
+        return np.stack([A["tx"] * u, 0.5 * A["ty"] * u, 0.3 * A["log_scale"] * u, z],
+                        axis=1)
     raise ValueError(f"unknown trajectory {kind}")
+
+
+PARAM_KEYS = ("tx", "ty", "log_scale", "rotation")
+
+
+def warp_valid_mask(frames_shape: tuple, cum: np.ndarray) -> np.ndarray:
+    """Per-frame boolean [T, H, W]: which pixels of the warped frame came from real
+    source content rather than from BORDER_REFLECT.
+
+    The mirrored border is not part of the constructed truth — it is content moving
+    the WRONG WAY — and §3.2's first branch ("where S provides a spatial effect
+    mask, fit on its COMPLEMENT") is the sanctioned pathway for excluding it. The
+    region is known exactly from the warp, so no threshold is invented."""
+    import cv2
+
+    T, h, w = len(cum), frames_shape[1], frames_shape[2]
+    out = np.zeros((T, h, w), dtype=bool)
+    ones = np.ones((h, w), dtype=np.uint8)
+    for t in range(T):
+        A = to_cv2_affine(sim_matrix(*cum[t]), h, w)
+        out[t] = cv2.warpAffine(ones, A, (w, h), flags=cv2.INTER_NEAREST,
+                                borderMode=cv2.BORDER_CONSTANT, borderValue=0) > 0
+    return out
 
 
 def relative_params(cum: np.ndarray) -> np.ndarray:
@@ -181,7 +214,8 @@ def expected_reversed_params(params: np.ndarray) -> np.ndarray:
 
 def grade_reversal(fwd: dict, rev: dict, descriptor_fwd: np.ndarray | None,
                    descriptor_rev: np.ndarray | None,
-                   median_within_class: float) -> dict:
+                   median_within_class: float,
+                   scaler: dict | None = None) -> dict:
     """§3.4 test 1 — graded on BOTH legs.
 
     Leg A (the one the blind-spot note insists on): do the fitted parameters of the
@@ -217,26 +251,37 @@ def grade_reversal(fwd: dict, rev: dict, descriptor_fwd: np.ndarray | None,
     d_blind = float(np.linalg.norm(got[:n][mask] - blind[:n][mask]))
     closer_ok = bool(d_neg < d_blind)
 
-    # LEG A2 — for channels that actually vary, the correlation floor (§3.4's own
-    # 0.9; a constant channel has no correlation to speak of and is not graded).
-    corrs = {}
+    # LEG A2 — the correlation floor (§3.4's own 0.9), applied ONLY to channels the
+    # inherited Bar-5 screen calls direction-SENSITIVE. A channel that is its own
+    # negated-reverse has no direction to detect; grading it is grading noise.
+    corrs, insensitive = {}, []
     for i, name in enumerate(m1b_flow.PARAM_NAMES):
+        if not channel_sensitive(fwd["params"], fwd["defined"], i, scaler):
+            corrs[name] = None
+            insensitive.append(name)
+            continue
         e, g = expect[:n, i][mask], got[:n, i][mask]
         if len(e) < 3 or np.std(e) < 1e-12 or np.std(g) < 1e-12:
             corrs[name] = None
+            insensitive.append(name)
             continue
         corrs[name] = float(np.corrcoef(e, g)[0, 1])
     graded = {k: v for k, v in corrs.items() if v is not None}
-    corr_ok = all(v >= NEG_CORR_MIN for v in graded.values())   # vacuously true if none vary
+    corr_ok = all(v >= NEG_CORR_MIN for v in graded.values())
 
     neg_ok = bool(closer_ok and corr_ok)
 
+    # LEG B — descriptor distance. UNDEFINED IS NOT FAILURE (§1.5: "undefined != zero,
+    # everywhere"). If either descriptor or the within-class median is undefined, the
+    # leg is UNGRADABLE and is counted as such — it is never silently converted into a
+    # failure, which is what a NaN -> False comparison would do.
     d = curves.l2(descriptor_fwd, descriptor_rev)
-    dist_ok = bool(np.isfinite(d) and np.isfinite(median_within_class)
-                   and d > median_within_class)
+    gradable = bool(np.isfinite(d) and np.isfinite(median_within_class))
+    dist_ok = bool(gradable and d > median_within_class)
     return {
         "parameter_negation": {
             "corr": corrs,
+            "insensitive_channels": insensitive,
             "n_pairs": int(mask.sum()),
             "min_corr": min(graded.values()) if graded else None,
             "n_channels_graded": len(graded),
@@ -246,24 +291,77 @@ def grade_reversal(fwd: dict, rev: dict, descriptor_fwd: np.ndarray | None,
             "threshold": NEG_CORR_MIN,
             "pass": neg_ok,
         },
-        "descriptor_distance": {"d_self_vs_reversed": d,
-                                "median_within_class": median_within_class,
-                                "pass": dist_ok},
-        "pass": bool(neg_ok and dist_ok),
+        "descriptor_distance": {
+            "d_self_vs_reversed": d if np.isfinite(d) else None,
+            "median_within_class": (median_within_class
+                                    if np.isfinite(median_within_class) else None),
+            "gradable": gradable,
+            "reason": None if gradable else
+                      "descriptor or within-class median undefined (§1.5: undefined "
+                      "is not failure)",
+            "pass": dist_ok,
+        },
+        "gradable": gradable,
+        "pass": bool(neg_ok and dist_ok) if gradable else None,
     }
 
 
-def reversal_sensitive(params: np.ndarray, defined: np.ndarray) -> bool:
-    """A palindromic move (a pan out and back) is genuinely identical to its own
-    reverse — grading it would be grading noise. Sensitivity is enumerated from the
-    trajectory itself, before any reversed flow is computed (corpus-only)."""
+SENSITIVITY_DTW_MIN = 0.5      # INHERITED VERBATIM from the certified bars.yaml
+                               # (probes.reversal.sensitivity_dtw_min). Not invented
+                               # here: §3.4 says the reversal probe is "inherited
+                               # from old Bar 5", and completing that inheritance is
+                               # implementing the spec, not choosing a number.
+
+
+def sensitivity_dtw(params: np.ndarray, defined: np.ndarray,
+                    scaler: dict | None = None) -> float:
+    """The certified Bar-5 screen: z-unit banded DTW of a clip's camera trajectory
+    against its OWN negated-reverse.
+
+    bars.yaml: "sensitivity enumerated analytically from deployed trajectories
+    (params negated + time-reversed) — corpus-only, pre-freeze ... palindromic moves
+    score ~0 and are excluded".
+
+    A clip whose trajectory IS its own reverse (a pan out and back; a camera that
+    barely moves) has NO DIRECTION TO DETECT. Grading it is grading noise, and a
+    metric cannot be blamed for failing to distinguish two things that are the same.
+    """
     if defined.sum() < 8:
+        return 0.0
+    P = params.copy()
+    E = expected_reversed_params(params)
+    ok = defined & defined[::-1]
+    if ok.sum() < 8:
+        return 0.0
+    a, b = P[ok], E[ok]
+    if scaler is not None:
+        a = curves.zscore(a, scaler)
+        b = curves.zscore(b, scaler)
+    n = curves.N_MOTION
+    return curves.banded_dtw(curves.resample(a, n), curves.resample(b, n))
+
+
+def reversal_sensitive(params: np.ndarray, defined: np.ndarray,
+                       scaler: dict | None = None) -> bool:
+    """Clip-level Bar-5 screen at the frozen floor."""
+    return bool(sensitivity_dtw(params, defined, scaler) >= SENSITIVITY_DTW_MIN)
+
+
+def channel_sensitive(params: np.ndarray, defined: np.ndarray, ch: int,
+                      scaler: dict | None = None) -> bool:
+    """Channel-granularity extension of the SAME inherited statistic at the SAME
+    frozen floor: a channel whose own trajectory is its own negated-reverse has no
+    direction to detect and is not graded on the correlation floor (the analogue of
+    grade_injection's `moved` flag)."""
+    P = params[:, [ch]]
+    E = expected_reversed_params(params)[:, [ch]]
+    ok = defined & defined[::-1]
+    if ok.sum() < 8:
         return False
-    P = params[defined]
-    E = expected_reversed_params(params)[defined[::-1]]
-    if len(P) < 3 or len(E) < 3:
-        return False
-    n = min(len(P), len(E))
-    # a clip is reversal-SENSITIVE if its trajectory is not already its own reverse
-    return bool(np.linalg.norm(P[:n] - E[:n]) > 1e-6
-                and np.abs(P[:n, 2:]).max() > 1e-4)   # some rotation or zoom exists
+    a, b = P[ok], E[ok]
+    if scaler is not None:
+        s1 = {"mean": scaler["mean"][[ch]], "std": scaler["std"][[ch]]}
+        a, b = curves.zscore(a, s1), curves.zscore(b, s1)
+    d = curves.banded_dtw(curves.resample(a, curves.N_MOTION),
+                          curves.resample(b, curves.N_MOTION))
+    return bool(np.isfinite(d) and d >= SENSITIVITY_DTW_MIN)   # some rotation or zoom exists

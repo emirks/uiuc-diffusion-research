@@ -280,3 +280,102 @@ def test_reversal_definedness_mask_is_aligned_to_reversed_order():
     assert g["parameter_negation"]["pass"], g["parameter_negation"]
     assert g["parameter_negation"]["n_pairs"] == 8          # 12 - 4, correctly aligned
     assert g["parameter_negation"]["dist_to_negated"] < 1e-9
+
+
+# --- second construction (advisor C5): the bugs that flattered the metric ------
+
+def test_corpus_scaler_is_exposed_so_curves_are_commensurable():
+    """THE BUG C5 CAUGHT. clip_descriptor returns RAW resampled params; only
+    corpus_descriptors applies the z-scale. Comparing one against the other yields a
+    finite, meaningless distance — and it FLATTERED the metric. Any curve compared
+    against a corpus descriptor must go through the same scaler."""
+    per_clip = [_traj_desc(seed) for seed in range(6)]
+    scaler = m1b_flow.corpus_scaler(per_clip)
+    z = m1b_flow.corpus_descriptors(per_clip)
+    raw = per_clip[0]["curve"]
+    assert scaler is not None and z[0] is not None
+    # the raw curve and the scaled curve are NOT the same object of comparison
+    assert not np.allclose(raw, z[0])
+    # applying the exposed scaler to the raw curve reproduces the corpus descriptor
+    assert np.allclose(curves.zscore(raw, scaler), z[0])
+
+
+def _traj_desc(seed):
+    rng = np.random.default_rng(seed)
+    T = 20
+    flows = np.stack([synth_flow(0.4 * i + rng.normal(0, 0.02), 0.1 * i, 0.001 * i, 0.002 * i)
+                      for i in range(T)])
+    t = m1b_flow.clip_camera_trajectory(flows, stride=2)
+    return m1b_flow.clip_descriptor(t, np.ones(T, bool))
+
+
+def test_sensitivity_screen_excludes_a_palindromic_move_and_keeps_a_real_one():
+    """The inherited Bar-5 screen (floor 0.5 from the certified bars.yaml): a clip
+    that IS its own reverse has no direction to detect, and grading it is grading
+    noise."""
+    T = 40
+    # a real, directed move: monotone pan + zoom
+    u = np.linspace(0, 1, T)
+    directed = np.stack([2.0 * u, 0.5 * u, 0.02 * u, 0.01 * u], axis=1)
+    # a palindrome: out and back — genuinely identical to its own reverse
+    v = np.concatenate([np.linspace(0, 1, T // 2), np.linspace(1, 0, T - T // 2)])
+    palin = np.stack([2.0 * v, 0.5 * v, 0.02 * v, 0.01 * v], axis=1)
+    d_ok = np.ones(T, bool)
+    s_dir = acceptance.sensitivity_dtw(directed, d_ok)
+    s_pal = acceptance.sensitivity_dtw(palin, d_ok)
+    assert s_dir > s_pal
+    assert acceptance.SENSITIVITY_DTW_MIN == 0.5    # inherited, not invented
+
+
+def test_undefined_reversal_leg_is_ungradable_not_a_failure():
+    """§1.5: undefined != zero. A NaN descriptor distance must NOT be silently
+    converted into a FAIL — that is what a NaN > x comparison does."""
+    T = 12
+    fwd_p = acceptance.relative_params(acceptance.trajectory("pan_zoom", T + 1, {
+        "tx": 40.0, "ty": 20.0, "log_scale": 0.3, "rotation": 0.1}))
+    fwd = {"params": fwd_p, "defined": np.ones(T, bool)}
+    rev = {"params": acceptance.expected_reversed_params(fwd_p),
+           "defined": np.ones(T, bool)}
+    g = acceptance.grade_reversal(fwd, rev, None, None, float("nan"))
+    assert g["gradable"] is False
+    assert g["pass"] is None                       # NOT False
+    assert g["descriptor_distance"]["reason"] is not None
+
+
+def test_per_channel_amplitudes_keep_units_separate():
+    """THE OTHER BUG C5 CAUGHT. One scalar across channels put 0.3*20 = 6.0 into
+    LOG-scale — e**6 ~ 403x cumulative zoom — so the compound probe was physically
+    degenerate and its 'translation' truth was dominated by scale-coupling."""
+    amps = {"tx": 22.0, "ty": 32.0, "log_scale": 0.30, "rotation": 0.068}
+    cum = acceptance.trajectory("pan_zoom", 121, amps)
+    assert abs(cum[:, 0]).max() == pytest.approx(22.0, rel=1e-6)      # px
+    assert abs(cum[:, 2]).max() == pytest.approx(0.3 * 0.30, rel=1e-6)  # log-scale
+    assert np.exp(abs(cum[:, 2]).max()) < 1.10       # a sane zoom, not 403x
+
+
+def test_border_valid_mask_marks_mirror_pixels_invalid():
+    """BORDER_REFLECT content moves the WRONG WAY and was never part of the
+    constructed truth. §3.2's 'fit on its complement' pathway excludes it; the region
+    is known exactly from the warp, so no threshold is invented."""
+    cum = acceptance.trajectory("pan_x", 10, {"tx": 30.0, "ty": 0, "log_scale": 0,
+                                              "rotation": 0})
+    vm = acceptance.warp_valid_mask((10, 40, 60, 3), cum)
+    assert vm.shape == (10, 40, 60)
+    assert vm[0].all()                       # no warp at t=0 -> everything is real
+    assert not vm[-1].all()                  # the largest pan leaves a mirror strip
+    assert vm[-1].mean() > 0.4               # but most of the frame is still real
+
+
+def test_fit_ignores_invalid_pixels_even_across_irls_iterations():
+    """The validity mask must be re-applied every IRLS iteration — the Huber update
+    would otherwise hand the invalid pixels their vote back."""
+    truth = (3.0, 0.0, 0.0, 0.0)
+    flow = synth_flow(*truth)
+    valid = np.ones((H, W), bool)
+    valid[:, : W // 4] = False
+    flow[:, : W // 4] = np.array([-30.0, 20.0])      # garbage in the invalid region
+    A, grid = m1b_flow.design_matrix(H, W, stride=1)
+    r = m1b_flow.fit_similarity(flow, A, grid, stride=1, valid=valid)
+    assert r["defined"]
+    assert np.allclose(r["params"], np.array(truth), atol=1e-6), r["params"]
+    assert r["valid_frac"] == pytest.approx(0.75, abs=0.02)

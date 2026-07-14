@@ -1,0 +1,17 @@
+{
+ "derivation": "per-pair peak = p50 of |per-pair param| over DEFINED core pairs of camera-tagged clips (frozen camera_fits.npz, texture-gated); total amplitude = peak*(T-1)/(pi/2) inverting the ease-in-out profile",
+ "per_pair_peaks": {
+  "tx": 0.29662494324898003,
+  "ty": 0.4213673190469248,
+  "log_scale": 0.003915933609507229,
+  "rotation": 0.0008941331412560354
+ },
+ "total_amplitudes": {
+  "tx": 22.66047646196549,
+  "ty": 32.19009200817496,
+  "log_scale": 0.29915529157092646,
+  "rotation": 0.06830674042232733
+ },
+ "T": 121,
+ "note": "corpus-only, outcome-independent; PRE-DECLARED in CONSULTATIONS.md C5 before any corrected probe flow was computed"
+}

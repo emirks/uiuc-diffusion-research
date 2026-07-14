@@ -294,3 +294,126 @@ rather than selected from the grid), the per-clip definedness report, the pre-ex
 enumeration of zero-covered eligible stratum classes, the Huber breakdown table as
 a committed artifact, and the incumbent-vs-candidate definedness overlap are all
 recorded. Phase 1 proceeds to §3.4 and the exam.
+
+---
+
+## C5 — 2026-07-14 13:10 · §3.4 acceptance FAILED: my probe, or the metric?
+
+**Asked.** Both §3.4 tests failed as first constructed (committed unmodified at
+f5d2790). Injected: zoom/rotate pass, translation fails (amp_err 0.14–0.55),
+pan_zoom catastrophic (2.3–82×). Reversal: 10/101. Is this the metric failing
+constructed truth (→ STOP, no second attempt) or a defect in my probe construction
+(→ fixable; debugging is not a rescue variant)? May I change the injected amplitude,
+the amp_err statistic, the sensitivity filter?
+
+**Direction received.** FIXABLE BRANCH — probe construction, not the metric. And the
+advisor found **two defects I had missed**, both of which had been *flattering* the
+metric:
+- **The z-scale bug.** Leg B compared `m1b_z[i]` (corpus z-scored) against
+  `rdesc["curve"]` (raw — `clip_descriptor` never applies the scaler; only
+  `corpus_descriptors` does). Raw-vs-z-scored is a meaningless distance that happens
+  to be finite. Mandatory fix.
+- **pan_zoom was physically degenerate.** One scalar applied across channels with
+  different units put 0.3×20 = 6.0 into LOG-scale — e⁶ ≈ **403× cumulative zoom**.
+  Its late frames were 400× magnifications of nothing, and its "translation" truth
+  was dominated by scale-coupling. The 2.3–82× errors were the probe grading its own
+  degeneracy.
+- **The reversal failure profile was not what I said.** 101/101 graded clips pass the
+  threshold-free closer-to-negated check (margins 15–350×); the dominant failure is
+  68/101 NaN `d_self_vs_reversed` and 65/101 NaN `median_within_class` being
+  converted NaN→False→FAIL. That is a §1.5 violation ("undefined ≠ zero"), not a
+  metric failure.
+
+Rulings: `max|·|` LEFT ALONE (changing a grading statistic after watching it fail is
+goalpost-moving). §3.4's 0.9/10%, the §3.2 gates, the aggregation rule and gates.yaml
+all UNTOUCHED. NaN → ungradable-with-reason, counted, never failed. Reversal
+sensitivity uses the certified Bar-5 screen — z-unit banded DTW of a trajectory vs
+its own negated-reverse, floor **0.5 INHERITED VERBATIM from certify/bars.yaml**
+(§3.4 itself says the probe is "inherited from old Bar 5", so completing the
+inheritance is implementing the spec, not choosing a number), plus the same statistic
+at channel granularity. Border mirror pixels excluded through §3.2's own "fit on its
+complement" pathway, the invalid set known exactly from the warp. **ONE corrected
+construction, ONE run**; if it fails, the presumption is STOP.
+
+---
+
+## C5-R — 2026-07-14 13:35 · RECONCILE: the rule contradicted its own rationale
+
+**Asked (before running anything).** C5's derivation rule — "amplitude peak = p50 of
+the corpus per-pair |Δc|" — yields tx 0.297 px/pair, which is essentially the
+*original invented* amplitude (0.314 px/pair). It does not raise the SNR at all,
+which was the rationale the fix rested on. Applied literally it reconstructs the
+failing probe and would kill Phase 1 on a probe artifact. p90 would give 3.11 px/pair
+and the SNR the rationale assumed. But "advisor said p50, executor prefers p90
+because p50 would fail" is exactly the shape of goalpost-moving — so I brought it
+back rather than choosing.
+
+**Direction received — the error was the advisor's, and the fix is better than either
+option.** The decisive fact is not about the metric at all: **at p50 a PERFECT
+estimator fails too.** With per-pair parameter noise σ ≈ 0.02–0.05 px, `max|·|` over
+~120 pairs adds ≈ 2.5–3σ at the peak; against a 0.297 px peak that is amp_err
+≈ 0.2–0.5 for *any* estimator whose error is the flow's own — including an oracle
+that fits the flow exactly. **A test an oracle fails is not a test of M1b; it grades
+the instrument's noise floor.** So the quantile stops being a judgment call: build a
+LADDER and make the probe *prove* it can test what §3.4 asks.
+
+**PRE-DECLARED, WITH EVERY REALIZED NUMBER, BEFORE ANY CORRECTED PROBE FLOW WAS
+COMPUTED (this declaration is what makes it a derivation and not a search):**
+
+Corpus per-pair |Δc| quantiles (defined + texture-gated core pairs of camera-tagged
+clips, n = 3,566):
+
+| channel | p50 | p75 | p90 |
+|---|---|---|---|
+| tx | 0.296625 | 0.650124 | 3.113154 |
+| ty | 0.421367 | 1.166700 | 2.305041 |
+| log_scale | 0.003916 | 0.011151 | 0.024682 |
+| rotation | 0.000894 | 0.002165 | 0.004176 |
+
+Ladder amplitudes (total, per channel, own units; ×76.394 = (T−1)/(π/2)):
+
+| rung | tx | ty | log_scale | rotation |
+|---|---|---|---|---|
+| p50 | 22.6605 | 32.1901 | 0.2992 | 0.0683 |
+| p75 | 49.6658 | 89.1293 | 0.8518 | 0.1654 |
+| p90 | 237.8274 | 176.0922 | 1.8856 | 0.3190 |
+
+Measured σ per substrate × channel (identity control — the base clips' own corpus
+fits; it OVER-estimates, since the "most-static" clips are not perfectly static,
+which is conservative): tx median 0.01743 (range 0.0064–0.0233), ty 0.01460
+(0.0092–0.0315), log_scale 0.00011, rotation 0.00007.
+
+**The noise-limited ORACLE (200 draws): `recovered = truth + N(0, σ)` pushed through
+`grade_injection` UNCHANGED** (same `max|·|`, same frozen 0.9/10%). A cell is
+oracle-valid at rung q iff the MEDIAN draw has amp_err ≤ 0.10 AND corr ≥ 0.90 — no
+new threshold is introduced. Result, confirming the diagnosis: **at p50 the oracle
+FAILS** on pan_x for 5/8 substrates, rotate for 6/8 and pan_zoom for 6/8; at p75 and
+p90 it is valid nearly everywhere.
+
+**VERDICT RUNG, per (substrate, kind) cell:** the HIGHEST rung that is *both*
+oracle-valid *and* DEFINED under the frozen §3.2 gates. If no rung qualifies, the
+cell is excluded-with-reason (as wireframe_2 already was). **THE ANTI-GAMING GUARD IS
+STRUCTURAL:** `select_verdict_rung()` takes as input ONLY the oracle simulation and
+the frozen-gate definedness — the metric's recovered parameters are not an argument
+to it and cannot be. That is what makes "highest valid rung" a construction-validity
+rule rather than "the rung where it passes". Every rung of every cell is graded and
+reported regardless; the verdict is taken at the declared cell and the rest is the
+amplitude-resolution curve.
+
+**PRE-COMMITTED NOW, so it cannot be invoked opportunistically later:** if the
+verdict-rung cells FAIL, that is the metric failing constructed truth → STOP, no
+further construction. If a post-hoc oracle sim on the NEW probes' own σ shows a
+verdict cell was noise-limited after all, that is a CONSTRUCTION failure and returns
+to the fork — it does NOT convert into a metric failure.
+
+**A FIRST-CLASS PHASE-1 FINDING, to be recorded beside coverage (facts only, no
+inference — the inference is owner-side):** in this corpus the MEDIAN per-pair camera
+translation (tx 0.297 px, ty 0.421 px) is within an order of magnitude of the flow
+fit's own per-pair parameter noise (σ ≈ 0.015–0.017 px), while the vigorous decile is
+tx 3.11 px / ty 2.31 px. An oracle fails §3.4's peak-amplitude criterion at p50.
+
+**Action taken.** Ladder + oracle implemented and pre-declared (probe_ladder.json).
+Probes rebuilt at all three rungs with per-channel amplitudes in their own units, the
+rung in the cache key (a key that ignored it would silently pair the first
+construction's flow with the second's ground truth), and exact border-validity masks.
+`max|·|`, 0.9/10%, the §3.2 gates, the aggregation rule and gates.yaml: untouched.

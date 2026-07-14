@@ -66,7 +66,7 @@ def design_matrix(h: int, w: int, stride: int = PIXEL_STRIDE) -> tuple[np.ndarra
 
 def fit_similarity(flow: np.ndarray, A: np.ndarray, grid: np.ndarray,
                    stride: int = PIXEL_STRIDE, delta: float = HUBER_DELTA_PX,
-                   iters: int = IRLS_ITERS) -> dict:
+                   iters: int = IRLS_ITERS, valid: np.ndarray | None = None) -> dict:
     """Huber-IRLS similarity fit to ONE dense flow field [H, W, 2].
 
     Returns the 4 parameters, the inlier fraction, and the robust residual. The
@@ -94,7 +94,23 @@ def fit_similarity(flow: np.ndarray, A: np.ndarray, grid: np.ndarray,
     t[0::2] = f[:, 0] + x
     t[1::2] = f[:, 1] + y
 
+    # §3.2's first branch: "where S provides a spatial effect mask, fit on its
+    # COMPLEMENT". On the injected-trajectory probes the invalid region is known
+    # exactly — the pixels a synthetic warp fills from BORDER_REFLECT are mirror
+    # content moving the WRONG WAY, and they are not part of the constructed truth.
+    # Excluding them is what keeps "the ground truth is exact" true. Everywhere else
+    # valid is None and the fit is unchanged.
+    m_valid = None
+    if valid is not None:
+        m_valid = valid[::stride, ::stride].ravel().astype(bool)
+        if m_valid.sum() < 16:
+            return {"params": np.full(4, np.nan), "inlier_frac": 0.0,
+                    "residual_px": float("nan"), "defined": False,
+                    "valid_frac": float(m_valid.mean())}
+
     w = np.ones(len(f))                      # per-POINT weights (residual is a 2-vector)
+    if m_valid is not None:
+        w = w * m_valid                      # invalid pixels never vote
     p = np.zeros(4)
     for _ in range(iters):
         W = np.repeat(w, 2)
@@ -107,22 +123,31 @@ def fit_similarity(flow: np.ndarray, A: np.ndarray, grid: np.ndarray,
         r = (A @ p - t).reshape(-1, 2)
         rn = np.linalg.norm(r, axis=1)
         w = np.where(rn <= delta, 1.0, delta / np.maximum(rn, 1e-9))   # Huber
+        if m_valid is not None:
+            w = w * m_valid          # re-apply EVERY iteration: the Huber update
+                                     # above would otherwise hand the invalid
+                                     # border pixels their vote back
 
     a, b, tx, ty = p
     s = float(np.hypot(a, b))
-    inlier = float(np.mean(rn <= delta))
+    # the inlier fraction is over the VALID support — an invalid pixel is not an
+    # outlier, it is not a pixel at all
+    sel = m_valid if m_valid is not None else np.ones(len(rn), bool)
+    inlier = float(np.mean(rn[sel] <= delta)) if sel.any() else 0.0
     return {
         "params": np.array([tx, ty,
                             np.log(s) if s > 1e-9 else np.nan,
                             float(np.arctan2(b, a))]),
         "inlier_frac": inlier,
-        "residual_px": float(np.median(rn)),
+        "residual_px": float(np.median(rn[sel])) if sel.any() else float("nan"),
         "defined": bool(inlier >= MIN_INLIER_FRAC and s > 1e-9),
+        "valid_frac": float(sel.mean()),
     }
 
 
 def clip_camera_trajectory(flow: np.ndarray, texture_ok: np.ndarray | None = None,
-                           stride: int = PIXEL_STRIDE) -> dict:
+                           stride: int = PIXEL_STRIDE,
+                           valid: np.ndarray | None = None) -> dict:
     """Fit every frame pair of one clip -> [T-1, 4] parameter trajectory + flags.
 
     texture_ok: per-PAIR boolean (a low-texture frame makes its flow unreliable,
@@ -134,7 +159,8 @@ def clip_camera_trajectory(flow: np.ndarray, texture_ok: np.ndarray | None = Non
     inlier = np.zeros(T)
     defined = np.zeros(T, dtype=bool)
     for i in range(T):
-        r = fit_similarity(flow[i].astype(np.float32), A, grid, stride)
+        v = valid[i] if valid is not None else None
+        r = fit_similarity(flow[i].astype(np.float32), A, grid, stride, valid=v)
         params[i] = r["params"]
         inlier[i] = r["inlier_frac"]
         defined[i] = r["defined"]
@@ -166,13 +192,21 @@ def clip_descriptor(traj: dict, core_pairs: np.ndarray) -> dict:
             "defined": True, "reason": None}
 
 
+def corpus_scaler(per_clip: list[dict]) -> dict | None:
+    """The per-channel corpus z-scale. Exposed because ANY curve compared against a
+    corpus descriptor must go through this same scaler — a raw curve and a z-scored
+    curve are not commensurable, and an L2 between them is a meaningless number that
+    happens to be finite."""
+    defined = [d["curve"] for d in per_clip if d["defined"]]
+    return curves.fit_channel_scaler(defined) if defined else None
+
+
 def corpus_descriptors(per_clip: list[dict]) -> list[np.ndarray | None]:
     """Z-score each of the 4 channels over the CORPUS (a frozen scale applied
     identically to every clip — never per clip, which would destroy the amplitude
     information that distinguishes a slow pan from a fast one)."""
-    defined = [d["curve"] for d in per_clip if d["defined"]]
-    if not defined:
+    scaler = corpus_scaler(per_clip)
+    if scaler is None:
         return [None] * len(per_clip)
-    scaler = curves.fit_channel_scaler(defined)
     return [curves.zscore(d["curve"], scaler) if d["defined"] else None
             for d in per_clip]

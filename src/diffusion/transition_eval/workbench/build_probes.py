@@ -33,13 +33,33 @@ from . import acceptance, flowcache, paths
 
 PROBE_DIR = paths.WB_CACHE / "probes"
 INJECT_KINDS = ("pan_x", "pan_y", "zoom", "rotate", "pan_zoom")
-INJECT_AMPS = {"pan_x": 24.0, "pan_y": 24.0, "zoom": 0.25, "rotate": 0.20,
-               "pan_zoom": 20.0}
 N_STATIC_CLIPS = 8
 
+# AMPLITUDES ARE DERIVED FROM THE CORPUS, NOT INVENTED (advisor C5). The first
+# construction used a single invented scalar per kind, which (a) injected a
+# SUB-PIXEL per-frame translation — testing the flow estimator's noise floor rather
+# than the metric — and (b) mixed units in the compound probe, putting e**6 ~ 403x
+# cumulative zoom into "pan+zoom". The derivation, pre-declared in CONSULTATIONS.md
+# before any corrected probe flow was computed, is read from the frozen artifact
+# written by the derivation step; per-channel, in each channel's own units.
+AMPLITUDES_JSON = paths.WB_OUT / "phase1/probe_amplitudes_derived.json"
 
-def probe_path(kind: str, key: str, extra: str = "") -> str:
-    h = hashlib.sha1(f"{kind}|{key}|{extra}|{flowcache.CACHE_TAG}".encode()).hexdigest()[:16]
+
+def inject_amplitudes() -> dict:
+    d = json.loads(AMPLITUDES_JSON.read_text())
+    return d["total_amplitudes"]
+
+
+def probe_path(kind: str, key: str, extra: str = "", rung: str = "") -> str:
+    """Cache key. For INJECTED probes the key MUST include the RUNG: amplitudes
+    changed between constructions and differ per rung, and a key that ignored them
+    would silently reuse the first construction's flow while pairing it with the
+    second construction's ground truth — the worst kind of stale-cache bug, because
+    every number would still look plausible. Reversed probes are unchanged between
+    constructions and keep their key (their flow is reused, saving GPU)."""
+    salt = f"|{rung}|border_masked" if kind == "inj" else ""
+    h = hashlib.sha1(f"{kind}|{key}|{extra}{salt}|{flowcache.CACHE_TAG}"
+                     .encode()).hexdigest()[:16]
     return str(PROBE_DIR / f"{kind}_{h}.npz")
 
 
@@ -104,21 +124,56 @@ def main() -> int:
     for k in static_keys:
         log(f"    {k}")
 
+    from . import probe_ladder
+    ladder = json.loads((paths.WB_OUT / "phase1/probe_ladder.json").read_text())
+    amps_by_rung = ladder["ladder_amplitudes"]
+
+    # Skip base clips the FROZEN texture gate already declares undefined — they are
+    # not valid constructed-truth substrates, and building them would waste GPU.
+    gates = paths.load_gates()
+    tmin = gates["phase1"]["m1b_flow"]["min_pair_texture"]
+    tex = np.load(paths.WB_CACHE / "texture.npz")["pair_texture"]
+    usable, skipped = [], []
+    for k in static_keys:
+        i = fkeys.index(k)
+        below = float((tex[i][core[i]] < tmin).mean())
+        (skipped if below > 0.30 else usable).append((k, below))
+    for k, b in skipped:
+        log(f"  SKIP base clip {k}: {b:.0%} of core pairs below the frozen texture gate")
+    static_keys = [k for k, _ in usable]
+
+    log(f"injection: {len(static_keys)} substrates x {len(INJECT_KINDS)} kinds x "
+        f"{len(probe_ladder.RUNGS)} rungs")
+    for r in probe_ladder.RUNGS:
+        log(f"  {r}: " + "  ".join(f"{n}={amps_by_rung[r][n]:.4f}"
+                                   for n in ("tx", "ty", "log_scale", "rotation")))
     truth = {}
     t0 = time.time()
     for k in static_keys:
         frames, _ = load_frames(paths.clip_path(k), short_side=None)
         frames = flowcache.resize_for_flow(frames)
-        for kind in INJECT_KINDS:
-            out = probe_path("inj", k, kind)
-            cum = acceptance.trajectory(kind, len(frames), INJECT_AMPS[kind])
-            rel = acceptance.relative_params(cum)
-            truth[f"{k}|{kind}"] = rel.tolist()
-            if pathlib_exists(out):
-                continue
-            warped = acceptance.warp_frames(frames, cum)
-            flow = raft.flow_pairs(np.ascontiguousarray(warped))
-            _atomic_save(out, flow=flow, src=k, kind=kind, truth=rel)
+        for rung in probe_ladder.RUNGS:
+            for kind in INJECT_KINDS:
+                out = probe_path("inj", k, kind, rung)
+                cum = acceptance.trajectory(kind, len(frames), amps_by_rung[rung])
+                rel = acceptance.relative_params(cum)
+                truth[f"{k}|{kind}|{rung}"] = rel.tolist()
+                if pathlib_exists(out):
+                    continue
+                warped = acceptance.warp_frames(frames, cum)
+                # BORDER_REFLECT mirror pixels are content moving the WRONG WAY and
+                # were never part of the constructed truth. §3.2's first branch
+                # ("where S provides a spatial effect mask, fit on its COMPLEMENT")
+                # is the sanctioned pathway for excluding them; the invalid set is
+                # known EXACTLY from the cumulative warp (a pixel is invalid iff its
+                # source coordinate falls outside the source frame), so no radius and
+                # no threshold is invented. For a PAIR both frames must be real.
+                vm = acceptance.warp_valid_mask(frames.shape, cum)
+                vpair = vm[:-1] & vm[1:]
+                flow = raft.flow_pairs(np.ascontiguousarray(warped))
+                _atomic_save(out, flow=flow, src=k, kind=kind, rung=rung,
+                             truth=rel, valid=vpair)
+        log(f"  {k} done ({time.time() - t0:.0f}s)")
     log(f"injection flows done in {time.time() - t0:.0f}s")
 
     raft.free()
@@ -126,7 +181,11 @@ def main() -> int:
         "reversed_clips": cam_keys,
         "static_clips": static_keys,
         "inject_kinds": list(INJECT_KINDS),
-        "inject_amplitudes": INJECT_AMPS,
+        "rungs": list(probe_ladder.RUNGS),
+        "inject_amplitudes_by_rung": amps_by_rung,
+        "base_clips_skipped_texture": [{"clip": k, "frac_below_gate": b}
+                                       for k, b in skipped],
+        "amplitude_derivation": ladder["purpose"],
         "n_static": N_STATIC_CLIPS,
         "flow_pins": flowcache.PINS,
         "ground_truth_relative_params": truth,
