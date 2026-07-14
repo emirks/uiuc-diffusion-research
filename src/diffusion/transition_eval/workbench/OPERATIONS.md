@@ -288,3 +288,19 @@ report.
 `IDEAS_NEXT_CYCLE.md` is the single sanctioned non-neutral file: a parking
 lot the executor may append to, clearly marked non-authoritative, never
 referenced by any record or verdict.
+
+---
+
+## 8.5 Ported-threshold rule (AMENDMENT — E1′ cycle, owner directive)
+
+> Any threshold ported across contexts requires a pre-registered validity guard
+> in the destination context, or the leg it gates is advisory.
+
+Entered from `E1PRIME_DIRECTIVE.md` Part 1, as the codified lesson of escalation
+(b): reversal leg A2 applied the §3.4 injected-trajectory correlation floor
+(0.90) — an **amplitude-controlled** threshold — to **uncontrolled** real-clip
+channels, with no validity guard registered in the destination context. The leg
+is therefore advisory, not gating, and was recorded as such.
+
+Binding on every future cycle. A threshold's authority does not travel with its
+number; it travels with the construction that calibrated it.

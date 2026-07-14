@@ -111,6 +111,32 @@ vs realized **0.187 px** for wireframe_5 tx at p90 (valid area 0.63).
 
 ---
 
+### 3b. Item-5 readout — which channels the 3 oracle-valid failures failed on
+
+Added by the E1′ cycle's Part-1 amendment. **Pure readout of the persisted
+`acceptance.json` + `posthoc_oracle.json`; no re-run, no recomputation, no new
+probe.** Persisted as `item5_channel_readout.json`.
+
+| cell | failing channel(s) | corr | amp_err | oracle median amp_err |
+|---|---|---|---|---|
+| mystification_5 · zoom | `log_scale` | 0.9962 | 0.1182 | 0.0554 |
+| mystification_5 · pan_zoom | `ty`, `log_scale` | 0.9898 / 0.9917 | 0.1172 / 0.1376 | 0.0691 / 0.0844 |
+| saint_glow_3 · pan_zoom | `ty` | 0.9940 | 0.1187 | 0.0674 |
+
+Channel tally across the three cells: **`ty` x 2, `log_scale` x 2**. No `tx`
+failure and no `rotation` failure among them.
+
+**Every failure is an AMPLITUDE failure.** On all four failing channel-cells the
+correlation floor (>= 0.90) is met with margin 0.9898-0.9962, and only the
+relative-amplitude bound (<= 0.10) is breached (0.1172-0.1376). Across all SIX
+failing cells (including the three noise-limited ones) the lowest correlation on
+any failing channel is **0.9655**, and every failure is `amp_ok = false`; not one
+is a correlation failure.
+
+Stated without interpretation: the fitter recovered the SHAPE of every injected
+trajectory it was graded on, and missed its SCALE by 12-18%. No mechanism claim
+is attached. The §3.4 verdict is unchanged and remains terminal.
+
 ## 4. Test 1 — reversal: **FAIL**
 
 Waterfall: **102** camera-tagged clips → **12** insensitive (Bar-5 screen, DTW 0.000

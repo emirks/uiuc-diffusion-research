@@ -494,3 +494,31 @@ remain analysis-tier; no second attempt this cycle (§3.6, §9). Both constructi
 stay in the record. Prohibited from every record, per this ruling: "on the metric's
 own account", "unlucky", "would have passed if", and any mechanism attribution for
 the leg-B failures.
+
+---
+
+# E1′ cycle (2026-07-14, second directive) — ADVISOR CHANNEL UNAVAILABLE
+
+**No consultations exist for the E1′ cycle.** The advisor tool returned
+"unavailable" on the first call (made before any substantive work, at the point
+where three definitional readings in the directive had been identified) and was
+not retried.
+
+This is recorded rather than silently absorbed because the previous cycle's
+record leans on the advisor channel in six places, and a reader comparing the two
+cycles must not infer that E1′'s readings were advisor-reviewed. **They were
+not.** They are executor readings.
+
+**Compensating discipline actually applied** (in place of consultation):
+
+1. Every reading of the directive not fully determined by frozen text is
+   **pre-declared, with its derivation, in the Part-2 pre-registration commit —
+   before any candidate number exists** (`E1PRIME_PREREG.md` §P1–§P8).
+2. The single reading that remains genuinely open after derivation (the
+   σ-parameterization) carries a **pre-declared, explicitly non-gating
+   sensitivity column**, so that if the verdict turns out to be σ-sensitive the
+   owner can adjudicate it **without a re-run** — the exact remedy that made
+   escalation (a) adjudicable, applied pre-emptively this time.
+3. Two structural properties of the registered IV design that weaken it
+   (the m̃ ≡ 0 tautology; see PREREG §P5) are disclosed **before** the IV is run,
+   not after its result is known.
