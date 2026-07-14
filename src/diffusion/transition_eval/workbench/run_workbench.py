@@ -170,23 +170,33 @@ def cmd_fit_motion(args) -> int:
 
 # --- Phase 1: acceptance (§3.4) then the exam (§3.5/§3.6) ---------------------
 
-def _descriptors(keys, sidedness, bs, gates, tex, fits):
-    """m1b and m1c clip descriptors under the FROZEN gates."""
+def _traj_of(i, gates, tex, fits):
+    """One clip's camera trajectory with the FROZEN §3.2 gates applied."""
+    tex_min = gates["phase1"]["m1b_flow"]["min_pair_texture"]
+    traj = {"params": fits["params"][i], "defined": fits["defined"][i].copy(),
+            "inlier_frac": fits["inlier_frac"][i]}
+    if tex is not None:
+        traj["defined"] = traj["defined"] & (tex[i] >= tex_min)   # §3.2 low-texture gate
+    return traj
+
+
+def _m1b_descriptors(keys, gates, tex, fits):
+    """m1b needs only the cached camera fits — no flow, so no 15 GB re-read."""
+    return [m1b_flow.clip_descriptor(_traj_of(i, gates, tex, fits), fits["core_pairs"][i])
+            for i in range(len(keys))]
+
+
+def _m1c_descriptors(keys, gates, tex, fits):
+    """m1c needs the dense residual, so it does read the flow cache."""
     from . import flowcache
 
     eps = gates["phase1"]["m1c_flow"]["energy_gate_epsilon"]
-    tex_min = gates["phase1"]["m1b_flow"]["min_pair_texture"]
-    m1b, m1c = [], []
+    out = []
     for i, k in enumerate(keys):
         flow = flowcache.load_clip_flow(paths.clip_path(k), paths.WB_CACHE).astype(np.float32)
-        traj = {"params": fits["params"][i], "defined": fits["defined"][i].copy(),
-                "inlier_frac": fits["inlier_frac"][i]}
-        if tex is not None:
-            traj["defined"] &= (tex[i] >= tex_min)          # §3.2 low-texture gate
-        core = fits["core_pairs"][i]
-        m1b.append(m1b_flow.clip_descriptor(traj, core))
-        m1c.append(m1c_flow.clip_curve(flow, traj, core, eps))
-    return m1b, m1c
+        out.append(m1c_flow.clip_curve(flow, _traj_of(i, gates, tex, fits),
+                                       fits["core_pairs"][i], eps))
+    return out
 
 
 def cmd_phase1(args) -> int:
@@ -204,7 +214,8 @@ def cmd_phase1(args) -> int:
     tex = np.load(tex_p)["pair_texture"] if tex_p.exists() else None
 
     log("building descriptors under the frozen gates")
-    m1b_raw, m1c_raw = _descriptors(keys, sidedness, bs, gates, tex, fits)
+    m1b_raw = _m1b_descriptors(keys, gates, tex, fits)
+    m1c_raw = _m1c_descriptors(keys, gates, tex, fits)
     m1b_z = m1b_flow.corpus_descriptors(m1b_raw)
     m1c_z = m1c_flow.corpus_descriptors(m1c_raw)
     log(f"m1b_flow defined {sum(d['defined'] for d in m1b_raw)}/{len(keys)}; "
@@ -273,8 +284,29 @@ def cmd_acceptance(args) -> int:
     tex = np.load(tex_p)["pair_texture"] if tex_p.exists() else None
 
     # ---- test 2: injected-trajectory recovery -------------------------------
-    inj_rows = []
+    # The probe base clips must clear the SAME frozen gates the exam uses. A base
+    # clip the metric itself declares undefined (here: textureless) is not a valid
+    # substrate for constructed truth — grading on it would fail the acceptance test
+    # for a reason that has nothing to do with the metric's ability to recover a
+    # camera. Excluded EXPLICITLY and recorded, never silently dropped (§1.5).
+    tex_min = gates["phase1"]["m1b_flow"]["min_pair_texture"]
+    excluded = []
+    base_clips = []
     for k in man["static_clips"]:
+        i = fkeys.index(k)
+        core = fits["core_pairs"][i]
+        below = float((tex[i][core] < tex_min).mean()) if tex is not None else 0.0
+        if below > m1b_flow.MAX_UNDEFINED_CORE:
+            excluded.append({"clip": k, "frac_core_pairs_below_texture_gate": below,
+                             "reason": "base clip is texture-gated by the frozen §3.2 "
+                                       "rule; not a valid constructed-truth substrate"})
+            log(f"  EXCLUDED base clip {k}: {below:.0%} of core pairs below the frozen "
+                f"texture gate")
+            continue
+        base_clips.append(k)
+
+    inj_rows = []
+    for k in base_clips:
         for kind in man["inject_kinds"]:
             p = build_probes.probe_path("inj", k, kind)
             z = np.load(p)
@@ -290,10 +322,7 @@ def cmd_acceptance(args) -> int:
     inj_pass = all(r["pass"] for r in inj_rows)
 
     # ---- test 1: reversal ----------------------------------------------------
-    eps = gates["phase1"]["m1c_flow"]["energy_gate_epsilon"]
-    tex_min = gates["phase1"]["m1b_flow"]["min_pair_texture"]
-    m1b_raw, _ = _descriptors(keys, sidedness, bs, gates, tex, fits) if eps is not None \
-        else (None, None)
+    m1b_raw = _m1b_descriptors(keys, gates, tex, fits)   # no flow needed for m1b
     m1b_z = m1b_flow.corpus_descriptors(m1b_raw)
     D_b = curves.distance_matrix(m1b_z)
     lab = np.array(labels)
@@ -330,6 +359,8 @@ def cmd_acceptance(args) -> int:
                 "of either = fix or stop; the exam is not run on a metric that fails "
                 "constructed truth.",
         "injected_trajectory": {"pass": inj_pass, "n": len(inj_rows), "rows": inj_rows,
+                                "base_clips_used": base_clips,
+                                "base_clips_excluded": excluded,
                                 "thresholds": {"corr_min": acceptance.CORR_MIN,
                                                "amp_err_max": acceptance.AMP_ERR_MAX}},
         "reversal": {"pass": rev_pass, "n_graded": len(graded_rev),
