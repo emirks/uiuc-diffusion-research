@@ -8,7 +8,7 @@ The two rules above all sections: **pin everything, stamp everything.**
 
 ---
 
-## 0. OPEN register (must be empty of `lock`-severity items before `eval/v3.0` is tagged)
+## 0. OPEN register (lock-severity items must be empty before tagging — **satisfied 2026-07-14; `eval/v3.0.0` exists**)
 
 | id | item | severity | where resolved |
 |----|------|----------|----------------|
@@ -177,6 +177,7 @@ The record must contain: bars.yaml sha · per-bar verdicts · trust map (recall 
 - `python -m diffusion.transition_eval.plan --design D --corpus C --out suite.json`
 - `python -m diffusion.transition_eval.score --manifest M --corpus C [--training T] [--suite suite.json] --label L → {results.json, items.jsonl}` (results embed the stamp, completeness, paired twin table); `--from-items`-style re-reporting = login node, numpy-only.
 - `python src/diffusion/transition_eval/versioning.py [--corpus PATH] [--check]` — print/verify the stamp (standalone stdlib; the `-m` form also works inside the diffusion env).
+- `python -m diffusion.transition_eval.certify.run_certification --corpus C --main-root R` — the §6.5 certification driver (refuses unfrozen bars; GPU node, ~35–40 min warm; writes record + figures + explorer under `outputs/eval/certification/<version>/`). One-time regrade tooling: `scripts/regrade_draft8_to_v3.py` (3.0.0 record provenance).
 - Judge: separate CLI, login node, resumable via response cache.
 - Runtime: 1× H100/L40S; ~50 items ≈ 10–15 min warm cache (measured 8:39/46); cold corpus featurization dominates first runs.
 - `results.json` schema: `{provenance (the stamp), completeness, items[], tables, flags}`.
@@ -198,9 +199,14 @@ src/diffusion/transition_eval/
 ├── manifests_v3.py                            # 3 schemas + tier/sidedness derivations
 ├── plan.py  score.py                          # lifecycle CLIs (score = the ONE scorer)
 ├── build_corpus_manifest.py                   # corpus manifest builder (O1 tooling)
-├── certify/                                   # §6 as code: bars.yaml (DRAFT), exam,
-│                                              #   probes, stability, seeds
-└── certifications/                            # committed records, one per certified version
+├── certify/                                   # §6 as code:
+│   ├── bars.yaml                              #   pre-registered bars (FROZEN)
+│   ├── run_certification.py                   #   §6.5 driver (A→B→C→D → record)
+│   ├── exam.py  probes.py  blockc.py          #   Block A · Block B · Block C
+│   ├── stability.py  seeds.py                 #   Block D compare + σ_seed protocol
+│   ├── diagnostics.py                         #   exam analysis persistence (non-gating)
+│   └── figures.py  explorer.py                #   auto figures + results_explorer.html
+└── certifications/                            # committed records, one per attempt
 ```
 
 Regeneration: annotated tag `eval/vX.Y` per certified release; `git worktree add ../eval-vX.Y <tag>` reproduces any old harness — no snapshot folders, no vendored copies. Rejected anti-patterns: per-version package copies, metric code in experiment dirs, floating `torch.hub`/HF `main` references.
@@ -212,7 +218,7 @@ Regeneration: annotated tag `eval/vX.Y` per certified release; `git worktree add
 3. Bump `VERSION` (iterate as `X.Y.Z-draft.N`; certified releases drop the suffix).
 4. `PYTHONPATH=$PWD/src pytest -q tests/test_transition_eval*.py tests/test_versioning.py` — green. (PYTHONPATH matters in worktrees: the env's editable install points at the main checkout and silently shadows worktree code; every harness test file also carries a sys.path shim for the same reason.)
 5. `python -m diffusion.transition_eval.versioning --corpus <corpus_manifest>` — review the stamp.
-6. Run certification (§6) → committed record `certifications/v<X.Y>.md` + artifacts under `outputs/eval/certification/<version>/`. *(Until O4 lands: version stays draft; drafts cannot produce headline numbers.)*
+6. Run certification (§6) → committed record `certifications/v<X.Y>.md` + artifacts under `outputs/eval/certification/<version>/`. *(While the version is a draft it cannot produce headline numbers.)*
 7. `CHANGELOG.md` entry (repo rule).
 8. Commit package + SPEC + VERSION + certification record together. On PASS: drop `-draft`, annotated tag `eval/vX.Y`, push branch + tag, open PR. On FAIL: stays draft, no tag.
 9. Cross-version comparisons only via rescoring old items under the new tag.

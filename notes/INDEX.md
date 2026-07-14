@@ -22,6 +22,7 @@ Single entry point for everything learned in this project.
 | [`dataset/vc_bench.md`](dataset/vc_bench.md) | Dataset | VC-Bench task definition, class taxonomy (1/2/5/6/8), dataset structure, 9 eval metrics (VQS/SECS/TSS), transfer approach |
 | [`dataset/vc_bench_exploration.md`](dataset/vc_bench_exploration.md) | Dataset | Interactive tools for browsing VC-Bench (FiftyOne, Gradio, options compared) |
 | [`dataset/autotransition.md`](dataset/autotransition.md) | Dataset | AutoTransition (HF, 35k templates, 107 transition names, ~52.9 GB) — JSON schema, split-tar-not-gzip gotcha, partial-download recipe |
+| [`eval_harness_v3.md`](eval_harness_v3.md) | Eval | Transition-eval harness v3 — CERTIFIED `eval/v3.0.0`; positioning, plan→infer→score flow, trust map, certification meaning; SPEC.md in-package is authoritative |
 | [`ideas.md`](ideas.md) | Research | Hypothesis / minimal-experiment sketches |
 
 ---
@@ -79,6 +80,10 @@ model-bootstrap middle, solver step-escalation, σ-conditional release), the
 mechanism behind each, why each one failed, the named cause (free-middle cost
 coupled to anchor quality through velocity coupling), and three paths forward
 outside §0. Designed for a reader who wasn't in the room.
+
+### Eval
+
+**`eval_harness_v3.md`** — The transition-eval harness map: certified status (`eval/v3.0.0`, 2026-07-14), what certification claims and doesn't, the plan→infer→score flow, trust-map consumption rule, open items before the first model report. Authoritative detail lives in `src/diffusion/transition_eval/SPEC.md` (metrics §3, health assessment §6, change protocol §10); committed records in `src/diffusion/transition_eval/certifications/`.
 
 ### Research
 
