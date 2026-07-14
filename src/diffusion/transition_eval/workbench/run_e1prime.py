@@ -207,8 +207,22 @@ def run() -> int:
                                "threshold": a["misretrieved_must_drop_below"],
                                "pass": bool(cand["misretrieved"] < a["misretrieved_must_drop_below"])},
         "hubness_gate": {"value": cand["hubness"]["stats"], "pass": bool(cand["hubness"]["pass"])},
-        "coverage_not_materially_narrower": {"value": cand["coverage"], "incumbent": 1.0,
-                                             "pass": bool(cand["coverage"] >= 1.0)},
+        "coverage_not_materially_narrower": {
+            "value": cand["coverage"], "incumbent": 1.0,
+            "shortfall_pp": round(100 * (1.0 - cand["coverage"]), 2),
+            "pass": None,
+            "OWNER_RESERVED": "§7 cond. 4 says coverage must be 'not MATERIALLY narrower' "
+                              "than the incumbent's 1.0000. 'Materially' is not a "
+                              "threshold, and the executor does not invent one "
+                              "(§2.7: ambiguity -> escalate, never choose). The FACT is "
+                              "reported: 0.9417 vs 1.0000, i.e. 13/223 clips undefined "
+                              "(12 low_D + 1 empty core). The shortfall is entirely a "
+                              "consequence of the FROZEN §1.2 min-D guard, which the "
+                              "gamma-signature triggers and E1's delta did not (the "
+                              "delta contains no D; every gamma channel divides by it). "
+                              "MOOT for the §7 call: conditions 1 and 2 fail "
+                              "independently and terminally.",
+        },
         "probe_battery": {"value": "IV1/IV2 are the only probe-battery elements this "
                                    "cycle registers; the full §7 battery (twins through "
                                    "M2a, sibling-vs-control per class, lerp at the floor) "
@@ -217,6 +231,11 @@ def run() -> int:
     }
     sec7["all_pass"] = bool(all(v["pass"] for v in sec7.values()
                                 if isinstance(v, dict) and v.get("pass") is not None))
+    sec7["all_pass_note"] = ("False because conditions 1 (Cohen's d) and 2 (misretrieved) "
+                             "FAIL. Two conditions are not computed as pass/fail: the "
+                             "coverage condition is owner-reserved (see above) and the "
+                             "full probe battery is not part of a kill test. Neither can "
+                             "change the §7 outcome.")
 
     # ---- predictions (descriptive, NEVER gating) ----------------------------
     preds = _predictions(corpus, keys, labels, side, sig_raw, mats["A_gating"][0],

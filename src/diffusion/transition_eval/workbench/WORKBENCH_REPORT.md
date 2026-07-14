@@ -1,283 +1,284 @@
-# Metric Workbench — Report
+# Metric Workbench — Final Report (WORKBENCH CLOSED)
 
-**Branch** `eval/metric-workbench` · **Run** 2026-07-14 · **Executor** implementation
-agent (build → test → run → report neutrally, OPERATIONS §8).
+**Branch** `eval/metric-workbench` · **Run** 2026-07-14 (two cycles) · **Executor**
+implementation agent (build → test → run → report neutrally, OPERATIONS §8).
 
-This is a **neutral data package**. Every §7 adoption condition below is a **computed
-pass/fail fact**. There is **no adoption recommendation, no interpretation, and no
-strategy** in this document — those belong to owner-side review.
+This is a **neutral data package**. Every gate, kill rule and §7 adoption condition below
+is a **computed pass/fail fact**. There is **no adoption recommendation, no
+interpretation and no strategy** in this document — those belong to owner-side review.
 
-Both tracks terminated on pre-registered rules. **Two owner-reserved matters are
-escalated** (§7 below).
+**All three tracks terminated on pre-registered rules. The workbench is closed. No third
+cycle under any outcome (E1PRIME_DIRECTIVE §2.6).**
 
 ---
 
 ## 0. Outcome at a glance
 
-| track | rung | pre-registered rule that fired | outcome |
+| cycle | track | pre-registered rule that fired | outcome |
 |---|---|---|---|
-| Phase 2 (appearance) | **E1** | §4.1 KILL RULE | **KILL** — E2/E3 do not run |
-| Phase 1 (motion) | **§3.4 acceptance** | "the exam is not run on a metric that fails constructed truth" | **FAIL** — the exam is not run |
+| 1 | Phase 1 (motion) | §3.4 — *"the exam is not run on a metric that fails constructed truth"* | **FAIL** — exam not run; M1b/M1c_flow stay analysis-tier |
+| 1 | Phase 2 (appearance) · **E1** delta | §4.1 KILL RULE | **KILL** — E2/E3 do not run |
+| 2 | Phase 2 (appearance) · **E1′** γ-signature | §2.4 KILL RULE, **binding per §2.3** | **KILL (IV pass)** — **adjudicated**; workbench closed |
 
 Kill rules honored are results, not failures (OPERATIONS §7).
 
----
-
-## 1. Freeze verification (step 0)
-
-- All six incumbent metrics **reproduce RUNBOOK §B exactly** from the frozen
-  `distance_matrices.npz` (sha256 verified) through the frozen exam kernel.
-- `m1a__v3_sided` rebuilt from warm bundles with deployed code: **max|Δ| = 0.0**
-  (bitwise).
-- The workbench wrote **nothing** to the certified shared cache. Corpus reads go
-  through a `ReadOnlyExtractor` whose `extract()` raises, so polluting it is
-  impossible by construction rather than by discipline; the GPU job printed a
-  before/after cache canary and both read **1933 entries, 0 files touched**.
-
-  **Disclosed for accuracy:** the shared cache *did* grow later in the day — 1933 →
-  2233 entries, 300 files written between 12:58 and 13:03. That is **not** the
-  workbench. It coincides exactly with the owner's own `exp060_score` job
-  (12:57:43 → 13:03:18), and the certified harness writes feature caches into
-  `outputs/eval/cache` by design when scoring new generations. **All 223 corpus cache
-  entries this run depends on are untouched** (mtimes 2026-07-08), and the incumbent
-  bitwise round-trip **still reproduces `max|Δ| = 0.0`** against the frozen npz after
-  the fact. Every number in this report therefore stands.
-
-### Amendment A4 — the drafted stratum recalls do not exist
-
-RUNBOOK §3.5 cites incumbent stratum recalls of **0.62 / 0.44** from memory. **No
-constructible definition reproduces them.** All five readings were computed and
-recorded:
-
-| definition (m1b_camera, camera stratum) | value |
-|---|---|
-| clip-pooled, uncovered = miss | 0.31373 |
-| clip-pooled, uncovered dropped (deployed descriptive) | 0.33684 |
-| macro per-class, all classes | 0.26929 |
-| **macro per-class, eligible (FROZEN as the gate)** | **0.34623** |
-| restricted pool | 0.40000 |
-
-A4 pre-registered this backfill and demoted the memory figures, so the backfilled
-values are the numbers to beat. The frozen definition reproduces the certified exam's
-own persisted `o7_conditional.camera_stratum_mean_recall` **bit-for-bit**. Object
-stratum (m1c_object): **0.03426**.
+**Both owner-reserved matters escalated in cycle 1 were adjudicated by the owner before
+cycle 2 ran.** Cycle 2 escalates **one** new matter (§7 condition 4; moot for the call).
 
 ---
 
-## 2. Phase 2 — appearance · E1 (§4.1 KILL TEST)
+## 1. Freeze verification
 
-**Rule (verbatim):** *"if delta fails to beat raw M1a on **both** Cohen's d and
-misretrieved count, the endpoint-normalization program is dead at the appearance
-level. One appendix paragraph, full stop. E2/E3 do not run."*
+**Cycle 1.** All six incumbent metrics **reproduce RUNBOOK §B exactly** from the frozen
+`distance_matrices.npz` (sha256 verified) through the frozen exam kernel.
+`m1a__v3_sided` rebuilt from warm bundles with deployed code: **max|Δ| = 0.0** (bitwise).
 
-| | E1 delta | pinned incumbent `m1a__v3_sided` | beats? |
-|---|---|---|---|
-| Cohen's d | 0.358190 | 1.522006 | **NO** |
-| misretrieved | 209/223 | 73/223 | **NO** |
-| accuracy | 0.0628 (chance 0.067) | 0.672646 | — |
-| coverage | 1.0000 | 1.0000 | — |
-| §1.4 hubness | **FAIL** (skew 4.300, entropy 0.322, max-pred 0.650, sink `mystification`) | PASS | — |
+**Cycle 2 (E1′).** Ordering was enforced and is verifiable from the git history:
 
-**VERDICT: KILL. E2/E3 do not run.** Coverage is 1.0000, so this is not a
-shrunken-support artifact.
+| step | commit | what existed at that commit |
+|---|---|---|
+| Part-1 record amendments | **`2ac90d7`** | no E1′ computation of any kind |
+| **Part-2 pre-registration FROZEN** | **`aace78d`** | **no E1′ signature, distance, IV number or exam** |
+| code + 16 unit tests | `c4fce9b` | still no candidate number |
+| **raw min-D floor FROZEN** (corpus-only) | **`6930eae`** | **no candidate distance** |
+| the run | *(after all of the above)* | — |
 
-### Instrument diagnostics (facts; they do not revise the verdict)
+`gates.yaml` — the RUNBOOK's frozen gates — was **not touched by cycle 2**. Its last
+commit is `8c38833` (the cycle-1 Phase-1 freeze). Every number cycle 2 reuses (kill rule
+1.522006 / 73, hubness thresholds, §7, min-D percentile 5.0) is **quoted** from it, never
+restated with a different value.
 
-The control is the identical representation with **no null subtraction at all** —
-i.e. containing zero endpoint-normalization:
+**Shared-cache canary.** Both GPU jobs printed a before/after cache count. Cycle 2's IV2
+job: **2233 → 2233 entries, 0 files touched.** The corpus is read through a
+`ReadOnlyExtractor` whose `extract()` raises, so polluting the certified cache is
+impossible by construction, not by discipline.
 
-| arm | accuracy | Cohen's d | misretrieved | hubness entropy |
+*Disclosed for accuracy (unchanged from cycle 1):* the shared cache did grow earlier in
+the day, 1933 → 2233 entries between 12:58 and 13:03. That is **not** the workbench — it
+coincides exactly with the owner's own `exp060_score` job (12:57:43 → 13:03:18), and the
+certified harness writes feature caches by design when scoring generations. All 223
+corpus entries this report depends on are untouched (mtimes 2026-07-08), and the
+incumbent bitwise round-trip still reproduces **max|Δ| = 0.0**.
+
+---
+
+## 2. Cycle 2 — E1′, the γ-scalar signature (the final candidate)
+
+Full record: `outputs/eval/workbench/e1prime/RECORD.md`.
+
+### 2.1 §2.3 instrument validity — BOTH PASS, so the kill BINDS THE HYPOTHESIS
+
+| precondition | accuracy | floor | verdict | (â, b̂)-only column *(non-gating)* |
 |---|---|---|---|---|
-| RAW `v_clip`, no subtraction | 0.6054 | 0.9875 | 88/223 | 0.882 |
-| WHITENED `v_clip`, no subtraction | 0.0628 | 0.1068 | 209/223 | 0.042 |
-| WHITENED delta (**the candidate**) | 0.0628 | 0.3582 | 209/223 | 0.322 |
-| RAW delta (unwhitened) | 0.1345 | 0.6211 | 193/223 | 0.524 |
+| **IV1** effect vs nothing — {223 clips, 223 rendered nulls} | **0.9357** | 0.90 | **PASS** | 0.8476 |
+| **IV2** snap vs nothing — {37 Bar-6 hard cuts, 37 matched lerps} | **1.0000** | 0.90 | **PASS** | 1.0000 |
 
-ZCA spectrum: 768 dims, λ ∈ [1.848e-09, 3.637e-02], condition ≈ 1.97e7. The frozen
-eigenvalue floor (1e-6 · λ_max = 3.64e-08) floors **1 of 768** dimensions. Whitened
-norm means: null 35.52 vs clip 14.61 (raw: 0.912 vs 0.867). Plumbing verified: nulls
-are genuinely distinct from their clips (cos mean 0.700, min 0.113), 223/223 deltas
-defined.
+The (â, b̂)-only column was **pre-declared before the IV ran**, because the
+pre-registration disclosed in advance that every "nothing" object has **m̃ ≡ 0 exactly**
+(`make_lerp` is idempotent on its own endpoints — proved by unit test), which makes the
+IV partly tautological on that channel. **The passes do not rest on the tautology:** with
+m̃ removed entirely, the signature still separates effect-from-nothing at **0.85** and
+cut-from-crossfade at **1.00**. The instrument is valid on its merits.
 
-**Floor-sensitivity diagnostics** (grid pre-declared before computing; no verdict
-column, no floor recommended): across `eig_floor_ratio ∈ {1e-6 … 1e-1}` the whitened
-no-subtraction control stays at accuracy 0.0628 from 1e-6 through 1e-3 and reaches
-0.3722 only at 1e-1 (704 of 768 dims floored), still below the raw control's 0.6054.
-The whitened delta does not exceed accuracy 0.0942 or fall below 202/223 misretrieved
-at any floor in the grid.
+IV2 pair coverage **1.0000** over all 37 n≥2 classes.
 
-### E0 (§4.2, non-gating; ran regardless of the kill)
+### 2.2 §2.4 kill rule — FIRES on both legs
 
-Chord detachment (clip residual magnitude / its own rendered null's): most detached
-flying_cam_transition 1.217, shadow_smoke 1.191; most chord-hugging live_concert
-0.694, polygon 0.726.
+> *"If the candidate fails to beat pinned `m1a__v3_sided` (d 1.522006, misretrieved
+> 73/223) on **both** Cohen's d and misretrieved count → KILL, one appendix paragraph,
+> workbench closed."*
 
----
+| | candidate | incumbent | beats? |
+|---|---|---|---|
+| Cohen's d | **0.797854** | 1.522006 | **NO** (×1.91 short) |
+| misretrieved | **183 / 223** | 73 / 223 | **NO** (×2.51 worse) |
 
-## 3. Phase 1 — motion · §3.4 acceptance
+### 2.3 The arms (§2.2's closed list — nothing else was computed)
 
-Full detail: `outputs/eval/workbench/phase1/RECORD.md`.
+| arm | role | acc | Cohen's d | coverage | misretr. | hubness |
+|---|---|---|---|---|---|---|
+| **A (â, b̂, m̃) raw** | **GATING** | 0.1905 | **0.7979** | 0.9417 | **183** | PASS |
+| B (â, b̂, m) no null subtraction | control | 0.2143 | 0.6794 | 0.9417 | 178 | PASS |
+| C (â, b̂, m̃) Ledoit-Wolf | non-gating | 0.2048 | 0.8047 | 0.9417 | 180 | PASS |
+| D m̃ alone | diagnostic | 0.0905 | 0.4336 | 0.9417 | 204 | PASS |
+| *A under σ_emb* | *non-gating σ column* | *0.2048* | *0.7763* | *0.9417* | *180* | *PASS* |
+| `m1a__v3_sided` (incumbent) | — | 0.6726 | **1.5220** | 1.0000 | **73** | PASS |
 
-**Backbone:** SEA-RAFT (amendment A2's timeboxed attempt **succeeded**, so the
-RUNBOOK's primary choice shipped; the torchvision fallback was staged and not
-needed). Flow at 432×320.
+Chance = 0.067. The signature carries **real class signal** (2.8× chance) and is far
+below the incumbent. **The hubness gate PASSES on every arm** — the failure is not a hub
+collapse and no sink is suppressing the score.
 
-**Test 2 — injected-trajectory: FAIL.** 35 verdict cells (all rung p90; `wireframe_2`
-excluded-with-reason as texture-gated). **29 PASS** (corr 0.9618–0.9998, amp_err
-0.0004–0.0996). **6 FAIL.** The pre-committed **post-hoc oracle** (σ re-estimated from
-each probe's own realized noise; `recovered = truth + N(0,σ)` pushed through the
-unchanged grader) splits them: **3 noise-limited** (an oracle could not pass them
-either → construction) and **3 fail at rungs the oracle passes with margin** →
-**the metric failing constructed truth**. The verdict is **monotone** under any
-reclassification of the 3 noise-limited cells.
+### 2.4 The σ reading — pre-declared as open, now closed by its own column
 
-**Test 1 — reversal: FAIL.** 102 camera-tagged → 12 insensitive (Bar-5 screen, floor
-0.5 inherited verbatim from the certified `bars.yaml`) → 57 undefined-ungradable
-(§1.5: counted, never failed) → **33 graded**. Leg A1 (closer-to-negated,
-threshold-free) **33/33**. Leg A2 (0.90 negation-correlation floor) **17/33**. Leg B
-(descriptor distance > median within-class) **22/33** (failing ratios 0.360–0.880).
-Joint row pass **11/33**. Leg B's form is frozen verbatim; the construction was
-re-checked for a third defect and none was found. **Reversal fails on leg B alone.**
+The pre-registration named exactly one genuinely open reading (the σ-parameterization)
+and pre-declared a **non-gating sensitivity column** for the alternative **before any
+number existed**, so a σ-sensitive verdict would be adjudicable without a re-run.
 
-**Consequence (§3.4):** the exam is **not run**; no §3.6 adoption question arises.
-M1b_flow and M1c_flow remain **analysis-tier**. No second attempt this cycle
-(§3.6, §9).
-
-### Pre-exam facts (computed before any distance existed)
-
-- **Coverage under the frozen gates:** m1b_flow **130/223 (0.5830)**, m1c_flow
-  **118/223 (0.5291)** — against incumbent m1b_camera **0.9686** and m1c_object
-  **0.9955**. The dominant loss (223 → 143) comes from RUNBOOK-**pinned** rules (40%
-  inlier floor, 30% clip cap), **before** either open threshold was set; the two
-  calibrations frozen this cycle are second-order (143 → 130 / 118).
-- **Mechanism, measured on the corpus:** effect-area fraction (pixels the camera fit
-  calls outliers) median **0.875** on undefined core frames vs **0.160** on defined
-  ones.
-- **§3.6 stratum-recall ceilings implied by coverage alone:** camera **0.3571** (9 of
-  14 eligible classes have zero covered clips; incumbent target 0.34623); object
-  **0.6111** (7 of 18; incumbent target 0.03426).
-- **Corpus camera-motion scale:** median per-pair translation **tx 0.297 px / ty 0.421
-  px**, within an order of magnitude of the flow fit's own per-pair parameter noise
-  (σ ≈ 0.015–0.017 px). Vigorous decile: tx 3.11 px / ty 2.31 px. **An oracle fails
-  §3.4's peak-amplitude criterion at p50.**
-- **Huber breakdown (constructed truth):** max parameter error vs contaminated area —
-  5% → 0.05 px, 15% → 0.24, 25% → 0.52, 33% → 0.75, 40% → 1.68, 45% → 2.92. Past ~40%
-  the inlier fraction collapses and the frame exits **undefined** rather than
-  confidently wrong.
+Gating σ: **d 0.7979**. Alternative σ_emb: **d 0.7763**. Both are less than **half** the
+incumbent's 1.522006 and both fail the kill rule on both legs. **The open reading cannot
+change the verdict.**
 
 ---
 
-## 4. §1.4 hubness gate (mandatory per candidate; terminal)
+## 3. §7 adoption conditions — computed pass/fail FACTS
 
-The RUNBOOK mandates this gate but states **no numbers**. They were derived, not
-chosen: each threshold is the **midpoint of the empty gap** between the pass and dead
-incumbent populations — a deployed convention in the certified instrument
-(`probes.grade_splices` fixes `tau_copy` the same way). Frozen: skew ≤ 3.0, prediction
-entropy ≥ 0.70, max-pred-class share ≤ 0.25, gating k = 10.
+| condition | value | threshold | pass |
+|---|---|---|---|
+| 1. Cohen's d ≥ 1.772006 | 0.797854 | 1.772006 | **FAIL** |
+| 2. misretrieved < 73 | 183 | 73 | **FAIL** |
+| 3. hubness gate | skew 0.41 / H 0.920 / max-pred 0.076 | 3.0 / 0.70 / 0.25 | **PASS** |
+| 4. coverage not *materially* narrower | 0.9417 vs 1.0000 | — | **OWNER-RESERVED** |
+| 5. full probe battery | not run | — | n/a (kill test) |
 
-Authority for where the gate sits is RUNBOOK §0 itself ("M1c is hub-collapsed
-(polygon column = sink artifact)"; "M1b is merely weak"). The frozen gate reproduces
-that diagnosis on all six incumbents (fires on `m1c_object`/polygon and
-`m_incumbent`; silent on the m1a family and `m1b_camera`), and a regression fixture
-asserts it.
-
-**Candidate verdicts:** E1 delta **FAIL** (sink `mystification`). M1b_flow / M1c_flow:
-**not evaluated** — the §3.4 gate is upstream of the exam.
+**§7 ALL-PASS: FALSE**, on conditions 1 and 2, independently and terminally.
 
 ---
 
-## 5. §5 pre-registered prediction checks (descriptive, non-gating)
+## 4. §5 pre-registered predictions, in registered form (DESCRIPTIVE — never gating)
 
-| # | prediction | result |
-|---|---|---|
-| P1 | sibling γ-distance < clip-to-own-null distance for every eligible class | **NOT CHECKABLE** in its registered (γ-signature) form — E2 did not run. On the nearest available analogue, **8/29** eligible classes have every clip closer to a sibling than to its own null. |
-| P2 | sidedness (26/13) recoverable from s(σ) asymmetry | rank **AUC 0.523** (one-sided mean +0.360, two-sided +0.347). 0.5 = no separation. |
-| P3 | nature_bloom remains lerp-adjacent | detachment ratio **0.893** vs corpus median 0.948; rank 13/39 low→high. n=2 class, never gating (§6). |
-| P4 | one-sided classes concentrate excursion mass in early σ | one-sided centroid **0.456** vs two-sided **0.499**; one-sided earlier: **True**. |
+| prediction | result |
+|---|---|
+| **P1** sibling γ-distance < clip-to-own-null, per n≥4-eligible class | **9 / 28** classes (clip level: 155/189 = 82%). **Fails as registered.** |
+| **P2** sidedness recoverable from s-asymmetry | rank AUC **0.1017** — see below |
+| **P4** one-sided mass early in σ | m̃-centroid **0.3263** (one-sided) vs **0.4626** (two-sided) → **HOLDS** |
 
----
-
-## 6. §7 adoption conditions — computed pass/fail FACTS
-
-§7 governs the **appearance** candidate. E1 is the only appearance candidate that
-ran; E2/E3 did not (per the §4.1 kill).
-
-| # | §7 condition | computed |
-|---|---|---|
-| 1 | Cohen's d improves by ≥ 0.25 over 1.522006 (⇒ ≥ 1.772006) **and** misretrieved < 73 | **FAIL** — d 0.358190; misretrieved 209 |
-| 2 | probe battery passes unchanged (splices, siblings > controls, twins 11/11, lerp at floor) | **NOT RUN** — §4.1 kill fired first; the probe battery was never reached |
-| 3 | hubness gate passes (§1.4) | **FAIL** — skew 4.300 > 3.0; entropy 0.322 < 0.70; max-pred 0.650 > 0.25 |
-| 4 | definedness coverage reported and not materially narrower than the incumbent's (1.0000) | coverage **1.0000** — **reported**. *"Materially narrower" is **not computable**: no frozen materiality threshold exists. The number is stated; the adjudication is owner-side.* |
-
-Phase 1's gate is **§3.6**, not §7, and §3.6 carries no coverage condition. No §3.6
-adoption question arises because the exam was not run.
+**P2, stated precisely.** AUC 0.1017 is **not** "no separation" (which would be 0.50).
+The two sidedness populations are **strongly separated** — a classifier on the *negation*
+of the registered statistic scores **0.8983** — but in the direction **opposite** to the
+one the registered statistic's phrasing implies. Sidedness **is** recoverable from the
+asymmetry; the registered statistic's sign is inverted relative to the prediction. **No
+mechanism claim is attached.**
 
 ---
 
-## 7. Owner-reserved matters (escalated; both tracks stopped)
+## 5. Cycle-1 tracks (unchanged; both terminal)
 
-**(a) The E1 whitening confound.** RUNBOOK §1.1 mandates whitening but **does not pin
-its regularization**. `eig_floor_ratio = 1e-6` was an **executor-chosen** free
-parameter, frozen in good faith (`694afc7`) before any candidate ran. The
-identically-preprocessed **no-subtraction control** — containing zero
-endpoint-normalization — produces the same retrieval statistics as the candidate
-(0.0628 accuracy, 209/223). Whether the frozen parameter confounds the §4.1 test, and
-whether the recorded verdict bears on the endpoint-normalization hypothesis, are
-outcome-aware threshold and kill-rule-interpretation questions — **owner-reserved**
-(OPERATIONS §1(5), §8). **No workbench action revised the recorded verdict.**
-Floor-sensitivity diagnostics are attached so this can be adjudicated **without a
-re-run**.
+**Phase 2 · E1 (delta vector) — §4.1 KILL** (`72a5bd4`): d **0.358190** vs 1.522006;
+**209/223** misretrieved vs 73; coverage 1.0000; **hubness FAIL**. E2/E3 did not run.
 
-**(b) Reversal leg A2.** The 0.90 correlation floor is frozen in `gates.yaml` only
-under `injected_trajectory`; applying it to reversal negation correlations is an
-executor operationalization, applied to real-clip channels whose amplitudes are
-uncontrolled. 20 of 132 graded clip×channel cells fall below it (rotation 11, ty 5,
-log_scale 3, tx 1); rotation is the corpus's lowest-amplitude channel (per-pair p50
-0.00089). No oracle-validity guard was pre-registered for reversal, and constructing
-one after the leg failed is precluded by the C5-R pre-commitment. **No mechanism claim
-is attached.** Note the reversal verdict does **not** rest on A2 (leg B fails
-independently), and §3.4 does not rest on reversal (the injected test fails
-independently).
+**Phase 1 · motion — §3.4 ACCEPTANCE FAILED** (`2de4835`): injected trajectories
+**29/35** pass; a post-hoc oracle splits the 6 failures into 3 noise-limited
+(construction) and **3 real metric failures at oracle-VALID rungs**. Reversal: 102 → 12
+insensitive → 57 undefined-ungradable → **33 graded**; leg A1 33/33, leg A2 17/33, leg B
+**22/33**, joint 11/33 → **fails on leg B alone**. The exam was **not run**. M1b_flow /
+M1c_flow remain analysis-tier. No second attempt (§3.6, §9).
+
+**Item-5 readout** (added this cycle; pure readout of persisted records, no re-run): the
+3 oracle-valid failures failed on **`ty` × 2, `log_scale` × 2**. **Every failure across
+all six failing cells is an AMPLITUDE failure, never a correlation failure** — the lowest
+correlation on any failing channel anywhere is **0.9655**, against a 0.90 floor, while
+amplitude misses by 12–18%.
+
+---
+
+## 6. Owner-reserved matters
+
+### Adjudicated by the owner before cycle 2 (both from cycle 1)
+
+- **(a) E1's whitening confound** — adjudicated: the E1 KILL binds the
+  candidate-as-specified; the hypothesis was recorded **unadjudicated**, prior lowered.
+  Cycle 2 (E1′) carried the hypothesis and **adjudicated it**.
+- **(b) Reversal leg A2** — adjudicated: an invalid-in-context operationalization. Phase-1
+  verdicts unaffected (leg B and the injected test fail independently). Codified as
+  OPERATIONS **§8.5**: *a ported threshold needs a validity guard in its destination
+  context, or the leg it gates is advisory.*
+
+### Escalated by cycle 2 (one, and it is moot)
+
+- **§7 condition 4 — "not *materially* narrower" coverage.** "Materially" is not a
+  threshold and the executor did not invent one (§2.7: ambiguity → escalate, never
+  choose). **The fact:** coverage **0.9417** = 210/223, with 13 undefined rows — **12
+  low_D + 1 empty core mask**. The shortfall is entirely a consequence of the **frozen
+  §1.2 min-D guard**, which the γ-signature triggers and E1's delta did not (the delta
+  contains no D; every γ channel divides by it). **Moot for the §7 call:** conditions 1
+  and 2 fail independently and terminally.
+
+### Facts bearing on already-adjudicated matters (recorded, reopening nothing)
+
+- **Arm C (Ledoit-Wolf) and escalation (a).** E1's whitener used an **executor-chosen**
+  `eig_floor_ratio = 1e-6`, and its whitened no-subtraction control scored **0.0628**
+  (chance) against a raw control's **0.6054**. Arm C substitutes Ledoit-Wolf, which has
+  **no free parameter** (δ = 0.007576, computed from the data; condition number 1.968e7 →
+  4.062e3; no eigenvalue floor). Under it the whitened arm scores **d 0.8047 / acc
+  0.2048** — **indistinguishable from the raw gating arm** (0.7979 / 0.1905), not
+  collapsed to chance. The mechanism is isolated in a unit test: an eigenvalue floor
+  divides near-null directions by `sqrt(floor)` and amplifies pure noise to unit variance;
+  Ledoit-Wolf divides them by `sqrt(δ·m)` and leaves them small. **Stated without
+  extension:** a parameter-free whitener does not flatten this signature, while the
+  floored whitener flattened E1's delta to chance. **Escalation (a) is already
+  adjudicated and E1-as-specified does not re-run; nothing here changes that.**
+
+- **e0's descriptive curves are degenerate.** `e0_anatomy.py` resampled **each channel by
+  its own arc length**, which maps any **monotone** channel to a straight line for every
+  clip (proved by unit test). â is near-monotone by construction, so E0's â curves are
+  near-linear ramps corpus-wide. **E0 is non-gating and no verdict ever rested on it** —
+  but the owner's adjudication of escalation (a) cited **"P2 AUC 0.523"** as one of three
+  descriptive wounds, and that figure was measured through this reparameterization. P2 is
+  recomputed above in E1′'s registered form (0.1017 → 0.8983 on the negated statistic).
+
+---
+
+## 7. Advisor channel — UNAVAILABLE in cycle 2 (disclosure)
+
+Cycle 1 ran with an advisor channel (six consultations, C1–C6, logged in
+`CONSULTATIONS.md`, including three self-corrections). **In cycle 2 the advisor tool
+returned "unavailable" on the first call and was not retried. No consultation exists for
+E1′.** Its readings are **executor readings, reviewed by no one.**
+
+Compensating discipline actually applied, and verifiable in the git history: every
+reading not fully determined by frozen text was **pre-declared with its derivation in the
+Part-2 pre-registration commit (`aace78d`), before any candidate number existed**; the one
+reading that remained genuinely open (σ) carried a **pre-declared non-gating sensitivity
+column** (which subsequently closed it); and the two structural weaknesses of the
+registered IV design (the m̃ ≡ 0 tautology) were **disclosed before the IV ran**, not
+after its result was known.
 
 ---
 
 ## 8. What was NOT run, and why
 
-| not run | why |
-|---|---|
-| **E2** (γ-signature), **E3** (within-video Gram) | §4.1 recorded **KILL**. `gates.yaml` makes this structural: the driver refuses E2/E3 unless E1's recorded verdict is a pass. |
-| §4.5 ablations | they apply to "whichever rung survives" (§4.5); none did. |
-| **Phase 1 exam** (§3.5), §3.6 verdict | §3.4 acceptance FAILED: "the exam is not run on a metric that fails constructed truth." |
-| M1b_flow / M1c_flow hubness verdicts | the §3.4 gate is upstream of the exam. |
-| Re-run of the 3 noise-limited injected cells | the verdict is **monotone** under any reclassification of them; no outcome could change it (C5, C6; §9). |
+- **E2, E3** — forbidden by the §4.1 kill (cycle 1) and by §2.7 (cycle 2).
+- **The Phase-1 exam** — §3.4: *"the exam is not run on a metric that fails constructed
+  truth."*
+- **Any motion work in cycle 2** — §2.7. The item-5 readout is a readout of persisted
+  artifacts; no probe was rebuilt and no flow recomputed.
+- **The full §7 probe battery** — E1′ is a kill test, not an adoption run.
+- **Any rescue variant, any repair, any threshold adjustment** — terminal by rule.
 
 ---
 
-## 9. Integrity of the pre-registration
+## 9. Integrity
 
-- `gates.yaml` was frozen **before any candidate computation** and **no frozen number
-  was changed at any point**: §3.4's 0.9/10%, the `max|·|` amplitude statistic, the
-  all-graded-must-pass aggregation, §3.2's 40%/30% caps, §4.1's kill thresholds,
-  §1.4's hubness thresholds, §7's deltas, `gates.yaml` itself.
-- The two open Phase-1 calibrations were **derived** from §1.2's in-document
-  5th-percentile convention and frozen in their own commit **before the exam**, with
-  the construction **pre-declared before the numbers were computed**.
-- The §3.4 second construction's amplitude ladder, oracle, and verdict-rung rule were
-  **pre-declared before any corrected probe flow was computed**;
-  `select_verdict_rung()` reads **only** the oracle simulation and the frozen-gate
-  definedness — the metric's recovered parameters are **not an argument to it**.
-- Six advisor consultations are logged (`CONSULTATIONS.md`, C1–C6) with question,
-  direction, and action. **No consultation overrode a frozen rule.** Three errors of
-  the executor's own were caught and are logged as corrections rather than silently
-  repaired: a retroactively-logged consultation (C2), and three count misreports in
-  the §3.4 summary (C6).
-- Bugs found and fixed during the run, two of which had been **flattering** the
-  metric: a z-scale mismatch in the reversal descriptor leg, a unit-mixing degeneracy
-  in the compound probe (e⁶ ≈ 403× zoom), a NaN→FAIL §1.5 violation, and a reversal
-  definedness-mask misalignment.
+- **No frozen number was changed at any point, in either cycle.** `gates.yaml` is
+  byte-identical since `8c38833`; `certify/bars.yaml` is untouched; the `eval/v3.0.0` tag
+  (`50c0270`) was never reopened.
+- **Zero files outside `workbench/` were modified on this branch.** The certified package
+  is byte-identical.
+- **155 tests pass** (139 from cycle 1 + 16 new), 1 skipped.
+- **Determinism:** the full E1′ run was executed **twice**; every gating number (all four
+  arms' accuracy, Cohen's d, coverage, misretrieved; both IV accuracies) is
+  **bit-identical across re-runs**.
+- **Two unit tests are evidence for claims the pre-registration rests on**, not shape
+  checks: per-channel arc length linearizes any monotone channel (why that σ reading was
+  rejected **by derivation**), and `make_lerp` is idempotent on its own endpoints (why
+  every "nothing" object has m̃ ≡ 0, disclosed **before** the IV ran).
+
+### Commit hashes (cycle 2)
+
+| commit | content |
+|---|---|
+| `2ac90d7` | Part-1 record amendments (both escalations adjudicated; owner spec errors; item-5 readout; OPERATIONS §8.5) |
+| `aace78d` | **Part-2 pre-registration FROZEN** — before any candidate number |
+| `c4fce9b` | `e1prime.py`, `iv.py`, `lw.py`, `build_iv2.py` + 16 tests |
+| `6930eae` | **raw min-D floor FROZEN** (corpus-only) — before any candidate distance |
+
+---
 
 ## Artifacts
 
-`outputs/eval/workbench/{step0,e0,e1,phase1}/` · `CONSULTATIONS.md` ·
-`IDEAS_NEXT_CYCLE.md` (non-authoritative parking lot; referenced by no record and
-gating nothing).
+`E1PRIME_DIRECTIVE.md` (owner authority, verbatim) · `E1PRIME_AMENDMENTS.md` (Part 1) ·
+`E1PRIME_PREREG.md` + `gates_e1prime.yaml` (frozen Part 2) · `CONSULTATIONS.md` (C1–C6 +
+the cycle-2 advisor-unavailable disclosure) · `outputs/eval/workbench/e1prime/RECORD.md`
++ `e1prime.json` + `mind_raw_frozen.json` + five distance matrices ·
+`outputs/eval/workbench/phase1/RECORD.md` + `item5_channel_readout.json` ·
+`outputs/eval/workbench/phase2/` (E1) · `$WB_CACHE/iv2/` (37 hard cuts + 37 lerps).
