@@ -53,10 +53,25 @@ def resize_cover_crop(frames: np.ndarray, height: int, width: int) -> np.ndarray
 
 
 def write_video(frames: np.ndarray, path: pathlib.Path, fps: float = 24.0) -> None:
-    """Write uint8 frames as H.264 mp4 (yuv420p needs even dims — crops by 1px if odd)."""
-    h, w = frames.shape[1] // 2 * 2, frames.shape[2] // 2 * 2
+    """Write uint8 frames as H.264 mp4 (yuv420p needs even dims — crops by 1px if odd).
+
+    Encodes to a temp file first and keeps the EXISTING file when the bytes are
+    identical: the stat-based (path|mtime|size) cache keys then stay warm across
+    reruns of deterministic builders (certification probe videos). A differing
+    encode atomically replaces the target — behavior is otherwise unchanged."""
+    path = pathlib.Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    with av.open(str(path), "w") as container:
+    tmp = path.with_name(path.name + ".tmp")
+    _encode_video(frames, tmp, fps)
+    if path.exists() and tmp.read_bytes() == path.read_bytes():
+        tmp.unlink()
+    else:
+        tmp.replace(path)
+
+
+def _encode_video(frames: np.ndarray, path: pathlib.Path, fps: float) -> None:
+    h, w = frames.shape[1] // 2 * 2, frames.shape[2] // 2 * 2
+    with av.open(str(path), "w", format="mp4") as container:
         stream = container.add_stream("libx264", rate=fractions.Fraction(fps).limit_denominator(1000))
         stream.width, stream.height = w, h
         stream.pix_fmt = "yuv420p"

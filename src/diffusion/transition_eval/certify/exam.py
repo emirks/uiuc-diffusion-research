@@ -64,15 +64,52 @@ def variant_core(bundle: dict, sidedness: str, variant: str) -> tuple[np.ndarray
 
 # --- R1: clip-level distance matrices ----------------------------------------------
 
+def _map_pairs(fn, pairs: list, n_jobs: int | None,
+               min_pairs_for_pool: int) -> list:
+    """Map fn over independent (i, j) pairs, on a fork pool when the pair count
+    justifies it. fn must be a module-level numpy-only function reading
+    fork-inherited state; results are identical to the serial path."""
+    import concurrent.futures
+    import multiprocessing
+    import os
+
+    if n_jobs is None:
+        n_jobs = min(16, os.cpu_count() or 1)
+    if n_jobs > 1 and len(pairs) >= min_pairs_for_pool and hasattr(os, "fork"):
+        ctx = multiprocessing.get_context("fork")
+        with concurrent.futures.ProcessPoolExecutor(
+                max_workers=n_jobs, mp_context=ctx) as ex:
+            return list(ex.map(fn, pairs,
+                               chunksize=max(1, len(pairs) // (n_jobs * 8))))
+    return [fn(p) for p in pairs]
+
+
+_APPEARANCE_STATE: dict = {}   # fork-inherited worker state for appearance_distance_matrix
+
+
+def _appearance_pair(pair: tuple[int, int]) -> float:
+    i, j = pair
+    cores = _APPEARANCE_STATE["cores"]
+    return 1.0 - set_similarity(cores[i], cores[j])
+
+
 def appearance_distance_matrix(bundles: list[dict], variant: str,
-                               sidedness: list[str]) -> np.ndarray:
-    """1 - set_similarity on core frames under the chosen core-mask variant."""
+                               sidedness: list[str], n_jobs: int | None = None,
+                               min_pairs_for_pool: int = 256) -> np.ndarray:
+    """1 - set_similarity on core frames under the chosen core-mask variant.
+    Pairwise cells are independent pure numpy — fork-parallel, bit-identical."""
     cores = [b["feats"][variant_core(b, s, variant)[0]]
              for b, s in zip(bundles, sidedness)]
     n = len(bundles)
+    pairs = list(itertools.combinations(range(n), 2))
+    _APPEARANCE_STATE["cores"] = cores
+    try:
+        vals = _map_pairs(_appearance_pair, pairs, n_jobs, min_pairs_for_pool)
+    finally:
+        _APPEARANCE_STATE.clear()
     D = np.zeros((n, n))
-    for i, j in itertools.combinations(range(n), 2):
-        D[i, j] = D[j, i] = 1.0 - set_similarity(cores[i], cores[j])
+    for (i, j), v in zip(pairs, vals):
+        D[i, j] = D[j, i] = v
     return D
 
 
@@ -102,26 +139,13 @@ def motion_distance_matrices(bundles: list[dict], n_jobs: int | None = None,
     The pairwise loop is embarrassingly parallel (each cell independent, pure
     numpy) and runs on a fork pool when the pair count justifies it; workers
     never touch torch/CUDA. Results are identical to the serial path."""
-    import concurrent.futures
-    import multiprocessing
-    import os
-
     n = len(bundles)
     cams = [camera_trajectory(b["tracks"], b["vis"]) for b in bundles]
     _MOTION_STATE.update(tracks=[b["tracks"] for b in bundles],
                          vis=[b["vis"] for b in bundles], cams=cams)
     pairs = list(itertools.combinations(range(n), 2))
-    if n_jobs is None:
-        n_jobs = min(16, os.cpu_count() or 1)
     try:
-        if n_jobs > 1 and len(pairs) >= min_pairs_for_pool and hasattr(os, "fork"):
-            ctx = multiprocessing.get_context("fork")
-            with concurrent.futures.ProcessPoolExecutor(
-                    max_workers=n_jobs, mp_context=ctx) as ex:
-                results = list(ex.map(_motion_pair, pairs,
-                                      chunksize=max(1, len(pairs) // (n_jobs * 8))))
-        else:
-            results = [_motion_pair(p) for p in pairs]
+        results = _map_pairs(_motion_pair, pairs, n_jobs, min_pairs_for_pool)
     finally:
         _MOTION_STATE.clear()
     D_inc = np.full((n, n), np.nan)

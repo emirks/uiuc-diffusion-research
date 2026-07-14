@@ -12,10 +12,41 @@ distribution.
 
 from __future__ import annotations
 
+import hashlib
+import pathlib
+
 import numpy as np
 import torch
 
 from .video_io import resize_cover_crop
+
+# Bump on ANY numeric change to LpipsScorer / endpoint_fidelity / temporal_lpips
+# preprocessing — the cache stores their outputs keyed by stat-based video
+# identity. Certification's warm rerun runs with the cache OFF and its cold
+# anchors with an empty cache dir, so a stale-cache bug cannot pass silently.
+LPIPS_CACHE_TAG = "alex-v1"
+
+
+def lpips_cache_path(key: str, cache_dir: pathlib.Path) -> pathlib.Path:
+    return pathlib.Path(cache_dir) / f"lpips_{hashlib.sha1(key.encode()).hexdigest()[:16]}.npz"
+
+
+def cached_temporal_lpips(frames: np.ndarray | None, key: str,
+                          cache_dir: pathlib.Path | None, scorer: "LpipsScorer") -> np.ndarray:
+    """Cache-through temporal_lpips keyed by the video's bundle key (stat-based
+    identity + geometry). cache_dir=None disables caching entirely (compute
+    fresh, write nothing). A cache miss with frames=None is a caller bug —
+    callers may only skip decoding after checking the cache is warm."""
+    p = (lpips_cache_path(f"{key}:tlpips:{LPIPS_CACHE_TAG}", cache_dir)
+         if cache_dir is not None else None)
+    if p is not None and p.exists():
+        return np.load(p)["d"]
+    if frames is None:
+        raise RuntimeError(f"temporal-lpips cache miss for {key} but no frames were decoded")
+    d = temporal_lpips(frames, scorer)
+    if p is not None:
+        np.savez_compressed(p, d=d)
+    return d
 
 
 class LpipsScorer:

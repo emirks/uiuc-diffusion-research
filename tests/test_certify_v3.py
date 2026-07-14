@@ -479,3 +479,87 @@ def test_build_and_write_analysis_schema(tmp_path):
     assert list(z["keys"]) == keys and np.array_equal(z["m"], D)
     loaded = json.loads(out.read_text())
     assert set(loaded) == {"clips", "metrics", "r2", "by_tag"}
+
+
+# ---- perf no-ops: probe rewrite skip, parallel appearance, LPIPS cache --------------
+
+def test_write_video_preserves_mtime_when_identical(tmp_path):
+    import time
+    from diffusion.transition_eval.video_io import write_video
+    rng = np.random.default_rng(3)
+    frames = rng.integers(0, 255, (6, 32, 32, 3)).astype(np.uint8)
+    p = tmp_path / "v.mp4"
+    write_video(frames, p)
+    st1 = p.stat()
+    time.sleep(0.05)
+    write_video(frames, p)                      # identical -> old file kept
+    st2 = p.stat()
+    assert (st1.st_mtime_ns, st1.st_size) == (st2.st_mtime_ns, st2.st_size)
+    other = frames.copy()
+    other[0] = 255 - other[0]
+    write_video(other, p)                       # different -> replaced
+    assert p.stat().st_mtime_ns != st1.st_mtime_ns
+    assert not list(tmp_path.glob("*.tmp"))
+
+
+def test_appearance_distance_matrix_parallel_matches_serial():
+    from diffusion.transition_eval.certify.exam import appearance_distance_matrix
+    rng = np.random.default_rng(4)
+    bundles = []
+    for _ in range(9):
+        F = rng.normal(size=(5, 8))
+        F /= np.linalg.norm(F, axis=1, keepdims=True)
+        bundles.append({"feats": F, "profile": {"n_prefix": 1, "n_suffix": 1}})
+    side = ["twosided"] * 9
+    D_ser = appearance_distance_matrix(bundles, "all_frames", side, n_jobs=1)
+    D_par = appearance_distance_matrix(bundles, "all_frames", side,
+                                       n_jobs=2, min_pairs_for_pool=1)
+    np.testing.assert_array_equal(D_ser, D_par)
+
+
+class _StubLpips:
+    def pairwise(self, f1, f2, batch_size=16):
+        return np.mean(np.abs(f1.astype(float) - f2.astype(float)), axis=(1, 2, 3))
+
+
+def test_cached_temporal_lpips_roundtrip_and_off_mode(tmp_path):
+    from diffusion.transition_eval.endpoints import cached_temporal_lpips
+    rng = np.random.default_rng(5)
+    frames = rng.integers(0, 255, (5, 8, 8, 3)).astype(np.uint8)
+    d1 = cached_temporal_lpips(frames, "k1", tmp_path, _StubLpips())
+    d2 = cached_temporal_lpips(None, "k1", tmp_path, _StubLpips())   # cache hit
+    np.testing.assert_array_equal(d1, d2)
+    # off mode (cache_dir None): computes fresh, never touches disk
+    d3 = cached_temporal_lpips(frames, "k2", None, _StubLpips())
+    np.testing.assert_array_equal(d3, d1 * 0 + d3)
+    with pytest.raises(RuntimeError):
+        cached_temporal_lpips(None, "k2", tmp_path, _StubLpips())    # miss, no frames
+    with pytest.raises(RuntimeError):
+        cached_temporal_lpips(None, "k2", None, _StubLpips())
+
+
+def test_lpips_warm_and_cached_endpoint_hit(tmp_path):
+    from types import SimpleNamespace
+    from diffusion.transition_eval.endpoints import LPIPS_CACHE_TAG, lpips_cache_path
+    from diffusion.transition_eval.score import _cached_endpoint, _endpoint_key, lpips_warm
+    cond_vid = tmp_path / "cond.mp4"
+    cond_vid.write_bytes(b"x" * 100)            # stat identity is all file_key needs
+    cond = SimpleNamespace(video=str(cond_vid), num_frames=3)
+    item = SimpleNamespace(item_id="it", condition_prefix=cond, condition_suffix=None)
+    gkey = "gk"
+    assert not lpips_warm(item, gkey, tmp_path)
+    np.savez(lpips_cache_path(f"{gkey}:tlpips:{LPIPS_CACHE_TAG}", tmp_path), d=np.ones(4))
+    assert not lpips_warm(item, gkey, tmp_path)  # endpoint cache still missing
+    ek = _endpoint_key(gkey, "prefix", cond, 256)
+    np.savez(lpips_cache_path(ek, tmp_path), prefix_lpips=0.12, prefix_dino=0.9)
+    assert lpips_warm(item, gkey, tmp_path)
+    assert not lpips_warm(item, gkey, None)      # caching disabled -> never warm
+    gb = SimpleNamespace(key=gkey, feats=np.ones((4, 2)))
+    out = _cached_endpoint(item, "prefix", 3, gb, None, None, None, tmp_path,
+                           short_side=256)
+    assert out == {"prefix_lpips": 0.12, "prefix_dino": 0.9}
+    item2 = SimpleNamespace(item_id="it2", condition_prefix=cond,
+                            condition_suffix=cond)
+    with pytest.raises(RuntimeError):            # miss + no frames is a caller bug
+        _cached_endpoint(item2, "suffix", 3, gb, None, None, None, tmp_path,
+                         short_side=256)

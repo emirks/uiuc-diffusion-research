@@ -28,8 +28,9 @@ import pathlib
 import numpy as np
 
 from . import versioning
-from .endpoints import LpipsScorer, endpoint_fidelity, seam_scores, temporal_lpips
-from .features import DinoExtractor
+from .endpoints import (LPIPS_CACHE_TAG, LpipsScorer, cached_temporal_lpips,
+                        endpoint_fidelity, lpips_cache_path, seam_scores)
+from .features import DinoExtractor, file_key
 from .controls import make_lerp, make_static_hold
 from .m1_transfer import appearance_ref, camera_match, camera_trajectory, object_match
 from .m2_integrity import (TAU_COPY, copy_score, intrusion_margin,
@@ -62,11 +63,57 @@ def _ref_bundle_cache(corpus: dict, cache_dir, extractor, tracker):
     return bundles, pools
 
 
+def _endpoint_key(gen_key: str, side: str, cond, short_side: int) -> str:
+    """Cache key for one endpoint_fidelity call: generated-video identity +
+    condition-clip identity (stat-based) + slice length + LPIPS tag."""
+    ck = file_key(pathlib.Path(cond.video), str(short_side))
+    return f"{gen_key}:endp:{side}:{ck}:{cond.num_frames}:{LPIPS_CACHE_TAG}"
+
+
+def _cached_endpoint(item, side, n, gen_bundle, gen_frames, extractor,
+                     lpips_scorer, cache_dir, short_side=SHORT_SIDE):
+    """endpoint_fidelity through the LPIPS cache; a hit also skips decoding the
+    condition clip. cache_dir=None disables caching (always compute fresh)."""
+    cond = item.condition_prefix if side == "prefix" else item.condition_suffix
+    p = (lpips_cache_path(_endpoint_key(gen_bundle.key, side, cond, short_side),
+                          cache_dir) if cache_dir is not None else None)
+    if p is not None and p.exists():
+        z = np.load(p)
+        return {k: float(z[k]) for k in z.files}
+    if gen_frames is None:
+        raise RuntimeError(f"endpoint cache miss for {item.item_id}:{side} "
+                           "but no frames were decoded")
+    frames, _ = load_frames(pathlib.Path(cond.video), short_side=short_side)
+    sl = frames[:n] if side == "prefix" else frames[-n:]
+    out = endpoint_fidelity(gen_frames, gen_bundle.feats, sl,
+                            lambda f: extractor.extract(f), lpips_scorer, side)
+    if p is not None:
+        np.savez_compressed(p, **out)
+    return out
+
+
+def lpips_warm(item, gen_key: str, cache_dir: pathlib.Path | None,
+               short_side: int = SHORT_SIDE) -> bool:
+    """True iff every LPIPS quantity score_item needs for this item is cached —
+    only then may the generated video's decode be skipped."""
+    if cache_dir is None:
+        return False
+    if not lpips_cache_path(f"{gen_key}:tlpips:{LPIPS_CACHE_TAG}", cache_dir).exists():
+        return False
+    for side in ("prefix", "suffix"):
+        cond = getattr(item, f"condition_{side}")
+        if cond and not lpips_cache_path(
+                _endpoint_key(gen_key, side, cond, short_side), cache_dir).exists():
+            return False
+    return True
+
+
 def score_item(item, sidedness, gen_bundle, gen_frames, ref_bundle, ref_core,
-               pools, lpips_scorer, extractor, training_pools=None):
+               pools, lpips_scorer, extractor, training_pools=None,
+               lpips_cache_dir=None):
     n_pre = item.condition_prefix.num_frames if item.condition_prefix else 9
     n_suf = item.condition_suffix.num_frames if item.condition_suffix else 0
-    T = len(gen_frames)
+    T = len(gen_bundle.feats)
     gcore, gmeta = core_mask_v3(gen_bundle.profile, sidedness)
     gmid = mid_mask(T, n_pre, n_suf)
     ref_cam = camera_trajectory(ref_bundle.tracks, ref_bundle.vis)
@@ -90,14 +137,12 @@ def score_item(item, sidedness, gen_bundle, gen_frames, ref_bundle, ref_core,
         row.update(memorization_score(gen_bundle.feats, gmid, training_pools))
     # M3
     if item.condition_prefix:
-        pre, _ = load_frames(pathlib.Path(item.condition_prefix.video), short_side=SHORT_SIDE)
-        row.update(endpoint_fidelity(gen_frames, gen_bundle.feats, pre[:n_pre],
-                                     lambda f: extractor.extract(f), lpips_scorer, "prefix"))
+        row.update(_cached_endpoint(item, "prefix", n_pre, gen_bundle, gen_frames,
+                                    extractor, lpips_scorer, lpips_cache_dir))
     if item.condition_suffix:
-        suf, _ = load_frames(pathlib.Path(item.condition_suffix.video), short_side=SHORT_SIDE)
-        row.update(endpoint_fidelity(gen_frames, gen_bundle.feats, suf[-n_suf:],
-                                     lambda f: extractor.extract(f), lpips_scorer, "suffix"))
-    d = temporal_lpips(gen_frames, lpips_scorer)
+        row.update(_cached_endpoint(item, "suffix", n_suf, gen_bundle, gen_frames,
+                                    extractor, lpips_scorer, lpips_cache_dir))
+    d = cached_temporal_lpips(gen_frames, gen_bundle.key, lpips_cache_dir, lpips_scorer)
     row.update(seam_scores(d, n_pre, max(n_suf, 1)))
     return row
 
@@ -146,6 +191,12 @@ def main() -> int:
     ap.add_argument("--cache-dir", default="outputs/eval/cache",
                     help="feature/track cache (stability's cold-anchor rerun "
                          "points this at a fresh directory)")
+    ap.add_argument("--lpips-cache", choices=("on", "off"), default="on",
+                    help="cache temporal/endpoint LPIPS in --cache-dir keyed by "
+                         "stat-based video identity (numeric no-op: a miss "
+                         "computes exactly what uncached code computed); off "
+                         "never reads or writes it — certification's warm rerun "
+                         "uses off so bar 8 keeps recomputing LPIPS end-to-end")
     args = ap.parse_args()
 
     stamp = versioning.stamp(args.corpus)
@@ -167,6 +218,7 @@ def main() -> int:
     tracker = Tracker(device=device)
     lpips_scorer = LpipsScorer(device=device)
 
+    lpips_cache_dir = cache_dir if args.lpips_cache == "on" else None
     ref_bundles, pools = _ref_bundle_cache(corpus, cache_dir, extractor, tracker)
     training_pools = None
     if training:
@@ -185,22 +237,29 @@ def main() -> int:
             if ref_key not in ref_bundles:
                 raise ValueError(f"reference {ref_key} not in corpus manifest")
             rb, rcore = ref_bundles[ref_key]
-            gb, gframes = process_video_file(pathlib.Path(it.generated_video),
-                                             cache_dir, extractor, tracker,
-                                             short_side=SHORT_SIDE)
+            gpath = pathlib.Path(it.generated_video)
+            gkey = file_key(gpath, extractor.model_name, str(SHORT_SIDE))
+            # decode only if some consumer needs pixels: feature/track cache
+            # misses decode inside process_video_file regardless; LPIPS misses
+            # are pre-checked here (numeric no-op — a miss always decodes)
+            gb, gframes = process_video_file(
+                gpath, cache_dir, extractor, tracker, short_side=SHORT_SIDE,
+                need_frames=not lpips_warm(it, gkey, lpips_cache_dir))
             row = score_item(it, side, gb, gframes, rb, rcore, pools,
-                             lpips_scorer, extractor, training_pools)
+                             lpips_scorer, extractor, training_pools,
+                             lpips_cache_dir=lpips_cache_dir)
             row["tier"] = derive_tier(it, corpus, training)
             row["tags"] = tags_of(it.style, corpus)
             row["provenance"] = {"harness": stamp["harness"], "certified": stamp["certified"]}
             rows.append(row)
 
             if args.controls == "auto" and it.condition_prefix:  # control arm through the identical pipeline
-                cframes, cname = control_frames(it, side, len(gframes))
+                cframes, cname = control_frames(it, side, len(gb.feats))
                 cb = process_video(cframes, gb.key + f":{cname}", cache_dir,
                                    extractor, tracker)
                 crow = score_item(it, side, cb, cframes, rb, rcore, pools,
-                                  lpips_scorer, extractor, None)
+                                  lpips_scorer, extractor, None,
+                                  lpips_cache_dir=lpips_cache_dir)
                 crow.update({"item_id": f"{cname}__{it.item_id}", "arm": cname,
                              "twin_of": None, "provenance": row["provenance"]})
                 rows.append(crow)

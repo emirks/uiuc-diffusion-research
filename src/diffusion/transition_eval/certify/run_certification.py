@@ -45,10 +45,19 @@ def log(msg: str) -> None:
     print(f"[certify] {msg}", flush=True)
 
 
-def run_score(manifest: pathlib.Path, label: str, out_root: pathlib.Path,
-              controls: str, cache_dir: str | None = None) -> pathlib.Path:
-    """score.py through its real CLI — certification exercises the shipped
-    entrypoint, not a private shim. Returns the items.jsonl path."""
+class ScoreError(RuntimeError):
+    """A score.py subprocess exited nonzero (tail of its log attached)."""
+
+
+def start_score(manifest: pathlib.Path, label: str, out_root: pathlib.Path,
+                controls: str, cache_dir: str | None = None,
+                lpips_cache: str | None = None) -> dict:
+    """Launch score.py through its real CLI — certification exercises the
+    shipped entrypoint, not a private shim. Independent manifests run
+    concurrently (disjoint item sets -> disjoint cache writes; per-item math
+    is untouched, so outputs are identical to sequential runs — and bar 8's
+    warm/cold comparisons verify that at run time). Output goes to
+    <out_root>/<label>.score.log; wait_score() collects the items.jsonl."""
     cmd = [sys.executable, "-m", "diffusion.transition_eval.score",
            "--manifest", str(manifest),
            "--corpus", str(CORPUS_PATH),
@@ -56,10 +65,25 @@ def run_score(manifest: pathlib.Path, label: str, out_root: pathlib.Path,
            "--controls", controls]
     if cache_dir:
         cmd += ["--cache-dir", cache_dir]
+    if lpips_cache:
+        cmd += ["--lpips-cache", lpips_cache]
     env = {**os.environ, "PYTHONPATH": str(REPO_ROOT / "src")}
-    log(f"score: {label} ({controls=})")
-    subprocess.run(cmd, check=True, cwd=REPO_ROOT, env=env)
-    return REPO_ROOT / out_root / label / "items.jsonl"
+    logf = open(REPO_ROOT / out_root / f"{label}.score.log", "w")
+    log(f"score: {label} ({controls=}) started")
+    proc = subprocess.Popen(cmd, cwd=REPO_ROOT, env=env,
+                            stdout=logf, stderr=subprocess.STDOUT)
+    return {"proc": proc, "logf": logf, "label": label, "out_root": out_root}
+
+
+def wait_score(h: dict) -> pathlib.Path:
+    rc = h["proc"].wait()
+    h["logf"].close()
+    if rc != 0:
+        tail = " | ".join((REPO_ROOT / h["out_root"] / f"{h['label']}.score.log")
+                          .read_text().splitlines()[-3:])
+        raise ScoreError(f"{h['label']} exit {rc}: {tail}")
+    log(f"score: {h['label']} done")
+    return REPO_ROOT / h["out_root"] / h["label"] / "items.jsonl"
 
 
 def load_rows(items_jsonl: pathlib.Path) -> dict[str, dict]:
@@ -189,42 +213,9 @@ def main() -> int:
         rev_cams[p["ref"]] = camera_trajectory(rb["tracks"], rb["vis"])
     extractor.free(); tracker.free()
 
-    # ---- Block B score + grade ---------------------------------------------------------
-    # Every step from here on funnels failures into `crashed` so the record is
-    # ALWAYS written (draft.7's driver died at the anchor rule and the record
-    # had to be assembled post-hoc — never again).
-    crashed = []
-
-    def safe(name, fn, default):
-        try:
-            return fn()
-        except Exception as e:  # noqa: BLE001 — recorded loudly, run continues
-            crashed.append(f"{name}: {type(e).__name__}: {e}")
-            return default
-
-    GRADER_CRASH = {"pass": False, "reason": "grader crashed (see bar8.crashes)"}
-    try:
-        sib_items = run_score(man_dir / "siblings.json", "cert_siblings", out, "auto")
-    except subprocess.CalledProcessError as e:
-        crashed.append(f"siblings scoring: {e}"); sib_items = None
-    try:
-        probe_items = run_score(man_dir / "probes.json", "cert_probes", out, "off")
-    except subprocess.CalledProcessError as e:
-        crashed.append(f"probe scoring: {e}"); probe_items = None
-
-    rows = {}
-    if sib_items:
-        rows.update(load_rows(sib_items))
-    if probe_items:
-        rows.update(load_rows(probe_items))
-    g_sib = safe("grade_siblings", lambda: probes.grade_siblings(rows, classes, bars), GRADER_CRASH)
-    g_ctl = safe("grade_controls", lambda: probes.grade_controls(rows, classes, bars), GRADER_CRASH)
-    g_spl = safe("grade_splices", lambda: probes.grade_splices(rows, classes, bars), GRADER_CRASH)
-    g_rev = safe("grade_reversal", lambda: probes.grade_reversal(rev_pairs, cams, rev_cams, bars), GRADER_CRASH)
-    g_m3 = safe("grade_m3_panel", lambda: probes.grade_m3_panel(rows, classes, bars), GRADER_CRASH)
-
-    # ---- Block C -----------------------------------------------------------------------
-    log("Block C: archives")
+    # ---- Block C conversion (pure CPU) — before scoring, so all three
+    # independent manifests can score concurrently ---------------------------------------
+    log("Block C: archives (conversion)")
     c_items, c_excluded = [], []
     v2_paths = {
         "exp_056": main_root / "outputs/eval/exp_056/quads/run_0002",
@@ -243,11 +234,47 @@ def main() -> int:
             e57_items = items
     (man_dir / "blockc.json").write_text(json.dumps(c_items, indent=1))
     log(f"  archives: {len(c_items)} convertible, {len(c_excluded)} excluded (loud)")
+
+    # ---- Blocks B+C scoring (three independent manifests, concurrent) + grade ----------
+    # Every step from here on funnels failures into `crashed` so the record is
+    # ALWAYS written (draft.7's driver died at the anchor rule and the record
+    # had to be assembled post-hoc — never again).
+    crashed = []
+
+    def safe(name, fn, default):
+        try:
+            return fn()
+        except Exception as e:  # noqa: BLE001 — recorded loudly, run continues
+            crashed.append(f"{name}: {type(e).__name__}: {e}")
+            return default
+
+    GRADER_CRASH = {"pass": False, "reason": "grader crashed (see bar8.crashes)"}
+    h_sib = start_score(man_dir / "siblings.json", "cert_siblings", out, "auto")
+    h_prb = start_score(man_dir / "probes.json", "cert_probes", out, "off")
+    h_blc = start_score(man_dir / "blockc.json", "cert_blockc", out, "off")
     try:
-        c_jsonl = run_score(man_dir / "blockc.json", "cert_blockc", out, "off")
-        c_rows = load_rows(c_jsonl)
-    except subprocess.CalledProcessError as e:
+        sib_items = wait_score(h_sib)
+    except ScoreError as e:
+        crashed.append(f"siblings scoring: {e}"); sib_items = None
+    try:
+        probe_items = wait_score(h_prb)
+    except ScoreError as e:
+        crashed.append(f"probe scoring: {e}"); probe_items = None
+    try:
+        c_rows = load_rows(wait_score(h_blc))
+    except ScoreError as e:
         crashed.append(f"blockC scoring: {e}"); c_rows = {}
+
+    rows = {}
+    if sib_items:
+        rows.update(load_rows(sib_items))
+    if probe_items:
+        rows.update(load_rows(probe_items))
+    g_sib = safe("grade_siblings", lambda: probes.grade_siblings(rows, classes, bars), GRADER_CRASH)
+    g_ctl = safe("grade_controls", lambda: probes.grade_controls(rows, classes, bars), GRADER_CRASH)
+    g_spl = safe("grade_splices", lambda: probes.grade_splices(rows, classes, bars), GRADER_CRASH)
+    g_rev = safe("grade_reversal", lambda: probes.grade_reversal(rev_pairs, cams, rev_cams, bars), GRADER_CRASH)
+    g_m3 = safe("grade_m3_panel", lambda: probes.grade_m3_panel(rows, classes, bars), GRADER_CRASH)
 
     twin_ids = [f"exp_057__{t}" for t in
                 blockc.copy_twin_ids(v2_paths["exp_057"] / "manifest_scoring.json")]
@@ -262,29 +289,44 @@ def main() -> int:
                  lambda: blockc.arm_distributions(list(c_rows.values())),
                  "not computed — crashed")
 
-    # ---- Block D -----------------------------------------------------------------------
+    # ---- Block D (warm rerun + cold anchors, concurrent) --------------------------------
+    # The rerun scores with --lpips-cache off: bar 8's warm comparison keeps
+    # recomputing LPIPS end-to-end, so a stale/corrupt LPIPS cache entry from
+    # the first pass shows up as a warm delta instead of passing silently.
     log("Block D: stability")
     warm_cmp = cold_cmp = None
     if sib_items:
+        h_rerun = h_cold = None
         try:
-            sib2 = run_score(man_dir / "siblings.json", "cert_siblings_rerun", out, "auto")
-            warm_cmp = compare_runs(sib_items, sib2,
-                                    tolerance=bars["stability"]["bar8"]["warm_max_abs_delta"])
-        except subprocess.CalledProcessError as e:
-            crashed.append(f"warm rerun: {e}")
+            h_rerun = start_score(man_dir / "siblings.json", "cert_siblings_rerun",
+                                  out, "auto", lpips_cache="off")
+        except Exception as e:  # noqa: BLE001 — the record must still be written
+            crashed.append(f"warm rerun: {type(e).__name__}: {e}")
         try:
             anchors = anchor_ids(pairs, corpus, e57_items, bars)
             anchor_man = [it for it in (sib_man + c_items) if it["item_id"] in anchors]
             (man_dir / "anchors.json").write_text(json.dumps(anchor_man, indent=1))
-            cold_jsonl = run_score(man_dir / "anchors.json", "cert_anchors_cold", out,
-                                   "auto", cache_dir=str(out / "cold_cache"))
-            base = {i: r for i, r in {**rows, **c_rows}.items() if i in anchors}
-            base_path = out / "anchors_warm.jsonl"
-            base_path.write_text("\n".join(json.dumps(r) for r in base.values()))
-            cold_cmp = compare_runs(base_path, cold_jsonl,
-                                    tolerance=bars["stability"]["bar8"]["anchors"]["reproduction_tolerance"])
-        except Exception as e:  # noqa: BLE001 — the record must still be written
+            h_cold = start_score(man_dir / "anchors.json", "cert_anchors_cold", out,
+                                 "auto", cache_dir=str(out / "cold_cache"))
+        except Exception as e:  # noqa: BLE001
             crashed.append(f"cold anchors: {type(e).__name__}: {e}")
+        if h_rerun:
+            try:
+                sib2 = wait_score(h_rerun)
+                warm_cmp = compare_runs(sib_items, sib2,
+                                        tolerance=bars["stability"]["bar8"]["warm_max_abs_delta"])
+            except Exception as e:  # noqa: BLE001
+                crashed.append(f"warm rerun: {type(e).__name__}: {e}")
+        if h_cold:
+            try:
+                cold_jsonl = wait_score(h_cold)
+                base = {i: r for i, r in {**rows, **c_rows}.items() if i in anchors}
+                base_path = out / "anchors_warm.jsonl"
+                base_path.write_text("\n".join(json.dumps(r) for r in base.values()))
+                cold_cmp = compare_runs(base_path, cold_jsonl,
+                                        tolerance=bars["stability"]["bar8"]["anchors"]["reproduction_tolerance"])
+            except Exception as e:  # noqa: BLE001
+                crashed.append(f"cold anchors: {type(e).__name__}: {e}")
 
     floors = {}
     for side in ("twosided", "onesided"):
