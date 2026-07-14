@@ -219,3 +219,78 @@ diagnostics. Owner-reserved blocker escalated with provenance: RUNBOOK §1.1
 mandates whitening but does not pin its regularization; `eig_floor_ratio` was an
 executor-chosen free parameter, frozen in good faith at 694afc7 before any
 candidate ran. Phase 1 continued without waiting — it is an independent track.
+
+---
+
+## C4 — 2026-07-14 12:45 · the two open Phase-1 calibrations, and a coverage collapse
+
+**Asked.** §3.2's low-texture gate and §3.3's energy gate are both mandated by the
+RUNBOOK with NO numbers, and the driver refuses the Phase 1 exam until both are
+frozen. (1) Is §1.2's in-document 5th-percentile convention the right derivation
+for both? (2) Before either open threshold is set, §3.2's PINNED rules (40% inlier
+floor + 30% clip cap) already leave only 143/223 clips defined — coverage 0.641 vs
+the incumbent's 0.9686/0.9955, with 16 clips having no defined core pair at all. Is
+that a bug, a reportable property, or an owner-reserved blocker? (3) Should the
+exam run at all at this coverage? (4) What else to record now?
+
+**Direction received.**
+- **Both slots are DELEGABLE** (C2's boundary test: the gates are registered —
+  mandatory, named, purpose stated, §3.3 even names its exemplar failure; only the
+  numeric operationalization is open, and OPERATIONS §8 lists "§3.3's ε percentile"
+  verbatim as advisor-appropriate).
+- **Adopt §1.2's 5th-percentile convention for both** — it is the RUNBOOK's only
+  in-document precedent for turning a corpus distribution into a floor, and it is
+  already frozen as `min_d.percentile: 5.0`. The alternatives are rejected on frozen
+  text: a C2-style gap-midpoint is unimplementable (no labelled no-object-motion
+  population exists; the 6 camera-tagged-without-object classes are NOT one, because
+  their effects still move — a mislabelled negative is worse than none), and a
+  noise-floor estimate is a new instrument-design element found nowhere in frozen
+  text (→ IDEAS_NEXT_CYCLE, not this cycle). §3.3's own text pins the construction
+  family — "set ε from the corpus residual-magnitude distribution (report chosen
+  percentile)" — so the only open parameter is the percentile.
+- **ε MUST BE CALIBRATED ON THE POPULATION IT OPERATES ON.** The texture gate is
+  upstream of the energy gate (§3.2 definedness feeds m1c's frames; "energy gate
+  first" is first *within* m1c). So the p5 quoted from the pre-texture population
+  (5.5e-5) is not the right realization.
+- **The coverage collapse is an honest measured property of PINNED rules** — not a
+  §3.4 fix-or-stop (nothing failed, nothing is buggy: the estimator is the
+  registered one, the no-spatial-mask fact is a certified-tree property, and the
+  gate refusing large-effect frames is the gate working as designed), and not
+  owner-reserved (every number involved — 40%, 30% — is RUNBOOK-pinned; a computed
+  consequence of frozen rules is a fact, not a decision). Report it.
+- **TWO CORRECTIONS to my framing.** (a) §7 is the APPEARANCE adoption rule; Phase
+  1's gate is §3.6, which has NO coverage condition. Coverage enters Phase 1 only
+  through the frozen conventions (an uncovered row is a misretrieved one; an
+  eligible class with zero covered clips contributes 0.0 to the macro stratum
+  recall) and through §1.5's report-beside-accuracy discipline. (b) Coverage NUMBERS
+  are computable facts; **"not materially narrower" is NOT computable** — no frozen
+  materiality threshold exists, and inventing one would itself be prohibition 5.
+  Report 0.583 / 0.529 beside 0.9686 / 0.9955 and stop there. Those words never
+  appear with a verdict attached.
+- **Proceed to §3.4 and, if both probes pass, the exam.** No frozen rule conditions
+  the exam on pre-exam coverage; stopping on coverage would be an executor-side
+  inference about an outcome, which C3 prohibited. The frozen conventions already
+  price definedness into §3.6's own numbers without anyone editorializing.
+
+**PRE-DECLARED ε CONSTRUCTION (declared here BEFORE the number is computed — the
+declaration is what makes this a derivation and not a search):**
+
+    1. freeze min_pair_texture = p5 of the corpus pair-texture distribution,
+       taken over CORE PAIRS ONLY (both frames core; seams excluded) = 0.0753.
+       This gate applies to BOTH m1b and m1c (it is a §3.2 frame-definedness rule
+       and m1c inherits frame definedness).
+    2. THEN recompute the residual-energy distribution over core frames that
+       survive BOTH the camera fit (inlier >= 40%) AND the texture gate
+       (pair_texture >= 0.0753), and freeze
+           energy_gate_epsilon = p5 of THAT population
+           energy_gate_percentile = 5.0
+    3. Report both the pre-texture realization (5.5e-5) and the frozen post-texture
+       one, so the construction is auditable.
+
+**Action taken.** All adopted. Both thresholds frozen in their own commit before any
+exam. Coverage waterfall, the tex x eps grid (as a no-verdict diagnostic, disclosed
+as computed BEFORE the freeze, with the threshold derived from §1.2's convention
+rather than selected from the grid), the per-clip definedness report, the pre-exam
+enumeration of zero-covered eligible stratum classes, the Huber breakdown table as
+a committed artifact, and the incumbent-vs-candidate definedness overlap are all
+recorded. Phase 1 proceeds to §3.4 and the exam.
