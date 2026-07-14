@@ -1,0 +1,40 @@
+{
+ "n_clips": 223,
+ "camera_fit": {
+  "defined_pair_frac_overall": 0.7421068161699617,
+  "inlier_frac_percentiles": {
+   "p5": 0.03712357217030114,
+   "p25": 0.3856113707165109,
+   "p50": 0.7601895119418484,
+   "p75": 0.9694963655244029,
+   "p95": 1.0
+  },
+  "clips_with_no_defined_core_pair": 16
+ },
+ "residual_energy_core_frames": {
+  "n": 10060,
+  "percentiles": {
+   "p1": 9.997770044344927e-06,
+   "p2": 1.815283950331239e-05,
+   "p5": 5.454733370501774e-05,
+   "p10": 0.00014560469128735044,
+   "p20": 0.0003403381169570986,
+   "p25": 0.0004602455014420159,
+   "p50": 0.0015225093004661858,
+   "p75": 0.003284220708120111,
+   "p95": 0.008112603444654755
+  },
+  "note": "\u00a73.3's epsilon is chosen from THIS distribution (corpus-only, outcome-independent) and frozen in gates.yaml BEFORE the Phase 1 exam runs."
+ },
+ "pair_texture_core_frames": {
+  "percentiles": {
+   "p1": 0.048040179535746574,
+   "p2": 0.056723407655954364,
+   "p5": 0.07532586343586445,
+   "p10": 0.09770334511995316,
+   "p25": 0.13497623056173325,
+   "p50": 0.18726521730422974
+  },
+  "note": "\u00a73.2's low-texture threshold is chosen from THIS distribution."
+ }
+}

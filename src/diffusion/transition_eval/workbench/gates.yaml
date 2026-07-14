@@ -198,7 +198,15 @@ phase1:
     min_inlier_fraction: 0.40      # < 40% inliers -> frame undefined
     max_undefined_core_frac: 0.30  # > 30% of core frames undefined -> clip undefined
     resample: 32                   # §1.3 motion descriptors
-    min_pair_texture: null         # OPEN corpus-only calibration (§3.2's second
+    # FROZEN 2026-07-14 (own commit, before the exam). Derived, not chosen: §1.2's
+    # min-D guard is the RUNBOOK's ONLY in-document precedent for turning a corpus
+    # distribution into a floor, and it uses the 5th percentile (already frozen
+    # above as min_d.percentile: 5.0). Population: CORE PAIRS ONLY (both frames
+    # core, seams excluded) — the support the §3.2 definedness accounting runs on.
+    # This gate applies to BOTH m1b and m1c: it is a §3.2 FRAME-definedness rule,
+    # and m1c inherits frame definedness.
+    texture_percentile: 5.0
+    min_pair_texture: 0.075326     # OPEN corpus-only calibration (§3.2's second
                                    # definedness gate: "inlier fraction < 40% OR
                                    # LOW-TEXTURE FRAME -> frame undefined"). The
                                    # RUNBOOK names the gate but not the number.
@@ -209,8 +217,17 @@ phase1:
                                    # the inlier gate cannot see that (noise agrees
                                    # with itself).
   m1c_flow:                        # §3.3 object metric
-    energy_gate_percentile: null   # OPEN corpus-only calibration (§3.3: "set eps
-    energy_gate_epsilon: null      # from the corpus residual-magnitude
+    # FROZEN 2026-07-14 (own commit, before the exam). §3.3 pins the construction
+    # FAMILY ("set eps from the corpus residual-magnitude distribution, report
+    # chosen percentile"), so only the percentile was open; §1.2's convention
+    # supplies it. CALIBRATED ON THE POPULATION THE GATE OPERATES ON: the texture
+    # gate is UPSTREAM of the energy gate, so epsilon is the 5th percentile over
+    # core frames surviving BOTH the camera fit (inlier >= 40%) AND the texture
+    # gate (9,622 frames). The pre-texture realization was 5.455e-05; the frozen
+    # post-texture one is 5.685e-05. Construction PRE-DECLARED in CONSULTATIONS.md
+    # (C4) before the number was computed.
+    energy_gate_percentile: 5.0    # OPEN corpus-only calibration (§3.3: "set eps
+    energy_gate_epsilon: 0.00005685  # from the corpus residual-magnitude
                                    # distribution, report chosen percentile").
                                    # Chosen from the residual distribution BEFORE
                                    # the exam runs, then frozen here in its own

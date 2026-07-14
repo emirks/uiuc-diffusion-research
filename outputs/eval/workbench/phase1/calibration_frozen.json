@@ -1,0 +1,20 @@
+{
+ "min_pair_texture": 0.07532586343586445,
+ "texture_percentile": 5.0,
+ "energy_gate_epsilon": 5.6850750608556944e-05,
+ "energy_gate_percentile": 5.0,
+ "epsilon_population": "core frames surviving camera-fit (inlier>=40%) AND texture (>=p5)",
+ "epsilon_population_n": 9622,
+ "epsilon_pre_texture_realization": 5.454733370501774e-05,
+ "coverage_waterfall": {
+  "corpus": 223,
+  "after_pinned_3_2_rules": 143,
+  "after_texture_gate_m1b": 130,
+  "after_energy_gate_m1c": 118,
+  "m1b_coverage": 0.5829596412556054,
+  "m1c_coverage": 0.5291479820627802,
+  "incumbent_m1b_coverage": 0.9686,
+  "incumbent_m1c_coverage": 0.9955
+ },
+ "note": "Construction PRE-DECLARED in CONSULTATIONS.md C4 before computing. The dominant coverage loss (223->143) comes from RUNBOOK-PINNED rules, not from these open thresholds (143->130/118)."
+}
