@@ -1,3 +1,25 @@
+## 2026-07-14
+
+**14:20** — Metric Workbench (branch `eval/metric-workbench`) ran end-to-end and both
+tracks terminated on pre-registered rules. **Phase 2 / E1** fired its §4.1 KILL rule
+(delta: Cohen's d 0.358 vs the pinned incumbent's 1.522; 209/223 misretrieved vs
+73/223; hubness FAIL) — E2/E3 do not run. A control shows the identically-preprocessed
+representation with *no* endpoint-normalization at all scores the same, so the §1.1
+whitening (whose regularization the RUNBOOK does not pin, and which the executor
+froze at 1e-6·λ_max) is escalated as an **owner-reserved** matter with a pre-declared
+floor-sensitivity sweep attached. **Phase 1 / motion** failed §3.4 acceptance — 29/35
+injected-trajectory verdict cells pass (corr 0.96–1.00), but 3 fail at rungs a
+noise-limited *oracle* passes with margin, and reversal fails its descriptor leg
+(22/33) — so the exam is not run and M1b_flow/M1c_flow stay analysis-tier, with no
+second attempt this cycle. Backbone: SEA-RAFT (amendment A2's timeboxed attempt
+succeeded). Key measured facts for the owner: candidate coverage is 0.583/0.529
+against the incumbents' 0.969/0.996, the dominant loss coming from RUNBOOK-*pinned*
+rules meeting a corpus whose effects fill >87% of the frame on undefined frames; and
+the corpus's median per-pair camera translation (0.30 px) sits within an order of
+magnitude of the flow fit's own noise. Deliverable:
+`src/diffusion/transition_eval/workbench/WORKBENCH_REPORT.md`. The certified cache and
+the eval/v3.0.0 tag were never touched.
+
 # Changelog
 
 ## 2026-07-14
