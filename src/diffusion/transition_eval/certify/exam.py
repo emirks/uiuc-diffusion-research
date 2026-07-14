@@ -42,6 +42,7 @@ from ..m1_transfer import camera_match, camera_trajectory, object_match
 from ..m2_integrity import intrusion_margin
 from ..report import retrieval_eval
 from ..s_structure import core_mask_v3
+from . import diagnostics
 
 CORE_VARIANTS = ("v2_envelope", "v3_sided", "all_frames")
 
@@ -321,9 +322,14 @@ def trust_map(r1_winner: dict, r2_winner: dict, class_n: dict,
 # --- orchestration -----------------------------------------------------------------
 
 def run_exam(bundles: list[dict], labels: list[str], sidedness: list[str],
-             corpus: dict, bars: dict, out_dir: pathlib.Path) -> dict:
+             corpus: dict, bars: dict, out_dir: pathlib.Path,
+             analysis_dir: pathlib.Path | None = None) -> dict:
     """Full Block A. Caller supplies processed bundles (cached pipeline).
-    Refuses unfrozen bars — running earlier would de-register them."""
+    Refuses unfrozen bars — running earlier would de-register them.
+
+    When analysis_dir is given, the full diagnostic state (matrices, confusion,
+    per-clip rows, per-tag accuracy — see certify.diagnostics) is persisted
+    there; a diagnostics failure never gates the exam."""
     if not bars.get("frozen"):
         raise RuntimeError(
             "bars.yaml is DRAFT (frozen: false) — freeze the bars before "
@@ -338,13 +344,15 @@ def run_exam(bundles: list[dict], labels: list[str], sidedness: list[str],
     camera = {c for c, v in corpus["classes"].items() if "camera" in v.get("tags", [])}
 
     # R1 appearance under every mask variant
-    r1 = {}
+    r1, mats = {}, {}
     for v in CORE_VARIANTS:
         D = appearance_distance_matrix(bundles, v, sidedness)
+        mats[f"m1a__{v}"] = D
         r1[f"m1a__{v}"] = retrieval_eval(D, labels)
     # R1 motion
     Dm = motion_distance_matrices(bundles)
     for k, D in Dm.items():
+        mats[k] = D
         r1[k] = retrieval_eval(D, labels)
     m1c_def = m1c_definedness_per_class(Dm["m1c_object"], labels)
 
@@ -376,11 +384,25 @@ def run_exam(bundles: list[dict], labels: list[str], sidedness: list[str],
                  "m1b": r1["m1b_camera"], "m1c": r1["m1c_object"]}
     tmap = trust_map(winner_r1, r2, class_n, m1c_def, bars)
 
+    # diagnostic state (representation only — never feeds a verdict)
+    by_tag = None
+    try:
+        keys = sorted(corpus["clips"])
+        assert len(keys) == len(bundles), "bundle order must be sorted corpus keys"
+        ana = diagnostics.build_analysis(corpus, keys, labels, sidedness,
+                                         r1, mats, r2, mask_w)
+        by_tag = ana["by_tag"]
+        if analysis_dir is not None:
+            diagnostics.write_analysis(analysis_dir, ana, mats, keys)
+    except Exception as e:  # noqa: BLE001 — diagnostics must never gate the exam
+        print(f"[exam] diagnostics failed (non-gating): {type(e).__name__}: {e}",
+              flush=True)
+
     result = {"r1": {k: {kk: vv for kk, vv in v.items() if kk != "confusion"}
                      for k, v in r1.items()},
               "r2": {k: v for k, v in r2.items() if k != "rows"},
               "mask_adoption": mask_verdict, "motion_adoption": motion_verdict,
-              "o7_conditional": o7, "bar1": bar1,
+              "o7_conditional": o7, "bar1": bar1, "by_tag": by_tag,
               "m1c_definedness": m1c_def, "trust_map": tmap}
     (out_dir / "exam.json").write_text(json.dumps(result, indent=1, default=str))
     (out_dir / "trust_map.json").write_text(json.dumps(tmap, indent=1))

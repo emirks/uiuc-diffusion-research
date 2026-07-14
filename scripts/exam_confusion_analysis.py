@@ -1,12 +1,11 @@
-"""Read-only exam deep-dive for a finished certification run.
+"""Read-only exam deep-dive for a certification run that predates automatic
+diagnostics (the exam now writes analysis/ itself via certify.diagnostics —
+this script only exists to backfill older runs).
 
 Recomputes the exact Block-A distance matrices with the DEPLOYED exam code
 (appearance_distance_matrix / motion_distance_matrices / retrieval_eval /
 pool_margin_exam — imported verbatim, nothing reimplemented) and persists
-what exam.json strips: full confusion matrices, per-clip 1-NN predictions
-with distances and margins, class-pair distance matrices, R2 per-clip
-margins + intruder classes, and per-clip transition tags parsed from the
-corpus source paths.
+what exam.json strips, in the same schema certify.diagnostics writes.
 
 Pure analysis: touches no instrument code, writes only under the cert dir.
 
@@ -33,61 +32,8 @@ from diffusion.transition_eval.report import retrieval_eval           # noqa: E4
 from diffusion.transition_eval.certify.exam import (                  # noqa: E402
     CORE_VARIANTS, appearance_distance_matrix, motion_distance_matrices,
     pool_margin_exam)
-
-TAG_WORDS = ("object", "style", "camera")
-
-
-def clip_tags(source: str) -> list[str]:
-    """twosided_object_camera_air-bending -> [object, camera] (sidedness aside)."""
-    parts = pathlib.Path(source).parent.name.split("_")
-    return [p for p in parts[1:] if p in TAG_WORDS]
-
-
-def per_clip_rows(D: np.ndarray, keys: list[str], labels: list[str]) -> list[dict]:
-    """Mirror retrieval_eval's masking exactly; add distances and margins."""
-    n = len(labels)
-    M = D.copy().astype(float)
-    np.fill_diagonal(M, np.inf)
-    M[np.isnan(M)] = np.inf
-    lab = np.array(labels)
-    rows = []
-    for i in range(n):
-        if not np.isfinite(M[i]).any():
-            rows.append({"key": keys[i], "label": labels[i], "pred": None})
-            continue
-        j = int(np.argmin(M[i]))
-        same = (lab == labels[i]) & np.isfinite(M[i])
-        same[i] = False
-        other = (lab != labels[i]) & np.isfinite(M[i])
-        d_within = float(M[i][same].min()) if same.any() else None
-        d_cross = float(M[i][other].min()) if other.any() else None
-        rows.append({
-            "key": keys[i], "label": labels[i], "pred": labels[j],
-            "nn_key": keys[j], "nn_dist": float(M[i, j]),
-            "d_within_min": d_within, "d_cross_min": d_cross,
-            "margin": (d_cross - d_within)
-                      if d_within is not None and d_cross is not None else None,
-        })
-    return rows
-
-
-def class_distance_matrices(D: np.ndarray, labels: list[str]) -> dict:
-    """Mean and min inter-clip distance per class pair, finite entries only."""
-    classes = sorted(set(labels))
-    lab = np.array(labels)
-    mean_m, min_m = {}, {}
-    for a in classes:
-        ia = np.where(lab == a)[0]
-        mean_m[a], min_m[a] = {}, {}
-        for b in classes:
-            ib = np.where(lab == b)[0]
-            block = D[np.ix_(ia, ib)].astype(float).copy()
-            if a == b:
-                block[np.eye(len(ia), dtype=bool)] = np.nan
-            vals = block[np.isfinite(block)]
-            mean_m[a][b] = float(vals.mean()) if vals.size else None
-            min_m[a][b] = float(vals.min()) if vals.size else None
-    return {"classes": classes, "mean": mean_m, "min": min_m}
+from diffusion.transition_eval.certify.diagnostics import (           # noqa: E402
+    class_distance_matrices, clip_tags, per_clip_rows)
 
 
 def main() -> int:

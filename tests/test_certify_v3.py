@@ -407,3 +407,75 @@ def test_motion_distance_matrices_parallel_matches_serial():
     parallel = motion_distance_matrices(bundles, n_jobs=2, min_pairs_for_pool=1)
     for k in serial:
         np.testing.assert_array_equal(serial[k], parallel[k])
+
+
+# ---- diagnostics / representation layer ---------------------------------------------
+
+def test_per_clip_rows_margins_and_masking():
+    from diffusion.transition_eval.certify import diagnostics as dg
+    keys, labels = ["k0", "k1", "k2"], ["a", "a", "b"]
+    D = np.array([[0.0, 0.2, 0.5],
+                  [0.2, 0.0, 0.1],
+                  [0.5, 0.1, 0.0]])
+    rows = dg.per_clip_rows(D, keys, labels)
+    assert rows[0]["pred"] == "a" and rows[0]["nn_key"] == "k1"
+    assert abs(rows[0]["margin"] - 0.3) < 1e-12
+    # clip 1's nearest neighbour is the cross-class k2: misretrieved, margin < 0
+    assert rows[1]["pred"] == "b" and abs(rows[1]["margin"] + 0.1) < 1e-12
+    D2 = D.copy()
+    D2[2, :] = np.nan
+    assert dg.per_clip_rows(D2, keys, labels)[2]["pred"] is None
+
+
+def test_tag_accuracy_coarse_and_patterns():
+    from diffusion.transition_eval.certify import diagnostics as dg
+    clips = [
+        {"key": "k0", "class": "a", "sidedness": "twosided", "tags": ["object"]},
+        {"key": "k1", "class": "a", "sidedness": "twosided", "tags": ["object"]},
+        {"key": "k2", "class": "b", "sidedness": "onesided", "tags": ["style", "camera"]},
+    ]
+    rows = [{"key": "k0", "label": "a", "pred": "a"},
+            {"key": "k1", "label": "a", "pred": "b"},
+            {"key": "k2", "label": "b", "pred": "b"}]
+    bt = dg.tag_accuracy({"m": rows}, clips)
+    coarse = {r["group"]: r for r in bt["coarse"]}
+    assert coarse["twosided"]["n"] == 2 and coarse["twosided"]["m"] == 0.5
+    assert coarse["object"]["m"] == 0.5
+    assert coarse["camera"]["m"] == 1.0 and coarse["camera"]["n"] == 1
+    pats = {r["group"]: r for r in bt["patterns"]}
+    assert set(pats) == {"twosided_object", "onesided_style_camera"}
+    assert pats["twosided_object"]["m"] == 0.5
+
+
+def test_build_and_write_analysis_schema(tmp_path):
+    from diffusion.transition_eval.certify import diagnostics as dg
+    corpus = {"clips": {
+        "alpha/a0.mp4": {"class": "alpha", "source": "d/twosided_object_alpha/a0.mp4"},
+        "alpha/a1.mp4": {"class": "alpha", "source": "d/twosided_object_alpha/a1.mp4"},
+        "beta/b0.mp4": {"class": "beta", "source": "d/onesided_style_beta/b0.mp4"},
+    }}
+    keys = sorted(corpus["clips"])
+    labels = [corpus["clips"][k]["class"] for k in keys]
+    sidedness = ["twosided", "twosided", "onesided"]
+    D = np.array([[0.0, 0.1, 0.6], [0.1, 0.0, 0.5], [0.6, 0.5, 0.0]])
+    r1 = {"m": {"accuracy_1nn": 1.0, "chance": 0.5,
+                "confusion": {"alpha": {"alpha": 2}, "beta": {"alpha": 1}}}}
+    r2 = {"accuracy": 1.0, "n_graded": 2, "n_singleton_excluded": 1,
+          "per_class_recall": {"alpha": 1.0}, "margins_mean": 0.2,
+          "rows": [{"label": "alpha", "margin": 0.2, "correct": True},
+                   {"label": "alpha", "margin": 0.2, "correct": True},
+                   {"label": "beta", "margin": None, "correct": None}]}
+    ana = dg.build_analysis(corpus, keys, labels, sidedness, r1, {"m": D}, r2, "v3_sided")
+    assert [c["tags"] for c in ana["clips"]] == [["object"], ["object"], ["style"]]
+    assert ana["metrics"]["m"]["retrieval"] is r1["m"]
+    assert ana["metrics"]["m"]["rows"][0]["key"] == keys[0]
+    assert ana["r2"]["rows"][0]["key"] == keys[0]
+    assert ana["r2"]["winner_mask"] == "v3_sided"
+    assert {r["group"] for r in ana["by_tag"]["patterns"]} == \
+        {"twosided_object", "onesided_style"}
+    out = dg.write_analysis(tmp_path, ana, {"m": D}, keys)
+    assert out.exists()
+    z = np.load(tmp_path / "distance_matrices.npz")
+    assert list(z["keys"]) == keys and np.array_equal(z["m"], D)
+    loaded = json.loads(out.read_text())
+    assert set(loaded) == {"clips", "metrics", "r2", "by_tag"}

@@ -1,13 +1,14 @@
 """Build the deep-dive results explorer for a finished certification run.
 
-Consumes the certification artifacts plus the exam deep-dive produced by
-scripts/exam_confusion_analysis.py and emits one self-contained HTML page
-(no external requests): confusion matrices with class distances, per-clip
+Consumes the certification artifacts plus the exam diagnostic state written by
+certify.diagnostics (analysis/analysis.json) and emits one self-contained HTML
+page (no external requests): confusion matrices with class distances, per-clip
 margins, tag-level error intensity, R1/R2 divergence, probe/archive/stability
-charts, and the eight bar verdicts.
+charts, and the eight bar verdicts. The certification driver calls build() at
+the end of every run (non-gating); manual rerun:
 
-    python scripts/build_results_explorer.py \
-        --cert-dir outputs/eval/certification/3.0.0-draft.8
+    PYTHONPATH=src python -m diffusion.transition_eval.certify.explorer \
+        --cert-dir outputs/eval/certification/<version>
 """
 from __future__ import annotations
 
@@ -954,16 +955,22 @@ renderAll();
 """
 
 
-def main() -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--cert-dir", required=True)
-    args = ap.parse_args()
-    cert = pathlib.Path(args.cert_dir)
+def build(cert_dir: pathlib.Path) -> pathlib.Path:
+    """Render <cert_dir>/results_explorer.html from the run's artifacts."""
+    cert = pathlib.Path(cert_dir)
     data = prep(cert)
     html = HTML.replace("__VER__", data["version"]) \
                .replace("__DATA__", json.dumps(data, separators=(",", ":")))
     out = cert / "results_explorer.html"
     out.write_text(html)
+    return out
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--cert-dir", required=True)
+    args = ap.parse_args()
+    out = build(pathlib.Path(args.cert_dir))
     print(f"[explorer] {out}  ({out.stat().st_size // 1024} KB)")
     return 0
 

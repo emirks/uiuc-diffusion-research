@@ -151,7 +151,8 @@ def main() -> int:
 
     # ---- Block A ---------------------------------------------------------------------
     log("Block A: exam (R1 + R2 + adoption)")
-    exam_res = exam.run_exam(bundles, labels, sidedness, corpus, bars, out / "exam")
+    exam_res = exam.run_exam(bundles, labels, sidedness, corpus, bars, out / "exam",
+                             analysis_dir=out / "analysis")
     mask_w = exam_res["mask_adoption"]["winner"]
     log(f"  mask winner={mask_w}; motion winner={exam_res['motion_adoption']['winner']}; "
         f"bar1 pass={exam_res['bar1']['pass']}")
@@ -363,14 +364,45 @@ def main() -> int:
            f"(gap {g_spl.get('gap')})",
            f"- sigma_seed: PENDING (gates first model report, not this tag)",
            f"- Block C: {len(c_rows)} archived items scored; "
-           f"{len(c_excluded)} excluded loudly (see record.json)",
-           "", "Artifacts: exam/, content_invariance.json, manifests/, "
-               "probe_videos/, cert_*/items.jsonl, record.json — all under "
+           f"{len(c_excluded)} excluded loudly (see record.json)"]
+
+    def _pct(v):
+        return "—" if v is None else f"{v:.3f}"
+    r1 = exam_res["r1"]
+    md += ["", "## Exam detail (representation, non-gating)", "",
+           "| metric | acc (1-NN) | Cohen's d | chance |", "|---|---|---|---|"]
+    md += [f"| {m} | {_pct(r['accuracy_1nn'])} | {r['separation_cohens_d']:.2f} "
+           f"| {_pct(r['chance'])} |" for m, r in r1.items()]
+    md += ["", f"R2 pool accuracy: {_pct(exam_res['r2']['accuracy'])} "
+               f"over {exam_res['r2']['n_graded']} graded."]
+    if exam_res.get("by_tag"):
+        mnames = list(r1)
+        md += ["", "### R1 accuracy by tag group", "",
+               "| group | n | " + " | ".join(mnames) + " |",
+               "|---|---|" + "---|" * len(mnames)]
+        for row in exam_res["by_tag"]["coarse"] + exam_res["by_tag"]["patterns"]:
+            md += [f"| {row['group']} | {row['n']} | "
+                   + " | ".join(_pct(row.get(m)) for m in mnames) + " |"]
+    md += ["", "Artifacts: exam/, analysis/ (confusion, per-clip margins, class "
+               "distances), figures/*.png, results_explorer.html, "
+               "content_invariance.json, manifests/, probe_videos/, "
+               "cert_*/items.jsonl, record.json — all under "
                f"`{out.relative_to(REPO_ROOT) if out.is_relative_to(REPO_ROOT) else out}`."]
     rec_dir = pathlib.Path(__file__).parents[1] / "certifications"
     rec_dir.mkdir(exist_ok=True)
     (rec_dir / f"v{ver}.md").write_text("\n".join(md))
     log(f"record -> certifications/v{ver}.md  overall={'PASS' if overall else 'FAIL'}")
+
+    # ---- representation (figures + explorer) — never gates the record ------------------
+    log("representation: figures + results explorer")
+    try:
+        from . import explorer, figures
+        figs = figures.save_all(out)
+        explorer.build(out)
+        log(f"  {len(figs)} figures -> figures/, results_explorer.html written")
+    except Exception as e:  # noqa: BLE001 — record is already on disk
+        log(f"  representation failed (non-gating, record unaffected): "
+            f"{type(e).__name__}: {e}")
     return 0 if overall else 1
 
 
