@@ -216,9 +216,10 @@ job serves both.
   undefined row that is counted, never skipped quietly.
 - **Trust-map awareness:** class-level claims restricted to the n≥4-eligible
   scope (RUNBOOK §6); untrusted cells carry `†`.
-- When blocked (owner decision, cluster failure, gate ambiguity): commit
-  state, write the blocker into the running report, stop that track, continue
-  any independent track.
+- When blocked: consult the advisor first (§8 — most execution-level
+  ambiguities resolve there without stalling the run). Only owner-reserved
+  matters (§8 list) stop a track: commit state, write the blocker into the
+  running report, stop that track, continue any independent track.
 
 ## 8. Division of labor — executor reports, reviewer concludes
 
@@ -244,6 +245,45 @@ adoption call, all synthesis, and all strategy belong to owner-side review
 therefore be complete enough that the reviewer never needs a re-run to make
 the call — coverage, hubness, margins, and definedness sit next to every
 headline statistic, always.
+
+### The advisor channel (in-flight consultation)
+
+Advisor mode is enabled: the executor may consult a reasoning advisor at
+critical moments — show intermediate results, ask for evaluation and
+direction. This is a tool AGAINST stalling, not a checkpoint: the process
+runs autonomously end-to-end until every metric depicted in the RUNBOOK is
+tested and reported extensively; the executor never idles waiting for the
+owner unless an owner-reserved matter arises.
+
+Consult the advisor when (non-exhaustive, use judgment):
+
+- an unexpected result makes the next EXECUTION step ambiguous;
+- a corpus-only calibration the RUNBOOK deliberately leaves open needs
+  choosing (e.g. §3.3's energy-gate ε percentile) and a second read helps;
+- an acceptance test fails and §3.4's "fix or stop" fork needs adjudication:
+  implementation bug (fix and rerun — debugging is not a rescue variant) vs
+  the metric failing constructed truth (stop, record);
+- artifacts contradict the pinned baselines or each other;
+- before designing an expensive step (the GPU cache-build job) if uncertain;
+- at a phase boundary when the direction of remaining work is unclear.
+
+The advisor MAY provide: interpretation of intermediate results,
+execution direction, bug-vs-real-signal reads, choices among options that
+are all compatible with the pre-registration.
+
+The advisor may NOT — and the executor may not ask it to — override or
+reinterpret a frozen gate, kill rule, threshold, or adoption rule; authorize
+a second attempt or rescue variant; make the §7 adoption call; or reopen
+owner-reserved matters (bar forms, threshold changes, baseline re-pinning).
+Those remain owner-only and stop the track. A consultation that drifts there
+ends with the blocker recorded, not with the advice followed.
+
+Every consultation is logged in the running record: timestamp, question
+asked, advisor direction received, action taken. Advisor input never
+softens or reframes a committed record — verdicts stay rule text + numbers.
+In-flight consultation and post-hoc review are distinct: the advisor steers
+execution; the catch is still made only in owner-side review of the final
+report.
 
 `IDEAS_NEXT_CYCLE.md` is the single sanctioned non-neutral file: a parking
 lot the executor may append to, clearly marked non-authoritative, never
