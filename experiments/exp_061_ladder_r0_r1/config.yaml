@@ -1,0 +1,43 @@
+# exp_061 R0/R1 ladder baselines — snapshot of the generation contract.
+# run.py hardcodes these constants (ValidationRunner pattern, matching
+# exp_056/057/060; the trainer uv env has no diffusion.exp_utils). This file
+# is the record and is copied to outputs/.../config_snapshot.yaml at run time.
+model:
+  base_model: "cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors"   # exp_056's base
+  text_encoder: "cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
+  lora: null              # R0/R1 are adapter-free by definition
+
+inputs:
+  selection: "experiments/exp_061_ladder_r0_r1/dataset/selection.json"
+  cond_dir: "experiments/exp_061_ladder_r0_r1/dataset/cond"   # R1 only
+  split: "data/processed/transitions_std121/split_v1.json"
+
+arms:
+  r0:                      # base prior probe: prompt only, NO conditioning
+    conditions: []
+  r1:                      # conditioning-suppression probe: endpoints only
+    conditions: [prefix9, suffix8]   # exp_051 recipe, endpoints from item clip
+
+inference:                 # exp_057/060 recipe verbatim
+  width: 480
+  height: 640
+  num_frames: 121
+  fps: 24
+  num_inference_steps: 30
+  guidance_scale: 4.0
+  stg_scale: 1.0
+  stg_blocks: [29]
+  stg_mode: "stg_v"
+  n_prefix: 9              # <clip>_start9.mp4 (first 9 frames of the item clip)
+  n_suffix: 8              # <clip>_end9.mp4 (last 9 frames), consumed as 8
+  negative_prompt: "worst quality, inconsistent motion, distorted, jittery"
+  trigger: "ICTRANS"       # kept for prompt parity with base twins + future rungs
+
+runtime:
+  seeds: [42, 43, 44]      # same items AND seeds in both arms (paired design)
+  device: cuda
+  dtype: bfloat16
+
+outputs:
+  dir: "outputs/videos/exp_061_ladder_r0_r1"   # {r0,r1}/<arm>__<class>__<clip>__s<seed>.mp4
+  fps: 24
