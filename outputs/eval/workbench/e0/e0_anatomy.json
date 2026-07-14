@@ -1,0 +1,433 @@
+{
+ "status": "E0 rides the E1 run and carries NO gating numbers (\u00a74.2). It is produced as registered despite the \u00a74.1 kill, which does not remove it. Everything here is DESCRIPTIVE.",
+ "space": "registered whitened space (\u00a71.1); the instrument state documented in e1_floor_sensitivity.json also conditions these curves",
+ "n_clips_with_curves": 222,
+ "per_class_chord_detachment": {
+  "air_bending": {
+   "m_mean": 0.7164146643567484,
+   "m_null_mean": 0.7204370289395434,
+   "detachment_ratio": 0.9944167714578528,
+   "n": 4,
+   "sidedness": "twosided"
+  },
+  "animalization": {
+   "m_mean": 0.6384197296819478,
+   "m_null_mean": 0.6800364932699963,
+   "detachment_ratio": 0.9388021613547065,
+   "n": 8,
+   "sidedness": "onesided"
+  },
+  "color_rain": {
+   "m_mean": 0.5721274802970262,
+   "m_null_mean": 0.5598225645332756,
+   "detachment_ratio": 1.021980028214849,
+   "n": 8,
+   "sidedness": "onesided"
+  },
+  "cotton_cloud": {
+   "m_mean": 0.4584985404964052,
+   "m_null_mean": 0.5014558972321485,
+   "detachment_ratio": 0.914334726198551,
+   "n": 6,
+   "sidedness": "onesided"
+  },
+  "display_transition": {
+   "m_mean": 0.5854114270941556,
+   "m_null_mean": 0.4966448115334141,
+   "detachment_ratio": 1.1787325941988005,
+   "n": 3,
+   "sidedness": "twosided"
+  },
+  "earth_element": {
+   "m_mean": 0.5500321115839114,
+   "m_null_mean": 0.5966761971725638,
+   "detachment_ratio": 0.921826803533169,
+   "n": 6,
+   "sidedness": "onesided"
+  },
+  "earth_wave": {
+   "m_mean": 0.715509395284047,
+   "m_null_mean": 0.6224031236272805,
+   "detachment_ratio": 1.149591588027637,
+   "n": 5,
+   "sidedness": "twosided"
+  },
+  "fire_element": {
+   "m_mean": 0.4989324979366312,
+   "m_null_mean": 0.5657734447275844,
+   "detachment_ratio": 0.8818591656893041,
+   "n": 4,
+   "sidedness": "onesided"
+  },
+  "firelava": {
+   "m_mean": 0.6542249353454299,
+   "m_null_mean": 0.5981865977084123,
+   "detachment_ratio": 1.0936803630367085,
+   "n": 6,
+   "sidedness": "twosided"
+  },
+  "flame": {
+   "m_mean": 0.6741873758859603,
+   "m_null_mean": 0.6872526898088087,
+   "detachment_ratio": 0.9809890683345552,
+   "n": 2,
+   "sidedness": "twosided"
+  },
+  "flying_cam_transition": {
+   "m_mean": 0.646995486027852,
+   "m_null_mean": 0.5315149661730486,
+   "detachment_ratio": 1.2172667322733592,
+   "n": 4,
+   "sidedness": "twosided"
+  },
+  "gas_transformation": {
+   "m_mean": 0.5456151940208664,
+   "m_null_mean": 0.579839124988723,
+   "detachment_ratio": 0.9409768511765704,
+   "n": 10,
+   "sidedness": "onesided"
+  },
+  "giant_grab": {
+   "m_mean": 0.45437361175964774,
+   "m_null_mean": 0.5681021640098315,
+   "detachment_ratio": 0.7998096830903542,
+   "n": 5,
+   "sidedness": "onesided"
+  },
+  "hero_flight": {
+   "m_mean": 0.560200857515525,
+   "m_null_mean": 0.6598141420696242,
+   "detachment_ratio": 0.8490282668970318,
+   "n": 10,
+   "sidedness": "onesided"
+  },
+  "hole_transition": {
+   "m_mean": 0.6639582137195663,
+   "m_null_mean": 0.5973456443415814,
+   "detachment_ratio": 1.1115142798963704,
+   "n": 2,
+   "sidedness": "twosided"
+  },
+  "illustration_scene": {
+   "m_mean": 0.5357249316152795,
+   "m_null_mean": 0.6170852921345844,
+   "detachment_ratio": 0.8681537843206923,
+   "n": 10,
+   "sidedness": "onesided"
+  },
+  "jump_transition": {
+   "m_mean": 0.569210797673203,
+   "m_null_mean": 0.5135445874858787,
+   "detachment_ratio": 1.108396060524842,
+   "n": 1,
+   "sidedness": "twosided"
+  },
+  "live_concert": {
+   "m_mean": 0.46333113233245726,
+   "m_null_mean": 0.667719684988086,
+   "detachment_ratio": 0.6939006633310869,
+   "n": 8,
+   "sidedness": "onesided"
+  },
+  "luminous_gaze": {
+   "m_mean": 0.5149476691270988,
+   "m_null_mean": 0.48754729754936843,
+   "detachment_ratio": 1.0562004378148682,
+   "n": 4,
+   "sidedness": "onesided"
+  },
+  "melt_transition": {
+   "m_mean": 0.6923503935239818,
+   "m_null_mean": 0.6167358015439275,
+   "detachment_ratio": 1.1226045119981065,
+   "n": 3,
+   "sidedness": "twosided"
+  },
+  "money_rain": {
+   "m_mean": 0.7350157655468276,
+   "m_null_mean": 0.8437307480011719,
+   "detachment_ratio": 0.8711496733858592,
+   "n": 7,
+   "sidedness": "onesided"
+  },
+  "monstrosity": {
+   "m_mean": 0.5139279491039582,
+   "m_null_mean": 0.5979458424901588,
+   "detachment_ratio": 0.8594891252420015,
+   "n": 3,
+   "sidedness": "onesided"
+  },
+  "mystification": {
+   "m_mean": 0.5397912035113637,
+   "m_null_mean": 0.5240994778419962,
+   "detachment_ratio": 1.0299403573802037,
+   "n": 5,
+   "sidedness": "onesided"
+  },
+  "nature_bloom": {
+   "m_mean": 0.49213187602670605,
+   "m_null_mean": 0.551127755489473,
+   "detachment_ratio": 0.8929542581095903,
+   "n": 2,
+   "sidedness": "onesided"
+  },
+  "plasma_explosion": {
+   "m_mean": 0.5841629425465867,
+   "m_null_mean": 0.674413054497702,
+   "detachment_ratio": 0.8661797672076013,
+   "n": 4,
+   "sidedness": "onesided"
+  },
+  "polygon": {
+   "m_mean": 0.4351110961338327,
+   "m_null_mean": 0.5997216480158611,
+   "detachment_ratio": 0.7255217442514683,
+   "n": 9,
+   "sidedness": "onesided"
+  },
+  "portal": {
+   "m_mean": 0.7028160086555241,
+   "m_null_mean": 0.6838856996875704,
+   "detachment_ratio": 1.0276805158765594,
+   "n": 13,
+   "sidedness": "onesided"
+  },
+  "raven_transition": {
+   "m_mean": 0.6707429654196708,
+   "m_null_mean": 0.5878030014234329,
+   "detachment_ratio": 1.1411016340430198,
+   "n": 4,
+   "sidedness": "twosided"
+  },
+  "run_set_on_fire": {
+   "m_mean": 0.5619329409119145,
+   "m_null_mean": 0.716859008858393,
+   "detachment_ratio": 0.7838820939236012,
+   "n": 2,
+   "sidedness": "onesided"
+  },
+  "saint_glow": {
+   "m_mean": 0.5916517191648627,
+   "m_null_mean": 0.5714666780592775,
+   "detachment_ratio": 1.0353214664661365,
+   "n": 4,
+   "sidedness": "onesided"
+  },
+  "sakura_petals": {
+   "m_mean": 0.5629347467662315,
+   "m_null_mean": 0.6049030529563484,
+   "detachment_ratio": 0.9306197811616178,
+   "n": 2,
+   "sidedness": "onesided"
+  },
+  "seamless_transition": {
+   "m_mean": 0.7033499902385989,
+   "m_null_mean": 0.6982539516678994,
+   "detachment_ratio": 1.0072982595494473,
+   "n": 1,
+   "sidedness": "twosided"
+  },
+  "shadow": {
+   "m_mean": 0.502816107095535,
+   "m_null_mean": 0.5423527792667834,
+   "detachment_ratio": 0.9271015588327975,
+   "n": 15,
+   "sidedness": "onesided"
+  },
+  "shadow_smoke": {
+   "m_mean": 0.6809162338280312,
+   "m_null_mean": 0.5718000024599721,
+   "detachment_ratio": 1.1908293649853519,
+   "n": 10,
+   "sidedness": "twosided"
+  },
+  "super_fast_run": {
+   "m_mean": 0.6106743150616666,
+   "m_null_mean": 0.7499924478460999,
+   "detachment_ratio": 0.8142406191095118,
+   "n": 12,
+   "sidedness": "onesided"
+  },
+  "water_bending": {
+   "m_mean": 0.6991286112383523,
+   "m_null_mean": 0.6631159241792883,
+   "detachment_ratio": 1.0543082826786816,
+   "n": 4,
+   "sidedness": "twosided"
+  },
+  "water_element": {
+   "m_mean": 0.527618289805987,
+   "m_null_mean": 0.5563105429359063,
+   "detachment_ratio": 0.9484240349311068,
+   "n": 5,
+   "sidedness": "onesided"
+  },
+  "wireframe": {
+   "m_mean": 0.4156535496626439,
+   "m_null_mean": 0.5305168136041923,
+   "detachment_ratio": 0.7834879856847562,
+   "n": 9,
+   "sidedness": "onesided"
+  },
+  "wonderland": {
+   "m_mean": 0.6510220177327637,
+   "m_null_mean": 0.6161870354901902,
+   "detachment_ratio": 1.0565331307479742,
+   "n": 2,
+   "sidedness": "onesided"
+  }
+ },
+ "prediction_checks": {
+  "P1_sibling_closer_than_own_null": {
+   "status": "PARTIAL \u2014 the gamma-signature form is NOT CHECKABLE (E2 did not run, per the \u00a74.1 kill). Computed here on the m(sigma) mean in the registered whitened space as the nearest available analogue.",
+   "per_class": {
+    "air_bending": {
+     "clips": 4,
+     "closer_to_sibling": 3
+    },
+    "animalization": {
+     "clips": 8,
+     "closer_to_sibling": 4
+    },
+    "color_rain": {
+     "clips": 8,
+     "closer_to_sibling": 6
+    },
+    "cotton_cloud": {
+     "clips": 6,
+     "closer_to_sibling": 4
+    },
+    "earth_element": {
+     "clips": 6,
+     "closer_to_sibling": 4
+    },
+    "earth_wave": {
+     "clips": 5,
+     "closer_to_sibling": 4
+    },
+    "fire_element": {
+     "clips": 4,
+     "closer_to_sibling": 3
+    },
+    "firelava": {
+     "clips": 6,
+     "closer_to_sibling": 4
+    },
+    "flying_cam_transition": {
+     "clips": 4,
+     "closer_to_sibling": 4
+    },
+    "gas_transformation": {
+     "clips": 10,
+     "closer_to_sibling": 9
+    },
+    "giant_grab": {
+     "clips": 5,
+     "closer_to_sibling": 4
+    },
+    "hero_flight": {
+     "clips": 10,
+     "closer_to_sibling": 9
+    },
+    "illustration_scene": {
+     "clips": 10,
+     "closer_to_sibling": 10
+    },
+    "live_concert": {
+     "clips": 8,
+     "closer_to_sibling": 8
+    },
+    "luminous_gaze": {
+     "clips": 4,
+     "closer_to_sibling": 2
+    },
+    "melt_transition": {
+     "clips": 3,
+     "closer_to_sibling": 1
+    },
+    "money_rain": {
+     "clips": 7,
+     "closer_to_sibling": 6
+    },
+    "mystification": {
+     "clips": 5,
+     "closer_to_sibling": 4
+    },
+    "plasma_explosion": {
+     "clips": 4,
+     "closer_to_sibling": 3
+    },
+    "polygon": {
+     "clips": 9,
+     "closer_to_sibling": 9
+    },
+    "portal": {
+     "clips": 13,
+     "closer_to_sibling": 12
+    },
+    "raven_transition": {
+     "clips": 4,
+     "closer_to_sibling": 4
+    },
+    "saint_glow": {
+     "clips": 4,
+     "closer_to_sibling": 4
+    },
+    "shadow": {
+     "clips": 15,
+     "closer_to_sibling": 12
+    },
+    "shadow_smoke": {
+     "clips": 10,
+     "closer_to_sibling": 9
+    },
+    "super_fast_run": {
+     "clips": 12,
+     "closer_to_sibling": 12
+    },
+    "water_bending": {
+     "clips": 4,
+     "closer_to_sibling": 1
+    },
+    "water_element": {
+     "clips": 5,
+     "closer_to_sibling": 2
+    },
+    "wireframe": {
+     "clips": 9,
+     "closer_to_sibling": 9
+    }
+   },
+   "classes_where_all_clips_closer_to_sibling": 8,
+   "n_eligible_classes": 29
+  },
+  "P2_sidedness_recoverable_from_asymmetry": {
+   "statistic": "mean(a_hat) - mean(1 - b_hat) over sigma",
+   "onesided": {
+    "n": 173,
+    "mean": 0.36006820984223104,
+    "std": 0.10351655006127657
+   },
+   "twosided": {
+    "n": 49,
+    "mean": 0.3471422082909087,
+    "std": 0.06765823874570871
+   },
+   "rank_auc_onesided_vs_twosided": 0.5227085053674649,
+   "note": "descriptive, non-gating; AUC 0.5 = no separation, 1.0 = perfect"
+  },
+  "P3_nature_bloom_lerp_adjacent": {
+   "nature_bloom_detachment_ratio": 0.8929542581095903,
+   "corpus_median_detachment_ratio": 0.9484240349311068,
+   "rank_of_nature_bloom_low_to_high": 13,
+   "n_classes": 39,
+   "note": "descriptive; n=2 class, never gating (RUNBOOK \u00a76)"
+  },
+  "P4_onesided_excursion_mass_early_sigma": {
+   "onesided_sigma_centroid_mean": 0.4556337396576811,
+   "twosided_sigma_centroid_mean": 0.4993453186510275,
+   "onesided_earlier": true,
+   "note": "descriptive, non-gating; centroid < 0.5 means mass early in sigma"
+  }
+ }
+}
