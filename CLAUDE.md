@@ -8,6 +8,18 @@ Format: newest entry at top, under a `## YYYY-MM-DD` date heading. Each entry is
 
 ---
 
+## Commit & push discipline
+
+**Local and remote must never drift.** After *any* checkpoint that changes the repo — a new experiment scaffold (`exp-design`), a finished run + write-up (`exp-finish`), an eval/certification (`exp-eval`), a doc/spec/knowledge-bank edit, an infra change — **commit and push immediately, in the same step**. End every such step with a clean `git status` and `ahead=0 behind=0`.
+
+- **Atomic**: one logical change per commit; stage by pathspec, never `git add -A`. Message `type(scope): what` — `exp_NNN:`, `docs:`, `eval:`, `infra:`, `chore:`.
+- **Push after every commit** (`git push`) — never leave commits sitting local.
+- **Identity**: this environment exports a wrong `GIT_AUTHOR_EMAIL`, so commits mis-attribute. Always commit as `emirks <emirks88@gmail.com>` — guard once per shell: `export GIT_AUTHOR_NAME=emirks GIT_AUTHOR_EMAIL=emirks88@gmail.com GIT_COMMITTER_NAME=emirks GIT_COMMITTER_EMAIL=emirks88@gmail.com`.
+- **Never commit** big/regenerable files — respect `.gitignore` (`wandb/`, `**/.precomputed*/`, `**/decoded_videos/`, weights). Dataset `*.mp4` go through Git-LFS (`.gitattributes`); needs `~/.local/bin` on PATH.
+- **Branches**: do exploratory/spec work on a feature branch, same commit+push-immediately rule (first push `git push -u origin <branch>`). When the work concludes (certified, decision landed), `git merge --no-ff` it into `main` and push; leave the branch as the record. Keep every branch at `ahead=0 behind=0` vs its upstream.
+
+---
+
 ## Knowledge bank workflow
 
 `notes/INDEX.md` is the **single entry point** for everything learned in this project (model mechanics, API quirks, experiment findings, theory).
