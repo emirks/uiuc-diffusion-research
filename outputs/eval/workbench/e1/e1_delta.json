@@ -1,0 +1,2478 @@
+{
+ "metric": "e1_delta",
+ "accuracy_1nn": 0.06278026905829596,
+ "separation_cohens_d": 0.3581899911324271,
+ "coverage": 1.0,
+ "misretrieved": 209,
+ "n_clips": 223,
+ "chance": 0.06726457399103139,
+ "accuracy_wilson95": [
+  0.03776133896774705,
+  0.10260797600798932
+ ],
+ "per_class_recall": {
+  "air_bending": 0.0,
+  "animalization": 0.0,
+  "color_rain": 0.0,
+  "cotton_cloud": 0.6666666666666666,
+  "display_transition": 0.0,
+  "earth_element": 0.0,
+  "earth_wave": 0.0,
+  "fire_element": 0.0,
+  "firelava": 0.0,
+  "flame": 0.0,
+  "flying_cam_transition": 0.0,
+  "gas_transformation": 0.2,
+  "giant_grab": 0.0,
+  "hero_flight": 0.1,
+  "hole_transition": 0.0,
+  "illustration_scene": 0.2,
+  "jump_transition": 0.0,
+  "live_concert": 0.25,
+  "luminous_gaze": 0.0,
+  "melt_transition": 0.0,
+  "money_rain": 0.0,
+  "monstrosity": 0.0,
+  "mystification": 0.2,
+  "nature_bloom": 0.0,
+  "plasma_explosion": 0.0,
+  "polygon": 0.2222222222222222,
+  "portal": 0.0,
+  "raven_transition": 0.0,
+  "run_set_on_fire": 0.0,
+  "saint_glow": 0.0,
+  "sakura_petals": 0.0,
+  "seamless_transition": 0.0,
+  "shadow": 0.0,
+  "shadow_smoke": 0.0,
+  "super_fast_run": 0.0,
+  "water_bending": 0.0,
+  "water_element": 0.0,
+  "wireframe": 0.0,
+  "wonderland": 0.0
+ },
+ "stratum_recalls": {
+  "camera": {
+   "value": 0.055158730158730164,
+   "n_classes": 14,
+   "n_classes_nan": 0,
+   "nan_classes": [],
+   "class_coverage": 1.0,
+   "per_class": {
+    "air_bending": 0.0,
+    "earth_element": 0.0,
+    "earth_wave": 0.0,
+    "firelava": 0.0,
+    "flying_cam_transition": 0.0,
+    "hero_flight": 0.1,
+    "illustration_scene": 0.2,
+    "live_concert": 0.25,
+    "plasma_explosion": 0.0,
+    "polygon": 0.2222222222222222,
+    "raven_transition": 0.0,
+    "shadow_smoke": 0.0,
+    "super_fast_run": 0.0,
+    "water_bending": 0.0
+   }
+  },
+  "object": {
+   "value": 0.07314814814814814,
+   "n_classes": 18,
+   "n_classes_nan": 0,
+   "nan_classes": [],
+   "class_coverage": 1.0,
+   "per_class": {
+    "air_bending": 0.0,
+    "animalization": 0.0,
+    "color_rain": 0.0,
+    "cotton_cloud": 0.6666666666666666,
+    "earth_wave": 0.0,
+    "firelava": 0.0,
+    "gas_transformation": 0.2,
+    "giant_grab": 0.0,
+    "live_concert": 0.25,
+    "luminous_gaze": 0.0,
+    "melt_transition": 0.0,
+    "money_rain": 0.0,
+    "mystification": 0.2,
+    "portal": 0.0,
+    "raven_transition": 0.0,
+    "saint_glow": 0.0,
+    "shadow_smoke": 0.0,
+    "water_bending": 0.0
+   }
+  }
+ },
+ "primary_stratum": null,
+ "hubness": {
+  "pass": false,
+  "checks": {
+   "skew_ok": false,
+   "entropy_ok": false,
+   "pred_share_ok": false
+  },
+  "thresholds": {
+   "gating_k": 10,
+   "diagnostic_ks": [
+    1,
+    5,
+    10
+   ],
+   "max_hubness_skew": 3.0,
+   "min_pred_entropy_norm": 0.7,
+   "max_pred_class_share": 0.25,
+   "form": "FAIL if ANY of the three trips (OR-structured \u2014 the instruments see\ndifferent failures: the prediction column is a k=1 phenomenon, so rank-2..10\nabsorption casts no 1-NN votes and is invisible to it, which is how the\nincumbent m1b decouples). Terminal regardless of accuracy (\u00a71.4). Applies to\nEVERY candidate space/descriptor \u2014 motion and appearance alike (\u00a77 cond. 3).\n",
+   "coverage_interaction": "Computed on the same matrix the exam grades, over the DEFINED SUBPOOL only,\ndenominators explicit, NO coverage correction or renormalization (that would\nbe a new bar form). The \u00a73.2/\u00a73.3 definedness gates are SUPPOSED to remove\nnear-static clips, and a shrunken pool mechanically concentrates hub\nstatistics \u2014 that is a property of the candidate, not an artifact to correct\naway. Coverage is reported beside every hubness stat.\n",
+   "band_disclosure": "A candidate statistic landing INSIDE the band gets the frozen verdict \u2014\nterminal, no re-adjudication by the executor \u2014 but the report must flag\n\"landed in the calibration band; verdict is threshold-placement-sensitive\"\nand print the band and both populations. Whether the placement was right is\nowner-side review.\n",
+   "incumbent_table": {
+    "m1a__v3_sided": {
+     "skew": 0.839,
+     "pred_entropy_norm": 0.9111,
+     "max_pred_class_share": 0.0807,
+     "verdict": "PASS"
+    },
+    "m1a__v2_envelope": {
+     "skew": 0.967,
+     "pred_entropy_norm": 0.9059,
+     "max_pred_class_share": 0.0807,
+     "verdict": "PASS"
+    },
+    "m1a__all_frames": {
+     "skew": 1.188,
+     "pred_entropy_norm": 0.928,
+     "max_pred_class_share": 0.0673,
+     "verdict": "PASS"
+    },
+    "m1b_camera": {
+     "skew": 2.517,
+     "pred_entropy_norm": 0.9173,
+     "max_pred_class_share": 0.1019,
+     "verdict": "PASS"
+    },
+    "m_incumbent": {
+     "skew": 3.386,
+     "pred_entropy_norm": 0.5094,
+     "max_pred_class_share": 0.3901,
+     "verdict": "FAIL"
+    },
+    "m1c_object": {
+     "skew": 4.325,
+     "pred_entropy_norm": 0.4469,
+     "max_pred_class_share": 0.5811,
+     "verdict": "FAIL",
+     "sink_class": "polygon"
+    }
+   }
+  },
+  "landed_in_calibration_band": false,
+  "band_membership": {
+   "hubness_skew": false,
+   "pred_entropy_norm": false,
+   "max_pred_class_share": false
+  },
+  "calibration_band": {
+   "skew": [
+    1.188,
+    3.386
+   ],
+   "pred_entropy_norm": [
+    0.5094,
+    0.9059
+   ],
+   "max_pred_class_share": [
+    0.1019,
+    0.3901
+   ]
+  },
+  "stats": {
+   "k": 10,
+   "n_clips": 223,
+   "n_undefined_rows": 0,
+   "coverage": 1.0,
+   "hubness_skew": 4.299729588597959,
+   "skew_by_k_diagnostic": {
+    "1": 13.067495542670361,
+    "5": 6.80088202346228,
+    "10": 4.299729588597959
+   },
+   "k_occurrence_max": 222,
+   "k_occurrence_mean": 10.0,
+   "max_clip_knn_share": 0.09955156950672646,
+   "hub_clip_index": 122,
+   "pred_entropy_norm": 0.32168426053333987,
+   "max_pred_class_share": 0.6502242152466368,
+   "sink_class": "mystification",
+   "n_graded": 223
+  }
+ },
+ "definedness": {
+  "n_clips": 223,
+  "n_undefined_rows": 0,
+  "coverage": 1.0,
+  "undefined_by_reason": {},
+  "nan_cell_fraction": 0.0
+ },
+ "per_clip_rows": [
+  {
+   "key": "air_bending/air_bending_0.mp4",
+   "label": "air_bending",
+   "pred": "saint_glow",
+   "nn_key": "saint_glow/saint_glow_2.mp4",
+   "nn_dist": 45.733033689621244,
+   "d_within_min": 55.7805252979086,
+   "d_cross_min": 45.733033689621244,
+   "margin": -10.047491608287359
+  },
+  {
+   "key": "air_bending/air_bending_1.mp4",
+   "label": "air_bending",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 50.35164399904849,
+   "d_within_min": 62.83443883482273,
+   "d_cross_min": 50.35164399904849,
+   "margin": -12.482794835774236
+  },
+  {
+   "key": "air_bending/air_bending_2.mp4",
+   "label": "air_bending",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 45.55609174559738,
+   "d_within_min": 58.00661535347006,
+   "d_cross_min": 45.55609174559738,
+   "margin": -12.450523607872682
+  },
+  {
+   "key": "air_bending/air_bending_3.mp4",
+   "label": "air_bending",
+   "pred": "water_element",
+   "nn_key": "water_element/water_element_4.mp4",
+   "nn_dist": 45.28766802975668,
+   "d_within_min": 55.7805252979086,
+   "d_cross_min": 45.28766802975668,
+   "margin": -10.492857268151923
+  },
+  {
+   "key": "animalization/animalization_0.mp4",
+   "label": "animalization",
+   "pred": "color_rain",
+   "nn_key": "color_rain/color_rain_0.mp4",
+   "nn_dist": 38.93071335544673,
+   "d_within_min": 44.22789609208352,
+   "d_cross_min": 38.93071335544673,
+   "margin": -5.297182736636792
+  },
+  {
+   "key": "animalization/animalization_1.mp4",
+   "label": "animalization",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 36.52104593383011,
+   "d_within_min": 42.27074628790138,
+   "d_cross_min": 36.52104593383011,
+   "margin": -5.749700354071273
+  },
+  {
+   "key": "animalization/animalization_2.mp4",
+   "label": "animalization",
+   "pred": "saint_glow",
+   "nn_key": "saint_glow/saint_glow_3.mp4",
+   "nn_dist": 37.69179132061631,
+   "d_within_min": 43.291352541634524,
+   "d_cross_min": 37.69179132061631,
+   "margin": -5.599561221018213
+  },
+  {
+   "key": "animalization/animalization_3.mp4",
+   "label": "animalization",
+   "pred": "water_element",
+   "nn_key": "water_element/water_element_4.mp4",
+   "nn_dist": 38.002862429704564,
+   "d_within_min": 42.45707569004268,
+   "d_cross_min": 38.002862429704564,
+   "margin": -4.454213260338115
+  },
+  {
+   "key": "animalization/animalization_4.mp4",
+   "label": "animalization",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 31.15667237680963,
+   "d_within_min": 38.83592433620127,
+   "d_cross_min": 31.15667237680963,
+   "margin": -7.679251959391642
+  },
+  {
+   "key": "animalization/animalization_5.mp4",
+   "label": "animalization",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 30.65231432390973,
+   "d_within_min": 34.642790101118116,
+   "d_cross_min": 30.65231432390973,
+   "margin": -3.9904757772083848
+  },
+  {
+   "key": "animalization/animalization_6.mp4",
+   "label": "animalization",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 38.276720210531664,
+   "d_within_min": 43.79384330684687,
+   "d_cross_min": 38.276720210531664,
+   "margin": -5.517123096315203
+  },
+  {
+   "key": "animalization/animalization_7.mp4",
+   "label": "animalization",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 28.86068278020504,
+   "d_within_min": 34.642790101118116,
+   "d_cross_min": 28.86068278020504,
+   "margin": -5.782107320913077
+  },
+  {
+   "key": "color_rain/color_rain_0.mp4",
+   "label": "color_rain",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 19.24504882038567,
+   "d_within_min": 25.331635638143048,
+   "d_cross_min": 19.24504882038567,
+   "margin": -6.086586817757379
+  },
+  {
+   "key": "color_rain/color_rain_1.mp4",
+   "label": "color_rain",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 23.050647208987257,
+   "d_within_min": 25.331635638143048,
+   "d_cross_min": 23.050647208987257,
+   "margin": -2.2809884291557907
+  },
+  {
+   "key": "color_rain/color_rain_2.mp4",
+   "label": "color_rain",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 29.97163202817642,
+   "d_within_min": 31.872398971534622,
+   "d_cross_min": 29.97163202817642,
+   "margin": -1.900766943358203
+  },
+  {
+   "key": "color_rain/color_rain_3.mp4",
+   "label": "color_rain",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 33.07364067702726,
+   "d_within_min": 34.10550570392479,
+   "d_cross_min": 33.07364067702726,
+   "margin": -1.0318650268975347
+  },
+  {
+   "key": "color_rain/color_rain_5.mp4",
+   "label": "color_rain",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 25.60186620937549,
+   "d_within_min": 27.19864725451792,
+   "d_cross_min": 25.60186620937549,
+   "margin": -1.5967810451424285
+  },
+  {
+   "key": "color_rain/color_rain_6.mp4",
+   "label": "color_rain",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 24.014010952556617,
+   "d_within_min": 25.782273959867155,
+   "d_cross_min": 24.014010952556617,
+   "margin": -1.7682630073105372
+  },
+  {
+   "key": "color_rain/color_rain_7.mp4",
+   "label": "color_rain",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 25.14676006890009,
+   "d_within_min": 27.574539854071613,
+   "d_cross_min": 25.14676006890009,
+   "margin": -2.4277797851715235
+  },
+  {
+   "key": "color_rain/color_rain_8.mp4",
+   "label": "color_rain",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 24.801033981693823,
+   "d_within_min": 26.93612194179453,
+   "d_cross_min": 24.801033981693823,
+   "margin": -2.135087960100705
+  },
+  {
+   "key": "cotton_cloud/cotton_cloud_0.mp4",
+   "label": "cotton_cloud",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 47.90039650024121,
+   "d_within_min": 48.59609848134821,
+   "d_cross_min": 47.90039650024121,
+   "margin": -0.6957019811069998
+  },
+  {
+   "key": "cotton_cloud/cotton_cloud_1.mp4",
+   "label": "cotton_cloud",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 31.127902431462896,
+   "d_within_min": 31.127902431462896,
+   "d_cross_min": 31.86194238243776,
+   "margin": 0.7340399509748643
+  },
+  {
+   "key": "cotton_cloud/cotton_cloud_2.mp4",
+   "label": "cotton_cloud",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 38.31494922779517,
+   "d_within_min": 38.31494922779517,
+   "d_cross_min": 39.27629898885329,
+   "margin": 0.9613497610581234
+  },
+  {
+   "key": "cotton_cloud/cotton_cloud_4.mp4",
+   "label": "cotton_cloud",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 33.832160274459646,
+   "d_within_min": 33.832160274459646,
+   "d_cross_min": 35.502805118128336,
+   "margin": 1.6706448436686898
+  },
+  {
+   "key": "cotton_cloud/cotton_cloud_6.mp4",
+   "label": "cotton_cloud",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 22.826841176003416,
+   "d_within_min": 22.826841176003416,
+   "d_cross_min": 24.726531956087676,
+   "margin": 1.89969078008426
+  },
+  {
+   "key": "cotton_cloud/cotton_cloud_8.mp4",
+   "label": "cotton_cloud",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 16.323214958326385,
+   "d_within_min": 22.826841176003416,
+   "d_cross_min": 16.323214958326385,
+   "margin": -6.503626217677031
+  },
+  {
+   "key": "display_transition/display_transition_1.mp4",
+   "label": "display_transition",
+   "pred": "shadow",
+   "nn_key": "shadow/shadow_14.mp4",
+   "nn_dist": 63.55447795131548,
+   "d_within_min": 76.26250883684924,
+   "d_cross_min": 63.55447795131548,
+   "margin": -12.70803088553376
+  },
+  {
+   "key": "display_transition/display_transition_2.mp4",
+   "label": "display_transition",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 49.7039205343902,
+   "d_within_min": 75.5115582456619,
+   "d_cross_min": 49.7039205343902,
+   "margin": -25.807637711271703
+  },
+  {
+   "key": "display_transition/display_transition_3.mp4",
+   "label": "display_transition",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 62.437563615965466,
+   "d_within_min": 75.5115582456619,
+   "d_cross_min": 62.437563615965466,
+   "margin": -13.073994629696436
+  },
+  {
+   "key": "earth_element/earth_element_0.mp4",
+   "label": "earth_element",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 32.77475417177394,
+   "d_within_min": 37.18327840928922,
+   "d_cross_min": 32.77475417177394,
+   "margin": -4.40852423751528
+  },
+  {
+   "key": "earth_element/earth_element_1.mp4",
+   "label": "earth_element",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 31.94470867048322,
+   "d_within_min": 38.63429469907166,
+   "d_cross_min": 31.94470867048322,
+   "margin": -6.68958602858844
+  },
+  {
+   "key": "earth_element/earth_element_2.mp4",
+   "label": "earth_element",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 27.095998381114732,
+   "d_within_min": 36.36870239275672,
+   "d_cross_min": 27.095998381114732,
+   "margin": -9.272704011641984
+  },
+  {
+   "key": "earth_element/earth_element_3.mp4",
+   "label": "earth_element",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 29.657446901230198,
+   "d_within_min": 36.36870239275672,
+   "d_cross_min": 29.657446901230198,
+   "margin": -6.711255491526519
+  },
+  {
+   "key": "earth_element/earth_element_4.mp4",
+   "label": "earth_element",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 32.19848058418614,
+   "d_within_min": 38.132782161538366,
+   "d_cross_min": 32.19848058418614,
+   "margin": -5.9343015773522225
+  },
+  {
+   "key": "earth_element/earth_element_6.mp4",
+   "label": "earth_element",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 33.14683928746453,
+   "d_within_min": 40.12966003322926,
+   "d_cross_min": 33.14683928746453,
+   "margin": -6.982820745764727
+  },
+  {
+   "key": "earth_wave/earth_wave_0.mp4",
+   "label": "earth_wave",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 49.14924417029238,
+   "d_within_min": 59.76788177585894,
+   "d_cross_min": 49.14924417029238,
+   "margin": -10.618637605566562
+  },
+  {
+   "key": "earth_wave/earth_wave_1.mp4",
+   "label": "earth_wave",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 48.18981181415159,
+   "d_within_min": 63.190908821502646,
+   "d_cross_min": 48.18981181415159,
+   "margin": -15.001097007351056
+  },
+  {
+   "key": "earth_wave/earth_wave_2.mp4",
+   "label": "earth_wave",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 44.54028112545429,
+   "d_within_min": 61.72932018526635,
+   "d_cross_min": 44.54028112545429,
+   "margin": -17.18903905981206
+  },
+  {
+   "key": "earth_wave/earth_wave_3.mp4",
+   "label": "earth_wave",
+   "pred": "water_element",
+   "nn_key": "water_element/water_element_4.mp4",
+   "nn_dist": 46.3589374757623,
+   "d_within_min": 59.76788177585894,
+   "d_cross_min": 46.3589374757623,
+   "margin": -13.408944300096636
+  },
+  {
+   "key": "earth_wave/earth_wave_4.mp4",
+   "label": "earth_wave",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 51.00698893843611,
+   "d_within_min": 60.40147471692908,
+   "d_cross_min": 51.00698893843611,
+   "margin": -9.394485778492971
+  },
+  {
+   "key": "fire_element/fire_element_0.mp4",
+   "label": "fire_element",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 27.94870324403115,
+   "d_within_min": 33.61127922413412,
+   "d_cross_min": 27.94870324403115,
+   "margin": -5.662575980102972
+  },
+  {
+   "key": "fire_element/fire_element_1.mp4",
+   "label": "fire_element",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 28.539425671141977,
+   "d_within_min": 33.61127922413412,
+   "d_cross_min": 28.539425671141977,
+   "margin": -5.071853552992145
+  },
+  {
+   "key": "fire_element/fire_element_2.mp4",
+   "label": "fire_element",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 29.24655637571015,
+   "d_within_min": 32.64820667400034,
+   "d_cross_min": 29.24655637571015,
+   "margin": -3.4016502982901926
+  },
+  {
+   "key": "fire_element/fire_element_4.mp4",
+   "label": "fire_element",
+   "pred": "saint_glow",
+   "nn_key": "saint_glow/saint_glow_2.mp4",
+   "nn_dist": 27.849288171780966,
+   "d_within_min": 32.64820667400034,
+   "d_cross_min": 27.849288171780966,
+   "margin": -4.798918502219376
+  },
+  {
+   "key": "firelava/firelava_0.mp4",
+   "label": "firelava",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 41.45825965404296,
+   "d_within_min": 48.84744488896118,
+   "d_cross_min": 41.45825965404296,
+   "margin": -7.389185234918216
+  },
+  {
+   "key": "firelava/firelava_1.mp4",
+   "label": "firelava",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 42.61390831767879,
+   "d_within_min": 54.129766476735156,
+   "d_cross_min": 42.61390831767879,
+   "margin": -11.515858159056364
+  },
+  {
+   "key": "firelava/firelava_2.mp4",
+   "label": "firelava",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 41.26892520997867,
+   "d_within_min": 50.29493857647436,
+   "d_cross_min": 41.26892520997867,
+   "margin": -9.02601336649569
+  },
+  {
+   "key": "firelava/firelava_3.mp4",
+   "label": "firelava",
+   "pred": "saint_glow",
+   "nn_key": "saint_glow/saint_glow_2.mp4",
+   "nn_dist": 45.93019624436924,
+   "d_within_min": 55.813383978281635,
+   "d_cross_min": 45.93019624436924,
+   "margin": -9.883187733912393
+  },
+  {
+   "key": "firelava/firelava_4.mp4",
+   "label": "firelava",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 36.196288815492174,
+   "d_within_min": 48.84744488896118,
+   "d_cross_min": 36.196288815492174,
+   "margin": -12.651156073469004
+  },
+  {
+   "key": "firelava/firelava_5.mp4",
+   "label": "firelava",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 48.76665230300674,
+   "d_within_min": 56.411028236990575,
+   "d_cross_min": 48.76665230300674,
+   "margin": -7.644375933983838
+  },
+  {
+   "key": "flame/flame_transition_0.mp4",
+   "label": "flame",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 42.08816488675299,
+   "d_within_min": 58.31092558363322,
+   "d_cross_min": 42.08816488675299,
+   "margin": -16.22276069688023
+  },
+  {
+   "key": "flame/flame_transition_1.mp4",
+   "label": "flame",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 48.439538261270116,
+   "d_within_min": 58.31092558363322,
+   "d_cross_min": 48.439538261270116,
+   "margin": -9.871387322363105
+  },
+  {
+   "key": "flying_cam_transition/flying_cam_transition_1.mp4",
+   "label": "flying_cam_transition",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 53.699886354698954,
+   "d_within_min": 67.48410068834418,
+   "d_cross_min": 53.699886354698954,
+   "margin": -13.784214333645231
+  },
+  {
+   "key": "flying_cam_transition/flying_cam_transition_2.mp4",
+   "label": "flying_cam_transition",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 48.37830894371102,
+   "d_within_min": 67.48410068834418,
+   "d_cross_min": 48.37830894371102,
+   "margin": -19.105791744633166
+  },
+  {
+   "key": "flying_cam_transition/flying_cam_transition_3.mp4",
+   "label": "flying_cam_transition",
+   "pred": "luminous_gaze",
+   "nn_key": "luminous_gaze/luminous_gaze_2.mp4",
+   "nn_dist": 57.14734846730052,
+   "d_within_min": 72.60673087423302,
+   "d_cross_min": 57.14734846730052,
+   "margin": -15.459382406932505
+  },
+  {
+   "key": "flying_cam_transition/flying_cam_transition_4.mp4",
+   "label": "flying_cam_transition",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 60.95678777897384,
+   "d_within_min": 73.05673529619412,
+   "d_cross_min": 60.95678777897384,
+   "margin": -12.09994751722028
+  },
+  {
+   "key": "gas_transformation/gas_transformation_0.mp4",
+   "label": "gas_transformation",
+   "pred": "gas_transformation",
+   "nn_key": "gas_transformation/gas_transformation_8.mp4",
+   "nn_dist": 4.601508445154991,
+   "d_within_min": 4.601508445154991,
+   "d_cross_min": 33.421691680601086,
+   "margin": 28.820183235446095
+  },
+  {
+   "key": "gas_transformation/gas_transformation_1.mp4",
+   "label": "gas_transformation",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 34.83371411662824,
+   "d_within_min": 39.45935423911014,
+   "d_cross_min": 34.83371411662824,
+   "margin": -4.625640122481904
+  },
+  {
+   "key": "gas_transformation/gas_transformation_2.mp4",
+   "label": "gas_transformation",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 25.441103427893385,
+   "d_within_min": 32.7931206568398,
+   "d_cross_min": 25.441103427893385,
+   "margin": -7.352017228946412
+  },
+  {
+   "key": "gas_transformation/gas_transformation_3.mp4",
+   "label": "gas_transformation",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 27.016738165124195,
+   "d_within_min": 32.429328796303025,
+   "d_cross_min": 27.016738165124195,
+   "margin": -5.41259063117883
+  },
+  {
+   "key": "gas_transformation/gas_transformation_4.mp4",
+   "label": "gas_transformation",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 25.87689424367972,
+   "d_within_min": 32.45647285607892,
+   "d_cross_min": 25.87689424367972,
+   "margin": -6.5795786123991995
+  },
+  {
+   "key": "gas_transformation/gas_transformation_5.mp4",
+   "label": "gas_transformation",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 31.40103886939047,
+   "d_within_min": 34.547925197057204,
+   "d_cross_min": 31.40103886939047,
+   "margin": -3.146886327666735
+  },
+  {
+   "key": "gas_transformation/gas_transformation_6.mp4",
+   "label": "gas_transformation",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 25.412732480024516,
+   "d_within_min": 32.429328796303025,
+   "d_cross_min": 25.412732480024516,
+   "margin": -7.016596316278509
+  },
+  {
+   "key": "gas_transformation/gas_transformation_7.mp4",
+   "label": "gas_transformation",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 37.48144788554096,
+   "d_within_min": 41.86585446854332,
+   "d_cross_min": 37.48144788554096,
+   "margin": -4.3844065830023595
+  },
+  {
+   "key": "gas_transformation/gas_transformation_8.mp4",
+   "label": "gas_transformation",
+   "pred": "gas_transformation",
+   "nn_key": "gas_transformation/gas_transformation_0.mp4",
+   "nn_dist": 4.601508445154991,
+   "d_within_min": 4.601508445154991,
+   "d_cross_min": 34.12791100521915,
+   "margin": 29.526402560064156
+  },
+  {
+   "key": "gas_transformation/gas_transformation_9.mp4",
+   "label": "gas_transformation",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 37.26240962830988,
+   "d_within_min": 39.58840413875687,
+   "d_cross_min": 37.26240962830988,
+   "margin": -2.3259945104469892
+  },
+  {
+   "key": "giant_grab/giant_grab_0.mp4",
+   "label": "giant_grab",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 28.829731383837288,
+   "d_within_min": 29.72042452012038,
+   "d_cross_min": 28.829731383837288,
+   "margin": -0.8906931362830903
+  },
+  {
+   "key": "giant_grab/giant_grab_1.mp4",
+   "label": "giant_grab",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 20.65900307116845,
+   "d_within_min": 29.258675022537798,
+   "d_cross_min": 20.65900307116845,
+   "margin": -8.599671951369348
+  },
+  {
+   "key": "giant_grab/giant_grab_2.mp4",
+   "label": "giant_grab",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 28.589325472278404,
+   "d_within_min": 29.258675022537798,
+   "d_cross_min": 28.589325472278404,
+   "margin": -0.669349550259394
+  },
+  {
+   "key": "giant_grab/giant_grab_3.mp4",
+   "label": "giant_grab",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 40.469277853414916,
+   "d_within_min": 41.12992203003484,
+   "d_cross_min": 40.469277853414916,
+   "margin": -0.6606441766199254
+  },
+  {
+   "key": "giant_grab/giant_grab_4.mp4",
+   "label": "giant_grab",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 27.941302427007038,
+   "d_within_min": 30.56811123764728,
+   "d_cross_min": 27.941302427007038,
+   "margin": -2.6268088106402416
+  },
+  {
+   "key": "hero_flight/hero_flight_0.mp4",
+   "label": "hero_flight",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 30.593973579957826,
+   "d_within_min": 36.57072388679373,
+   "d_cross_min": 30.593973579957826,
+   "margin": -5.976750306835903
+  },
+  {
+   "key": "hero_flight/hero_flight_1.mp4",
+   "label": "hero_flight",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 46.37591243297844,
+   "d_within_min": 52.5433172611626,
+   "d_cross_min": 46.37591243297844,
+   "margin": -6.167404828184161
+  },
+  {
+   "key": "hero_flight/hero_flight_2.mp4",
+   "label": "hero_flight",
+   "pred": "saint_glow",
+   "nn_key": "saint_glow/saint_glow_0.mp4",
+   "nn_dist": 47.440037149672754,
+   "d_within_min": 50.40825991927109,
+   "d_cross_min": 47.440037149672754,
+   "margin": -2.9682227695983343
+  },
+  {
+   "key": "hero_flight/hero_flight_3.mp4",
+   "label": "hero_flight",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 38.02301070071345,
+   "d_within_min": 41.036793720074904,
+   "d_cross_min": 38.02301070071345,
+   "margin": -3.0137830193614548
+  },
+  {
+   "key": "hero_flight/hero_flight_4.mp4",
+   "label": "hero_flight",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 33.775285145323984,
+   "d_within_min": 38.844245376983096,
+   "d_cross_min": 33.775285145323984,
+   "margin": -5.068960231659112
+  },
+  {
+   "key": "hero_flight/hero_flight_5.mp4",
+   "label": "hero_flight",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 31.402516139141206,
+   "d_within_min": 37.07204409388987,
+   "d_cross_min": 31.402516139141206,
+   "margin": -5.669527954748666
+  },
+  {
+   "key": "hero_flight/hero_flight_6.mp4",
+   "label": "hero_flight",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 34.123934542346255,
+   "d_within_min": 36.57072388679373,
+   "d_cross_min": 34.123934542346255,
+   "margin": -2.446789344447474
+  },
+  {
+   "key": "hero_flight/hero_flight_7.mp4",
+   "label": "hero_flight",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 35.013204988048344,
+   "d_within_min": 37.33719565523777,
+   "d_cross_min": 35.013204988048344,
+   "margin": -2.3239906671894275
+  },
+  {
+   "key": "hero_flight/hero_flight_8.mp4",
+   "label": "hero_flight",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 35.24489928483584,
+   "d_within_min": 40.17857321645116,
+   "d_cross_min": 35.24489928483584,
+   "margin": -4.933673931615324
+  },
+  {
+   "key": "hero_flight/hero_flight_9.mp4",
+   "label": "hero_flight",
+   "pred": "hero_flight",
+   "nn_key": "hero_flight/hero_flight_6.mp4",
+   "nn_dist": 39.351563487299806,
+   "d_within_min": 39.351563487299806,
+   "d_cross_min": 39.585290227332926,
+   "margin": 0.23372674003312
+  },
+  {
+   "key": "hole_transition/hole_transition_0.mp4",
+   "label": "hole_transition",
+   "pred": "illustration_scene",
+   "nn_key": "illustration_scene/illustration_scene_2.mp4",
+   "nn_dist": 58.92535056787657,
+   "d_within_min": 72.46498539762791,
+   "d_cross_min": 58.92535056787657,
+   "margin": -13.539634829751343
+  },
+  {
+   "key": "hole_transition/hole_transition_1.mp4",
+   "label": "hole_transition",
+   "pred": "illustration_scene",
+   "nn_key": "illustration_scene/illustration_scene_2.mp4",
+   "nn_dist": 49.85651864202157,
+   "d_within_min": 72.46498539762791,
+   "d_cross_min": 49.85651864202157,
+   "margin": -22.608466755606344
+  },
+  {
+   "key": "illustration_scene/illustration_scene_0.mp4",
+   "label": "illustration_scene",
+   "pred": "illustration_scene",
+   "nn_key": "illustration_scene/illustration_scene_6.mp4",
+   "nn_dist": 5.64358304670545,
+   "d_within_min": 5.64358304670545,
+   "d_cross_min": 32.20620778979125,
+   "margin": 26.5626247430858
+  },
+  {
+   "key": "illustration_scene/illustration_scene_1.mp4",
+   "label": "illustration_scene",
+   "pred": "saint_glow",
+   "nn_key": "saint_glow/saint_glow_2.mp4",
+   "nn_dist": 40.574407432086794,
+   "d_within_min": 43.160086888480656,
+   "d_cross_min": 40.574407432086794,
+   "margin": -2.585679456393862
+  },
+  {
+   "key": "illustration_scene/illustration_scene_2.mp4",
+   "label": "illustration_scene",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 21.013737558745586,
+   "d_within_min": 25.235940550139393,
+   "d_cross_min": 21.013737558745586,
+   "margin": -4.222202991393807
+  },
+  {
+   "key": "illustration_scene/illustration_scene_3.mp4",
+   "label": "illustration_scene",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 31.77116559743362,
+   "d_within_min": 33.599485376191765,
+   "d_cross_min": 31.77116559743362,
+   "margin": -1.8283197787581464
+  },
+  {
+   "key": "illustration_scene/illustration_scene_4.mp4",
+   "label": "illustration_scene",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 27.676677497261604,
+   "d_within_min": 30.972195367737537,
+   "d_cross_min": 27.676677497261604,
+   "margin": -3.2955178704759334
+  },
+  {
+   "key": "illustration_scene/illustration_scene_5.mp4",
+   "label": "illustration_scene",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 20.801114746928405,
+   "d_within_min": 25.235940550139393,
+   "d_cross_min": 20.801114746928405,
+   "margin": -4.4348258032109875
+  },
+  {
+   "key": "illustration_scene/illustration_scene_6.mp4",
+   "label": "illustration_scene",
+   "pred": "illustration_scene",
+   "nn_key": "illustration_scene/illustration_scene_0.mp4",
+   "nn_dist": 5.64358304670545,
+   "d_within_min": 5.64358304670545,
+   "d_cross_min": 31.33359919472176,
+   "margin": 25.690016148016312
+  },
+  {
+   "key": "illustration_scene/illustration_scene_7.mp4",
+   "label": "illustration_scene",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 27.97971225112517,
+   "d_within_min": 30.02656833365185,
+   "d_cross_min": 27.97971225112517,
+   "margin": -2.046856082526677
+  },
+  {
+   "key": "illustration_scene/illustration_scene_8.mp4",
+   "label": "illustration_scene",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 26.551154526067098,
+   "d_within_min": 30.44202752056282,
+   "d_cross_min": 26.551154526067098,
+   "margin": -3.890872994495723
+  },
+  {
+   "key": "illustration_scene/illustration_scene_9.mp4",
+   "label": "illustration_scene",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 33.29038598234801,
+   "d_within_min": 34.48116243155922,
+   "d_cross_min": 33.29038598234801,
+   "margin": -1.1907764492112065
+  },
+  {
+   "key": "jump_transition/jump_transition_1.mp4",
+   "label": "jump_transition",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 54.931197161891895,
+   "d_within_min": null,
+   "d_cross_min": 54.931197161891895,
+   "margin": null
+  },
+  {
+   "key": "live_concert/live_concert_0.mp4",
+   "label": "live_concert",
+   "pred": "live_concert",
+   "nn_key": "live_concert/live_concert_1.mp4",
+   "nn_dist": 5.561608876100619,
+   "d_within_min": 5.561608876100619,
+   "d_cross_min": 38.03858441846012,
+   "margin": 32.4769755423595
+  },
+  {
+   "key": "live_concert/live_concert_1.mp4",
+   "label": "live_concert",
+   "pred": "live_concert",
+   "nn_key": "live_concert/live_concert_0.mp4",
+   "nn_dist": 5.561608876100619,
+   "d_within_min": 5.561608876100619,
+   "d_cross_min": 37.400894186773236,
+   "margin": 31.839285310672615
+  },
+  {
+   "key": "live_concert/live_concert_2.mp4",
+   "label": "live_concert",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 33.20391639435125,
+   "d_within_min": 38.02072713690676,
+   "d_cross_min": 33.20391639435125,
+   "margin": -4.816810742555504
+  },
+  {
+   "key": "live_concert/live_concert_3.mp4",
+   "label": "live_concert",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 37.58656880927936,
+   "d_within_min": 41.10201318437642,
+   "d_cross_min": 37.58656880927936,
+   "margin": -3.5154443750970543
+  },
+  {
+   "key": "live_concert/live_concert_4.mp4",
+   "label": "live_concert",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 31.519661177829743,
+   "d_within_min": 37.870640315106826,
+   "d_cross_min": 31.519661177829743,
+   "margin": -6.350979137277083
+  },
+  {
+   "key": "live_concert/live_concert_5.mp4",
+   "label": "live_concert",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 37.08711993419621,
+   "d_within_min": 42.3059554912544,
+   "d_cross_min": 37.08711993419621,
+   "margin": -5.218835557058192
+  },
+  {
+   "key": "live_concert/live_concert_6.mp4",
+   "label": "live_concert",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 31.369352140052044,
+   "d_within_min": 37.870640315106826,
+   "d_cross_min": 31.369352140052044,
+   "margin": -6.501288175054782
+  },
+  {
+   "key": "live_concert/live_concert_7.mp4",
+   "label": "live_concert",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 36.28257271879911,
+   "d_within_min": 42.22128819441897,
+   "d_cross_min": 36.28257271879911,
+   "margin": -5.938715475619858
+  },
+  {
+   "key": "luminous_gaze/luminous_gaze_0.mp4",
+   "label": "luminous_gaze",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 29.62463462177959,
+   "d_within_min": 32.54603227141253,
+   "d_cross_min": 29.62463462177959,
+   "margin": -2.9213976496329366
+  },
+  {
+   "key": "luminous_gaze/luminous_gaze_1.mp4",
+   "label": "luminous_gaze",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 26.33383460719127,
+   "d_within_min": 28.147725614143955,
+   "d_cross_min": 26.33383460719127,
+   "margin": -1.8138910069526837
+  },
+  {
+   "key": "luminous_gaze/luminous_gaze_2.mp4",
+   "label": "luminous_gaze",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 19.816445709443315,
+   "d_within_min": 28.147725614143955,
+   "d_cross_min": 19.816445709443315,
+   "margin": -8.33127990470064
+  },
+  {
+   "key": "luminous_gaze/luminous_gaze_3.mp4",
+   "label": "luminous_gaze",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 25.845727730847177,
+   "d_within_min": 28.1934668534609,
+   "d_cross_min": 25.845727730847177,
+   "margin": -2.3477391226137243
+  },
+  {
+   "key": "melt_transition/melt_transition_1.mp4",
+   "label": "melt_transition",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 50.525879944724785,
+   "d_within_min": 71.16808277187354,
+   "d_cross_min": 50.525879944724785,
+   "margin": -20.642202827148758
+  },
+  {
+   "key": "melt_transition/melt_transition_2.mp4",
+   "label": "melt_transition",
+   "pred": "shadow",
+   "nn_key": "shadow/shadow_10.mp4",
+   "nn_dist": 70.90882643020083,
+   "d_within_min": 80.95279631556126,
+   "d_cross_min": 70.90882643020083,
+   "margin": -10.043969885360426
+  },
+  {
+   "key": "melt_transition/melt_transition_3.mp4",
+   "label": "melt_transition",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 66.01003903605576,
+   "d_within_min": 79.20098948819461,
+   "d_cross_min": 66.01003903605576,
+   "margin": -13.19095045213885
+  },
+  {
+   "key": "melt_transition/melt_transition_4.mp4",
+   "label": "melt_transition",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 53.7273903840435,
+   "d_within_min": 71.16808277187354,
+   "d_cross_min": 53.7273903840435,
+   "margin": -17.44069238783004
+  },
+  {
+   "key": "money_rain/money_rain_0.mp4",
+   "label": "money_rain",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 27.222380981291586,
+   "d_within_min": 31.14548731162369,
+   "d_cross_min": 27.222380981291586,
+   "margin": -3.9231063303321037
+  },
+  {
+   "key": "money_rain/money_rain_1.mp4",
+   "label": "money_rain",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 26.007474013743998,
+   "d_within_min": 30.572462668355254,
+   "d_cross_min": 26.007474013743998,
+   "margin": -4.5649886546112555
+  },
+  {
+   "key": "money_rain/money_rain_2.mp4",
+   "label": "money_rain",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 35.18471246001256,
+   "d_within_min": 39.170522756910124,
+   "d_cross_min": 35.18471246001256,
+   "margin": -3.9858102968975615
+  },
+  {
+   "key": "money_rain/money_rain_3.mp4",
+   "label": "money_rain",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 26.625937539264076,
+   "d_within_min": 31.79093306253809,
+   "d_cross_min": 26.625937539264076,
+   "margin": -5.1649955232740155
+  },
+  {
+   "key": "money_rain/money_rain_4.mp4",
+   "label": "money_rain",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 29.709365157865626,
+   "d_within_min": 33.60314887046092,
+   "d_cross_min": 29.709365157865626,
+   "margin": -3.893783712595294
+  },
+  {
+   "key": "money_rain/money_rain_6.mp4",
+   "label": "money_rain",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 31.469664854705446,
+   "d_within_min": 34.29177212373434,
+   "d_cross_min": 31.469664854705446,
+   "margin": -2.822107269028894
+  },
+  {
+   "key": "money_rain/money_rain_7.mp4",
+   "label": "money_rain",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 24.693162671644497,
+   "d_within_min": 30.572462668355254,
+   "d_cross_min": 24.693162671644497,
+   "margin": -5.879299996710756
+  },
+  {
+   "key": "monstrosity/monstrosity_0.mp4",
+   "label": "monstrosity",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 32.32228566950208,
+   "d_within_min": 41.41584645404841,
+   "d_cross_min": 32.32228566950208,
+   "margin": -9.093560784546334
+  },
+  {
+   "key": "monstrosity/monstrosity_1.mp4",
+   "label": "monstrosity",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 30.44248222561611,
+   "d_within_min": 40.490056991553566,
+   "d_cross_min": 30.44248222561611,
+   "margin": -10.047574765937455
+  },
+  {
+   "key": "monstrosity/monstrosity_2.mp4",
+   "label": "monstrosity",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 30.776903323169712,
+   "d_within_min": 40.490056991553566,
+   "d_cross_min": 30.776903323169712,
+   "margin": -9.713153668383853
+  },
+  {
+   "key": "mystification/mystification_0.mp4",
+   "label": "mystification",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 40.71147843357247,
+   "d_within_min": 41.01852990601339,
+   "d_cross_min": 40.71147843357247,
+   "margin": -0.3070514724409179
+  },
+  {
+   "key": "mystification/mystification_2.mp4",
+   "label": "mystification",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 39.31648803170371,
+   "d_within_min": 39.5243498893132,
+   "d_cross_min": 39.31648803170371,
+   "margin": -0.20786185760948683
+  },
+  {
+   "key": "mystification/mystification_3.mp4",
+   "label": "mystification",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 16.323214958326385,
+   "d_within_min": 21.805711274811213,
+   "d_cross_min": 16.323214958326385,
+   "margin": -5.482496316484827
+  },
+  {
+   "key": "mystification/mystification_4.mp4",
+   "label": "mystification",
+   "pred": "luminous_gaze",
+   "nn_key": "luminous_gaze/luminous_gaze_2.mp4",
+   "nn_dist": 46.69146986928438,
+   "d_within_min": 47.23101151813641,
+   "d_cross_min": 46.69146986928438,
+   "margin": -0.5395416488520297
+  },
+  {
+   "key": "mystification/mystification_5.mp4",
+   "label": "mystification",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 21.805711274811213,
+   "d_within_min": 21.805711274811213,
+   "d_cross_min": 22.858950588099006,
+   "margin": 1.0532393132877935
+  },
+  {
+   "key": "nature_bloom/nature_bloom_0.mp4",
+   "label": "nature_bloom",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 32.75106735409871,
+   "d_within_min": 40.51889202709611,
+   "d_cross_min": 32.75106735409871,
+   "margin": -7.767824672997399
+  },
+  {
+   "key": "nature_bloom/nature_bloom_2.mp4",
+   "label": "nature_bloom",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 30.527416833123947,
+   "d_within_min": 40.51889202709611,
+   "d_cross_min": 30.527416833123947,
+   "margin": -9.99147519397216
+  },
+  {
+   "key": "plasma_explosion/plasma_explosion_0.mp4",
+   "label": "plasma_explosion",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 36.94598145746451,
+   "d_within_min": 46.21140182302288,
+   "d_cross_min": 36.94598145746451,
+   "margin": -9.26542036555837
+  },
+  {
+   "key": "plasma_explosion/plasma_explosion_1.mp4",
+   "label": "plasma_explosion",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 42.280498429098905,
+   "d_within_min": 55.15841703062847,
+   "d_cross_min": 42.280498429098905,
+   "margin": -12.877918601529565
+  },
+  {
+   "key": "plasma_explosion/plasma_explosion_2.mp4",
+   "label": "plasma_explosion",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 37.051501818446184,
+   "d_within_min": 46.21140182302288,
+   "d_cross_min": 37.051501818446184,
+   "margin": -9.159900004576699
+  },
+  {
+   "key": "plasma_explosion/plasma_explosion_4.mp4",
+   "label": "plasma_explosion",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 44.56226146126959,
+   "d_within_min": 49.76694706604862,
+   "d_cross_min": 44.56226146126959,
+   "margin": -5.20468560477903
+  },
+  {
+   "key": "polygon/polygon_0.mp4",
+   "label": "polygon",
+   "pred": "polygon",
+   "nn_key": "polygon/polygon_3.mp4",
+   "nn_dist": 7.081735644568472,
+   "d_within_min": 7.081735644568472,
+   "d_cross_min": 37.672317262917986,
+   "margin": 30.590581618349514
+  },
+  {
+   "key": "polygon/polygon_1.mp4",
+   "label": "polygon",
+   "pred": "wireframe",
+   "nn_key": "wireframe/wireframe_2.mp4",
+   "nn_dist": 35.73272578661341,
+   "d_within_min": 39.58893686090559,
+   "d_cross_min": 35.73272578661341,
+   "margin": -3.856211074292183
+  },
+  {
+   "key": "polygon/polygon_2.mp4",
+   "label": "polygon",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 26.28817300654677,
+   "d_within_min": 30.84756153698191,
+   "d_cross_min": 26.28817300654677,
+   "margin": -4.55938853043514
+  },
+  {
+   "key": "polygon/polygon_3.mp4",
+   "label": "polygon",
+   "pred": "polygon",
+   "nn_key": "polygon/polygon_0.mp4",
+   "nn_dist": 7.081735644568472,
+   "d_within_min": 7.081735644568472,
+   "d_cross_min": 39.22751670700019,
+   "margin": 32.14578106243172
+  },
+  {
+   "key": "polygon/polygon_4.mp4",
+   "label": "polygon",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 38.992666431627114,
+   "d_within_min": 42.23372933032282,
+   "d_cross_min": 38.992666431627114,
+   "margin": -3.241062898695702
+  },
+  {
+   "key": "polygon/polygon_5.mp4",
+   "label": "polygon",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 44.821850438905805,
+   "d_within_min": 49.23844417831532,
+   "d_cross_min": 44.821850438905805,
+   "margin": -4.416593739409514
+  },
+  {
+   "key": "polygon/polygon_6.mp4",
+   "label": "polygon",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 33.96252459497709,
+   "d_within_min": 37.10327476012362,
+   "d_cross_min": 33.96252459497709,
+   "margin": -3.140750165146528
+  },
+  {
+   "key": "polygon/polygon_7.mp4",
+   "label": "polygon",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 26.14149612401805,
+   "d_within_min": 30.84756153698191,
+   "d_cross_min": 26.14149612401805,
+   "margin": -4.706065412963859
+  },
+  {
+   "key": "polygon/polygon_8.mp4",
+   "label": "polygon",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 32.87992509215299,
+   "d_within_min": 37.222517637916695,
+   "d_cross_min": 32.87992509215299,
+   "margin": -4.342592545763708
+  },
+  {
+   "key": "portal/portal_0.mp4",
+   "label": "portal",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 32.80203258382521,
+   "d_within_min": 38.35259939082026,
+   "d_cross_min": 32.80203258382521,
+   "margin": -5.55056680699505
+  },
+  {
+   "key": "portal/portal_1.mp4",
+   "label": "portal",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 36.314478615721704,
+   "d_within_min": 41.700145797812624,
+   "d_cross_min": 36.314478615721704,
+   "margin": -5.38566718209092
+  },
+  {
+   "key": "portal/portal_10.mp4",
+   "label": "portal",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 28.755747481011557,
+   "d_within_min": 34.99810900091172,
+   "d_cross_min": 28.755747481011557,
+   "margin": -6.242361519900161
+  },
+  {
+   "key": "portal/portal_11.mp4",
+   "label": "portal",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 35.217354301167404,
+   "d_within_min": 40.46797780776489,
+   "d_cross_min": 35.217354301167404,
+   "margin": -5.250623506597485
+  },
+  {
+   "key": "portal/portal_12.mp4",
+   "label": "portal",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 41.47352210717729,
+   "d_within_min": 46.65105325436261,
+   "d_cross_min": 41.47352210717729,
+   "margin": -5.17753114718532
+  },
+  {
+   "key": "portal/portal_13.mp4",
+   "label": "portal",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 34.152450227085104,
+   "d_within_min": 40.58097712341921,
+   "d_cross_min": 34.152450227085104,
+   "margin": -6.428526896334105
+  },
+  {
+   "key": "portal/portal_2.mp4",
+   "label": "portal",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 36.89901965843575,
+   "d_within_min": 41.314429613805984,
+   "d_cross_min": 36.89901965843575,
+   "margin": -4.415409955370237
+  },
+  {
+   "key": "portal/portal_4.mp4",
+   "label": "portal",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 31.734335975729667,
+   "d_within_min": 34.72418747265021,
+   "d_cross_min": 31.734335975729667,
+   "margin": -2.98985149692054
+  },
+  {
+   "key": "portal/portal_5.mp4",
+   "label": "portal",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 36.62547420532819,
+   "d_within_min": 40.468874861646555,
+   "d_cross_min": 36.62547420532819,
+   "margin": -3.843400656318366
+  },
+  {
+   "key": "portal/portal_6.mp4",
+   "label": "portal",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 34.377180982134945,
+   "d_within_min": 39.47800980010128,
+   "d_cross_min": 34.377180982134945,
+   "margin": -5.100828817966338
+  },
+  {
+   "key": "portal/portal_7.mp4",
+   "label": "portal",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 32.82597285246935,
+   "d_within_min": 35.17846209019622,
+   "d_cross_min": 32.82597285246935,
+   "margin": -2.3524892377268714
+  },
+  {
+   "key": "portal/portal_8.mp4",
+   "label": "portal",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 29.87198107467683,
+   "d_within_min": 34.319354979138495,
+   "d_cross_min": 29.87198107467683,
+   "margin": -4.447373904461664
+  },
+  {
+   "key": "portal/portal_9.mp4",
+   "label": "portal",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 27.732505497936497,
+   "d_within_min": 34.319354979138495,
+   "d_cross_min": 27.732505497936497,
+   "margin": -6.586849481201998
+  },
+  {
+   "key": "raven_transition/raven_transition_0.mp4",
+   "label": "raven_transition",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 51.23311815820997,
+   "d_within_min": 63.44168096938133,
+   "d_cross_min": 51.23311815820997,
+   "margin": -12.208562811171362
+  },
+  {
+   "key": "raven_transition/raven_transition_1.mp4",
+   "label": "raven_transition",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 50.59256351958226,
+   "d_within_min": 63.27799069215024,
+   "d_cross_min": 50.59256351958226,
+   "margin": -12.685427172567984
+  },
+  {
+   "key": "raven_transition/raven_transition_2.mp4",
+   "label": "raven_transition",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 42.98696711993473,
+   "d_within_min": 56.96946111093734,
+   "d_cross_min": 42.98696711993473,
+   "margin": -13.982493991002606
+  },
+  {
+   "key": "raven_transition/raven_transition_3.mp4",
+   "label": "raven_transition",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 40.17271017632115,
+   "d_within_min": 56.96946111093734,
+   "d_cross_min": 40.17271017632115,
+   "margin": -16.796750934616192
+  },
+  {
+   "key": "run_set_on_fire/action_run_setonfire_6.mp4",
+   "label": "run_set_on_fire",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 28.804863955738945,
+   "d_within_min": 33.01031524071175,
+   "d_cross_min": 28.804863955738945,
+   "margin": -4.205451284972803
+  },
+  {
+   "key": "run_set_on_fire/action_run_setonfire_7.mp4",
+   "label": "run_set_on_fire",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 27.491270437615782,
+   "d_within_min": 33.01031524071175,
+   "d_cross_min": 27.491270437615782,
+   "margin": -5.519044803095966
+  },
+  {
+   "key": "saint_glow/saint_glow_0.mp4",
+   "label": "saint_glow",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 21.146504166202483,
+   "d_within_min": 23.999048468339254,
+   "d_cross_min": 21.146504166202483,
+   "margin": -2.8525443021367707
+  },
+  {
+   "key": "saint_glow/saint_glow_1.mp4",
+   "label": "saint_glow",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 26.346181605718208,
+   "d_within_min": 27.714162548976514,
+   "d_cross_min": 26.346181605718208,
+   "margin": -1.3679809432583063
+  },
+  {
+   "key": "saint_glow/saint_glow_2.mp4",
+   "label": "saint_glow",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 18.685390938562602,
+   "d_within_min": 23.999048468339254,
+   "d_cross_min": 18.685390938562602,
+   "margin": -5.313657529776652
+  },
+  {
+   "key": "saint_glow/saint_glow_3.mp4",
+   "label": "saint_glow",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 22.441907799959726,
+   "d_within_min": 25.001365019184732,
+   "d_cross_min": 22.441907799959726,
+   "margin": -2.5594572192250062
+  },
+  {
+   "key": "sakura_petals/sakura_petals_0.mp4",
+   "label": "sakura_petals",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 31.984223167328025,
+   "d_within_min": 47.443736669772875,
+   "d_cross_min": 31.984223167328025,
+   "margin": -15.45951350244485
+  },
+  {
+   "key": "sakura_petals/sakura_petals_2.mp4",
+   "label": "sakura_petals",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 37.50010727361719,
+   "d_within_min": 47.443736669772875,
+   "d_cross_min": 37.50010727361719,
+   "margin": -9.943629396155686
+  },
+  {
+   "key": "seamless_transition/seamless_transition_0.mp4",
+   "label": "seamless_transition",
+   "pred": "giant_grab",
+   "nn_key": "giant_grab/giant_grab_1.mp4",
+   "nn_dist": 55.457286286899084,
+   "d_within_min": null,
+   "d_cross_min": 55.457286286899084,
+   "margin": null
+  },
+  {
+   "key": "shadow/shadow_0.mp4",
+   "label": "shadow",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 28.737891790952123,
+   "d_within_min": 34.507298944168305,
+   "d_cross_min": 28.737891790952123,
+   "margin": -5.769407153216182
+  },
+  {
+   "key": "shadow/shadow_1.mp4",
+   "label": "shadow",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 40.03628308780569,
+   "d_within_min": 43.34110574357012,
+   "d_cross_min": 40.03628308780569,
+   "margin": -3.3048226557644256
+  },
+  {
+   "key": "shadow/shadow_10.mp4",
+   "label": "shadow",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 24.32978911950312,
+   "d_within_min": 29.972085560597332,
+   "d_cross_min": 24.32978911950312,
+   "margin": -5.642296441094214
+  },
+  {
+   "key": "shadow/shadow_11.mp4",
+   "label": "shadow",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 32.2491075990763,
+   "d_within_min": 37.2255695093984,
+   "d_cross_min": 32.2491075990763,
+   "margin": -4.976461910322101
+  },
+  {
+   "key": "shadow/shadow_12.mp4",
+   "label": "shadow",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 30.57991377557358,
+   "d_within_min": 34.67767715347458,
+   "d_cross_min": 30.57991377557358,
+   "margin": -4.097763377901003
+  },
+  {
+   "key": "shadow/shadow_13.mp4",
+   "label": "shadow",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 37.07154868104161,
+   "d_within_min": 40.214212039159996,
+   "d_cross_min": 37.07154868104161,
+   "margin": -3.1426633581183836
+  },
+  {
+   "key": "shadow/shadow_14.mp4",
+   "label": "shadow",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 42.497977170616636,
+   "d_within_min": 46.01172556801447,
+   "d_cross_min": 42.497977170616636,
+   "margin": -3.5137483973978334
+  },
+  {
+   "key": "shadow/shadow_2.mp4",
+   "label": "shadow",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 29.52482159164674,
+   "d_within_min": 34.2754040209524,
+   "d_cross_min": 29.52482159164674,
+   "margin": -4.750582429305659
+  },
+  {
+   "key": "shadow/shadow_3.mp4",
+   "label": "shadow",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 42.053058917384284,
+   "d_within_min": 44.58150699786758,
+   "d_cross_min": 42.053058917384284,
+   "margin": -2.528448080483294
+  },
+  {
+   "key": "shadow/shadow_4.mp4",
+   "label": "shadow",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 33.80016003145693,
+   "d_within_min": 37.989710007453134,
+   "d_cross_min": 33.80016003145693,
+   "margin": -4.189549975996201
+  },
+  {
+   "key": "shadow/shadow_5.mp4",
+   "label": "shadow",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 25.084430055421663,
+   "d_within_min": 29.972085560597332,
+   "d_cross_min": 25.084430055421663,
+   "margin": -4.887655505175669
+  },
+  {
+   "key": "shadow/shadow_6.mp4",
+   "label": "shadow",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 26.049128286674424,
+   "d_within_min": 32.65832958934248,
+   "d_cross_min": 26.049128286674424,
+   "margin": -6.609201302668055
+  },
+  {
+   "key": "shadow/shadow_7.mp4",
+   "label": "shadow",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 33.51279235308505,
+   "d_within_min": 36.29918076083645,
+   "d_cross_min": 33.51279235308505,
+   "margin": -2.786388407751403
+  },
+  {
+   "key": "shadow/shadow_8.mp4",
+   "label": "shadow",
+   "pred": "saint_glow",
+   "nn_key": "saint_glow/saint_glow_2.mp4",
+   "nn_dist": 37.88645624356739,
+   "d_within_min": 42.849635104193645,
+   "d_cross_min": 37.88645624356739,
+   "margin": -4.9631788606262575
+  },
+  {
+   "key": "shadow/shadow_9.mp4",
+   "label": "shadow",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 31.301912284776204,
+   "d_within_min": 35.252036665571715,
+   "d_cross_min": 31.301912284776204,
+   "margin": -3.9501243807955113
+  },
+  {
+   "key": "shadow_smoke/shadow_smoke_0.mp4",
+   "label": "shadow_smoke",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 46.08568914144906,
+   "d_within_min": 59.44678703745474,
+   "d_cross_min": 46.08568914144906,
+   "margin": -13.361097896005681
+  },
+  {
+   "key": "shadow_smoke/shadow_smoke_1.mp4",
+   "label": "shadow_smoke",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 46.38216835988383,
+   "d_within_min": 58.32886358736829,
+   "d_cross_min": 46.38216835988383,
+   "margin": -11.946695227484462
+  },
+  {
+   "key": "shadow_smoke/shadow_smoke_2.mp4",
+   "label": "shadow_smoke",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 47.12434671747214,
+   "d_within_min": 54.50269168027129,
+   "d_cross_min": 47.12434671747214,
+   "margin": -7.378344962799147
+  },
+  {
+   "key": "shadow_smoke/shadow_smoke_3.mp4",
+   "label": "shadow_smoke",
+   "pred": "saint_glow",
+   "nn_key": "saint_glow/saint_glow_2.mp4",
+   "nn_dist": 41.61344302254036,
+   "d_within_min": 54.50269168027129,
+   "d_cross_min": 41.61344302254036,
+   "margin": -12.889248657730931
+  },
+  {
+   "key": "shadow_smoke/shadow_smoke_4.mp4",
+   "label": "shadow_smoke",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 54.67041900308829,
+   "d_within_min": 63.73700066309002,
+   "d_cross_min": 54.67041900308829,
+   "margin": -9.06658166000173
+  },
+  {
+   "key": "shadow_smoke/shadow_smoke_5.mp4",
+   "label": "shadow_smoke",
+   "pred": "saint_glow",
+   "nn_key": "saint_glow/saint_glow_2.mp4",
+   "nn_dist": 47.957057358856154,
+   "d_within_min": 56.89971932632323,
+   "d_cross_min": 47.957057358856154,
+   "margin": -8.942661967467075
+  },
+  {
+   "key": "shadow_smoke/shadow_smoke_6.mp4",
+   "label": "shadow_smoke",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 43.697358131538536,
+   "d_within_min": 55.540432142419995,
+   "d_cross_min": 43.697358131538536,
+   "margin": -11.843074010881459
+  },
+  {
+   "key": "shadow_smoke/shadow_smoke_7.mp4",
+   "label": "shadow_smoke",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 46.1111591617097,
+   "d_within_min": 56.00784048868893,
+   "d_cross_min": 46.1111591617097,
+   "margin": -9.896681326979227
+  },
+  {
+   "key": "shadow_smoke/shadow_smoke_8.mp4",
+   "label": "shadow_smoke",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 53.06338741098409,
+   "d_within_min": 61.96212101421129,
+   "d_cross_min": 53.06338741098409,
+   "margin": -8.8987336032272
+  },
+  {
+   "key": "shadow_smoke/shadow_smoke_9.mp4",
+   "label": "shadow_smoke",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 53.9513680741925,
+   "d_within_min": 63.99901111233444,
+   "d_cross_min": 53.9513680741925,
+   "margin": -10.047643038141942
+  },
+  {
+   "key": "super_fast_run/super_fast_run_0.mp4",
+   "label": "super_fast_run",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 30.99822230291139,
+   "d_within_min": 36.61904311569036,
+   "d_cross_min": 30.99822230291139,
+   "margin": -5.62082081277897
+  },
+  {
+   "key": "super_fast_run/super_fast_run_1.mp4",
+   "label": "super_fast_run",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 30.498039212270903,
+   "d_within_min": 35.169763458569804,
+   "d_cross_min": 30.498039212270903,
+   "margin": -4.671724246298901
+  },
+  {
+   "key": "super_fast_run/super_fast_run_10.mp4",
+   "label": "super_fast_run",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 37.552883278361904,
+   "d_within_min": 41.1994424540127,
+   "d_cross_min": 37.552883278361904,
+   "margin": -3.6465591756507933
+  },
+  {
+   "key": "super_fast_run/super_fast_run_12.mp4",
+   "label": "super_fast_run",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 29.51159852923844,
+   "d_within_min": 34.40471763972754,
+   "d_cross_min": 29.51159852923844,
+   "margin": -4.893119110489096
+  },
+  {
+   "key": "super_fast_run/super_fast_run_2.mp4",
+   "label": "super_fast_run",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 29.587718450347623,
+   "d_within_min": 35.078414156922165,
+   "d_cross_min": 29.587718450347623,
+   "margin": -5.490695706574542
+  },
+  {
+   "key": "super_fast_run/super_fast_run_3.mp4",
+   "label": "super_fast_run",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 30.946351995534606,
+   "d_within_min": 35.078414156922165,
+   "d_cross_min": 30.946351995534606,
+   "margin": -4.132062161387559
+  },
+  {
+   "key": "super_fast_run/super_fast_run_4.mp4",
+   "label": "super_fast_run",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 31.598520769912792,
+   "d_within_min": 37.46170143498847,
+   "d_cross_min": 31.598520769912792,
+   "margin": -5.863180665075678
+  },
+  {
+   "key": "super_fast_run/super_fast_run_5.mp4",
+   "label": "super_fast_run",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 26.599133298684958,
+   "d_within_min": 33.36165590722306,
+   "d_cross_min": 26.599133298684958,
+   "margin": -6.762522608538102
+  },
+  {
+   "key": "super_fast_run/super_fast_run_6.mp4",
+   "label": "super_fast_run",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 25.856936954794374,
+   "d_within_min": 33.36165590722306,
+   "d_cross_min": 25.856936954794374,
+   "margin": -7.504718952428686
+  },
+  {
+   "key": "super_fast_run/super_fast_run_7.mp4",
+   "label": "super_fast_run",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 32.879086927211574,
+   "d_within_min": 35.95525364929378,
+   "d_cross_min": 32.879086927211574,
+   "margin": -3.076166722082206
+  },
+  {
+   "key": "super_fast_run/super_fast_run_8.mp4",
+   "label": "super_fast_run",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 33.64855438354857,
+   "d_within_min": 37.694895263902886,
+   "d_cross_min": 33.64855438354857,
+   "margin": -4.046340880354315
+  },
+  {
+   "key": "super_fast_run/super_fast_run_9.mp4",
+   "label": "super_fast_run",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 38.82493237581271,
+   "d_within_min": 42.99525457161855,
+   "d_cross_min": 38.82493237581271,
+   "margin": -4.170322195805845
+  },
+  {
+   "key": "water_bending/water_bending_0.mp4",
+   "label": "water_bending",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 41.33148022682941,
+   "d_within_min": 54.01392654077241,
+   "d_cross_min": 41.33148022682941,
+   "margin": -12.682446313942997
+  },
+  {
+   "key": "water_bending/water_bending_1.mp4",
+   "label": "water_bending",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 52.5017690498607,
+   "d_within_min": 58.806145477150764,
+   "d_cross_min": 52.5017690498607,
+   "margin": -6.304376427290066
+  },
+  {
+   "key": "water_bending/water_bending_2.mp4",
+   "label": "water_bending",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 42.87400081401332,
+   "d_within_min": 54.01392654077241,
+   "d_cross_min": 42.87400081401332,
+   "margin": -11.139925726759088
+  },
+  {
+   "key": "water_bending/water_bending_3.mp4",
+   "label": "water_bending",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 45.49454970984051,
+   "d_within_min": 56.40955300557291,
+   "d_cross_min": 45.49454970984051,
+   "margin": -10.915003295732397
+  },
+  {
+   "key": "water_element/water_element_0.mp4",
+   "label": "water_element",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 31.40176249971312,
+   "d_within_min": 37.54626197930117,
+   "d_cross_min": 31.40176249971312,
+   "margin": -6.1444994795880525
+  },
+  {
+   "key": "water_element/water_element_1.mp4",
+   "label": "water_element",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 24.365253633890312,
+   "d_within_min": 28.998570063543838,
+   "d_cross_min": 24.365253633890312,
+   "margin": -4.633316429653526
+  },
+  {
+   "key": "water_element/water_element_2.mp4",
+   "label": "water_element",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 27.957557754518657,
+   "d_within_min": 31.78173795036049,
+   "d_cross_min": 27.957557754518657,
+   "margin": -3.8241801958418336
+  },
+  {
+   "key": "water_element/water_element_4.mp4",
+   "label": "water_element",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 30.805645152937277,
+   "d_within_min": 33.28368718749016,
+   "d_cross_min": 30.805645152937277,
+   "margin": -2.4780420345528817
+  },
+  {
+   "key": "water_element/water_element_5.mp4",
+   "label": "water_element",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 22.6870881400924,
+   "d_within_min": 28.998570063543838,
+   "d_cross_min": 22.6870881400924,
+   "margin": -6.3114819234514385
+  },
+  {
+   "key": "wireframe/wireframe_0.mp4",
+   "label": "wireframe",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 35.49722669416036,
+   "d_within_min": 36.73659610943472,
+   "d_cross_min": 35.49722669416036,
+   "margin": -1.2393694152743606
+  },
+  {
+   "key": "wireframe/wireframe_1.mp4",
+   "label": "wireframe",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 33.526213996443786,
+   "d_within_min": 35.099291350787595,
+   "d_cross_min": 33.526213996443786,
+   "margin": -1.573077354343809
+  },
+  {
+   "key": "wireframe/wireframe_2.mp4",
+   "label": "wireframe",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 20.10634272328415,
+   "d_within_min": 31.140329429730997,
+   "d_cross_min": 20.10634272328415,
+   "margin": -11.033986706446846
+  },
+  {
+   "key": "wireframe/wireframe_3.mp4",
+   "label": "wireframe",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 36.399596541835784,
+   "d_within_min": 37.83591832362188,
+   "d_cross_min": 36.399596541835784,
+   "margin": -1.4363217817860985
+  },
+  {
+   "key": "wireframe/wireframe_4.mp4",
+   "label": "wireframe",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 31.448179991277996,
+   "d_within_min": 33.84294092300962,
+   "d_cross_min": 31.448179991277996,
+   "margin": -2.394760931731625
+  },
+  {
+   "key": "wireframe/wireframe_5.mp4",
+   "label": "wireframe",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 30.5767498772288,
+   "d_within_min": 32.38166545732133,
+   "d_cross_min": 30.5767498772288,
+   "margin": -1.8049155800925334
+  },
+  {
+   "key": "wireframe/wireframe_6.mp4",
+   "label": "wireframe",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 29.99026914594354,
+   "d_within_min": 33.00657857449947,
+   "d_cross_min": 29.99026914594354,
+   "margin": -3.0163094285559318
+  },
+  {
+   "key": "wireframe/wireframe_7.mp4",
+   "label": "wireframe",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 35.67883134043237,
+   "d_within_min": 37.3724309859271,
+   "d_cross_min": 35.67883134043237,
+   "margin": -1.6935996454947357
+  },
+  {
+   "key": "wireframe/wireframe_8.mp4",
+   "label": "wireframe",
+   "pred": "mystification",
+   "nn_key": "mystification/mystification_3.mp4",
+   "nn_dist": 28.64363737626202,
+   "d_within_min": 31.140329429730997,
+   "d_cross_min": 28.64363737626202,
+   "margin": -2.4966920534689763
+  },
+  {
+   "key": "wonderland/wonderland_0.mp4",
+   "label": "wonderland",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 32.71421159625426,
+   "d_within_min": 39.33009522468916,
+   "d_cross_min": 32.71421159625426,
+   "margin": -6.615883628434901
+  },
+  {
+   "key": "wonderland/wonderland_2.mp4",
+   "label": "wonderland",
+   "pred": "cotton_cloud",
+   "nn_key": "cotton_cloud/cotton_cloud_8.mp4",
+   "nn_dist": 31.453014099370805,
+   "d_within_min": 39.33009522468916,
+   "d_cross_min": 31.453014099370805,
+   "margin": -7.877081125318355
+  }
+ ],
+ "kill_rule": {
+  "rule": "RUNBOOK \u00a74.1: if delta fails to beat raw M1a on BOTH Cohen's d and misretrieved count, the endpoint-normalization program is dead at the appearance level. One appendix paragraph, full stop. E2/E3 do not run.",
+  "beats_cohens_d": {
+   "candidate": 0.3581899911324271,
+   "incumbent": 1.522006,
+   "pass": false
+  },
+  "beats_misretrieved": {
+   "candidate": 209,
+   "incumbent": 73,
+   "pass": false
+  },
+  "survives": false,
+  "verdict": "KILL \u2014 endpoint-normalization is dead at the appearance level; E2/E3 do not run"
+ },
+ "incumbent": {
+  "accuracy": 0.672646,
+  "cohens_d": 1.522006,
+  "coverage": 1.0,
+  "misretrieved": 73
+ },
+ "pinned_choices": {
+  "v_null_pooling": "clip_core_frame_indices",
+  "low_D_excluded": false,
+  "note": "both pinned in gates.yaml before any E1 number existed"
+ },
+ "delta_norms": {
+  "mean": 34.15894932956355,
+  "min": 10.903611036932924,
+  "max": 70.31264922824273
+ }
+}

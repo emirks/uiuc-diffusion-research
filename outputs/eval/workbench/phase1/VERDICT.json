@@ -1,0 +1,31 @@
+{
+ "phase": 1,
+ "status": "STOPPED at \u00a73.4 acceptance",
+ "exam_run": false,
+ "rule": "RUNBOOK \u00a73.4 \u2014 'Failure of either = fix or stop; the exam is not run on a metric that fails constructed truth.' \u00a73.6/\u00a79 \u2014 misses stay analysis-tier, no second attempt this cycle.",
+ "verdict": "\u00a73.4 FAILS. The exam is NOT run. M1b_flow and M1c_flow remain analysis-tier. Phase 1 closed.",
+ "injected_trajectory": {
+  "verdict_cells": 35,
+  "pass": 29,
+  "fail": 6,
+  "fail_at_oracle_valid_rungs": 3,
+  "fail_noise_limited_construction": 3,
+  "note": "the verdict is monotone under any reclassification of the 3 noise-limited cells; they are not re-run"
+ },
+ "reversal": {
+  "camera_tagged": 102,
+  "insensitive": 12,
+  "undefined_ungradable": 57,
+  "graded": 33,
+  "legA1_closer_to_negated": 33,
+  "legA2_corr_floor": 17,
+  "legB_descriptor_distance": 22,
+  "joint_row_pass": 11,
+  "note": "fails on leg B alone, independent of A2"
+ },
+ "exam_not_run": true,
+ "no_adoption_question": "there is no exam result to compare against the pinned incumbents (m1b_camera d 0.519962; m1c_object d 0.247601)",
+ "records": [
+  "outputs/eval/workbench/phase1/RECORD.md"
+ ]
+}

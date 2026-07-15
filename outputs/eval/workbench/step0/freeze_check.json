@@ -1,0 +1,21 @@
+{
+ "warm_cache_probe": {
+  "n_bundles": 223,
+  "decodes": 0,
+  "gpu": false,
+  "extractor_calls": 0,
+  "seconds": 7.47,
+  "cache_dir": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/eval-v3-spec/outputs/eval/cache",
+  "corpus_root": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/eval-v3-spec/data/processed/transitions_std121",
+  "pins": {
+   "dino_model": "facebook/dinov2-base",
+   "feature_short_side": 256
+  }
+ },
+ "bitwise_roundtrip": {
+  "metric": "m1a__v3_sided",
+  "built_by": "certify.exam.appearance_distance_matrix (deployed)",
+  "max_abs_delta_vs_frozen_npz": 0.0,
+  "exact": true
+ }
+}

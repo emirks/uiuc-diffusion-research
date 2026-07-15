@@ -1,0 +1,59 @@
+{
+ "purpose": "\u00a73.4 fix-or-stop adjudication: is the E1 kill caused by the pre-registered hypothesis failing, or by an instrument defect upstream of it? DIAGNOSTIC ONLY \u2014 the \u00a74.1 verdict is recorded from the pre-registered E1 and is not revised by this.",
+ "control_no_subtraction_whitened": {
+  "accuracy_1nn": 0.06278026905829596,
+  "cohens_d": 0.1067646965029283,
+  "coverage": 1.0,
+  "misretrieved": 209,
+  "hubness_skew": 4.438471544323488,
+  "pred_entropy_norm": 0.041865084922717934,
+  "max_pred_class_share": 0.9730941704035875,
+  "sink_class": "live_concert"
+ },
+ "control_no_subtraction_raw": {
+  "accuracy_1nn": 0.6053811659192825,
+  "cohens_d": 0.987512334048301,
+  "coverage": 1.0,
+  "misretrieved": 88,
+  "hubness_skew": 3.459633233304176,
+  "pred_entropy_norm": 0.8816254807305272,
+  "max_pred_class_share": 0.08520179372197309,
+  "sink_class": "shadow_smoke"
+ },
+ "e1_delta_whitened_PREREGISTERED": {
+  "accuracy_1nn": 0.06278026905829596,
+  "cohens_d": 0.3581899911324271,
+  "coverage": 1.0,
+  "misretrieved": 209,
+  "hubness_skew": 4.299729588597959,
+  "pred_entropy_norm": 0.32168426053333987,
+  "max_pred_class_share": 0.6502242152466368,
+  "sink_class": "mystification"
+ },
+ "e1_delta_raw_unwhitened": {
+  "accuracy_1nn": 0.13452914798206278,
+  "cohens_d": 0.6210911751335098,
+  "coverage": 1.0,
+  "misretrieved": 193,
+  "hubness_skew": 4.555839194720122,
+  "pred_entropy_norm": 0.5240925105626548,
+  "max_pred_class_share": 0.48878923766816146,
+  "sink_class": "mystification"
+ },
+ "zca": {
+  "eig_max": 0.036374383161544996,
+  "eig_min": 1.847879687816524e-09,
+  "eig_floor": 3.6374383161545e-08,
+  "eig_floor_ratio": 1e-06,
+  "n_floored": 1,
+  "dim": 768,
+  "condition_number_raw": 19684389.303789247
+ },
+ "norms": {
+  "whitened_clip_mean": 14.610541574215047,
+  "whitened_null_mean": 35.5212266533192,
+  "raw_clip_mean": 0.866502046585083,
+  "raw_null_mean": 0.9115840792655945
+ },
+ "finding": "The WHITENED control (mean-pooled core embedding, NO null subtraction, i.e. no endpoint-normalization whatsoever) is as dead as the E1 delta: acc 0.0628, entropy 0.042. The RAW control is healthy: acc 0.6054, entropy 0.882. The whitening mandated by \u00a71.1 destroys the representation BEFORE the delta is formed. A kill test that also kills its own control has not tested its hypothesis."
+}

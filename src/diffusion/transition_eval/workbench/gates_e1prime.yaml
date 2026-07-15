@@ -1,0 +1,203 @@
+# E1' — frozen numeric gates (machine-readable mirror of E1PRIME_PREREG.md).
+#
+# FROZEN BEFORE ANY CANDIDATE COMPUTATION. When this file was committed, no E1'
+# signature, distance, IV number or exam existed. Changing any number here after a
+# candidate number has been seen is threshold-changing — owner-reserved (OPERATIONS
+# §1 prohibition 5) and terminal for the track.
+#
+# gates.yaml (the RUNBOOK's gates) is NOT touched by this cycle and stays
+# byte-identical. This file adds the E1'-specific numbers the owner directive
+# introduced; every number it REUSES (kill rule, hubness, §7, min-D percentile) is
+# quoted from gates.yaml, never restated with a different value.
+
+status: FROZEN
+frozen: true
+frozen_at: 2026-07-14
+frozen_before: "any E1' signature, distance, IV number or exam"
+authority: "E1PRIME_DIRECTIVE.md Part 2, committed verbatim at 2ac90d7"
+supersedes: "nothing in eval/v3.0; gates.yaml is unchanged and unread-from except
+  where quoted below"
+
+# --- 2.3 instrument-validity preconditions (OWNER-CHOSEN, frozen: 0.90 both) ---
+# The kill verdict binds the HYPOTHESIS only if both hold. Otherwise the recorded
+# verdict is INSTRUMENT-INVALID and the workbench closes unadjudicated (2.6 case 2),
+# with NO repair attempts.
+instrument_validity:
+  iv1_effect_vs_nothing:
+    form: "binary LOO 1-NN over pooled signatures {223 real clips, 223 rendered nulls}"
+    min_accuracy: 0.90
+  iv2_snap_vs_nothing:
+    form: "binary 1-NN {hard-cut splice, rendered lerp}, reusing the existing Bar-6
+      splice construction (certify.probes.build_hard_cut on each class's bar_pair)"
+    min_accuracy: 0.90
+    report_pair_coverage_if_incomplete: true
+  rationale: |
+    A signature that cannot distinguish an effect from its absence, or a cut from a
+    crossfade — the objects it was designed to make identifiable — cannot issue
+    findings about class identity.
+  structural_disclosure_m_tilde_tautology: |
+    PRE-DECLARED, BEFORE ANY IV NUMBER EXISTS (PREREG §P5a). make_lerp is idempotent
+    on its own endpoints (it returns concat([prefix, mid, suffix]), so a null's own
+    first-9/last-8 frames ARE the prefix/suffix it was built from). Therefore every
+    "nothing" object has m~ = m_lerp - m_lerp == 0 EXACTLY, on every frame. The
+    "nothing" class is a CONSTANT on the m~ channel, so IV1/IV2 are, on that channel,
+    close to a tautology and certify less than their names suggest. The IV is computed
+    exactly as registered and its verdict binds; a NON-GATING (a_hat, b_hat)-only
+    column is reported beside it so owner review can see whether the pass rests on the
+    tautological channel. The tautology does NOT make the IV vacuous: if real clips
+    also have m~ ~ 0, the IV FAILS.
+
+# --- 2.4 kill rule (same form as §4.1; numbers quoted from gates.yaml baselines) ---
+kill_rule:
+  must_beat:
+    incumbent: m1a__v3_sided
+    cohens_d: 1.522006        # == gates.yaml baselines.m1a__v3_sided.cohens_d
+    misretrieved: 73          # == gates.yaml baselines.m1a__v3_sided.misretrieved
+  form: |
+    If the candidate fails to beat pinned m1a__v3_sided on BOTH Cohen's d AND
+    misretrieved count -> KILL, one appendix paragraph, workbench closed. Strictly
+    beat both to survive. BINDING PER 2.3 (instrument validity).
+
+# --- 2.5 gates and reporting (unchanged from the RUNBOOK; quoted, not restated) ---
+hubness:
+  source: gates.yaml           # thresholds are NOT re-derived for E1'
+  gating_k: 10
+  max_hubness_skew: 3.0
+  min_pred_entropy_norm: 0.70
+  max_pred_class_share: 0.25
+adoption_m1a:
+  source: gates.yaml
+  cohens_d_min: 1.772006       # 1.522006 + 0.25
+  misretrieved_must_drop_below: 73
+  hubness_gate: must_pass
+  coverage: "reported and not materially narrower than the incumbent's (pinned 1.0000)"
+  probe_battery: "splices don't fool it; siblings rank above controls per n>=4-eligible
+    class; twins stay 11/11 through the M2a channel; rendered lerp scores at the floor
+    for non-bloom classes"
+
+# --- the candidate's construction (2.1) --------------------------------------
+candidate:
+  name: gamma_scalar_signature
+  rung: R0_direct
+  channels: [a_hat, b_hat, m_tilde]
+  geometry: raw                # NO ZCA ANYWHERE IN THE GATING ARM (owner directive)
+  anchors: certify.probes.endpoint_vecs     # deployed; unwhitened
+  m_tilde: "m(sigma) - m_lerp(sigma), frame-index aligned (sigma-alignment = index
+    alignment); same anchors e_A, e_B for clip and null"
+  rho:
+    form: sided_linear_span_projection
+    twosided: "rho = f - P f, P = orthogonal projector onto span{e_A, e_B} (2-D LINEAR
+      subspace through the origin)"
+    onesided: "rho = f - P f, P = orthogonal projector onto span{e_A} (1-D)"
+    derivation: |
+      gates.yaml e2.coords (FROZEN): "project out span{e_A, e_B} two-sided; e_A alone
+      one-sided". LINEAR, not the affine chord line: the ONE-SIDED clause decides it —
+      "projection onto e_A alone" has no affine reading (the affine hull of one point
+      is that point, and f - e_A projects nothing out). See PREREG §P2.
+    rank_guard: "Gram-Schmidt; second vector norm < 1e-8 * ||e_B|| -> clip UNDEFINED
+      with reason and COUNTED (never silently demoted to rank-1)"
+  m: "||rho|| / D"
+  D: "||e_B - e_A||, raw space"
+  sigma:
+    gating: arclength_of_the_3channel_signature_curve_in_R3
+    computed_on: "native chord units, BEFORE the corpus z-norm (the directive fixes the
+      order: resample -> z-norm)"
+    shared_across_channels: true
+    derivation: "PREREG §P1 — §1.3 states ONE sigma and resamples ALL signature channels
+      onto it; §1.3's 'no differential invariants (curvature/torsion)' presupposes the
+      signature IS a curve in a multi-dim space."
+    rejected_per_channel_arclength: |
+      REJECTED BY DERIVATION: arc length of a MONOTONE scalar channel maps it to a
+      STRAIGHT LINE for every clip (v(sigma) = v0 + sigma*(vT - v0)). a_hat is
+      near-monotone by construction, so this reading annihilates it corpus-wide. It is
+      the reading e0_anatomy.py used (descriptive, non-gating — no verdict rested on
+      it). Proved by test.
+    open_alternative_sigma_emb: |
+      arc length of the RAW 768-d embedding path is ALSO consistent with §1.3's text.
+      Not chosen (§1.3's vocabulary locates the curve in signature space), but not
+      excluded either. -> PRE-DECLARED NON-GATING SENSITIVITY COLUMN: the gating arm is
+      also computed under sigma_emb and reported beside the verdict. IT CANNOT CHANGE
+      THE VERDICT UNDER ANY OUTCOME. Purpose: make a sigma-sensitive verdict
+      adjudicable in owner review WITHOUT a re-run.
+  resample: 64
+  zscore:
+    fit_population: "the 223 REAL corpus clips (defined signatures only)"
+    applied_unchanged_to: [rendered_nulls, hard_cuts, iv2_lerps]
+    rationale: "§1.3 'z-score per channel over the corpus'. Fitting on a pool that
+      included the calibration objects would let the nulls move the scale they are
+      supposed to be measured against."
+  distance:
+    per_channel: banded_dtw
+    dtw_band_frac: 0.10        # never widen — timing is M1d's property (§1.3)
+    combination: equal_weight_mean_of_the_three_channel_distances   # frozen (2.1)
+    undefined: "NaN -> the frozen kernel reads it as 'cannot retrieve' and drops it from
+      coverage (§1.5)"
+
+# --- §1.2 min-D guard: percentile frozen; VALUE is corpus-only calibration ----
+min_d:
+  percentile: 5.0              # == gates.yaml min_d.percentile (NOT re-chosen)
+  space: raw                   # the persisted floor was fitted in WHITENED space and is
+                               # meaningless under raw geometry -> recomputed
+  floor_value: 0.603499        # FROZEN 2026-07-14 in its own commit, BEFORE any
+                               # candidate distance existed. Corpus-only calibration:
+                               # reads the frozen corpus and nothing else. 5th pct of
+                               # the raw chord distribution (min 0.3167 / p50 1.1476 /
+                               # max 1.4434) -> 12/223 clips flagged low_D.
+  n_low_D: 12
+  scope: "low_D clips are FLAGGED and EXCLUDED from the gamma-signature (every channel
+    divides by D) and NEVER zeroed. Coverage reported next to accuracy."
+
+# --- 2.2 arms (CLOSED LIST — no other variant may be computed) ----------------
+arms:
+  A_gating:
+    channels: [a_hat, b_hat, m_tilde]
+    geometry: raw
+    gates: true                # THE ONLY GATING ARM
+  B_no_null_subtraction:
+    channels: [a_hat, b_hat, m]
+    geometry: raw
+    gates: false
+    role: "diagnostic control (calibration on/off)"
+  C_ledoit_wolf:
+    channels: [a_hat, b_hat, m_tilde]
+    geometry: ledoit_wolf_shrinkage_whitened
+    gates: false
+    role: "diagnostic column, non-gating"
+    estimator: |
+      Ledoit & Wolf (2004) analytic closed form: Sigma* = delta*mu*I + (1-delta)*S,
+      mu = tr(S)/p, delta = b^2/d^2. NO FREE PARAMETER — which is exactly why it answers
+      escalation (a): does a PRINCIPLED whitener also kill the signal, independent of
+      the executor-chosen eigenvalue floor? sklearn is absent from the env, so it is
+      implemented from the published formula and unit-tested (delta in [0,1]; trace
+      exactly preserved; delta -> 0 as n -> inf; Sigma* PSD and better-conditioned).
+    fit_population: s_mask_core_frames    # §1.1's, unchanged
+  D_m_tilde_alone:
+    channels: [m_tilde]
+    geometry: raw
+    gates: false
+    role: "diagnostic (where the signal lives)"
+
+# --- §5 predictions, re-checked in registered form (DESCRIPTIVE, NEVER GATING) -
+predictions:
+  P1: "sibling gamma-distance < clip-to-own-rendered-null gamma-distance, per
+    n>=4-eligible class (now directly checkable — the gamma signature exists)"
+  P2: "sidedness AUC from this signature's s-asymmetry (statistic reused verbatim from
+    e0: mean(a_hat) - mean(1 - b_hat) over sigma; recomputed on E1''s shared-sigma
+    curves. e0's own figure was 0.523 — see E1PRIME_AMENDMENTS.md §A)"
+  P4: "one-sided classes concentrate excursion mass in early sigma (sigma-centroid of
+    |m~|; the |m| column is also reported for comparability with e0)"
+
+# --- 2.6 terminal outcomes (ALL close the workbench; no third cycle) ----------
+terminal_outcomes:
+  - "KILL (IV pass): endpoint-normalization dead at appearance level, adjudicated."
+  - "INSTRUMENT-INVALID (IV fail): program closes unadjudicated; NO repair attempts."
+  - "Survives kill, misses §7: appendix analysis, workbench closed."
+  - "Meets §7 in full: eligible for v3.1 re-cert through the standard door."
+
+# --- 2.7 prohibitions --------------------------------------------------------
+prohibitions:
+  - "No E2/E3 resurrection."
+  - "No motion work (Part 1 item 5 was a READOUT of persisted artifacts only)."
+  - "No parameter search outside the closed arm list above."
+  - "No threshold derived after seeing any candidate number."
+  - "Ambiguity -> escalate and halt that leg. Never choose."

@@ -1,0 +1,331 @@
+# Metric Workbench — frozen numeric gates (OPERATIONS §4 item 6).
+#
+# Machine-readable mirror of every number the RUNBOOK gates on, plus the
+# conventions those numbers are stated against. The driver REFUSES to run any
+# exam whose gates are not frozen (same reflex as certify/exam.py's frozen-bars
+# check), and refuses E2/E3 unless E1's recorded verdict is a pass.
+#
+# FROZEN BEFORE ANY CANDIDATE COMPUTATION. No candidate descriptor, no candidate
+# distance matrix, and no candidate exam existed when this file was committed.
+# Changing any number here after a candidate has run is threshold-changing —
+# owner-reserved (OPERATIONS §1 prohibition 5), and terminal for the track.
+#
+# Two-kind calibration (bars.yaml principle, inherited): corpus-only calibration
+# (the hubness thresholds below, the min-D percentile, the stratum targets) may
+# run pre-freeze because it is outcome-independent — it reads only the frozen
+# corpus and the frozen incumbent matrices, never a candidate.
+
+status: FROZEN
+frozen: true
+frozen_at: 2026-07-14
+frozen_before: "any candidate descriptor, matrix, or exam"
+
+# --- conventions the gates are stated against --------------------------------
+# These are not stylistic. The kill rule (§4.1) and the adoption rule (§7) are
+# stated against a `misretrieved` COUNT, and that count only reproduces the
+# pinned 73/165/206 under one convention. Pinning it here stops a later
+# comparison from quietly switching denominators and flattering a candidate.
+conventions:
+  misretrieved: |
+    misretrieved := n_clips - n_correct. A clip whose row is UNCOVERED (all
+    distances undefined -> the frozen kernel cannot retrieve for it) counts as
+    misretrieved, not as excluded. Verified: this convention, and only this one,
+    reproduces the pinned 73/223 (m1a__v3_sided), 165/223 (m1b_camera) and
+    206/223 (m1c_object). Definedness never buys accuracy (RUNBOOK §1.5).
+  accuracy: |
+    accuracy_1nn is the frozen kernel's own — correct over COVERED rows. It is
+    therefore a graded-denominator statistic while misretrieved is a
+    total-denominator count; both are reported, never mixed.
+  coverage: |
+    Reported next to accuracy ALWAYS (§1.5). An accuracy win on a shrunken
+    support is not a win.
+  stratum_recall: |
+    macro mean of per-class recall over (stratum INTERSECT n>=4-eligible), with
+    a NaN class recall (no covered clips in that class) counted as 0.0, not
+    dropped. Dropping would let a candidate raise its score by NaN-ing its
+    hardest classes. On the incumbent both conventions agree to the last bit
+    (no eligible class has NaN recall), so the pinned targets below are
+    unaffected by the choice. Strata come from the MANIFEST tags — the source
+    the deployed gating code (exam.adopt_motion) uses.
+  class_scope: |
+    All class-level gating restricted to n>=4-eligible classes (RUNBOOK §6).
+    Singletons and n<=3 classes are scored and reported, never gating.
+
+# --- pinned incumbent baselines (RUNBOOK §B; regenerated + asserted at step 0) -
+baselines:
+  source: outputs/eval/certification/3.0.0-draft.8/analysis/distance_matrices.npz
+  npz_sha256: f96934c65fdc95f9a4709e5673ba39b00f3c257aba191c8c8a14889ceb31483b
+  appearance_incumbent: m1a__v3_sided
+  camera_incumbent: m1b_camera
+  object_incumbent: m1c_object
+  m1a__v3_sided: {accuracy: 0.672646, cohens_d: 1.522006, coverage: 1.0000, misretrieved: 73}
+  m1b_camera:    {accuracy: 0.268519, cohens_d: 0.519962, coverage: 0.9686, misretrieved: 165}
+  m1c_object:    {accuracy: 0.076577, cohens_d: 0.247601, coverage: 0.9955, misretrieved: 206}
+  n_clips: 223
+  chance: 0.067
+
+# RUNBOOK A4 backfill. §3.5 cites 0.62/0.44 from memory; NO constructible
+# definition reproduces those figures (all five are recorded in baselines.json).
+# A4 pre-registered this backfill and explicitly demoted the memory figures, so
+# the values below — not 0.62/0.44 — are the numbers to beat. The chosen
+# definition reproduces the certified exam's own persisted statistic
+# (exam.json o7_conditional.camera_stratum_mean_recall) bit-for-bit.
+stratum_targets:
+  definition: macro_per_class_eligible   # see conventions.stratum_recall
+  camera:
+    incumbent: m1b_camera
+    value: 0.34623015873015867
+    n_classes_eligible: 14
+    tieback: "== exam.json o7_conditional.camera_stratum_mean_recall (bit-for-bit)"
+  object:
+    incumbent: m1c_object
+    value: 0.03425925925925926
+    n_classes_eligible: 18
+
+# --- §1.2 min-D guard ---------------------------------------------------------
+min_d:
+  percentile: 5.0          # floor at the 5th percentile of the corpus D distribution
+  scope: |
+    low_D clips are EXCLUDED from D-NORMALIZED scores (E2's a_hat/b_hat/m~
+    channels, E3's Gram — everywhere D enters a denominator) and FLAGGED, never
+    zeroed. E1's delta contains no D (no division, no projection), so E1 scores
+    every clip. Pinned pre-run so the exclusion set cannot be tuned to a result.
+
+# --- §1.4 hubness gate (MANDATORY per candidate space/descriptor; TERMINAL) ----
+#
+# The RUNBOOK states this gate without stating numbers. They are CALIBRATED ON
+# THE FROZEN INCUMBENTS ALONE, before any candidate exists.
+#
+# Authority for where the gate sits is the RUNBOOK's own diagnosis (§0), not a
+# judgement call by the executor:
+#   - M1c is "hub-collapsed (polygon column = sink artifact from near-zero
+#     residual descriptors)"  -> the gate MUST fire on m1c_object.
+#   - M1b is merely weak: "discrimination only inside camera-tagged strata"
+#     -> the gate MUST NOT fire on m1b_camera.
+# So the acceptance criterion for the gate itself is: FAIL m1c_object and
+# m_incumbent (collapsed by the same pattern), PASS m1a__v3_sided,
+# m1a__v2_envelope, m1a__all_frames and m1b_camera. A regression test in
+# tests/test_workbench.py asserts exactly that against the frozen table below.
+#
+# DERIVATION RULE (this is what is frozen — the numbers merely follow):
+#   threshold = midpoint of the empty gap between the pass population and the
+#   dead population, measured on the six frozen incumbent matrices.
+# This is a deployed convention in the certified instrument, not an invention:
+#   certify/probes.grade_splices sets tau_recalibrated = 0.5*(splice_min +
+#   honest_max), and bars.yaml freezes tau_copy at the gap midpoint between the
+#   known-positive and known-negative populations.
+#
+# Loss asymmetry, accepted deliberately: a false KILL is terminal and
+# irreversible (§3.6/§9 — no second attempt), while a false PASS is caught in
+# owner-side review, because hubness stats sit next to every headline number by
+# contract. That asymmetry is why the thresholds sit at the gap midpoint rather
+# than hugging the pass population, and it is a reason never to tighten them.
+hubness:
+  gating_k: 10             # mean class size ~6, so k=10 deliberately reaches
+                           # PAST the class boundary and measures beyond-class
+                           # absorption — the M1c/polygon failure exactly.
+  diagnostic_ks: [1, 5, 10]  # persisted for k-sensitivity; ONLY gating_k gates.
+  max_hubness_skew: 3.0          # midpoint(2.517 m1b, 3.386 MFS) = 2.952
+  min_pred_entropy_norm: 0.70    # midpoint(0.9059 m1a__v2, 0.5094 MFS) = 0.708
+  max_pred_class_share: 0.25     # midpoint(0.1019 m1b, 0.3901 MFS) = 0.246
+  form: |
+    FAIL if ANY of the three trips (OR-structured — the instruments see
+    different failures: the prediction column is a k=1 phenomenon, so rank-2..10
+    absorption casts no 1-NN votes and is invisible to it, which is how the
+    incumbent m1b decouples). Terminal regardless of accuracy (§1.4). Applies to
+    EVERY candidate space/descriptor — motion and appearance alike (§7 cond. 3).
+  coverage_interaction: |
+    Computed on the same matrix the exam grades, over the DEFINED SUBPOOL only,
+    denominators explicit, NO coverage correction or renormalization (that would
+    be a new bar form). The §3.2/§3.3 definedness gates are SUPPOSED to remove
+    near-static clips, and a shrunken pool mechanically concentrates hub
+    statistics — that is a property of the candidate, not an artifact to correct
+    away. Coverage is reported beside every hubness stat.
+  calibration_band:        # the empty gap between the two populations
+    skew: [1.188, 3.386]
+    pred_entropy_norm: [0.5094, 0.9059]
+    max_pred_class_share: [0.1019, 0.3901]
+  band_disclosure: |
+    A candidate statistic landing INSIDE the band gets the frozen verdict —
+    terminal, no re-adjudication by the executor — but the report must flag
+    "landed in the calibration band; verdict is threshold-placement-sensitive"
+    and print the band and both populations. Whether the placement was right is
+    owner-side review.
+  # The frozen calibration population (k=10, computed on the six incumbent
+  # matrices at step 0, before any candidate existed).
+  incumbent_table:
+    m1a__v3_sided:    {skew: 0.839, pred_entropy_norm: 0.9111, max_pred_class_share: 0.0807, verdict: PASS}
+    m1a__v2_envelope: {skew: 0.967, pred_entropy_norm: 0.9059, max_pred_class_share: 0.0807, verdict: PASS}
+    m1a__all_frames:  {skew: 1.188, pred_entropy_norm: 0.9280, max_pred_class_share: 0.0673, verdict: PASS}
+    m1b_camera:       {skew: 2.517, pred_entropy_norm: 0.9173, max_pred_class_share: 0.1019, verdict: PASS}
+    m_incumbent:      {skew: 3.386, pred_entropy_norm: 0.5094, max_pred_class_share: 0.3901, verdict: FAIL}
+    m1c_object:       {skew: 4.325, pred_entropy_norm: 0.4469, max_pred_class_share: 0.5811, verdict: FAIL, sink_class: polygon}
+
+# --- Phase 1: motion (§3.2 / §3.3 / §3.4 / §3.6) -------------------------------
+phase1:
+  flow:
+    # PINNED 2026-07-14 at cache-build time, per amendment A2's registered
+    # procedure ("attempt SEA-RAFT install once, timeboxed ~30 min; on failure fall
+    # back to torchvision RAFT"). THE ATTEMPT SUCCEEDED (11:26-11:27), so the
+    # RUNBOOK's primary choice ships — taking the fallback while the primary works
+    # would itself be a deviation. Chosen ONCE, never revisited this cycle.
+    backbone: SEA-RAFT
+    repo: https://github.com/princeton-vl/SEA-RAFT
+    commit: 9137517ba24e628442aec097d3afe71d03503b75
+    weights: MemorySlices/Tartan-C-T-TSKH-spring540x960-M
+    config: config/eval/spring-M.json
+    iters: 4
+    fallback_not_used: "torchvision raft_large (Raft_Large_Weights.C_T_SKHT_V2),
+      staged but not needed"
+    short_side: 320                # ~320px (§3.1), adjacent frame pairs
+    resolution_hw: [432, 320]      # BOTH % 8 == 0 — RAFT feature pyramids require
+                                   # it. Decoding at short_side=320 yields 427x320
+                                   # and 427 is NOT divisible by 8; the deployed
+                                   # signals/flow.py::_resize rounds to /8 only when
+                                   # it downscales, so it would pass 427 straight
+                                   # through. Reached instead by decoding native
+                                   # 480x640 and INTER_AREA-resizing once.
+    seam_frames_excluded: true     # from M3b; excluded from all FITS (descriptor
+                                   # time — the cache holds every pair). The seams
+                                   # are structural, at pair 8 (n_prefix-1) and pair
+                                   # 112 (T-n_suffix-1); requiring both frames of a
+                                   # pair to be core already removes them.
+  m1b_flow:                        # §3.2 camera metric
+    model: similarity_4param       # tx, ty, log-scale, rotation
+    fit: huber_irls
+    huber_delta_px: 1.5
+    irls_iters: 20                 # converged (8 still drifts — measured)
+    min_inlier_fraction: 0.40      # < 40% inliers -> frame undefined
+    max_undefined_core_frac: 0.30  # > 30% of core frames undefined -> clip undefined
+    resample: 32                   # §1.3 motion descriptors
+    # FROZEN 2026-07-14 (own commit, before the exam). Derived, not chosen: §1.2's
+    # min-D guard is the RUNBOOK's ONLY in-document precedent for turning a corpus
+    # distribution into a floor, and it uses the 5th percentile (already frozen
+    # above as min_d.percentile: 5.0). Population: CORE PAIRS ONLY (both frames
+    # core, seams excluded) — the support the §3.2 definedness accounting runs on.
+    # This gate applies to BOTH m1b and m1c: it is a §3.2 FRAME-definedness rule,
+    # and m1c inherits frame definedness.
+    texture_percentile: 5.0
+    min_pair_texture: 0.075326     # OPEN corpus-only calibration (§3.2's second
+                                   # definedness gate: "inlier fraction < 40% OR
+                                   # LOW-TEXTURE FRAME -> frame undefined"). The
+                                   # RUNBOOK names the gate but not the number.
+                                   # Chosen from the corpus texture distribution
+                                   # BEFORE the exam runs, then frozen in its own
+                                   # commit. Needed because a confident fit to a
+                                   # textureless frame is still a fit to noise, and
+                                   # the inlier gate cannot see that (noise agrees
+                                   # with itself).
+  m1c_flow:                        # §3.3 object metric
+    # FROZEN 2026-07-14 (own commit, before the exam). §3.3 pins the construction
+    # FAMILY ("set eps from the corpus residual-magnitude distribution, report
+    # chosen percentile"), so only the percentile was open; §1.2's convention
+    # supplies it. CALIBRATED ON THE POPULATION THE GATE OPERATES ON: the texture
+    # gate is UPSTREAM of the energy gate, so epsilon is the 5th percentile over
+    # core frames surviving BOTH the camera fit (inlier >= 40%) AND the texture
+    # gate (9,622 frames). The pre-texture realization was 5.455e-05; the frozen
+    # post-texture one is 5.685e-05. Construction PRE-DECLARED in CONSULTATIONS.md
+    # (C4) before the number was computed.
+    energy_gate_percentile: 5.0    # OPEN corpus-only calibration (§3.3: "set eps
+    energy_gate_epsilon: 0.00005685  # from the corpus residual-magnitude
+                                   # distribution, report chosen percentile").
+                                   # Chosen from the residual distribution BEFORE
+                                   # the exam runs, then frozen here in its own
+                                   # commit. This is the designed kill for the
+                                   # polygon sink: near-static residuals must exit
+                                   # as UNDEFINED, not collapse to a shared
+                                   # descriptor.
+    orientation_bins: 8
+    grid: [3, 3]
+    magnitude_normalized_by: image_diagonal   # resolution must not leak
+    resample: 32
+  acceptance:                      # §3.4 — BOTH must pass before the exam runs
+    reversal:
+      form: |
+        Time-reversed reference must be distinguished from the original. The
+        known blind spot (recorded in certify/probes.py): per-channel z-norm
+        makes time-antisymmetric trajectories self-identical, so the probe MUST
+        check PARAMETER NEGATION, not only descriptor distance.
+      descriptor_distance_exceeds: median_within_class_distance
+    injected_trajectory:
+      per_parameter_correlation_min: 0.90
+      relative_amplitude_error_max: 0.10
+    on_failure: |
+      "Fix or stop" (§3.4). An IMPLEMENTATION BUG is fixed and rerun — debugging
+      is not a rescue variant. The METRIC failing constructed truth is a STOP:
+      the exam is not run on a metric that fails constructed truth.
+  adoption:                        # §3.6 — terminal
+    form: |
+      Beats incumbent on Cohen's d AND within-stratum recall -> tier upgrade
+      proposed (v3.1 re-cert, owner's call). Misses -> stays analysis-tier, NO
+      second attempt this cycle. If M1c_flow still exhibits a hub after the
+      energy gate -> the descriptor is dead, no rescue variants.
+    m1b_flow: {beat_cohens_d: 0.519962, beat_stratum_recall: 0.34623015873015867}
+    m1c_flow: {beat_cohens_d: 0.247601, beat_stratum_recall: 0.03425925925925926}
+
+# --- Phase 2: appearance ladder (§4) ------------------------------------------
+phase2:
+  zca:
+    fit_population: s_mask_core_frames   # §1.1 + A3 ("S-mask frame selection")
+    eig_floor_ratio: 1.0e-6              # deterministic floor, frozen pre-candidate
+  nulls:
+    kind: rendered_lerp                  # §4.0 — the per-pair calibration object
+    builder: transition_eval.controls.make_lerp   # deployed alpha-blend, reused
+    applies_to: all_clips                # one-sided clips too (every clip has both
+                                         # conditioned windows); NOT make_static_hold
+  e1:                                    # §4.1 — THE KILL TEST, runs first
+    definition: |
+      v_clip = mean whitened masked embedding over core frames; v_null = same
+      pooling over the clip's rendered lerp; delta = v_clip - v_null. One vector
+      per clip. Distance: L2.
+    v_null_pooling: clip_core_frame_indices
+    v_null_pooling_rationale: |
+      The null is pooled over THE CLIP'S OWN core frame indices, not over the
+      null's own S-mask. A lerp's envelope stays >= the core threshold throughout
+      the crossfade, so its strict core is empty-to-degenerate by construction
+      and the fallback valley would pick an arbitrary sliver near env-min. The
+      null is a calibration object FOR THAT CLIP: it inherits the clip's
+      structure, and delta only cancels content if both means share sigma-support.
+      Pinned pre-run; no switching after seeing E1 numbers.
+    kill_rule: |
+      VERBATIM, PRE-REGISTERED (§4.1): if delta fails to beat raw M1a on BOTH
+      Cohen's d AND misretrieved count, the endpoint-normalization program is
+      dead at the appearance level. One appendix paragraph, full stop. E2/E3 DO
+      NOT RUN.
+    must_beat: {cohens_d: 1.522006, misretrieved: 73}   # strictly beat BOTH to survive
+  e2:
+    runs_only_if: e1_verdict == pass
+    channels: [a_hat, b_hat, m_tilde]
+    m_tilde: "m(sigma) - m_lerp(sigma)  — residual magnitude calibrated per endpoint
+      pair against the rendered null (without this the signature re-imports content
+      through the channel it claims to quotient)"
+    coords: sided       # project out span{e_A, e_B} two-sided; e_A alone one-sided
+    resample: 64
+    distance: banded_dtw
+    dtw_band_frac: 0.10   # never widen — timing is M1d's property (§1.3)
+  e3:
+    runs_only_if: e2_adds_over_e1
+    pca_dims: [20, 50]
+    distance: frobenius
+    direction_adoption: false   # measurement only — NO adoption path this cycle
+
+# --- §7 adoption rule (verbatim, frozen before any Phase 2 run) ---------------
+# The executor COMPUTES each condition as a pass/fail FACT. It does not make the
+# call. Adoption is owner-side review; entry is via v3.1 re-cert.
+adoption_m1a:
+  cohens_d_improvement_min: 0.25      # over pinned 1.522006 -> candidate needs >= 1.772006
+  misretrieved_must_drop_below: 73    # strictly below the pinned count
+  probe_battery: "splices don't fool it; siblings rank above controls per
+    n>=4-eligible class; twins stay 11/11 through the M2a channel (which it must
+    not degrade); rendered lerp scores at the floor for non-bloom classes"
+  hubness_gate: must_pass             # §1.4
+  definedness: "coverage reported and not materially narrower than the
+    incumbent's (pinned: 1.0000)"
+
+# --- §5 pre-registered predictions (checked, never gating) --------------------
+predictions:
+  - "Sibling gamma-distance < clip-to-own-rendered-null distance for every
+     n>=4-eligible class (real effects are farther from nothing than from each other)"
+  - "Sidedness (26/13) recoverable from s(sigma) asymmetry"
+  - "nature_bloom remains lerp-adjacent — blind-spot theorem, not a metric failure"
+  - "One-sided classes concentrate excursion mass in early sigma"

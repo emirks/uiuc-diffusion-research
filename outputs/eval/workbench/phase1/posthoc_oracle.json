@@ -1,0 +1,170 @@
+{
+ "purpose": "C5-R post-hoc oracle: were the failing verdict cells noise-limited under the NEW probes' own sigma? Pre-committed mapping: noise-limited -> CONSTRUCTION failure (returns to the fork); not noise-limited -> the metric failed constructed truth -> STOP.",
+ "n_failing_cells": 6,
+ "n_noise_limited": 3,
+ "n_real_metric_failures": 3,
+ "cells": [
+  {
+   "clip": "wireframe/wireframe_5.mp4",
+   "kind": "pan_x",
+   "rung": "p90",
+   "sigma": {
+    "wireframe/wireframe_5.mp4|ty": 0.035090970258873574,
+    "wireframe/wireframe_5.mp4|log_scale": 0.00027444223637486533,
+    "wireframe/wireframe_5.mp4|rotation": 0.00032872595235888824,
+    "wireframe/wireframe_5.mp4|tx": 0.1869035248967845
+   },
+   "posthoc_oracle_valid": false,
+   "noise_limited": true,
+   "detail": {
+    "tx": {
+     "median_amp_err": 0.1046935500273308,
+     "median_corr": 0.9817922199822335,
+     "amp_ok": false,
+     "corr_ok": true
+    }
+   }
+  },
+  {
+   "clip": "wireframe/wireframe_5.mp4",
+   "kind": "pan_y",
+   "rung": "p90",
+   "sigma": {
+    "wireframe/wireframe_5.mp4|tx": 0.027649444195423947,
+    "wireframe/wireframe_5.mp4|log_scale": 0.00044649802985448247,
+    "wireframe/wireframe_5.mp4|rotation": 0.0001731431745187673,
+    "wireframe/wireframe_5.mp4|ty": 0.2024202812976252
+   },
+   "posthoc_oracle_valid": false,
+   "noise_limited": true,
+   "detail": {
+    "ty": {
+     "median_amp_err": 0.15479692908222825,
+     "median_corr": 0.9622138117863281,
+     "amp_ok": false,
+     "corr_ok": true
+    }
+   }
+  },
+  {
+   "clip": "mystification/mystification_5.mp4",
+   "kind": "zoom",
+   "rung": "p90",
+   "sigma": {
+    "mystification/mystification_5.mp4|tx": 0.060160359025587896,
+    "mystification/mystification_5.mp4|ty": 0.10130488350040484,
+    "mystification/mystification_5.mp4|rotation": 0.0003521428000405614,
+    "mystification/mystification_5.mp4|log_scale": 0.0008627393947061848
+   },
+   "posthoc_oracle_valid": true,
+   "noise_limited": false,
+   "detail": {
+    "log_scale": {
+     "median_amp_err": 0.05535974953765645,
+     "median_corr": 0.9936648781804208,
+     "amp_ok": true,
+     "corr_ok": true
+    }
+   }
+  },
+  {
+   "clip": "mystification/mystification_5.mp4",
+   "kind": "pan_zoom",
+   "rung": "p90",
+   "sigma": {
+    "mystification/mystification_5.mp4|rotation": 0.00016419603247728217,
+    "mystification/mystification_5.mp4|tx": 0.034116812210551156,
+    "mystification/mystification_5.mp4|ty": 0.04011353402320003,
+    "mystification/mystification_5.mp4|log_scale": 0.0003818597039920809
+   },
+   "posthoc_oracle_valid": true,
+   "noise_limited": false,
+   "detail": {
+    "tx": {
+     "median_amp_err": 0.019437953524693574,
+     "median_corr": 0.9990144715503879,
+     "amp_ok": true,
+     "corr_ok": true
+    },
+    "ty": {
+     "median_amp_err": 0.06909032570839921,
+     "median_corr": 0.9900863824767963,
+     "amp_ok": true,
+     "corr_ok": true
+    },
+    "log_scale": {
+     "median_amp_err": 0.08444321099030005,
+     "median_corr": 0.986408734529949,
+     "amp_ok": true,
+     "corr_ok": true
+    }
+   }
+  },
+  {
+   "clip": "saint_glow/saint_glow_3.mp4",
+   "kind": "pan_zoom",
+   "rung": "p90",
+   "sigma": {
+    "saint_glow/saint_glow_3.mp4|rotation": 0.0002313475419867294,
+    "saint_glow/saint_glow_3.mp4|tx": 0.0702193387906515,
+    "saint_glow/saint_glow_3.mp4|ty": 0.03689066863858434,
+    "saint_glow/saint_glow_3.mp4|log_scale": 0.00021299420651304772
+   },
+   "posthoc_oracle_valid": true,
+   "noise_limited": false,
+   "detail": {
+    "tx": {
+     "median_amp_err": 0.04423551010516669,
+     "median_corr": 0.9958413932553241,
+     "amp_ok": true,
+     "corr_ok": true
+    },
+    "ty": {
+     "median_amp_err": 0.06736454935301531,
+     "median_corr": 0.9916090848389364,
+     "amp_ok": true,
+     "corr_ok": true
+    },
+    "log_scale": {
+     "median_amp_err": 0.044224211961039823,
+     "median_corr": 0.9958086713915935,
+     "amp_ok": true,
+     "corr_ok": true
+    }
+   }
+  },
+  {
+   "clip": "gas_transformation/gas_transformation_4.mp4",
+   "kind": "pan_zoom",
+   "rung": "p90",
+   "sigma": {
+    "gas_transformation/gas_transformation_4.mp4|rotation": 0.0003620730912622136,
+    "gas_transformation/gas_transformation_4.mp4|tx": 0.056037623473391675,
+    "gas_transformation/gas_transformation_4.mp4|ty": 0.05312587328624369,
+    "gas_transformation/gas_transformation_4.mp4|log_scale": 0.00024110057717253495
+   },
+   "posthoc_oracle_valid": false,
+   "noise_limited": true,
+   "detail": {
+    "tx": {
+     "median_amp_err": 0.03405290323638217,
+     "median_corr": 0.9972964556406583,
+     "amp_ok": true,
+     "corr_ok": true
+    },
+    "ty": {
+     "median_amp_err": 0.10254685839757478,
+     "median_corr": 0.9829954802415108,
+     "amp_ok": false,
+     "corr_ok": true
+    },
+    "log_scale": {
+     "median_amp_err": 0.05275469848302845,
+     "median_corr": 0.994545235262402,
+     "amp_ok": true,
+     "corr_ok": true
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,238 @@
+{
+ "purpose": "DIAGNOSTIC ONLY. The \u00a74.1 verdict is recorded, terminal, and NOT revised by anything here. Not a candidate, not a rescue variant, not a second attempt. No row is scored against \u00a74.1, \u00a71.4 or \u00a77; no row carries a verdict. Nothing here feeds E2/E3 or any gate. The grid was PRE-DECLARED in CONSULTATIONS.md (C3) before being computed. No floor is recommended or selected \u2014 that is owner-reserved.",
+ "provenance": {
+  "verdict_commit": "72a5bd4",
+  "gates_freeze_commit": "694afc7",
+  "registered_eig_floor_ratio": 1e-06,
+  "note": "RUNBOOK \u00a71.1 mandates whitening but does NOT pin its regularization. eig_floor_ratio was an executor-chosen free parameter, frozen in good faith before any candidate ran."
+ },
+ "zca_spectrum": {
+  "dim": 768,
+  "eig_max": 0.03637438316154498,
+  "eig_min": 1.847879689019941e-09,
+  "condition_number": 19684389.290969934,
+  "quantiles": {
+   "q1": 2.5171909516413037e-05,
+   "q5": 3.70038022067738e-05,
+   "q10": 4.7813408916580695e-05,
+   "q25": 8.359577070176456e-05,
+   "q50": 0.0002075138564080214,
+   "q75": 0.0007365927361907658,
+   "q90": 0.00290860379565426,
+   "q99": 0.01523379804656538
+  },
+  "cumulative_variance_dims": {
+   "dims_for_50pct": 37,
+   "dims_for_80pct": 128,
+   "dims_for_90pct": 227,
+   "dims_for_95pct": 346,
+   "dims_for_99pct": 591
+  }
+ },
+ "raw_reference_rows_floor_independent": {
+  "raw_no_subtraction_control": {
+   "accuracy_1nn": 0.6053811659192825,
+   "cohens_d": 0.987512334048301,
+   "coverage": 1.0,
+   "misretrieved": 88,
+   "hubness_skew": 3.459633233304176,
+   "pred_entropy_norm": 0.8816254807305272,
+   "max_pred_class_share": 0.08520179372197309,
+   "sink_class": "shadow_smoke"
+  },
+  "raw_delta": {
+   "accuracy_1nn": 0.13452914798206278,
+   "cohens_d": 0.6210911751335098,
+   "coverage": 1.0,
+   "misretrieved": 193,
+   "hubness_skew": 4.555839194720122,
+   "pred_entropy_norm": 0.5240925105626548,
+   "max_pred_class_share": 0.48878923766816146,
+   "sink_class": "mystification"
+  }
+ },
+ "sweep": [
+  {
+   "eig_floor_ratio": 1e-06,
+   "eig_floor": 3.637438316154498e-08,
+   "n_floored": 1,
+   "effective_dims": 767,
+   "whitened_no_subtraction_control": {
+    "accuracy_1nn": 0.06278026905829596,
+    "cohens_d": 0.1067646965029291,
+    "coverage": 1.0,
+    "misretrieved": 209,
+    "hubness_skew": 4.438471544323488,
+    "pred_entropy_norm": 0.041865084922717934,
+    "max_pred_class_share": 0.9730941704035875,
+    "sink_class": "live_concert"
+   },
+   "whitened_delta": {
+    "accuracy_1nn": 0.06278026905829596,
+    "cohens_d": 0.3581899911324257,
+    "coverage": 1.0,
+    "misretrieved": 209,
+    "hubness_skew": 4.299729588597959,
+    "pred_entropy_norm": 0.32168426053333987,
+    "max_pred_class_share": 0.6502242152466368,
+    "sink_class": "mystification"
+   },
+   "whitened_null_to_clip_norm_ratio": 2.431205337111368,
+   "registered": true
+  },
+  {
+   "eig_floor_ratio": 1e-05,
+   "eig_floor": 3.637438316154498e-07,
+   "n_floored": 1,
+   "effective_dims": 767,
+   "whitened_no_subtraction_control": {
+    "accuracy_1nn": 0.06278026905829596,
+    "cohens_d": 0.10676738251464278,
+    "coverage": 1.0,
+    "misretrieved": 209,
+    "hubness_skew": 4.438471544323488,
+    "pred_entropy_norm": 0.041865084922717934,
+    "max_pred_class_share": 0.9730941704035875,
+    "sink_class": "live_concert"
+   },
+   "whitened_delta": {
+    "accuracy_1nn": 0.06278026905829596,
+    "cohens_d": 0.3581783550637277,
+    "coverage": 1.0,
+    "misretrieved": 209,
+    "hubness_skew": 4.301619512568407,
+    "pred_entropy_norm": 0.32168426053333987,
+    "max_pred_class_share": 0.6502242152466368,
+    "sink_class": "mystification"
+   },
+   "whitened_null_to_clip_norm_ratio": 2.431133388716123,
+   "registered": false
+  },
+  {
+   "eig_floor_ratio": 0.0001,
+   "eig_floor": 3.6374383161544986e-06,
+   "n_floored": 2,
+   "effective_dims": 766,
+   "whitened_no_subtraction_control": {
+    "accuracy_1nn": 0.06278026905829596,
+    "cohens_d": 0.10676578780623214,
+    "coverage": 1.0,
+    "misretrieved": 209,
+    "hubness_skew": 4.439692335066764,
+    "pred_entropy_norm": 0.041865084922717934,
+    "max_pred_class_share": 0.9730941704035875,
+    "sink_class": "live_concert"
+   },
+   "whitened_delta": {
+    "accuracy_1nn": 0.06278026905829596,
+    "cohens_d": 0.35785849182185353,
+    "coverage": 1.0,
+    "misretrieved": 209,
+    "hubness_skew": 4.296159716166427,
+    "pred_entropy_norm": 0.3230205712335732,
+    "max_pred_class_share": 0.6457399103139013,
+    "sink_class": "mystification"
+   },
+   "whitened_null_to_clip_norm_ratio": 2.429779156025953,
+   "registered": false
+  },
+  {
+   "eig_floor_ratio": 0.001,
+   "eig_floor": 3.637438316154498e-05,
+   "n_floored": 36,
+   "effective_dims": 732,
+   "whitened_no_subtraction_control": {
+    "accuracy_1nn": 0.06278026905829596,
+    "cohens_d": 0.10693900571309771,
+    "coverage": 1.0,
+    "misretrieved": 209,
+    "hubness_skew": 4.441564082762661,
+    "pred_entropy_norm": 0.041865084922717934,
+    "max_pred_class_share": 0.9730941704035875,
+    "sink_class": "live_concert"
+   },
+   "whitened_delta": {
+    "accuracy_1nn": 0.06278026905829596,
+    "cohens_d": 0.35732947912510704,
+    "coverage": 1.0,
+    "misretrieved": 209,
+    "hubness_skew": 4.299314846281027,
+    "pred_entropy_norm": 0.316837957521365,
+    "max_pred_class_share": 0.6322869955156951,
+    "sink_class": "mystification"
+   },
+   "whitened_null_to_clip_norm_ratio": 2.4131663944249495,
+   "registered": false
+  },
+  {
+   "eig_floor_ratio": 0.01,
+   "eig_floor": 0.0003637438316154498,
+   "n_floored": 481,
+   "effective_dims": 287,
+   "whitened_no_subtraction_control": {
+    "accuracy_1nn": 0.07623318385650224,
+    "cohens_d": 0.12230471256204281,
+    "coverage": 1.0,
+    "misretrieved": 206,
+    "hubness_skew": 4.495976602324867,
+    "pred_entropy_norm": 0.063570253972676,
+    "max_pred_class_share": 0.9596412556053812,
+    "sink_class": "live_concert"
+   },
+   "whitened_delta": {
+    "accuracy_1nn": 0.07174887892376682,
+    "cohens_d": 0.3713751137348387,
+    "coverage": 1.0,
+    "misretrieved": 207,
+    "hubness_skew": 4.448307609924131,
+    "pred_entropy_norm": 0.3421922468939843,
+    "max_pred_class_share": 0.5067264573991032,
+    "sink_class": "mystification"
+   },
+   "whitened_null_to_clip_norm_ratio": 1.700256071150437,
+   "registered": false
+  },
+  {
+   "eig_floor_ratio": 0.1,
+   "eig_floor": 0.003637438316154498,
+   "n_floored": 704,
+   "effective_dims": 64,
+   "whitened_no_subtraction_control": {
+    "accuracy_1nn": 0.3721973094170404,
+    "cohens_d": 0.3613050853409793,
+    "coverage": 1.0,
+    "misretrieved": 140,
+    "hubness_skew": 4.828234458922793,
+    "pred_entropy_norm": 0.5836853300480287,
+    "max_pred_class_share": 0.4663677130044843,
+    "sink_class": "live_concert"
+   },
+   "whitened_delta": {
+    "accuracy_1nn": 0.09417040358744394,
+    "cohens_d": 0.46266556641612167,
+    "coverage": 1.0,
+    "misretrieved": 202,
+    "hubness_skew": 4.582008536083188,
+    "pred_entropy_norm": 0.40723582623889076,
+    "max_pred_class_share": 0.5515695067264574,
+    "sink_class": "mystification"
+   },
+   "whitened_null_to_clip_norm_ratio": 1.165262374779903,
+   "registered": false
+  }
+ ],
+ "per_clip_distributions": {
+  "cos_clip_null_raw": {
+   "mean": 0.700099461348602,
+   "min": 0.11329129338264465,
+   "max": 0.9877938628196716,
+   "quantiles": {
+    "q5": 0.26592532694339754,
+    "q25": 0.5401684939861298,
+    "q50": 0.7723535299301147,
+    "q75": 0.8709721267223358,
+    "q95": 0.943103367090225
+   }
+  }
+ }
+}

@@ -1,0 +1,618 @@
+{
+ "gating_k": 10,
+ "thresholds": {
+  "max_hubness_skew": 3.0,
+  "min_pred_entropy_norm": 0.7,
+  "max_pred_class_share": 0.25
+ },
+ "derivation": "midpoint of the empty gap between the pass and dead incumbent populations (deployed convention: certify.probes.grade_splices tau_copy)",
+ "authority": "RUNBOOK \u00a70 \u2014 M1c is 'hub-collapsed (polygon column = sink artifact)'; M1b is merely weak ('discrimination only inside camera-tagged strata')",
+ "incumbents": {
+  "m1a__v3_sided": {
+   "pass": true,
+   "checks": {
+    "skew_ok": true,
+    "entropy_ok": true,
+    "pred_share_ok": true
+   },
+   "thresholds": {
+    "gating_k": 10,
+    "diagnostic_ks": [
+     1,
+     5,
+     10
+    ],
+    "max_hubness_skew": 3.0,
+    "min_pred_entropy_norm": 0.7,
+    "max_pred_class_share": 0.25,
+    "form": "FAIL if ANY of the three trips (OR-structured \u2014 the instruments see\ndifferent failures: the prediction column is a k=1 phenomenon, so rank-2..10\nabsorption casts no 1-NN votes and is invisible to it, which is how the\nincumbent m1b decouples). Terminal regardless of accuracy (\u00a71.4). Applies to\nEVERY candidate space/descriptor \u2014 motion and appearance alike (\u00a77 cond. 3).\n",
+    "coverage_interaction": "Computed on the same matrix the exam grades, over the DEFINED SUBPOOL only,\ndenominators explicit, NO coverage correction or renormalization (that would\nbe a new bar form). The \u00a73.2/\u00a73.3 definedness gates are SUPPOSED to remove\nnear-static clips, and a shrunken pool mechanically concentrates hub\nstatistics \u2014 that is a property of the candidate, not an artifact to correct\naway. Coverage is reported beside every hubness stat.\n",
+    "band_disclosure": "A candidate statistic landing INSIDE the band gets the frozen verdict \u2014\nterminal, no re-adjudication by the executor \u2014 but the report must flag\n\"landed in the calibration band; verdict is threshold-placement-sensitive\"\nand print the band and both populations. Whether the placement was right is\nowner-side review.\n",
+    "incumbent_table": {
+     "m1a__v3_sided": {
+      "skew": 0.839,
+      "pred_entropy_norm": 0.9111,
+      "max_pred_class_share": 0.0807,
+      "verdict": "PASS"
+     },
+     "m1a__v2_envelope": {
+      "skew": 0.967,
+      "pred_entropy_norm": 0.9059,
+      "max_pred_class_share": 0.0807,
+      "verdict": "PASS"
+     },
+     "m1a__all_frames": {
+      "skew": 1.188,
+      "pred_entropy_norm": 0.928,
+      "max_pred_class_share": 0.0673,
+      "verdict": "PASS"
+     },
+     "m1b_camera": {
+      "skew": 2.517,
+      "pred_entropy_norm": 0.9173,
+      "max_pred_class_share": 0.1019,
+      "verdict": "PASS"
+     },
+     "m_incumbent": {
+      "skew": 3.386,
+      "pred_entropy_norm": 0.5094,
+      "max_pred_class_share": 0.3901,
+      "verdict": "FAIL"
+     },
+     "m1c_object": {
+      "skew": 4.325,
+      "pred_entropy_norm": 0.4469,
+      "max_pred_class_share": 0.5811,
+      "verdict": "FAIL",
+      "sink_class": "polygon"
+     }
+    }
+   },
+   "landed_in_calibration_band": false,
+   "band_membership": {
+    "hubness_skew": false,
+    "pred_entropy_norm": false,
+    "max_pred_class_share": false
+   },
+   "calibration_band": {
+    "skew": [
+     1.188,
+     3.386
+    ],
+    "pred_entropy_norm": [
+     0.5094,
+     0.9059
+    ],
+    "max_pred_class_share": [
+     0.1019,
+     0.3901
+    ]
+   },
+   "stats": {
+    "k": 10,
+    "n_clips": 223,
+    "n_undefined_rows": 0,
+    "coverage": 1.0,
+    "hubness_skew": 0.8390642867243491,
+    "skew_by_k_diagnostic": {
+     "1": 1.2687373569403548,
+     "5": 0.6998490889903664,
+     "10": 0.8390642867243491
+    },
+    "k_occurrence_max": 34,
+    "k_occurrence_mean": 10.0,
+    "max_clip_knn_share": 0.015246636771300448,
+    "hub_clip_index": 43,
+    "pred_entropy_norm": 0.9110506084365507,
+    "max_pred_class_share": 0.08071748878923767,
+    "sink_class": "shadow_smoke",
+    "n_graded": 223
+   }
+  },
+  "m1a__v2_envelope": {
+   "pass": true,
+   "checks": {
+    "skew_ok": true,
+    "entropy_ok": true,
+    "pred_share_ok": true
+   },
+   "thresholds": {
+    "gating_k": 10,
+    "diagnostic_ks": [
+     1,
+     5,
+     10
+    ],
+    "max_hubness_skew": 3.0,
+    "min_pred_entropy_norm": 0.7,
+    "max_pred_class_share": 0.25,
+    "form": "FAIL if ANY of the three trips (OR-structured \u2014 the instruments see\ndifferent failures: the prediction column is a k=1 phenomenon, so rank-2..10\nabsorption casts no 1-NN votes and is invisible to it, which is how the\nincumbent m1b decouples). Terminal regardless of accuracy (\u00a71.4). Applies to\nEVERY candidate space/descriptor \u2014 motion and appearance alike (\u00a77 cond. 3).\n",
+    "coverage_interaction": "Computed on the same matrix the exam grades, over the DEFINED SUBPOOL only,\ndenominators explicit, NO coverage correction or renormalization (that would\nbe a new bar form). The \u00a73.2/\u00a73.3 definedness gates are SUPPOSED to remove\nnear-static clips, and a shrunken pool mechanically concentrates hub\nstatistics \u2014 that is a property of the candidate, not an artifact to correct\naway. Coverage is reported beside every hubness stat.\n",
+    "band_disclosure": "A candidate statistic landing INSIDE the band gets the frozen verdict \u2014\nterminal, no re-adjudication by the executor \u2014 but the report must flag\n\"landed in the calibration band; verdict is threshold-placement-sensitive\"\nand print the band and both populations. Whether the placement was right is\nowner-side review.\n",
+    "incumbent_table": {
+     "m1a__v3_sided": {
+      "skew": 0.839,
+      "pred_entropy_norm": 0.9111,
+      "max_pred_class_share": 0.0807,
+      "verdict": "PASS"
+     },
+     "m1a__v2_envelope": {
+      "skew": 0.967,
+      "pred_entropy_norm": 0.9059,
+      "max_pred_class_share": 0.0807,
+      "verdict": "PASS"
+     },
+     "m1a__all_frames": {
+      "skew": 1.188,
+      "pred_entropy_norm": 0.928,
+      "max_pred_class_share": 0.0673,
+      "verdict": "PASS"
+     },
+     "m1b_camera": {
+      "skew": 2.517,
+      "pred_entropy_norm": 0.9173,
+      "max_pred_class_share": 0.1019,
+      "verdict": "PASS"
+     },
+     "m_incumbent": {
+      "skew": 3.386,
+      "pred_entropy_norm": 0.5094,
+      "max_pred_class_share": 0.3901,
+      "verdict": "FAIL"
+     },
+     "m1c_object": {
+      "skew": 4.325,
+      "pred_entropy_norm": 0.4469,
+      "max_pred_class_share": 0.5811,
+      "verdict": "FAIL",
+      "sink_class": "polygon"
+     }
+    }
+   },
+   "landed_in_calibration_band": true,
+   "band_membership": {
+    "hubness_skew": false,
+    "pred_entropy_norm": true,
+    "max_pred_class_share": false
+   },
+   "calibration_band": {
+    "skew": [
+     1.188,
+     3.386
+    ],
+    "pred_entropy_norm": [
+     0.5094,
+     0.9059
+    ],
+    "max_pred_class_share": [
+     0.1019,
+     0.3901
+    ]
+   },
+   "stats": {
+    "k": 10,
+    "n_clips": 223,
+    "n_undefined_rows": 0,
+    "coverage": 1.0,
+    "hubness_skew": 0.9673774210542975,
+    "skew_by_k_diagnostic": {
+     "1": 1.6730901529736661,
+     "5": 0.9283447911667364,
+     "10": 0.9673774210542975
+    },
+    "k_occurrence_max": 35,
+    "k_occurrence_mean": 10.0,
+    "max_clip_knn_share": 0.01569506726457399,
+    "hub_clip_index": 17,
+    "pred_entropy_norm": 0.9058526318852034,
+    "max_pred_class_share": 0.08071748878923767,
+    "sink_class": "shadow",
+    "n_graded": 223
+   }
+  },
+  "m1a__all_frames": {
+   "pass": true,
+   "checks": {
+    "skew_ok": true,
+    "entropy_ok": true,
+    "pred_share_ok": true
+   },
+   "thresholds": {
+    "gating_k": 10,
+    "diagnostic_ks": [
+     1,
+     5,
+     10
+    ],
+    "max_hubness_skew": 3.0,
+    "min_pred_entropy_norm": 0.7,
+    "max_pred_class_share": 0.25,
+    "form": "FAIL if ANY of the three trips (OR-structured \u2014 the instruments see\ndifferent failures: the prediction column is a k=1 phenomenon, so rank-2..10\nabsorption casts no 1-NN votes and is invisible to it, which is how the\nincumbent m1b decouples). Terminal regardless of accuracy (\u00a71.4). Applies to\nEVERY candidate space/descriptor \u2014 motion and appearance alike (\u00a77 cond. 3).\n",
+    "coverage_interaction": "Computed on the same matrix the exam grades, over the DEFINED SUBPOOL only,\ndenominators explicit, NO coverage correction or renormalization (that would\nbe a new bar form). The \u00a73.2/\u00a73.3 definedness gates are SUPPOSED to remove\nnear-static clips, and a shrunken pool mechanically concentrates hub\nstatistics \u2014 that is a property of the candidate, not an artifact to correct\naway. Coverage is reported beside every hubness stat.\n",
+    "band_disclosure": "A candidate statistic landing INSIDE the band gets the frozen verdict \u2014\nterminal, no re-adjudication by the executor \u2014 but the report must flag\n\"landed in the calibration band; verdict is threshold-placement-sensitive\"\nand print the band and both populations. Whether the placement was right is\nowner-side review.\n",
+    "incumbent_table": {
+     "m1a__v3_sided": {
+      "skew": 0.839,
+      "pred_entropy_norm": 0.9111,
+      "max_pred_class_share": 0.0807,
+      "verdict": "PASS"
+     },
+     "m1a__v2_envelope": {
+      "skew": 0.967,
+      "pred_entropy_norm": 0.9059,
+      "max_pred_class_share": 0.0807,
+      "verdict": "PASS"
+     },
+     "m1a__all_frames": {
+      "skew": 1.188,
+      "pred_entropy_norm": 0.928,
+      "max_pred_class_share": 0.0673,
+      "verdict": "PASS"
+     },
+     "m1b_camera": {
+      "skew": 2.517,
+      "pred_entropy_norm": 0.9173,
+      "max_pred_class_share": 0.1019,
+      "verdict": "PASS"
+     },
+     "m_incumbent": {
+      "skew": 3.386,
+      "pred_entropy_norm": 0.5094,
+      "max_pred_class_share": 0.3901,
+      "verdict": "FAIL"
+     },
+     "m1c_object": {
+      "skew": 4.325,
+      "pred_entropy_norm": 0.4469,
+      "max_pred_class_share": 0.5811,
+      "verdict": "FAIL",
+      "sink_class": "polygon"
+     }
+    }
+   },
+   "landed_in_calibration_band": true,
+   "band_membership": {
+    "hubness_skew": true,
+    "pred_entropy_norm": false,
+    "max_pred_class_share": false
+   },
+   "calibration_band": {
+    "skew": [
+     1.188,
+     3.386
+    ],
+    "pred_entropy_norm": [
+     0.5094,
+     0.9059
+    ],
+    "max_pred_class_share": [
+     0.1019,
+     0.3901
+    ]
+   },
+   "stats": {
+    "k": 10,
+    "n_clips": 223,
+    "n_undefined_rows": 0,
+    "coverage": 1.0,
+    "hubness_skew": 1.1881623187676842,
+    "skew_by_k_diagnostic": {
+     "1": 1.3127178548484986,
+     "5": 1.3625978982228435,
+     "10": 1.1881623187676842
+    },
+    "k_occurrence_max": 40,
+    "k_occurrence_mean": 10.0,
+    "max_clip_knn_share": 0.017937219730941704,
+    "hub_clip_index": 43,
+    "pred_entropy_norm": 0.9280149348731632,
+    "max_pred_class_share": 0.06726457399103139,
+    "sink_class": "portal",
+    "n_graded": 223
+   }
+  },
+  "m1b_camera": {
+   "pass": true,
+   "checks": {
+    "skew_ok": true,
+    "entropy_ok": true,
+    "pred_share_ok": true
+   },
+   "thresholds": {
+    "gating_k": 10,
+    "diagnostic_ks": [
+     1,
+     5,
+     10
+    ],
+    "max_hubness_skew": 3.0,
+    "min_pred_entropy_norm": 0.7,
+    "max_pred_class_share": 0.25,
+    "form": "FAIL if ANY of the three trips (OR-structured \u2014 the instruments see\ndifferent failures: the prediction column is a k=1 phenomenon, so rank-2..10\nabsorption casts no 1-NN votes and is invisible to it, which is how the\nincumbent m1b decouples). Terminal regardless of accuracy (\u00a71.4). Applies to\nEVERY candidate space/descriptor \u2014 motion and appearance alike (\u00a77 cond. 3).\n",
+    "coverage_interaction": "Computed on the same matrix the exam grades, over the DEFINED SUBPOOL only,\ndenominators explicit, NO coverage correction or renormalization (that would\nbe a new bar form). The \u00a73.2/\u00a73.3 definedness gates are SUPPOSED to remove\nnear-static clips, and a shrunken pool mechanically concentrates hub\nstatistics \u2014 that is a property of the candidate, not an artifact to correct\naway. Coverage is reported beside every hubness stat.\n",
+    "band_disclosure": "A candidate statistic landing INSIDE the band gets the frozen verdict \u2014\nterminal, no re-adjudication by the executor \u2014 but the report must flag\n\"landed in the calibration band; verdict is threshold-placement-sensitive\"\nand print the band and both populations. Whether the placement was right is\nowner-side review.\n",
+    "incumbent_table": {
+     "m1a__v3_sided": {
+      "skew": 0.839,
+      "pred_entropy_norm": 0.9111,
+      "max_pred_class_share": 0.0807,
+      "verdict": "PASS"
+     },
+     "m1a__v2_envelope": {
+      "skew": 0.967,
+      "pred_entropy_norm": 0.9059,
+      "max_pred_class_share": 0.0807,
+      "verdict": "PASS"
+     },
+     "m1a__all_frames": {
+      "skew": 1.188,
+      "pred_entropy_norm": 0.928,
+      "max_pred_class_share": 0.0673,
+      "verdict": "PASS"
+     },
+     "m1b_camera": {
+      "skew": 2.517,
+      "pred_entropy_norm": 0.9173,
+      "max_pred_class_share": 0.1019,
+      "verdict": "PASS"
+     },
+     "m_incumbent": {
+      "skew": 3.386,
+      "pred_entropy_norm": 0.5094,
+      "max_pred_class_share": 0.3901,
+      "verdict": "FAIL"
+     },
+     "m1c_object": {
+      "skew": 4.325,
+      "pred_entropy_norm": 0.4469,
+      "max_pred_class_share": 0.5811,
+      "verdict": "FAIL",
+      "sink_class": "polygon"
+     }
+    }
+   },
+   "landed_in_calibration_band": true,
+   "band_membership": {
+    "hubness_skew": true,
+    "pred_entropy_norm": false,
+    "max_pred_class_share": false
+   },
+   "calibration_band": {
+    "skew": [
+     1.188,
+     3.386
+    ],
+    "pred_entropy_norm": [
+     0.5094,
+     0.9059
+    ],
+    "max_pred_class_share": [
+     0.1019,
+     0.3901
+    ]
+   },
+   "stats": {
+    "k": 10,
+    "n_clips": 223,
+    "n_undefined_rows": 7,
+    "coverage": 0.968609865470852,
+    "hubness_skew": 2.51712850692605,
+    "skew_by_k_diagnostic": {
+     "1": 3.851273328047569,
+     "5": 2.694308291658353,
+     "10": 2.51712850692605
+    },
+    "k_occurrence_max": 66,
+    "k_occurrence_mean": 9.68609865470852,
+    "max_clip_knn_share": 0.030555555555555555,
+    "hub_clip_index": 146,
+    "pred_entropy_norm": 0.917257450072464,
+    "max_pred_class_share": 0.10185185185185185,
+    "sink_class": "portal",
+    "n_graded": 216
+   }
+  },
+  "m_incumbent": {
+   "pass": false,
+   "checks": {
+    "skew_ok": false,
+    "entropy_ok": false,
+    "pred_share_ok": false
+   },
+   "thresholds": {
+    "gating_k": 10,
+    "diagnostic_ks": [
+     1,
+     5,
+     10
+    ],
+    "max_hubness_skew": 3.0,
+    "min_pred_entropy_norm": 0.7,
+    "max_pred_class_share": 0.25,
+    "form": "FAIL if ANY of the three trips (OR-structured \u2014 the instruments see\ndifferent failures: the prediction column is a k=1 phenomenon, so rank-2..10\nabsorption casts no 1-NN votes and is invisible to it, which is how the\nincumbent m1b decouples). Terminal regardless of accuracy (\u00a71.4). Applies to\nEVERY candidate space/descriptor \u2014 motion and appearance alike (\u00a77 cond. 3).\n",
+    "coverage_interaction": "Computed on the same matrix the exam grades, over the DEFINED SUBPOOL only,\ndenominators explicit, NO coverage correction or renormalization (that would\nbe a new bar form). The \u00a73.2/\u00a73.3 definedness gates are SUPPOSED to remove\nnear-static clips, and a shrunken pool mechanically concentrates hub\nstatistics \u2014 that is a property of the candidate, not an artifact to correct\naway. Coverage is reported beside every hubness stat.\n",
+    "band_disclosure": "A candidate statistic landing INSIDE the band gets the frozen verdict \u2014\nterminal, no re-adjudication by the executor \u2014 but the report must flag\n\"landed in the calibration band; verdict is threshold-placement-sensitive\"\nand print the band and both populations. Whether the placement was right is\nowner-side review.\n",
+    "incumbent_table": {
+     "m1a__v3_sided": {
+      "skew": 0.839,
+      "pred_entropy_norm": 0.9111,
+      "max_pred_class_share": 0.0807,
+      "verdict": "PASS"
+     },
+     "m1a__v2_envelope": {
+      "skew": 0.967,
+      "pred_entropy_norm": 0.9059,
+      "max_pred_class_share": 0.0807,
+      "verdict": "PASS"
+     },
+     "m1a__all_frames": {
+      "skew": 1.188,
+      "pred_entropy_norm": 0.928,
+      "max_pred_class_share": 0.0673,
+      "verdict": "PASS"
+     },
+     "m1b_camera": {
+      "skew": 2.517,
+      "pred_entropy_norm": 0.9173,
+      "max_pred_class_share": 0.1019,
+      "verdict": "PASS"
+     },
+     "m_incumbent": {
+      "skew": 3.386,
+      "pred_entropy_norm": 0.5094,
+      "max_pred_class_share": 0.3901,
+      "verdict": "FAIL"
+     },
+     "m1c_object": {
+      "skew": 4.325,
+      "pred_entropy_norm": 0.4469,
+      "max_pred_class_share": 0.5811,
+      "verdict": "FAIL",
+      "sink_class": "polygon"
+     }
+    }
+   },
+   "landed_in_calibration_band": false,
+   "band_membership": {
+    "hubness_skew": false,
+    "pred_entropy_norm": false,
+    "max_pred_class_share": false
+   },
+   "calibration_band": {
+    "skew": [
+     1.188,
+     3.386
+    ],
+    "pred_entropy_norm": [
+     0.5094,
+     0.9059
+    ],
+    "max_pred_class_share": [
+     0.1019,
+     0.3901
+    ]
+   },
+   "stats": {
+    "k": 10,
+    "n_clips": 223,
+    "n_undefined_rows": 0,
+    "coverage": 1.0,
+    "hubness_skew": 3.386203527712213,
+    "skew_by_k_diagnostic": {
+     "1": 6.942611579985092,
+     "5": 4.0645606685164335,
+     "10": 3.386203527712213
+    },
+    "k_occurrence_max": 139,
+    "k_occurrence_mean": 10.0,
+    "max_clip_knn_share": 0.06233183856502242,
+    "hub_clip_index": 163,
+    "pred_entropy_norm": 0.5093790532897065,
+    "max_pred_class_share": 0.3901345291479821,
+    "sink_class": "illustration_scene",
+    "n_graded": 223
+   }
+  },
+  "m1c_object": {
+   "pass": false,
+   "checks": {
+    "skew_ok": false,
+    "entropy_ok": false,
+    "pred_share_ok": false
+   },
+   "thresholds": {
+    "gating_k": 10,
+    "diagnostic_ks": [
+     1,
+     5,
+     10
+    ],
+    "max_hubness_skew": 3.0,
+    "min_pred_entropy_norm": 0.7,
+    "max_pred_class_share": 0.25,
+    "form": "FAIL if ANY of the three trips (OR-structured \u2014 the instruments see\ndifferent failures: the prediction column is a k=1 phenomenon, so rank-2..10\nabsorption casts no 1-NN votes and is invisible to it, which is how the\nincumbent m1b decouples). Terminal regardless of accuracy (\u00a71.4). Applies to\nEVERY candidate space/descriptor \u2014 motion and appearance alike (\u00a77 cond. 3).\n",
+    "coverage_interaction": "Computed on the same matrix the exam grades, over the DEFINED SUBPOOL only,\ndenominators explicit, NO coverage correction or renormalization (that would\nbe a new bar form). The \u00a73.2/\u00a73.3 definedness gates are SUPPOSED to remove\nnear-static clips, and a shrunken pool mechanically concentrates hub\nstatistics \u2014 that is a property of the candidate, not an artifact to correct\naway. Coverage is reported beside every hubness stat.\n",
+    "band_disclosure": "A candidate statistic landing INSIDE the band gets the frozen verdict \u2014\nterminal, no re-adjudication by the executor \u2014 but the report must flag\n\"landed in the calibration band; verdict is threshold-placement-sensitive\"\nand print the band and both populations. Whether the placement was right is\nowner-side review.\n",
+    "incumbent_table": {
+     "m1a__v3_sided": {
+      "skew": 0.839,
+      "pred_entropy_norm": 0.9111,
+      "max_pred_class_share": 0.0807,
+      "verdict": "PASS"
+     },
+     "m1a__v2_envelope": {
+      "skew": 0.967,
+      "pred_entropy_norm": 0.9059,
+      "max_pred_class_share": 0.0807,
+      "verdict": "PASS"
+     },
+     "m1a__all_frames": {
+      "skew": 1.188,
+      "pred_entropy_norm": 0.928,
+      "max_pred_class_share": 0.0673,
+      "verdict": "PASS"
+     },
+     "m1b_camera": {
+      "skew": 2.517,
+      "pred_entropy_norm": 0.9173,
+      "max_pred_class_share": 0.1019,
+      "verdict": "PASS"
+     },
+     "m_incumbent": {
+      "skew": 3.386,
+      "pred_entropy_norm": 0.5094,
+      "max_pred_class_share": 0.3901,
+      "verdict": "FAIL"
+     },
+     "m1c_object": {
+      "skew": 4.325,
+      "pred_entropy_norm": 0.4469,
+      "max_pred_class_share": 0.5811,
+      "verdict": "FAIL",
+      "sink_class": "polygon"
+     }
+    }
+   },
+   "landed_in_calibration_band": false,
+   "band_membership": {
+    "hubness_skew": false,
+    "pred_entropy_norm": false,
+    "max_pred_class_share": false
+   },
+   "calibration_band": {
+    "skew": [
+     1.188,
+     3.386
+    ],
+    "pred_entropy_norm": [
+     0.5094,
+     0.9059
+    ],
+    "max_pred_class_share": [
+     0.1019,
+     0.3901
+    ]
+   },
+   "stats": {
+    "k": 10,
+    "n_clips": 223,
+    "n_undefined_rows": 1,
+    "coverage": 0.9955156950672646,
+    "hubness_skew": 4.324850568263539,
+    "skew_by_k_diagnostic": {
+     "1": 13.544347447161442,
+     "5": 6.355476376446105,
+     "10": 4.324850568263539
+    },
+    "k_occurrence_max": 201,
+    "k_occurrence_mean": 9.955156950672645,
+    "max_clip_knn_share": 0.09054054054054055,
+    "hub_clip_index": 137,
+    "pred_entropy_norm": 0.4469012158098534,
+    "max_pred_class_share": 0.581081081081081,
+    "sink_class": "polygon",
+    "n_graded": 222
+   }
+  }
+ }
+}

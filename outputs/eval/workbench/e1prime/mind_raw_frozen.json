@@ -1,0 +1,32 @@
+{
+ "what": "the \u00a71.2 min-D floor, recomputed in RAW embedding space",
+ "why": "the persisted floor was fitted in WHITENED space and is meaningless under the directive's raw geometry. The PERCENTILE is frozen (gates.yaml min_d.percentile = 5.0) and was NOT re-chosen.",
+ "class": "CORPUS-ONLY CALIBRATION \u2014 reads the frozen corpus and nothing else. No candidate signature, distance, IV number or exam exists at this point. Frozen in its own commit before any candidate distance.",
+ "percentile": 5.0,
+ "floor_value": 0.6034994721412659,
+ "n_clips": 223,
+ "n_low_D": 12,
+ "low_D_clips": [
+  "color_rain/color_rain_0.mp4",
+  "color_rain/color_rain_8.mp4",
+  "cotton_cloud/cotton_cloud_8.mp4",
+  "illustration_scene/illustration_scene_2.mp4",
+  "money_rain/money_rain_1.mp4",
+  "money_rain/money_rain_2.mp4",
+  "money_rain/money_rain_3.mp4",
+  "mystification/mystification_3.mp4",
+  "portal/portal_0.mp4",
+  "saint_glow/saint_glow_0.mp4",
+  "saint_glow/saint_glow_2.mp4",
+  "saint_glow/saint_glow_3.mp4"
+ ],
+ "D_distribution": {
+  "min": 0.3166651129722595,
+  "p5": 0.6034994721412659,
+  "p50": 1.1475889682769775,
+  "p95": 1.3896870613098145,
+  "max": 1.4433778524398804,
+  "mean": 1.102716088294983
+ },
+ "scope": "low_D clips are FLAGGED and EXCLUDED from the gamma-signature (every channel divides by D) and NEVER zeroed. Coverage reported beside accuracy."
+}

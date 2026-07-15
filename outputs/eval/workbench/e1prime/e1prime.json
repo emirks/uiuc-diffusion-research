@@ -1,0 +1,1417 @@
+{
+ "authority": "E1PRIME_DIRECTIVE.md \u00a72, frozen at aace78d",
+ "instrument_validity": {
+  "iv1": {
+   "name": "IV1_effect_vs_nothing",
+   "min_accuracy": 0.9,
+   "accuracy": 0.9357142857142857,
+   "pass": true,
+   "coverage": 0.9417040358744395,
+   "n_pooled": 446,
+   "n_defined": 420,
+   "per_class_recall": {
+    "null": 1.0,
+    "real": 0.8714285714285714
+   },
+   "chance": 0.5,
+   "disclosure_a_hat_b_hat_only": {
+    "accuracy": 0.8476190476190476,
+    "coverage": 0.9417040358744395,
+    "gating": false,
+    "why": "the m~ channel is EXACTLY 0 for every rendered null by construction (make_lerp is idempotent on its own endpoints), so the full-signature 1-NN is partly tautological. This column uses only the two channels that are not structurally constant for the 'nothing' class. It is reported so owner review can see whether the IV verdict rests on the tautological channel. IT DOES NOT ALTER THE VERDICT."
+   }
+  },
+  "iv2": {
+   "name": "IV2_snap_vs_nothing",
+   "min_accuracy": 0.9,
+   "accuracy": 1.0,
+   "pass": true,
+   "coverage": 1.0,
+   "n_pooled": 74,
+   "n_defined": 74,
+   "per_class_recall": {
+    "cut": 1.0,
+    "lerp": 1.0
+   },
+   "chance": 0.5,
+   "disclosure_a_hat_b_hat_only": {
+    "accuracy": 1.0,
+    "coverage": 1.0,
+    "gating": false,
+    "why": "the m~ channel is EXACTLY 0 for every rendered null by construction (make_lerp is idempotent on its own endpoints), so the full-signature 1-NN is partly tautological. This column uses only the two channels that are not structurally constant for the 'nothing' class. It is reported so owner review can see whether the IV verdict rests on the tautological channel. IT DOES NOT ALTER THE VERDICT."
+   },
+   "n_pairs": 37,
+   "pair_coverage": 1.0,
+   "classes": [
+    "air_bending",
+    "animalization",
+    "color_rain",
+    "cotton_cloud",
+    "display_transition",
+    "earth_element",
+    "earth_wave",
+    "fire_element",
+    "firelava",
+    "flame",
+    "flying_cam_transition",
+    "gas_transformation",
+    "giant_grab",
+    "hero_flight",
+    "hole_transition",
+    "illustration_scene",
+    "live_concert",
+    "luminous_gaze",
+    "melt_transition",
+    "money_rain",
+    "monstrosity",
+    "mystification",
+    "nature_bloom",
+    "plasma_explosion",
+    "polygon",
+    "portal",
+    "raven_transition",
+    "run_set_on_fire",
+    "saint_glow",
+    "sakura_petals",
+    "shadow",
+    "shadow_smoke",
+    "super_fast_run",
+    "water_bending",
+    "water_element",
+    "wireframe",
+    "wonderland"
+   ]
+  },
+  "gate": {
+   "rule": "E1PRIME_DIRECTIVE \u00a72.3: the kill verdict binds the hypothesis only if BOTH instrument-validity preconditions hold (>= 0.90 each); otherwise the recorded verdict is INSTRUMENT-INVALID and the workbench closes UNADJUDICATED, with no repair attempts (\u00a72.6 case 2).",
+   "iv1": {
+    "accuracy": 0.9357142857142857,
+    "min": 0.9,
+    "pass": true
+   },
+   "iv2": {
+    "accuracy": 1.0,
+    "min": 0.9,
+    "pass": true
+   },
+   "instrument_valid": true,
+   "verdict": "INSTRUMENT VALID \u2014 the kill rule binds the hypothesis"
+  }
+ },
+ "kill_rule": {
+  "rule": "If the candidate fails to beat pinned m1a__v3_sided on BOTH Cohen's d AND\nmisretrieved count -> KILL, one appendix paragraph, workbench closed. Strictly\nbeat both to survive. BINDING PER 2.3 (instrument validity).\n",
+  "beats_cohens_d": {
+   "candidate": 0.7978537923945757,
+   "incumbent": 1.522006,
+   "pass": false
+  },
+  "beats_misretrieved": {
+   "candidate": 183,
+   "incumbent": 73,
+   "pass": false
+  },
+  "survives": false,
+  "binding_on_the_hypothesis": true,
+  "verdict": "KILL \u2014 the candidate fails to beat m1a__v3_sided on both"
+ },
+ "section7_conditions": {
+  "cohens_d_ge_1.772006": {
+   "value": 0.7978537923945757,
+   "threshold": 1.772006,
+   "pass": false
+  },
+  "misretrieved_lt_73": {
+   "value": 183,
+   "threshold": 73,
+   "pass": false
+  },
+  "hubness_gate": {
+   "value": {
+    "k": 10,
+    "n_clips": 223,
+    "n_undefined_rows": 13,
+    "coverage": 0.9417040358744395,
+    "hubness_skew": 0.4130950811206496,
+    "skew_by_k_diagnostic": {
+     "1": 1.038310940604935,
+     "5": 0.4456255949025085,
+     "10": 0.4130950811206496
+    },
+    "k_occurrence_max": 27,
+    "k_occurrence_mean": 9.417040358744394,
+    "max_clip_knn_share": 0.012857142857142857,
+    "hub_clip_index": 84,
+    "pred_entropy_norm": 0.9204902071785755,
+    "max_pred_class_share": 0.0761904761904762,
+    "sink_class": "shadow",
+    "n_graded": 210
+   },
+   "pass": true
+  },
+  "coverage_not_materially_narrower": {
+   "value": 0.9417040358744395,
+   "incumbent": 1.0,
+   "shortfall_pp": 5.83,
+   "pass": null,
+   "OWNER_RESERVED": "\u00a77 cond. 4 says coverage must be 'not MATERIALLY narrower' than the incumbent's 1.0000. 'Materially' is not a threshold, and the executor does not invent one (\u00a72.7: ambiguity -> escalate, never choose). The FACT is reported: 0.9417 vs 1.0000, i.e. 13/223 clips undefined (12 low_D + 1 empty core). The shortfall is entirely a consequence of the FROZEN \u00a71.2 min-D guard, which the gamma-signature triggers and E1's delta did not (the delta contains no D; every gamma channel divides by it). MOOT for the \u00a77 call: conditions 1 and 2 fail independently and terminally."
+  },
+  "probe_battery": {
+   "value": "IV1/IV2 are the only probe-battery elements this cycle registers; the full \u00a77 battery (twins through M2a, sibling-vs-control per class, lerp at the floor) is NOT run \u2014 E1' is a kill test, not an adoption run.",
+   "pass": null
+  },
+  "all_pass": false,
+  "all_pass_note": "False because conditions 1 (Cohen's d) and 2 (misretrieved) FAIL. Two conditions are not computed as pass/fail: the coverage condition is owner-reserved (see above) and the full probe battery is not part of a kill test. Neither can change the \u00a77 outcome."
+ },
+ "arms": {
+  "A_gating": {
+   "metric": "A_gating",
+   "accuracy_1nn": 0.19047619047619047,
+   "separation_cohens_d": 0.7978537923945757,
+   "coverage": 0.9417040358744395,
+   "misretrieved": 183,
+   "n_clips": 223,
+   "chance": 0.06726457399103139,
+   "accuracy_wilson95": [
+    0.14311234878874343,
+    0.2489610363711132
+   ],
+   "per_class_recall": {
+    "air_bending": 0.0,
+    "animalization": 0.0,
+    "color_rain": 0.0,
+    "cotton_cloud": 0.2,
+    "display_transition": 0.0,
+    "earth_element": 0.16666666666666666,
+    "earth_wave": 0.0,
+    "fire_element": 0.0,
+    "firelava": 0.0,
+    "flame": 0.0,
+    "flying_cam_transition": 0.0,
+    "gas_transformation": 0.3,
+    "giant_grab": 0.2,
+    "hero_flight": 0.4,
+    "hole_transition": 0.0,
+    "illustration_scene": 0.3333333333333333,
+    "jump_transition": 0.0,
+    "live_concert": 0.5,
+    "luminous_gaze": 0.0,
+    "melt_transition": 0.0,
+    "money_rain": 0.25,
+    "monstrosity": 0.0,
+    "mystification": 0.0,
+    "nature_bloom": 0.0,
+    "plasma_explosion": 0.0,
+    "polygon": 0.3333333333333333,
+    "portal": 0.4166666666666667,
+    "raven_transition": 0.0,
+    "run_set_on_fire": 0.0,
+    "saint_glow": 0.0,
+    "sakura_petals": 0.0,
+    "seamless_transition": 0.0,
+    "shadow": 0.4,
+    "shadow_smoke": 0.1,
+    "super_fast_run": 0.16666666666666666,
+    "water_bending": 0.0,
+    "water_element": 0.6,
+    "wireframe": 0.2222222222222222,
+    "wonderland": 0.0
+   },
+   "stratum_recalls": {
+    "camera": {
+     "value": 0.14285714285714285,
+     "n_classes": 14,
+     "n_classes_nan": 0,
+     "nan_classes": [],
+     "class_coverage": 1.0,
+     "per_class": {
+      "air_bending": 0.0,
+      "earth_element": 0.16666666666666666,
+      "earth_wave": 0.0,
+      "firelava": 0.0,
+      "flying_cam_transition": 0.0,
+      "hero_flight": 0.4,
+      "illustration_scene": 0.3333333333333333,
+      "live_concert": 0.5,
+      "plasma_explosion": 0.0,
+      "polygon": 0.3333333333333333,
+      "raven_transition": 0.0,
+      "shadow_smoke": 0.1,
+      "super_fast_run": 0.16666666666666666,
+      "water_bending": 0.0
+     }
+    },
+    "object": {
+     "value": 0.10925925925925926,
+     "n_classes": 18,
+     "n_classes_nan": 0,
+     "nan_classes": [],
+     "class_coverage": 1.0,
+     "per_class": {
+      "air_bending": 0.0,
+      "animalization": 0.0,
+      "color_rain": 0.0,
+      "cotton_cloud": 0.2,
+      "earth_wave": 0.0,
+      "firelava": 0.0,
+      "gas_transformation": 0.3,
+      "giant_grab": 0.2,
+      "live_concert": 0.5,
+      "luminous_gaze": 0.0,
+      "melt_transition": 0.0,
+      "money_rain": 0.25,
+      "mystification": 0.0,
+      "portal": 0.4166666666666667,
+      "raven_transition": 0.0,
+      "saint_glow": 0.0,
+      "shadow_smoke": 0.1,
+      "water_bending": 0.0
+     }
+    }
+   },
+   "primary_stratum": null,
+   "hubness": {
+    "pass": true,
+    "checks": {
+     "skew_ok": true,
+     "entropy_ok": true,
+     "pred_share_ok": true
+    },
+    "thresholds": {
+     "gating_k": 10,
+     "diagnostic_ks": [
+      1,
+      5,
+      10
+     ],
+     "max_hubness_skew": 3.0,
+     "min_pred_entropy_norm": 0.7,
+     "max_pred_class_share": 0.25,
+     "form": "FAIL if ANY of the three trips (OR-structured \u2014 the instruments see\ndifferent failures: the prediction column is a k=1 phenomenon, so rank-2..10\nabsorption casts no 1-NN votes and is invisible to it, which is how the\nincumbent m1b decouples). Terminal regardless of accuracy (\u00a71.4). Applies to\nEVERY candidate space/descriptor \u2014 motion and appearance alike (\u00a77 cond. 3).\n",
+     "coverage_interaction": "Computed on the same matrix the exam grades, over the DEFINED SUBPOOL only,\ndenominators explicit, NO coverage correction or renormalization (that would\nbe a new bar form). The \u00a73.2/\u00a73.3 definedness gates are SUPPOSED to remove\nnear-static clips, and a shrunken pool mechanically concentrates hub\nstatistics \u2014 that is a property of the candidate, not an artifact to correct\naway. Coverage is reported beside every hubness stat.\n",
+     "band_disclosure": "A candidate statistic landing INSIDE the band gets the frozen verdict \u2014\nterminal, no re-adjudication by the executor \u2014 but the report must flag\n\"landed in the calibration band; verdict is threshold-placement-sensitive\"\nand print the band and both populations. Whether the placement was right is\nowner-side review.\n",
+     "incumbent_table": {
+      "m1a__v3_sided": {
+       "skew": 0.839,
+       "pred_entropy_norm": 0.9111,
+       "max_pred_class_share": 0.0807,
+       "verdict": "PASS"
+      },
+      "m1a__v2_envelope": {
+       "skew": 0.967,
+       "pred_entropy_norm": 0.9059,
+       "max_pred_class_share": 0.0807,
+       "verdict": "PASS"
+      },
+      "m1a__all_frames": {
+       "skew": 1.188,
+       "pred_entropy_norm": 0.928,
+       "max_pred_class_share": 0.0673,
+       "verdict": "PASS"
+      },
+      "m1b_camera": {
+       "skew": 2.517,
+       "pred_entropy_norm": 0.9173,
+       "max_pred_class_share": 0.1019,
+       "verdict": "PASS"
+      },
+      "m_incumbent": {
+       "skew": 3.386,
+       "pred_entropy_norm": 0.5094,
+       "max_pred_class_share": 0.3901,
+       "verdict": "FAIL"
+      },
+      "m1c_object": {
+       "skew": 4.325,
+       "pred_entropy_norm": 0.4469,
+       "max_pred_class_share": 0.5811,
+       "verdict": "FAIL",
+       "sink_class": "polygon"
+      }
+     }
+    },
+    "landed_in_calibration_band": false,
+    "band_membership": {
+     "hubness_skew": false,
+     "pred_entropy_norm": false,
+     "max_pred_class_share": false
+    },
+    "calibration_band": {
+     "skew": [
+      1.188,
+      3.386
+     ],
+     "pred_entropy_norm": [
+      0.5094,
+      0.9059
+     ],
+     "max_pred_class_share": [
+      0.1019,
+      0.3901
+     ]
+    },
+    "stats": {
+     "k": 10,
+     "n_clips": 223,
+     "n_undefined_rows": 13,
+     "coverage": 0.9417040358744395,
+     "hubness_skew": 0.4130950811206496,
+     "skew_by_k_diagnostic": {
+      "1": 1.038310940604935,
+      "5": 0.4456255949025085,
+      "10": 0.4130950811206496
+     },
+     "k_occurrence_max": 27,
+     "k_occurrence_mean": 9.417040358744394,
+     "max_clip_knn_share": 0.012857142857142857,
+     "hub_clip_index": 84,
+     "pred_entropy_norm": 0.9204902071785755,
+     "max_pred_class_share": 0.0761904761904762,
+     "sink_class": "shadow",
+     "n_graded": 210
+    }
+   },
+   "definedness": {
+    "n_clips": 223,
+    "n_undefined_rows": 13,
+    "coverage": 0.9417040358744395,
+    "undefined_by_reason": {
+     "low_D (below the frozen 5th-pct raw chord floor; every channel divides by D)": 12,
+     "core mask < 2 frames": 1
+    },
+    "nan_cell_fraction": 0.11319350881779243
+   }
+  },
+  "B_no_null_sub": {
+   "metric": "B_no_null_sub",
+   "accuracy_1nn": 0.21428571428571427,
+   "separation_cohens_d": 0.6793924091518854,
+   "coverage": 0.9417040358744395,
+   "misretrieved": 178,
+   "n_clips": 223,
+   "chance": 0.06726457399103139,
+   "accuracy_wilson95": [
+    0.16418250020720604,
+    0.2746544707095847
+   ],
+   "per_class_recall": {
+    "air_bending": 0.0,
+    "animalization": 0.125,
+    "color_rain": 0.3333333333333333,
+    "cotton_cloud": 0.0,
+    "display_transition": 0.0,
+    "earth_element": 0.0,
+    "earth_wave": 0.0,
+    "fire_element": 0.0,
+    "firelava": 0.0,
+    "flame": 0.0,
+    "flying_cam_transition": 0.0,
+    "gas_transformation": 0.3,
+    "giant_grab": 0.2,
+    "hero_flight": 0.5,
+    "hole_transition": 0.0,
+    "illustration_scene": 0.2222222222222222,
+    "jump_transition": 0.0,
+    "live_concert": 0.875,
+    "luminous_gaze": 0.0,
+    "melt_transition": 0.0,
+    "money_rain": 0.5,
+    "monstrosity": 0.0,
+    "mystification": 0.0,
+    "nature_bloom": 0.0,
+    "plasma_explosion": 0.25,
+    "polygon": 0.3333333333333333,
+    "portal": 0.3333333333333333,
+    "raven_transition": 0.0,
+    "run_set_on_fire": 0.0,
+    "saint_glow": 0.0,
+    "sakura_petals": 0.0,
+    "seamless_transition": 0.0,
+    "shadow": 0.4,
+    "shadow_smoke": 0.1,
+    "super_fast_run": 0.16666666666666666,
+    "water_bending": 0.0,
+    "water_element": 0.4,
+    "wireframe": 0.3333333333333333,
+    "wonderland": 0.0
+   },
+   "stratum_recalls": {
+    "camera": {
+     "value": 0.17480158730158732,
+     "n_classes": 14,
+     "n_classes_nan": 0,
+     "nan_classes": [],
+     "class_coverage": 1.0,
+     "per_class": {
+      "air_bending": 0.0,
+      "earth_element": 0.0,
+      "earth_wave": 0.0,
+      "firelava": 0.0,
+      "flying_cam_transition": 0.0,
+      "hero_flight": 0.5,
+      "illustration_scene": 0.2222222222222222,
+      "live_concert": 0.875,
+      "plasma_explosion": 0.25,
+      "polygon": 0.3333333333333333,
+      "raven_transition": 0.0,
+      "shadow_smoke": 0.1,
+      "super_fast_run": 0.16666666666666666,
+      "water_bending": 0.0
+     }
+    },
+    "object": {
+     "value": 0.1537037037037037,
+     "n_classes": 18,
+     "n_classes_nan": 0,
+     "nan_classes": [],
+     "class_coverage": 1.0,
+     "per_class": {
+      "air_bending": 0.0,
+      "animalization": 0.125,
+      "color_rain": 0.3333333333333333,
+      "cotton_cloud": 0.0,
+      "earth_wave": 0.0,
+      "firelava": 0.0,
+      "gas_transformation": 0.3,
+      "giant_grab": 0.2,
+      "live_concert": 0.875,
+      "luminous_gaze": 0.0,
+      "melt_transition": 0.0,
+      "money_rain": 0.5,
+      "mystification": 0.0,
+      "portal": 0.3333333333333333,
+      "raven_transition": 0.0,
+      "saint_glow": 0.0,
+      "shadow_smoke": 0.1,
+      "water_bending": 0.0
+     }
+    }
+   },
+   "primary_stratum": null,
+   "hubness": {
+    "pass": true,
+    "checks": {
+     "skew_ok": true,
+     "entropy_ok": true,
+     "pred_share_ok": true
+    },
+    "thresholds": {
+     "gating_k": 10,
+     "diagnostic_ks": [
+      1,
+      5,
+      10
+     ],
+     "max_hubness_skew": 3.0,
+     "min_pred_entropy_norm": 0.7,
+     "max_pred_class_share": 0.25,
+     "form": "FAIL if ANY of the three trips (OR-structured \u2014 the instruments see\ndifferent failures: the prediction column is a k=1 phenomenon, so rank-2..10\nabsorption casts no 1-NN votes and is invisible to it, which is how the\nincumbent m1b decouples). Terminal regardless of accuracy (\u00a71.4). Applies to\nEVERY candidate space/descriptor \u2014 motion and appearance alike (\u00a77 cond. 3).\n",
+     "coverage_interaction": "Computed on the same matrix the exam grades, over the DEFINED SUBPOOL only,\ndenominators explicit, NO coverage correction or renormalization (that would\nbe a new bar form). The \u00a73.2/\u00a73.3 definedness gates are SUPPOSED to remove\nnear-static clips, and a shrunken pool mechanically concentrates hub\nstatistics \u2014 that is a property of the candidate, not an artifact to correct\naway. Coverage is reported beside every hubness stat.\n",
+     "band_disclosure": "A candidate statistic landing INSIDE the band gets the frozen verdict \u2014\nterminal, no re-adjudication by the executor \u2014 but the report must flag\n\"landed in the calibration band; verdict is threshold-placement-sensitive\"\nand print the band and both populations. Whether the placement was right is\nowner-side review.\n",
+     "incumbent_table": {
+      "m1a__v3_sided": {
+       "skew": 0.839,
+       "pred_entropy_norm": 0.9111,
+       "max_pred_class_share": 0.0807,
+       "verdict": "PASS"
+      },
+      "m1a__v2_envelope": {
+       "skew": 0.967,
+       "pred_entropy_norm": 0.9059,
+       "max_pred_class_share": 0.0807,
+       "verdict": "PASS"
+      },
+      "m1a__all_frames": {
+       "skew": 1.188,
+       "pred_entropy_norm": 0.928,
+       "max_pred_class_share": 0.0673,
+       "verdict": "PASS"
+      },
+      "m1b_camera": {
+       "skew": 2.517,
+       "pred_entropy_norm": 0.9173,
+       "max_pred_class_share": 0.1019,
+       "verdict": "PASS"
+      },
+      "m_incumbent": {
+       "skew": 3.386,
+       "pred_entropy_norm": 0.5094,
+       "max_pred_class_share": 0.3901,
+       "verdict": "FAIL"
+      },
+      "m1c_object": {
+       "skew": 4.325,
+       "pred_entropy_norm": 0.4469,
+       "max_pred_class_share": 0.5811,
+       "verdict": "FAIL",
+       "sink_class": "polygon"
+      }
+     }
+    },
+    "landed_in_calibration_band": true,
+    "band_membership": {
+     "hubness_skew": false,
+     "pred_entropy_norm": true,
+     "max_pred_class_share": false
+    },
+    "calibration_band": {
+     "skew": [
+      1.188,
+      3.386
+     ],
+     "pred_entropy_norm": [
+      0.5094,
+      0.9059
+     ],
+     "max_pred_class_share": [
+      0.1019,
+      0.3901
+     ]
+    },
+    "stats": {
+     "k": 10,
+     "n_clips": 223,
+     "n_undefined_rows": 13,
+     "coverage": 0.9417040358744395,
+     "hubness_skew": 0.21024392228734173,
+     "skew_by_k_diagnostic": {
+      "1": 0.9690083953621866,
+      "5": 0.38352402200244934,
+      "10": 0.21024392228734173
+     },
+     "k_occurrence_max": 25,
+     "k_occurrence_mean": 9.417040358744394,
+     "max_clip_knn_share": 0.011904761904761904,
+     "hub_clip_index": 84,
+     "pred_entropy_norm": 0.8993960412706218,
+     "max_pred_class_share": 0.09047619047619047,
+     "sink_class": "shadow",
+     "n_graded": 210
+    }
+   },
+   "definedness": {
+    "n_clips": 223,
+    "n_undefined_rows": 13,
+    "coverage": 0.9417040358744395,
+    "undefined_by_reason": {
+     "low_D (below the frozen 5th-pct raw chord floor; every channel divides by D)": 12,
+     "core mask < 2 frames": 1
+    },
+    "nan_cell_fraction": 0.11319350881779243
+   }
+  },
+  "C_ledoit_wolf": {
+   "metric": "C_ledoit_wolf",
+   "accuracy_1nn": 0.20476190476190476,
+   "separation_cohens_d": 0.8047140473835519,
+   "coverage": 0.9417040358744395,
+   "misretrieved": 180,
+   "n_clips": 223,
+   "chance": 0.06726457399103139,
+   "accuracy_wilson95": [
+    0.15572054612380445,
+    0.26441099049021266
+   ],
+   "per_class_recall": {
+    "air_bending": 0.0,
+    "animalization": 0.0,
+    "color_rain": 0.0,
+    "cotton_cloud": 0.0,
+    "display_transition": 0.0,
+    "earth_element": 0.16666666666666666,
+    "earth_wave": 0.0,
+    "fire_element": 0.0,
+    "firelava": 0.0,
+    "flame": 0.0,
+    "flying_cam_transition": 0.0,
+    "gas_transformation": 0.3,
+    "giant_grab": 0.4,
+    "hero_flight": 0.7,
+    "hole_transition": 0.0,
+    "illustration_scene": 0.2222222222222222,
+    "jump_transition": 0.0,
+    "live_concert": 0.5,
+    "luminous_gaze": 0.0,
+    "melt_transition": 0.0,
+    "money_rain": 0.5,
+    "monstrosity": 0.0,
+    "mystification": 0.0,
+    "nature_bloom": 0.0,
+    "plasma_explosion": 0.0,
+    "polygon": 0.4444444444444444,
+    "portal": 0.08333333333333333,
+    "raven_transition": 0.0,
+    "run_set_on_fire": 0.0,
+    "saint_glow": 0.0,
+    "sakura_petals": 0.0,
+    "seamless_transition": 0.0,
+    "shadow": 0.5333333333333333,
+    "shadow_smoke": 0.3,
+    "super_fast_run": 0.4166666666666667,
+    "water_bending": 0.0,
+    "water_element": 0.0,
+    "wireframe": 0.1111111111111111,
+    "wonderland": 0.0
+   },
+   "stratum_recalls": {
+    "camera": {
+     "value": 0.1964285714285714,
+     "n_classes": 14,
+     "n_classes_nan": 0,
+     "nan_classes": [],
+     "class_coverage": 1.0,
+     "per_class": {
+      "air_bending": 0.0,
+      "earth_element": 0.16666666666666666,
+      "earth_wave": 0.0,
+      "firelava": 0.0,
+      "flying_cam_transition": 0.0,
+      "hero_flight": 0.7,
+      "illustration_scene": 0.2222222222222222,
+      "live_concert": 0.5,
+      "plasma_explosion": 0.0,
+      "polygon": 0.4444444444444444,
+      "raven_transition": 0.0,
+      "shadow_smoke": 0.3,
+      "super_fast_run": 0.4166666666666667,
+      "water_bending": 0.0
+     }
+    },
+    "object": {
+     "value": 0.11574074074074073,
+     "n_classes": 18,
+     "n_classes_nan": 0,
+     "nan_classes": [],
+     "class_coverage": 1.0,
+     "per_class": {
+      "air_bending": 0.0,
+      "animalization": 0.0,
+      "color_rain": 0.0,
+      "cotton_cloud": 0.0,
+      "earth_wave": 0.0,
+      "firelava": 0.0,
+      "gas_transformation": 0.3,
+      "giant_grab": 0.4,
+      "live_concert": 0.5,
+      "luminous_gaze": 0.0,
+      "melt_transition": 0.0,
+      "money_rain": 0.5,
+      "mystification": 0.0,
+      "portal": 0.08333333333333333,
+      "raven_transition": 0.0,
+      "saint_glow": 0.0,
+      "shadow_smoke": 0.3,
+      "water_bending": 0.0
+     }
+    }
+   },
+   "primary_stratum": null,
+   "hubness": {
+    "pass": true,
+    "checks": {
+     "skew_ok": true,
+     "entropy_ok": true,
+     "pred_share_ok": true
+    },
+    "thresholds": {
+     "gating_k": 10,
+     "diagnostic_ks": [
+      1,
+      5,
+      10
+     ],
+     "max_hubness_skew": 3.0,
+     "min_pred_entropy_norm": 0.7,
+     "max_pred_class_share": 0.25,
+     "form": "FAIL if ANY of the three trips (OR-structured \u2014 the instruments see\ndifferent failures: the prediction column is a k=1 phenomenon, so rank-2..10\nabsorption casts no 1-NN votes and is invisible to it, which is how the\nincumbent m1b decouples). Terminal regardless of accuracy (\u00a71.4). Applies to\nEVERY candidate space/descriptor \u2014 motion and appearance alike (\u00a77 cond. 3).\n",
+     "coverage_interaction": "Computed on the same matrix the exam grades, over the DEFINED SUBPOOL only,\ndenominators explicit, NO coverage correction or renormalization (that would\nbe a new bar form). The \u00a73.2/\u00a73.3 definedness gates are SUPPOSED to remove\nnear-static clips, and a shrunken pool mechanically concentrates hub\nstatistics \u2014 that is a property of the candidate, not an artifact to correct\naway. Coverage is reported beside every hubness stat.\n",
+     "band_disclosure": "A candidate statistic landing INSIDE the band gets the frozen verdict \u2014\nterminal, no re-adjudication by the executor \u2014 but the report must flag\n\"landed in the calibration band; verdict is threshold-placement-sensitive\"\nand print the band and both populations. Whether the placement was right is\nowner-side review.\n",
+     "incumbent_table": {
+      "m1a__v3_sided": {
+       "skew": 0.839,
+       "pred_entropy_norm": 0.9111,
+       "max_pred_class_share": 0.0807,
+       "verdict": "PASS"
+      },
+      "m1a__v2_envelope": {
+       "skew": 0.967,
+       "pred_entropy_norm": 0.9059,
+       "max_pred_class_share": 0.0807,
+       "verdict": "PASS"
+      },
+      "m1a__all_frames": {
+       "skew": 1.188,
+       "pred_entropy_norm": 0.928,
+       "max_pred_class_share": 0.0673,
+       "verdict": "PASS"
+      },
+      "m1b_camera": {
+       "skew": 2.517,
+       "pred_entropy_norm": 0.9173,
+       "max_pred_class_share": 0.1019,
+       "verdict": "PASS"
+      },
+      "m_incumbent": {
+       "skew": 3.386,
+       "pred_entropy_norm": 0.5094,
+       "max_pred_class_share": 0.3901,
+       "verdict": "FAIL"
+      },
+      "m1c_object": {
+       "skew": 4.325,
+       "pred_entropy_norm": 0.4469,
+       "max_pred_class_share": 0.5811,
+       "verdict": "FAIL",
+       "sink_class": "polygon"
+      }
+     }
+    },
+    "landed_in_calibration_band": false,
+    "band_membership": {
+     "hubness_skew": false,
+     "pred_entropy_norm": false,
+     "max_pred_class_share": false
+    },
+    "calibration_band": {
+     "skew": [
+      1.188,
+      3.386
+     ],
+     "pred_entropy_norm": [
+      0.5094,
+      0.9059
+     ],
+     "max_pred_class_share": [
+      0.1019,
+      0.3901
+     ]
+    },
+    "stats": {
+     "k": 10,
+     "n_clips": 223,
+     "n_undefined_rows": 13,
+     "coverage": 0.9417040358744395,
+     "hubness_skew": 0.27478817055982896,
+     "skew_by_k_diagnostic": {
+      "1": 1.1727190713766504,
+      "5": 0.5215294620255558,
+      "10": 0.27478817055982896
+     },
+     "k_occurrence_max": 25,
+     "k_occurrence_mean": 9.417040358744394,
+     "max_clip_knn_share": 0.011904761904761904,
+     "hub_clip_index": 119,
+     "pred_entropy_norm": 0.9147216594682593,
+     "max_pred_class_share": 0.09047619047619047,
+     "sink_class": "shadow_smoke",
+     "n_graded": 210
+    }
+   },
+   "definedness": {
+    "n_clips": 223,
+    "n_undefined_rows": 13,
+    "coverage": 0.9417040358744395,
+    "undefined_by_reason": {
+     "low_D (below the frozen 5th-pct raw chord floor; every channel divides by D)": 12,
+     "core mask < 2 frames": 1
+    },
+    "nan_cell_fraction": 0.11319350881779243
+   }
+  },
+  "D_m_tilde_alone": {
+   "metric": "D_m_tilde_alone",
+   "accuracy_1nn": 0.09047619047619047,
+   "separation_cohens_d": 0.43357993390219324,
+   "coverage": 0.9417040358744395,
+   "misretrieved": 204,
+   "n_clips": 223,
+   "chance": 0.06726457399103139,
+   "accuracy_wilson95": [
+    0.05868671172522298,
+    0.13697961325551045
+   ],
+   "per_class_recall": {
+    "air_bending": 0.0,
+    "animalization": 0.25,
+    "color_rain": 0.0,
+    "cotton_cloud": 0.2,
+    "display_transition": 0.0,
+    "earth_element": 0.0,
+    "earth_wave": 0.0,
+    "fire_element": 0.0,
+    "firelava": 0.0,
+    "flame": 0.0,
+    "flying_cam_transition": 0.0,
+    "gas_transformation": 0.4,
+    "giant_grab": 0.0,
+    "hero_flight": 0.4,
+    "hole_transition": 0.0,
+    "illustration_scene": 0.3333333333333333,
+    "jump_transition": 0.0,
+    "live_concert": 0.125,
+    "luminous_gaze": 0.0,
+    "melt_transition": 0.0,
+    "money_rain": 0.0,
+    "monstrosity": 0.0,
+    "mystification": 0.0,
+    "nature_bloom": 0.0,
+    "plasma_explosion": 0.0,
+    "polygon": 0.2222222222222222,
+    "portal": 0.08333333333333333,
+    "raven_transition": 0.0,
+    "run_set_on_fire": 0.0,
+    "saint_glow": 0.0,
+    "sakura_petals": 0.0,
+    "seamless_transition": 0.0,
+    "shadow": 0.0,
+    "shadow_smoke": 0.0,
+    "super_fast_run": 0.08333333333333333,
+    "water_bending": 0.0,
+    "water_element": 0.0,
+    "wireframe": 0.0,
+    "wonderland": 0.0
+   },
+   "stratum_recalls": {
+    "camera": {
+     "value": 0.08313492063492064,
+     "n_classes": 14,
+     "n_classes_nan": 0,
+     "nan_classes": [],
+     "class_coverage": 1.0,
+     "per_class": {
+      "air_bending": 0.0,
+      "earth_element": 0.0,
+      "earth_wave": 0.0,
+      "firelava": 0.0,
+      "flying_cam_transition": 0.0,
+      "hero_flight": 0.4,
+      "illustration_scene": 0.3333333333333333,
+      "live_concert": 0.125,
+      "plasma_explosion": 0.0,
+      "polygon": 0.2222222222222222,
+      "raven_transition": 0.0,
+      "shadow_smoke": 0.0,
+      "super_fast_run": 0.08333333333333333,
+      "water_bending": 0.0
+     }
+    },
+    "object": {
+     "value": 0.0587962962962963,
+     "n_classes": 18,
+     "n_classes_nan": 0,
+     "nan_classes": [],
+     "class_coverage": 1.0,
+     "per_class": {
+      "air_bending": 0.0,
+      "animalization": 0.25,
+      "color_rain": 0.0,
+      "cotton_cloud": 0.2,
+      "earth_wave": 0.0,
+      "firelava": 0.0,
+      "gas_transformation": 0.4,
+      "giant_grab": 0.0,
+      "live_concert": 0.125,
+      "luminous_gaze": 0.0,
+      "melt_transition": 0.0,
+      "money_rain": 0.0,
+      "mystification": 0.0,
+      "portal": 0.08333333333333333,
+      "raven_transition": 0.0,
+      "saint_glow": 0.0,
+      "shadow_smoke": 0.0,
+      "water_bending": 0.0
+     }
+    }
+   },
+   "primary_stratum": null,
+   "hubness": {
+    "pass": true,
+    "checks": {
+     "skew_ok": true,
+     "entropy_ok": true,
+     "pred_share_ok": true
+    },
+    "thresholds": {
+     "gating_k": 10,
+     "diagnostic_ks": [
+      1,
+      5,
+      10
+     ],
+     "max_hubness_skew": 3.0,
+     "min_pred_entropy_norm": 0.7,
+     "max_pred_class_share": 0.25,
+     "form": "FAIL if ANY of the three trips (OR-structured \u2014 the instruments see\ndifferent failures: the prediction column is a k=1 phenomenon, so rank-2..10\nabsorption casts no 1-NN votes and is invisible to it, which is how the\nincumbent m1b decouples). Terminal regardless of accuracy (\u00a71.4). Applies to\nEVERY candidate space/descriptor \u2014 motion and appearance alike (\u00a77 cond. 3).\n",
+     "coverage_interaction": "Computed on the same matrix the exam grades, over the DEFINED SUBPOOL only,\ndenominators explicit, NO coverage correction or renormalization (that would\nbe a new bar form). The \u00a73.2/\u00a73.3 definedness gates are SUPPOSED to remove\nnear-static clips, and a shrunken pool mechanically concentrates hub\nstatistics \u2014 that is a property of the candidate, not an artifact to correct\naway. Coverage is reported beside every hubness stat.\n",
+     "band_disclosure": "A candidate statistic landing INSIDE the band gets the frozen verdict \u2014\nterminal, no re-adjudication by the executor \u2014 but the report must flag\n\"landed in the calibration band; verdict is threshold-placement-sensitive\"\nand print the band and both populations. Whether the placement was right is\nowner-side review.\n",
+     "incumbent_table": {
+      "m1a__v3_sided": {
+       "skew": 0.839,
+       "pred_entropy_norm": 0.9111,
+       "max_pred_class_share": 0.0807,
+       "verdict": "PASS"
+      },
+      "m1a__v2_envelope": {
+       "skew": 0.967,
+       "pred_entropy_norm": 0.9059,
+       "max_pred_class_share": 0.0807,
+       "verdict": "PASS"
+      },
+      "m1a__all_frames": {
+       "skew": 1.188,
+       "pred_entropy_norm": 0.928,
+       "max_pred_class_share": 0.0673,
+       "verdict": "PASS"
+      },
+      "m1b_camera": {
+       "skew": 2.517,
+       "pred_entropy_norm": 0.9173,
+       "max_pred_class_share": 0.1019,
+       "verdict": "PASS"
+      },
+      "m_incumbent": {
+       "skew": 3.386,
+       "pred_entropy_norm": 0.5094,
+       "max_pred_class_share": 0.3901,
+       "verdict": "FAIL"
+      },
+      "m1c_object": {
+       "skew": 4.325,
+       "pred_entropy_norm": 0.4469,
+       "max_pred_class_share": 0.5811,
+       "verdict": "FAIL",
+       "sink_class": "polygon"
+      }
+     }
+    },
+    "landed_in_calibration_band": false,
+    "band_membership": {
+     "hubness_skew": false,
+     "pred_entropy_norm": false,
+     "max_pred_class_share": false
+    },
+    "calibration_band": {
+     "skew": [
+      1.188,
+      3.386
+     ],
+     "pred_entropy_norm": [
+      0.5094,
+      0.9059
+     ],
+     "max_pred_class_share": [
+      0.1019,
+      0.3901
+     ]
+    },
+    "stats": {
+     "k": 10,
+     "n_clips": 223,
+     "n_undefined_rows": 13,
+     "coverage": 0.9417040358744395,
+     "hubness_skew": -0.09724874693241213,
+     "skew_by_k_diagnostic": {
+      "1": 0.6619556346144347,
+      "5": 0.1422489321345994,
+      "10": -0.09724874693241213
+     },
+     "k_occurrence_max": 22,
+     "k_occurrence_mean": 9.417040358744394,
+     "max_clip_knn_share": 0.010476190476190476,
+     "hub_clip_index": 98,
+     "pred_entropy_norm": 0.9128627764170615,
+     "max_pred_class_share": 0.0761904761904762,
+     "sink_class": "live_concert",
+     "n_graded": 210
+    }
+   },
+   "definedness": {
+    "n_clips": 223,
+    "n_undefined_rows": 13,
+    "coverage": 0.9417040358744395,
+    "undefined_by_reason": {
+     "low_D (below the frozen 5th-pct raw chord floor; every channel divides by D)": 12,
+     "core mask < 2 frames": 1
+    },
+    "nan_cell_fraction": 0.11319350881779243
+   }
+  },
+  "A_gating__sigma_emb_NONGATING": {
+   "metric": "A_gating__sigma_emb",
+   "accuracy_1nn": 0.20476190476190476,
+   "separation_cohens_d": 0.776342656096295,
+   "coverage": 0.9417040358744395,
+   "misretrieved": 180,
+   "n_clips": 223,
+   "chance": 0.06726457399103139,
+   "accuracy_wilson95": [
+    0.15572054612380445,
+    0.26441099049021266
+   ],
+   "per_class_recall": {
+    "air_bending": 0.0,
+    "animalization": 0.125,
+    "color_rain": 0.0,
+    "cotton_cloud": 0.2,
+    "display_transition": 0.0,
+    "earth_element": 0.0,
+    "earth_wave": 0.4,
+    "fire_element": 0.0,
+    "firelava": 0.0,
+    "flame": 0.0,
+    "flying_cam_transition": 0.0,
+    "gas_transformation": 0.2,
+    "giant_grab": 0.0,
+    "hero_flight": 0.4,
+    "hole_transition": 0.0,
+    "illustration_scene": 0.4444444444444444,
+    "jump_transition": 0.0,
+    "live_concert": 0.625,
+    "luminous_gaze": 0.0,
+    "melt_transition": 0.0,
+    "money_rain": 0.0,
+    "monstrosity": 0.0,
+    "mystification": 0.0,
+    "nature_bloom": 0.0,
+    "plasma_explosion": 0.0,
+    "polygon": 0.7777777777777778,
+    "portal": 0.25,
+    "raven_transition": 0.0,
+    "run_set_on_fire": 0.0,
+    "saint_glow": 0.0,
+    "sakura_petals": 0.0,
+    "seamless_transition": 0.0,
+    "shadow": 0.26666666666666666,
+    "shadow_smoke": 0.4,
+    "super_fast_run": 0.08333333333333333,
+    "water_bending": 0.0,
+    "water_element": 0.6,
+    "wireframe": 0.2222222222222222,
+    "wonderland": 0.0
+   },
+   "stratum_recalls": {
+    "camera": {
+     "value": 0.22361111111111112,
+     "n_classes": 14,
+     "n_classes_nan": 0,
+     "nan_classes": [],
+     "class_coverage": 1.0,
+     "per_class": {
+      "air_bending": 0.0,
+      "earth_element": 0.0,
+      "earth_wave": 0.4,
+      "firelava": 0.0,
+      "flying_cam_transition": 0.0,
+      "hero_flight": 0.4,
+      "illustration_scene": 0.4444444444444444,
+      "live_concert": 0.625,
+      "plasma_explosion": 0.0,
+      "polygon": 0.7777777777777778,
+      "raven_transition": 0.0,
+      "shadow_smoke": 0.4,
+      "super_fast_run": 0.08333333333333333,
+      "water_bending": 0.0
+     }
+    },
+    "object": {
+     "value": 0.12222222222222223,
+     "n_classes": 18,
+     "n_classes_nan": 0,
+     "nan_classes": [],
+     "class_coverage": 1.0,
+     "per_class": {
+      "air_bending": 0.0,
+      "animalization": 0.125,
+      "color_rain": 0.0,
+      "cotton_cloud": 0.2,
+      "earth_wave": 0.4,
+      "firelava": 0.0,
+      "gas_transformation": 0.2,
+      "giant_grab": 0.0,
+      "live_concert": 0.625,
+      "luminous_gaze": 0.0,
+      "melt_transition": 0.0,
+      "money_rain": 0.0,
+      "mystification": 0.0,
+      "portal": 0.25,
+      "raven_transition": 0.0,
+      "saint_glow": 0.0,
+      "shadow_smoke": 0.4,
+      "water_bending": 0.0
+     }
+    }
+   },
+   "primary_stratum": null,
+   "hubness": {
+    "pass": true,
+    "checks": {
+     "skew_ok": true,
+     "entropy_ok": true,
+     "pred_share_ok": true
+    },
+    "thresholds": {
+     "gating_k": 10,
+     "diagnostic_ks": [
+      1,
+      5,
+      10
+     ],
+     "max_hubness_skew": 3.0,
+     "min_pred_entropy_norm": 0.7,
+     "max_pred_class_share": 0.25,
+     "form": "FAIL if ANY of the three trips (OR-structured \u2014 the instruments see\ndifferent failures: the prediction column is a k=1 phenomenon, so rank-2..10\nabsorption casts no 1-NN votes and is invisible to it, which is how the\nincumbent m1b decouples). Terminal regardless of accuracy (\u00a71.4). Applies to\nEVERY candidate space/descriptor \u2014 motion and appearance alike (\u00a77 cond. 3).\n",
+     "coverage_interaction": "Computed on the same matrix the exam grades, over the DEFINED SUBPOOL only,\ndenominators explicit, NO coverage correction or renormalization (that would\nbe a new bar form). The \u00a73.2/\u00a73.3 definedness gates are SUPPOSED to remove\nnear-static clips, and a shrunken pool mechanically concentrates hub\nstatistics \u2014 that is a property of the candidate, not an artifact to correct\naway. Coverage is reported beside every hubness stat.\n",
+     "band_disclosure": "A candidate statistic landing INSIDE the band gets the frozen verdict \u2014\nterminal, no re-adjudication by the executor \u2014 but the report must flag\n\"landed in the calibration band; verdict is threshold-placement-sensitive\"\nand print the band and both populations. Whether the placement was right is\nowner-side review.\n",
+     "incumbent_table": {
+      "m1a__v3_sided": {
+       "skew": 0.839,
+       "pred_entropy_norm": 0.9111,
+       "max_pred_class_share": 0.0807,
+       "verdict": "PASS"
+      },
+      "m1a__v2_envelope": {
+       "skew": 0.967,
+       "pred_entropy_norm": 0.9059,
+       "max_pred_class_share": 0.0807,
+       "verdict": "PASS"
+      },
+      "m1a__all_frames": {
+       "skew": 1.188,
+       "pred_entropy_norm": 0.928,
+       "max_pred_class_share": 0.0673,
+       "verdict": "PASS"
+      },
+      "m1b_camera": {
+       "skew": 2.517,
+       "pred_entropy_norm": 0.9173,
+       "max_pred_class_share": 0.1019,
+       "verdict": "PASS"
+      },
+      "m_incumbent": {
+       "skew": 3.386,
+       "pred_entropy_norm": 0.5094,
+       "max_pred_class_share": 0.3901,
+       "verdict": "FAIL"
+      },
+      "m1c_object": {
+       "skew": 4.325,
+       "pred_entropy_norm": 0.4469,
+       "max_pred_class_share": 0.5811,
+       "verdict": "FAIL",
+       "sink_class": "polygon"
+      }
+     }
+    },
+    "landed_in_calibration_band": true,
+    "band_membership": {
+     "hubness_skew": false,
+     "pred_entropy_norm": true,
+     "max_pred_class_share": false
+    },
+    "calibration_band": {
+     "skew": [
+      1.188,
+      3.386
+     ],
+     "pred_entropy_norm": [
+      0.5094,
+      0.9059
+     ],
+     "max_pred_class_share": [
+      0.1019,
+      0.3901
+     ]
+    },
+    "stats": {
+     "k": 10,
+     "n_clips": 223,
+     "n_undefined_rows": 13,
+     "coverage": 0.9417040358744395,
+     "hubness_skew": 0.3983453263219407,
+     "skew_by_k_diagnostic": {
+      "1": 1.1929762484415871,
+      "5": 0.49722981794307597,
+      "10": 0.3983453263219407
+     },
+     "k_occurrence_max": 28,
+     "k_occurrence_mean": 9.417040358744394,
+     "max_clip_knn_share": 0.013333333333333334,
+     "hub_clip_index": 84,
+     "pred_entropy_norm": 0.9014027138464605,
+     "max_pred_class_share": 0.07142857142857142,
+     "sink_class": "polygon",
+     "n_graded": 210
+    }
+   },
+   "definedness": {
+    "n_clips": 223,
+    "n_undefined_rows": 13,
+    "coverage": 0.9417040358744395,
+    "undefined_by_reason": {
+     "low_D (below the frozen 5th-pct raw chord floor; every channel divides by D)": 12,
+     "core mask < 2 frames": 1
+    },
+    "nan_cell_fraction": 0.11319350881779243
+   },
+   "gating": false,
+   "why": "PRE-DECLARED NON-GATING sensitivity column (PREREG \u00a7P1). The gating sigma is the arc length of the 3-channel signature curve; this column re-parameterizes the SAME channels by the arc length of the raw 768-d embedding path \u2014 the one reading the frozen text does not exclude. IT CANNOT CHANGE THE VERDICT. It exists so that a sigma-sensitive verdict is adjudicable in owner review WITHOUT a re-run."
+  }
+ },
+ "predictions": {
+  "status": "DESCRIPTIVE, NON-GATING (\u00a72.5). No verdict depends on any number here.",
+  "P1_sibling_closer_than_own_null": {
+   "form": "sibling gamma-distance < clip-to-own-rendered-null gamma-distance, per n>=4-eligible class \u2014 now DIRECTLY checkable (the gamma signature exists; e0 could only compute an m-mean analogue)",
+   "per_class": {
+    "air_bending": {
+     "clips": 4,
+     "sibling_closer_than_own_null": 4
+    },
+    "animalization": {
+     "clips": 8,
+     "sibling_closer_than_own_null": 4
+    },
+    "color_rain": {
+     "clips": 6,
+     "sibling_closer_than_own_null": 4
+    },
+    "cotton_cloud": {
+     "clips": 5,
+     "sibling_closer_than_own_null": 5
+    },
+    "earth_element": {
+     "clips": 6,
+     "sibling_closer_than_own_null": 5
+    },
+    "earth_wave": {
+     "clips": 5,
+     "sibling_closer_than_own_null": 5
+    },
+    "fire_element": {
+     "clips": 4,
+     "sibling_closer_than_own_null": 2
+    },
+    "firelava": {
+     "clips": 6,
+     "sibling_closer_than_own_null": 5
+    },
+    "flying_cam_transition": {
+     "clips": 4,
+     "sibling_closer_than_own_null": 3
+    },
+    "gas_transformation": {
+     "clips": 10,
+     "sibling_closer_than_own_null": 6
+    },
+    "giant_grab": {
+     "clips": 5,
+     "sibling_closer_than_own_null": 5
+    },
+    "hero_flight": {
+     "clips": 10,
+     "sibling_closer_than_own_null": 8
+    },
+    "illustration_scene": {
+     "clips": 9,
+     "sibling_closer_than_own_null": 7
+    },
+    "live_concert": {
+     "clips": 8,
+     "sibling_closer_than_own_null": 8
+    },
+    "luminous_gaze": {
+     "clips": 4,
+     "sibling_closer_than_own_null": 2
+    },
+    "melt_transition": {
+     "clips": 3,
+     "sibling_closer_than_own_null": 2
+    },
+    "money_rain": {
+     "clips": 4,
+     "sibling_closer_than_own_null": 3
+    },
+    "mystification": {
+     "clips": 4,
+     "sibling_closer_than_own_null": 3
+    },
+    "plasma_explosion": {
+     "clips": 4,
+     "sibling_closer_than_own_null": 2
+    },
+    "polygon": {
+     "clips": 9,
+     "sibling_closer_than_own_null": 8
+    },
+    "portal": {
+     "clips": 12,
+     "sibling_closer_than_own_null": 11
+    },
+    "raven_transition": {
+     "clips": 4,
+     "sibling_closer_than_own_null": 4
+    },
+    "shadow": {
+     "clips": 15,
+     "sibling_closer_than_own_null": 12
+    },
+    "shadow_smoke": {
+     "clips": 10,
+     "sibling_closer_than_own_null": 10
+    },
+    "super_fast_run": {
+     "clips": 12,
+     "sibling_closer_than_own_null": 11
+    },
+    "water_bending": {
+     "clips": 4,
+     "sibling_closer_than_own_null": 4
+    },
+    "water_element": {
+     "clips": 5,
+     "sibling_closer_than_own_null": 5
+    },
+    "wireframe": {
+     "clips": 9,
+     "sibling_closer_than_own_null": 7
+    }
+   },
+   "classes_where_every_clip_closer_to_sibling": 9,
+   "n_eligible_classes": 28
+  },
+  "P2_sidedness_from_s_asymmetry": {
+   "statistic": "mean(a_hat) - mean(1 - b_hat) over sigma (e0's, verbatim)",
+   "rank_auc_onesided_vs_twosided": 0.10166053999239448,
+   "onesided": {
+    "n": 161,
+    "mean": 0.32837882846531075
+   },
+   "twosided": {
+    "n": 49,
+    "mean": 0.47570047868265136
+   },
+   "e0_figure_for_comparison": 0.523,
+   "note": "e0's 0.523 was computed on PER-CHANNEL arc-length curves, which linearize any monotone channel (E1PRIME_AMENDMENTS.md \u00a7A). This figure is on E1''s shared-sigma curves. Both are descriptive."
+  },
+  "P4_onesided_excursion_mass_early_sigma": {
+   "m_tilde_centroid": {
+    "onesided": 0.32633391063531997,
+    "twosided": 0.46262163581672394,
+    "onesided_earlier": true
+   },
+   "m_centroid_for_e0_comparability": {
+    "onesided": 0.5131678978293185,
+    "twosided": 0.49910472628269176,
+    "onesided_earlier": false
+   },
+   "note": "centroid < 0.5 = mass early in sigma"
+  }
+ },
+ "min_d_floor_raw": 0.6034994721412659,
+ "n_low_D": 12,
+ "ledoit_wolf": {
+  "shrinkage": 0.0075757280661043975,
+  "condition_number_raw": 19684389.27790437,
+  "condition_number_shrunk": 4062.424859024581,
+  "eig_floor_ratio": null,
+  "note": "no free parameter; no eigenvalue floor (that is the point of the arm)"
+ }
+}
