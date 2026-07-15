@@ -127,27 +127,37 @@ outputs:
 
 ---
 
-## RunPod
+## Compute: UIUC Campus Cluster (Slurm) — since 2026-07
 
-**Before any pod-lifecycle operation, invoke the `runpod-pod-init` skill
-first.** That skill is the source of truth for:
+Experiments run on the UIUC Campus Cluster (login node `cc-login3`), not
+RunPod. The repo lives at `$LAB/diffusion-research` with
+`LAB=/projects/illinois/eng/cs/jrehg/users/emirkisa`; framework caches are
+redirected to `$LAB/cache/*` via `~/.bashrc`; the research env is
+`conda activate $LAB/envs/diffusion` (after `module load anaconda3/2024.10`).
 
-- account / volume / key facts (`sy54sawkcs`, EU-RO-1, the SSH key pair, the
-  shared HF cache, `pod_init.sh`)
-- the `PUBLIC_KEY` env trap (raw GraphQL `podFindAndDeployOnDemand` calls
-  silently leave sshd unstarted without it)
-- the EU-RO-1 capacity poller (raw GraphQL, GPU list with VRAM gating,
-  15 s cadence, heartbeat every 10 cycles)
-- Route A (spin up, hand off) vs Route B (spin up, run experiment via tmux,
-  tear down) playbooks
-- tmux-pane snapshot Monitor pattern (`capture-pane -p ... -S -400 | tail -50`)
-  — pane is ground truth, not the log file
-- `runpodctl` vs raw GraphQL, why `stop pod` + `start pod` loses GPU slots in
-  supply-tight DCs, and other lifecycle gotchas
+**Before any cluster/experiment-lifecycle operation, invoke the matching
+skill first — they are the source of truth for this workflow:**
 
-Triggers (non-exhaustive): "spin up a pod", "give me an A100", any
-`runpodctl create|stop|remove`, any GraphQL `podFindAndDeployOnDemand` /
-`podEditJob`, capacity polling, on-air sshd recovery.
+- `cc-slurm` — partitions/accounts/GPUs, queue etiquette (high/normal/
+  secondary), storage map, modules, monitoring commands
+- `exp-design` — plan an experiment or sweep (resource plan, queue choice,
+  preemption-readiness, array-friendly variant structure)
+- `exp-submit` — validated sbatch template, job arrays, dependency chains,
+  post-submit checks
+- `exp-status` — job/progress monitoring, pending diagnosis, failure taxonomy
+- `exp-finish` — completion verification, vc-bench eval, CHANGELOG write-up,
+  cleanup
+- `exp-eval` — evaluating transition generations with the certified
+  transition-eval harness (`eval/v3.0.0`): certified-checkout rule,
+  plan→infer→score, trust map, certification protocol; SPEC.md in
+  `src/diffusion/transition_eval/` is the authority
 
-This is broader than auth — the skill captures lessons from past pod-lifecycle
-bugs that aren't obvious from the API surface.
+Hard rules: long runs go through `sbatch` (never park `srun ... bash`);
+`-high` queues require a `#cluster_high_priority` Slack announcement;
+`-secondary` queues are preemptible — only submit resumable runs there.
+
+### RunPod (legacy, pre-2026-07)
+
+The pod-based flow is preserved in the `runpod-pod-init` skill (marked
+legacy). The volume `s3://sy54sawkcs` still exists read-only pending
+decommissioning. Pod IDs in older CHANGELOG entries refer to that era.

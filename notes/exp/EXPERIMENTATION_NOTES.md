@@ -1,4 +1,5 @@
 # Fully Manual Notes
+Written by me, don't add or modify!
 
 # Exp 20, LTX2 C2V Diffusers
 * Baseline implementation of C2V task (conditioned generation on 2 video endpoints) with diffusers library.
@@ -126,7 +127,7 @@ For each block index `l` in `layer_indices`, forward hooks are registered on:
 
 
 # Exp 41, C2V Attention Feature Injection 
-* Injected K, V for 4 cases
+* Ran generation for 4 cases
     * Perturbed (random noise, scaled to inverted z1 channelwise rms) baseline
     * Perturbed Injected (K, V) injection at steps written in the config, to the layers written in the config
     * Target Recon (The source of features)
@@ -246,3 +247,51 @@ For each block index `l` in `layer_indices`, forward hooks are registered on:
 
     ### Velocity Field Injection
     2. To point at the specific shadow transition, don't directly inject the velocities but do test-time-optimization based on the predicted z0 at each step, globalizing the target.
+
+
+# Exp 48, Velocity Injection
+* Current version is injecting the z0 in each step, instead of that, make predicted z0 injection at the matching step cached from the reconstruction step!
+* Inject only in specific timesteps (early-mid)
+* Adjust the strength.
+
+
+* RUN THE Caching independently.
+* Then injection on generation time! Run nicely!
+* Run with 25 Frames Condition Video Length 
+
+* Which noise do we start from? Inverted z1? If so problematic? Which z1?
+
+
+
+
+
+
+
+# Exp 50, LoRA Baseline
+* Pivoted to training solutions.
+* With exp 50 & 51, did LoRA Training in different settings.
+    1. T2V LoRA training. 
+        - Given 10 shadow smoke samples, one prompt for each. Trained LoRA
+    2. I2V LoRA training.   
+        - Given 10 shadow smoke samples, one prompt for each, first-frame conditioning with p=0.5. Trained LoRA
+    3. C2V LoRA training.
+        - Given 10 shadow smoke samples, one prompt for each, first-last clip conditioning (C2V setting) with p=1. Trained LoRA
+
+* Q: Is the baseline LoRA training on LTX-2 adequate to transfer Shadow Smoke Transition between unseen endpoints seamlessly using 10 reference samples.
+- Answer: Yes!
+
+***State:***
+* Base model fails to generate the described transition. Wrong place, wrond mechanics, no movement etc.
+
+***Problems:*** 
+    1- LTX-2's conditioning training is incredibly robust. 
+    2- Trained using 10 training samples, can be decreased.
+    3- Evaluation problem: What does "seamless" mean? How do we measure success.
+    4- Is it specific to Shadow Smoke Transition samples? Does it generalize to other types of transitions?
+    5- Was the endpoints genuinely OOD? Or similar to Shadow Smoke Transition Samples? And what was N (pairs x seeds)?
+        - Add endpoint pairs from DAVIS dataset? 
+    6- What does base C2V + descriptive prompt produce on the same grid?
+        - Base model can not produce nicely! 
+    7- Does training-time conditioning exactly match the inference time conditioning?
+        - seems like it, but need to check! 
+
