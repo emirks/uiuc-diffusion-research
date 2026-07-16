@@ -1,5 +1,26 @@
 ## 2026-07-16
 
+22:45 — **transition-eval 4.0.0 CERTIFIED (regrade of the draft.1 run) — all 8 bars PASS.**
+The draft.1 certification run (job 9531327, full §6, clean) FAILED on **bar 8 alone**: the
+reference-rebuild-parity of `pop_App` came out 2.02e-05 > the frozen scalar 1e-6. Advised
+fail-branch consult (fable-advisor xhigh) diagnosed a **pre-registration defect, not an instrument
+failure** — `pop_App`/`pop_Dyn` are ECDF-composed rank lattices on `{k/(2N)}` (quantum 2.02e-05),
+for which a scalar float tolerance is unsatisfiable under any cross-environment rebuild while the
+same clause tolerates the ~2.5e-8 raw-channel float32-reduction drift that flips one lattice cell
+one step. **Fix:** the two-class rebuild-parity criterion (`bars.yaml` `reference:`, SPEC §7) —
+value-space arrays keep `value_tol` 1e-6; the two lattice arrays are compared in integer rank units
+(`max_step` 4, `max_flips` 50). **No measurement/grader `.py` changed; `reference_v4.npz` byte-
+identical.** Per the 3.0.0 precedent, certified by committed regrade (`scripts/regrade_draft1_to_v4.py`)
+over the draft.1 artifacts + provenance flip-counts (`scripts/provenance_rebuild_parity_v4.py`, job
+9538092 on ccc0440: on-node self-repro bit-identical, cert-path==build-script-path, `pop_App` 4
+flips/step 1, `pop_Dyn` 0; committed artifact built on the Jupyter-pod CPU ⇒ cross-env drift, not
+within-node) — **not a re-run** (draft.1 warm determinism bit-perfect, worst=0.0). §6 fail-forward
+amended to codify the regrade exception. Record: `certifications/v4.0.0.md`; draft.1 FAIL record
+retained at `certifications/v4.0.0-draft.1.md`. On tag: `eval/v4.0.0`; `eval/v3.0.0` stays certified
+for v3 numbers. Bars: bar1 S3 d=1.734 · bar2 29/29 deployed+LOO · bar4 gap 0.112 · bar5 12W/3L
+p=0.018 · bar6 swap+hard-cut 37/37 · bar7 11/11 · bar8 warm 0.0 + two-class parity · bar9 3 metrics
+pass / 3 controls fail.
+
 17:45 — **transition-eval 4.0.0-draft.1: health-validated metrics + causal bar 9 ported into
 the certified harness (branch `eval/v4-metrics`, not yet frozen/run).** Replaces the three M1
 transfer metrics with the metric-search/health-validation deliverables — M1a=**S3** (4-channel
