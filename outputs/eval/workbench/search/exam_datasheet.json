@@ -1,0 +1,1294 @@
+{
+ "m1a_incumbent": {
+  "causal": {
+   "controlled_map": 0.5769025044344122,
+   "Cn_skill": 0.5449733921196189,
+   "null": 0.07016976977132472,
+   "z": 56.63130130137093,
+   "p": 0.0033222591362126247,
+   "boot_lo": 0.5555010930487384,
+   "floor": 0.017895853457783394,
+   "PASS": true
+  },
+  "validity": {
+   "uncontrolled_map": 0.4658973376462927,
+   "U_skill": 0.45986724333276396,
+   "null": 0.011164096676409772
+  },
+  "reliability": {
+   "hubness_pass": true,
+   "skew": 0.8390642867243491,
+   "entropy": 0.9110506084365507,
+   "maxpred": 0.08071748878923767,
+   "hub_class": "shadow_smoke",
+   "hub_share": 0.08071748878923767
+  },
+  "shortcut": {
+   "delta_macro": 0.08510614878685496,
+   "note": "\u0394=Cn-U; \u22650 content-robust, \u226a0 shortcut"
+  },
+  "trust_map": {
+   "air_bending": {
+    "controlled_map": 0.9166666666666666,
+    "skill": 0.9103585657370518,
+    "delta": 0.5283692073987238,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "animalization": {
+    "controlled_map": 0.41989795918367345,
+    "skill": 0.37667909998870064,
+    "delta": 0.14955071064745915,
+    "n": 8,
+    "stamp": "TRUSTED"
+   },
+   "color_rain": {
+    "controlled_map": 0.4364795918367347,
+    "skill": 0.3961149790275935,
+    "delta": 0.048250930007364856,
+    "n": 8,
+    "stamp": "TRUSTED"
+   },
+   "cotton_cloud": {
+    "controlled_map": 0.6805555555555555,
+    "skill": 0.6550889870413432,
+    "delta": 0.10567492759830777,
+    "n": 6,
+    "stamp": "TRUSTED"
+   },
+   "earth_element": {
+    "controlled_map": 0.6272222222222222,
+    "skill": 0.6003740165686957,
+    "delta": 0.0037664172169508126,
+    "n": 6,
+    "stamp": "TRUSTED"
+   },
+   "earth_wave": {
+    "controlled_map": 0.95,
+    "skill": 0.9460666077394417,
+    "delta": 0.2747359035322401,
+    "n": 5,
+    "stamp": "TRUSTED"
+   },
+   "fire_element": {
+    "controlled_map": 0.7638888888888888,
+    "skill": 0.7460791635548917,
+    "delta": 0.12531296639273592,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "firelava": {
+    "controlled_map": 0.8905555555555557,
+    "skill": 0.8823988251821725,
+    "delta": 0.3386030442996977,
+    "n": 6,
+    "stamp": "TRUSTED"
+   },
+   "flying_cam_transition": {
+    "controlled_map": 0.08333333333333333,
+    "skill": 0.009207365892714175,
+    "delta": 0.020497506793632082,
+    "n": 4,
+    "stamp": "WEAK"
+   },
+   "gas_transformation": {
+    "controlled_map": 0.16817460317460317,
+    "skill": 0.1086857009437326,
+    "delta": 0.0756538665335609,
+    "n": 10,
+    "stamp": "WEAK"
+   },
+   "giant_grab": {
+    "controlled_map": 0.10416666666666666,
+    "skill": 0.03174960594460705,
+    "delta": 0.013543784402581523,
+    "n": 5,
+    "stamp": "WEAK"
+   },
+   "hero_flight": {
+    "controlled_map": 0.7569091710758377,
+    "skill": 0.7395255979695345,
+    "delta": 0.037486096582506456,
+    "n": 10,
+    "stamp": "TRUSTED"
+   },
+   "illustration_scene": {
+    "controlled_map": 0.4105291005291005,
+    "skill": 0.36549750543017767,
+    "delta": 0.022675574771186924,
+    "n": 10,
+    "stamp": "TRUSTED"
+   },
+   "live_concert": {
+    "controlled_map": 1.0,
+    "skill": 1.0,
+    "delta": 0.0,
+    "n": 8,
+    "stamp": "TRUSTED"
+   },
+   "luminous_gaze": {
+    "controlled_map": 0.7499999999999999,
+    "skill": 0.7293368753445941,
+    "delta": -0.0178405894301763,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "melt_transition": {
+    "controlled_map": 0.3611111111111111,
+    "skill": 0.3153063755891838,
+    "delta": 0.07377398126487222,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "money_rain": {
+    "controlled_map": 0.12777777777777777,
+    "skill": 0.06407150187143118,
+    "delta": 0.01075143932590155,
+    "n": 7,
+    "stamp": "WEAK"
+   },
+   "mystification": {
+    "controlled_map": 0.2375,
+    "skill": 0.1802299537106167,
+    "delta": 0.006116902113033007,
+    "n": 5,
+    "stamp": "WEAK"
+   },
+   "plasma_explosion": {
+    "controlled_map": 0.4999999999999999,
+    "skill": 0.4600539946005398,
+    "delta": -0.0062095421461978995,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "polygon": {
+    "controlled_map": 0.6383101851851852,
+    "skill": 0.6129090710578616,
+    "delta": 0.0441119505808919,
+    "n": 9,
+    "stamp": "TRUSTED"
+   },
+   "portal": {
+    "controlled_map": 0.9342463092463091,
+    "skill": 0.9293166268725981,
+    "delta": 0.016291900742816057,
+    "n": 13,
+    "stamp": "TRUSTED"
+   },
+   "raven_transition": {
+    "controlled_map": 1.0,
+    "skill": 1.0,
+    "delta": 0.0,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "saint_glow": {
+    "controlled_map": 0.13888888888888887,
+    "skill": 0.07171732295253778,
+    "delta": -0.05744950016056065,
+    "n": 4,
+    "stamp": "WEAK"
+   },
+   "shadow": {
+    "controlled_map": 0.2974977932120789,
+    "skill": 0.2433867095761349,
+    "delta": 0.04256723057572745,
+    "n": 15,
+    "stamp": "TRUSTED"
+   },
+   "shadow_smoke": {
+    "controlled_map": 0.971715167548501,
+    "skill": 0.9696882248463692,
+    "delta": 0.1318335276846453,
+    "n": 10,
+    "stamp": "TRUSTED"
+   },
+   "super_fast_run": {
+    "controlled_map": 0.7854636735318552,
+    "skill": 0.7695471933218618,
+    "delta": -0.005600885638486153,
+    "n": 12,
+    "stamp": "TRUSTED"
+   },
+   "water_bending": {
+    "controlled_map": 0.9166666666666666,
+    "skill": 0.9105856639014455,
+    "delta": 0.3319565559434946,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "water_element": {
+    "controlled_map": 0.5833333333333333,
+    "skill": 0.5514286995918001,
+    "delta": 0.07814231464436155,
+    "n": 5,
+    "stamp": "TRUSTED"
+   },
+   "wireframe": {
+    "controlled_map": 0.2792824074074074,
+    "skill": 0.2283455134641366,
+    "delta": 0.07503346939434294,
+    "n": 9,
+    "stamp": "TRUSTED"
+   }
+  },
+  "coverage": {
+   "anchor_cov_controlled": 1.0,
+   "classes_defined": 29,
+   "classes_eligible": 29
+  }
+ },
+ "m1a_improved": {
+  "causal": {
+   "controlled_map": 0.714342511040899,
+   "Cn_skill": 0.6822149049923634,
+   "null": 0.10109853027488122,
+   "z": 59.69115013175437,
+   "p": 0.0033222591362126247,
+   "boot_lo": 0.696857488685273,
+   "floor": 0.020547232859569053,
+   "PASS": true
+  },
+  "validity": {
+   "uncontrolled_map": 0.5495742937414269,
+   "U_skill": 0.5445130516265768,
+   "null": 0.011111717103912767
+  },
+  "reliability": {
+   "hubness_pass": true,
+   "skew": 1.1481184543886944,
+   "entropy": 0.9180990138919582,
+   "maxpred": 0.06726457399103139,
+   "hub_class": "shadow",
+   "hub_share": 0.06726457399103139
+  },
+  "shortcut": {
+   "delta_macro": 0.13770185336578655,
+   "note": "\u0394=Cn-U; \u22650 content-robust, \u226a0 shortcut"
+  },
+  "trust_map": {
+   "air_bending": {
+    "controlled_map": 0.7777777777777777,
+    "skill": 0.7520789215433086,
+    "delta": 0.6088210195900388,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "animalization": {
+    "controlled_map": 0.9183673469387754,
+    "skill": 0.9096625189320541,
+    "delta": 0.24605346114270732,
+    "n": 8,
+    "stamp": "TRUSTED"
+   },
+   "color_rain": {
+    "controlled_map": 0.772406462585034,
+    "skill": 0.7486181354663197,
+    "delta": 0.14627659974371388,
+    "n": 8,
+    "stamp": "TRUSTED"
+   },
+   "cotton_cloud": {
+    "controlled_map": 0.9666666666666667,
+    "skill": 0.9629928884667337,
+    "delta": 0.06411654594110183,
+    "n": 6,
+    "stamp": "TRUSTED"
+   },
+   "earth_element": {
+    "controlled_map": 0.6033333333333334,
+    "skill": 0.5616467511311848,
+    "delta": 0.04984929749355105,
+    "n": 6,
+    "stamp": "TRUSTED"
+   },
+   "earth_wave": {
+    "controlled_map": 1.0,
+    "skill": 1.0,
+    "delta": 0.28230354378261113,
+    "n": 5,
+    "stamp": "TRUSTED"
+   },
+   "fire_element": {
+    "controlled_map": 0.5416666666666666,
+    "skill": 0.4873919121835033,
+    "delta": 0.06323496169032206,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "firelava": {
+    "controlled_map": 0.9666666666666667,
+    "skill": 0.9631163413049848,
+    "delta": 0.270981698504728,
+    "n": 6,
+    "stamp": "TRUSTED"
+   },
+   "flying_cam_transition": {
+    "controlled_map": 0.2222222222222222,
+    "skill": 0.12486325988435691,
+    "delta": 0.10800992977404729,
+    "n": 4,
+    "stamp": "WEAK"
+   },
+   "gas_transformation": {
+    "controlled_map": 0.4798148148148148,
+    "skill": 0.4242546807062804,
+    "delta": 0.2775814030199698,
+    "n": 10,
+    "stamp": "TRUSTED"
+   },
+   "giant_grab": {
+    "controlled_map": 0.7583333333333333,
+    "skill": 0.7298807749627422,
+    "delta": 0.10488100476352413,
+    "n": 5,
+    "stamp": "TRUSTED"
+   },
+   "hero_flight": {
+    "controlled_map": 0.8304012345679013,
+    "skill": 0.8121102686317593,
+    "delta": -0.004525074682464991,
+    "n": 10,
+    "stamp": "TRUSTED"
+   },
+   "illustration_scene": {
+    "controlled_map": 0.4821516754850088,
+    "skill": 0.4254214512064512,
+    "delta": 0.08075447273500863,
+    "n": 10,
+    "stamp": "TRUSTED"
+   },
+   "live_concert": {
+    "controlled_map": 1.0,
+    "skill": 1.0,
+    "delta": 0.0,
+    "n": 8,
+    "stamp": "TRUSTED"
+   },
+   "luminous_gaze": {
+    "controlled_map": 0.9166666666666666,
+    "skill": 0.9059118707856358,
+    "delta": 0.07445129990958288,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "melt_transition": {
+    "controlled_map": 0.4583333333333333,
+    "skill": 0.3951300211962984,
+    "delta": 0.3642317386589932,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "money_rain": {
+    "controlled_map": 0.7587301587301586,
+    "skill": 0.7331058489911721,
+    "delta": 0.15605955922126757,
+    "n": 7,
+    "stamp": "TRUSTED"
+   },
+   "mystification": {
+    "controlled_map": 0.4041666666666666,
+    "skill": 0.3369397217928902,
+    "delta": 0.2133447532374142,
+    "n": 5,
+    "stamp": "WEAK"
+   },
+   "plasma_explosion": {
+    "controlled_map": 0.5138888888888888,
+    "skill": 0.45406332865387616,
+    "delta": -0.012228479120291902,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "polygon": {
+    "controlled_map": 0.6032242063492063,
+    "skill": 0.5614451093645915,
+    "delta": 0.08901699499434318,
+    "n": 9,
+    "stamp": "TRUSTED"
+   },
+   "portal": {
+    "controlled_map": 0.954594017094017,
+    "skill": 0.9496550047341858,
+    "delta": 0.026066935555701387,
+    "n": 13,
+    "stamp": "TRUSTED"
+   },
+   "raven_transition": {
+    "controlled_map": 1.0,
+    "skill": 1.0,
+    "delta": 0.0,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "saint_glow": {
+    "controlled_map": 0.7222222222222222,
+    "skill": 0.6872067563340631,
+    "delta": 0.12260028157092606,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "shadow": {
+    "controlled_map": 0.3177290038004324,
+    "skill": 0.24328346214040858,
+    "delta": 0.017936518082766195,
+    "n": 15,
+    "stamp": "TRUSTED"
+   },
+   "shadow_smoke": {
+    "controlled_map": 0.9888888888888889,
+    "skill": 0.9877064017498148,
+    "delta": 0.11675945033615143,
+    "n": 10,
+    "stamp": "TRUSTED"
+   },
+   "super_fast_run": {
+    "controlled_map": 0.8652037146355327,
+    "skill": 0.850717062494603,
+    "delta": 0.002955281977583768,
+    "n": 12,
+    "stamp": "TRUSTED"
+   },
+   "water_bending": {
+    "controlled_map": 0.75,
+    "skill": 0.7210167389956602,
+    "delta": 0.3109047409294745,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "water_element": {
+    "controlled_map": 0.7833333333333333,
+    "skill": 0.7591700629862912,
+    "delta": 0.1004624069622837,
+    "n": 5,
+    "stamp": "TRUSTED"
+   },
+   "wireframe": {
+    "controlled_map": 0.35914351851851856,
+    "skill": 0.29203215455188253,
+    "delta": 0.1076426062052685,
+    "n": 9,
+    "stamp": "TRUSTED"
+   }
+  },
+  "coverage": {
+   "anchor_cov_controlled": 1.0,
+   "classes_defined": 29,
+   "classes_eligible": 29
+  }
+ },
+ "m1b_incumbent": {
+  "causal": {
+   "controlled_map": 0.5906380943691549,
+   "Cn_skill": 0.4121288497978286,
+   "null": 0.3036536909660157,
+   "z": 10.913455772018034,
+   "p": 0.0033222591362126247,
+   "boot_lo": 0.5622105522730615,
+   "floor": 0.052592764269600155,
+   "PASS": true
+  },
+  "validity": {
+   "uncontrolled_map": 0.14760656160818497,
+   "U_skill": 0.1374885170780609,
+   "null": 0.011730909942030071
+  },
+  "reliability": {
+   "hubness_pass": true,
+   "skew": 2.51712850692605,
+   "entropy": 0.917257450072464,
+   "maxpred": 0.10185185185185185,
+   "hub_class": "portal",
+   "hub_share": 0.10185185185185185
+  },
+  "shortcut": {
+   "delta_macro": 0.27464033271976773,
+   "note": "\u0394=Cn-U; \u22650 content-robust, \u226a0 shortcut"
+  },
+  "trust_map": {
+   "air_bending": {
+    "controlled_map": 0.5,
+    "skill": 0.2555318122285793,
+    "delta": 0.2674019699215027,
+    "n": 4,
+    "stamp": "WEAK"
+   },
+   "earth_element": {
+    "controlled_map": 0.3805555555555556,
+    "skill": 0.11030726981361666,
+    "delta": 0.08170262119882317,
+    "n": 6,
+    "stamp": "WEAK"
+   },
+   "earth_wave": {
+    "controlled_map": 0.4166666666666667,
+    "skill": 0.12565575818136412,
+    "delta": -0.19976413669002022,
+    "n": 5,
+    "stamp": "WEAK"
+   },
+   "firelava": {
+    "controlled_map": 0.5922222222222222,
+    "skill": 0.41929843761743574,
+    "delta": 0.29063107340856426,
+    "n": 6,
+    "stamp": "TRUSTED"
+   },
+   "flying_cam_transition": {
+    "controlled_map": 0.5,
+    "skill": 0.2618917441224713,
+    "delta": 0.14727813210377932,
+    "n": 4,
+    "stamp": "WEAK"
+   },
+   "hero_flight": {
+    "controlled_map": 0.6968474426807761,
+    "skill": 0.5805904762099938,
+    "delta": 0.39068890602962597,
+    "n": 10,
+    "stamp": "TRUSTED"
+   },
+   "illustration_scene": {
+    "controlled_map": 0.37183862433862436,
+    "skill": 0.12702319344012195,
+    "delta": 0.020560757691734086,
+    "n": 10,
+    "stamp": "WEAK"
+   },
+   "live_concert": {
+    "controlled_map": 0.7806547619047618,
+    "skill": 0.6941421492591844,
+    "delta": 0.42138080341059503,
+    "n": 8,
+    "stamp": "TRUSTED"
+   },
+   "plasma_explosion": {
+    "controlled_map": 0.7222222222222221,
+    "skill": 0.590527537023135,
+    "delta": 0.43375266843390453,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "polygon": {
+    "controlled_map": 0.4234953703703704,
+    "skill": 0.18652812802080626,
+    "delta": 0.009609547958985193,
+    "n": 9,
+    "stamp": "WEAK"
+   },
+   "raven_transition": {
+    "controlled_map": NaN,
+    "skill": NaN,
+    "delta": NaN,
+    "n": 4,
+    "stamp": "UNRATABLE"
+   },
+   "shadow_smoke": {
+    "controlled_map": 0.7014550264550264,
+    "skill": 0.5863867974849597,
+    "delta": 0.5264991657211214,
+    "n": 10,
+    "stamp": "TRUSTED"
+   },
+   "super_fast_run": {
+    "controlled_map": 0.5923373343827889,
+    "skill": 0.4410724625990528,
+    "delta": 0.4148534121472621,
+    "n": 12,
+    "stamp": "TRUSTED"
+   },
+   "water_bending": {
+    "controlled_map": 1.0,
+    "skill": 1.0,
+    "delta": 0.7870101226500517,
+    "n": 4,
+    "stamp": "TRUSTED"
+   }
+  },
+  "coverage": {
+   "anchor_cov_controlled": 0.9166666666666666,
+   "classes_defined": 13,
+   "classes_eligible": 14
+  }
+ },
+ "m1b_improved": {
+  "causal": {
+   "controlled_map": 0.6550840068020803,
+   "Cn_skill": 0.5330301863135416,
+   "null": 0.2613741122257858,
+   "z": 14.281827970945706,
+   "p": 0.0033222591362126247,
+   "boot_lo": 0.6255416502728764,
+   "floor": 0.05513438410866704,
+   "PASS": true
+  },
+  "validity": {
+   "uncontrolled_map": 0.19468201501480725,
+   "U_skill": 0.1858524308968414,
+   "null": 0.010845188824542308
+  },
+  "reliability": {
+   "hubness_pass": true,
+   "skew": 1.7791626878733806,
+   "entropy": 0.92532293185637,
+   "maxpred": 0.07407407407407407,
+   "hub_class": "gas_transformation",
+   "hub_share": 0.07407407407407407
+  },
+  "shortcut": {
+   "delta_macro": 0.3471777554167002,
+   "note": "\u0394=Cn-U; \u22650 content-robust, \u226a0 shortcut"
+  },
+  "trust_map": {
+   "air_bending": {
+    "controlled_map": 0.8333333333333334,
+    "skill": 0.766218585622443,
+    "delta": 0.44019464997018287,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "earth_element": {
+    "controlled_map": 0.3861111111111111,
+    "skill": 0.16493797491791076,
+    "delta": 0.13658680101923562,
+    "n": 6,
+    "stamp": "WEAK"
+   },
+   "earth_wave": {
+    "controlled_map": 0.5,
+    "skill": 0.3051176796077775,
+    "delta": 0.3160817761293872,
+    "n": 5,
+    "stamp": "WEAK"
+   },
+   "firelava": {
+    "controlled_map": 0.6111111111111112,
+    "skill": 0.4766498613122133,
+    "delta": 0.44549045381208924,
+    "n": 6,
+    "stamp": "TRUSTED"
+   },
+   "flying_cam_transition": {
+    "controlled_map": 0.5833333333333333,
+    "skill": 0.42092394801183874,
+    "delta": 0.2633940284465135,
+    "n": 4,
+    "stamp": "WEAK"
+   },
+   "hero_flight": {
+    "controlled_map": 0.7896737213403879,
+    "skill": 0.722266753430015,
+    "delta": 0.4174026350889897,
+    "n": 10,
+    "stamp": "TRUSTED"
+   },
+   "illustration_scene": {
+    "controlled_map": 0.4772795414462081,
+    "skill": 0.31153350848103933,
+    "delta": 0.20565725712776176,
+    "n": 10,
+    "stamp": "TRUSTED"
+   },
+   "live_concert": {
+    "controlled_map": 0.9059098639455783,
+    "skill": 0.8751012540844969,
+    "delta": 0.29625032796709594,
+    "n": 8,
+    "stamp": "TRUSTED"
+   },
+   "plasma_explosion": {
+    "controlled_map": 0.8055555555555555,
+    "skill": 0.7321770182374696,
+    "delta": 0.5746470986721444,
+    "n": 4,
+    "stamp": "TRUSTED"
+   },
+   "polygon": {
+    "controlled_map": 0.45525793650793644,
+    "skill": 0.278038123964744,
+    "delta": 0.09235900568013311,
+    "n": 9,
+    "stamp": "TRUSTED"
+   },
+   "raven_transition": {
+    "controlled_map": NaN,
+    "skill": NaN,
+    "delta": NaN,
+    "n": 4,
+    "stamp": "UNRATABLE"
+   },
+   "shadow_smoke": {
+    "controlled_map": 0.7794808201058201,
+    "skill": 0.7092639522547002,
+    "delta": 0.507755088609541,
+    "n": 10,
+    "stamp": "TRUSTED"
+   },
+   "super_fast_run": {
+    "controlled_map": 0.611267982858892,
+    "skill": 0.48935658266812976,
+    "delta": 0.3533791100050697,
+    "n": 12,
+    "stamp": "TRUSTED"
+   },
+   "water_bending": {
+    "controlled_map": 0.7777777777777777,
+    "skill": 0.6901426634820217,
+    "delta": 0.4764480718877181,
+    "n": 4,
+    "stamp": "TRUSTED"
+   }
+  },
+  "coverage": {
+   "anchor_cov_controlled": 0.9166666666666666,
+   "classes_defined": 13,
+   "classes_eligible": 14
+  }
+ },
+ "m1c_incumbent": {
+  "causal": {
+   "controlled_map": 0.3783665330358452,
+   "Cn_skill": 0.09419325894948825,
+   "null": 0.3137239559034262,
+   "z": 3.0599358173932,
+   "p": 0.0033222591362126247,
+   "boot_lo": 0.3532117363642879,
+   "floor": 0.042250936612408384,
+   "PASS": false
+  },
+  "validity": {
+   "uncontrolled_map": 0.02100555749365273,
+   "U_skill": 0.010565406648840089,
+   "null": 0.010551633139743409
+  },
+  "reliability": {
+   "hubness_pass": false,
+   "skew": 4.324850568263539,
+   "entropy": 0.4469012158098534,
+   "maxpred": 0.581081081081081,
+   "hub_class": "polygon",
+   "hub_share": 0.581081081081081
+  },
+  "shortcut": {
+   "delta_macro": 0.08362785230064816,
+   "note": "\u0394=Cn-U; \u22650 content-robust, \u226a0 shortcut"
+  },
+  "trust_map": {
+   "air_bending": {
+    "controlled_map": 0.38888888888888884,
+    "skill": 0.07647099979010694,
+    "delta": 0.08713515720665423,
+    "n": 4,
+    "stamp": "WEAK"
+   },
+   "animalization": {
+    "controlled_map": 0.4176445578231292,
+    "skill": 0.16410378639496231,
+    "delta": 0.14511835756076907,
+    "n": 8,
+    "stamp": "WEAK"
+   },
+   "color_rain": {
+    "controlled_map": 0.5555272108843538,
+    "skill": 0.3637634454556619,
+    "delta": 0.29450263123977816,
+    "n": 8,
+    "stamp": "TRUSTED"
+   },
+   "cotton_cloud": {
+    "controlled_map": 0.5183333333333333,
+    "skill": 0.30244065314726387,
+    "delta": 0.27941600531659294,
+    "n": 6,
+    "stamp": "WEAK"
+   },
+   "earth_wave": {
+    "controlled_map": 0.2583333333333333,
+    "skill": -0.10518581885162771,
+    "delta": -0.09452166143508042,
+    "n": 5,
+    "stamp": "WEAK"
+   },
+   "firelava": {
+    "controlled_map": 0.523888888888889,
+    "skill": 0.3107183167693039,
+    "delta": 0.30622251182460297,
+    "n": 6,
+    "stamp": "WEAK"
+   },
+   "gas_transformation": {
+    "controlled_map": 0.26358024691358023,
+    "skill": -0.027701214915801464,
+    "delta": -0.053105468831394984,
+    "n": 10,
+    "stamp": "WEAK"
+   },
+   "giant_grab": {
+    "controlled_map": 0.4875,
+    "skill": 0.2500609706527924,
+    "delta": 0.1343921083922713,
+    "n": 5,
+    "stamp": "WEAK"
+   },
+   "live_concert": {
+    "controlled_map": 0.40038265306122445,
+    "skill": 0.14823646287721687,
+    "delta": 0.1533144663624652,
+    "n": 8,
+    "stamp": "WEAK"
+   },
+   "luminous_gaze": {
+    "controlled_map": 0.3611111111111111,
+    "skill": 0.04794756812694034,
+    "delta": 0.016500718984464834,
+    "n": 4,
+    "stamp": "WEAK"
+   },
+   "melt_transition": {
+    "controlled_map": 0.34722222222222215,
+    "skill": 0.023342799750640655,
+    "delta": 0.03400695716718795,
+    "n": 4,
+    "stamp": "WEAK"
+   },
+   "money_rain": {
+    "controlled_map": 0.5928571428571429,
+    "skill": 0.4164725366723692,
+    "delta": 0.42312612203567623,
+    "n": 7,
+    "stamp": "TRUSTED"
+   },
+   "mystification": {
+    "controlled_map": 0.1875,
+    "skill": -0.19103365433556607,
+    "delta": -0.18036949691901877,
+    "n": 5,
+    "stamp": "WEAK"
+   },
+   "portal": {
+    "controlled_map": 0.1922989047989048,
+    "skill": -0.12091184817653446,
+    "delta": -0.11236095372650223,
+    "n": 13,
+    "stamp": "WEAK"
+   },
+   "raven_transition": {
+    "controlled_map": 0.2222222222222222,
+    "skill": -0.1979463776383343,
+    "delta": -0.18728222022178703,
+    "n": 4,
+    "stamp": "WEAK"
+   },
+   "saint_glow": {
+    "controlled_map": 0.20833333333333331,
+    "skill": -0.18741754044857992,
+    "delta": -0.17675338303203264,
+    "n": 4,
+    "stamp": "WEAK"
+   },
+   "shadow_smoke": {
+    "controlled_map": 0.3155291005291005,
+    "skill": 0.03800789963462383,
+    "delta": 0.04118565588512262,
+    "n": 10,
+    "stamp": "WEAK"
+   },
+   "water_bending": {
+    "controlled_map": 0.5694444444444444,
+    "skill": 0.35959234265252726,
+    "delta": 0.37025650006907457,
+    "n": 4,
+    "stamp": "WEAK"
+   }
+  },
+  "coverage": {
+   "anchor_cov_controlled": 1.0,
+   "classes_defined": 18,
+   "classes_eligible": 18
+  }
+ },
+ "m1c_improved": {
+  "causal": {
+   "controlled_map": 0.5285668421085088,
+   "Cn_skill": 0.32591464972095824,
+   "null": 0.3006328387105007,
+   "z": 10.914585604841939,
+   "p": 0.0033222591362126247,
+   "boot_lo": 0.4996918662066232,
+   "floor": 0.04176686346863727,
+   "PASS": true
+  },
+  "validity": {
+   "uncontrolled_map": 0.09076248450256386,
+   "U_skill": 0.08123983433549882,
+   "null": 0.010364674615793443
+  },
+  "reliability": {
+   "hubness_pass": true,
+   "skew": 0.760661163496395,
+   "entropy": 0.8887822108953461,
+   "maxpred": 0.11261261261261261,
+   "hub_class": "polygon",
+   "hub_share": 0.11261261261261261
+  },
+  "shortcut": {
+   "delta_macro": 0.24467481538545943,
+   "note": "\u0394=Cn-U; \u22650 content-robust, \u226a0 shortcut"
+  },
+  "trust_map": {
+   "air_bending": {
+    "controlled_map": 0.6944444444444444,
+    "skill": 0.5479761660160263,
+    "delta": 0.3619684871195746,
+    "n": 4,
+    "stamp": "WEAK"
+   },
+   "animalization": {
+    "controlled_map": 0.3581207482993197,
+    "skill": 0.1133943983841387,
+    "delta": 0.1157477504425598,
+    "n": 8,
+    "stamp": "WEAK"
+   },
+   "color_rain": {
+    "controlled_map": 0.4641156462585034,
+    "skill": 0.2627534374423194,
+    "delta": 0.15129966466242417,
+    "n": 8,
+    "stamp": "WEAK"
+   },
+   "cotton_cloud": {
+    "controlled_map": 0.5038888888888889,
+    "skill": 0.29338594473692553,
+    "delta": 0.20842558846022463,
+    "n": 6,
+    "stamp": "WEAK"
+   },
+   "earth_wave": {
+    "controlled_map": 0.7208333333333333,
+    "skill": 0.5997371408088895,
+    "delta": 0.58494853635146,
+    "n": 5,
+    "stamp": "TRUSTED"
+   },
+   "firelava": {
+    "controlled_map": 0.4794444444444444,
+    "skill": 0.2604597199165484,
+    "delta": 0.18167447779994342,
+    "n": 6,
+    "stamp": "WEAK"
+   },
+   "gas_transformation": {
+    "controlled_map": 0.40518077601410935,
+    "skill": 0.18264854849911955,
+    "delta": 0.08596171280728708,
+    "n": 10,
+    "stamp": "WEAK"
+   },
+   "giant_grab": {
+    "controlled_map": 0.6666666666666667,
+    "skill": 0.5197246421281536,
+    "delta": 0.0418024756635329,
+    "n": 5,
+    "stamp": "TRUSTED"
+   },
+   "live_concert": {
+    "controlled_map": 0.5238945578231293,
+    "skill": 0.34260787070231424,
+    "delta": 0.2811192493708758,
+    "n": 8,
+    "stamp": "TRUSTED"
+   },
+   "luminous_gaze": {
+    "controlled_map": 0.375,
+    "skill": 0.05601006922592829,
+    "delta": -0.017722806759689173,
+    "n": 4,
+    "stamp": "WEAK"
+   },
+   "melt_transition": {
+    "controlled_map": 0.6944444444444444,
+    "skill": 0.5473561484123174,
+    "delta": 0.5578293746098256,
+    "n": 4,
+    "stamp": "WEAK"
+   },
+   "money_rain": {
+    "controlled_map": 0.3825396825396825,
+    "skill": 0.12629525605276365,
+    "delta": 0.13676848225027188,
+    "n": 7,
+    "stamp": "WEAK"
+   },
+   "mystification": {
+    "controlled_map": 0.4541666666666666,
+    "skill": 0.20627974767909185,
+    "delta": 0.21675297387660009,
+    "n": 5,
+    "stamp": "WEAK"
+   },
+   "portal": {
+    "controlled_map": 0.49942141192141193,
+    "skill": 0.3226669940512501,
+    "delta": 0.2502704891900229,
+    "n": 13,
+    "stamp": "TRUSTED"
+   },
+   "raven_transition": {
+    "controlled_map": 0.5277777777777778,
+    "skill": 0.2927962282465507,
+    "delta": 0.2611664033524961,
+    "n": 4,
+    "stamp": "WEAK"
+   },
+   "saint_glow": {
+    "controlled_map": 0.20833333333333331,
+    "skill": -0.19097367321353945,
+    "delta": -0.18050044701603124,
+    "n": 4,
+    "stamp": "WEAK"
+   },
+   "shadow_smoke": {
+    "controlled_map": 0.6670414462081129,
+    "skill": 0.5430443401850074,
+    "delta": 0.4421694761306279,
+    "n": 10,
+    "stamp": "TRUSTED"
+   },
+   "water_bending": {
+    "controlled_map": 0.8888888888888888,
+    "skill": 0.836756903822609,
+    "delta": 0.7209209767454288,
+    "n": 4,
+    "stamp": "TRUSTED"
+   }
+  },
+  "coverage": {
+   "anchor_cov_controlled": 1.0,
+   "classes_defined": 18,
+   "classes_eligible": 18
+  }
+ },
+ "ensemble_ceiling": {
+  "per_metric_skill": {
+   "m1a_incumbent": {
+    "air_bending": 0.910367493277562,
+    "animalization": 0.378802241119795,
+    "color_rain": 0.39619677771167056,
+    "cotton_cloud": 0.657033107737333,
+    "earth_element": 0.59948109622402,
+    "earth_wave": 0.9459702836560108,
+    "fire_element": 0.7456105347166799,
+    "firelava": 0.8819553467636592,
+    "flying_cam_transition": 0.010197960407918422,
+    "gas_transformation": 0.10528378540393456,
+    "giant_grab": 0.03341825265997301,
+    "hero_flight": 0.739828720062819,
+    "illustration_scene": 0.364829216095022,
+    "live_concert": 1.0,
+    "luminous_gaze": 0.7286159413006331,
+    "melt_transition": 0.3202640133976948,
+    "money_rain": 0.06361031193108717,
+    "mystification": 0.17703492729725676,
+    "plasma_explosion": 0.45788575444232493,
+    "polygon": 0.6135472633610771,
+    "portal": 0.929262363060992,
+    "raven_transition": 1.0,
+    "saint_glow": 0.06953476738369183,
+    "shadow": 0.24075210820135842,
+    "shadow_smoke": 0.9697246572019449,
+    "super_fast_run": 0.7689366073128507,
+    "water_bending": 0.9103496364179698,
+    "water_element": 0.550238373661959,
+    "wireframe": 0.22989083833520216
+   },
+   "m1a_improved": {
+    "air_bending": 0.7517840521253489,
+    "animalization": 0.9097647397574362,
+    "color_rain": 0.7493421773500478,
+    "cotton_cloud": 0.9632708529732245,
+    "earth_element": 0.5605883438980861,
+    "earth_wave": 1.0,
+    "fire_element": 0.4873653686826843,
+    "firelava": 0.9628930247132456,
+    "flying_cam_transition": 0.12234876188486052,
+    "gas_transformation": 0.4208732823931858,
+    "giant_grab": 0.7308501423091202,
+    "hero_flight": 0.8121403793489637,
+    "illustration_scene": 0.42528475027997353,
+    "live_concert": 1.0,
+    "luminous_gaze": 0.9055415617128463,
+    "melt_transition": 0.40018455859735463,
+    "money_rain": 0.7337614946723104,
+    "mystification": 0.3338716188938231,
+    "plasma_explosion": 0.45346658338538404,
+    "polygon": 0.5624908612970047,
+    "portal": 0.9496913773323302,
+    "raven_transition": 1.0,
+    "saint_glow": 0.6874023132228821,
+    "shadow": 0.23966066253775156,
+    "shadow_smoke": 0.9877265933065451,
+    "super_fast_run": 0.8505113135913132,
+    "water_bending": 0.7196843853820598,
+    "water_element": 0.7570547561203513,
+    "wireframe": 0.2928456980884083
+   },
+   "m1b_incumbent": {
+    "air_bending": 0.2650061249489588,
+    "animalization": 0.23201754774898226,
+    "color_rain": -0.013734406860274205,
+    "cotton_cloud": 0.3367218480518664,
+    "earth_element": 0.12627825882537325,
+    "earth_wave": 0.1218165851210639,
+    "fire_element": -0.006008103954170732,
+    "firelava": 0.4164723341106636,
+    "flying_cam_transition": 0.25404061334438466,
+    "gas_transformation": 0.22216656775884705,
+    "giant_grab": 0.3997413026489531,
+    "hero_flight": 0.5783040850643043,
+    "illustration_scene": 0.12853098452000927,
+    "live_concert": 0.6947784214003849,
+    "luminous_gaze": -0.0005558643690938335,
+    "melt_transition": 0.32791935032203856,
+    "money_rain": 0.04643914252399321,
+    "mystification": 0.09154958201796574,
+    "plasma_explosion": 0.584199584199584,
+    "polygon": 0.18220631077828828,
+    "portal": 0.4745052871908641,
+    "raven_transition": NaN,
+    "saint_glow": -0.07868020304568522,
+    "shadow": 0.20656678823284907,
+    "shadow_smoke": 0.5861354023821406,
+    "super_fast_run": 0.4398557563142516,
+    "water_bending": 1.0,
+    "water_element": -0.013114887499491464,
+    "wireframe": 0.17305359691442163
+   },
+   "m1b_improved": {
+    "air_bending": 0.7662337662337662,
+    "animalization": 0.30356037808377084,
+    "color_rain": 0.2835909360301779,
+    "cotton_cloud": 0.6845174907580281,
+    "earth_element": 0.17362994575622212,
+    "earth_wave": 0.3038904787686597,
+    "fire_element": 0.17201540436456977,
+    "firelava": 0.48004872686216843,
+    "flying_cam_transition": 0.41398619611928633,
+    "gas_transformation": 0.6215759326738192,
+    "giant_grab": 0.7283702213279678,
+    "hero_flight": 0.7217259284936124,
+    "illustration_scene": 0.3110235686603217,
+    "live_concert": 0.8753257917278573,
+    "luminous_gaze": 0.3864246452767481,
+    "melt_transition": 0.6310679611650485,
+    "money_rain": 0.2293132854736588,
+    "mystification": 0.18303350387852782,
+    "plasma_explosion": 0.730838246603435,
+    "polygon": 0.2728695396797324,
+    "portal": 0.48959291761467344,
+    "raven_transition": NaN,
+    "saint_glow": 0.46598101265822783,
+    "shadow": 0.4290356435390851,
+    "shadow_smoke": 0.7082183571909979,
+    "super_fast_run": 0.4867401692588779,
+    "water_bending": 0.6882307092751363,
+    "water_element": 0.37825425051492334,
+    "wireframe": 0.6361031666324984
+   },
+   "m1c_incumbent": {
+    "air_bending": 0.06963631237665634,
+    "animalization": 0.16504300936453903,
+    "color_rain": 0.3646340078219047,
+    "cotton_cloud": 0.28553966339880954,
+    "earth_element": -0.05592303066746836,
+    "earth_wave": -0.12137757244855092,
+    "fire_element": 0.5984473296747421,
+    "firelava": 0.31175714744619343,
+    "flying_cam_transition": 0.5178197064989518,
+    "gas_transformation": -0.028117862162832102,
+    "giant_grab": 0.25790362802670747,
+    "hero_flight": 0.30023475892879437,
+    "illustration_scene": 0.27261115954584986,
+    "live_concert": 0.14049771457592677,
+    "luminous_gaze": 0.042863087806908,
+    "melt_transition": 0.02718366220505034,
+    "money_rain": 0.4155919609149119,
+    "mystification": -0.1798319327731092,
+    "plasma_explosion": 0.11715246636771294,
+    "polygon": 0.8776119524267169,
+    "portal": -0.12357563286109972,
+    "raven_transition": -0.20412844036697242,
+    "saint_glow": -0.18453865336658357,
+    "shadow": -0.0676764500338162,
+    "shadow_smoke": 0.03619843554067159,
+    "super_fast_run": 0.05293039143594693,
+    "water_bending": 0.36003303055326175,
+    "water_element": -0.19633362431553042,
+    "wireframe": -0.23861062404913636
+   },
+   "m1c_improved": {
+    "air_bending": 0.5362563237774031,
+    "animalization": 0.11628639051253215,
+    "color_rain": 0.2591695692909211,
+    "cotton_cloud": 0.29538568362580486,
+    "earth_element": -0.05449254501932187,
+    "earth_wave": 0.5973127470883642,
+    "fire_element": 0.5235464714818394,
+    "firelava": 0.2579315005570133,
+    "flying_cam_transition": 0.39583333333333337,
+    "gas_transformation": 0.18572971687058815,
+    "giant_grab": 0.5214102444796002,
+    "hero_flight": 0.6100342909296547,
+    "illustration_scene": 0.13663633926990376,
+    "live_concert": 0.3494188976180736,
+    "luminous_gaze": 0.028637213987624085,
+    "melt_transition": 0.5577593138568749,
+    "money_rain": 0.1337312577524371,
+    "mystification": 0.20485047951764962,
+    "plasma_explosion": 0.5816483056756379,
+    "polygon": 0.7984541419090341,
+    "portal": 0.32371628437136973,
+    "raven_transition": 0.28229665071770343,
+    "saint_glow": -0.1923023288244317,
+    "shadow": 0.08728749371104176,
+    "shadow_smoke": 0.5449831995071369,
+    "super_fast_run": 0.5127260529378174,
+    "water_bending": 0.8357289527720738,
+    "water_element": -0.014224789462319296,
+    "wireframe": 0.18068176081107598
+   }
+  },
+  "ceiling": {
+   "air_bending": 0.910367493277562,
+   "animalization": 0.9097647397574362,
+   "color_rain": 0.7493421773500478,
+   "cotton_cloud": 0.9632708529732245,
+   "earth_element": 0.59948109622402,
+   "earth_wave": 1.0,
+   "fire_element": 0.7456105347166799,
+   "firelava": 0.9628930247132456,
+   "flying_cam_transition": 0.5178197064989518,
+   "gas_transformation": 0.6215759326738192,
+   "giant_grab": 0.7308501423091202,
+   "hero_flight": 0.8121403793489637,
+   "illustration_scene": 0.42528475027997353,
+   "live_concert": 1.0,
+   "luminous_gaze": 0.9055415617128463,
+   "melt_transition": 0.6310679611650485,
+   "money_rain": 0.7337614946723104,
+   "mystification": 0.3338716188938231,
+   "plasma_explosion": 0.730838246603435,
+   "polygon": 0.8776119524267169,
+   "portal": 0.9496913773323302,
+   "raven_transition": 1.0,
+   "saint_glow": 0.6874023132228821,
+   "shadow": 0.4290356435390851,
+   "shadow_smoke": 0.9877265933065451,
+   "super_fast_run": 0.8505113135913132,
+   "water_bending": 1.0,
+   "water_element": 0.7570547561203513,
+   "wireframe": 0.6361031666324984
+  },
+  "corpus_limited_classes": []
+ }
+}
