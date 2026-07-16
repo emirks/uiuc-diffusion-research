@@ -1,5 +1,21 @@
 ## 2026-07-16
 
+17:45 — **transition-eval 4.0.0-draft.1: health-validated metrics + causal bar 9 ported into
+the certified harness (branch `eval/v4-metrics`, not yet frozen/run).** Replaces the three M1
+transfer metrics with the metric-search/health-validation deliverables — M1a=**S3** (4-channel
+appearance+dynamics ECDF composite), M1b=**D_ZPR** (3-view Z/P/R camera ECDF fusion), M1c=**CSLS**
+(k=10 de-hubbed object motion, scoped stamp) — now corpus-relative: raw measurements ranked
+against the committed `reference_v4.npz` instrument constant (`reference_stats.py`; μ + 9 ECDF
+populations + CSLS r_obj; sha in `versioning.PINS`). Fixed causal-excess exam gate ported as
+**bar 9** (`certify/datasheet.py`, self-verifying via 3 negative controls that must FAIL). §4
+invariant amended "all scores raw" → "no outcome-coupled normalization"; deployed scoring emits a
+saturation flag outside fitted support. Advised campaign (fable-advisor xhigh): direct
+replacement (no sign-test theater), DINO-only gating baseline (max-over-proxies non-gating), m1c
+ships headline scoped, bar-2 leave-own-clip-out robustness clause + non-gating D_ZPR-reversal
+field. Port parity-verified at every tier (S3/Z/P/R/CSLS bit-exact, D_ZPR 2e-16, retrieval
+headlines 4dp, datasheet verdicts reproduce n_perm=1000); bar 9 dry-run through deployed code =
+PASS; 68 tests green. Next: freeze bars (own commit) → §6 certification run on the H200.
+
 16:18 — **Eval-ladder scaffolds built + ready to submit; A7 audit PASS.** Scaffolded
 `exp_062` (11 R2/R3 specialist trainings: `caption_missing.py` captioned the 24 held-out-
 class train clips via Gemini/PyAV; `build_datasets.py` → 11 per-class manifests + configs

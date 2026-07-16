@@ -345,6 +345,160 @@ def trust_map(r1_winner: dict, r2_winner: dict, class_n: dict,
 
 # --- orchestration -----------------------------------------------------------------
 
+def v4_headline_matrices(bundles: list[dict], sidedness: list[str],
+                         n_jobs: int | None = None) -> dict:
+    """The three v4 headline distance matrices over the corpus, built by the
+    DEPLOYED reference_stats kernels (the exam imports deployed code, never a
+    reimplementation): S3 appearance, D_ZPR camera, CSLS object. Also returns
+    the raw channel/view matrices (for the reference artifact + diagnostics)
+    and the incumbent object distance CSLS de-hubs."""
+    from .. import reference_stats as RS
+    feats = [b["feats"] for b in bundles]
+    core = [variant_core(b, s, "v3_sided")[0] for b, s in zip(bundles, sidedness)]
+    npre = [b["profile"]["n_prefix"] for b in bundles]
+    nsuf = [b["profile"]["n_suffix"] for b in bundles]
+    a = RS.m1a_channel_matrices(feats, core, npre, nsuf,
+                                n_jobs=n_jobs or 8)                # P1/P2/V1/V1e/mu
+    S3 = RS.s3_matrix(a["P1"], a["P2"], a["V1"], a["V1e"])
+    tracks = np.stack([b["tracks"] for b in bundles])
+    vis = np.stack([b["vis"] for b in bundles])
+    b_views = RS.m1b_view_matrices(tracks, vis)                    # Z/P/R/cam_valid
+    D_ZPR = RS.dzpr_matrix(b_views["Z"], b_views["P"], b_views["R"])
+    Dobj = motion_distance_matrices(bundles)["m1c_object"]         # deployed 1-object_match
+    CSLS = RS.csls_matrix(Dobj)
+    return {"S3": S3, "D_ZPR": D_ZPR, "CSLS": CSLS, "object_D": Dobj,
+            "channels": a, "views": b_views}
+
+
+def bar2_loo_app_ref(channels: dict, bundles: list[dict], sidedness: list[str],
+                     keys: list[str], sib_key: str, ref_key: str) -> float:
+    """Leave-own-clip-out sibling app_ref for the bar-2 robustness clause (Q2):
+    re-score (sib, ref) through the DEPLOYED m1a_pair kernel against M1a ECDF
+    populations that exclude the sibling clip's own row/column. Returns
+    app_ref = 1 - S3 (higher = better), matching score.py's field orientation."""
+    from .. import reference_stats as RS
+    si, ri = keys.index(sib_key), keys.index(ref_key)
+    loo_ref = RS.loo_m1a_reference(channels, si)
+    bs, br = bundles[si], bundles[ri]
+    gcore = variant_core(bs, sidedness[si], "v3_sided")[0]
+    rcore = variant_core(br, sidedness[ri], "v3_sided")[0]
+    r = RS.m1a_pair(bs["feats"], gcore, bs["profile"]["n_prefix"], bs["profile"]["n_suffix"],
+                    br["feats"], rcore, br["profile"]["n_prefix"], br["profile"]["n_suffix"],
+                    loo_ref)
+    return 1.0 - r["s3"]
+
+
+def run_exam_v4(bundles: list[dict], labels: list[str], sidedness: list[str],
+                corpus: dict, bars: dict, out_dir: pathlib.Path,
+                clip_paths: list[pathlib.Path],
+                analysis_dir: pathlib.Path | None = None) -> dict:
+    """Block A for v4.0.0 — DIRECT REPLACEMENT (advisor V1/F3a, owner-delegated
+    2026-07-16): the headline metrics ARE S3/D_ZPR/CSLS (adjudicated already by
+    the metric-search + health-validation campaigns under a richer pre-registered
+    process; re-running the weaker mechanical sign test whose outcome is known
+    would be pre-registration theater, and the incumbent m1c FAILS the new causal
+    gate — a fluke miss would leave no valid metric on either side).
+
+    Produces: R1 retrieval on the three headliners (bar 1 = M1a d>=1.5); the v3
+    incumbents rescored DESCRIPTIVELY (version bridge, non-gating); R2 pool margin
+    (M2b, unchanged); the trust map on the v4 winners; and bar 9 — the two-arm
+    causal-excess datasheet gate on all three headliners plus the three negative
+    controls (D_cont, pixel-color, random-D), self-verifying (falsifiers must
+    FAIL). Refuses unfrozen bars."""
+    if not bars.get("frozen"):
+        raise RuntimeError("bars.yaml is DRAFT (frozen: false) — freeze first (SPEC §6).")
+    from . import datasheet as DS
+    out_dir = pathlib.Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    class_n = {c: corpus["classes"][c]["n_clips"] for c in corpus["classes"]}
+    eligible = {c for c, n in class_n.items()
+                if n >= bars["exam"]["trust"]["min_class_n"]}
+    camera = {c for c, v in corpus["classes"].items() if "camera" in v.get("tags", [])}
+    obj_classes = {c for c, v in corpus["classes"].items() if "object" in v.get("tags", [])}
+
+    hl = v4_headline_matrices(bundles, sidedness)
+    mats = {"m1a_S3": hl["S3"], "m1b_D_ZPR": hl["D_ZPR"], "m1c_CSLS": hl["CSLS"]}
+    # v3 incumbents, rescored descriptively for the bridge (non-gating)
+    inc_app = appearance_distance_matrix(bundles, "v3_sided", sidedness)
+    inc_mot = motion_distance_matrices(bundles)
+    mats_bridge = {"m1a__v3_sided": inc_app, "m1b_camera": inc_mot["m1b_camera"],
+                   "m1c_object": inc_mot["m1c_object"], "m_incumbent": inc_mot["m_incumbent"]}
+
+    r1 = {k: retrieval_eval(D, labels) for k, D in {**mats, **mats_bridge}.items()}
+    m1c_def = m1c_definedness_per_class(hl["object_D"], labels)
+
+    # bar 1: M1a (S3) separation floor — d only (carried from v3.0.0; foreknown pass,
+    # disclosed in bars header + record).
+    win = r1["m1a_S3"]
+    bar1 = {"acc": win["accuracy_1nn"], "d": win["separation_cohens_d"],
+            "d_min": bars["exam"]["bar1_m1a_floor"]["d_min"],
+            "metric": "m1a_S3"}
+    bar1["pass"] = bool(bar1["d"] >= bar1["d_min"])
+
+    # R2 pool-level M2b — unchanged in v4 (M2b machinery untouched); v3_sided core.
+    r2 = pool_margin_exam(bundles, labels, sidedness, "v3_sided")
+
+    # trust map on the v4 winners (per-class recall of S3/D_ZPR/CSLS)
+    winner_r1 = {"m1a": r1["m1a_S3"], "m1b": r1["m1b_D_ZPR"], "m1c": r1["m1c_CSLS"]}
+    tmap = trust_map(winner_r1, r2, class_n, m1c_def, bars)
+
+    # bar 9 — the two-arm causal-excess gate + negative controls (SPEC §6.2).
+    log_np = bars["exam"]["bar9_causal"]["n_perm"]
+    n_boot = bars["exam"]["bar9_causal"]["n_boot"]
+    content = DS.content_sim_endpoint([b["feats"] for b in bundles],
+                                      [b["profile"]["n_prefix"] for b in bundles],
+                                      [b["profile"]["n_suffix"] for b in bundles])
+    content_alt = DS.content_sim_pixel(clip_paths,
+                                       [b["profile"]["n_prefix"] for b in bundles],
+                                       [b["profile"]["n_suffix"] for b in bundles])
+    strata = {"m1a_S3": eligible, "m1b_D_ZPR": camera & eligible,
+              "m1c_CSLS": obj_classes & eligible}
+    headline_sheets = {}
+    for nm, D in mats.items():
+        headline_sheets[nm] = DS.full_datasheet(
+            D, labels, content, strata[nm], n_perm=log_np, n_boot=n_boot,
+            content_sim_alt=content_alt)
+    ctrl = {"D_cont": (1.0 - content), "pixel_color": (1.0 - content_alt),
+            "random_D": DS.random_distance_matrix(len(labels))}
+    for k in ("D_cont", "pixel_color"):
+        np.fill_diagonal(ctrl[k], 0.0)
+    control_sheets = {nm: DS.full_datasheet(D, labels, content, eligible,
+                                            n_perm=log_np, n_boot=n_boot,
+                                            content_sim_alt=content_alt)
+                      for nm, D in ctrl.items()}
+    bar9 = DS.grade_bar9(headline_sheets, control_sheets)
+    bar9["headline"] = {k: v["causal"] for k, v in headline_sheets.items()}
+    bar9["controls"] = {k: v["causal"] for k, v in control_sheets.items()}
+
+    result = {"r1": {k: {kk: vv for kk, vv in v.items() if kk != "confusion"}
+                     for k, v in r1.items()},
+              "r2": {k: v for k, v in r2.items() if k != "rows"},
+              "bar1": bar1, "bar9": bar9, "m1c_definedness": m1c_def,
+              "trust_map": tmap,
+              "headline_metrics": {"m1a": "S3", "m1b": "D_ZPR", "m1c": "CSLS"}}
+    (out_dir / "exam.json").write_text(json.dumps(result, indent=1, default=str))
+    (out_dir / "trust_map.json").write_text(json.dumps(tmap, indent=1))
+    # reference-artifact rebuild parts (channels/views/object_D already computed) —
+    # NOT serialized (big arrays); the driver assembles the reference from these and
+    # checks rebuild-parity vs the committed artifact (SPEC §4/§7).
+    result["_reference_parts"] = {"channels": hl["channels"], "views": hl["views"],
+                                  "object_D": hl["object_D"]}
+
+    # diagnostics (non-gating): reuse the analysis builder over the v4 matrices
+    try:
+        keys = sorted(corpus["clips"])
+        ana = diagnostics.build_analysis(corpus, keys, labels, sidedness,
+                                         {**r1}, {**mats, **mats_bridge}, r2, "v3_sided")
+        result["by_tag"] = ana["by_tag"]
+        if analysis_dir is not None:
+            diagnostics.write_analysis(analysis_dir, ana, {**mats, **mats_bridge}, keys)
+    except Exception as e:  # noqa: BLE001 — never gates the exam
+        print(f"[exam-v4] diagnostics failed (non-gating): {type(e).__name__}: {e}",
+              flush=True)
+    return result
+
+
 def run_exam(bundles: list[dict], labels: list[str], sidedness: list[str],
              corpus: dict, bars: dict, out_dir: pathlib.Path,
              analysis_dir: pathlib.Path | None = None) -> dict:

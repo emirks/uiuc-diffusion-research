@@ -27,9 +27,45 @@
 #       descriptive rates) — those consumers are not certification gates.
 # Draft.8 history (2026-07-13) retained in git; this file's draft.8 header
 # documented the bar-3 conjunct removal and anchor dedup now folded above.
-status: FROZEN
-frozen: true      # re-frozen 2026-07-14 (3.0.0 revision, own commit);
-                  # changes henceforth = new version + re-run
+#
+# ============================================================================
+# 4.0.0 REVISION (2026-07-16) — new headline transfer metrics + a new bar 9.
+# Advised campaign (operator/advisor; fable-advisor at xhigh made every call);
+# owner authorized GO 2026-07-16 and delegated the two pre-declarations below.
+# The headline transfer metrics are REPLACED (SPEC §3): M1a=S3 (4-channel
+# appearance+dynamics ECDF composite), M1b=D_ZPR (3-view camera ECDF fusion),
+# M1c=CSLS (de-hubbed object motion). They are corpus-relative (SPEC §4 amended:
+# reference populations are pinned instrument constants). Changes here:
+#   - DIRECT REPLACEMENT, no sign-test adoption (advisor F3a): the metrics were
+#     adjudicated by the metric-search + health-validation campaigns under a
+#     richer pre-registered process (simplicity ladder, two-arm causal gate,
+#     three falsifiers, class-half stability) with committed reports; re-running
+#     the weaker mechanical sign test whose outcome is already known would be
+#     pre-registration theater, and the incumbent M1c FAILS the new causal gate
+#     (a fluke sign-test miss would leave no valid metric on either side). The
+#     `exam.variants`/`exam.adoption` block below is RETAINED for future
+#     candidates but is NOT consulted by run_exam_v4. Incumbents are rescored
+#     descriptively for the version bridge (non-gating).
+#   - OUTCOME-AWARE, disclosed (v3.0.0 precedent): all exam-side quantities for
+#     the shipped metrics were known before this freeze (health campaign panel).
+#     bar1 (d>=1.5 on S3) and bar9 both pass foreknown; disclosed here + record.
+#     The score.py-side outcomes (bar2 sibling>control under S3; bars 4-8) were
+#     NOT computed under the new metrics before freeze — they are the real teeth.
+#   - NEW bar 9 (bar9_causal): the two-arm causal-excess gate + negative
+#     controls (below). bars 1,2,4-8 keep their forms and thresholds verbatim.
+#   - F1a (owner-delegated, OUTCOME-AWARE): the DINO endpoint content baseline
+#     GATES bar 9; the max-over-proxies excess ships as a mandatory NON-GATING
+#     record field. Consequence disclosed: this is what lets M1c pass — excess
+#     over DINO 0.156 vs over the color proxy 0.099 (the 0.10 bar). A gate needs
+#     a pinned closed-form baseline; "strongest known proxy" is an open roster.
+#   - F1b (owner-delegated): M1c ships HEADLINE with a scoped stamp (real but
+#     faint; margin over strongest proxy at the practical bar), not demoted.
+#   - tau_copy_initial -> 0.858 (owner-adopted operating value, amendment-1;
+#     the frozen midpoint rule re-derives tau from this run's Block B regardless).
+status: DRAFT
+frozen: false     # 4.0.0-draft.1: flips to true in the freeze commit (own commit)
+                  # AFTER advisor consult 2, BEFORE any score.py-side outcome.
+                  # v3.0.0 was frozen: true — that lock stays on the eval/v3.0.0 tag.
 
 principles:
   truth_only: "hard bars only on constructed or human-verified truth; model-behavior
@@ -75,8 +111,30 @@ exam:                                # Block A (SPEC 6.1)
     version; pre-registered secondary analysis; no other weighting schemes)"
   bar1_m1a_floor:                    # d ONLY (3.0.0, owner decision — see header).
     d_min: 1.5                       # pre-registered since draft.7; passed at 1.522
-                                     # before the accuracy conjunct was deleted.
+                                     # (v3) and again on S3 (v4, foreknown, disclosed).
                                      # Accuracy is reported descriptively, ungated.
+  bar9_causal:                       # NEW 4.0.0 — the two-arm causal-excess gate
+                                     # (SPEC §6.2), self-verifying via negative controls.
+    form: "each headline metric (S3/D_ZPR/CSLS) passes the two-arm gate on its
+      stratum AND all three negative controls (D_cont, pixel-color, random-D) FAIL
+      the same gate on the same content galleries"
+    gate: "causal_PASS iff causal_excess = Cn - Cn_B >= max(0.10, 2*null_std)
+      AND paired-subsample lo95(controlled-mAP difference) > 0, baseline B = D_cont
+      = 1 - content_sim(endpoint DINO). BOTH arms load-bearing — random-D passes
+      the paired-CI arm; a sub-floor metric passes the excess arm — do NOT simplify
+      to one arm (health-validated 2026-07-16; the old above-chance gate was a
+      proven no-op for content-monotone metrics, demoted to descriptive)."
+    baseline: dino_endpoint          # F1a: DINO gates; max-over-proxies is a
+                                     # mandatory NON-GATING record field
+                                     # (causal_excess_maxproxy). Disclosed outcome-
+                                     # aware: DINO-gating is what lets M1c pass.
+    excess_floor: 0.10               # max(0.10, 2*null_std); the practical bar
+    negative_controls: [D_cont, pixel_color, random_D]  # must all FAIL (self-verify)
+    n_perm: 1000                     # permutation null size (health-campaign setting)
+    n_boot: 400                      # Politis-Romano subsample count
+    m1c_scoped_stamp: "object-motion signal real but faint; excess over DINO 0.156,
+      over the strongest content proxy (color) 0.099 — at the 0.10 practical bar
+      (paired lo95 0.043 > 0). Ships headline WITH this stamp (F1b), not demoted."
 
 probes:                              # Block B (SPEC 6.2) — all scored by score.py
   siblings:
@@ -92,6 +150,24 @@ probes:                              # Block B (SPEC 6.2) — all scored by scor
       eligibility_min_n: 4           # the exam's existing trust convention; a 2-clip
                                      # class yields one pair, no distributional basis.
                                      # Ineligible classes stay scored + reported.
+      loo_clause:                    # NEW 4.0.0 (advisor Q2) — leave-own-clip-out
+                                     # robustness. S3 is corpus-relative (percentile),
+                                     # so a sibling — a real corpus clip — draws an
+                                     # in-sample ECDF boost (<=222/24753 ~= 0.9pp) that
+                                     # could manufacture a PASS in S3's compressed
+                                     # regime (exactly V1's named residual risk). The
+                                     # clause re-scores each sibling through the
+                                     # DEPLOYED m1a_pair kernel against M1a ECDF
+                                     # populations with the sibling's own row/col
+                                     # MASKED, and requires sibling_LOO app_ref >
+                                     # control app_ref for ALL eligible classes. bar 2
+                                     # PASS = base form AND loo_clause. Only the ECDF
+                                     # populations are masked (the quantified leakage
+                                     # channel); mu stays full-corpus (1/223, not the
+                                     # leakage channel; disclosed). The control arm is
+                                     # synthetic (out-of-sample) so it is unchanged.
+                                     # Deployed lookup kernel reused (no kernel change),
+                                     # so the F8 fallback margin rule is NOT invoked.
   controls:
     arms: {twosided: lerp, onesided: static_hold}
                                      # controls are construction spec; they are graded
@@ -107,7 +183,11 @@ probes:                              # Block B (SPEC 6.2) — all scored by scor
     honest_set: bar_pair_sibling_m2a # independent real footage provably does not
                                      # copy its reference; max-distance pairs avoid
                                      # shared-scene contamination
-    tau_copy_initial: 0.88           # v2 check-C carryover; detection graded at this
+    tau_copy_initial: 0.858          # 4.0.0: owner-adopted operating value (amendment-1,
+                                     # 2026-07-14; splice min 0.914 / honest max 0.802,
+                                     # midpoint rule). The frozen midpoint rule below
+                                     # re-derives tau from THIS run's Block B regardless;
+                                     # the bar is on the gap, not this constant.
     bar4:
       detect_all: true               # 100% of splices, verbatim AND perturbed
       min_gap: 0.05                  # cosine units, splice_min - honest_max; a
@@ -177,6 +257,16 @@ record:                              # certifications/v<X.Y>.md required content
     expectation: "~0 (DINO is content-heavy; M1a claims style)"
     alarm_level: 0.4                 # noted in record, NON-GATING
     gating: false
+
+reference:                           # 4.0.0 — the corpus-relative reference artifact
+                                     # (reference_v4.npz), a pinned instrument constant
+                                     # (SPEC §4/§7; sha in versioning.PINS).
+  rebuild_tol: 1.0e-6                # rebuilding the artifact from the pinned corpus
+                                     # must reproduce the committed one within this
+                                     # (gated inside bar 8; float-path tolerance —
+                                     # the exact-EMD LP value is unique, DTW float32).
+  contents: "mu, ECDF populations {P1,P2,V1,V1e,App,Dyn,Z,P,R}, CSLS r_obj[223],
+    k_csls=10, rgrid, s3_app_weight — fitted once on the 223-clip corpus."
 
 judge:
   certification: exempt              # advisory until human-calibrated (O9)

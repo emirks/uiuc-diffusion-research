@@ -36,9 +36,21 @@ REPO_ROOT = pathlib.Path(__file__).resolve().parents[4]  # .../certify/ -> repo
 BARS_PATH = pathlib.Path(__file__).parent / "bars.yaml"
 
 CLAIMS = ("the instrument separates the styles it has seen (per-class trust map "
-          "attached), refuses known-degenerate and copied inputs, is direction-"
-          "sensitive on motion, runs deterministically end-to-end on real "
-          "generations, and its blind spots are enumerated.")
+          "attached), does so with content-controlled discrimination that exceeds "
+          "an explicit content baseline (bar 9), refuses known-degenerate and "
+          "copied inputs, is direction-sensitive on motion, runs deterministically "
+          "end-to-end on real generations, and its blind spots are enumerated.")
+
+# v4.0.0 additional non-claims (advisor V1/F6, SPEC §6.5): the corpus-relative
+# reference populations were fitted on real-corpus pairs — behavior on
+# generated-domain inputs is flagged (saturation), not certified.
+V4_NONCLAIM = ("reference populations (S3 ECDFs, D_ZPR ECDFs, CSLS neighborhoods) "
+               "were fitted on real-corpus pairs; behavior on generated-domain "
+               "inputs outside their support is flagged (saturation), not certified. "
+               "M1c ships a SCOPED causal stamp: object-motion signal is real but "
+               "faint, and its margin over the strongest content proxy sits at the "
+               "0.10 practical bar (excess over DINO 0.156; over the color proxy "
+               "0.099 — DINO-only gates, both ship in the datasheet, advisor V1/F1a).")
 
 
 def log(msg: str) -> None:
@@ -173,13 +185,42 @@ def main() -> int:
     sidedness = [corpus["classes"][l]["sidedness"] for l in labels]
     bundles = [bundles_by_key[k] for k in keys]
 
-    # ---- Block A ---------------------------------------------------------------------
-    log("Block A: exam (R1 + R2 + adoption)")
-    exam_res = exam.run_exam(bundles, labels, sidedness, corpus, bars, out / "exam",
-                             analysis_dir=out / "analysis")
-    mask_w = exam_res["mask_adoption"]["winner"]
-    log(f"  mask winner={mask_w}; motion winner={exam_res['motion_adoption']['winner']}; "
-        f"bar1 pass={exam_res['bar1']['pass']}")
+    # ---- Block A (v4: direct replacement — headline metrics ARE S3/D_ZPR/CSLS) -------
+    log("Block A: exam v4 (R1 S3/D_ZPR/CSLS + R2 M2b + bar9 causal gate)")
+    clip_paths = [REPO_ROOT / probe_root / k for k in keys]
+    exam_res = exam.run_exam_v4(bundles, labels, sidedness, corpus, bars, out / "exam",
+                                clip_paths, analysis_dir=out / "analysis")
+    log(f"  bar1(S3 d>={exam_res['bar1']['d_min']}) pass={exam_res['bar1']['pass']} "
+        f"(d={exam_res['bar1']['d']:.3f}); bar9(causal gate) pass={exam_res['bar9']['pass']}")
+    for nm, v in exam_res["bar9"]["metrics_causal_PASS"].items():
+        log(f"    bar9 {nm}: causal_PASS={v}")
+    for nm, v in exam_res["bar9"]["controls_causal_PASS"].items():
+        log(f"    bar9 control {nm}: causal_PASS={v} (must be False)")
+
+    # ---- reference-artifact rebuild parity (SPEC §4/§7) -----------------------------
+    # The committed reference_v4 artifact (a pinned instrument constant, sha in
+    # versioning.PINS) is what score.py ranks every generated pair against. Rebuild
+    # it from THIS corpus (reusing the exam's already-computed matrices) and assert
+    # it reproduces the committed artifact within tolerance — else the artifact is
+    # stale/corrupt and Block B/C would score against wrong reference populations.
+    from .. import reference_stats as RS
+    parts = exam_res.pop("_reference_parts")
+    fresh_ref = RS.build_reference_from_parts(parts["channels"], parts["views"],
+                                              parts["object_D"], keys,
+                                              stamp["corpus_sha256"])
+    committed_ref = None
+    try:
+        committed_ref = RS.load_reference(expect_corpus_sha=stamp["corpus_sha256"])
+        rebuild_parity = RS.compare_reference(fresh_ref, committed_ref,
+                                              tol=bars["reference"]["rebuild_tol"])
+    except Exception as e:  # noqa: BLE001 — a missing/mismatched artifact is a hard fail
+        rebuild_parity = {"pass": False, "mismatch": [f"{type(e).__name__}: {e}"],
+                          "per_array": {}}
+    rebuild_parity["artifact_sha256"] = versioning.sha256_file(
+        REPO_ROOT / "src/diffusion/transition_eval/reference_v4.npz")
+    log(f"  reference rebuild-parity: pass={rebuild_parity['pass']} "
+        f"(sha {str(rebuild_parity['artifact_sha256'])[:12]}…"
+        + ("" if rebuild_parity["pass"] else f"; mismatch {rebuild_parity['mismatch']}") + ")")
 
     # ---- Block B build ----------------------------------------------------------------
     log("Block B: probe construction")
@@ -204,6 +245,7 @@ def main() -> int:
     rev_pairs = probes.enumerate_reversal_pairs(pairs, corpus, cams, bars)
     log(f"  reversal-sensitive pairs: {len(rev_pairs)}")
     rev_cams = {}
+    rev_bundles = {}   # v4 (Q1): reversed-ref tracks/vis for the D_ZPR reversal field
     for p in rev_pairs:
         vp = probes.build_reversed_video(REPO_ROOT / probe_root / p["ref"],
                                          probe_dir / f"rev__{p['class']}.mp4")
@@ -211,6 +253,8 @@ def main() -> int:
                                    short_side=versioning.PINS["feature_short_side"],
                                    need_frames=False)
         rev_cams[p["ref"]] = camera_trajectory(rb["tracks"], rb["vis"])
+        rev_bundles[p["ref"]] = {"tracks": rb["tracks"], "vis": rb["vis"],
+                                 "cam": rev_cams[p["ref"]]}
     extractor.free(); tracker.free()
 
     # ---- Block C conversion (pure CPU) — before scoring, so all three
@@ -276,9 +320,68 @@ def main() -> int:
     g_sib = safe("grade_sibling_floor",
                  lambda: probes.grade_sibling_floor(rows, eligible, bars, inelig),
                  GRADER_CRASH)
+
+    # bar 2 leave-own-clip-out robustness clause (v4, advisor Q2): a PASS must not
+    # depend on the sibling's in-sample ECDF leakage. Re-score each eligible
+    # sibling through the deployed m1a_pair kernel against M1a populations with the
+    # sibling's own row/col masked, and require sibling_LOO app_ref > its control's
+    # app_ref (the control is synthetic — out-of-sample already — so it is unchanged).
+    def _bar2_loo():
+        per = {}
+        for cls in eligible:
+            sib_key, ref_key = [str(k) for k in pairs[cls]["bar_pair"]]
+            ctrl = next((rows[k] for k in rows if k.endswith(f"__sib__{cls}")
+                         and rows[k]["arm"].startswith("control")), None)
+            if ctrl is None or not np.isfinite(ctrl.get("app_ref", np.nan)):
+                per[cls] = {"pass": False, "reason": "missing/NaN control"}
+                continue
+            loo = exam.bar2_loo_app_ref(parts["channels"], bundles, sidedness, keys,
+                                        sib_key, ref_key)
+            per[cls] = {"pass": bool(loo > ctrl["app_ref"]),
+                        "sib_loo_app_ref": float(loo),
+                        "control_app_ref": float(ctrl["app_ref"]),
+                        "loo_margin": float(loo - ctrl["app_ref"])}
+        n_pass = sum(1 for v in per.values() if v["pass"])
+        return {"pass": bool(eligible and n_pass == len(eligible)),
+                "n_pass": n_pass, "n_eligible": len(eligible),
+                "rule": "sibling LOO app_ref > control app_ref, all eligible classes; "
+                        "M1a ECDF populations mask the sibling's own row/col (mu full-corpus)",
+                "per_class": per}
+    g_sib_loo = safe("grade_bar2_loo", _bar2_loo, GRADER_CRASH)
     g_spl = safe("grade_splices", lambda: probes.grade_splices(rows, classes, bars), GRADER_CRASH)
     g_rev = safe("grade_reversal", lambda: probes.grade_reversal(rev_pairs, cams, rev_cams, bars), GRADER_CRASH)
     g_m3 = safe("grade_m3_panel", lambda: probes.grade_m3_panel(rows, classes, bars), GRADER_CRASH)
+
+    # D_ZPR reversal deltas (v4, advisor Q1) — MANDATORY NON-GATING record field.
+    # bar 5 gates on the verbatim v3 cam_corr form (above); this additionally
+    # records the shipped M1b metric's per-pair behavior under reversal through the
+    # deployed m1b_pair (ecdf_lookup) path — the reversed ref is non-corpus, exactly
+    # the out-of-sample path a real generation takes. delta > 0 ⟺ reversed ref is a
+    # WORSE (larger-distance) D_ZPR match, i.e. the shipped metric is direction-
+    # sensitive. A promotion candidate for the next version's bars, not gated here
+    # (untested strict inequality; F8 forbids pre-testing; a spurious FAIL would burn
+    # a fail-forward re-run over likely ECDF-quantization noise).
+    def _dzpr_reversal():
+        from ..m1_transfer import camera_zpr
+        out_rows = []
+        for p in rev_pairs:
+            g, r = p["gen"], p["ref"]
+            gb, rb0 = bundles_by_key[g], bundles_by_key[r]
+            un = camera_zpr(gb["tracks"], gb["vis"], cams[g],
+                            rb0["tracks"], rb0["vis"], cams[r], committed_ref)["cam_zpr"]
+            rv = camera_zpr(gb["tracks"], gb["vis"], cams[g],
+                            rev_bundles[r]["tracks"], rev_bundles[r]["vis"],
+                            rev_bundles[r]["cam"], committed_ref)["cam_zpr"]
+            delta = (rv - un) if (np.isfinite(un) and np.isfinite(rv)) else float("nan")
+            out_rows.append({"class": p["class"], "dzpr_unreversed": float(un),
+                             "dzpr_reversed": float(rv), "delta_reversed_minus_unrev": float(delta)})
+        fin = [x["delta_reversed_minus_unrev"] for x in out_rows
+               if np.isfinite(x["delta_reversed_minus_unrev"])]
+        return {"gating": False, "per_pair": out_rows, "n": len(fin),
+                "n_direction_sensitive": int(sum(1 for d in fin if d > 0)),
+                "note": "delta>0 => reversed ref is a worse D_ZPR match (direction-sensitive)"}
+    dzpr_reversal = safe("dzpr_reversal_field", _dzpr_reversal,
+                         {"gating": False, "per_pair": "not computed — crashed"})
 
     twin_ids = [f"exp_057__{t}" for t in
                 blockc.copy_twin_ids(v2_paths["exp_057"] / "manifest_scoring.json")]
@@ -348,17 +451,22 @@ def main() -> int:
     bar8 = {"no_crash": bool(not crashed and not error_rows),
             "crashes": crashed, "error_rows": error_rows,
             "warm": warm_cmp, "cold_anchors": cold_cmp,
+            "reference_rebuild_parity": rebuild_parity,   # v4: committed artifact matches rebuild
             "pass": bool(not crashed and not error_rows
                          and warm_cmp and warm_cmp["pass"]
-                         and cold_cmp and cold_cmp["pass"])}
+                         and cold_cmp and cold_cmp["pass"]
+                         and rebuild_parity["pass"])}
     verdicts = {
         "bar1_m1a_floor": exam_res["bar1"]["pass"],
-        "bar2_sibling_floor": g_sib["pass"],   # merged draft.8 bars 2+3 (3.0.0)
+        # bar 2 = the deployed sibling>control floor AND the v4 leave-own-clip-out
+        # robustness clause (Q2): a PASS cannot ride on in-sample ECDF leakage.
+        "bar2_sibling_floor": bool(g_sib["pass"] and g_sib_loo["pass"]),
         "bar4_splices": g_spl["pass"],
         "bar5_reversal": g_rev["pass"],
         "bar6_m3_panel": g_m3["pass"],
         "bar7_copy_twins": g_twin["pass"],
         "bar8_integration_determinism": bar8["pass"],
+        "bar9_causal_gate": exam_res["bar9"]["pass"],   # v4.0.0 (SPEC §6.2)
     }
     overall = all(verdicts.values())
     calibration = {
@@ -375,15 +483,34 @@ def main() -> int:
     record = {"version": ver, "overall_pass": overall, "verdicts": verdicts,
               "stamp": stamp, "bars_sha256": versioning.sha256_file(BARS_PATH),
               "exam": {k: v for k, v in exam_res.items() if k != "trust_map"},
-              "grades": {"sibling_floor": g_sib, "splices": g_spl,
-                         "reversal": g_rev, "m3_panel": g_m3, "copy_twins": g_twin,
-                         "bar8": bar8},
+              "grades": {"sibling_floor": g_sib, "sibling_floor_loo": g_sib_loo,
+                         "splices": g_spl, "reversal": g_rev, "m3_panel": g_m3,
+                         "copy_twins": g_twin, "bar8": bar8,
+                         "bar9_causal_gate": exam_res["bar9"]},
               "content_invariance": {**audit, "per_class": "see content_invariance.json",
                                      "alarm_level": bars["record"]["content_invariance"]["alarm_level"],
                                      "gating": False},
               "blockc": {"n_scored": len(c_rows), "excluded": c_excluded,
                          "bridge": bridge, "arm_distributions": dists},
-              "calibration": calibration, "claims": CLAIMS}
+              "calibration": calibration, "claims": CLAIMS,
+              # mandatory NON-GATING record fields (advisor V1/consult-2):
+              "non_gating_fields": {
+                  # F1a: excess over the strongest content proxy (max(DINO,color)),
+                  # per headline metric — the record ships both baselines.
+                  "causal_excess_maxproxy": {nm: v.get("causal_excess_maxproxy")
+                                             for nm, v in exam_res["bar9"]["headline"].items()},
+                  # Q1: shipped-M1b (D_ZPR) behavior under reversal, deployed path.
+                  "dzpr_reversal": dzpr_reversal,
+                  # Q3 (measured by the advisor on the frozen artifact; disclosed):
+                  "ecdf_tie_bound": "lookup-vs-compose tie discrepancy <= max_tie_run/n "
+                                    "= 5/24753 ~= 2e-4 on [0,1] (pop_App/pop_Dyn max run 5, "
+                                    "no mass point; other 7 populations tie-free)",
+                  "path_separation": "no bar compares the corpus-matrix path and the "
+                                     "per-item lookup path on opposite sides: bar1/bar9 use "
+                                     "the corpus matrices only; bar2 (both clauses), bars "
+                                     "4/6/7 compare score.py lookup-path rows to score.py "
+                                     "lookup-path rows; bar5 uses cam_corr (neither path).",
+              }}
     (out / "record.json").write_text(json.dumps(record, indent=1, default=str))
 
     md = [f"# Certification record — transition-eval/{ver}",
@@ -398,11 +525,15 @@ def main() -> int:
            "that metrics track human judgment (M4 exempt until O9); that pools/masks "
            "behave identically on generated-domain frames (untestable without labels); "
            "M2c validity (first real training manifest); M1b absolute validity "
-           "(injected-trajectory test = post-lock appendix).",
+           f"(injected-trajectory test = post-lock appendix). v4 additionally: {V4_NONCLAIM}",
            "",
-           f"- mask winner: **{mask_w}** · motion winner: "
-           f"**{exam_res['motion_adoption']['winner']}** · O7 Huber triggered: "
-           f"{exam_res['o7_conditional']['huber_triggered']}",
+           f"- headline metrics (direct replacement, advisor V1/F3a): M1a=**S3** "
+           f"(d {exam_res['bar1']['d']:.2f}), M1b=**D_ZPR**, M1c=**CSLS** (scoped "
+           f"stamp — object-motion signal real but faint, margin over the strongest "
+           f"content proxy at the 0.10 bar); incumbents rescored descriptively (bridge)",
+           f"- bar9 causal-excess gate: pass={exam_res['bar9']['pass']} "
+           f"(headliners {exam_res['bar9']['metrics_causal_PASS']}; negative controls "
+           f"{exam_res['bar9']['controls_causal_PASS']} — all must be False)",
            f"- content-invariance pooled partial corr: {audit['pooled_partial_corr']} "
            f"(alarm {bars['record']['content_invariance']['alarm_level']}, non-gating)",
            f"- tau_copy recalibrated: {g_spl.get('tau_recalibrated')} "

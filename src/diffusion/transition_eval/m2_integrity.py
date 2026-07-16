@@ -26,7 +26,8 @@ import numpy as np
 
 from .appearance import set_similarity
 
-TAU_COPY = 0.88   # DRAFT (SPEC O3) — recalibrated by splice probes at certification
+TAU_COPY = 0.858  # owner-adopted 2026-07-14 (amendment-1 midpoint rule); v4
+                  # certification re-derives under the same frozen rule
 
 
 def mid_mask(T: int, n_prefix: int, n_suffix: int) -> np.ndarray:

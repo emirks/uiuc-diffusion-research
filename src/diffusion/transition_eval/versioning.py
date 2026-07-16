@@ -44,8 +44,12 @@ TAG_PREFIX = "eval/v"
 # freely without re-certification; the measuring device may not.
 INSTRUMENT_PATHS = (
     "src/diffusion/transition_eval",
+    # workbench/ is committed search HISTORY, not instrument (v4 decision):
+    # editing it never changes a deployed number, so it is outside dirty scope.
+    ":(exclude)src/diffusion/transition_eval/workbench",
     "tests/test_transition_eval.py",
     "tests/test_transition_eval_v3.py",
+    "tests/test_transition_eval_v4.py",
     "tests/test_certify_v3.py",
     "tests/test_versioning.py",
 )
@@ -67,11 +71,18 @@ PINS = {
     "feature_short_side": 256,
     "core_threshold": 0.5,
     "cross_high_threshold": 0.85,
-    "tau_copy": 0.88,                 # DRAFT — recalibrated in certification
+    "tau_copy": 0.858,                # owner-adopted 2026-07-14 (amendment-1:
+                                      # bar-4 midpoint of splice min 0.914 /
+                                      # honest max 0.802); v4 Block B re-derives
+                                      # under the same frozen midpoint rule
     "core_fallback_min_frames": 8,    # DRAFT — δ-expansion params set at lock
+    # v4 corpus-reference artifact (SPEC §4: pinned instrument constant) —
+    # sha256 of src/diffusion/transition_eval/reference_v4.npz, set at build.
+    "reference_v4_sha256": "e6ea40111a46ade630c3c56c210c2e7b12df1c9dbfd074c717cf0342a8ad2818",
+    "emd_lp_solver": "scipy-linprog-highs",   # observed scipy ver in env_fingerprint
 }
 
-_ENV_PACKAGES = ("torch", "numpy", "transformers", "lpips", "google-genai", "opencv-python")
+_ENV_PACKAGES = ("torch", "numpy", "scipy", "transformers", "lpips", "google-genai", "opencv-python")
 
 
 def _git(*args: str) -> str | None:
