@@ -32,7 +32,10 @@ from .endpoints import (LPIPS_CACHE_TAG, LpipsScorer, cached_temporal_lpips,
                         endpoint_fidelity, lpips_cache_path, seam_scores)
 from .features import DinoExtractor, file_key
 from .controls import make_lerp, make_static_hold
-from .m1_transfer import appearance_ref, camera_match, camera_trajectory, object_match
+from .m1_transfer import (appearance_ref, appearance_s3, camera_match,
+                          camera_trajectory, camera_zpr, object_csls,
+                          object_match_from_profiles, residual_direction_profile)
+from .reference_stats import load_reference
 from .m2_integrity import (TAU_COPY, copy_score, intrusion_margin,
                            memorization_score, mid_mask)
 from .manifests_v3 import (completeness, derive_tier, load_corpus_manifest,
@@ -61,6 +64,20 @@ def _ref_bundle_cache(corpus: dict, cache_dir, extractor, tracker):
         pools.setdefault(cls, []).append(b.feats[mask])
     pools = {c: np.concatenate(fs) for c, fs in pools.items()}
     return bundles, pools
+
+
+def _corpus_v4_pack(corpus: dict, bundles: dict) -> dict:
+    """Per-corpus-clip v4 precomputations, once per run: camera fits + residual-
+    direction profiles in sorted key order (the reference artifact's row order).
+    M1c's CSLS neighborhood term needs every item's similarities to all 223
+    corpus clips; profiles make that 223 cheap correlations per item."""
+    keys = sorted(corpus["clips"])
+    cams = {k: camera_trajectory(bundles[k][0].tracks, bundles[k][0].vis)
+            for k in keys}
+    profiles = [residual_direction_profile(bundles[k][0].tracks,
+                                           bundles[k][0].vis, cams[k])
+                for k in keys]
+    return {"keys": keys, "cams": cams, "profiles": profiles}
 
 
 def _endpoint_key(gen_key: str, side: str, cond, short_side: int) -> str:
@@ -109,26 +126,40 @@ def lpips_warm(item, gen_key: str, cache_dir: pathlib.Path | None,
 
 
 def score_item(item, sidedness, gen_bundle, gen_frames, ref_bundle, ref_core,
-               pools, lpips_scorer, extractor, training_pools=None,
-               lpips_cache_dir=None):
+               pools, lpips_scorer, extractor, ref_key, v4pack,
+               training_pools=None, lpips_cache_dir=None):
     n_pre = item.condition_prefix.num_frames if item.condition_prefix else 9
     n_suf = item.condition_suffix.num_frames if item.condition_suffix else 0
     T = len(gen_bundle.feats)
     gcore, gmeta = core_mask_v3(gen_bundle.profile, sidedness)
     gmid = mid_mask(T, n_pre, n_suf)
-    ref_cam = camera_trajectory(ref_bundle.tracks, ref_bundle.vis)
+    ref_cam = v4pack["cams"][ref_key]
     gen_cam = camera_trajectory(gen_bundle.tracks, gen_bundle.vis)
+
+    # v4 M1c: the gen clip's residual profile vs the full reference corpus
+    gen_res = residual_direction_profile(gen_bundle.tracks, gen_bundle.vis, gen_cam)
+    sims_corpus = np.array([object_match_from_profiles(gen_res, pj)
+                            for pj in v4pack["profiles"]])
+    ref_idx = v4pack["keys"].index(ref_key)
+    prof_g, prof_r = gen_bundle.profile, ref_bundle.profile
 
     row = {
         "item_id": item.item_id, "arm": item.arm, "style": item.style,
         "twin_of": item.twin_of, "sidedness": sidedness,
         **structure_flags(gen_bundle.profile, gmeta),
         **{f"scalar_{k}": v for k, v in gen_bundle.scalars.items() if k != "hold"},
-        # M1
-        "app_ref": appearance_ref(gen_bundle.feats, gcore, ref_bundle.feats, ref_core),
+        # M1 — v4 headline metrics (SPEC §3; corpus-relative, reference_v4-ranked)
+        **appearance_s3(gen_bundle.feats, gcore, prof_g["n_prefix"], prof_g["n_suffix"],
+                        ref_bundle.feats, ref_core, prof_r["n_prefix"], prof_r["n_suffix"],
+                        v4pack["ref_stats"]),
+        **camera_zpr(gen_bundle.tracks, gen_bundle.vis, gen_cam,
+                     ref_bundle.tracks, ref_bundle.vis, ref_cam, v4pack["ref_stats"]),
+        **object_csls(float(sims_corpus[ref_idx]), sims_corpus, ref_idx,
+                      v4pack["ref_stats"]),
+        # M1 — v3 analysis/bridge fields (raw substrate statistics, ungated)
+        "app_ref_v3": appearance_ref(gen_bundle.feats, gcore, ref_bundle.feats, ref_core),
         **camera_match(gen_cam, ref_cam),
-        "obj_match": object_match(gen_bundle.tracks, gen_bundle.vis,
-                                  ref_bundle.tracks, ref_bundle.vis, gen_cam, ref_cam),
+        "obj_match": float(sims_corpus[ref_idx]),
         # M2
         **copy_score(gen_bundle.feats, gmid, ref_bundle.feats, ref_core, TAU_COPY),
         **intrusion_margin(gen_bundle.feats, gcore, pools, item.style),
@@ -171,7 +202,8 @@ def paired_table(rows):
                         **{f"d_{m}": (None if ic.get(m) is None or r.get(m) is None
                                       or not (np.isfinite(ic[m]) and np.isfinite(r[m]))
                                       else float(ic[m] - r[m]))
-                           for m in ("app_ref", "copy_max", "margin", "max_seam_z",
+                           for m in ("app_ref", "cam_zpr", "obj_csls", "copy_max",
+                                     "margin", "max_seam_z",
                                      "prefix_dino", "suffix_dino")}})
     return out
 
@@ -220,6 +252,13 @@ def main() -> int:
 
     lpips_cache_dir = cache_dir if args.lpips_cache == "on" else None
     ref_bundles, pools = _ref_bundle_cache(corpus, cache_dir, extractor, tracker)
+    # v4: the frozen reference artifact (pinned instrument constant) + per-run
+    # corpus precomputations. Corpus mismatch refuses loudly (SPEC §4/§7).
+    ref_stats = load_reference(expect_corpus_sha=stamp["corpus_sha256"])
+    v4pack = _corpus_v4_pack(corpus, ref_bundles)
+    assert [str(k) for k in ref_stats["keys"]] == v4pack["keys"], \
+        "reference_v4 artifact key order != corpus manifest key order"
+    v4pack["ref_stats"] = ref_stats
     training_pools = None
     if training:
         training_pools = {k: ref_bundles[k][0].feats
@@ -246,8 +285,8 @@ def main() -> int:
                 gpath, cache_dir, extractor, tracker, short_side=SHORT_SIDE,
                 need_frames=not lpips_warm(it, gkey, lpips_cache_dir))
             row = score_item(it, side, gb, gframes, rb, rcore, pools,
-                             lpips_scorer, extractor, training_pools,
-                             lpips_cache_dir=lpips_cache_dir)
+                             lpips_scorer, extractor, ref_key, v4pack,
+                             training_pools, lpips_cache_dir=lpips_cache_dir)
             row["tier"] = derive_tier(it, corpus, training)
             row["tags"] = tags_of(it.style, corpus)
             row["provenance"] = {"harness": stamp["harness"], "certified": stamp["certified"]}
@@ -258,8 +297,8 @@ def main() -> int:
                 cb = process_video(cframes, gb.key + f":{cname}", cache_dir,
                                    extractor, tracker)
                 crow = score_item(it, side, cb, cframes, rb, rcore, pools,
-                                  lpips_scorer, extractor, None,
-                                  lpips_cache_dir=lpips_cache_dir)
+                                  lpips_scorer, extractor, ref_key, v4pack,
+                                  None, lpips_cache_dir=lpips_cache_dir)
                 crow.update({"item_id": f"{cname}__{it.item_id}", "arm": cname,
                              "twin_of": None, "provenance": row["provenance"]})
                 rows.append(crow)

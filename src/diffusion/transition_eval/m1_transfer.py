@@ -162,6 +162,25 @@ def _residual_directions(tracks: np.ndarray, vis: np.ndarray, cam: dict,
     return np.where(active[..., None], vr / (speed[..., None] + 1e-9), 0.0).astype(np.float32)
 
 
+def residual_direction_profile(tracks: np.ndarray, vis: np.ndarray,
+                               cam: dict | None = None,
+                               n_steps: int = N_STEPS) -> np.ndarray:
+    """One clip's residual-direction profile — the per-clip half of object_match,
+    exposed so a profile can be extracted once and correlated against many
+    (M1c's CSLS neighborhood term needs gen-vs-all-223-corpus similarities)."""
+    cam = cam or camera_trajectory(tracks, vis)
+    return _residual_directions(tracks, vis, cam, n_steps)
+
+
+def object_match_from_profiles(D1: np.ndarray, D2: np.ndarray,
+                               n_steps: int = N_STEPS) -> float:
+    """The correlate half of object_match on two precomputed profiles."""
+    if len(D1) == 0 or len(D2) == 0:
+        return float("nan")
+    C = np.einsum("itc,jtc->ij", D1, D2) / n_steps
+    return float(0.5 * (C.max(axis=1).mean() + C.max(axis=0).mean()))
+
+
 def object_match(tracksA: np.ndarray, visA: np.ndarray,
                  tracksB: np.ndarray, visB: np.ndarray,
                  camA: dict | None = None, camB: dict | None = None,
@@ -171,9 +190,50 @@ def object_match(tracksA: np.ndarray, visA: np.ndarray,
     imputed; the camera channel carries that item)."""
     camA = camA or camera_trajectory(tracksA, visA)
     camB = camB or camera_trajectory(tracksB, visB)
-    D1 = _residual_directions(tracksA, visA, camA, n_steps)
-    D2 = _residual_directions(tracksB, visB, camB, n_steps)
-    if len(D1) == 0 or len(D2) == 0:
-        return float("nan")
-    C = np.einsum("itc,jtc->ij", D1, D2) / n_steps
-    return float(0.5 * (C.max(axis=1).mean() + C.max(axis=0).mean()))
+    return object_match_from_profiles(
+        _residual_directions(tracksA, visA, camA, n_steps),
+        _residual_directions(tracksB, visB, camB, n_steps), n_steps)
+
+
+# --- v4 headline metrics (corpus-relative; SPEC §3/§4) --------------------------
+#
+# Deployed definitions of the health-validated deliverables (provenance aliases
+# S3 / D_ZPR / CSLS — workbench/search REPORT_health_validation.md). Raw pair
+# measurements are ranked against the frozen reference populations in the
+# committed reference_v4 artifact (reference_stats.load_reference), a pinned
+# instrument constant. Orientation of reported fields:
+#   app_ref  [0,1] HIGHER better (= 1 - S3 rank-distance; keeps the v3 field's
+#            name + orientation so downstream graders read it unchanged)
+#   cam_zpr  [0,1] LOWER better (rank-distance; cam_dtw/cam_corr stay analysis)
+#   obj_csls LOWER better (CSLS-adjusted distance; obj_match stays analysis)
+# Each carries a *_saturated flag when any raw measurement fell outside the
+# fitted reference support (SPEC §6.5: flagged, not certified).
+
+def appearance_s3(gen_feats: np.ndarray, gen_core: np.ndarray, gen_pre: int,
+                  gen_suf: int, ref_feats: np.ndarray, ref_core: np.ndarray,
+                  ref_pre: int, ref_suf: int, ref_stats: dict) -> dict:
+    """M1a v4: 4-channel appearance+dynamics rank composite vs the reference."""
+    from .reference_stats import m1a_pair
+    r = m1a_pair(gen_feats, gen_core, gen_pre, gen_suf,
+                 ref_feats, ref_core, ref_pre, ref_suf, ref_stats)
+    return {"app_ref": 1.0 - r["s3"], "app_saturated": r["saturated"]}
+
+
+def camera_zpr(gen_tracks, gen_vis, gen_cam, ref_tracks, ref_vis, ref_cam,
+               ref_stats: dict) -> dict:
+    """M1b v4: equal-weight rank fusion of the Z/P/R camera views. NaN (never
+    imputed) unless both fits are cam-valid."""
+    from .reference_stats import m1b_pair
+    r = m1b_pair(gen_tracks, gen_vis, gen_cam, ref_tracks, ref_vis, ref_cam,
+                 ref_stats)
+    return {"cam_zpr": r["dzpr"], "cam_zpr_saturated": r["saturated"]}
+
+
+def object_csls(sim_gen_ref: float, sims_gen_corpus: np.ndarray,
+                ref_key_index: int, ref_stats: dict) -> dict:
+    """M1c v4: CSLS-de-hubbed object-motion distance. sims_gen_corpus = the gen
+    clip's object_match similarities against all 223 reference-corpus clips
+    (via residual_direction_profile + object_match_from_profiles)."""
+    from .reference_stats import m1c_pair
+    r = m1c_pair(sim_gen_ref, sims_gen_corpus, ref_key_index, ref_stats)
+    return {"obj_csls": r["csls"], "obj_r_gen": r["r_gen"]}
