@@ -1,20 +1,28 @@
-"""exp_062 — R2/R3 generation from the per-class specialist LoRAs, via the trainer's
-ValidationRunner (exp_051 fork). Per docs/eval_ladder/PLAN.md §5.
+"""exp_062 — R2/R3/R1K/R3X generation via the trainer's ValidationRunner (exp_051
+fork). AMENDED 2026-07-16 to ladder_items_v2.json (PLAN Amendment 1): conditioning is
+SIDE-KEYED (suffix only iff the class is two_sided) and specialist checkpoints come
+from the per-class `<cls>_keyed/` dir (one_sided = prefix-only retrains; two_sided =
+symlink to the blind==keyed run).
 
-For a given --class and --seed, generates that class's:
-  R2 (held-in endpoints) = the grid's r2_items (train clips)
-  R3 (unseen endpoints)  = the grid's test_items (test clips)
-at BOTH specialist checkpoints (step_00250 and step_02000 — the pre-registered
-checkpoint-sensitivity robustness check). Conditioning is sidedness-BLIND
-(prefix 9f + suffix 8f) exactly as trained. Prompt = ICTRANS + type-blind caption
-(test-clip prompts reuse exp_061's for cross-rung parity).
+Modes (per --class, --seed):
+  default : R2 (grid r2_items, held-in) + R3 (grid test_items, unseen), ckpt 250 & 2000
+  --no-adapter : R1K = base 19B, NO adapter (zero-init PEFT = base), prefix-only,
+                 test_items only. Only valid for one_sided (r1k) classes.
+  --r3x   : R3X = donor endpoints from grid r3x.recipients[cls].donors, prefix-only
+                 (recipients are one_sided), ckpt 2000 only.
 
-Co-residence-safe order (exp_051): build the runner FIRST (loads+frees Gemma,
-encodes conds), THEN load the 19B; swap LoRA state-dict per checkpoint. Run in the
-ltx-trainer uv env:
+Conditioning: prefix(9f) always; suffix(8f) iff grid class suffix_conditioning
+(default/R2/R3) — R1K and R3X are prefix-only by construction. Prompt = ICTRANS +
+type-blind caption (exp_061 wins for cross-rung parity).
+
+Co-residence-safe (exp_051): build the runner FIRST (loads+frees Gemma, encodes
+conds), THEN load the 19B; swap LoRA state per checkpoint (base = zero-init, no load).
+Run in the ltx-trainer uv env:
     cd $LAB/LTX-2-official/packages/ltx-trainer
-    uv run --frozen python <this file> --class shadow --seed 42
-Skip-if-exists per output mp4 (requeue-safe). Submit AFTER exp_062 training (PLAN §C1).
+    uv run --frozen python <this file> --class shadow --seed 42            # R2/R3
+    uv run --frozen python <this file> --class shadow --seed 42 --no-adapter  # R1K
+    uv run --frozen python <this file> --class shadow --seed 42 --r3x         # R3X
+Skip-if-exists per output mp4 (requeue-safe).
 """
 import argparse, json
 from pathlib import Path
@@ -38,7 +46,7 @@ EXP = REPO / "experiments/exp_062_ladder_r2r3_specialists"
 COND = EXP / "dataset/cond"
 CKPT_ROOT = REPO / "outputs/training/exp_062_ladder_r2r3_specialists"
 OUT_ROOT = REPO / "outputs/videos/exp_062_ladder_r2r3_specialists"
-STEPS = [250, 2000]
+GRID = json.loads((REPO / "docs/eval_ladder/ladder_items_v2.json").read_text())
 
 # specialist = video-attention targets (exp_051)
 TARGET_MODULES = [
@@ -57,11 +65,10 @@ def load_captions() -> dict:
     return caps
 
 
-def build_sample(clip: str, caps: dict) -> ValidationSample:
-    conds = [
-        PrefixConditionConfig(video=str(COND / f"{clip}_start9.mp4"), num_frames=9),
-        SuffixConditionConfig(video=str(COND / f"{clip}_end9.mp4"), num_frames=8),
-    ]
+def build_sample(clip: str, caps: dict, use_suffix: bool) -> ValidationSample:
+    conds = [PrefixConditionConfig(video=str(COND / f"{clip}_start9.mp4"), num_frames=9)]
+    if use_suffix:
+        conds.append(SuffixConditionConfig(video=str(COND / f"{clip}_end9.mp4"), num_frames=8))
     return ValidationSample(prompt=f"ICTRANS {caps[clip]}", conditions=conds, video_dims=(480, 640, 121))
 
 
@@ -71,27 +78,43 @@ def main() -> None:
     ap.add_argument("--seed", type=int, required=True)
     ap.add_argument("--rank", type=int, default=32)
     ap.add_argument("--alpha", type=int, default=32)
+    ap.add_argument("--no-adapter", dest="no_adapter", action="store_true", help="R1K: base model, prefix-only")
+    ap.add_argument("--r3x", action="store_true", help="R3X: cross-class donor endpoints")
     args = ap.parse_args()
 
-    grid = json.loads((REPO / "docs/eval_ladder/ladder_items_v1.json").read_text())["classes"]
-    g = grid[args.cls]
+    classes = GRID["classes"]
+    g = classes[args.cls]
     caps = load_captions()
-    # (rung, clip) targets in a fixed order
-    targets = [("R2", c) for c in g["r2_items"]] + [("R3", c) for c in g["test_items"]]
+
+    # ---- mode -> (rung, targets [(rung,clip)], steps, use_suffix) ----
+    if args.no_adapter:
+        assert g["r1k"], f"{args.cls} is not an R1K (one_sided) class"
+        rung, steps, use_suffix = "R1K", [None], False
+        targets = [(rung, c) for c in g["test_items"]]
+    elif args.r3x:
+        assert args.cls in GRID["r3x"]["recipients"], f"{args.cls} not an R3X recipient (B8)"
+        rung, steps, use_suffix = "R3X", [2000], False   # recipients one_sided -> prefix-only
+        targets = [(rung, d["donor_clip"]) for d in GRID["r3x"]["recipients"][args.cls]["donors"]]
+    else:
+        steps, use_suffix = [250, 2000], bool(g["suffix_conditioning"])
+        targets = [("R2", c) for c in g["r2_items"]] + [("R3", c) for c in g["test_items"]]
 
     def out_path(rung, clip, step):
-        return OUT_ROOT / rung / f"{rung}__{args.cls}__{clip}__s{args.seed}__ckpt{step}.mp4"
+        stem = f"{rung}__{args.cls}__{clip}__s{args.seed}"
+        if step is not None:
+            stem += f"__ckpt{step}"
+        return OUT_ROOT / rung / f"{stem}.mp4"
 
-    # what's left to do across both checkpoints
-    pending = [(r, c, s) for (r, c) in targets for s in STEPS if not out_path(r, c, s).exists()]
+    pending = [(r, c, s) for (r, c) in targets for s in steps if not out_path(r, c, s).exists()]
     if not pending:
-        print(f"[done] {args.cls} s{args.seed}: nothing to do")
+        print(f"[done] {args.cls} s{args.seed} ({targets[0][0]}): nothing to do")
         return
     for r, c, s in pending:
         out_path(r, c, s).parent.mkdir(parents=True, exist_ok=True)
-    print(f"[info] {args.cls} s{args.seed}: {len(pending)} videos pending across steps {STEPS}")
+    cond_mode = "prefix+suffix" if use_suffix else "prefix-only"
+    print(f"[info] {args.cls} s{args.seed} {targets[0][0]}: {len(pending)} pending, {cond_mode}, steps {steps}")
 
-    samples = [build_sample(c, caps) for (_, c) in targets]
+    samples = [build_sample(c, caps, use_suffix) for (_, c) in targets]
     val_cfg = ValidationConfig(
         samples=samples, negative_prompt="worst quality, inconsistent motion, distorted, jittery",
         video_dims=(480, 640, 121), frame_rate=24.0, seed=args.seed, inference_steps=30,
@@ -107,31 +130,34 @@ def main() -> None:
     transformer = get_peft_model(
         transformer,
         LoraConfig(r=args.rank, lora_alpha=args.alpha, target_modules=TARGET_MODULES,
-                   lora_dropout=0.0, init_lora_weights=True),
+                   lora_dropout=0.0, init_lora_weights=True),   # B=0 -> identity == base model until a ckpt is loaded
     )
     transformer = transformer.to(device).eval()
+    ckpt_dir = CKPT_ROOT / f"{args.cls}_keyed" / "checkpoints"
 
-    for step in STEPS:
+    for step in steps:
         needed = [(r, c) for (r, c) in targets if not out_path(r, c, step).exists()]
         if not needed:
             continue
-        ckpt = CKPT_ROOT / args.cls / "checkpoints" / f"lora_weights_step_{step:05d}.safetensors"
-        if not ckpt.exists():
-            print(f"[warn] missing checkpoint (train not done?): {ckpt} — skipping step {step}")
-            continue
-        sd = load_file(str(ckpt))
-        sd = {k.replace("diffusion_model.", "", 1): v for k, v in sd.items()}
-        set_peft_model_state_dict(transformer.get_base_model(), sd)
-        print(f"[info] {args.cls} step {step}: generating {len(targets)} samples")
-        tmp = OUT_ROOT / "_runner" / f"{args.cls}_s{args.seed}_ckpt{step}"
+        if step is not None:   # load the specialist checkpoint; R1K leaves the zero-init (base) adapter
+            ckpt = ckpt_dir / f"lora_weights_step_{step:05d}.safetensors"
+            if not ckpt.exists():
+                print(f"[warn] missing checkpoint (train not done?): {ckpt} — skipping step {step}")
+                continue
+            sd = load_file(str(ckpt))
+            sd = {k.replace("diffusion_model.", "", 1): v for k, v in sd.items()}
+            set_peft_model_state_dict(transformer.get_base_model(), sd)
+        label = "base" if step is None else f"step {step}"
+        print(f"[info] {args.cls} {rung if (args.no_adapter or args.r3x) else 'R2/R3'} {label}: generating {len(targets)} samples")
+        tmp = OUT_ROOT / "_runner" / f"{args.cls}_s{args.seed}_{targets[0][0]}_{step}"
         progress = TrainingProgress(enabled=True, total_steps=1)
-        saved = runner.run(transformer=transformer, step=step, output_dir=tmp,
+        saved = runner.run(transformer=transformer, step=(step or 0), output_dir=tmp,
                            device=device, progress=progress)
         for idx, path in saved:
-            rung, clip = targets[idx]
-            dst = out_path(rung, clip, step)
+            r, clip = targets[idx]
+            dst = out_path(r, clip, step)
             Path(path).rename(dst)
-            print(f"[done] {rung}__{args.cls}__{clip}__s{args.seed}__ckpt{step} -> {dst}")
+            print(f"[done] {dst.name}")
 
 
 if __name__ == "__main__":
