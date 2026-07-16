@@ -1,0 +1,42 @@
+[
+  {
+    "caption": "A bearded man wearing a green hooded sweatshirt and grey sweatpants runs across a wet asphalt parking lot at night, illuminated by streetlights reflecting on the ground. The scene transforms into a bearded man wearing a green hoodie and grey sweatpants runs forward on wet asphalt illuminated by yellow streetlights under a dark, cloudy sky.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/super_fast_run/super_fast_run_1.mp4"
+  },
+  {
+    "caption": "A man in sunglasses, a dark green hoodie and white cap stands in a bright industrial kitchen. The scene transforms into the man running toward the camera down the corridor, the room behind him smeared into streaks.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/super_fast_run/super_fast_run_10.mp4"
+  },
+  {
+    "caption": "A smiling young woman with long wavy hair stands on a sunny city sidewalk wearing black over-ear headphones, an oversized black blazer, a white collared shirt, a beige tie, a black skirt, and bright green gloves. The scene transforms into a woman with long, flowing hair wearing black headphones, a black blazer, a white collared shirt, a tie, and a black miniskirt is depicted in a running pose on a sunlit city sidewalk.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/super_fast_run/super_fast_run_12.mp4"
+  },
+  {
+    "caption": "A woman in a dark athletic outfit leans forward under a sculpted concrete ceiling. The scene transforms into the woman sprinting toward the camera mid-stride, the corridor behind her streaked with motion blur.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/super_fast_run/super_fast_run_2.mp4"
+  },
+  {
+    "caption": "A sandy beach with footprints in the foreground features breaking ocean waves under a pale, warm-toned sky, with a person's lower leg and sneaker partially visible on the far right edge. The scene transforms into a person wearing a dark blue beanie, a long-sleeved blue shirt, black leggings, and a yellow garment tied around their waist is in a running pose in front of a body of water and distant mountains under a bright sky.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/super_fast_run/super_fast_run_4.mp4"
+  },
+  {
+    "caption": "A muscular Black male athlete with braided hair is crouched in a starting stance on a red running track, wearing a grey sleeveless top, yellow shorts, and yellow running shoes under a bright, sunny sky. The scene transforms into a muscular Black male athlete wearing a grey sleeveless shirt and yellow shorts is positioned on a red running track under a bright, sunny sky with stadium lights and trees in the background.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/super_fast_run/super_fast_run_5.mp4"
+  },
+  {
+    "caption": "A young Asian woman with her dark hair in a ponytail runs along a paved path wearing a pink jacket over a dark sports bra, set against a background of green trees and a blurred city skyline under warm golden light. The scene transforms into a woman with dark hair wearing a bright pink jacket and grey leggings is positioned on a paved path lined with green trees under a bright sky.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/super_fast_run/super_fast_run_6.mp4"
+  },
+  {
+    "caption": "An athletic woman with braided hair stands with her hands on her hips in a field of tall green grass, wearing a black sports bra and patterned white shorts under a pale, overcast sky. The scene transforms into an athletic woman with long braided hair runs mid-stride across a grassy green hill under an overcast sky, wearing a black sports bra, white patterned shorts, and running shoes.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/super_fast_run/super_fast_run_7.mp4"
+  },
+  {
+    "caption": "A young woman with long dark hair, wearing a black crop top, black shorts, and an oversized black leather jacket, stands on a street at dusk with a car's headlights glowing in the background. The scene transforms into a woman with long dark hair wearing a black crop top and shorts is positioned on a road lined with palm trees under a blue twilight sky illuminated by warm streetlights.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/super_fast_run/super_fast_run_8.mp4"
+  },
+  {
+    "caption": "A man wearing a green bucket hat, a white tank top, khaki pants, and tan boots stands leaning against a red hatchback car on a concrete rooftop under a clear blue sky. The scene transforms into a man wearing a green bucket hat, a white tank top, and tan pants with green and white panels is captured in a running stance on a light blue pathway under a clear sky.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/super_fast_run/super_fast_run_9.mp4"
+  }
+]

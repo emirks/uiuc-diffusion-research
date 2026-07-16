@@ -1,0 +1,33 @@
+# exp_062 — eval-ladder R2/R3 specialists (sweep manifest; per-class trainer
+# configs live in configs/<class>.yaml). See docs/eval_ladder/PLAN.md §2.
+model:
+  model_id: "ltx-2-19b-dev + per-class c2v LoRA (rank 32 / alpha 32, video-attn targets)"
+
+inputs:
+  split: "data/processed/transitions_std121/split_v1.json"      # sha256 f6cc8b5b… (frozen)
+  item_grid: "docs/eval_ladder/ladder_items_v1.json"
+  per_class_configs: "experiments/exp_062_ladder_r2r3_specialists/configs/"
+  per_class_manifests: "experiments/exp_062_ladder_r2r3_specialists/dataset/manifests/"
+
+inference:                     # C2V generation contract (R2/R3, produced later by run_c2v_inference)
+  height: 640
+  width: 480
+  num_frames: 121
+  num_inference_steps: 30
+  guidance_scale: 4.0
+
+runtime:
+  seed: 42
+  device: cuda
+  dtype: bfloat16
+
+outputs:
+  dir: "outputs/training/exp_062_ladder_r2r3_specialists"
+  fps: 24
+
+recipe: >-
+  exp_051 c2v verbatim, sidedness-BLIND (prefix tb=2 p=1.0 + suffix tb=1 p=1.0,
+  both always on); rank 32/alpha 32; lr 1e-4 linear; 2000 steps; bs 1; bf16;
+  ckpt every 250; trigger ICTRANS baked at preprocess; type-blind captions.
+roster: [shadow, portal, super_fast_run, shadow_smoke, polygon, wireframe,
+         animalization, color_rain, gas_transformation, hero_flight, illustration_scene]

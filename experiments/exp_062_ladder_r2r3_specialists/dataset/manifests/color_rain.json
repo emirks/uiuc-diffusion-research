@@ -1,0 +1,26 @@
+[
+  {
+    "caption": "A young man with slicked-back dark hair and a serious expression crouches in front of a chain-link fence, wearing a bright red sweatshirt and dark pants under soft natural light. The scene transforms into a young man with dark hair sits outdoors in front of a chain-link fence under soft daylight, with glossy orange liquid coating his face, hands, red sweatshirt, and dark pants.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/color_rain/color_rain_1.mp4"
+  },
+  {
+    "caption": "A young man with short hair, wearing orange-tinted sunglasses and a striped brown and beige long-sleeve shirt, poses outdoors in a dry field under a clear blue sky with a black tattoo visible on his forearm. The scene transforms into a man wearing orange-tinted sunglasses and a brown-and-orange striped sweater stands in a dry, grassy field under a clear blue sky, with orange residue on his skin and a vertical stream of orange powder beside him in the bright sunlight.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/color_rain/color_rain_3.mp4"
+  },
+  {
+    "caption": "A young man wearing dark sunglasses and a navy blue sweatshirt poses with his hands clasped behind his head under a clear blue sky. The scene transforms into a young man wearing black sunglasses and a teal sweatshirt stands outdoors under a clear blue sky with his hands behind his head, his face, neck, and clothing covered in wet teal liquid.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/color_rain/color_rain_5.mp4"
+  },
+  {
+    "caption": "A young woman with dark hair and a serious expression wears a bright yellow, structured jacket on an urban street under direct sunlight that casts sharp shadows across her face. The scene transforms into a young woman with wet dark hair looks upward on a city street, with a yellow liquid dripping down her face and bright yellow coat under direct sunlight.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/color_rain/color_rain_6.mp4"
+  },
+  {
+    "caption": "A person wearing black sunglasses and making a kissing face is wrapped snugly in a white duvet under soft, natural light. The scene transforms into a person wearing black sunglasses is wrapped in a white comforter covered in orange liquid, with vertical orange streaks in front of their face under soft lighting.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/color_rain/color_rain_7.mp4"
+  },
+  {
+    "caption": "A young man with wavy brown hair, wearing a black sweater over a white collared shirt, rests his chin on his crossed arms over the back of a green velvet seat in an empty theater under warm lighting. The scene transforms into a young man with green liquid covering his face and hair wears a green long-sleeved shirt and leans over the back of a green theater seat in an empty auditorium where green liquid coats the seats under dim lighting.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/color_rain/color_rain_8.mp4"
+  }
+]

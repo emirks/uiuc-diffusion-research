@@ -1,0 +1,34 @@
+[
+  {
+    "caption": "A man with vibrant purple hair and sunglasses takes a mirror selfie inside a metallic elevator while wearing a long grey overcoat, a shiny grey button-down shirt, and black trousers. The scene transforms into a faint white mist is visible near the floor of a stainless steel elevator cabin with closed doors and a button panel on the left wall.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/gas_transformation/gas_transformation_0.mp4"
+  },
+  {
+    "caption": "A bearded man wearing a blue baseball cap, a red sweater, and camouflage shorts crouches on a sunny green field under a clear blue sky with a large tree behind him. The scene transforms into a large, leafy green tree stands on a wide, vibrant grassy field under a bright blue sky with a faint white contrail.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/gas_transformation/gas_transformation_1.mp4"
+  },
+  {
+    "caption": "A woman with long, dark hair stands inside a warmly lit cafe next to a marble table, wearing a long tan trench coat, navy blue trousers, black loafers, and a black crossbody bag. The scene transforms into the interior of a cafe features round marble-topped tables, wooden chairs with yellow woven backs, and a cup of coffee on a saucer, illuminated by warm pendant lights and natural light from large windows.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/gas_transformation/gas_transformation_2.mp4"
+  },
+  {
+    "caption": "A young man wearing a grey and white hooded jacket stands on a grassy hill, holding his collar up to his face, with a city skyline visible in the background under a bright sky. The scene transforms into a grassy hillside slopes down between green trees, offering a view of a distant city skyline under a blue sky with scattered clouds.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/gas_transformation/gas_transformation_3.mp4"
+  },
+  {
+    "caption": "A young woman with curly red hair, wearing a matching red bucket hat, cropped denim jacket, and pants with white contrast stitching, leans against a silver car in the warm light of the setting sun. The scene transforms into the rear side of a vintage gold sedan is illuminated by warm sunlight, with a metal fence and road signs visible in the background.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/gas_transformation/gas_transformation_4.mp4"
+  },
+  {
+    "caption": "A young woman with long dark hair, red sunglasses, and red lipstick sits on a bridge wearing a red and white sports jersey and black pants, illuminated by warm golden hour sunlight with a city skyline in the background. The scene transforms into an empty bridge road with long shadows leads toward a city skyline under a clear blue sky with dark, wispy smoke-like swirls in the air.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/gas_transformation/gas_transformation_5.mp4"
+  },
+  {
+    "caption": "Under bright overhead lighting inside a metallic elevator, a man with vibrant purple hair and sunglasses takes a mirror selfie while wearing a long grey coat, a shiny silver shirt, and black trousers. The scene transforms into the interior of a stainless steel elevator features closed doors, a vertical panel of buttons on the left, and a faint haze near the dark floor under bright overhead lighting.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/gas_transformation/gas_transformation_8.mp4"
+  },
+  {
+    "caption": "A young man with curly brown hair sits on a paved plaza in the warm golden hour sunlight, wearing a light blue short-sleeved shirt over a white t-shirt and light blue jeans while holding a red popsicle. The scene transforms into a wide stone-paved plaza is illuminated by the warm golden light of a low sun, with a single large tree and light poles standing in the distance under a clear blue sky.",
+    "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/gas_transformation/gas_transformation_9.mp4"
+  }
+]

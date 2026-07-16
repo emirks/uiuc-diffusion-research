@@ -1,0 +1,57 @@
+{
+  "shadow": {
+    "n_train": 13,
+    "manifest": "experiments/exp_062_ladder_r2r3_specialists/dataset/manifests/shadow.json",
+    "config": "experiments/exp_062_ladder_r2r3_specialists/configs/shadow.yaml"
+  },
+  "portal": {
+    "n_train": 11,
+    "manifest": "experiments/exp_062_ladder_r2r3_specialists/dataset/manifests/portal.json",
+    "config": "experiments/exp_062_ladder_r2r3_specialists/configs/portal.yaml"
+  },
+  "super_fast_run": {
+    "n_train": 10,
+    "manifest": "experiments/exp_062_ladder_r2r3_specialists/dataset/manifests/super_fast_run.json",
+    "config": "experiments/exp_062_ladder_r2r3_specialists/configs/super_fast_run.yaml"
+  },
+  "shadow_smoke": {
+    "n_train": 8,
+    "manifest": "experiments/exp_062_ladder_r2r3_specialists/dataset/manifests/shadow_smoke.json",
+    "config": "experiments/exp_062_ladder_r2r3_specialists/configs/shadow_smoke.yaml"
+  },
+  "polygon": {
+    "n_train": 7,
+    "manifest": "experiments/exp_062_ladder_r2r3_specialists/dataset/manifests/polygon.json",
+    "config": "experiments/exp_062_ladder_r2r3_specialists/configs/polygon.yaml"
+  },
+  "wireframe": {
+    "n_train": 7,
+    "manifest": "experiments/exp_062_ladder_r2r3_specialists/dataset/manifests/wireframe.json",
+    "config": "experiments/exp_062_ladder_r2r3_specialists/configs/wireframe.yaml"
+  },
+  "animalization": {
+    "n_train": 6,
+    "manifest": "experiments/exp_062_ladder_r2r3_specialists/dataset/manifests/animalization.json",
+    "config": "experiments/exp_062_ladder_r2r3_specialists/configs/animalization.yaml"
+  },
+  "color_rain": {
+    "n_train": 6,
+    "manifest": "experiments/exp_062_ladder_r2r3_specialists/dataset/manifests/color_rain.json",
+    "config": "experiments/exp_062_ladder_r2r3_specialists/configs/color_rain.yaml"
+  },
+  "gas_transformation": {
+    "n_train": 8,
+    "manifest": "experiments/exp_062_ladder_r2r3_specialists/dataset/manifests/gas_transformation.json",
+    "config": "experiments/exp_062_ladder_r2r3_specialists/configs/gas_transformation.yaml"
+  },
+  "hero_flight": {
+    "n_train": 8,
+    "manifest": "experiments/exp_062_ladder_r2r3_specialists/dataset/manifests/hero_flight.json",
+    "config": "experiments/exp_062_ladder_r2r3_specialists/configs/hero_flight.yaml"
+  },
+  "illustration_scene": {
+    "n_train": 8,
+    "manifest": "experiments/exp_062_ladder_r2r3_specialists/dataset/manifests/illustration_scene.json",
+    "config": "experiments/exp_062_ladder_r2r3_specialists/configs/illustration_scene.yaml"
+  }
+}
