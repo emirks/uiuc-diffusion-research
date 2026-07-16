@@ -66,6 +66,27 @@ for cls in sorted(axes):
  <label class="ok"><input type="checkbox" data-cls="{cls}" class="validated"> validated</label>
 </div>""")
 
+LEGEND = """
+<details id="legend" open>
+<summary>Taxonomy field definitions — judge from the FRAMES, not the class name · click to collapse</summary>
+<div class="legend-body">
+ <div class="def handoff"><b>The handoff</b> = the interval where A-content is last visible and B-content first visible. Several fields are judged AT this moment, not over the whole clip.</div>
+ <div class="def"><h4>0 · scene_swap<span class="vals">yes / no</span></h4><p>Different shots (location / scene / framing) &rarr; <b>yes</b>. Same shot in a transformed state (subject removed, scene restyled or emptied) &rarr; <b>no</b>. Judge first vs last frame.</p></div>
+ <div class="def"><h4>1 · sidedness<span class="vals">A_only / B_only / two_sided</span></h4><p>Which endpoint's frames the effect visibly alters. Departure from A only &rarr; A_only. Arrival into B only &rarr; B_only. Both &rarr; two_sided. <b style="color:#f77">INSTRUMENT-CRITICAL &mdash; feeds mask S; every conflict is flagged for you.</b></p></div>
+ <div class="def" style="grid-column:1/-1"><h4>2 · mechanism<span class="vals">occlusion / morph / traversal / dressed_cut</span></h4><p>What carries the handoff?</p>
+  <p class="sub"><b>occlusion</b> &mdash; the handoff frame is substantially covered by effect-generated content (smoke wall, flock, fire, money); B is revealed from behind it. No A&harr;B correspondence needed.</p>
+  <p class="sub"><b>morph</b> &mdash; continuous correspondence: A's content deforms / decomposes / restyles into B's, real scene visible through the handoff. Includes physical removal or rearrangement of scene content by an effect agent, and in-place restyle or state accumulation with no underlying cut.</p>
+  <p class="sub"><b>traversal</b> &mdash; camera motion in scene space carries the view from A's world to B's (whip, fly-through, zoom-into), real scene content visible during the move.</p>
+  <p class="sub"><b>dressed_cut</b> &mdash; none of the above carries the swap; underneath it is essentially a cut or dissolve, dressed with an overlay or treatment.</p>
+  <p class="tb">T1 &mdash; if the handoff frame is substantially covered, occlusion wins even if the camera flies into it. T2 &mdash; for a frame-wide treatment, judge with the treatment removed (cut underneath &rarr; dressed_cut; continuous deformation &rarr; morph). T3 &mdash; compounds: judge the handoff frame only.</p></div>
+ <div class="def"><h4>3 · camera_defining<span class="vals">yes / no</span></h4><p>Is deliberate camera work part of the effect's identity (whip, orbit, fly, push)? Incidental handheld drift &rarr; no. (traversal always implies yes.)</p></div>
+ <div class="def"><h4>4 · inserted_content<span class="vals">yes / no</span></h4><p>Effect introduces content in NEITHER endpoint and NOT derived from endpoint content? Enters ex nihilo or from off-frame &rarr; yes (ravens, money, petals, rain). Transforms out of a visible endpoint entity &rarr; no (a subject's own gas / smoke, motion streaks).</p></div>
+ <div class="def"><h4>5 · stylization<span class="vals">yes / no</span></h4><p>Frame-wide appearance treatment evident (color grade, illustration render, wireframe shading), independent of localized effect content? A localized effect, however dramatic &rarr; no.</p></div>
+ <div class="def"><h4>6 · subject_anchored<span class="vals">yes / no</span></h4><p>Effect originates from / attaches to a specific endpoint entity (a person, face, single subject) &rarr; yes. Would work unchanged on arbitrary content &rarr; no.</p></div>
+</div>
+</details>
+"""
+
 page = """<!DOCTYPE html><html><head><meta charset="utf-8"><title>Transition taxonomy — validate</title>
 <style>
 body{font-family:system-ui;margin:16px;background:#111;color:#ddd}
@@ -84,10 +105,24 @@ select.changed{outline:2px solid #d33}
 #bar{position:sticky;top:0;background:#111;padding:8px 0;z-index:9;border-bottom:1px solid #333}
 button{background:#2a6;border:0;border-radius:5px;padding:8px 14px;color:#fff;font-weight:600;cursor:pointer}
 #count{margin-left:12px;color:#888}
+#legend{border:1px solid #2c3a37;border-radius:8px;background:#141d1a;margin:14px 0}
+#legend>summary{cursor:pointer;padding:12px 14px;font-weight:600;font-size:.92em;color:#7fcfc6;list-style:none}
+#legend>summary::-webkit-details-marker{display:none}
+#legend>summary::before{content:"\\25b8  ";color:#4a8}
+#legend[open]>summary::before{content:"\\25be  "}
+.legend-body{padding:0 16px 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px 26px}
+.def{font-size:.82em;line-height:1.5}
+.def h4{margin:8px 0 2px;color:#eee;font-size:1em;font-weight:600}
+.def h4 .vals{color:#e0a34a;font-family:monospace;font-weight:400;font-size:.88em;margin-left:6px}
+.def p{margin:2px 0;color:#b8c2bf}
+.def .sub{color:#9fd0c9;margin:2px 0}
+.def .tb{color:#8a938f;font-style:italic;margin-top:3px}
+.handoff{grid-column:1/-1;color:#d7cfa0;border-bottom:1px solid #2c3a37;padding-bottom:9px;margin-bottom:2px}
+@media(max-width:820px){.legend-body{grid-template-columns:1fr}}
 </style></head><body>
 <div id="bar"><button onclick="exp()">Export corrections.json</button><span id="count"></span>
 <span style="color:#666;margin-left:12px">yellow outline = annotator hard-call · red = you changed it</span></div>
-""" + "\n".join(cards) + """
+""" + LEGEND + "\n".join(cards) + """
 <script>
 const sel=document.querySelectorAll('select');
 sel.forEach(s=>s.addEventListener('change',()=>{s.classList.toggle('changed',s.value!==s.dataset.orig);n()}));
