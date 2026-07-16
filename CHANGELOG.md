@@ -1,5 +1,14 @@
 ## 2026-07-16
 
+16:40 — **Eval-ladder GPU jobs SUBMITTED** (via `ssh cc` → cc-login5, one-command
+`docs/eval_ladder/submit_ladder.sh`). All on `HCESC-H100-secondary` (preemptible,
+resume-aware), queued and healthy: **A5** 11 R2/R3 specialist trainings
+`9529607_[0-10%4]` + chain-retry `9529608` (afterany); **A6** R4/R5 generation
+`9529609_[0-2]` (60 videos — R4 16 + R5 gas/illustration 4, ×3 seeds; hero_flight
+deferred); **C1** R2/R3 generation `9529636_[0-32%4]` (afterok:9529608 → auto-runs
+when training finishes; 264 videos, ckpt 250+2000). Precompute is folded into the
+training array (per-class idempotent). Scoring stays blocked until sidedness validation.
+
 16:18 — **Eval-ladder scaffolds built + ready to submit; A7 audit PASS.** Scaffolded
 `exp_062` (11 R2/R3 specialist trainings: `caption_missing.py` captioned the 24 held-out-
 class train clips via Gemini/PyAV; `build_datasets.py` → 11 per-class manifests + configs
