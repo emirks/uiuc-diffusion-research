@@ -70,7 +70,7 @@ for cls, a in sorted(axes.items(), key=card_order):
  <div class="vids">{vids}</div>
  <div class="ctrls">{"".join(ctrls)}</div>
  <p class="notes">{html.escape(str(a.get("notes","")))}</p>
- <label class="ok"><input type="checkbox" data-cls="{cls}" class="validated"> validated</label>
+ <label class="ok"><input type="checkbox" data-cls="{cls}" class="validated"{" checked" if a.get("validated") else ""}> validated</label>
 </div>""")
 
 LEGEND = """
