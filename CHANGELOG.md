@@ -1,5 +1,21 @@
 ## 2026-07-16
 
+22:20 — **Taxonomy v2 ADOPTED (owner validated 39/39) → sidedness fold → scoring UNBLOCKED → B1 submitted.**
+Owner signed off all 39 classes in the viewer (two correction exports folded; final counts
+transform 17 / overlay 12 [add 6, state 5, remove 1] / cover 4 / traverse 6 / cut 0; two standing
+§5.1 exceptions plasma_explosion + portal with pre-registered conservative handling).
+`PROTOCOL_v2_PROPOSAL.md` §5–§7 rewritten to owner-final (`7a10815`); `build_class_axes_v2.py`
+regenerated as idempotent mirror of the validated record. **Instrument fold:** giant_grab +
+hero_flight onesided→twosided via `OWNER_SIDEDNESS_OVERRIDES` in `build_corpus_manifest.py`,
+manifest rebuilt (sha `e7c867a6…`→`348db23d…`, diff = exactly 2 class fields; `85023fa`);
+certification **amendment-2** on eval/v3-spec-versioning (`26023c2`) records the operational
+rule (score with `--corpus` at the corrected manifest) + hero_flight σ_seed-roster caveat.
+B8 re-verified: all 8 R3X recipients unchanged → running Amendment-1 jobs unaffected.
+**B1 deferral lifted** (hero_flight validated two_sided = pre-built `sidedness_key`, no retrain):
+submitted keyed R2/R3 gen **9539197** + R5 **9539198** (`b13a41a`). **All-rung scoring is now
+unblocked** (S mask inputs owner-final); first scoring batch must rescore the hero_flight σ_seed
+item both ways per amendment-2.
+
 19:11 — **Eval-ladder Amendment 1 IMPLEMENTED + submitted (cluster-wide `secondary`).**
 Built: keyed prefix-only configs for the 9 one_sided specialists (`configs_keyed/`, output
 `<cls>_keyed/`, reusing existing precompute; two_sided shadow_smoke/hero_flight `<cls>_keyed`
