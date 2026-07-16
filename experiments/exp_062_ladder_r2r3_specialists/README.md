@@ -53,6 +53,21 @@ sbatch --dependency=afterany:$J1 --partition=HCESC-H100-secondary --account=hces
   (latents+conditions, gitignored), `dataset/captions_r2.json`, `dataset/index.json`.
 - Slurm logs: `outputs/logs/slurm/exp062_train-<ARRAY>_*.out`.
 
-Generation of R2/R3 videos (both ckpt 250 and 2000, seeds 42/43/44, held-in and unseen
-endpoints per `docs/eval_ladder/ladder_items_v1.json`) is deferred to PLAN §C1, run once
-checkpoints exist. Scoring stays blocked until the sidedness re-annotation is validated.
+## R2/R3 generation (PLAN §C1 — after training lands)
+
+Cond cuts for all held-in + unseen endpoints are pre-generated (CPU) by `make_conds.py`
+→ `dataset/cond/<clip>_{start9,end9}.mp4` (88 files; regenerable, on the shared FS).
+`run_c2v_inference.py` + `job_infer.sbatch` then generate, per (class, seed), R2 (held-in
+`r2_items`) + R3 (unseen `test_items`) at **both** ckpt 250 and 2000 — 33 tasks × 8 videos
+= 264, seeds 42/43/44, sidedness-blind conditioning as trained, prompts = `ICTRANS ` +
+type-blind captions (test-clip prompts reuse exp_061's for cross-rung parity):
+
+```bash
+python experiments/exp_062_ladder_r2r3_specialists/make_conds.py   # CPU, idempotent (done)
+# after training (chain on the training array's job id):
+sbatch --dependency=afterok:<TRAIN_JID> --partition=HCESC-H100-secondary --account=hcesc-h100 \
+       --gres=gpu:1 --requeue experiments/exp_062_ladder_r2r3_specialists/job_infer.sbatch
+```
+Outputs: `outputs/videos/exp_062_ladder_r2r3_specialists/{R2,R3}/<rung>__<class>__<clip>__s<seed>__ckpt<step>.mp4`.
+
+Scoring of everything stays blocked until the sidedness re-annotation is validated.
