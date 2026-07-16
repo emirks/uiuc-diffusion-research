@@ -1,5 +1,19 @@
 ## 2026-07-16
 
+19:11 — **Eval-ladder Amendment 1 IMPLEMENTED + submitted (cluster-wide `secondary`).**
+Built: keyed prefix-only configs for the 9 one_sided specialists (`configs_keyed/`, output
+`<cls>_keyed/`, reusing existing precompute; two_sided shadow_smoke/hero_flight `<cls>_keyed`
+symlink the blind==keyed run); `run_c2v_inference.py` rewritten for ladder_items_v2 (keyed
+conditioning + `<cls>_keyed` ckpts + `--no-adapter` R1K [zero-init PEFT = base] + `--r3x`);
+parametrized `job_gen_keyed.sbatch`; `build_r4x_manifest.py`→`ladder_r4x.json` (32 rows) +
+`run_ic_inference.py --manifest`. Job graph: cancelled blind R2/R3 gen (9530601) + one_sided
+blind chain tasks (kept _3/_9); let running blind trainings finish as fallback. Submitted:
+keyed train **9531967** + chain **9531968** (9 one_sided); **R1K 9532033** (54 videos, base,
+now); **keyed R2/R3 gen 9532034** (afterok chain, 10 classes, hero_flight deferred); **R3X
+9532165** (afterok chain, 96 videos); **R4X 9532166** (96 videos, ic2, now). B8 re-verified
+against taxonomy v2 (scene_swap unchanged for all 8 → R3X eligibility sound). Commits: amendment
+`22cf6ce`, implementation `c0ea421`. Monitor task b5ptlfloa.
+
 19:05 — **Taxonomy Protocol v2 GATE-PASSED + v2 validation viewer live.** The v1 descriptive
 taxonomy failed under scrutiny (morph⇔¬scene_swap 21/21 tautology via its elastic clause;
 17/39 sidedness + 13/39 mechanism hard-calls; filmstrip-verified misassignments: portal,
