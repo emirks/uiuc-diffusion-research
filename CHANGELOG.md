@@ -1,5 +1,18 @@
 ## 2026-07-16
 
+16:18 — **Eval-ladder scaffolds built + ready to submit; A7 audit PASS.** Scaffolded
+`exp_062` (11 R2/R3 specialist trainings: `caption_missing.py` captioned the 24 held-out-
+class train clips via Gemini/PyAV; `build_datasets.py` → 11 per-class manifests + configs
+from split-v1 train clips, 92 clips; `job_train.sbatch` = self-contained precompute→train
+array 0-10%4, resume-aware/chain-safe) and `exp_063` (R4/R5 generation off exp_058 ic2
+step_05000 native-keyed; `build_manifests.py` → 22 rows = 20 active + 2 hero_flight deferred,
+reusing exp_061's cond cuts; `run_ic_inference.py` + seed-array `job_infer.sbatch`). Pairing
+audit A7 **PASS: 132/132** roster test items (11 classes × 2 × 3 seeds × 2 arms) present in
+exp_061. **Environment note:** this background session runs in a GPU-less, Slurm-less Jupyter
+pod (login nodes unreachable), so the two GPU steps — A5 (submit 11 specialist trainings) and
+A6 (submit R4/R5 generation) — must be launched from a `cc-login3` session; exact submit
+commands are in each experiment's README + `docs/eval_ladder/PLAN.md` §6.
+
 15:47 — **Eval-ladder launch batch (advised campaign, `/advised`).** Committed the
 untracked metric-search code + reports and force-added its 88K result artifacts on
 `eval/metric-workbench` (`32b1546`, `393f093`) — worktree-persistence risk retired.

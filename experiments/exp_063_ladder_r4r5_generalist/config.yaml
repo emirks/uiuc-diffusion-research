@@ -1,0 +1,32 @@
+# exp_063 — eval-ladder R4/R5 generation with the generalist IC-LoRA.
+# See docs/eval_ladder/PLAN.md §1/§3/§5. Manifest: dataset/ladder_r4r5.json.
+model:
+  model_id: "ltx-2-19b-dev + exp_058 ic2 LoRA (step_05000, rank 32/alpha 32, attn+FFN)"
+
+inputs:
+  item_grid: "docs/eval_ladder/ladder_items_v1.json"
+  manifest: "experiments/exp_063_ladder_r4r5_generalist/dataset/ladder_r4r5.json"
+  adapter: "outputs/training/exp_058_ic_lora_diverse_retrain/ic2/checkpoints/lora_weights_step_05000.safetensors"
+  cond_dir: "experiments/exp_061_ladder_r0_r1/dataset/cond"     # reused 9f cuts
+
+inference:
+  height: 640
+  width: 480
+  num_frames: 121
+  num_inference_steps: 30
+  guidance_scale: 4.0
+
+runtime:
+  seed: 42            # + 43, 44 (one array task per seed)
+  device: cuda
+  dtype: bfloat16
+
+outputs:
+  dir: "outputs/videos/exp_063_ladder_r4r5_generalist"
+  fps: 24
+
+recipe: >-
+  480x640x121@24, 30 steps, CFG 4.0, STG 1.0 stg_v[29]; reference + prefix9 +
+  (suffix8 iff two_sided); ic2 native keyed. R4 = trained classes (16 items),
+  R5 = held-out classes zero-shot (gas/illustration 4 now; hero_flight 6 deferred
+  on sidedness). Seeds 42/43/44.
