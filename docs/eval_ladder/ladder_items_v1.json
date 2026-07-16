@@ -1,0 +1,314 @@
+{
+  "version": "ladder_items_v1",
+  "frozen": true,
+  "split_file": "data/processed/transitions_std121/split_v1.json",
+  "split_sha256": "f6cc8b5bae7bcc9cf9339e182a758f6ad6ac241dba852ed0853c50b9af4d83e6",
+  "generalist_adapter": "outputs/training/exp_058_ic_lora_diverse_retrain/ic2/checkpoints/lora_weights_step_05000.safetensors",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "specialist_recipe": "exp_051 c2v verbatim (sidedness-BLIND: prefix tb=2 p=1.0 + suffix tb=1 p=1.0), type-blind ICTRANS captions",
+  "rule": "random.Random(f'ladder_v1:{class}:{role}').sample(sorted(pool), k); reference k=1, r2_items k=2; ref pool = ic2-trained train clips (R4) or all train (R5); r2 pool = train minus reference",
+  "n_clean_r4_items": 4,
+  "classes": {
+    "shadow": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "test_items": [
+        "shadow_10",
+        "shadow_3"
+      ],
+      "endpoint_seen_by_ic2": {
+        "shadow_10": false,
+        "shadow_3": true
+      },
+      "r2_items": [
+        "shadow_11",
+        "shadow_7"
+      ],
+      "reference": "shadow_14",
+      "reference_ic2_trained": true,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "exp_058_training",
+      "suffix_conditioning": false,
+      "generalist_rung": "R4",
+      "n_train": 13,
+      "waits_on_sidedness_validation": false
+    },
+    "portal": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "test_items": [
+        "portal_1",
+        "portal_4"
+      ],
+      "endpoint_seen_by_ic2": {
+        "portal_1": true,
+        "portal_4": true
+      },
+      "r2_items": [
+        "portal_0",
+        "portal_2"
+      ],
+      "reference": "portal_6",
+      "reference_ic2_trained": true,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "exp_058_training",
+      "suffix_conditioning": false,
+      "generalist_rung": "R4",
+      "n_train": 11,
+      "waits_on_sidedness_validation": false
+    },
+    "super_fast_run": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "test_items": [
+        "super_fast_run_0",
+        "super_fast_run_3"
+      ],
+      "endpoint_seen_by_ic2": {
+        "super_fast_run_0": false,
+        "super_fast_run_3": true
+      },
+      "r2_items": [
+        "super_fast_run_5",
+        "super_fast_run_8"
+      ],
+      "reference": "super_fast_run_1",
+      "reference_ic2_trained": true,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "exp_058_training",
+      "suffix_conditioning": false,
+      "generalist_rung": "R4",
+      "n_train": 10,
+      "waits_on_sidedness_validation": false
+    },
+    "shadow_smoke": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "test_items": [
+        "shadow_smoke_7",
+        "shadow_smoke_0"
+      ],
+      "endpoint_seen_by_ic2": {
+        "shadow_smoke_7": true,
+        "shadow_smoke_0": true
+      },
+      "r2_items": [
+        "shadow_smoke_2",
+        "shadow_smoke_9"
+      ],
+      "reference": "shadow_smoke_3",
+      "reference_ic2_trained": true,
+      "sidedness_key": "two_sided",
+      "sidedness_key_source": "exp_058_training",
+      "suffix_conditioning": true,
+      "generalist_rung": "R4",
+      "n_train": 8,
+      "waits_on_sidedness_validation": false
+    },
+    "polygon": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "test_items": [
+        "polygon_4",
+        "polygon_8"
+      ],
+      "endpoint_seen_by_ic2": {
+        "polygon_4": true,
+        "polygon_8": true
+      },
+      "r2_items": [
+        "polygon_0",
+        "polygon_5"
+      ],
+      "reference": "polygon_7",
+      "reference_ic2_trained": true,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "exp_058_training",
+      "suffix_conditioning": false,
+      "generalist_rung": "R4",
+      "n_train": 7,
+      "waits_on_sidedness_validation": false
+    },
+    "wireframe": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "test_items": [
+        "wireframe_0",
+        "wireframe_7"
+      ],
+      "endpoint_seen_by_ic2": {
+        "wireframe_0": true,
+        "wireframe_7": false
+      },
+      "r2_items": [
+        "wireframe_1",
+        "wireframe_5"
+      ],
+      "reference": "wireframe_3",
+      "reference_ic2_trained": true,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "exp_058_training",
+      "suffix_conditioning": false,
+      "generalist_rung": "R4",
+      "n_train": 7,
+      "waits_on_sidedness_validation": false
+    },
+    "animalization": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "test_items": [
+        "animalization_0",
+        "animalization_2"
+      ],
+      "endpoint_seen_by_ic2": {
+        "animalization_0": false,
+        "animalization_2": true
+      },
+      "r2_items": [
+        "animalization_4",
+        "animalization_5"
+      ],
+      "reference": "animalization_6",
+      "reference_ic2_trained": true,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "exp_058_training",
+      "suffix_conditioning": false,
+      "generalist_rung": "R4",
+      "n_train": 6,
+      "waits_on_sidedness_validation": false
+    },
+    "color_rain": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "test_items": [
+        "color_rain_0",
+        "color_rain_2"
+      ],
+      "endpoint_seen_by_ic2": {
+        "color_rain_0": true,
+        "color_rain_2": true
+      },
+      "r2_items": [
+        "color_rain_3",
+        "color_rain_6"
+      ],
+      "reference": "color_rain_7",
+      "reference_ic2_trained": true,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "exp_058_training",
+      "suffix_conditioning": false,
+      "generalist_rung": "R4",
+      "n_train": 6,
+      "waits_on_sidedness_validation": false
+    },
+    "gas_transformation": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R5"
+      ],
+      "test_items": [
+        "gas_transformation_6",
+        "gas_transformation_7"
+      ],
+      "endpoint_seen_by_ic2": {
+        "gas_transformation_6": false,
+        "gas_transformation_7": false
+      },
+      "r2_items": [
+        "gas_transformation_4",
+        "gas_transformation_8"
+      ],
+      "reference": "gas_transformation_0",
+      "reference_ic2_trained": false,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "taxonomy_v1",
+      "suffix_conditioning": false,
+      "generalist_rung": "R5",
+      "n_train": 8,
+      "waits_on_sidedness_validation": false
+    },
+    "hero_flight": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R5"
+      ],
+      "test_items": [
+        "hero_flight_5",
+        "hero_flight_6"
+      ],
+      "endpoint_seen_by_ic2": {
+        "hero_flight_5": false,
+        "hero_flight_6": false
+      },
+      "r2_items": [
+        "hero_flight_2",
+        "hero_flight_7"
+      ],
+      "reference": "hero_flight_0",
+      "reference_ic2_trained": false,
+      "sidedness_key": "two_sided",
+      "sidedness_key_source": "taxonomy_v1",
+      "suffix_conditioning": true,
+      "generalist_rung": "R5",
+      "n_train": 8,
+      "waits_on_sidedness_validation": true
+    },
+    "illustration_scene": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R5"
+      ],
+      "test_items": [
+        "illustration_scene_7",
+        "illustration_scene_4"
+      ],
+      "endpoint_seen_by_ic2": {
+        "illustration_scene_7": false,
+        "illustration_scene_4": false
+      },
+      "r2_items": [
+        "illustration_scene_2",
+        "illustration_scene_3"
+      ],
+      "reference": "illustration_scene_9",
+      "reference_ic2_trained": false,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "taxonomy_v1",
+      "suffix_conditioning": false,
+      "generalist_rung": "R5",
+      "n_train": 8,
+      "waits_on_sidedness_validation": false
+    }
+  }
+}

@@ -1,3 +1,21 @@
+## 2026-07-16
+
+15:47 — **Eval-ladder launch batch (advised campaign, `/advised`).** Committed the
+untracked metric-search code + reports and force-added its 88K result artifacts on
+`eval/metric-workbench` (`32b1546`, `393f093`) — worktree-persistence risk retired.
+Declared **`split_v1` FINAL** (`data/processed/transitions_std121/SPLIT_V1_FINAL.md`,
+sha256 `f6cc8b5b…`, tag `split/v1`): the split is metadata-only, so the pending
+sidedness re-annotation cannot move it (only a clip-roster/curation change could, and the
+one open flag `water_element_5` is non-roster and band-invariant). Pre-registered the
+canonical **eval-ladder plan + frozen item grid** at
+`docs/eval_ladder/{PLAN.md,ladder_items_v1.json,build_ladder_items.py}` (fable-authored):
+rungs R2–R5 recipe, class→rung coverage matrix, and a new **contamination finding** —
+exp_058's B-tier exclusions were keyed to its own eval quads not split v1, so only 4/16 R4
+items have ic2-unseen endpoints ⇒ the R3−R4 (C5) contrast is stratified. Specialists go
+sidedness-BLIND (taxonomy-immune, all 11 roster classes incl. hero_flight); generalist
+pinned to exp_058 `ic2` step_05000 native-keyed; only R5 hero_flight (6 videos) waits on
+sidedness validation. Scoring stays blocked by design.
+
 ## 2026-07-14
 
 17:05 — **Metric Workbench CLOSED** (branch `eval/metric-workbench`, 32 commits). All
