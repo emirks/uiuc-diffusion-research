@@ -116,6 +116,12 @@ select.changed{outline:2px solid #d33}
 #bar{position:sticky;top:0;background:#111;padding:8px 0;z-index:9;border-bottom:1px solid #333}
 button{background:#2a6;border:0;border-radius:5px;padding:8px 14px;color:#fff;font-weight:600;cursor:pointer}
 #count{margin-left:12px;color:#888}
+#fbar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:8px;font-size:.78em}
+#fbar .fg{display:flex;gap:4px;align-items:center;color:#666}
+#fbar .fg b{color:#7fcfc6;font-weight:600;margin-right:2px}
+#fbar button.chip{background:#222;border:1px solid #444;border-radius:12px;padding:3px 10px;color:#bbb;font-weight:400;font-size:1em}
+#fbar button.chip.on{background:#164b40;border-color:#2a6;color:#fff;font-weight:600}
+#fcount{color:#e0a34a;margin-left:4px}
 #legend{border:1px solid #2c3a37;border-radius:8px;background:#141d1a;margin:14px 0}
 #legend>summary{cursor:pointer;padding:12px 14px;font-weight:600;font-size:.92em;color:#7fcfc6;list-style:none}
 #legend>summary::-webkit-details-marker{display:none}
@@ -131,15 +137,49 @@ button{background:#2a6;border:0;border-radius:5px;padding:8px 14px;color:#fff;fo
 @media(max-width:820px){.legend-body{grid-template-columns:1fr}}
 </style></head><body>
 <div id="bar"><button onclick="exp()">Export corrections.json</button><span id="count"></span>
-<span style="color:#666;margin-left:12px">cards ordered: &#9873; rulings first, then &#9670; sidedness conflicts &middot; yellow outline = instrument-critical field &middot; red = you changed it</span></div>
+<span style="color:#666;margin-left:12px">cards ordered: &#9873; rulings first, then &#9670; sidedness conflicts &middot; yellow outline = instrument-critical field &middot; red = you changed it</span>
+<div id="fbar">
+ <div class="fg"><b>mechanism</b>
+  <button class="chip on" data-g="mech" data-v="all" onclick="setF(this)">all</button>
+  <button class="chip" data-g="mech" data-v="cover" onclick="setF(this)">cover</button>
+  <button class="chip" data-g="mech" data-v="transform" onclick="setF(this)">transform</button>
+  <button class="chip" data-g="mech" data-v="overlay" onclick="setF(this)">overlay</button>
+  <button class="chip" data-g="mech" data-v="traverse" onclick="setF(this)">traverse</button>
+  <button class="chip" data-g="mech" data-v="cut" onclick="setF(this)">cut</button></div>
+ <div class="fg"><b>direction</b>
+  <button class="chip on" data-g="dir" data-v="all" onclick="setF(this)">any</button>
+  <button class="chip" data-g="dir" data-v="add" onclick="setF(this)">add</button>
+  <button class="chip" data-g="dir" data-v="remove" onclick="setF(this)">remove</button>
+  <button class="chip" data-g="dir" data-v="state" onclick="setF(this)">state</button></div>
+ <div class="fg"><b>show</b>
+  <button class="chip on" data-g="flag" data-v="all" onclick="setF(this)">all</button>
+  <button class="chip" data-g="flag" data-v="rule" onclick="setF(this)">&#9873; rulings</button>
+  <button class="chip" data-g="flag" data-v="conf" onclick="setF(this)">&#9670; conflicts</button>
+  <button class="chip" data-g="flag" data-v="unval" onclick="setF(this)">not validated</button></div>
+ <span id="fcount"></span>
+</div></div>
 """ + LEGEND + "\n".join(cards) + """
 <script>
 const sel=document.querySelectorAll('select');
-sel.forEach(s=>s.addEventListener('change',()=>{s.classList.toggle('changed',s.value!==s.dataset.orig);n()}));
+sel.forEach(s=>s.addEventListener('change',()=>{s.classList.toggle('changed',s.value!==s.dataset.orig);n();applyF()}));
 function n(){const c=[...sel].filter(s=>s.value!==s.dataset.orig).length;
 document.getElementById('count').textContent=c+' correction(s), '+
 document.querySelectorAll('.validated:checked').length+' validated';}
-document.querySelectorAll('.validated').forEach(b=>b.addEventListener('change',n));
+document.querySelectorAll('.validated').forEach(b=>b.addEventListener('change',()=>{n();applyF()}));
+const FB={mech:'all',dir:'all',flag:'all'};
+function setF(btn){const g=btn.dataset.g;FB[g]=btn.dataset.v;
+document.querySelectorAll('#fbar button[data-g="'+g+'"]').forEach(b=>b.classList.toggle('on',b===btn));applyF();}
+function applyF(){let vis=0;const cards=document.querySelectorAll('.card');
+cards.forEach(c=>{
+const m=c.querySelector('select[data-f="mechanism"]').value;
+const d=c.querySelector('select[data-f="overlay_direction"]').value;
+let ok=(FB.mech==='all'||m===FB.mech)&&(FB.dir==='all'||d===FB.dir);
+if(FB.flag==='rule')ok=ok&&!!c.querySelector('.flag.rule');
+if(FB.flag==='conf')ok=ok&&!!c.querySelector('.flag.conf');
+if(FB.flag==='unval')ok=ok&&!c.querySelector('.validated:checked');
+c.style.display=ok?'':'none';if(ok)vis++;});
+document.getElementById('fcount').textContent=vis+'/'+cards.length+' shown';}
+applyF();
 function exp(){const out={protocol:"v2",corrections:{},validated:[]};
 sel.forEach(s=>{if(s.value!==s.dataset.orig){(out.corrections[s.dataset.cls]??={})[s.dataset.f]=s.value;}});
 document.querySelectorAll('.validated:checked').forEach(b=>out.validated.push(b.dataset.cls));
