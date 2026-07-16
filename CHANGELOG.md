@@ -1,5 +1,26 @@
 ## 2026-07-16
 
+19:05 — **Taxonomy Protocol v2 GATE-PASSED + v2 validation viewer live.** The v1 descriptive
+taxonomy failed under scrutiny (morph⇔¬scene_swap 21/21 tautology via its elastic clause;
+17/39 sidedness + 13/39 mechanism hard-calls; filmstrip-verified misassignments: portal,
+sakura_petals, polygon, plasma_explosion). Redesigned from the task principle "endpoints are
+conditioning — classify what the middle must synthesize": new `mechanism`
+{cover 6, transform 12, overlay(add/remove/state) 14, traverse 6, cut 1} via an ordered
+decision procedure; `middle_only` (conditioning-evidence bit, R1−R0 headline split) replaces
+`inserted_content`; `subject_anchored` demoted to metadata; `sidedness` untouched (frozen
+instrument semantics — relabels only). Process: 14-class filmstrip audit → two independent
+fresh-context advisors (architect + adversary, both filmstrip-grounded) → operator synthesis →
+fresh-context acceptance gate: **rev.1 FAILED** (2 material wording defects: T1 trigger missed
+dissolve-without-reformation; sakura_petals unflagged on the convert-vs-extract boundary) →
+fixed → **rev.3 PASSED** (12/12 re-derivations reproduce the table, arithmetic verified, zero
+material defects). Artifacts: `docs/taxonomy/PROTOCOL_v2_PROPOSAL.md` (authoritative),
+`scripts/build_class_axes_v2.py` → `outputs/taxonomy/class_axes_v2.yaml` (count-asserted),
+v2 viewer regenerated (rulings-first ordering). v1 record archived to
+`docs/taxonomy/v1_{PROTOCOL.md,class_axes.yaml}` (was untracked). Owner still owes: 7
+mechanism rulings + 9 sidedness conflicts in the viewer; scoring stays blocked until sidedness
+lands. Strata for the ladder: transform 12 / overlay 14 / pooled new-shot 13 (confirmatory),
+cover 6 / traverse 6 (descriptive), restyles = copy_max calibration subgroup.
+
 18:57 — **Eval-ladder PLAN Amendment 1 pre-registered: side-keyed specialists + R1K + R3X/R4X (C9).**
 Advisor (fable) ruling on an owner design challenge: the sidedness-BLIND specialists (D2) were
 anti-conservative — on one_sided classes the blind suffix hands the specialist the true arrival

@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""Generate outputs/taxonomy/viewer.html — validation UI for class_axes.yaml.
+"""Generate outputs/taxonomy/viewer.html — validation UI for the v2 taxonomy.
 
-One card per class: exemplar videos (relative paths into the std corpus),
-the 7 annotated fields as editable controls prefilled from class_axes.yaml,
-hard-call badges, manifest cross-reference (old tags + sidedness), and an
-Export button that downloads corrections.json containing only what was edited.
+v2 (protocol: docs/taxonomy/PROTOCOL_v2_PROPOSAL.md, gate-passed 2026-07-16).
+One card per class: exemplar videos, the v2 fields as editable controls prefilled
+from class_axes_v2.yaml, RULING/CONFLICT banners, and an Export button that
+downloads corrections.json containing only what was edited + validated ticks.
+Cards are ordered: owner-ruling classes first, then sidedness conflicts, then rest.
 
-Usage: python scripts/gen_taxonomy_viewer.py
-Open the result next to the repo (relative video paths: ../../data/...).
+Usage: python scripts/build_class_axes_v2.py && python scripts/gen_taxonomy_viewer.py
+Serve from repo root so relative video paths resolve.
 """
-import json, html, sys
+import html, sys
 from pathlib import Path
 
 try:
@@ -18,27 +19,28 @@ except ImportError:
     sys.exit("needs pyyaml (research env)")
 
 ROOT = Path(__file__).resolve().parents[1]
-AXES = ROOT / "outputs/taxonomy/class_axes.yaml"
-CORPUS = ROOT / "data/processed/transitions_std121/corpus_manifest.json"
+AXES = ROOT / "outputs/taxonomy/class_axes_v2.yaml"
 OUT = ROOT / "outputs/taxonomy/viewer.html"
 
 FIELDS = {
+    "mechanism": ["cover", "transform", "overlay", "traverse", "cut"],
+    "overlay_direction": ["none", "add", "remove", "state"],
     "scene_swap": [True, False],
     "sidedness": ["A_only", "B_only", "two_sided"],
-    "mechanism": ["occlusion", "morph", "traversal", "dressed_cut"],
     "camera_defining": [True, False],
-    "inserted_content": [True, False],
     "stylization": [True, False],
+    "middle_only": [True, False],
     "subject_anchored": [True, False],
 }
 
 axes = yaml.safe_load(AXES.read_text())["classes"]
-corpus = json.loads(CORPUS.read_text())["classes"]
+
+def card_order(item):
+    cls, a = item
+    return (0 if a.get("owner_ruling") else (1 if a.get("sidedness_conflict") else 2), cls)
 
 cards = []
-for cls in sorted(axes):
-    a = axes[cls]
-    m = corpus.get(cls, {})
+for cls, a in sorted(axes.items(), key=card_order):
     vids = "".join(
         f'<div class="v"><video src="../../data/processed/transitions_std121/{cls}/{c}.mp4" '
         f'controls muted loop preload="none"></video><span>{html.escape(c)}</span></div>'
@@ -46,20 +48,25 @@ for cls in sorted(axes):
     ctrls = []
     for f, opts in FIELDS.items():
         cur = a.get(f)
+        if f == "overlay_direction" and cur is None:
+            cur = "none"
         os_ = "".join(
-            f'<option value="{o}" {"selected" if o == cur else ""}>{o}</option>'
+            f'<option value="{o}" {"selected" if str(o) == str(cur) else ""}>{o}</option>'
             for o in opts)
-        hc = ' class="hard"' if f in (a.get("hard_call") or []) else ""
-        ctrls.append(f'<label{hc}>{f}<select data-cls="{cls}" data-f="{f}" '
+        crit = ' class="crit"' if f == "sidedness" else ""
+        ctrls.append(f'<label{crit}>{f}<select data-cls="{cls}" data-f="{f}" '
                      f'data-orig="{cur}">{os_}</select></label>')
     flags = []
-    if a.get("sidedness_conflict"): flags.append("SIDEDNESS CONFLICT vs manifest")
-    if a.get("heterogeneous"): flags.append("HETEROGENEOUS")
-    flagtxt = f'<div class="flag">{" · ".join(flags)}</div>' if flags else ""
+    if a.get("owner_ruling"):
+        flags.append('<div class="flag rule">&#9873; MECHANISM RULING NEEDED — see notes below</div>')
+    if a.get("sidedness_conflict"):
+        flags.append('<div class="flag conf">&#9670; SIDEDNESS CONFLICT vs manifest — instrument-critical, rule this</div>')
+    if a.get("cam_recheck"):
+        flags.append('<div class="flag cam">camera_defining is arguable — re-judge with the locked-off-tripod test</div>')
     cards.append(f"""
 <div class="card" id="{cls}">
- <h2>{cls} <small>n={m.get("n_clips","?")} · manifest: {m.get("sidedness","?")} / {"+".join(m.get("tags",[]))}</small></h2>
- {flagtxt}
+ <h2>{cls} <small>v1 was: {a.get("v1_mechanism","?")} &rarr; v2: {a.get("mechanism")}{("/"+a["overlay_direction"]) if a.get("overlay_direction") else ""}</small></h2>
+ {''.join(flags)}
  <div class="vids">{vids}</div>
  <div class="ctrls">{"".join(ctrls)}</div>
  <p class="notes">{html.escape(str(a.get("notes","")))}</p>
@@ -68,26 +75,27 @@ for cls in sorted(axes):
 
 LEGEND = """
 <details id="legend" open>
-<summary>Taxonomy field definitions — judge from the FRAMES, not the class name · click to collapse</summary>
+<summary>Taxonomy v2 — mechanism decision procedure &amp; field definitions (gate-passed; judge from the FRAMES) · click to collapse</summary>
 <div class="legend-body">
- <div class="def handoff"><b>The handoff</b> = the interval where A-content is last visible and B-content first visible. Several fields are judged AT this moment, not over the whole clip.</div>
- <div class="def"><h4>0 · scene_swap<span class="vals">yes / no</span></h4><p>Different shots (location / scene / framing) &rarr; <b>yes</b>. Same shot in a transformed state (subject removed, scene restyled or emptied) &rarr; <b>no</b>. Judge first vs last frame.</p></div>
- <div class="def"><h4>1 · sidedness<span class="vals">A_only / B_only / two_sided</span></h4><p>Which endpoint's frames the effect visibly alters. Departure from A only &rarr; A_only. Arrival into B only &rarr; B_only. Both &rarr; two_sided. <b style="color:#f77">INSTRUMENT-CRITICAL &mdash; feeds mask S; every conflict is flagged for you.</b></p></div>
- <div class="def" style="grid-column:1/-1"><h4>2 · mechanism<span class="vals">occlusion / morph / traversal / dressed_cut</span></h4><p>What carries the handoff?</p>
-  <p class="sub"><b>occlusion</b> &mdash; the handoff frame is substantially covered by effect-generated content (smoke wall, flock, fire, money); B is revealed from behind it. No A&harr;B correspondence needed.</p>
-  <p class="sub"><b>morph</b> &mdash; continuous correspondence: A's content deforms / decomposes / restyles into B's, real scene visible through the handoff. Includes physical removal or rearrangement of scene content by an effect agent, and in-place restyle or state accumulation with no underlying cut.</p>
-  <p class="sub"><b>traversal</b> &mdash; camera motion in scene space carries the view from A's world to B's (whip, fly-through, zoom-into), real scene content visible during the move.</p>
-  <p class="sub"><b>dressed_cut</b> &mdash; none of the above carries the swap; underneath it is essentially a cut or dissolve, dressed with an overlay or treatment.</p>
-  <p class="tb">T1 &mdash; if the handoff frame is substantially covered, occlusion wins even if the camera flies into it. T2 &mdash; for a frame-wide treatment, judge with the treatment removed (cut underneath &rarr; dressed_cut; continuous deformation &rarr; morph). T3 &mdash; compounds: judge the handoff frame only.</p></div>
- <div class="def"><h4>3 · camera_defining<span class="vals">yes / no</span></h4><p>Is deliberate camera work part of the effect's identity (whip, orbit, fly, push)? Incidental handheld drift &rarr; no. (traversal always implies yes.)</p></div>
- <div class="def"><h4>4 · inserted_content<span class="vals">yes / no</span></h4><p>Effect introduces content in NEITHER endpoint and NOT derived from endpoint content? Enters ex nihilo or from off-frame &rarr; yes (ravens, money, petals, rain). Transforms out of a visible endpoint entity &rarr; no (a subject's own gas / smoke, motion streaks).</p></div>
- <div class="def"><h4>5 · stylization<span class="vals">yes / no</span></h4><p>Frame-wide appearance treatment evident (color grade, illustration render, wireframe shading), independent of localized effect content? A localized effect, however dramatic &rarr; no.</p></div>
- <div class="def"><h4>6 · subject_anchored<span class="vals">yes / no</span></h4><p>Effect originates from / attaches to a specific endpoint entity (a person, face, single subject) &rarr; yes. Would work unchanged on arbitrary content &rarr; no.</p></div>
+ <div class="def handoff"><b>Apply IN ORDER — the order IS the tie-breaker.</b> Endpoints are given as conditioning; classify what the MIDDLE must do. Apparatus (smoke, rings, petals, hands, blur) never decides.
+ <b>TB0:</b> strip frame-wide treatment/motion-blur only when a residual effect remains underneath (a pure frame-wide restyle is T1); judge compounds at the maximal-effect (handoff) frame.</div>
+ <div class="def" style="grid-column:1/-1"><h4>mechanism<span class="vals">cover / transform / overlay / traverse / cut</span></h4>
+  <p class="sub"><b>T1 transform</b> — pre-existing content undergoes visible CONVERSION with correspondence: deforms; dissolves into matter derived from itself (with or WITHOUT reforming into B — dispersal-to-absence counts); substance substitution; re-render/restyle in place. External matter that covers, extracts, or deletes without visible conversion is never transform. <i>Conversion beats coverage.</i></p>
+  <p class="sub"><b>T2 overlay</b> — B is the SAME scene as A changed only by content added / removed / accrued as state, while survivors keep tracker-confirmable identity. Sub-tag add / remove / state. <i>Same-scene beats coverage.</i></p>
+  <p class="sub"><b>T3 cover</b> — frame substantially blocked by matter/flash at handoff; a DIFFERENT shot handed off at clearance, or inside the occluder's interior (screens). Residue into B's first frames allowed; translucent media passed through during ego-motion are not blocking. <i>Covered beats camera.</i></p>
+  <p class="sub"><b>T4 traverse</b> — the CAMERA/view itself travels (through space or an open aperture: hole, doorway, haze) into B's place. Subject travels while camera stays &rarr; never traverse. Camera exits through the far side of an aperture &rarr; traverse; B lives inside the occluder (picture/screen) &rarr; cover.</p>
+  <p class="sub"><b>T5 cut</b> — none of the above; a discontinuity underneath, staged/dressed.</p></div>
+ <div class="def"><h4>scene_swap<span class="vals">yes / no</span></h4><p>First vs last frames: different shot/world &rarr; yes; same scene changed &rarr; no. Consistency: cover/traverse/cut &rArr; yes; overlay &rArr; no; transform may be either.</p></div>
+ <div class="def"><h4>sidedness<span class="vals">A_only / B_only / two_sided</span></h4><p>Which endpoint's frames the effect visibly alters. <b style="color:#f77">INSTRUMENT-CRITICAL — feeds mask S; semantics FROZEN (v1). Rule the &#9670; conflicts.</b></p></div>
+ <div class="def"><h4>camera_defining<span class="vals">yes / no</span></h4><p>"Replace the camera path with a locked-off tripod shot — does the effect still function?" No &rarr; yes. In doubt &rarr; no, unless the class's identity IS an ego-motion/scale-reveal move.</p></div>
+ <div class="def"><h4>stylization<span class="vals">yes / no</span></h4><p>Frame-wide appearance treatment beyond the effect region at any point (class-majority across exemplars).</p></div>
+ <div class="def"><h4>middle_only<span class="vals">yes / no</span></h4><p>Looking at the FIRST and LAST ~1s only: any effect matter/treatment visible in either? None &rarr; yes (conditioning contains zero evidence of the effect).</p></div>
+ <div class="def"><h4>subject_anchored<span class="vals">yes / no</span></h4><p>Metadata only in v2 (no metric consumes it): effect originates from / targets / tracks one endpoint entity.</p></div>
 </div>
 </details>
 """
 
-page = """<!DOCTYPE html><html><head><meta charset="utf-8"><title>Transition taxonomy — validate</title>
+page = """<!DOCTYPE html><html><head><meta charset="utf-8"><title>Transition taxonomy v2 — validate</title>
 <style>
 body{font-family:system-ui;margin:16px;background:#111;color:#ddd}
 .card{border:1px solid #333;border-radius:8px;padding:12px;margin:14px 0;background:#1a1a1a}
@@ -96,10 +104,13 @@ h2{margin:0 0 6px}h2 small{color:#888;font-weight:400;font-size:.7em}
 video{width:240px;border-radius:4px;background:#000}
 .ctrls{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
 label{display:flex;flex-direction:column;font-size:.72em;color:#aaa}
-label.hard select{outline:2px solid #b58900}
+label.crit select{outline:2px solid #b58900}
 select{background:#222;color:#eee;border:1px solid #444;border-radius:4px;padding:2px}
 select.changed{outline:2px solid #d33}
-.flag{color:#f66;font-weight:600;font-size:.85em;margin:4px 0}
+.flag{font-weight:600;font-size:.85em;margin:4px 0;padding:4px 8px;border-radius:5px}
+.flag.rule{color:#fff;background:#7a1f1f}
+.flag.conf{color:#111;background:#e0a34a}
+.flag.cam{color:#9fd0c9;background:#15302c;font-weight:400}
 .notes{color:#8a8;font-size:.85em;margin:6px 0}
 .ok{flex-direction:row;gap:6px;align-items:center;font-size:.8em}
 #bar{position:sticky;top:0;background:#111;padding:8px 0;z-index:9;border-bottom:1px solid #333}
@@ -116,12 +127,11 @@ button{background:#2a6;border:0;border-radius:5px;padding:8px 14px;color:#fff;fo
 .def h4 .vals{color:#e0a34a;font-family:monospace;font-weight:400;font-size:.88em;margin-left:6px}
 .def p{margin:2px 0;color:#b8c2bf}
 .def .sub{color:#9fd0c9;margin:2px 0}
-.def .tb{color:#8a938f;font-style:italic;margin-top:3px}
 .handoff{grid-column:1/-1;color:#d7cfa0;border-bottom:1px solid #2c3a37;padding-bottom:9px;margin-bottom:2px}
 @media(max-width:820px){.legend-body{grid-template-columns:1fr}}
 </style></head><body>
 <div id="bar"><button onclick="exp()">Export corrections.json</button><span id="count"></span>
-<span style="color:#666;margin-left:12px">yellow outline = annotator hard-call · red = you changed it</span></div>
+<span style="color:#666;margin-left:12px">cards ordered: &#9873; rulings first, then &#9670; sidedness conflicts &middot; yellow outline = instrument-critical field &middot; red = you changed it</span></div>
 """ + LEGEND + "\n".join(cards) + """
 <script>
 const sel=document.querySelectorAll('select');
@@ -130,7 +140,7 @@ function n(){const c=[...sel].filter(s=>s.value!==s.dataset.orig).length;
 document.getElementById('count').textContent=c+' correction(s), '+
 document.querySelectorAll('.validated:checked').length+' validated';}
 document.querySelectorAll('.validated').forEach(b=>b.addEventListener('change',n));
-function exp(){const out={corrections:{},validated:[]};
+function exp(){const out={protocol:"v2",corrections:{},validated:[]};
 sel.forEach(s=>{if(s.value!==s.dataset.orig){(out.corrections[s.dataset.cls]??={})[s.dataset.f]=s.value;}});
 document.querySelectorAll('.validated:checked').forEach(b=>out.validated.push(b.dataset.cls));
 const a=document.createElement('a');
@@ -139,4 +149,4 @@ a.download='corrections.json';a.click();}
 n();
 </script></body></html>"""
 OUT.write_text(page)
-print(f"wrote {OUT} ({len(axes)} classes)")
+print(f"wrote {OUT} ({len(axes)} classes, v2)")
