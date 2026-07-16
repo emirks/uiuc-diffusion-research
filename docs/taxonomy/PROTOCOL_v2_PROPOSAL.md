@@ -1,12 +1,17 @@
-# Transition Taxonomy — Protocol v2 (PROPOSAL)
+# Transition Taxonomy — Protocol v2 (ADOPTED)
 
-**Status:** rev.3 — **PASSED the fresh-context acceptance gate 2026-07-16** (independent evaluator:
-zero material defects; 12/12 mandated re-derivations reproduce the table; 5 minor wording fixes
-applied in this revision, none changing any assignment or stratum). rev.1 had FAILED the same gate
-on two material wording defects (T1 trigger; sakura_petals flag). Remaining step: **owner sign-off**
-via the §7 rulings in the v2 viewer.
+**Status:** rev.4 — **ADOPTED. Owner-validated 2026-07-16, 39/39 classes signed off** in the
+viewer (two correction exports folded the same evening; §5 is the owner-final table, mirrored
+byte-for-byte by `scripts/build_class_axes_v2.py` → `outputs/taxonomy/class_axes_v2.yaml`).
+Two standing §5.1 exceptions (plasma_explosion, portal) carry pre-registered conservative
+handling until harmonized. Gate history: rev.3 PASSED the fresh-context acceptance gate
+2026-07-16 (zero material defects; 12/12 re-derivations reproduce the table); rev.1 had FAILED
+on two material wording defects (T1 trigger; sakura_petals flag).
 **Date:** 2026-07-16. **Supersedes:** `outputs/taxonomy/PROTOCOL.md` (v1) — *descriptive layer only*.
-**Instrument impact: NONE.** `sidedness` semantics, mask S, the certified harness (eval/v3.0.0), split_v1, and all training rosters are untouched by this proposal. v1→v2 conversion is mechanical given the table in §5.
+**Instrument impact:** `sidedness` *semantics*, mask S construction, the certified harness
+(eval/v3.0.0), split_v1, and all training rosters are untouched. The owner's validation did
+flip two per-class sidedness *labels* (giant_grab, hero_flight → twosided) — folded into
+`corpus_manifest.json` via the documented owner-override (§6, last bullet; amendment-2).
 
 **Provenance:** direct filmstrip audit of 14/39 classes; two independent fresh-context reviews
 (an unanchored "architect" derivation and an adversarial stress-test that force-assigned all 39
@@ -89,102 +94,111 @@ to metadata.
   cover.
 - **T5 — cut.** None of the above; a discontinuity underneath, staged/dressed.
 
-## 5. Full 39-class assignment (v1 → v2)
+## 5. Full 39-class assignment (v1 → v2) — OWNER-FINAL
 
-Sub = overlay_direction. Swap/styl per §3 tests. mid = middle_only. Flags: ⚑ = owner ruling
-needed (§7); ◆ = sidedness conflict already pending in the owner's viewer pass (unchanged).
+All 39 classes reviewed and signed off by the owner in the viewer on 2026-07-16 (two
+correction exports, both folded; audit trail in `outputs/taxonomy/fold_report_v2_*.md`).
+Sub = overlay_direction. ⚠ = standing §5.1 exception, owner-validated as written but
+inconsistent with the implication table (see §5.1) — 2 classes.
 
 | class | v1 mech | **v2 mech** | sub | swap | side | cam | styl | mid | behavior (one line) |
 |---|---|---|---|---|---|---|---|---|---|
-| air_bending | occlusion | **transform** | — | T | two | F* | F | y | subjects dissolve into cotton-smoke which reforms as B (owner-ruled); *cam: owner set y in v1 pass — re-judge under locked-off test |
+| air_bending | occlusion | **transform** | — | T | two | T | F | y | subjects dissolve into cotton-smoke which reforms as B (owner-ruled); cam: owner set y in v1 pass - re-judge under locked-off test |
 | animalization | morph | **transform** | — | F | A | F | F | y | body re-renders in place into animal; transient ring |
-| color_rain | morph | **overlay** | state | F | A | F | T | n | liquid drenches subject; grade persists |
-| cotton_cloud | morph | **overlay** | add | F | A | F | F | n | cotton fills scene around untouched subject |
-| display_transition | occlusion | **cover** ⚑ | — | T | two | T | F | ⚑ | held-up screen fills frame; B = screen interior (ratify interior clause; is the monitor in the first panel?) |
-| earth_element | morph | **transform** | — | F | A ◆ | F | F | n | body cracks into rock in place |
-| earth_wave | morph | **transform** ⚑ | — | F | A ◆ | F | F | y | sand wave wraps body — becomes element, or hosts it? |
-| fire_element | morph | **overlay** ⚑ | state | F | A | F | F | n | fire manifests on/around posed subject — accrual or substitution? |
-| firelava | occlusion | **cover** | — | T | two | T | F | y | fire wall sweeps over the silhouette (no visible conversion) during tracked shot; reveal |
-| flame | occlusion | **cover** | — | T | two | F | F | y | fire → full-frame whiteout → recedes off different subject/set |
-| flying_cam_transition | occlusion | **traverse** | — | T | two ◆ | T | F | y | filmstrip-verified: doorway rises from desert sand; camera walks through into living room; no covering matter at handoff |
-| gas_transformation | morph | **transform** | — | F | A | F | F | y | body dissolves into gas with correspondence (conversion, not extraction) |
-| giant_grab | morph | **overlay** | remove | F | two ◆ | F | F | n | inserted hand drags subject out; scene persists; hand re-enters |
-| hero_flight | traversal | **traverse** | — | T | two ◆ | T | F | n | camera follows the launch into sustained flight persisting into B window (advisors read two_sided; owner rules) |
-| hole_transition | occlusion | **traverse** | — | T | A ◆ | T | F | n | camera zooms *through* an open ring/aperture into B's actual space (passage, not picture) |
-| illustration_scene | morph | **transform** | — | F | A | F | T | n | photoreal → flat illustration re-render in place |
+| color_rain | morph | **overlay** | state | F | A | F | T | y | liquid drenches subject; grade persists |
+| cotton_cloud | morph | **overlay** | add | F | A | F | F | y | cotton fills scene around untouched subject |
+| display_transition | occlusion | **cover** | — | T | two | T | F | y | held-up screen fills frame; B = screen interior (RULING: ratify interior clause; is monitor in first panel? middle_only provisional n) |
+| earth_element | morph | **transform** | — | F | A | T | F | y | body cracks into rock in place |
+| earth_wave | morph | **transform** | — | T | two | T | F | y | sand wave wraps body (RULING: becomes element -> transform, or hosts it -> overlay-state) |
+| fire_element | morph | **transform** | — | F | A | F | F | n | fire manifests on/around posed subject (RULING: accrual or substitution?) |
+| firelava | occlusion | **transform** | — | T | two | T | F | y | fire wall sweeps over the silhouette (no visible conversion) during tracked shot; reveal |
+| flame | occlusion | **cover** | — | T | two | F | F | y | fire -> full-frame whiteout -> recedes off different subject/set |
+| flying_cam_transition | occlusion | **traverse** | — | T | two | T | F | n | filmstrip-verified: doorway rises from desert sand; camera walks through into living room; no covering matter at handoff |
+| gas_transformation | morph | **transform** | — | F | A | F | F | y | body dissolves into gas with correspondence (conversion, dispersal-to-absence) |
+| giant_grab | morph | **overlay** | remove | F | two | F | F | n | inserted hand drags subject out; scene persists; hand re-enters |
+| hero_flight | traversal | **traverse** | — | T | two | T | F | n | camera follows the launch into sustained flight persisting into B window (advisors read two_sided; owner rules) |
+| hole_transition | occlusion | **cover** | — | T | two | T | F | y | camera zooms THROUGH an open ring/aperture into B's actual space (passage, not picture) |
+| illustration_scene | morph | **overlay** | state | F | A | F | T | n | photoreal -> flat illustration re-render in place |
 | jump_transition | traversal | **traverse** | — | T | two | T | F | y | camera follows jump arc to a different place/outfit |
-| live_concert | traversal | **traverse** | — | T | A ◆ | T | F | n | filmstrip-verified: backstage close-up pulls back through stage haze to festival wide (roster all-dup handled separately) |
-| luminous_gaze | morph | **overlay** | state | F | A | F | T | n | eyes ignite; storm + rim-light accrue over persisting subject/scene |
-| melt_transition | occlusion | **cover** | — | T | two | F | F | y | prop-derived melt covers frame; trace persists into B's first frames (residue allowed; mid=y assumes trace clears before the final ~1s window — confirm on video, else flip to n and update §6 counts) |
+| live_concert | traversal | **traverse** | — | T | A | T | F | n | filmstrip-verified: backstage close-up pulls back through stage haze to festival wide (roster all-dup handled separately) |
+| luminous_gaze | morph | **transform** | — | F | A | F | T | n | eyes ignite; storm + rim-light accrue over persisting subject/scene |
+| melt_transition | occlusion | **transform** | — | T | two | F | F | y | prop-derived melt covers frame; trace persists into B's first frames (mid=y assumes trace clears before final ~1s window - confirm on video) |
 | money_rain | morph | **overlay** | add | F | A | F | F | n | bills fall into persistent scene |
-| monstrosity | morph | **overlay** | add | F | A | F | F | n | creature grows in background; scene persists |
-| mystification | morph | **transform** | — | F | A | F | F | y | subject dissolves into colored smoke (conversion) |
-| nature_bloom | morph | **overlay** | add | F | A | F | F | n | flowers grow into background |
-| plasma_explosion | occlusion | **overlay** | add | F | A | T* | F | n | filmstrip-verified: same intersection throughout; explosion cloud added, persists; *cam=y arguable under locked-off test — re-judge with air_bending |
-| polygon | traversal | **transform** | — | F | A | F* | T | n | whole frame restyles photo → white low-poly; *cam flips to F under locked-off test |
-| portal | occlusion | **overlay** | remove | F | A | F | F | y | portal opens at subject, removes them, vanishes; street persists empty |
-| raven_transition | occlusion | **cover** | — | T | two | T | F | n | raven wall covers; stray birds persist into B |
-| run_set_on_fire | morph | **overlay** | state | F | A | T* | F | n | runner catches fire mid-run; same run, same alley; *cam=y arguable under locked-off test — re-judge with air_bending |
+| monstrosity | morph | **overlay** | add | F | A | T | F | n | creature grows in background; scene persists |
+| mystification | morph | **transform** | — | F | A | F | F | y | subject dissolves into colored smoke (conversion, dispersal-to-absence) |
+| nature_bloom | morph | **overlay** | add | F | A | F | F | y | flowers grow into background |
+| plasma_explosion | occlusion | **overlay** ⚠ | add | T | A | T | F | y | / same intersection throughout; explosion cloud added, persists; cam=y arguable under locked-off test - re-judge with air_bending |
+| polygon | traversal | **overlay** | state | F | A | F | T | n | whole frame restyles photo -> white low-poly; cam flips to F under locked-off test |
+| portal | occlusion | **cover** ⚠ | — | F | A | F | F | y | / portal opens at subject, removes them, vanishes; street persists empty (corpus: clip 0 is cartoon - replace exemplar) |
+| raven_transition | occlusion | **transform** | — | T | two | T | F | y | raven wall covers; stray birds persist into B |
+| run_set_on_fire | morph | **transform** | — | F | A | T | F | n | runner catches fire mid-run; same run, same alley; cam=y arguable under locked-off test - re-judge with air_bending |
 | saint_glow | morph | **overlay** | add | F | A | F | F | n | halo forms around subject; subject unchanged |
-| sakura_petals | occlusion | **overlay** ⚑ | remove | F | A | F | F | y | conflicting filmstrip reads: external petal swarm covering the subject (→ overlay-remove) vs the suit visibly eroding INTO petal clusters (→ conversion, T1 transform) — owner rules convert-vs-extract |
-| seamless_transition | traversal | **cut** | — | T | two ⚑ | F* | F | y | hidden edit: walk-out, empty beats, walk-in different room; *cam flips (camera static); sidedness convention needed (effect in neither window) |
-| shadow | morph | **transform** | — | F | A | F | F | n | subject becomes a living shadow (conversion visible) |
-| shadow_smoke | occlusion | **cover** ⚑ | — | T | two | T | F | y | body-derived smoke covers frame, clears to new scene — unless it *reforms* into B (air_bending precedent) → transform |
-| super_fast_run | traversal | **traverse** | — | T | A | T | F | n | sprint + tracking blur carry shot to different environment; still sprinting at end (v1 hard-call on sidedness, not a tracked conflict) |
-| water_bending | morph | **overlay** ⚑ | state | F | A ◆ | F | F | n | water manipulated around/onto subject — accrual or substitution? |
-| water_element | morph | **transform** ⚑ | — | F | A ◆ | F | F | n | verified exemplar 2 = body→water (transform); other exemplars heterogeneous — confirm or split class |
-| wireframe | morph | **transform** | — | F | A | F | T | n | subject+scene restyle to wireframe |
-| wonderland | morph | **transform** | — | F | A | F | T | n | whole frame restyles to stylized look |
+| sakura_petals | occlusion | **transform** | — | F | A | F | F | y | RULING: conflicting filmstrip reads - external petal swarm covering subject (overlay-remove) vs suit eroding INTO petals (conversion -> transform) |
+| seamless_transition | traversal | **traverse** | — | T | two | T | F | n | hidden edit: walk-out, empty beats, walk-in different room; camera static; sidedness convention needed (effect in neither window) |
+| shadow | morph | **transform** | — | F | A | F | F | y | subject becomes a living shadow (conversion visible) |
+| shadow_smoke | occlusion | **transform** | — | T | two | T | F | y | body-derived smoke covers frame, clears to new scene (RULING: merely clears -> cover, or reforms into B -> transform, air_bending precedent) |
+| super_fast_run | traversal | **traverse** | — | T | A | T | F | n | sprint + tracking blur carry shot to different environment; still sprinting at end |
+| water_bending | morph | **transform** | — | T | two | T | F | y | water manipulated around/onto subject (RULING: accrual or substitution?) |
+| water_element | morph | **transform** | — | F | A | F | F | y | verified exemplar 2 = body->water (transform); other exemplars heterogeneous (RULING: confirm or split class; corpus: maybe not a class) |
+| wireframe | morph | **overlay** | state | F | A | F | T | n | subject+scene restyle to wireframe |
+| wonderland | morph | **overlay** | state | F | A | F | T | n | whole frame restyles to stylized look |
 
 ### 5.1 Consistency table (annotate-and-verify)
 
 `mechanism ∈ {cover, traverse, cut}` ⇒ `scene_swap = yes`. `mechanism = overlay` ⇒
-`scene_swap = no`. `mechanism = transform` spans both (air_bending T; animalization F).
-`mechanism = traverse` ⇒ `camera_defining = yes`. Any violation = annotation error, escalate.
-(This check applied to v1 would have caught polygon.)
+`scene_swap = no`. `mechanism = transform` spans both. `mechanism = traverse` ⇒
+`camera_defining = yes`. A violation is an annotation error — with two standing
+owner-validated exceptions (2026-07-16 sign-off): **plasma_explosion** (overlay + swap=T)
+and **portal** (cover + swap=F). Pre-registered handling until the owner harmonizes each
+(one click: change mechanism or swap): each is EXCLUDED from any stratum whose
+interpretation rests on the violated implication — portal from the pooled new-shot copy
+tests (its scene persists ⇒ copying is partially correct there, unlike true covers),
+plasma_explosion from overlay-stratum copy-regime tests (its swap=T breaks the
+"background copying is partially correct" reading). Both keep their per-class rows.
 
-## 6. Strata, power, and pre-registration impact
+## 6. Strata, power, and pre-registration impact — POST-VALIDATION COUNTS
 
-Counts: **transform 12 · overlay 14 · cover 6 · traverse 6 · cut 1** (39 ✓).
+Counts (owner-final): **transform 17 · overlay 12 (add 6 / state 5 / remove 1) · cover 4 ·
+traverse 6 · cut 0** (39 ✓). The owner's rulings moved every borderline conversion INTO
+transform (raven, melt, firelava, shadow_smoke, sakura, water_bending, earth_wave,
+fire_element, luminous_gaze, run_set_on_fire) and emptied cut (seamless → traverse).
 
-- **Confirmatory sign-test strata:** transform (12; 10/12 → p≈.019) and overlay (14; 11/14 →
-  p≈.029). For copy-sensitive claims use **transform ∧ ¬stylization (8)** — a crossfade is
-  approximately a *correct* answer for restyles, so the 4 restyle classes are the pre-declared
-  **copy_max calibration subgroup**, excluded from copy-confound sign tests.
-- **Pooled confirmatory stratum "new-shot handoff" = cover ∪ traverse ∪ cut (13)** — coherent
-  (all synthesize a passage to a different shot) and absorbs the cut singleton. cover (6) and
-  traverse (6) alone are descriptive (p<.05 only if unanimous); pre-register them as such.
-  Do not gerrymander assignments to inflate strata.
-- **Recomputation policy:** 4 of the 7 owner rulings (§7) sit on the transform/overlay boundary,
-  so rulings can shift the 12/14 split (e.g., sakura→transform ⇒ transform 13 / overlay 13).
-  Stratum membership and this section's arithmetic are recomputed once §7 rulings land, BEFORE
-  any scoring consumes the strata; the pre-registration records post-ruling counts.
-- **Capability → metric mapping:** cover = occluder synthesis + reveal (seam_z; copy_max guards
-  freeze-fade cheating) · transform = correspondence morphing (copy_max/lerp is THE confound;
-  m1a, obj_match) · overlay = local synthesis over a copyable background (copy_max
-  region-restricted; obj_match survivor persistence) · traverse = ego-motion continuity
-  (cam_dtw, m1b) · cut = **no cut-alone claims**; contributes only via the pooled
-  new-shot-handoff stratum.
-- **middle_only (y=14 / n=25):** pre-registered headline split for R1−R0 (conditioning contains
-  zero effect evidence ⇒ predict strongest suppression, largest R2 gains). Count note:
-  display_transition is provisionally n pending its §7 ruling.
-- **scene_swap (T14/F25):** copy_max regime + seam_z applicability split.
-- Sidedness stays {A_only 27, two_sided 12} pending the owner's 9 conflict rulings; B_only
-  remains empty ⇒ all suppression analyses are A-side-weighted (note in report).
+- **Confirmatory sign-test strata:** transform (17; 13/17 → p≈.025) and overlay (12; 10/12 →
+  p≈.019). For copy-sensitive claims use **transform ∧ ¬stylization (16)**; the
+  **copy_max calibration subgroup is now `stylization=T` (6: 5 overlay-state + luminous_gaze
+  transform)** — a crossfade approximates a correct answer for restyles, so these 6 are
+  excluded from copy-confound sign tests. overlay ∧ ¬stylization = 7 (descriptive-leaning;
+  9/9–7/7 unanimity zones only if further split).
+- **Pooled confirmatory stratum "new-shot handoff" = cover ∪ traverse (10)** — cut is empty.
+  Power note: n=10 needs **9/10** for p<.05 (8/10 → p≈.055). Portal's §5.1 exception (above)
+  makes the effective copy-test pool **9** (needs 8/9, p≈.020) until harmonized. cover (4)
+  and traverse (6) alone are descriptive; pre-registered as such.
+- **Capability → metric mapping:** unchanged in kind — transform = correspondence
+  morphing (copy_max/lerp THE confound; m1a, obj_match) · overlay = local synthesis over a
+  copyable background · cover = occluder synthesis + reveal (seam_z) · traverse = ego-motion
+  continuity (cam_dtw, m1b). Camera-transfer secondary contrast (pre-registered while still
+  outcome-blind): **traverse (6) vs cover (4)** — both demand a new shot; only traverse
+  demands synthesized camera travel. camera_defining (18/39) cross-cuts all four mechanisms
+  and is the marginal stratum for any future camera/temporal-LoRA transfer claim.
+- **middle_only (y=23 / n=16):** pre-registered headline split for R1−R0.
+- **scene_swap (T17 / F22):** copy_max regime + seam_z applicability split.
+- **Sidedness (owner-final): A_only 24 · two_sided 15 · B_only 0** ⇒ all suppression
+  analyses remain A-side-weighted (report note). The 9 tracked conflicts were resolved by
+  the owner 2026-07-16; net instrument-side relabels: **giant_grab and hero_flight
+  onesided→twosided** (corpus_manifest updated via owner-override in
+  `build_corpus_manifest.py`; certification amendment-2 records the σ_seed caveat —
+  hero_flight was a σ_seed roster item drawn as onesided).
 
-## 7. Owner ruling list (exactly 7 mechanism calls) + existing sidedness work
+## 7. Owner rulings — ALL RESOLVED (2026-07-16 viewer sign-off)
 
-Mechanism rulings (watch the videos, apply §4): **water_element** (do the other exemplars match
-the verified body→water transform? else split/exclude), **water_bending**, **fire_element**,
-**earth_wave** (each: does the body *become* the element → transform, or *host* it → overlay-state),
-**shadow_smoke** (does the smoke merely clear → cover, or reform into B → transform),
-**sakura_petals** (external swarm extracting the subject → overlay-remove, or suit eroding into
-petals → transform; filmstrip reads conflict),
-**display_transition** (ratify the cover-interior clause; check monitor visibility in first panel
-for `middle_only`).
-Unchanged and still owed: the **9 sidedness conflicts** (◆) in the viewer pass — plus one new
-convention call: sidedness for classes whose effect appears in *neither* endpoint window
-(seamless_transition, flying_cam_transition).
+The 7 mechanism rulings, the 9 sidedness conflicts, the 3 camera re-checks, and the
+neither-window sidedness convention were all settled by the owner's full-table review
+(39/39 validated). The owner-final record is `outputs/taxonomy/class_axes_v2.yaml`,
+reproducible from `scripts/build_class_axes_v2.py`; the §5 table above mirrors it.
+Notable outcomes: dissolve/erode/host borderline classes uniformly → **transform**;
+seamless_transition → traverse (camera ruled moving); display_transition cover-interior
+clause ratified with middle_only=y; plasma_explosion & portal left as the two ⚠ §5.1
+exceptions (§5.1 pre-registered handling applies until harmonized).
 
 ## 8. Corpus repairs (independent of schema)
 
@@ -195,18 +209,19 @@ convention call: sidedness for classes whose effect appears in *neither* endpoin
 3. **live_concert** — roster all-dup (already tracked); fix before any rung consumes it.
 4. **flying_cam_transition / live_concert notes were empty** in v1 — behaviors now documented
    (§5) from filmstrip inspection.
-5. **v1 taxonomy files are untracked** (`outputs/taxonomy/` not in git) — migrate PROTOCOL.md,
-   class_axes.yaml (+v2 successors) into tracked paths with the v2 adoption commit.
+5. ~~v1 taxonomy files are untracked~~ **DONE** — v1 archived at `docs/taxonomy/v1_PROTOCOL.md`
+   + `docs/taxonomy/v1_class_axes.yaml`; v2 reproducible from `scripts/build_class_axes_v2.py`.
 
 ## 9. What does NOT change
 
 - `sidedness` semantics, mask S construction, every certified metric, τ_copy, σ_seed numbers,
-  certification v3.0.0 status: **untouched.** (A proposed *operationalization* of the sidedness
-  test — "effect visible in first/last ~1s window" — is recorded as a candidate but must be
-  checked against SPEC.md's S-mask definition before anyone annotates with it. Caution: it would
-  contradict current labels for every `middle_only=y ∧ two_sided` class — 8 classes, e.g.
-  firelava, melt_transition — so if pursued it is a *relabel proposal* requiring owner + §7-style
-  review, never a "clarification.")
+  certification v3.0.0 status: **untouched.** Per-class sidedness *labels* were owner-validated
+  2026-07-16; the two label flips (giant_grab, hero_flight → twosided) are folded into
+  `corpus_manifest.json` and documented in certification amendment-2 (hero_flight σ_seed-roster
+  caveat included). (A proposed *operationalization* of the sidedness test — "effect visible in
+  first/last ~1s window" — remains a candidate only; it would contradict validated labels for
+  every `middle_only=y ∧ two_sided` class, so if pursued it is a *relabel proposal* requiring
+  owner + §7-style review, never a "clarification.")
 - split_v1 (FINAL, tag split/v1), training rosters, all submitted jobs (exp_062/exp_063),
   R0/R1 generations: **untouched.**
 - v1 labels remain the annotation of record until owner sign-off; conversion is the §5 table.
