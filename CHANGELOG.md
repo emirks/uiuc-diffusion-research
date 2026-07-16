@@ -1,5 +1,20 @@
 ## 2026-07-16
 
+18:57 — **Eval-ladder PLAN Amendment 1 pre-registered: side-keyed specialists + R1K + R3X/R4X (C9).**
+Advisor (fable) ruling on an owner design challenge: the sidedness-BLIND specialists (D2) were
+anti-conservative — on one_sided classes the blind suffix hands the specialist the true arrival
+endpoint B (the effect's terminal state per SPEC §3), biasing the PRIMARY C5 (R3−R4) toward its
+pre-declared R3>R4 direction. Fix, committed BEFORE any keyed generation exists (outcome-blind
+honesty anchor): (1) retrain the 9 one_sided specialists PREFIX-ONLY into `<cls>_keyed/` dirs
+(two_sided shadow_smoke/hero_flight unchanged, blind==keyed; blind one_sided ckpts kept as a
+labeled sensitivity artifact); (2) new rung **R1K** = prefix-only base (no adapter) re-baselining
+C4/C6/C7/C8 so adapter-value isn't confounded with suffix removal (C1 stays on blind R1);
+(3) new secondary rungs **R3X/R4X** (contrast C9) = cross-class donor endpoints on the 8-class
+block B8 (one_sided ∧ scene_swap=false), 96+96 videos, no GT (class-effect transfer). D2 and §7
+rule-(iii) superseded; the 60 R4/R5 videos + all R0/R1 + split sha UNCHANGED. New grid
+`docs/eval_ladder/ladder_items_v2.json` (sha `087206d7…`, derived verbatim from frozen v1
+`afe17a3f…`) via `build_ladder_items_v2.py`; dated amendment in `docs/eval_ladder/PLAN.md`.
+
 17:21 — **Eval-ladder jobs MIGRATED to cluster-wide `secondary` (our node was fully saturated).**
 The 16:40 submission to `HCESC-H100-secondary` sat `PENDING (Resources)` indefinitely — that
 queue only scavenges our lab's own node `ccc0439`, whose 8/8 H100s are held by another user's
