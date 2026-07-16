@@ -1,0 +1,1031 @@
+protocol: outputs/taxonomy/PROTOCOL.md (v1 + pilot amendments)
+annotator: claude-sonnet (batches) + fable pilot key cross-check
+date: '2026-07-14'
+status: AWAITING OWNER VALIDATION
+classes:
+  air_bending:
+    clips_viewed:
+    - air_bending_0
+    - air_bending_2
+    - air_bending_3
+    scene_swap: true
+    sidedness: two_sided
+    mechanism: occlusion
+    camera_defining: false
+    inserted_content: false
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - sidedness
+    - inserted_content
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'A voluminous white ribbon of "air"/cotton-like smoke is exhaled from or wells up around the
+      subject''s torso, snakes and undulates across the frame substantially covering it (T1: occlusion),
+      then clears to reveal an entirely different person in a different location/framing (scene_swap).
+      In 2/3 clips a wisp or wind-blown-hair motion still overlaps the just-revealed B subject, so the
+      effect visibly touches both sides; the ribbon itself is derived from the subject''s own exhale/aura
+      (not ex nihilo), a rare-but-legal occlusion + inserted_content=false pairing. Camera itself stays
+      static/fixed the whole time despite the "bending" name.
+
+      '
+  animalization:
+    clips_viewed:
+    - animalization_0
+    - animalization_4
+    - animalization_7
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: true
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - sidedness
+    - inserted_content
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'Fixed camera, same backdrop/location throughout (blue studio, grass field, red studio). A
+      thin glowing energy ring/spark burst (ex-nihilo, not derived from either endpoint) briefly surrounds
+      the subject while their body continuously re-renders in place into an animal (dog / panda / tiger)
+      holding the same pose; the ring/sparks fade out before the animal settles into its own several-frame
+      independent motion (walking/sniffing), so no residual effect persists into the stabilized B state.
+
+      '
+  color_rain:
+    clips_viewed:
+    - color_rain_0
+    - color_rain_5
+    - color_rain_8
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: true
+    stylization: true
+    subject_anchored: false
+    hard_call:
+    - mechanism
+    - stylization
+    heterogeneous: true
+    per_clip:
+      color_rain_5:
+        stylization: false
+    sidedness_conflict: false
+    notes: 'Colored liquid (blood-red, teal paint, dark paint) pours from off-frame and progressively
+      drenches the subject in place. In 2 of 3 clips (color_rain_0, color_rain_8) the whole surrounding
+      scene also takes on a matching color-grade by the end; color_rain_5 stays localized to the person,
+      with the sky/grass never tinted.
+
+      '
+  cotton_cloud:
+    clips_viewed:
+    - cotton_cloud_0
+    - cotton_cloud_4
+    - cotton_cloud_8
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: true
+    stylization: false
+    subject_anchored: false
+    hard_call:
+    - mechanism
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'Subject holds the same pose/framing for the entire clip (parking garage, city street, office);
+      fluffy pink cotton-candy-like cloud matter grows ex nihilo from the surrounding environment/background
+      (never touching or emanating from the subject''s body) and progressively fills more of the frame
+      around them. Same shot, no cut, continuous in-place accumulation — treated as morph per the color_rain
+      precedent (state accumulation, not a "reveal from behind" occlusion, since the subject in the foreground
+      is never obscured).
+
+      '
+  display_transition:
+    clips_viewed:
+    - display_transition_1
+    - display_transition_2
+    - display_transition_3
+    scene_swap: true
+    sidedness: two_sided
+    mechanism: occlusion
+    camera_defining: true
+    inserted_content: true
+    stylization: false
+    subject_anchored: false
+    hard_call:
+    - mechanism
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'A crew member holds up an external camera/monitor screen showing a preview of destination
+      B; the screen is pushed/zoomed toward camera until it substantially covers the frame (T1: occlusion
+      wins over traversal even though camera work carries the push). In the frames leading up to full
+      reveal, the live environment visible around the screen''s edges has already cut to B''s location
+      while the screen itself still shows the preview, so the effect visibly bridges both A''s and B''s
+      frames. The monitor/rig is inserted, content-agnostic apparatus operated by a third party, not attached
+      to the subject being photographed.
+
+      '
+  earth_element:
+    clips_viewed:
+    - earth_element_0
+    - earth_element_3
+    - earth_element_6
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: true
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - sidedness
+    - mechanism
+    - scene_swap
+    heterogeneous: true
+    per_clip:
+      earth_element_6:
+        scene_swap: true
+        sidedness: two_sided
+        mechanism: occlusion
+    sidedness_conflict: true
+    notes: 'earth_element_0/3: in-place transformation only — same room/desert canyon the entire clip,
+      subject''s body progressively cracks into a rock/stone texture with glowing lightning-like veins
+      (and, in one clip, ground fire at the feet), never leaving the original location (matches manifest
+      onesided). earth_element_6 is a clear outlier: a dirt/sand mass grows from the subject and swells
+      to substantially occlude the entire frame for several consecutive tiles, revealing a wholly different
+      person in a different location (library aisle -> stairwell) with the new environment already visible
+      behind the dirt before the clean reveal — flagging sidedness_conflict since this per-clip two_sided/occlusion/scene_swap
+      finding disagrees with both the class default and the manifest''s onesided label.
+
+      '
+  earth_wave:
+    clips_viewed:
+    - earth_wave_0
+    - earth_wave_2
+    - earth_wave_4
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: false
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - sidedness
+    - mechanism
+    - scene_swap
+    heterogeneous: true
+    per_clip:
+      earth_wave_4:
+        scene_swap: true
+        sidedness: two_sided
+        mechanism: occlusion
+        inserted_content: true
+    sidedness_conflict: true
+    notes: 'earth_wave_0/2: in-place transformation — same terrain/canyon for the whole clip; a swirling
+      dust/sand wave wraps the subject''s hands and body as bending gestures accompany a progressive rock-texture
+      transformation, no location change (majority read is A_only, disagreeing with the manifest''s twosided
+      class label — flagging sidedness_conflict at the class level regardless of the per-clip split).
+      earth_wave_4 is the outlier, structurally identical to earth_element_6: dust/rubble floods and substantially
+      occludes the whole frame, then reveals a person in a completely different room; a faint dust speck
+      lingers into the first calm B frame.
+
+      '
+  fire_element:
+    clips_viewed:
+    - fire_element_0
+    - fire_element_2
+    - fire_element_4
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: true
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - inserted_content
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'Same static/posed shot for the entire clip (field at dusk, black sand beach, burning field)
+      — no scene_swap, no location change and no second person revealed. Glowing lava-crack texture progressively
+      spreads across the subject''s body until they are a full molten/lava humanoid; in 2/3 clips a flame
+      trail/projectile also appears at the hand as they gesture. Contrast with firelava (below), whose
+      near-identical crack/lava visual look does relocate the subject — the name alone does not disambiguate
+      these two classes; the frames do.
+
+      '
+  firelava:
+    clips_viewed:
+    - firelava_0
+    - firelava_3
+    - firelava_5
+    scene_swap: true
+    sidedness: two_sided
+    mechanism: occlusion
+    camera_defining: true
+    inserted_content: false
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - mechanism
+    - camera_defining
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'The subject''s own body erupts into fire (self-derived, same logic as shadow_smoke''s subject-emanated
+      smoke — not ex nihilo), which substantially covers their silhouette (T1: occlusion) while a continuously-tracked
+      shot follows them running/walking/falling; the real environment visibly changes during this covered
+      motion in all 3 clips (gas station -> street, snow slope -> grass field, rooftop pole -> street
+      plaza), and a faint residual flame patch lingers into the first calm B frame in each case, confirming
+      two_sided (matches manifest). Deliberate tracking/whip camera work following the moving flame figure
+      is part of the effect''s identity.
+
+      '
+  flame:
+    clips_viewed:
+    - flame_transition_0
+    - flame_transition_1
+    scene_swap: true
+    sidedness: two_sided
+    mechanism: occlusion
+    camera_defining: false
+    inserted_content: false
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - inserted_content
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: subject catches fire at the body, flame grows to a full-frame whiteout (occlusion), recedes
+      off a different subject at a different set revealing B; matches manifest twosided.
+  flying_cam_transition:
+    clips_viewed:
+    - flying_cam_transition_1
+    - flying_cam_transition_3
+    - flying_cam_transition_4
+    scene_swap: true
+    sidedness: two_sided
+    mechanism: occlusion
+    camera_defining: true
+    inserted_content: false
+    stylization: false
+    subject_anchored: false
+    hard_call:
+    - sidedness
+    - mechanism
+    - inserted_content
+    heterogeneous: true
+    sidedness_conflict: true
+    per_clip:
+      flying_cam_transition_1:
+        sidedness: two_sided
+        mechanism: traversal
+        inserted_content: true
+        notes: an archway materializes ex nihilo in desert sand; camera+subject walk continuously through
+          the real threshold into a lit house interior, then keep pushing/zooming onto a new subject on
+          the rug (real content visible throughout, no frame-wide occlusion).
+      flying_cam_transition_3:
+        sidedness: A_only
+        mechanism: occlusion
+        inserted_content: false
+        sidedness_conflict: true
+        notes: camera flies alongside a jet, closing to a canopy/helmet fill-frame blackout (T1); the
+          B side (soldiers on a hillside) is a static long-take reveal with no further effect activity
+          -- disagrees with manifest twosided.
+      flying_cam_transition_4:
+        sidedness: two_sided
+        mechanism: occlusion
+        inserted_content: false
+        notes: the subject's own fan sweeps through frame to a fill-frame motion-blur (T1) while the camera
+          keeps flying/pushing forward continuously through the reveal all the way to a close-up of subject
+          B.
+  gas_transformation:
+    clips_viewed:
+    - gas_transformation_0
+    - gas_transformation_5
+    - gas_transformation_9
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: false
+    stylization: false
+    subject_anchored: true
+    hard_call: []
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'The subject''s own body dissolves in place into smoke/gas (or smoke+fire) while the surrounding
+      scene (elevator, rooftop, plaza) stays visible throughout, not covered; the cloud then disperses,
+      leaving the same location empty of the subject.
+
+      '
+  giant_grab:
+    clips_viewed:
+    - giant_grab_0
+    - giant_grab_2
+    - giant_grab_4
+    scene_swap: false
+    sidedness: two_sided
+    mechanism: morph
+    camera_defining: false
+    inserted_content: true
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - mechanism
+    - inserted_content
+    heterogeneous: false
+    sidedness_conflict: true
+    notes: 'An oversized hand enters from off-frame, grips the endpoint subject (dog, man, or woman) directly,
+      and drags/lifts them out of frame, leaving the same location empty. The hand itself stays on screen
+      through the very last frame (ending on a peace-sign gesture), so the effect visibly touches the
+      arrival side too, not just the departure — flagging for owner review since any B-touching finding
+      is instrument-critical.
+
+      '
+  hero_flight:
+    clips_viewed:
+    - hero_flight_0
+    - hero_flight_5
+    - hero_flight_9
+    scene_swap: true
+    sidedness: two_sided
+    mechanism: traversal
+    camera_defining: true
+    inserted_content: false
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - sidedness
+    - mechanism
+    heterogeneous: false
+    sidedness_conflict: true
+    notes: launch from seated (heavily motion-blurred but continuous, not occluded) into sustained aerial
+      flight; the flying subject/fist-forward POV persists to the final frame in all 3 exemplars, so B's
+      frames are also effect-altered -- conflicts with manifest onesided.
+  hole_transition:
+    clips_viewed:
+    - hole_transition_0
+    - hole_transition_1
+    scene_swap: true
+    sidedness: A_only
+    mechanism: occlusion
+    camera_defining: true
+    inserted_content: true
+    stylization: false
+    subject_anchored: false
+    hard_call:
+    - sidedness
+    heterogeneous: false
+    sidedness_conflict: true
+    notes: large ring-shaped object (tire / wall mirror) appears only in A's environment; camera zooms
+      through its hole to reveal an entirely different B scene/subject with no ring residue on the B side.
+  illustration_scene:
+    clips_viewed:
+    - illustration_scene_0
+    - illustration_scene_5
+    - illustration_scene_9
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: false
+    stylization: true
+    subject_anchored: false
+    hard_call: []
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'A static photo (same pose, same framing/walk-cycle) progressively re-renders in place from
+      photorealistic into flat illustrated/pop-art line-art and color-block style; nothing is added or
+      removed, it''s a frame-wide restyle that never reverts.
+
+      '
+  jump_transition:
+    clips_viewed:
+    - jump_transition_1
+    scene_swap: true
+    sidedness: two_sided
+    mechanism: traversal
+    camera_defining: true
+    inserted_content: false
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - sidedness
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: only one filmstrip available for this class. Subject jumps from ruins in an olive suit, camera
+      follows the arc through the air, lands poolside in a black suit -- matches manifest twosided.
+  live_concert:
+    clips_viewed:
+    - live_concert_0
+    - live_concert_4
+    - live_concert_7
+    scene_swap: true
+    sidedness: A_only
+    mechanism: traversal
+    camera_defining: true
+    inserted_content: false
+    stylization: false
+    subject_anchored: false
+    hard_call:
+    - sidedness
+    - mechanism
+    heterogeneous: true
+    sidedness_conflict: true
+    per_clip:
+      live_concert_7:
+        sidedness: two_sided
+        mechanism: occlusion
+        inserted_content: true
+        sidedness_conflict: true
+        notes: handoff frame is fully whited-out by stage fog/smoke (T1 occlusion, smoke reads as inserted);
+          smoke lingers visibly into the first arrival-stage frames too (two_sided) before the same pull-back-to-crowd
+          reveal as the other two exemplars -- disagrees with manifest onesided.
+  luminous_gaze:
+    clips_viewed:
+    - luminous_gaze_0
+    - luminous_gaze_2
+    - luminous_gaze_3
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: true
+    stylization: true
+    subject_anchored: true
+    hard_call:
+    - inserted_content
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: same continuous shot; eyes ignite and dark smoke/storm clouds roll in while a rim-light energy
+      outline spreads across hair/jacket edges and the whole frame darkens -- no cut, no location change;
+      matches manifest onesided.
+  melt_transition:
+    clips_viewed:
+    - melt_transition_1
+    - melt_transition_3
+    - melt_transition_4
+    scene_swap: true
+    sidedness: two_sided
+    mechanism: occlusion
+    camera_defining: false
+    inserted_content: false
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - mechanism
+    heterogeneous: true
+    sidedness_conflict: false
+    per_clip:
+      melt_transition_3:
+        mechanism: dressed_cut
+        inserted_content: true
+        notes: yellow-then-black liquid paint drips down her sleeve while still at the same fruit-market
+          location (never fills the frame, market backdrop stays visible); the actual scene-swap to the
+          park is a hard cut dressed with a matching black-liquid puddle carried over into the first park
+          frame, and unlike clips 1/4 the paint has no visible source prop (ex nihilo, not derived) --
+          satisfies the dressed_cut/inserted_content consistency rule.
+    notes: liquid/melt substance derived from a held prop (lasso rope, ice cream) grows to cover most
+      of the frame (occlusion) and a trace of it persists into the first reveal frames of the new scene/outfit
+      (two_sided), matching manifest twosided; clip_3 instead reads as a dressed cut (see per_clip).
+  money_rain:
+    clips_viewed:
+    - money_rain_0
+    - money_rain_3
+    - money_rain_7
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: true
+    stylization: false
+    subject_anchored: false
+    hard_call:
+    - sidedness
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'Same continuous shot in all 3 (rooftop smoker, boat interior, sidewalk gunman); no cut, no
+      location change. Bills fall from off-frame starting roughly a third into the clip and progressively
+      accumulate, absent in the first tiles and heaviest/piled by the last — a "drenched" in-place state
+      accumulation (matches the scene_swap=no parenthetical example), so it reads A_only under the single-reference-scene
+      convention even though the visible money is concentrated toward the later tiles; agrees with manifest
+      onesided. Money is content-agnostic (would rain on any scene) and not derived from any endpoint
+      entity, so inserted_content=true, subject_anchored =false.
+
+      '
+  monstrosity:
+    clips_viewed:
+    - monstrosity_0
+    - monstrosity_1
+    - monstrosity_2
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: true
+    stylization: false
+    subject_anchored: false
+    hard_call:
+    - mechanism
+    - sidedness
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'Static camera, static subject, same backdrop the whole clip (tundra, night beach, highway
+      overpass); a giant horned/eyed creature grows in the background over time. The subject stays fully
+      unoccluded in the foreground throughout — nothing is ever revealed "from behind" the creature, so
+      this is treated as background state-accumulation (morph) rather than occlusion. Creature is a new
+      entity, not a transformation of the subject or scene geometry, so inserted_content=true; it manifests
+      regardless of who is standing there, so subject_anchored=false.
+
+      '
+  mystification:
+    clips_viewed:
+    - mystification_0
+    - mystification_3
+    - mystification_5
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: false
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - sidedness
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'Same static shot throughout (studio chair, convenience store, desert roadside fence); the
+      subject dissolves into colored smoke/dust in place (gold, blue, teal) and is entirely gone by the
+      last tile, leaving the persistent background empty — an exact match for the scene_swap=no "subject
+      removed" example. Smoke visibly originates from the subject''s own body (a gas form), so per protocol
+      this is NOT inserted_content, and it is clearly subject_anchored (the effect requires and attaches
+      to that specific figure).
+
+      '
+  nature_bloom:
+    clips_viewed:
+    - nature_bloom_0
+    - nature_bloom_2
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: true
+    stylization: false
+    subject_anchored: false
+    hard_call:
+    - sidedness
+    - camera_defining
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'Same static portrait framing throughout (car back seat, both clips); flowers/foliage progressively
+      grow into the background over the clip, absent at the start and filling much of the frame by the
+      end, with the subject''s pose/wardrobe unchanged — a petals- style ex-nihilo insertion (inserted_content=true)
+      that would grow into any backdrop (subject_anchored=false). No deliberate whip/ orbit/push identified;
+      any apparent size change is marginal and not a defining camera move.
+
+      '
+  plasma_explosion:
+    clips_viewed:
+    - plasma_explosion_0
+    - plasma_explosion_2
+    - plasma_explosion_4
+    scene_swap: false
+    sidedness: A_only
+    mechanism: occlusion
+    camera_defining: true
+    inserted_content: false
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - scene_swap
+    - inserted_content
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'Subject''s eyes/head emit an upward beam of light that swells into an explosion cloud, while
+      the camera simultaneously pulls back/ zooms out hard (heavy motion blur on street/traffic) — structurally
+      identical to the protocol''s gas_transformation compound: the handoff frame ends up substantially
+      covered by the cloud, so T1 gives occlusion despite the camera flying (camera_defining=true, "portal"
+      pattern). Last tile in all 3 clips is a total whiteout with no scene content legible, read as the
+      same shot "emptied" (scene_swap=no) rather than a confirmed cut to a new location. Beam originates
+      at the subject''s face (luminous_gaze-style), so subject_anchored=true and inserted_content=false
+      (energy transforms out of the subject rather than entering ex nihilo).
+
+      '
+  polygon:
+    clips_viewed:
+    - polygon_0
+    - polygon_4
+    - polygon_8
+    scene_swap: false
+    sidedness: A_only
+    mechanism: traversal
+    camera_defining: true
+    inserted_content: false
+    stylization: true
+    subject_anchored: false
+    hard_call:
+    - mechanism
+    - camera_defining
+    - stylization
+    - subject_anchored
+    heterogeneous: true
+    per_clip:
+      polygon_8:
+        mechanism: morph
+        camera_defining: false
+        stylization: false
+        subject_anchored: true
+    sidedness_conflict: false
+    notes: 'polygon_0/polygon_4 (majority): subject holds a fixed pose while the camera visibly reorients
+      around them (different building facades/architecture come into view across the tiles) as the entire
+      frame — subject and background alike — restyles from photo to a white/pale low-poly wireframe render;
+      real scene content (simplified) stays visible through the move, so mechanism=traversal with camera_defining=true,
+      and the frame-wide restyle is stylization=true, content-agnostic (subject_anchored=false). polygon_8
+      is a genuine outlier: a tight face/hand crop against a static wood-panel wall that never changes
+      — no camera movement, and only the subject (head, hair, hand) converts to polygon mesh while the
+      background stays fully photographic the whole clip, so it is localized (stylization=false per "localized
+      effect however dramatic = no"), continuous in-place decomposition with real background visible throughout
+      (morph), and specifically targets the subject while sparing the environment (subject_anchored=true).
+      scene_swap/sidedness/inserted_content are consistent across all 3 (no scene cut anywhere; restyle
+      only, nothing ex nihilo).
+
+      '
+  portal:
+    clips_viewed:
+    - portal_0
+    - portal_2
+    - portal_9
+    scene_swap: false
+    sidedness: A_only
+    mechanism: occlusion
+    camera_defining: false
+    inserted_content: true
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - sidedness
+    - subject_anchored
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'A green swirling portal opens right at the subject''s position, grows to substantially cover
+      the frame, and the subject is pulled through it; the portal then shrinks and vanishes, leaving the
+      same location empty. The camera itself never moves (fixed shot) despite the "portal" name.
+
+      '
+  raven_transition:
+    clips_viewed:
+    - raven_transition_0
+    - raven_transition_2
+    - raven_transition_3
+    scene_swap: true
+    sidedness: two_sided
+    mechanism: occlusion
+    camera_defining: true
+    inserted_content: true
+    stylization: false
+    subject_anchored: false
+    hard_call:
+    - subject_anchored
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'A flock of ravens/crows erupts and thickens into a substantially covering wall (T1: occlusion)
+      while the departure scene''s background is still visible through/around the birds, and stray birds
+      are still present as the arrival scene''s background becomes visible before fully clearing — effect
+      activity spans both sides, matching manifest twosided. Every exemplar ends in a wholly different
+      location with a different outfit and hairstyle (dark studio -> stone courtyard; tree/fog field ->
+      rooftop ledge; roadside silhouette -> sunset wheat field), a clean scene_swap=yes. Motion-blurred,
+      directional camera work through the flock is consistent across all 3, so camera_defining=true. Birds
+      are a textbook ex-nihilo insertion (inserted_content=true, the protocol''s own example); treated
+      as a generic occlusion device rather than something anchored to the specific subject (subject_anchored=false).
+
+      '
+  run_set_on_fire:
+    clips_viewed:
+    - action_run_setonfire_6
+    - action_run_setonfire_7
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: true
+    inserted_content: false
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - mechanism
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'Same continuous running shot in both clips (parking garage, patterned tunnel); a tracking
+      camera follows the runner start to finish (camera_defining=true), unrelated to the "onesided" scene
+      question since location never changes. Fire ignites on the hair and spreads across the body in place;
+      the runner''s silhouette and pose stay legible through the translucent flame the entire time (real
+      content visible through the handoff), which favors morph over occlusion despite the dramatic coverage.
+      Fire is a state the subject''s own body takes on rather than content thrown in from off-frame, so
+      inserted_content=false; clearly requires and attaches to that specific person, so subject_anchored=true.
+
+      '
+  saint_glow:
+    clips_viewed:
+    - saint_glow_0
+    - saint_glow_2
+    - saint_glow_3
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: true
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - sidedness
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'Same static/handheld shot throughout in all 3 (car interior, vintage-car-in-wheat-field, NYC
+      sidewalk); no cut, no location change. A halo ring forms above the subject''s head, their eyes begin
+      glowing, and radiant light beams build outward from hands/chest, absent in the first tiles and near-maximal
+      by the last — reads A_only under the single-reference-scene convention (agrees with manifest onesided)
+      even though visibly concentrated toward the later tiles. Halo/rays appear ex nihilo (no transforming
+      precursor entity), so inserted_content=true; effect is localized to the person (background stays
+      photographic throughout), so stylization=false; clearly requires and attaches to that specific subject
+      (subject_anchored=true).
+
+      '
+  sakura_petals:
+    clips_viewed:
+    - sakura_petals_0
+    - sakura_petals_2
+    scene_swap: false
+    sidedness: A_only
+    mechanism: occlusion
+    camera_defining: false
+    inserted_content: true
+    stylization: false
+    subject_anchored: false
+    hard_call:
+    - sidedness
+    - subject_anchored
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'Same static shot in both (astronaut on a rooftop; woman on a pink studio backdrop). Pink cherry-blossom
+      petals swirl in from off-frame and substantially cover the subject until they are unrecognizable
+      (T1: occlusion), then the petals thin out and disperse, leaving the same shot''s background empty
+      with the subject entirely gone — an exact match for the scene_swap=no "subject removed... emptied"
+      example, so no scene_swap despite the dramatic disappearance. Petals are the protocol''s own named
+      ex-nihilo example (inserted_content=true). Whether the petals specifically attach to this subject
+      or are a generic subject-consuming overlay (like a wipe) is a genuine judgment call; leaning subject_anchored=false
+      since the same petal-storm device reads as content-agnostic.
+
+      '
+  seamless_transition:
+    clips_viewed:
+    - seamless_transition_0
+    scene_swap: true
+    sidedness: two_sided
+    mechanism: traversal
+    camera_defining: true
+    inserted_content: false
+    stylization: false
+    subject_anchored: false
+    hard_call:
+    - mechanism
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'Only 1 clip available. A man in a shower walks out of frame through a doorway; after a couple
+      of empty-hallway tiles, a woman walks into frame in a visibly different room (different flooring/walls,
+      different wardrobe) — real, physically continuous-looking space is shown carrying the "walk" across
+      the cut, and effect activity (the walking motion itself) touches both the departure and the arrival,
+      matching manifest twosided. Read as traversal + camera_defining=true (matches the manifest''s own
+      "camera" tag: the deliberate walk-through framing is the effect''s identity) rather than dressed_cut,
+      though the underlying edit could plausibly be a disguised match-cut dressed with matching walk motion
+      — flagged as a hard call on mechanism. No overlay content or frame-wide grade introduced, so inserted_content=false
+      and stylization=false; the walk-through device is content-agnostic (subject_anchored=false).
+
+      '
+  shadow:
+    clips_viewed:
+    - shadow_0
+    - shadow_2
+    - shadow_9
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: false
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - sidedness
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'Same static shot throughout in all 3 (mermaid on ocean rocks; headscarf figure in a wheat
+      field; bucket-hat figure in a garage with a red car) — no cut, no location change, background stays
+      photographic and legible the entire clip. The subject''s own body progressively takes on a solid
+      black, wet/fur-like shadow texture, spreading from the lower body upward; reads A_only under the
+      single-reference-scene convention (agrees with manifest onesided). shadow_0 reaches full-body coverage
+      (head included) by the last tile; shadow_2/9 stop short of the head by the last tile — a coverage-extent
+      difference only, no field disagreement. The darkening is a state the subject''s own body/surface
+      takes on in-place (no cut, real pose legible throughout), so morph rather than occlusion, and not
+      ex nihilo (inserted_content=false, akin to a subject''s own gas/shadow form); clearly requires and
+      attaches to that specific subject (subject_anchored=true). Distinct from the protocol''s shadow_smoke
+      divergence example (different class, not reviewed here).
+
+      '
+  shadow_smoke:
+    clips_viewed:
+    - shadow_smoke_0
+    - shadow_smoke_5
+    - shadow_smoke_9
+    scene_swap: true
+    sidedness: two_sided
+    mechanism: occlusion
+    camera_defining: true
+    inserted_content: false
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - mechanism
+    - inserted_content
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'A dark, roughly circular smoke mass erupts from the subject''s own body/shoulders, substantially
+      (not fully) covers the frame as it whips across the screen, and clears to reveal a wholly different
+      scene and subject underneath — the only one of these 7 classes with a genuine scene_swap. Matches
+      the protocol''s own flagged divergence: the smoke never covers the whole frame, it''s a traveling
+      mid-screen mass.
+
+      '
+  super_fast_run:
+    clips_viewed:
+    - super_fast_run_0
+    - super_fast_run_4
+    - super_fast_run_9
+    scene_swap: true
+    sidedness: A_only
+    mechanism: traversal
+    camera_defining: true
+    inserted_content: false
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - scene_swap
+    - sidedness
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'Subject bursts from a calm stance into a full sprint; a fast tracking/whip-style camera plus
+      heavy directional motion blur (streaks on both subject and background) carry the shot from the starting
+      spot toward a visibly different patch of environment (e.g. rooftop-by-car to an abstract open runway),
+      and the blur never resolves back to sharp.
+
+      '
+  water_bending:
+    clips_viewed:
+    - water_bending_0
+    - water_bending_2
+    - water_bending_3
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: false
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - sidedness
+    - mechanism
+    - scene_swap
+    heterogeneous: true
+    per_clip:
+      water_bending_0:
+        scene_swap: true
+        sidedness: two_sided
+        mechanism: occlusion
+        camera_defining: true
+        inserted_content: true
+        subject_anchored: false
+    sidedness_conflict: true
+    notes: 'water_bending_2/3 (majority, 2/3): pure in-place transformation — same static shot the whole
+      clip (snowy-mountain fashion portrait; beach fashion portrait), no cut, no new person. The subject''s
+      body progressively becomes a translucent blue liquid/crystal form with glowing gold-vein texture;
+      real body/pose legible throughout, so morph, and it is the subject''s own body-state (not ex nihilo
+      / content-agnostic), so inserted_content=false, subject_anchored=true; reads A_only under the single-reference-scene
+      convention. water_bending_0 is a structural outlier, closely matching raven_transition''s pattern:
+      a real ocean wave crashes up, substantially occludes the frame (T1: occlusion) with directional,
+      motion-blurred camera work through the spray (camera_defining=true, matches the manifest''s "camera"
+      tag), then reveals an entirely different woman at a different seaside location (scene_swap=true,
+      two_sided, matches manifest); the wave itself is an ex-nihilo occluding device, content-agnostic
+      (inserted_content=true, subject_anchored=false). The class''s 2/3 majority (A_only, no scene_swap)
+      disagrees with the manifest''s twosided class default, so sidedness_conflict is raised at the class
+      level even though the single outlier clip itself agrees with the manifest.
+
+      '
+  water_element:
+    clips_viewed:
+    - water_element_0
+    - water_element_2
+    - water_element_5
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: false
+    stylization: false
+    subject_anchored: true
+    hard_call:
+    - sidedness
+    - mechanism
+    - scene_swap
+    heterogeneous: true
+    per_clip:
+      water_element_0:
+        scene_swap: true
+        sidedness: two_sided
+        mechanism: occlusion
+        camera_defining: true
+        inserted_content: true
+        subject_anchored: false
+      water_element_5:
+        stylization: true
+        subject_anchored: false
+    sidedness_conflict: true
+    notes: 'Three exemplars, three different effects — the most heterogeneous class in this batch. water_element_2
+      (default/majority read, man in a "Hendrix" t-shirt against a red-flower backdrop): same static shot
+      throughout, body progressively becomes a translucent blue liquid/crystal form — identical pattern
+      and field values to water_bending_2/3 above (morph, A_only, subject_anchored=true). water_element_0
+      (Japanese street scene, lollipop): structurally identical to water_bending_0/raven_transition —
+      a real wave crashes up and substantially occludes the frame with directional camera motion, then
+      reveals a completely different woman with a megaphone in a different outfit (scene_swap=true, two_sided,
+      occlusion, camera_defining=true, inserted_content=true, subject_anchored=false). water_element_5
+      is a striking finding: a subject''s legs/sneakers hanging against a wall progressively re-render
+      into a glowing GREEN WIREFRAME MESH as the real background fades to solid black — visually indistinguishable
+      from this batch''s wireframe class (same green palette as wireframe_0) and containing no water/liquid
+      content whatsoever; flagged per the protocol''s own "names lie, frames don''t" warning. Given no
+      two of the three exemplars agree on scene_swap/mechanism/stylization/ subject_anchored simultaneously,
+      defaults above reflect water_element_2 with both others as explicit per-clip overrides. sidedness_conflict
+      is raised primarily by the water_element_0 outlier (two_sided vs. the manifest''s onesided/A_only
+      expectation).
+
+      '
+  wireframe:
+    clips_viewed:
+    - wireframe_0
+    - wireframe_4
+    - wireframe_8
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: false
+    stylization: true
+    subject_anchored: false
+    hard_call:
+    - sidedness
+    - subject_anchored
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'Same static portrait shot throughout in all 3 (man on a chair with a red car; woman holding
+      a lamb, snowy mountains; woman on a rowboat with a lake reflection) — no cut, no location change.
+      The subject (and any held prop — lamb, oar) progressively re-renders into a glowing neon wireframe
+      mesh (green in wireframe_0, blue in wireframe_4/8) while the real photographic background simultaneously
+      fades to solid black by the final tiles — a frame-wide appearance treatment matching the protocol''s
+      own named example ("wireframe shading"), so stylization=true. Continuous deformation with no underlying
+      cut (T2), so morph; reads A_only under the single-reference-scene convention (agrees with manifest
+      onesided). The whole frame (not just the subject) converts, so this behaves as a content-agnostic
+      rendering filter rather than something anchored to the specific subject''s identity (subject_anchored=false),
+      though this is a closer call than most.
+
+      '
+  wonderland:
+    clips_viewed:
+    - wonderland_0
+    - wonderland_2
+    scene_swap: false
+    sidedness: A_only
+    mechanism: morph
+    camera_defining: false
+    inserted_content: false
+    stylization: true
+    subject_anchored: false
+    hard_call:
+    - sidedness
+    - subject_anchored
+    - inserted_content
+    heterogeneous: false
+    sidedness_conflict: false
+    notes: 'Same static shot throughout in both (man on a green newspaper box, NYC street corner; woman
+      crouching on a leaf-strewn sidewalk) — no cut, no location change. The real photographic backdrop
+      progressively liquifies into an abstract painterly/marbled texture (teal/mauve/purple swirls), a
+      frame-wide treatment independent of any localized effect content, so stylization=true; continuous,
+      no cut underneath, so morph; reads A_only under the single-reference-scene convention (agrees with
+      manifest onesided). In wonderland_0 the subject himself also fades into a translucent, colour-shifting
+      silhouette while holding a small glowing orb near his mouth (borderline ex-nihilo insertion, kept
+      inserted_content= false as a held prop/drink rather than new content, flagged hard); in wonderland_2
+      the subject''s face/body stays intact and only her lip colour iridesces while the background around
+      her fully abstracts. Because the defining transformation is the background restyle (present and
+      dominant in both, applied regardless of subject specifics), subject_anchored=false, though wonderland_0''s
+      partial subject dissolution makes this a genuine judgment call.
+
+      '

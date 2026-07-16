@@ -1,0 +1,741 @@
+{
+  "version": "ladder_items_v2",
+  "supersedes": "ladder_items_v1",
+  "amendment": "PLAN.md Amendment 1 (2026-07-16): side-keyed specialists, R1K base rung, R3X/R4X cross-class rungs (C9)",
+  "frozen": true,
+  "derived_from_v1_sha256": "afe17a3fc32e6770c7dcd9ff3f004586e6139b79bc87645b5fc1217029dbab1d",
+  "split_file": "data/processed/transitions_std121/split_v1.json",
+  "split_sha256": "f6cc8b5bae7bcc9cf9339e182a758f6ad6ac241dba852ed0853c50b9af4d83e6",
+  "generalist_adapter": "outputs/training/exp_058_ic_lora_diverse_retrain/ic2/checkpoints/lora_weights_step_05000.safetensors",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "specialist_recipe": "exp_051 c2v verbatim, SIDE-KEYED per class specialist_conditioning (one_sided: prefix tb=2 p=1.0 only; two_sided: + suffix tb=1 p=1.0), type-blind ICTRANS captions. Supersedes v1 D2 (sidedness-BLIND).",
+  "r1k": {
+    "desc": "prefix-only base rung: 19B dev, NO adapter, prefix 9f only (no suffix), for the one_sided classes' 2 test items x 3 seeds. Re-baselines C4/C6/C7/C8. two_sided classes: R1K == R1 (reuse exp_061 R1 rows).",
+    "classes": [
+      "animalization",
+      "color_rain",
+      "gas_transformation",
+      "illustration_scene",
+      "polygon",
+      "portal",
+      "shadow",
+      "super_fast_run",
+      "wireframe"
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ]
+  },
+  "r3x": {
+    "desc": "cross-class donor-endpoint transfer. Recipient specialist (R3X) and generalist-with-recipient-reference (R4X twin) receive endpoints from N=4 other B8 classes. step_02000 only. No GT; class-effect transfer.",
+    "eligibility_block_B8": [
+      "animalization",
+      "color_rain",
+      "gas_transformation",
+      "illustration_scene",
+      "polygon",
+      "portal",
+      "shadow",
+      "wireframe"
+    ],
+    "excluded": {
+      "super_fast_run": "scene_swap=true (no matched donors)",
+      "two_sided": "pool would be shadow_smoke<->hero_flight only; hero_flight conflict-pending"
+    },
+    "n_donors_per_recipient": 4,
+    "donor_rule": "random.Random(f'ladder_v2:{recipient}:r3x_donors').sample(sorted(B8-{recipient}), 4)",
+    "donor_clip_rule": "ic2-unseen test clip if exactly one unseen, else random.Random(f'ladder_v2:{donor}:r3x_donor_clip').sample(sorted(test_items),1)[0]; fixed per donor class",
+    "donor_clip_of_class": {
+      "animalization": {
+        "clip": "animalization_0",
+        "source": "ic2_unseen"
+      },
+      "color_rain": {
+        "clip": "color_rain_0",
+        "source": "rng"
+      },
+      "gas_transformation": {
+        "clip": "gas_transformation_6",
+        "source": "rng"
+      },
+      "illustration_scene": {
+        "clip": "illustration_scene_7",
+        "source": "rng"
+      },
+      "polygon": {
+        "clip": "polygon_8",
+        "source": "rng"
+      },
+      "portal": {
+        "clip": "portal_4",
+        "source": "rng"
+      },
+      "shadow": {
+        "clip": "shadow_10",
+        "source": "ic2_unseen"
+      },
+      "wireframe": {
+        "clip": "wireframe_7",
+        "source": "ic2_unseen"
+      }
+    },
+    "step": 2000,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "twin": "R4X",
+    "scoring_contract": {
+      "reference_video": "recipient's grid reference clip (identical in R3X and R4X -> delta is apples-to-apples)",
+      "style": "recipient class",
+      "sidedness_mask": "recipient sidedness (== donor's, both one_sided by construction)",
+      "gt_available": false,
+      "note": "M2c (copy) runs vs recipient's TRAINING manifest \u2014 flags memorized-content paste-on onto foreign endpoints."
+    },
+    "recipients": {
+      "animalization": {
+        "recipient_conditioning": "prefix_only",
+        "recipient_reference": "animalization_6",
+        "donors": [
+          {
+            "donor_class": "color_rain",
+            "donor_clip": "color_rain_0",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": true,
+            "conditioning": "prefix_only",
+            "cond_start9": "color_rain_0_start9.mp4"
+          },
+          {
+            "donor_class": "portal",
+            "donor_clip": "portal_4",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": true,
+            "conditioning": "prefix_only",
+            "cond_start9": "portal_4_start9.mp4"
+          },
+          {
+            "donor_class": "shadow",
+            "donor_clip": "shadow_10",
+            "donor_clip_source": "ic2_unseen",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "shadow_10_start9.mp4"
+          },
+          {
+            "donor_class": "wireframe",
+            "donor_clip": "wireframe_7",
+            "donor_clip_source": "ic2_unseen",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "wireframe_7_start9.mp4"
+          }
+        ]
+      },
+      "color_rain": {
+        "recipient_conditioning": "prefix_only",
+        "recipient_reference": "color_rain_7",
+        "donors": [
+          {
+            "donor_class": "gas_transformation",
+            "donor_clip": "gas_transformation_6",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "gas_transformation_6_start9.mp4"
+          },
+          {
+            "donor_class": "illustration_scene",
+            "donor_clip": "illustration_scene_7",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "illustration_scene_7_start9.mp4"
+          },
+          {
+            "donor_class": "portal",
+            "donor_clip": "portal_4",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": true,
+            "conditioning": "prefix_only",
+            "cond_start9": "portal_4_start9.mp4"
+          },
+          {
+            "donor_class": "wireframe",
+            "donor_clip": "wireframe_7",
+            "donor_clip_source": "ic2_unseen",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "wireframe_7_start9.mp4"
+          }
+        ]
+      },
+      "gas_transformation": {
+        "recipient_conditioning": "prefix_only",
+        "recipient_reference": "gas_transformation_0",
+        "donors": [
+          {
+            "donor_class": "color_rain",
+            "donor_clip": "color_rain_0",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": true,
+            "conditioning": "prefix_only",
+            "cond_start9": "color_rain_0_start9.mp4"
+          },
+          {
+            "donor_class": "illustration_scene",
+            "donor_clip": "illustration_scene_7",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "illustration_scene_7_start9.mp4"
+          },
+          {
+            "donor_class": "portal",
+            "donor_clip": "portal_4",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": true,
+            "conditioning": "prefix_only",
+            "cond_start9": "portal_4_start9.mp4"
+          },
+          {
+            "donor_class": "wireframe",
+            "donor_clip": "wireframe_7",
+            "donor_clip_source": "ic2_unseen",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "wireframe_7_start9.mp4"
+          }
+        ]
+      },
+      "illustration_scene": {
+        "recipient_conditioning": "prefix_only",
+        "recipient_reference": "illustration_scene_9",
+        "donors": [
+          {
+            "donor_class": "gas_transformation",
+            "donor_clip": "gas_transformation_6",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "gas_transformation_6_start9.mp4"
+          },
+          {
+            "donor_class": "portal",
+            "donor_clip": "portal_4",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": true,
+            "conditioning": "prefix_only",
+            "cond_start9": "portal_4_start9.mp4"
+          },
+          {
+            "donor_class": "shadow",
+            "donor_clip": "shadow_10",
+            "donor_clip_source": "ic2_unseen",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "shadow_10_start9.mp4"
+          },
+          {
+            "donor_class": "wireframe",
+            "donor_clip": "wireframe_7",
+            "donor_clip_source": "ic2_unseen",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "wireframe_7_start9.mp4"
+          }
+        ]
+      },
+      "polygon": {
+        "recipient_conditioning": "prefix_only",
+        "recipient_reference": "polygon_7",
+        "donors": [
+          {
+            "donor_class": "animalization",
+            "donor_clip": "animalization_0",
+            "donor_clip_source": "ic2_unseen",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "animalization_0_start9.mp4"
+          },
+          {
+            "donor_class": "color_rain",
+            "donor_clip": "color_rain_0",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": true,
+            "conditioning": "prefix_only",
+            "cond_start9": "color_rain_0_start9.mp4"
+          },
+          {
+            "donor_class": "portal",
+            "donor_clip": "portal_4",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": true,
+            "conditioning": "prefix_only",
+            "cond_start9": "portal_4_start9.mp4"
+          },
+          {
+            "donor_class": "wireframe",
+            "donor_clip": "wireframe_7",
+            "donor_clip_source": "ic2_unseen",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "wireframe_7_start9.mp4"
+          }
+        ]
+      },
+      "portal": {
+        "recipient_conditioning": "prefix_only",
+        "recipient_reference": "portal_6",
+        "donors": [
+          {
+            "donor_class": "animalization",
+            "donor_clip": "animalization_0",
+            "donor_clip_source": "ic2_unseen",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "animalization_0_start9.mp4"
+          },
+          {
+            "donor_class": "gas_transformation",
+            "donor_clip": "gas_transformation_6",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "gas_transformation_6_start9.mp4"
+          },
+          {
+            "donor_class": "illustration_scene",
+            "donor_clip": "illustration_scene_7",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "illustration_scene_7_start9.mp4"
+          },
+          {
+            "donor_class": "polygon",
+            "donor_clip": "polygon_8",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": true,
+            "conditioning": "prefix_only",
+            "cond_start9": "polygon_8_start9.mp4"
+          }
+        ]
+      },
+      "shadow": {
+        "recipient_conditioning": "prefix_only",
+        "recipient_reference": "shadow_14",
+        "donors": [
+          {
+            "donor_class": "animalization",
+            "donor_clip": "animalization_0",
+            "donor_clip_source": "ic2_unseen",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "animalization_0_start9.mp4"
+          },
+          {
+            "donor_class": "color_rain",
+            "donor_clip": "color_rain_0",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": true,
+            "conditioning": "prefix_only",
+            "cond_start9": "color_rain_0_start9.mp4"
+          },
+          {
+            "donor_class": "gas_transformation",
+            "donor_clip": "gas_transformation_6",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "gas_transformation_6_start9.mp4"
+          },
+          {
+            "donor_class": "illustration_scene",
+            "donor_clip": "illustration_scene_7",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "illustration_scene_7_start9.mp4"
+          }
+        ]
+      },
+      "wireframe": {
+        "recipient_conditioning": "prefix_only",
+        "recipient_reference": "wireframe_3",
+        "donors": [
+          {
+            "donor_class": "animalization",
+            "donor_clip": "animalization_0",
+            "donor_clip_source": "ic2_unseen",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "animalization_0_start9.mp4"
+          },
+          {
+            "donor_class": "gas_transformation",
+            "donor_clip": "gas_transformation_6",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "gas_transformation_6_start9.mp4"
+          },
+          {
+            "donor_class": "illustration_scene",
+            "donor_clip": "illustration_scene_7",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": false,
+            "conditioning": "prefix_only",
+            "cond_start9": "illustration_scene_7_start9.mp4"
+          },
+          {
+            "donor_class": "portal",
+            "donor_clip": "portal_4",
+            "donor_clip_source": "rng",
+            "endpoint_seen_by_ic2": true,
+            "conditioning": "prefix_only",
+            "cond_start9": "portal_4_start9.mp4"
+          }
+        ]
+      }
+    }
+  },
+  "contrasts_added": {
+    "C9": {
+      "contrast": "R3X - R4X",
+      "pairing": "item(donor endpoint)+seed, 8 B8 recipients",
+      "isolates": "specialist vs generalist on foreign (off-distribution) endpoints",
+      "direction_test": "R3X > R4X; one-sided sign test across 8 recipients, alpha=0.05; SECONDARY"
+    }
+  },
+  "rebaselined_contrasts": {
+    "note": "C4/C6/C7/C8 re-baseline onto R1K (prefix-only base) for one_sided classes so 'adapter value' is not confounded with suffix removal. C1 (R1-R0) stays on the original blind R1 per exp_061. C5 (R3-R4) is now conditioning-matched (both keyed)."
+  },
+  "classes": {
+    "shadow": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "test_items": [
+        "shadow_10",
+        "shadow_3"
+      ],
+      "endpoint_seen_by_ic2": {
+        "shadow_10": false,
+        "shadow_3": true
+      },
+      "r2_items": [
+        "shadow_11",
+        "shadow_7"
+      ],
+      "reference": "shadow_14",
+      "reference_ic2_trained": true,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "exp_058_training",
+      "suffix_conditioning": false,
+      "generalist_rung": "R4",
+      "n_train": 13,
+      "waits_on_sidedness_validation": false,
+      "specialist_conditioning": "prefix_only",
+      "r1k": true
+    },
+    "portal": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "test_items": [
+        "portal_1",
+        "portal_4"
+      ],
+      "endpoint_seen_by_ic2": {
+        "portal_1": true,
+        "portal_4": true
+      },
+      "r2_items": [
+        "portal_0",
+        "portal_2"
+      ],
+      "reference": "portal_6",
+      "reference_ic2_trained": true,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "exp_058_training",
+      "suffix_conditioning": false,
+      "generalist_rung": "R4",
+      "n_train": 11,
+      "waits_on_sidedness_validation": false,
+      "specialist_conditioning": "prefix_only",
+      "r1k": true
+    },
+    "super_fast_run": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "test_items": [
+        "super_fast_run_0",
+        "super_fast_run_3"
+      ],
+      "endpoint_seen_by_ic2": {
+        "super_fast_run_0": false,
+        "super_fast_run_3": true
+      },
+      "r2_items": [
+        "super_fast_run_5",
+        "super_fast_run_8"
+      ],
+      "reference": "super_fast_run_1",
+      "reference_ic2_trained": true,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "exp_058_training",
+      "suffix_conditioning": false,
+      "generalist_rung": "R4",
+      "n_train": 10,
+      "waits_on_sidedness_validation": false,
+      "specialist_conditioning": "prefix_only",
+      "r1k": true
+    },
+    "shadow_smoke": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "test_items": [
+        "shadow_smoke_7",
+        "shadow_smoke_0"
+      ],
+      "endpoint_seen_by_ic2": {
+        "shadow_smoke_7": true,
+        "shadow_smoke_0": true
+      },
+      "r2_items": [
+        "shadow_smoke_2",
+        "shadow_smoke_9"
+      ],
+      "reference": "shadow_smoke_3",
+      "reference_ic2_trained": true,
+      "sidedness_key": "two_sided",
+      "sidedness_key_source": "exp_058_training",
+      "suffix_conditioning": true,
+      "generalist_rung": "R4",
+      "n_train": 8,
+      "waits_on_sidedness_validation": false,
+      "specialist_conditioning": "prefix_suffix",
+      "r1k": false
+    },
+    "polygon": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "test_items": [
+        "polygon_4",
+        "polygon_8"
+      ],
+      "endpoint_seen_by_ic2": {
+        "polygon_4": true,
+        "polygon_8": true
+      },
+      "r2_items": [
+        "polygon_0",
+        "polygon_5"
+      ],
+      "reference": "polygon_7",
+      "reference_ic2_trained": true,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "exp_058_training",
+      "suffix_conditioning": false,
+      "generalist_rung": "R4",
+      "n_train": 7,
+      "waits_on_sidedness_validation": false,
+      "specialist_conditioning": "prefix_only",
+      "r1k": true
+    },
+    "wireframe": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "test_items": [
+        "wireframe_0",
+        "wireframe_7"
+      ],
+      "endpoint_seen_by_ic2": {
+        "wireframe_0": true,
+        "wireframe_7": false
+      },
+      "r2_items": [
+        "wireframe_1",
+        "wireframe_5"
+      ],
+      "reference": "wireframe_3",
+      "reference_ic2_trained": true,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "exp_058_training",
+      "suffix_conditioning": false,
+      "generalist_rung": "R4",
+      "n_train": 7,
+      "waits_on_sidedness_validation": false,
+      "specialist_conditioning": "prefix_only",
+      "r1k": true
+    },
+    "animalization": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "test_items": [
+        "animalization_0",
+        "animalization_2"
+      ],
+      "endpoint_seen_by_ic2": {
+        "animalization_0": false,
+        "animalization_2": true
+      },
+      "r2_items": [
+        "animalization_4",
+        "animalization_5"
+      ],
+      "reference": "animalization_6",
+      "reference_ic2_trained": true,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "exp_058_training",
+      "suffix_conditioning": false,
+      "generalist_rung": "R4",
+      "n_train": 6,
+      "waits_on_sidedness_validation": false,
+      "specialist_conditioning": "prefix_only",
+      "r1k": true
+    },
+    "color_rain": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "test_items": [
+        "color_rain_0",
+        "color_rain_2"
+      ],
+      "endpoint_seen_by_ic2": {
+        "color_rain_0": true,
+        "color_rain_2": true
+      },
+      "r2_items": [
+        "color_rain_3",
+        "color_rain_6"
+      ],
+      "reference": "color_rain_7",
+      "reference_ic2_trained": true,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "exp_058_training",
+      "suffix_conditioning": false,
+      "generalist_rung": "R4",
+      "n_train": 6,
+      "waits_on_sidedness_validation": false,
+      "specialist_conditioning": "prefix_only",
+      "r1k": true
+    },
+    "gas_transformation": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R5"
+      ],
+      "test_items": [
+        "gas_transformation_6",
+        "gas_transformation_7"
+      ],
+      "endpoint_seen_by_ic2": {
+        "gas_transformation_6": false,
+        "gas_transformation_7": false
+      },
+      "r2_items": [
+        "gas_transformation_4",
+        "gas_transformation_8"
+      ],
+      "reference": "gas_transformation_0",
+      "reference_ic2_trained": false,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "taxonomy_v1",
+      "suffix_conditioning": false,
+      "generalist_rung": "R5",
+      "n_train": 8,
+      "waits_on_sidedness_validation": false,
+      "specialist_conditioning": "prefix_only",
+      "r1k": true
+    },
+    "hero_flight": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R5"
+      ],
+      "test_items": [
+        "hero_flight_5",
+        "hero_flight_6"
+      ],
+      "endpoint_seen_by_ic2": {
+        "hero_flight_5": false,
+        "hero_flight_6": false
+      },
+      "r2_items": [
+        "hero_flight_2",
+        "hero_flight_7"
+      ],
+      "reference": "hero_flight_0",
+      "reference_ic2_trained": false,
+      "sidedness_key": "two_sided",
+      "sidedness_key_source": "taxonomy_v1",
+      "suffix_conditioning": true,
+      "generalist_rung": "R5",
+      "n_train": 8,
+      "waits_on_sidedness_validation": true,
+      "specialist_conditioning": "prefix_suffix",
+      "r1k": false
+    },
+    "illustration_scene": {
+      "rungs": [
+        "R2",
+        "R3",
+        "R5"
+      ],
+      "test_items": [
+        "illustration_scene_7",
+        "illustration_scene_4"
+      ],
+      "endpoint_seen_by_ic2": {
+        "illustration_scene_7": false,
+        "illustration_scene_4": false
+      },
+      "r2_items": [
+        "illustration_scene_2",
+        "illustration_scene_3"
+      ],
+      "reference": "illustration_scene_9",
+      "reference_ic2_trained": false,
+      "sidedness_key": "one_sided",
+      "sidedness_key_source": "taxonomy_v1",
+      "suffix_conditioning": false,
+      "generalist_rung": "R5",
+      "n_train": 8,
+      "waits_on_sidedness_validation": false,
+      "specialist_conditioning": "prefix_only",
+      "r1k": true
+    }
+  }
+}

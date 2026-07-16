@@ -117,7 +117,7 @@
    "dedup_pass": "exp_057",
    "n_clips": 5,
    "raw_dir": "data/processed/transitions/onesided_transitions/onesided_object_giant-grab",
-   "sidedness": "onesided",
+   "sidedness": "twosided",
    "tags": [
     "object"
    ]
@@ -126,7 +126,7 @@
    "dedup_pass": "exp_057",
    "n_clips": 10,
    "raw_dir": "data/processed/transitions/onesided_transitions/onesided_camera_hero-flight",
-   "sidedness": "onesided",
+   "sidedness": "twosided",
    "tags": [
     "camera"
    ]

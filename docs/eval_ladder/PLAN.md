@@ -281,3 +281,77 @@ circulant pairing minus test clips). It is deliberately NOT in this batch: its
 sidedness-keyed training mask depends on labels still under validation
 (earth_element, earth_wave, giant_grab, water_bending, water_element are all trained
 classes in the conflict set), so it only becomes safe after validation.
+
+---
+
+## Amendment 1 — Side-keyed specialists, R1K base rung, R3X/R4X cross-class rungs (2026-07-16)
+
+**Status of this amendment:** dated addition per the §0 rule ("Changes after generation
+begins require a dated amendment section, never an edit"). Authored under `/advised`
+(advisor = fable) on owner directive. Realized grid: [`ladder_items_v2.json`](ladder_items_v2.json)
+(sha256 `087206d7708b8b9237ebaa62ef1b58158af9eaa060974fe3224e60e75c78d752`), derived
+verbatim from frozen `ladder_items_v1.json` (`afe17a3f…`) — **no v1 item is re-drawn or
+edited**; v2 only layers the additions below. Split sha256 UNCHANGED.
+
+**Honesty anchor (why this is legitimate, not data-dependent).** At the time this
+amendment is committed: the 11 *blind* specialist trainings are complete or in flight
+(fallback checkpoints on disk), but **zero R2/R3 generations exist, zero R4/R5 scoring
+has occurred, and no metric has been computed on any specialist output.** The amendment
+is therefore outcome-blind with respect to every specialist rung. It is committed and
+pushed BEFORE any keyed training or any R2/R3/R1K/R3X/R4X generation is submitted (same
+pre-registration-timestamp discipline as A3).
+
+**D2 is SUPERSEDED.** D2 chose sidedness-BLIND specialists (prefix+suffix always) to
+keep training taxonomy-immune. That is now judged wrong for the PRIMARY contrast. On the
+one_sided classes SPEC §3 defines the effect's terminal state AS endpoint B; a blind
+specialist is fed the true arrival endpoint via the suffix, while the keyed generalist
+(R4) is not — so on 7 of 8 C5 classes the blind design hands R3 the answer and biases
+C5 (R3−R4) **toward** its pre-declared direction R3>R4. A declared bias favoring the
+headline hypothesis is exactly what this pre-registration exists to prevent. Under the
+amendment every conditioned rung applies **identical class-keyed conditioning**
+(R1K/R2/R3/R4/R5), so C5 becomes conditioning-matched (adapter-vs-adapter only).
+
+**What CHANGES:**
+1. **Specialists are side-keyed** per `specialist_conditioning`: one_sided → prefix
+   (tb=2, p=1.0) ONLY; two_sided → prefix+suffix (unchanged from blind). ⇒ the 9
+   one_sided specialists RETRAIN prefix-only into new dirs `outputs/training/
+   exp_062_ladder_r2r3_specialists/<cls>_keyed/`. The two_sided classes (shadow_smoke,
+   hero_flight) keep the blind==keyed run; `<cls>_keyed` symlinks to it. Blind
+   one_sided checkpoints are RETAINED as a labeled sensitivity artifact (regenerated
+   into results only if keyed training misbehaves or the owner asks).
+2. **New rung R1K** = base 19B dev, NO adapter, prefix-only, for the 9 one_sided
+   classes' 2 test items × 3 seeds (54 videos). two_sided R1K ≡ R1 (reuse). Contrasts
+   **C4, C6, C7, C8 re-baseline onto R1K** (so "adapter value" is not confounded with
+   suffix removal); **C1 (R1−R0) stays on the original blind R1** per exp_061.
+3. **§7 robustness rule (iii) is superseded** — the one-sided R3−R4 "mode asymmetry"
+   it declared acceptable is now removed by keying, not tolerated.
+4. **New rungs R3X / R4X (contrast C9), SECONDARY.** For each recipient in eligibility
+   block **B8** = {one_sided ∧ scene_swap=false} = animalization, color_rain,
+   gas_transformation, illustration_scene, polygon, portal, shadow, wireframe
+   (super_fast_run excluded: scene_swap=true ⇒ no matched donors; two_sided excluded):
+   feed the recipient specialist (R3X) and the generalist-with-recipient-reference
+   (R4X twin) prefix endpoints borrowed from N=4 other B8 classes (donor rule frozen in
+   the grid). step_02000 only; seeds 42/43/44; 96 R3X + 96 R4X videos. No ground truth
+   (foreign endpoints) — scored as class-effect transfer, never item reconstruction;
+   M2c copy runs vs the recipient's training manifest (the signature failure mode of
+   weight-baked identity). Scoring contract per grid: `reference_video` = recipient's
+   grid reference clip (identical across the twin ⇒ delta apples-to-apples),
+   `style`/mask = recipient class. **C9: R3X > R4X, one-sided sign test across the 8
+   recipients, α=0.05.**
+
+**What is UNCHANGED:** all R0/R1 rows and the 300 exp_061 videos; the 60 R4/R5 videos
+already generated (their keying is identical in v1 and v2 — this amendment does not
+touch the generalist); C1; the split and its sha; seeds; the certified-harness scoring
+plan (§7) except the C4/C6/C7/C8 re-baseline and the added C9.
+
+**hero_flight contingency.** hero_flight is two_sided (taxonomy_v1) AND in the
+sidedness-conflict set → its specialist R2/R3 generation AND its R5 stay DEFERRED
+(bundle B1) pending owner sidedness validation. Under two_sided keying its blind
+training already equals the keyed recipe (no retrain). IF validation flips it to
+one_sided: retrain prefix-only, add its R1K rows, regenerate R2/R3, key its R5
+prefix-only (~2 GPU-h). shadow_smoke is exp_058-labeled two_sided and conflict-free →
+fully in.
+
+**σ_seed caveat.** amendment-1's σ_seed/MDE was calibrated on suffix-anchored
+generations; prefix-only rungs (R1K, one_sided R2/R3/R3X) may show higher seed
+variance. This is reported context accompanying those deltas, NOT a gate.

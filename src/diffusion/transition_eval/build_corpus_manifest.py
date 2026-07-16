@@ -138,6 +138,15 @@ def main() -> int:
     # --- walk the std corpus ---------------------------------------------------
     classes, clips, problems = {}, {}, []
     std_dirs = sorted(p for p in std_root.iterdir() if p.is_dir() and not p.name.startswith("_"))
+    # Owner-validated sidedness relabels (taxonomy sign-off 2026-07-16, all 39
+    # classes reviewed in the viewer; SPEC §7 relabel path). The raw labeled
+    # tree keeps its original dir names — these two class labels were ruled
+    # wrong at validation. Recorded in eval/v3-spec-versioning
+    # certifications/v3.0.0-amendment-2.md.
+    OWNER_SIDEDNESS_OVERRIDES = {
+        "giant_grab": "twosided",   # hand re-enters in the B window
+        "hero_flight": "twosided",  # flight persists into the B window
+    }
     for cdir in std_dirs:
         cls = cdir.name
         vids = sorted(cdir.glob("*.mp4"))
@@ -148,6 +157,8 @@ def main() -> int:
             sidedness, tags, raw_dir = None, [], None
         else:
             sidedness, tags, raw_dir = raw_index[cls]
+        if cls in OWNER_SIDEDNESS_OVERRIDES:
+            sidedness = OWNER_SIDEDNESS_OVERRIDES[cls]
         if cls not in CLASS_DEDUP:
             problems.append(f"std class '{cls}' missing a dedup-pass assignment")
         classes[cls] = {

@@ -1,5 +1,7 @@
 ## 2026-07-16
 
+23:05 — **v4.0.0 merged toward main; corpus sidedness skew documented (owner-resolved).** The v4.0.0 certification (tag `eval/v4.0.0`, commit 8584114) was stamped against corpus `aa28c6d5` where `giant_grab`/`hero_flight` are **onesided** — their original, eval-correct classification. `amendment-2` (main) flips both to **twosided** in the shared `corpus_manifest.json` (sha `348db23d`) as a **pragmatic training override** (`OWNER_SIDEDNESS_OVERRIDES`), not an eval-truth correction. Owner determination (2026-07-16): the swap does not materially affect eval, so **v4.0.0 stands as-is, no re-certification** — the tag's onesided cert is correct for eval; main HEAD carries the twosided manifest for training. Known follow-up: eval and training sidedness now diverge in the shared manifest; a future v4.x may split them or re-cert against the twosided manifest if eval scope changes. Merge is clean (only this file conflicted; no measurement/grader code or `reference_v4.npz` touched).
+
 22:45 — **transition-eval 4.0.0 CERTIFIED (regrade of the draft.1 run) — all 8 bars PASS.**
 The draft.1 certification run (job 9531327, full §6, clean) FAILED on **bar 8 alone**: the
 reference-rebuild-parity of `pop_App` came out 2.02e-05 > the frozen scalar 1e-6. Advised
@@ -21,6 +23,92 @@ for v3 numbers. Bars: bar1 S3 d=1.734 · bar2 29/29 deployed+LOO · bar4 gap 0.1
 p=0.018 · bar6 swap+hard-cut 37/37 · bar7 11/11 · bar8 warm 0.0 + two-class parity · bar9 3 metrics
 pass / 3 controls fail.
 
+22:20 — **Taxonomy v2 ADOPTED (owner validated 39/39) → sidedness fold → scoring UNBLOCKED → B1 submitted.**
+Owner signed off all 39 classes in the viewer (two correction exports folded; final counts
+transform 17 / overlay 12 [add 6, state 5, remove 1] / cover 4 / traverse 6 / cut 0; two standing
+§5.1 exceptions plasma_explosion + portal with pre-registered conservative handling).
+`PROTOCOL_v2_PROPOSAL.md` §5–§7 rewritten to owner-final (`7a10815`); `build_class_axes_v2.py`
+regenerated as idempotent mirror of the validated record. **Instrument fold:** giant_grab +
+hero_flight onesided→twosided via `OWNER_SIDEDNESS_OVERRIDES` in `build_corpus_manifest.py`,
+manifest rebuilt (sha `e7c867a6…`→`348db23d…`, diff = exactly 2 class fields; `85023fa`);
+certification **amendment-2** on eval/v3-spec-versioning (`26023c2`) records the operational
+rule (score with `--corpus` at the corrected manifest) + hero_flight σ_seed-roster caveat.
+B8 re-verified: all 8 R3X recipients unchanged → running Amendment-1 jobs unaffected.
+**B1 deferral lifted** (hero_flight validated two_sided = pre-built `sidedness_key`, no retrain):
+submitted keyed R2/R3 gen **9539197** + R5 **9539198** (`b13a41a`). **All-rung scoring is now
+unblocked** (S mask inputs owner-final); first scoring batch must rescore the hero_flight σ_seed
+item both ways per amendment-2.
+
+19:11 — **Eval-ladder Amendment 1 IMPLEMENTED + submitted (cluster-wide `secondary`).**
+Built: keyed prefix-only configs for the 9 one_sided specialists (`configs_keyed/`, output
+`<cls>_keyed/`, reusing existing precompute; two_sided shadow_smoke/hero_flight `<cls>_keyed`
+symlink the blind==keyed run); `run_c2v_inference.py` rewritten for ladder_items_v2 (keyed
+conditioning + `<cls>_keyed` ckpts + `--no-adapter` R1K [zero-init PEFT = base] + `--r3x`);
+parametrized `job_gen_keyed.sbatch`; `build_r4x_manifest.py`→`ladder_r4x.json` (32 rows) +
+`run_ic_inference.py --manifest`. Job graph: cancelled blind R2/R3 gen (9530601) + one_sided
+blind chain tasks (kept _3/_9); let running blind trainings finish as fallback. Submitted:
+keyed train **9531967** + chain **9531968** (9 one_sided); **R1K 9532033** (54 videos, base,
+now); **keyed R2/R3 gen 9532034** (afterok chain, 10 classes, hero_flight deferred); **R3X
+9532165** (afterok chain, 96 videos); **R4X 9532166** (96 videos, ic2, now). B8 re-verified
+against taxonomy v2 (scene_swap unchanged for all 8 → R3X eligibility sound). Commits: amendment
+`22cf6ce`, implementation `c0ea421`. Monitor task b5ptlfloa.
+
+19:05 — **Taxonomy Protocol v2 GATE-PASSED + v2 validation viewer live.** The v1 descriptive
+taxonomy failed under scrutiny (morph⇔¬scene_swap 21/21 tautology via its elastic clause;
+17/39 sidedness + 13/39 mechanism hard-calls; filmstrip-verified misassignments: portal,
+sakura_petals, polygon, plasma_explosion). Redesigned from the task principle "endpoints are
+conditioning — classify what the middle must synthesize": new `mechanism`
+{cover 6, transform 12, overlay(add/remove/state) 14, traverse 6, cut 1} via an ordered
+decision procedure; `middle_only` (conditioning-evidence bit, R1−R0 headline split) replaces
+`inserted_content`; `subject_anchored` demoted to metadata; `sidedness` untouched (frozen
+instrument semantics — relabels only). Process: 14-class filmstrip audit → two independent
+fresh-context advisors (architect + adversary, both filmstrip-grounded) → operator synthesis →
+fresh-context acceptance gate: **rev.1 FAILED** (2 material wording defects: T1 trigger missed
+dissolve-without-reformation; sakura_petals unflagged on the convert-vs-extract boundary) →
+fixed → **rev.3 PASSED** (12/12 re-derivations reproduce the table, arithmetic verified, zero
+material defects). Artifacts: `docs/taxonomy/PROTOCOL_v2_PROPOSAL.md` (authoritative),
+`scripts/build_class_axes_v2.py` → `outputs/taxonomy/class_axes_v2.yaml` (count-asserted),
+v2 viewer regenerated (rulings-first ordering). v1 record archived to
+`docs/taxonomy/v1_{PROTOCOL.md,class_axes.yaml}` (was untracked). Owner still owes: 7
+mechanism rulings + 9 sidedness conflicts in the viewer; scoring stays blocked until sidedness
+lands. Strata for the ladder: transform 12 / overlay 14 / pooled new-shot 13 (confirmatory),
+cover 6 / traverse 6 (descriptive), restyles = copy_max calibration subgroup.
+
+18:57 — **Eval-ladder PLAN Amendment 1 pre-registered: side-keyed specialists + R1K + R3X/R4X (C9).**
+Advisor (fable) ruling on an owner design challenge: the sidedness-BLIND specialists (D2) were
+anti-conservative — on one_sided classes the blind suffix hands the specialist the true arrival
+endpoint B (the effect's terminal state per SPEC §3), biasing the PRIMARY C5 (R3−R4) toward its
+pre-declared R3>R4 direction. Fix, committed BEFORE any keyed generation exists (outcome-blind
+honesty anchor): (1) retrain the 9 one_sided specialists PREFIX-ONLY into `<cls>_keyed/` dirs
+(two_sided shadow_smoke/hero_flight unchanged, blind==keyed; blind one_sided ckpts kept as a
+labeled sensitivity artifact); (2) new rung **R1K** = prefix-only base (no adapter) re-baselining
+C4/C6/C7/C8 so adapter-value isn't confounded with suffix removal (C1 stays on blind R1);
+(3) new secondary rungs **R3X/R4X** (contrast C9) = cross-class donor endpoints on the 8-class
+block B8 (one_sided ∧ scene_swap=false), 96+96 videos, no GT (class-effect transfer). D2 and §7
+rule-(iii) superseded; the 60 R4/R5 videos + all R0/R1 + split sha UNCHANGED. New grid
+`docs/eval_ladder/ladder_items_v2.json` (sha `087206d7…`, derived verbatim from frozen v1
+`afe17a3f…`) via `build_ladder_items_v2.py`; dated amendment in `docs/eval_ladder/PLAN.md`.
+
+17:21 — **Eval-ladder jobs MIGRATED to cluster-wide `secondary` (our node was fully saturated).**
+The 16:40 submission to `HCESC-H100-secondary` sat `PENDING (Resources)` indefinitely — that
+queue only scavenges our lab's own node `ccc0439`, whose 8/8 H100s are held by another user's
+2.5-day `-high` job. Cancelled the four (nothing had run) and resubmitted the identical chain to
+the bare cluster-wide `secondary` partition (`--account=campusclusterusers --gres=gpu:H100:1
+--requeue`), which reaches the 6 extra 8×H100 nodes `ccc0419–0424` (same play as exp_050's
+sweep arms). All jobs are already `--time=03:55:00`, inside secondary's 4h cap, and resume-aware,
+so preemption just requeues from checkpoint. `sbatch --test-only` estimated a ~1h backfill start
+vs. indefinite on our node. New IDs: **A5** train `9530598_[0-10%4]` + chain `9530599`; **A6**
+R4/R5 gen `9530600_[0-2]`; **C1** R2/R3 gen `9530601_[0-32%4]` (afterok:9530599). Recipe,
+manifests, and dependency graph unchanged; scoring still blocked on sidedness validation.
+
+16:40 — **Eval-ladder GPU jobs SUBMITTED** (via `ssh cc` → cc-login5, one-command
+`docs/eval_ladder/submit_ladder.sh`). All on `HCESC-H100-secondary` (preemptible,
+resume-aware), queued and healthy: **A5** 11 R2/R3 specialist trainings
+`9529607_[0-10%4]` + chain-retry `9529608` (afterany); **A6** R4/R5 generation
+`9529609_[0-2]` (60 videos — R4 16 + R5 gas/illustration 4, ×3 seeds; hero_flight
+deferred); **C1** R2/R3 generation `9529636_[0-32%4]` (afterok:9529608 → auto-runs
+when training finishes; 264 videos, ckpt 250+2000). Precompute is folded into the
+training array (per-class idempotent). Scoring stays blocked until sidedness validation.
 17:45 — **transition-eval 4.0.0-draft.1: health-validated metrics + causal bar 9 ported into
 the certified harness (branch `eval/v4-metrics`, not yet frozen/run).** Replaces the three M1
 transfer metrics with the metric-search/health-validation deliverables — M1a=**S3** (4-channel

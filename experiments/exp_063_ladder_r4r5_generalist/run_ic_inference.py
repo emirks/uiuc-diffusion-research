@@ -60,11 +60,13 @@ def main() -> None:
     ap.add_argument("--chunk", type=int, default=0)
     ap.add_argument("--num-chunks", type=int, default=1)
     ap.add_argument("--include-deferred", action="store_true")
+    ap.add_argument("--manifest", default="dataset/ladder_r4r5.json",
+                    help="manifest path relative to the exp_063 dir (e.g. dataset/ladder_r4x.json for R4X)")
     ap.add_argument("--rank", type=int, default=32)
     ap.add_argument("--alpha", type=int, default=32)
     args = ap.parse_args()
 
-    doc = json.loads((EXP / "dataset/ladder_r4r5.json").read_text())
+    doc = json.loads((EXP / args.manifest).read_text())
     adapter = REPO / doc["adapter"]
     assert adapter.is_absolute() and adapter.exists(), f"adapter missing: {adapter}"
 

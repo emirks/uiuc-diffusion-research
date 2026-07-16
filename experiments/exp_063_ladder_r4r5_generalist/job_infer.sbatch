@@ -10,6 +10,8 @@
 # One array task per seed (42/43/44). Generates R4 (16) + R5 gas/illustration (4)
 # = 20 videos/seed via exp_058 ic2 step_05000, native keyed. hero_flight R5 is
 # deferred (sidedness pending) — not generated here. Skip-if-exists (requeue-safe).
+# B1 (deferral lifted, owner validated two_sided 2026-07-16): resubmit with
+#   --export=ALL,EXTRA_FLAGS=--include-deferred  → only missing hero_flight R5 files generate.
 # Usage: sbatch [partition/account/gres flags --requeue] job_infer.sbatch
 
 set -x
@@ -24,7 +26,7 @@ echo "=== seed $SEED (task $SLURM_ARRAY_TASK_ID) ==="
 cd $TRAINER
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
 
-uv run --frozen python $EXP/run_ic_inference.py --seed $SEED
+uv run --frozen python $EXP/run_ic_inference.py --seed $SEED ${EXTRA_FLAGS:-}
 RC=$?
 echo "=== EXIT $RC ==="
 exit $RC
