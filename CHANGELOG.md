@@ -1,5 +1,17 @@
 ## 2026-07-16
 
+17:21 — **Eval-ladder jobs MIGRATED to cluster-wide `secondary` (our node was fully saturated).**
+The 16:40 submission to `HCESC-H100-secondary` sat `PENDING (Resources)` indefinitely — that
+queue only scavenges our lab's own node `ccc0439`, whose 8/8 H100s are held by another user's
+2.5-day `-high` job. Cancelled the four (nothing had run) and resubmitted the identical chain to
+the bare cluster-wide `secondary` partition (`--account=campusclusterusers --gres=gpu:H100:1
+--requeue`), which reaches the 6 extra 8×H100 nodes `ccc0419–0424` (same play as exp_050's
+sweep arms). All jobs are already `--time=03:55:00`, inside secondary's 4h cap, and resume-aware,
+so preemption just requeues from checkpoint. `sbatch --test-only` estimated a ~1h backfill start
+vs. indefinite on our node. New IDs: **A5** train `9530598_[0-10%4]` + chain `9530599`; **A6**
+R4/R5 gen `9530600_[0-2]`; **C1** R2/R3 gen `9530601_[0-32%4]` (afterok:9530599). Recipe,
+manifests, and dependency graph unchanged; scoring still blocked on sidedness validation.
+
 16:40 — **Eval-ladder GPU jobs SUBMITTED** (via `ssh cc` → cc-login5, one-command
 `docs/eval_ladder/submit_ladder.sh`). All on `HCESC-H100-secondary` (preemptible,
 resume-aware), queued and healthy: **A5** 11 R2/R3 specialist trainings
