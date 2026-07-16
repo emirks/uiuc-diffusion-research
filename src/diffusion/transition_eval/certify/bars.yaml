@@ -62,10 +62,12 @@
 #     faint; margin over strongest proxy at the practical bar), not demoted.
 #   - tau_copy_initial -> 0.858 (owner-adopted operating value, amendment-1;
 #     the frozen midpoint rule re-derives tau from this run's Block B regardless).
-status: DRAFT
-frozen: false     # 4.0.0-draft.1: flips to true in the freeze commit (own commit)
-                  # AFTER advisor consult 2, BEFORE any score.py-side outcome.
-                  # v3.0.0 was frozen: true — that lock stays on the eval/v3.0.0 tag.
+status: FROZEN
+frozen: true      # 4.0.0 FROZEN 2026-07-16 in this own commit, AFTER advisor consult 2
+                  # (GO) and BEFORE any score.py-side outcome (bars 2/4-8 genuinely
+                  # unknown; bar1/bar9 are outcome-aware by V1/F1a design + disclosed).
+                  # Changes henceforth = new draft version + full re-run (fail-forward).
+                  # v3.0.0's lock stays on the eval/v3.0.0 tag.
 
 principles:
   truth_only: "hard bars only on constructed or human-verified truth; model-behavior
