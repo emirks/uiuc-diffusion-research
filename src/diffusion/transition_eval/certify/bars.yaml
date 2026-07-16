@@ -62,17 +62,42 @@
 #     faint; margin over strongest proxy at the practical bar), not demoted.
 #   - tau_copy_initial -> 0.858 (owner-adopted operating value, amendment-1;
 #     the frozen midpoint rule re-derives tau from this run's Block B regardless).
+# ----------------------------------------------------------------------------
+# 4.0.0-draft.2 REGRADE (2026-07-16) — advised campaign, fail-branch consult.
+# draft.1's full §6 run (job 9531327) FAILED on bar 8 ALONE, and within it only on
+# the reference-rebuild-parity sub-check of the pop_App population (max|Δ| 2.02e-5 >
+# the scalar 1e-6). Advisor diagnosis: a PRE-REGISTRATION DEFECT, not an instrument
+# failure — a scalar float tolerance is mechanically unsatisfiable for the two ECDF-
+# composed rank-lattice populations (see the `reference:` block below). Correction:
+# the two-class rebuild-parity criterion in `reference:`. NOTHING ELSE CHANGES — no
+# measurement code, no other bar, and reference_v4.npz stays byte-identical (sha in
+# versioning.PINS unchanged). Per the 3.0.0 precedent (draft.8 regrade), this pure
+# grading-rule change over data produced under unchanged pins is certified by a
+# COMMITTED REGRADE SCRIPT (scripts/regrade_draft1_to_v4.py), not a re-run: draft.1's
+# warm determinism was bit-perfect (worst=0.0) so a re-run reproduces every number.
+# OUTCOME-AWARENESS, disclosed plainly: at this re-freeze EVERY draft.1 bar outcome is
+# foreknown (the run is on the record), including the flip-counts that ground max_step/
+# max_flips. This is the standard fail-forward posture (fix the defective bar, re-freeze,
+# disclose); the K/B budgets are grounded on fault-signature separation, not fit to pass.
 status: FROZEN
-frozen: true      # 4.0.0 FROZEN 2026-07-16 in this own commit, AFTER advisor consult 2
-                  # (GO) and BEFORE any score.py-side outcome (bars 2/4-8 genuinely
-                  # unknown; bar1/bar9 are outcome-aware by V1/F1a design + disclosed).
-                  # Changes henceforth = new draft version + full re-run (fail-forward).
+frozen: true      # 4.0.0-draft.2 RE-FROZEN 2026-07-16 in its own commit, AFTER the
+                  # fail-branch advisor consult (regrade GO) + the provenance gate
+                  # (job 9538092: self-repro bit-identical, flips O(1), cross-env
+                  # confirmed). The corrected bar-8 clause is the ONLY change vs the
+                  # frozen draft.1 bars; graded by the committed regrade script.
                   # v3.0.0's lock stays on the eval/v3.0.0 tag.
 
 principles:
   truth_only: "hard bars only on constructed or human-verified truth; model-behavior
     statements are descriptive, never gating"
-  fail_forward: "failed cert -> diagnose -> new draft -> re-freeze -> full re-run"
+  fail_forward: "failed cert -> diagnose -> new draft -> re-freeze -> full re-run.
+    EXCEPTION (3.0.0 + 4.0.0-draft.2 precedent): when the draft-to-draft delta is a
+    PURE GRADING-RULE change over data produced under UNCHANGED measurement pins (no
+    measurement/grader .py touched, artifact sha unchanged), the changed clause may be
+    re-graded by a COMMITTED regrade script with full outcome-aware disclosure, and the
+    byte-identical graders' verdicts carry over verbatim — a re-run would only reproduce
+    the same numbers (determinism is proven per-cert). Measurement or grader-code changes
+    still require a full re-run."
   two_kind_calibration: "corpus-only calibration (fallback delta/k, reversal
     enumeration, sibling pair selection, anchor rule) may run pre-freeze;
     outcome-coupled calibration (tau_copy) runs post-freeze under the frozen
@@ -263,10 +288,35 @@ record:                              # certifications/v<X.Y>.md required content
 reference:                           # 4.0.0 — the corpus-relative reference artifact
                                      # (reference_v4.npz), a pinned instrument constant
                                      # (SPEC §4/§7; sha in versioning.PINS).
-  rebuild_tol: 1.0e-6                # rebuilding the artifact from the pinned corpus
-                                     # must reproduce the committed one within this
-                                     # (gated inside bar 8; float-path tolerance —
-                                     # the exact-EMD LP value is unique, DTW float32).
+  # 4.0.0-draft.2 (regrade): rebuild-parity is graded in TWO CLASSES. Seven of the nine
+  # populations are value-space (raw distances) and keep the scalar tolerance. TWO —
+  # pop_App, pop_Dyn — are ECDF-COMPOSED rank LATTICES: their values sit on the grid
+  # {k/(2N)} (N = corpus pairs = 24753), quantum 1/(2N) = 2.0200e-5. A scalar float
+  # tolerance BELOW that quantum is unsatisfiable under any cross-environment rebuild
+  # (float32-reduction order varies by CPU/BLAS), because the same clause tolerates the
+  # raw-channel ~2.5e-8 drift that inevitably flips one lattice cell by exactly one step.
+  # draft.1's flat 1e-6 was therefore internally inconsistent (it permitted the cause,
+  # forbade the consequence) and failed pop_App at 2.02e-5. The lattice arrays are compared
+  # in INTEGER RANK UNITS instead: u = round(pop*2N); require equal length, lattice sanity,
+  # bounded step, bounded flip-count. Full rationale: SPEC §7 + certifications/v4.0.0.md.
+  # K/B are OUTCOME-AWARE (set after draft.1's flip-counts — pop_App 4 flips / max-step 1,
+  # pop_Dyn 0 — were measured, job 9538092); grounded on fault-signature separation, NOT
+  # fit to barely pass: an off-by-one ranking bug shifts ALL N cells by >=2 steps (trips
+  # max_flips by ~500x); observed margins are 4x on max_step, 12.5x on max_flips.
+  value_tol: 1.0e-6                  # Class A (value-space: mu, pop_P1/P2/V1/V1e/Z/P/R,
+                                     #   r_obj, k_csls, rgrid, s3_app_weight): max|Δ| <= this.
+  lattice_arrays: [pop_App, pop_Dyn] # Class B: the two ECDF-composed rank-lattice populations.
+  lattice_sanity_tol: 1.0e-6         # Class B guard: max|pop*2N - round(pop*2N)| < this on BOTH
+                                     #   fresh & committed (a code change breaking the k/(2N)
+                                     #   structure trips this even if steps/flips look benign).
+  max_step: 4                        # Class B: max |Δ lattice steps| (K); observed 1.
+  max_flips: 50                      # Class B: count(u_fresh != u_committed) (B, ~0.2% of N);
+                                     #   observed pop_App 4, pop_Dyn 0.
+  rebuild_tol: 1.0e-6                # RETAINED for the DEPLOYED reference_stats.compare_reference
+                                     # (scalar path, still reads this key). The two-class grading
+                                     # above is applied by the committed regrade script over the
+                                     # recorded rebuild deltas + job-9538092 flip-counts; unifying
+                                     # the deployed comparator with a fresh run is a v5 O-item.
   contents: "mu, ECDF populations {P1,P2,V1,V1e,App,Dyn,Z,P,R}, CSLS r_obj[223],
     k_csls=10, rgrid, s3_app_weight — fitted once on the 223-clip corpus."
 

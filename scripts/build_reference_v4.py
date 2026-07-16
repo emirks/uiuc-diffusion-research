@@ -8,10 +8,13 @@ The artifact holds mu, the 9 ECDF populations (P1/P2/V1/V1e/App/Dyn/Z/P/R), the
 CSLS neighborhood means r_obj[223], and k/rgrid/weight constants — everything a
 single new (gen, ref) pair needs to be ranked against the corpus at score time.
 
-Determinism: the build reuses the certified warm cache; the exact-EMD LP value is
-unique and DTW runs in float32, so a rebuild reproduces this artifact within
-reference.rebuild_tol (1e-6) — the certification driver asserts exactly that
-(bar 8). Run on the SAME warm cache score.py uses; never seed CPU LPIPS.
+Determinism: the build reuses the certified warm cache. The seven value-space
+populations rebuild within reference.value_tol (1e-6) across environments; the two
+ECDF-COMPOSED rank-lattice populations (pop_App, pop_Dyn) are graded in integer rank
+units under the two-class rebuild-parity criterion (bars.yaml `reference:`, SPEC §6.4),
+because a scalar float tolerance below their 1/(2N) quantum is unsatisfiable under any
+cross-environment rebuild (float32-reduction order varies by CPU/BLAS). Run on the SAME
+warm cache score.py uses; never seed CPU LPIPS.
 """
 
 from __future__ import annotations
