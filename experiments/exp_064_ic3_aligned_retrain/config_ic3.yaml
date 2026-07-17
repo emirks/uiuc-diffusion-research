@@ -103,14 +103,14 @@ validation:
   frame_rate: 24.0
   seed: 42
   inference_steps: 30
-  interval: 1000
+  interval: 2500
   guidance_scale: 4.0
   stg_scale: 1.0
   stg_blocks:
   - 29
   stg_mode: stg_v
   generate_audio: false
-  skip_initial_validation: false
+  skip_initial_validation: true
 checkpoints:
   interval: 500
   keep_last_n: -1
