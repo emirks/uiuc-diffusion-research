@@ -35,8 +35,8 @@ PYTHONPATH=$WT/src python -m diffusion.transition_eval.score \
   --corpus $MAIN/data/processed/transitions_std121/corpus_manifest.json \
   $TRAIN_FLAG \
   --label $LABEL \
-  --out-root $MAIN/outputs/eval/ladder_v3 \
-  --cache-dir $MAIN/outputs/eval/cache
+  --out-root $MAIN/outputs/eval/${OUT_ROOT:-ladder_v3} \
+  --cache-dir $MAIN/outputs/eval/${CACHE_DIR:-cache}
 RC=$?
 echo "=== EXIT $RC ==="
 exit $RC
