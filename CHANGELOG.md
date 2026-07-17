@@ -1,3 +1,7 @@
+## 2026-07-17
+
+`10:55` exp_066 v4 cross-comparison aggregator (`aggregate_v4_table.py`): lane precedence ladder_v4h (H100, warm cache) > ladder_v4 (mixed insurance, rows disclosed `@mix`); amendment-1 MDEs attached only to definition-unchanged channels (app_ref_v3/margin/copy_max/max_seam_z), v4-normalized channels (app_ref/cam_zpr/obj_csls) get sign tests only; v3-exam trust applied at family level (disclosed approximation); saturation-flag rates per arm (SPEC §6.5); built-in bridge check |app_ref_v3 − certified v3 app_ref| per label. Header stamps "NOT re-certified" — v3 stays the headline. Also: two-week report (outputs/reports, untracked) extended to Jul 17 with the executed ladder + presentation skeleton.
+
 ## 2026-07-16
 
 `23:15` exp_066 ladder-v3 scoring scaffolded and W1 launched: 20 eval manifests (1,142 rows, all pre-registered conventions — self-GT refs for base/specialists, demo refs for ic tiers, recipient refs for X twins) + ic3 training manifest; certified-worktree score job (eval-v3-spec = tag + amendments, docs-only diff verified); base/ic2/sigma-recheck submitted (9542684-91). Also: ic3 validation cadence cut (interval 2500, skip-initial) after T1 burned its whole 1h59 chunk on precompute+initial validation — observability-only change, training math untouched; chain forecast now step_05000 ~05:15.
