@@ -136,28 +136,63 @@ endpoints.
 control floor), margin −0.141, near-copy 0% — specialist weights do not
 transfer their effect onto foreign endpoints.
 
-**C5 (PRIMARY) — ic3-B vs R3, same items, sign n=8:** ⟨PENDING — fills
-from the final aggregation once ic3 generation+scoring completes⟩
+**C5 (PRIMARY) — ic3-B vs specialist UNSEEN, same items:** on the
+cross-family-comparable channel the generalist **matches the specialist:
+margin Δ −0.018 (2/5 classes, p=1.0, below the 0.037 MDE) — parity on
+identical unseen items.** What differs is *how* each gets there: the
+specialist is memorization-adjacent (near-copy 100%, copy_max Δ +0.647,
+p=0.031) while ic3 synthesizes (near-copy 3%); and the specialist keeps its
+seam-integrity edge (max_seam_z Δ +18.0 against ic3, though sign-weak 4/6,
+p=0.69, heavy-tailed). app_ref Δ −0.415 is **not interpretable as a quality
+gap**: the arms score against different references by pre-registered
+convention (own GT vs demo reference) and r3's app_ref rides its own-GT
+near-copy inflation — margin is the comparable column.
 
-**C6/C7 — zero-shot (descriptive, n≤4):** ⟨PENDING⟩
+**C6/C7 — zero-shot (descriptive, n≤4 classes):** in-context zero-shot onto
+held-out classes does not clear the conditioned base — C6 margin −0.048
+(1/3 classes), and ic3-C margin 0.038 sits barely above the control floor
+(−0.01). Specialists beat zero-shot on their own classes (C7 margin +0.148,
+n=2 trusted). One-reference in-context learning is not (yet) class-free.
 
-**C8 — ic3-B over conditioned base (same items):** ⟨PENDING⟩
+**C8 — ic3-B over conditioned base (same items):** appearance-family
+channels null-to-negative (margin −0.016, 7/19, p=0.36, <MDE), but two
+transformations: **seam integrity max_seam_z −19.4 (21/25 classes improved,
+p=0.001)** and **synthesis instead of copying (copy_max −0.591, 0/25,
+p<0.001; near-copy 3% vs 100%)**. The generalist's value over conditioning
+is not "more class-like" — it is *coherent, non-degenerate transition
+structure* on content it never saw.
 
-**C9 — effect transfer onto foreign endpoints (R3X vs ic3-X twins, B8
-confirmatory, pre-registered direction R3X>R4X):** ⟨PENDING⟩ — the
-specialist-side half is already measured and robust: R3X collapses on foreign
-endpoints (app_ref 0.205, below the 0.36 control floor; margin −0.141).
+**C9 — effect transfer onto foreign endpoints (R3X vs ic3-X paired twins,
+B8 confirmatory, pre-registered direction R3X>R4X): CONFIRMED.** app_ref
+Δ +0.042 and margin Δ +0.094, both **6/6 recipients, p=0.031, ≫MDE** (twins
+share an identical frozen reference — apples-to-apples). Both arms collapse
+on foreign endpoints (r3x margin −0.141, ic3-x −0.240, both far below every
+in-class arm), but the specialist retains a small, universal appearance
+residue. The exploratory extension agrees (margin +0.108, 3/3). In this
+prefix-only foreign regime, *neither* weights nor one demo re-apply the
+effect — and in-context re-application loses even the residue.
 
-**C10 — value of split alignment (ic3 vs ic2, joined items):** ⟨PENDING⟩ —
-caveat pre-registered: ic2's "unseen" tier was contaminated (trained items),
-so C10 partially measures decontamination itself; descriptive only.
+**C10 — value of split alignment (ic3 vs ic2):** the sharpest reading is
+C10b: **ic3 on genuinely-unseen items matches ic2 on items ic2 had trained
+on** — app_ref Δ +0.010, margin Δ −0.002 (4/7, p=1.0, <MDE). Decontaminating
+the training split cost nothing measurable; ic2's seam looks better in the
+mean (Δ +12.4) but is sign-weak (5/8, p=0.73, heavy-tailed). Descriptive by
+pre-registration (contaminated baseline).
 
-**C11 — ic3 held-in vs unseen (A−B):** ⟨PENDING⟩
+**C11 — ic3 held-in vs unseen (A−B, class-level, descriptive):** margin
+0.240 vs 0.187, app_ref 0.347 vs 0.408 (different class sets; tier-A includes
+7 test-less stand-ins). The generalist's held-in advantage is **small and
+channel-inconsistent** — nothing like the specialist's overfit gap (C3:
+0.845→0.706 app_ref, 0.306→0.237 margin on matched conventions). In-context
+training does not memorize its training items the way per-class weights do.
 
 ### Near-copy diagnostic (τ=0.858)
 Own-item arms ~100% (their GT is in the corpus — definitional); ic2 tiers and
 specialist-FOREIGN 0% — generalists synthesize rather than reproduce, and no
-content paste-on is flagged on foreign endpoints. ⟨ic3 rates PENDING⟩
+content paste-on is flagged on foreign endpoints. **ic3: A 0% · B 3% (3/99)
+· C 0% · X 0%** — the aligned generalist synthesizes across every tier,
+including its own held-in items. Controls flag ~47% (the detector sees the
+degenerate arms).
 
 ## 8 · Limitations & flags
 
@@ -168,8 +203,15 @@ content paste-on is flagged on foreign endpoints. ⟨ic3 rates PENDING⟩
 - C6/C7/C10 are descriptive (n small or contaminated baseline); C9 extension
   is exploratory; the hero_flight σ_seed recheck (amendment-2) shifted no
   conclusion.
-- ic3 scoring lane (H100 primary, L40S backup) to be recorded in the final
-  aggregation footer. ⟨PENDING⟩
+- Every headline label (all 20, including all five ic3 labels) was generated
+  *and* scored on H100 against the exact `eval/v3.0.0` tag — 2,134 rows, 0
+  error rows. The L40S/mixed-pool insurance lanes ran in parallel and are not
+  used in any headline number. Cross-GPU check: the v4 lane's carried
+  `app_ref_v3` reproduces certified v3 `app_ref` to 0.00000 on shared H100
+  rows (A100 lane drift 7e-5 ≈ MDE/300).
+- C5/C8 app_ref crosses reference conventions (own GT vs demo reference) —
+  margin is the pre-registered cross-family channel; app_ref deltas there are
+  reported but not claim-bearing.
 
 *Full numbers: `outputs/eval/ladder_v3/_contrasts/{contrasts.md,json,
 tier_table.md}`. Compact presentation version: `SUMMARY_v3.md`.*

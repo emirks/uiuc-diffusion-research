@@ -1,9 +1,8 @@
 # Eval Ladder v3 — Summary & Conclusions
 
 *(compact presentation companion to `REPORT_v3.md` · certified instrument
-`eval/v3.0.0` + amendments 1–3 · campaign 2026-07-16/17)*
-
-⟨…⟩ = fills from the final aggregation (running now).
+`eval/v3.0.0` + amendments 1–3 · campaign 2026-07-16/17 · final aggregation:
+2,134 certified rows, 20/20 labels, 0 error rows)*
 
 ## The question and the answer shape
 
@@ -17,7 +16,7 @@ cross-class sign test and a seed-noise MDE gate — never an absolute score.
 | The base prior | base·P | contains the effect weakly; conditioning-starved |
 | + endpoint conditioning | base·PE | **large, near-universal gain** (+0.229 app, 21/22 cls) |
 | + per-class weights | specialists | **coherence, not class-likeness** (seam −10.8σ); collapses on foreign content |
-| + in-context demo | ic3 generalist | ⟨C5/C8/C9 verdict lines⟩ |
+| + in-context demo | ic3 generalist | **margin parity with the specialist on identical unseen items — by synthesis (3% near-copy), not memorization (100%)**; seam much better than base (21/25 cls), worse than specialist; zero-shot & foreign endpoints remain open |
 
 ## Design in one table
 
@@ -39,18 +38,37 @@ test-band clip; sidedness owner-final; seeds 42/43/44; paired items everywhere.
 | | margin | +0.114 | 18/22 (0.004) | YES | |
 | **C4** specialist−basePE | app_ref | −0.020 | (0.18) | no | appearance parity — |
 | | max_seam_z | **−10.8** | 10/11 (0.012) | YES | — but transitions become *coherent* |
-| **C5 (PRIMARY)** ic3·B−specialist | app_ref | ⟨…⟩ | ⟨…/8 (…)⟩ | ⟨…⟩ | ⟨generalist vs specialist on identical unseen items⟩ |
-| | margin | ⟨…⟩ | ⟨…⟩ | ⟨…⟩ | |
-| | max_seam_z | ⟨…⟩ | ⟨…⟩ | ⟨…⟩ | |
-| **C8** ic3·B−basePE | app_ref | ⟨…⟩ | ⟨…⟩ | ⟨…⟩ | ⟨what the demo buys over conditioning⟩ |
-| **C9** specialist-foreign−ic3·X (twins) | app_ref | ⟨…⟩ | ⟨…/8 (…)⟩ | ⟨…⟩ | ⟨pre-registered direction: specialist collapses harder⟩ |
-| **C11** ic3 A−B (overfit gap) | app_ref | ⟨…⟩ | ⟨…⟩ | ⟨…⟩ | ⟨generalist's memorization gap vs C3's 0.845→0.706⟩ |
+| **C5 (PRIMARY)** ic3·B−specialist | **margin** | **−0.018** | 2/5 (1.0) | no | **parity on identical unseen items** |
+| | copy_max | −0.647 | 0/6 (0.031) | YES | generalist synthesizes; specialist memorizes |
+| | max_seam_z | +18.0 | 4/6 (0.69) | YES* | specialist keeps its seam edge (*sign-weak, heavy-tailed) |
+| **C8** ic3·B−basePE | margin | −0.016 | 7/19 (0.36) | no | not "more class-like" than conditioning — |
+| | max_seam_z | **−19.4** | 21/25 impr. (0.001) | YES | — but coherent, |
+| | copy_max | −0.591 | 0/25 (<0.001) | YES | and synthesized (3% vs 100% near-copy) |
+| **C9** specialist-foreign−ic3·X (twins) | app_ref | **+0.042** | **6/6 (0.031)** | YES | pre-registered direction CONFIRMED: |
+| | margin | **+0.094** | **6/6 (0.031)** | YES | both collapse; specialist keeps a small residue |
+| **C11** ic3 A−B (descriptive) | margin | 0.240 vs 0.187 | — | — | tiny held-in gap — no specialist-style overfit (C3: 0.306→0.237) |
 
 ## Presentation Table 2 — tier table (trusted-class channel means)
 
-⟨paste final `outputs/eval/ladder_v3/_contrasts/tier_table.md` — one row per
-arm: base·P, base·PE, spec·SEEN/UNSEEN/FOREIGN @250/2000, ic3·A/B/C/X,
-ic2·R4/R5, CONTROL hold/lerp⟩
+| model·tier | app_ref | margin | cam_dtw↓ | seam_z↓ | near-copy |
+|---|---|---|---|---|---|
+| base·P | 0.445 | 0.073 | 1.184 | 6.4 | 4% |
+| base·PE | 0.659 | 0.175 | 1.059 | 7.5 | 100% |
+| spec·SEEN@2000 | **0.845** | **0.306** | 0.698 | 4.2 | 98% |
+| spec·UNSEEN@2000 | 0.706 | 0.237 | 1.019 | **0.04** | 100% |
+| spec·FOREIGN | 0.205 | −0.141 | 1.197 | 2.0 | 0% |
+| ic3·A held-in | 0.347† | 0.240 | 1.204 | **0.02** | 0% |
+| ic3·B unseen | 0.408† | 0.187 | 1.051 | 4.4 | 3% |
+| ic3·C zero-shot | 0.287† | 0.038 | 1.113 | −0.1 | 0% |
+| ic3·X foreign | 0.162† | −0.240 | 1.237 | 7.6 | 0% |
+| ic2·R4 (frozen, contaminated) | 0.321† | 0.221 | 1.195 | 1.3 | 0% |
+| CONTROL hold | 0.358 | −0.010 | 1.071 | (outlier-dominated) | 47% |
+| CONTROL lerp | 0.262 | −0.031 | 1.145 | −1.2 | 46% |
+
+† ic-arm app_ref scores against the *demo reference* (pre-registered
+convention) — not level-comparable with own-GT arms, whose app_ref also rides
+near-copy inflation. **Compare arms on `margin`.** Full table (all channels,
+n per cell): `outputs/eval/ladder_v3/_contrasts/tier_table.md`.
 
 Reading guide: `app_ref` = appearance similarity to the reference (M1a, DINO
 mean-of-max over core windows); `margin` = target-minus-intruder separation
@@ -66,7 +84,8 @@ inferential unit.
 | own-item arms (base·PE, spec·SEEN/UNSEEN) | ~98–100% | definitional: their GT is in the corpus |
 | specialist FOREIGN | 0% | no content paste-on onto foreign endpoints |
 | ic2 tiers | 0% | generalists synthesize |
-| ic3 tiers | ⟨…⟩ | ⟨…⟩ |
+| ic3 tiers | A 0% · B 3% · C 0% · X 0% | the aligned generalist synthesizes everywhere — even on held-in items |
+| controls | ~47% | the detector flags the degenerate arms |
 
 ## Presentation Table 4 — v4.0.0 cross-comparison (NOT re-certified)
 
@@ -90,8 +109,17 @@ reference population rebuilt for the corrected corpus per owner directive
    integrity transformed, appearance null), and its value is **content-bound**:
    on foreign endpoints the specialist falls below the degenerate-control
    floor (0.205 < 0.36).
-3. ⟨**The in-context generalist verdict** — C5/C8/C9 in one sentence⟩
-4. ⟨**Alignment value** — C10 descriptive note (ic2 contamination caveat)⟩
+3. **One in-context generalist matches eleven specialists on their own
+   unseen items (margin parity, C5) — and does it by synthesis, not
+   memorization** (near-copy 3% vs 100%; no specialist-style overfit gap,
+   C11). What it gives up: the specialist's seam-integrity edge (C5) and a
+   small appearance residue on foreign endpoints (C9, 6/6, confirmed). What
+   it keeps over plain conditioning: coherent seams (21/25 classes) and
+   non-degenerate synthesis (C8). Zero-shot onto unseen classes is not yet
+   real (C6: below conditioned base).
+4. **Decontaminating the training split cost nothing** — ic3 on genuinely
+   unseen items ties ic2 on items ic2 had trained on (C10b margin −0.002,
+   null; descriptive by pre-registration).
 5. Measurement discipline made these claims cheap to defend: certified
    instrument, pre-registered contrasts, paired deltas, MDE gates,
    fail-forward, and a second instrument (v4) as a free robustness check.

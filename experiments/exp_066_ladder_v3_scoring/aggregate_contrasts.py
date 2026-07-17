@@ -126,6 +126,9 @@ def delta_stats(pairs, trust):
         pos = sum(1 for v in cls_delta.values() if v > 0)
         n_cls = len(cls_delta)
         vals = list(t_items.values())
+        if not vals:  # joined items exist but every class is trust-excluded
+            res[ch] = None
+            continue
         mean_d = sum(vals) / len(vals)
         res[ch] = {
             "n_items": len(items), "n_items_trusted": len(vals),
