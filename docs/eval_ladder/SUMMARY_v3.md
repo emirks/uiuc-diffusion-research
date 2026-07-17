@@ -94,11 +94,21 @@ reference population rebuilt for the corrected corpus per owner directive
 2026-07-17. v3 stays the headline; v4 is the robustness cross-check.
 
 - Bridge check (built-in): v4 carries the raw v3 appearance metric —
-  |app_ref_v3 − certified v3 app_ref| = **0.00000** over shared H100 rows
-  (mixed-GPU insurance lane drift 7e-5 ≈ MDE/300 — quantifies the
-  H100-purity doctrine).
-- ⟨key contrasts under v4 metrics: C1/C4/C5/C9 rows from
-  `ladder_v4h/_contrasts/contrasts_v4.md` — agreement/disagreement notes⟩
+  |app_ref_v3 − certified v3 app_ref| = **0.00000 on every one of the 20
+  labels** (all-H100 lane; the A100 insurance lane drifts 7e-5 ≈ MDE/300 —
+  quantifies the H100-purity doctrine).
+- **v4 agrees with v3 on every claim-bearing verdict** (2,134 rows, all 20
+  labels, H100 lane):
+
+| Contrast | v4 app_ref (rank) | v4 verdict | agrees with v3? |
+|---|---|---|---|
+| C1 conditioning | +0.083, 20/22 (p<0.001); cam_zpr 9/10 better (p=0.021) | large + universal, camera too | **YES** (camera confirmed under a redesigned metric) |
+| C4 specialist−basePE | +0.080, 3/9 (p=0.51) | appearance null | **YES** |
+| C5 ic3·B−specialist | −0.159, 0/5 (p=0.062); margin −0.018 | margin parity, convention-driven app gap | **YES** |
+| C9 twins | **+0.125, 6/6 (p=0.031)**; margin +0.094, 6/6 | specialist residue on foreign endpoints | **YES — independently re-confirmed** |
+
+No claim-bearing channel disagrees between instruments. (v4-normalized
+channels carry sign tests only — no σ_seed was measured under v4.)
 
 ## Conclusions
 

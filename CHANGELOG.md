@@ -1,5 +1,7 @@
 ## 2026-07-17
 
+`12:15` **Eval ladder v3 campaign COMPLETE — 20/20 v3 labels certified (2,134 rows, 0 error rows) + full v4.0.0 cross-sweep (20/20, H100 lane).** Final contrasts: C5 PRIMARY = margin parity between the ic3 generalist and per-class specialists on identical unseen items (Δ−0.018 < MDE), achieved by synthesis (near-copy 3% vs 100%); C8 = seam integrity −19.4 (21/25 classes, p=0.001) + no copying over conditioned base; C9 confirmatory CONFIRMED (r3x>ic3_x, app_ref/margin 6/6 recipients, p=0.031, twins apples-to-apples); C10b decontamination cost nothing (margin −0.002 null); C11 no specialist-style overfit in the generalist. v4 instrument agrees on every claim-bearing verdict; bridge |app_ref_v3−v3 app_ref| = 0.00000 on all 20 labels. REPORT_v3 + SUMMARY_v3 filled with measured numbers only; presentation tables ready.
+
 `10:55` exp_066 v4 cross-comparison aggregator (`aggregate_v4_table.py`): lane precedence ladder_v4h (H100, warm cache) > ladder_v4 (mixed insurance, rows disclosed `@mix`); amendment-1 MDEs attached only to definition-unchanged channels (app_ref_v3/margin/copy_max/max_seam_z), v4-normalized channels (app_ref/cam_zpr/obj_csls) get sign tests only; v3-exam trust applied at family level (disclosed approximation); saturation-flag rates per arm (SPEC §6.5); built-in bridge check |app_ref_v3 − certified v3 app_ref| per label. Header stamps "NOT re-certified" — v3 stays the headline. Also: two-week report (outputs/reports, untracked) extended to Jul 17 with the executed ladder + presentation skeleton.
 
 ## 2026-07-16
