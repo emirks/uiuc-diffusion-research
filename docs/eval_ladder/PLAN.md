@@ -355,3 +355,107 @@ fully in.
 **σ_seed caveat.** amendment-1's σ_seed/MDE was calibrated on suffix-anchored
 generations; prefix-only rungs (R1K, one_sided R2/R3/R3X) may show higher seed
 variance. This is reported context accompanying those deltas, NOT a gate.
+
+## Amendment 2 — Unified tier grid, split-aligned generalist retrain (ic3), live_concert restoration (2026-07-16)
+
+**Honesty anchor.** At commit time, **zero adapter-rung scores exist** (no R2–R5/R1K/R3X/R4X
+item has ever been scored; base R0/R1 scoring may run concurrently — base arms are untouched
+by this amendment). This amendment is therefore outcome-blind with respect to every claim it
+re-bases. It becomes **binding only after a fresh-context gate PASS**; no ic3 job is submitted
+before that. Owner authorized the retrain and the live_concert ruling 2026-07-16 (chat).
+
+**Amends:** D5 (ic2 stays pinned — but as the *comparison* arm; headline generalist becomes
+ic3), D4's live_concert skip (its "0 test clips" rationale dissolves; the specialist roster
+nonetheless stays 11 — adding a 12th specialist is declined scope, owner may reopen), §3's
+tier bookkeeping (contamination stratification → designed tier A). Amendment 1 is unchanged.
+
+### A2.1 The unified tier grid (design restatement)
+
+One generation manifest per trained model; a row's tier is just
+**(class trained?) × (endpoint clip band)**:
+
+| tier | class trained | endpoints | meaning |
+|---|---|---|---|
+| A | yes | train band | held-in ceiling / overfit |
+| B | yes | test band | within-class generalization |
+| C | no  | test band (ref from its train band) | zero-shot class transfer |
+| X | — | another class's test clips (sidedness-matched) | effect transfer vs content memorization |
+
+Universal rules: **no adapter ever trains on a test-band clip**; conditioning keyed by
+owner-validated taxonomy sidedness everywhere (base, specialists, generalist); foreign (X)
+endpoints sidedness-matched (owner ruling: endpoints carry no transition information, so
+matched-sidedness foreign endpoints are well-posed for every class); same items + seeds
+42/43/44 across all models → every comparison is a paired delta.
+
+### A2.2 Corpus repair (owner ruling): live_concert_2 removed
+
+Owner visual review 2026-07-16: **live_concert_0 ≡ live_concert_2** (true duplicate);
+remaining live_concert clips ruled distinct — this *downgrades* the automated all-mutual-dup
+finding (which had forced all-train) to "high similarity, one true duplicate."
+Action: quarantine `live_concert_2.mp4` (keep-lowest-index convention) to
+`data/processed/transitions_std121/_removed/` (manifest builder skips `_` dirs); corpus
+223 → 222 clips; manifest rebuilt (corpus_sha changes; a one-paragraph **certification
+amendment-3** on `eval/v3-spec-versioning` records the new sha, same data-plane pattern as
+amendment-2).
+
+### A2.3 split v1.1 (localized re-draw, one class)
+
+Rebuild live_concert's band **under the frozen v1 rule, unchanged**: n=7 → **1 test clip**,
+drawn by the same seeded stream `random.Random("split_v1:live_concert")` over the 7 surviving
+sorted clip ids (remediation stream applies as in v1 if flagged). **Every other class's
+assignment is asserted byte-identical to split_v1.** Output: `split_v1.1.json` +
+`SPLIT_V1.1.md` (sha256 + this rationale) + tag `split/v1.1`. Housekeeping in the same batch:
+force-fix `split/v1` → 262aa10.
+
+### A2.4 ic3 — split-aligned generalist retrain (exp_064)
+
+- **Data:** split-v1.1 **train band only**, of the 32 non-holdout classes.
+  **Holdout verbatim ic2** (owner: no extension): hero_flight, illustration_scene,
+  gas_transformation, raven_transition, hole_transition, seamless_transition, jump_transition.
+- **Keying:** owner-final sidedness for every class (fixes ic2's giant_grab / earth_wave /
+  water_bending mis-keys).
+- **Recipe pinned = exp_058 verbatim:** rank 32/α32 attn+FFN, lr 2e-4, 5000 steps, ckpt/500,
+  seed 42, 480×640×121@24, single mask condition (prefix 2 latent frames always; +final
+  latent frame iff two_sided); pairs rebuilt from the train band by the exp_058 builder.
+- ic2 is retained, demoted to **labeled comparison arm** — it never headlines again.
+
+### A2.5 Generation grid v3 (exp_065 — ONE manifest, all tiers at once)
+
+| model | tier rows |
+|---|---|
+| ic3 | **A**: 8 C5-classes × designated train item + the 10 test-less classes' stand-in items · **B**: every trained ∩ test-bearing class (now incl. live_concert) × its test items · **C**: holdout classes with ≥1 train + ≥1 test clip (hero_flight, gas, illus, raven, hole; seamless/jump are single-clip → no rows) × test items · **X**: 11 recipients × 4 donors |
+| specialists | **X extension only**: the 3 recipients Amendment 1 excluded (shadow_smoke, hero_flight, super_fast_run) × 4 sidedness-matched donors, ckpt 2000 (+36 videos); frozen B8 donor sets kept verbatim |
+| base | keyed-endpoint arm extended to all one_sided classes beyond the R1K 9 (+≈45) + live_concert's new test item rows (+9) |
+
+References = the class's frozen grid reference clip (train band; for tier C, the holdout
+class's train band — never trained). Exact item lists + donor assignments frozen by
+`build_ladder_items_v3.py` → `ladder_items_v3.json` (sha recorded at gate time); ic3 volume
+≈ 270–300 videos, total new ≈ 360.
+
+### A2.6 Contrasts
+
+C1/C3/C4/C9 unchanged. **C5 (PRIMARY) re-based:** specialist UNSEEN·own (R3) vs **ic3 tier
+B**, same items/seeds, sign test across the same 8 classes — tier B is clean **by
+construction**, so the contamination stratification becomes unnecessary for the headline
+(`endpoint_seen_by_ic2` still emitted for the ic2 comparison arm). C6/C7/C8 re-based on ic3;
+C6/C7 upgrade from descriptive n=3 to **n=5 tier-C classes** (5/5 unanimity → p≈.031;
+labeled fragile). New secondary contrasts: **C10 = ic3 − ic2** on shared rows (the measured
+value of split alignment + correct keying); **C11 = ic3 tier A − tier B** (designed
+generalist overfit gap). σ_seed/MDE context and prefix-only caveat carry unchanged.
+
+### A2.7 What does NOT change
+
+split_v1 assignments for the other 38 classes; all specialist trainings (blind + keyed) and
+their R2/R3/R3X/B1 rows; the 300 R0/R1 videos; certified harness v3.0.0 + amendments;
+taxonomy v2 and its strata; sidedness semantics; seeds; the frozen B8 donor grid.
+
+### A2.8 Execution order
+
+1. Fresh-context gate on this amendment → PASS required.
+2. Quarantine live_concert_2 → rebuild corpus manifest → cert amendment-3.
+3. Build split_v1.1 (+byte-identity assertions) → tag.
+4. `build_ladder_items_v3.py` → freeze grid v3.
+5. Submit exp_064 (ic3 train; secondary, ≤4h windows, resume-aware).
+6. Submit exp_065 grid (skip-if-exists) after ic3 DONE.
+7. Score all rungs — certified checkout, corrected manifest. (Base-arm scoring independent;
+   may run before the gate.)
