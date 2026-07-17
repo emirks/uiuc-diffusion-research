@@ -4,9 +4,14 @@
 <meta charset="utf-8">
 <title>Eval Ladder v3 — One-Page Results</title>
 <style>
-  :root { --ink:#1a1d24; --sub:#5a6270; --line:#d8dce3; --accent:#0b5fa5; --hl:#eef4fa; --warn:#8a5a00; }
+  :root { --ink:#1a1d24; --sub:#5a6270; --line:#d8dce3; --accent:#0b5fa5; --hl:#eef4fa; --warn:#8a5a00; --bg:#ffffff; --bg2:#f7f8fa; --badc:#a03030; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink:#e2e6ec; --sub:#98a1af; --line:#3a4150; --accent:#6db3e8; --hl:#1d2735; --warn:#d9a545; --bg:#14171d; --bg2:#1a1e26; --badc:#e08585; }
+  }
+  :root[data-theme="dark"] { --ink:#e2e6ec; --sub:#98a1af; --line:#3a4150; --accent:#6db3e8; --hl:#1d2735; --warn:#d9a545; --bg:#14171d; --bg2:#1a1e26; --badc:#e08585; }
+  :root[data-theme="light"] { --ink:#1a1d24; --sub:#5a6270; --line:#d8dce3; --accent:#0b5fa5; --hl:#eef4fa; --warn:#8a5a00; --bg:#ffffff; --bg2:#f7f8fa; --badc:#a03030; }
   * { box-sizing:border-box; margin:0; padding:0; }
-  body { font:12.5px/1.42 "Segoe UI",system-ui,-apple-system,sans-serif; color:var(--ink); background:#fff; padding:26px 34px; max-width:1180px; margin:0 auto; }
+  body { font:12.5px/1.42 "Segoe UI",system-ui,-apple-system,sans-serif; color:var(--ink); background:var(--bg); padding:26px 34px; max-width:1180px; margin:0 auto; }
   h1 { font-size:21px; letter-spacing:-.2px; }
   h1 small { font-weight:400; color:var(--sub); font-size:12px; margin-left:10px; }
   h2 { font-size:13.5px; text-transform:uppercase; letter-spacing:.6px; color:var(--accent); margin:18px 0 6px; border-bottom:1.5px solid var(--line); padding-bottom:3px; }
@@ -14,9 +19,9 @@
   th,td { border:1px solid var(--line); padding:2.5px 6px; text-align:left; vertical-align:top; }
   th { background:var(--hl); font-weight:600; white-space:nowrap; }
   td.num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
-  tr.grp td { background:#f7f8fa; }
+  tr.grp td { background:var(--bg2); }
   .best { font-weight:700; color:var(--accent); }
-  .bad { color:#a03030; }
+  .bad { color:var(--badc); }
   .muted { color:var(--sub); }
   .pill { display:inline-block; background:var(--hl); border:1px solid var(--line); border-radius:9px; padding:0 7px; margin:1px 3px 1px 0; font-size:11px; white-space:nowrap; }
   .cols { display:flex; gap:22px; align-items:flex-start; }
