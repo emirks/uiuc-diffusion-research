@@ -1,0 +1,92 @@
+[
+ {
+  "item_id": "sigseed__hero_flight__s42__recheck",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/exp_060_sigma_seed/adapter/sigseed__hero_flight__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/hero_flight/hero_flight_8.mp4",
+  "style": "hero_flight",
+  "n_endpoints": 2,
+  "condition_prefix": {
+   "video": "data/processed/transitions_std121/hero_flight/hero_flight_6.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "data/processed/transitions_std121/hero_flight/hero_flight_6.mp4",
+   "num_frames": 8
+  },
+  "arm": "sigma_hero_recheck",
+  "twin_of": null,
+  "notes": "sigma_seed; cond=A:hero_flight_6 ref=B:hero_flight_8; seed=42; onesided-camera | amendment-2 recheck: same rows, corrected corpus (hero_flight now twosided)"
+ },
+ {
+  "item_id": "sigseed__hero_flight__s43__recheck",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/exp_060_sigma_seed/adapter/sigseed__hero_flight__s43.mp4",
+  "reference_video": "data/processed/transitions_std121/hero_flight/hero_flight_8.mp4",
+  "style": "hero_flight",
+  "n_endpoints": 2,
+  "condition_prefix": {
+   "video": "data/processed/transitions_std121/hero_flight/hero_flight_6.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "data/processed/transitions_std121/hero_flight/hero_flight_6.mp4",
+   "num_frames": 8
+  },
+  "arm": "sigma_hero_recheck",
+  "twin_of": null,
+  "notes": "sigma_seed; cond=A:hero_flight_6 ref=B:hero_flight_8; seed=43; onesided-camera | amendment-2 recheck: same rows, corrected corpus (hero_flight now twosided)"
+ },
+ {
+  "item_id": "sigseed__hero_flight__s44__recheck",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/exp_060_sigma_seed/adapter/sigseed__hero_flight__s44.mp4",
+  "reference_video": "data/processed/transitions_std121/hero_flight/hero_flight_8.mp4",
+  "style": "hero_flight",
+  "n_endpoints": 2,
+  "condition_prefix": {
+   "video": "data/processed/transitions_std121/hero_flight/hero_flight_6.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "data/processed/transitions_std121/hero_flight/hero_flight_6.mp4",
+   "num_frames": 8
+  },
+  "arm": "sigma_hero_recheck",
+  "twin_of": null,
+  "notes": "sigma_seed; cond=A:hero_flight_6 ref=B:hero_flight_8; seed=44; onesided-camera | amendment-2 recheck: same rows, corrected corpus (hero_flight now twosided)"
+ },
+ {
+  "item_id": "sigseed__hero_flight__s45__recheck",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/exp_060_sigma_seed/adapter/sigseed__hero_flight__s45.mp4",
+  "reference_video": "data/processed/transitions_std121/hero_flight/hero_flight_8.mp4",
+  "style": "hero_flight",
+  "n_endpoints": 2,
+  "condition_prefix": {
+   "video": "data/processed/transitions_std121/hero_flight/hero_flight_6.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "data/processed/transitions_std121/hero_flight/hero_flight_6.mp4",
+   "num_frames": 8
+  },
+  "arm": "sigma_hero_recheck",
+  "twin_of": null,
+  "notes": "sigma_seed; cond=A:hero_flight_6 ref=B:hero_flight_8; seed=45; onesided-camera | amendment-2 recheck: same rows, corrected corpus (hero_flight now twosided)"
+ },
+ {
+  "item_id": "sigseed__hero_flight__s46__recheck",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/exp_060_sigma_seed/adapter/sigseed__hero_flight__s46.mp4",
+  "reference_video": "data/processed/transitions_std121/hero_flight/hero_flight_8.mp4",
+  "style": "hero_flight",
+  "n_endpoints": 2,
+  "condition_prefix": {
+   "video": "data/processed/transitions_std121/hero_flight/hero_flight_6.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "data/processed/transitions_std121/hero_flight/hero_flight_6.mp4",
+   "num_frames": 8
+  },
+  "arm": "sigma_hero_recheck",
+  "twin_of": null,
+  "notes": "sigma_seed; cond=A:hero_flight_6 ref=B:hero_flight_8; seed=46; onesided-camera | amendment-2 recheck: same rows, corrected corpus (hero_flight now twosided)"
+ }
+]
