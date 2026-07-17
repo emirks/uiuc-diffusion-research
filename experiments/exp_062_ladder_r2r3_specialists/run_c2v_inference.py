@@ -24,7 +24,7 @@ Run in the ltx-trainer uv env:
     uv run --frozen python <this file> --class shadow --seed 42 --r3x         # R3X
 Skip-if-exists per output mp4 (requeue-safe).
 """
-import argparse, json
+import argparse, json, os
 from pathlib import Path
 
 import torch
@@ -46,7 +46,7 @@ EXP = REPO / "experiments/exp_062_ladder_r2r3_specialists"
 COND = EXP / "dataset/cond"
 CKPT_ROOT = REPO / "outputs/training/exp_062_ladder_r2r3_specialists"
 OUT_ROOT = REPO / "outputs/videos/exp_062_ladder_r2r3_specialists"
-GRID = json.loads((REPO / "docs/eval_ladder/ladder_items_v2.json").read_text())
+GRID = json.loads((REPO / os.environ.get("LADDER_GRID", "docs/eval_ladder/ladder_items_v2.json")).read_text())
 
 # specialist = video-attention targets (exp_051)
 TARGET_MODULES = [

@@ -29,6 +29,8 @@ case "$MODE" in
   r1k)  CLASSES=(shadow portal super_fast_run polygon wireframe animalization color_rain gas_transformation illustration_scene); FLAG="--no-adapter";;
   r3x)  CLASSES=(shadow portal polygon wireframe animalization color_rain gas_transformation illustration_scene); FLAG="--r3x";;
   b1)   CLASSES=(hero_flight); FLAG="";;
+  r3xext) CLASSES=(hero_flight shadow_smoke super_fast_run); FLAG="--r3x";
+          export LADDER_GRID=docs/eval_ladder/ladder_items_v3.json;;      # A2.5 X-extension -> --array=0-8
   *) echo "ERROR: MODE unset/invalid ('$MODE') — pass --export=ALL,MODE=r2r3|r1k|r3x"; exit 2;;
 esac
 CLS=${CLASSES[$((SLURM_ARRAY_TASK_ID / 3))]}
