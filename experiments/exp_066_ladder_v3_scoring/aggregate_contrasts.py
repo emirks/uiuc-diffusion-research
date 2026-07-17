@@ -161,6 +161,26 @@ def main():
 
     trust = json.loads(TRUST.read_text())
     rows, bad = load_rows(args.allow_uncertified)
+    # merge alt-pool labels (A100/A30/A40, own cache) for labels the primary
+    # H100 dir lacks — H100 takes precedence; alt rows disclosed via _label.
+    alt_dir = EVAL.parent / "ladder_v3_alt"
+    have = {r["_label"] for r in rows}
+    if alt_dir.is_dir():
+        import json as _j
+        for d in sorted(alt_dir.iterdir()):
+            rj, ij = d / "results.json", d / "items.jsonl"
+            if d.name in have or not (rj.exists() and ij.exists()):
+                continue
+            prov = _j.loads(rj.read_text()).get("provenance", {})
+            if not prov.get("certified") and not args.allow_uncertified:
+                continue
+            for line in ij.open():
+                r = _j.loads(line)
+                if r.get("error"):
+                    continue
+                r["_label"] = d.name + "@alt"
+                r["near_copy"] = (r.get("copy_max") or 0) >= TAU_COPY
+                rows.append(r)
     ix = index(rows)
     # fold base-PE union into one pseudo-arm for joins vs adapters
     for (arm, style, clip, seed), r in list(ix.items()):
