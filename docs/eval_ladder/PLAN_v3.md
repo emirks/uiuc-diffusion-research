@@ -40,20 +40,41 @@ C8 ic3-B−R1(K) · C9 R3X>R4X, B8-only confirmatory (extension = labeled
 exploratory) · C10 ic3−ic2 (value of alignment) · C11 ic3 A−B (overfit gap).
 Scoring: certified v3.0.0 + amendments 1–3, corrected corpus manifest.
 
-## 4 · Launch sheet (from cc-login3, repo root)
+## 4 · Launch sheet (repo root on any CC login node)
 
 ```bash
 P="--partition=secondary --account=campusclusterusers --gres=gpu:H100:1 --requeue"
-# NOW — no dependencies (all trainings for these are DONE):
+# ic3 train chain: 2 chunks suffice (ic2 ran 500 steps/~25 min => ~4h10 + precompute);
+# T3 = free safety chunk (DONE marker fast-exits) so the grids can never fire early.
 T1=$(sbatch --parsable $P experiments/exp_064_ic3_aligned_retrain/job_train.sbatch)
 T2=$(sbatch --parsable --dependency=afterany:$T1 $P experiments/exp_064_ic3_aligned_retrain/job_train.sbatch)
-sbatch --array=0-29%6 --export=ALL,MODE=r2r3   $P experiments/exp_062_ladder_r2r3_specialists/job_gen_keyed.sbatch
-sbatch --array=0-2    --export=ALL,MODE=b1     $P experiments/exp_062_ladder_r2r3_specialists/job_gen_keyed.sbatch
-sbatch --array=0-23%6 --export=ALL,MODE=r3x    $P experiments/exp_062_ladder_r2r3_specialists/job_gen_keyed.sbatch
-sbatch --array=0-8    --export=ALL,MODE=r3xext $P experiments/exp_062_ladder_r2r3_specialists/job_gen_keyed.sbatch
-sbatch --array=0-2 --export=ALL,MANIFEST=dataset/manifest_base_ext.json,CHUNKS=1 $P experiments/exp_065_ladder_v3_grid/job_grid.sbatch
-# AFTER ic3 (chained on the train tail; adapter-assert makes them requeue-safe):
-sbatch --array=0-11%6 --dependency=afterany:$T2 --export=ALL,MANIFEST=dataset/manifest_ic3.json,CHUNKS=4   $P experiments/exp_065_ladder_v3_grid/job_grid.sbatch
-sbatch --array=0-8%6  --dependency=afterany:$T2 --export=ALL,MANIFEST=dataset/manifest_ic3_x.json,CHUNKS=3 $P experiments/exp_065_ladder_v3_grid/job_grid.sbatch
+T3=$(sbatch --parsable --dependency=afterany:$T2 $P experiments/exp_064_ic3_aligned_retrain/job_train.sbatch)
+# NOW — no dependencies (all trainings for these are DONE):
+sbatch --array=0-29%15 --export=ALL,MODE=r2r3   $P experiments/exp_062_ladder_r2r3_specialists/job_gen_keyed.sbatch
+sbatch --array=0-2     --export=ALL,MODE=b1     $P experiments/exp_062_ladder_r2r3_specialists/job_gen_keyed.sbatch
+sbatch --array=0-23%15 --export=ALL,MODE=r3x    $P experiments/exp_062_ladder_r2r3_specialists/job_gen_keyed.sbatch
+sbatch --array=0-8     --export=ALL,MODE=r3xext $P experiments/exp_062_ladder_r2r3_specialists/job_gen_keyed.sbatch
+sbatch --array=0-5 --export=ALL,MANIFEST=dataset/manifest_base_ext.json,CHUNKS=2 $P experiments/exp_065_ladder_v3_grid/job_grid.sbatch
+# AFTER ic3 (chained on the safety tail; adapter-assert makes them requeue-safe):
+sbatch --array=0-20%15 --dependency=afterany:$T3 --export=ALL,MANIFEST=dataset/manifest_ic3.json,CHUNKS=7   $P experiments/exp_065_ladder_v3_grid/job_grid.sbatch
+sbatch --array=0-17%15 --dependency=afterany:$T3 --export=ALL,MANIFEST=dataset/manifest_ic3_x.json,CHUNKS=6 $P experiments/exp_065_ladder_v3_grid/job_grid.sbatch
 ```
 Then: score everything (certified checkout, corrected manifest).
+
+### As-run log — 2026-07-16, cc-login5
+
+Submitted exactly as the sheet above (knobs sized to observed availability: 15
+free H100s on secondary, 3 small foreign jobs pending). CHUNKS/throttles are
+submission-time knobs only — rows, settings, and seeds are frozen in the
+manifests/grid and unchanged.
+
+| what | job id | shape |
+|---|---|---|
+| ic3 train T1→T2→T3 | 9541860 → 9541861 → 9541862 | 3×3h55 chain, resume + DONE fast-exit |
+| specialists SEEN+UNSEEN·own (r2r3) | 9541863 | array 0-29%15 |
+| hero_flight (b1) | 9541864 | array 0-2 |
+| specialists UNSEEN·foreign B8 (r3x) | 9541865 | array 0-23%15 |
+| X-extension recipients (r3xext) | 9541866 | array 0-8 |
+| base PE-keyed extension | 9541867 | array 0-5, CHUNKS=2 |
+| ic3 A/B/C grid | 9541868 | array 0-20%15, CHUNKS=7, afterany:9541862 |
+| ic3 X grid | 9541869 | array 0-17%15, CHUNKS=6, afterany:9541862 |
