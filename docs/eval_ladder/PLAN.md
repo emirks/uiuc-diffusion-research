@@ -358,18 +358,11 @@ variance. This is reported context accompanying those deltas, NOT a gate.
 
 ## Amendment 2 — Unified tier grid, split-aligned generalist retrain (ic3), live_concert restoration (2026-07-16)
 
-**Gate history:** rev.1 FAILED the fresh-context gate (3 material defects: C7 n=5 unbuildable;
-C6 n=5 pairing gap; item/donor/reference draws not deterministic as written). rev.2 fixes all
-three (this text) plus the 6 minor findings, and corrects a factual error the gate did not
-have data to catch: hole_transition has n=2 clips → test-less under the split rule → it is
-NOT a tier-C class; tier C is n=4.
-
 **Honesty anchor.** At commit time, **zero adapter-rung scores exist** (no R2–R5/R1K/R3X/R4X
-item has ever been scored; base R0/R1 scoring may run concurrently — already-generated base
-rows are untouched by this amendment; A2.5 only ADDS base rows). This amendment is therefore
-outcome-blind with respect to every claim it re-bases. It becomes **binding only after a
-fresh-context gate PASS**; no ic3 job is submitted before that. Owner authorized the retrain
-and the live_concert ruling 2026-07-16 (chat).
+item has ever been scored; base R0/R1 scoring may run concurrently — base arms are untouched
+by this amendment). This amendment is therefore outcome-blind with respect to every claim it
+re-bases. It becomes **binding only after a fresh-context gate PASS**; no ic3 job is submitted
+before that. Owner authorized the retrain and the live_concert ruling 2026-07-16 (chat).
 
 **Amends:** D5 (ic2 stays pinned — but as the *comparison* arm; headline generalist becomes
 ic3), D4's live_concert skip (its "0 test clips" rationale dissolves; the specialist roster
@@ -409,13 +402,10 @@ amendment-2).
 
 Rebuild live_concert's band **under the frozen v1 rule, unchanged**: n=7 → **1 test clip**,
 drawn by the same seeded stream `random.Random("split_v1:live_concert")` over the 7 surviving
-sorted clip ids. The owner's 2026-07-16 ruling **clears the automated all-dup flag for the 7
-survivors**, so the draw is unconditional (a re-run of the automated flagger does not reapply;
-its finding stands recorded as "high mutual similarity, owner-overridden"). **Every other
-class's assignment is asserted byte-identical to split_v1.** Output: `split_v1.1.json` +
-`SPLIT_V1.1.md` (sha256 + this rationale + an explicit record of the `split/v1` tag force-move:
-prior target 1ebace4 → correct target 262aa10, reason: tag was minted one commit early;
-force-move executes in this batch so the freeze audit trail stays intact) + tag `split/v1.1`.
+sorted clip ids (remediation stream applies as in v1 if flagged). **Every other class's
+assignment is asserted byte-identical to split_v1.** Output: `split_v1.1.json` +
+`SPLIT_V1.1.md` (sha256 + this rationale) + tag `split/v1.1`. Housekeeping in the same batch:
+force-fix `split/v1` → 262aa10.
 
 ### A2.4 ic3 — split-aligned generalist retrain (exp_064)
 
@@ -433,47 +423,27 @@ force-move executes in this batch so the freeze audit trail stays intact) + tag 
 
 | model | tier rows |
 |---|---|
-| ic3 | **A**: 8 C5-classes × designated train item + the 10 test-less classes' frozen exp_061 stand-in items · **B**: every trained ∩ test-bearing class (now incl. live_concert) × its test items · **C**: the 4 holdout classes with ≥1 train + ≥1 test clip — **hero_flight, gas_transformation, illustration_scene, raven_transition** (hole_transition n=2 and seamless/jump n=1 are test-less → no C rows) × test items · **X**: 11 recipients × 4 donors |
-| specialists | **X extension only** (descriptive/secondary — see A2.6): the 3 recipients Amendment 1 excluded (shadow_smoke, hero_flight, super_fast_run) × 4 sidedness-matched donors, ckpt 2000 (+36 videos); frozen B8 donor sets kept verbatim |
-| base | keyed-endpoint arm extended to all one_sided classes beyond the R1K 9 (+≈45) + live_concert's new test item rows (+9). two_sided classes need no keyed extension (keyed ≡ the existing blind R1 rows) |
+| ic3 | **A**: 8 C5-classes × designated train item (first-lexicographic non-reference train clip) + the test-less classes' stand-in items (frozen exp_061 selection.json, verbatim) · **B**: every trained ∩ test-bearing class (now incl. live_concert) × its test items · **C**: holdout classes with ≥1 train + ≥1 test clip — **hero_flight (2), gas_transformation (2), illustration_scene (2), raven_transition (1); hole/seamless/jump have zero test clips → no rows** (verified from split_v1.json) × test items; raven reference = first-lexicographic train clip · **X**: 11 recipients × 4 donors (frozen B8 sets verbatim; the 3 new recipients' donors drawn by `random.Random(f"ladder_v3:donors:{recipient}")` over the sorted sidedness-matched candidate pool, first-lexicographic donor test clip as endpoint source) |
+| specialists | **X extension only**: the 3 recipients Amendment 1 excluded (shadow_smoke, hero_flight, super_fast_run) × 4 sidedness-matched donors, ckpt 2000 (+36 videos); frozen B8 donor sets kept verbatim |
+| base | keyed-endpoint arm extended to all one_sided classes beyond the R1K 9 (+≈45) + live_concert's new test item rows (+9) |
 
-**Deterministic draw rules (closed-form; no discretion at build time):**
-- tier-A designated train item = first lexicographic train-band clip that is not the class's
-  reference clip; stand-in items = the frozen `exp_061/dataset/selection.json` rows verbatim.
-- donors for the 3 new X recipients: `random.Random(f"ladder_v3:donors:{recipient}")
-  .sample(pool, 4)` where pool = sorted test-bearing classes with the recipient's owner-final
-  sidedness, recipient excluded; donor endpoint clip = the donor's first lexicographic
-  test-band clip. Frozen B8 donor sets untouched.
-- tier-C reference for raven_transition (never in the v1/v2 grid) = its first lexicographic
-  train-band clip; hero/gas/illus keep their frozen grid reference clips.
-- live_concert tier-B note (report context, not exclusion): its train-band neighbors are
-  owner-acknowledged high-similarity clips; copy-metric rows for live_concert carry this flag.
-
-`build_ladder_items_v3.py` is a pure function of these written rules + `split_v1.1.json`; its
-output `ladder_items_v3.json` sha256 is appended to this section in a follow-up commit BEFORE
-the ic3 job is submitted. ic3 volume ≈ 270–300 videos, total new ≈ 360.
+References = the class's frozen grid reference clip (train band; for tier C, the holdout
+class's train band — never trained). Exact item lists + donor assignments frozen by
+`build_ladder_items_v3.py` → `ladder_items_v3.json` (sha recorded at gate time); ic3 volume
+≈ 270–300 videos, total new ≈ 360.
 
 ### A2.6 Contrasts
 
-C1/C3/C4 unchanged. **C9 unchanged and stays B8-only**: its confirmatory sign test runs over
-the frozen 8 B8 recipients exclusively; the 3-recipient X extension is a **labeled
-descriptive arm that never enters C9** (caveat carried in reporting: for two_sided
-recipients/donors the endpoint windows can contain donor-effect residue, so the owner's
-"endpoints carry no transition information" premise is an approximation there — acceptable
-for a descriptive arm, not for a confirmatory test). C9's R4X side is generated by ic3 per
-A2.5 — the contrast definition (R3X > R4X, 8 recipients, one-sided sign, α=.05) is unchanged
-and no ic2-based R4X row was ever generated (all 3 tasks failed; zero videos, zero scores).
-**C5 (PRIMARY) re-based:** specialist UNSEEN·own (R3) vs **ic3 tier B**, same items/seeds,
-sign test across the same 8 classes — tier B is clean **by construction** for these 8
-(`endpoint_seen_by_ic2` still emitted for the ic2 comparison arm). C6/C7/C8 re-based on ic3.
-**C6 stays descriptive** at tier-C n=4 classes (even 4/4 unanimity gives p=.0625 — reported
-as effect sizes + seed-level bootstrap, no test; raven's paired base rows exist: it is
-two_sided, so keyed ≡ its existing exp_061 R1 rows). **C7 stays descriptive at n=3**
-(specialist ceilings exist only for hero_flight/gas/illustration; the roster does not grow).
-New secondary contrasts, both **descriptive, no test, no pre-declared direction**:
-**C10 = ic3 − ic2** on shared rows (the measured value of split alignment + correct keying);
-**C11 = ic3 tier A − tier B** (designed generalist overfit gap). σ_seed/MDE context and
-prefix-only caveat carry unchanged.
+C1/C3/C4/C9 unchanged. **C5 (PRIMARY) re-based:** specialist UNSEEN·own (R3) vs **ic3 tier
+B**, same items/seeds, sign test across the same 8 classes — tier B is clean **by
+construction**, so the contamination stratification becomes unnecessary for the headline
+(`endpoint_seen_by_ic2` still emitted for the ic2 comparison arm). C6/C7/C8 re-based on ic3;
+**C6 stays DESCRIPTIVE at tier-C n=4** (4/4 unanimity → p=.0625 > .05 — declared no-test;
+effect sizes + seed-level uncertainty only). **C7 stays descriptive at n=3** (only
+hero_flight/gas/illustration have specialists; the roster does not grow).
+New secondary contrasts: **C10 = ic3 − ic2** on shared rows (the measured
+value of split alignment + correct keying); **C11 = ic3 tier A − tier B** (designed
+generalist overfit gap). σ_seed/MDE context and prefix-only caveat carry unchanged.
 
 ### A2.7 What does NOT change
 
