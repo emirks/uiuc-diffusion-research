@@ -128,6 +128,26 @@ the exclusion (9544740-42; skip-if-exists dedupes); training chain resumes
 from step_01500 via T3 (9541936). Healthy-capacity note: only ~2 free H100s
 outside the sick pair at 04:20 — timeline now rides on overnight churn.
 
+**11:50 Fri — X tier scored clean in both instruments; cache-race incident
+closed.** 11:01 X generation completed → the 4 chained X scorers fired
+simultaneously on the shared warm cache; same-chunk v3/v4h pairs raced seeding
+cold entries for the same new videos → transient `EOFError` rows (v3 7+2,
+v4h 13+12). Post-hoc CRC scrub of 765 recent cache entries found **0 truncated
+on disk** — the errors were mid-write reads, cache final state clean.
+Structural fix for the abc wave: v4h chunk scorers re-chained `afterany` their
+v3 twins (same-chunk pairs serialize; disjoint chunks stay parallel; zero
+cold-cache penalty). X repair: 4 rescores (9553072-75, v4h chained after v3)
+— all four labels now 0 errors, v3 stamps certified. Also this window: the 15
+non-ic3 v4h scorers were held 10:44 (freed H100s must flow to generation
+first) and released 11:02 on X completion — the entire non-ic3 v4h sweep (17
+labels) finished by ~11:40 on the warm cache, incl. bridge check
+|app_ref_v3 − v3 app_ref| = 0.00000 over 168 shared H100 rows (mixed-lane
+A100 drift 7e-5, ~300× below MDE — quantifies the H100-purity doctrine).
+Tail risk being managed: the last 3 grid tasks (seed 44 × chunks 4-6) spent
+~50 min in concurrent model-load on the contended FS; mitigated by 3
+cache-warmer scoring runs (9553206-08, OUT_ROOT=ladder_v3_warm junk root) so
+the real abc scorers run mostly warm. Gen ETA ~12:15, all scoring ~12:45.
+
 **00:45 Fri deadline-mode restructure.** Presentation is TODAY. Training chain
 replaced: single-shot 3h55 job 9545634 (resumes step_01500, finishes 5000 in
 one window — no inter-chunk reload/queue gaps) + 1h59 safeties 9545635/36;
