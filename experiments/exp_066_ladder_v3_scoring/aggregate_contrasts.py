@@ -266,6 +266,35 @@ def main():
     for a, v in sorted(out["near_copy_rate_by_arm"].items()):
         md.append(f"- {a}: {v['rate']:.1%} of {v['n']}")
     (od / "contrasts.md").write_text("\n".join(md) + "\n")
+
+    # tier table: one row per arm, channel means over TRUSTED classes only
+    tt = ["# Ladder v3 — tier table (channel means over trusted classes)\n",
+          "| model·tier (arm) | n cls | " + " | ".join(
+              f"{ch} ({DIR[ch].split()[0]})" for ch in CHANNELS) + " | near-copy |",
+          "|---|---|" + "---|" * (len(CHANNELS) + 1)]
+    ARM_LABEL = {"r0": "base·P", "r1": "base·PE", "r1k": "base·PE-keyed",
+                 "r1k_ext": "base·PE-ext", "r2_ckpt250": "spec·SEEN@250",
+                 "r2_ckpt2000": "spec·SEEN@2000", "r3_ckpt250": "spec·UNSEEN@250",
+                 "r3_ckpt2000": "spec·UNSEEN@2000", "r3x": "spec·FOREIGN",
+                 "ic3_a": "ic3·A held-in", "ic3_b": "ic3·B unseen",
+                 "ic3_c": "ic3·C zero-shot", "ic3_x": "ic3·X foreign",
+                 "ic2_r4": "ic2·R4 (frozen)", "ic2_r5": "ic2·R5 (frozen)",
+                 "control_hold": "CONTROL hold", "control_lerp": "CONTROL lerp"}
+    for arm in sorted(class_means, key=lambda a: list(ARM_LABEL).index(a)
+                      if a in ARM_LABEL else 99):
+        cm = class_means[arm]
+        cells = []
+        for ch in CHANNELS:
+            tk = TRUST_KEY[ch]
+            vals = [v[ch] for s, v in cm.items() if ch in v and
+                    (tk is None or trust.get(s, {}).get(tk, False))]
+            cells.append(f"{sum(vals)/len(vals):.3f} (n={len(vals)})"
+                         if vals else "†")
+        nc = out["near_copy_rate_by_arm"].get(arm)
+        tt.append(f"| {ARM_LABEL.get(arm, arm)} | {len(cm)} | " +
+                  " | ".join(cells) +
+                  f" | {nc['rate']:.0%}" if nc else " | —")
+    (od / "tier_table.md").write_text("\n".join(tt) + "\n")
     print(f"[done] {len(rows)} rows -> {od}/contrasts.md (+json)")
     if bad:
         print(f"[note] uncertified labels: {bad}")
