@@ -100,3 +100,19 @@ straggler resubmit.
 | base PE-keyed extension | 9541943 | array 0-5, CHUNKS=2 |
 | ic3 A/B/C grid | 9541944 | array 0-20%15, CHUNKS=7, afterany:9541938 |
 | ic3 X grid | 9541945 | array 0-17%15, CHUNKS=6, afterany:9541938 |
+
+**23:08 ic3 validation-cadence fix.** T1's trainer ETA read 6h55: the config's
+initial 4-sample validation (~30 min) plus rounds every 1000 steps don't fit
+1h59 chunks (T1 reached only step ~280 and died pre-first-checkpoint; its
+progress is redone by T2). Fix, before T2 started: `skip_initial_validation:
+true`, validation `interval: 1000 → 2500` (rounds at 2500/5000 — the
+lora-train inline ID+OOD+control validation stays in-run). Observability-only:
+optimizer trajectory, data order, ckpt interval 500, and every training
+hyperparameter untouched (commit in exp_064). Revised chain forecast: ~2,300
+net steps/chunk → step_05000 lands in T4 ≈ 05:00–05:30, ic3 grids fire ≈
+05:30, last videos ≈ 08:00.
+
+**Scoring (exp_066).** All 20 eval manifests built (1,142 rows, pre-registered
+conventions) + `training_manifest_ic3.json`. W1 submitted 22:20 (jobs
+9542684-91: base_c0..c5 354 rows, ic2 60, sigma_hero_recheck 5). Waves W2–W6
+submit on count-verified generation completion; see exp_066/README.
