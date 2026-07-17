@@ -24,7 +24,7 @@ source "$(conda info --base)/etc/profile.d/conda.sh"
 LAB=/projects/illinois/eng/cs/jrehg/users/emirkisa
 conda activate "$LAB/envs/diffusion"
 MAIN=$LAB/diffusion-research
-WT=$MAIN/.claude/worktrees/eval-v3.0.0
+WT=$MAIN/.claude/worktrees/${WTREE:-eval-v3.0.0}
 EXP=$MAIN/experiments/exp_066_ladder_v3_scoring
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
 cd $MAIN
