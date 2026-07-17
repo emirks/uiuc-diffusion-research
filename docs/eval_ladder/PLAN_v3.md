@@ -116,3 +116,14 @@ net steps/chunk → step_05000 lands in T4 ≈ 05:00–05:30, ic3 grids fire ≈
 conventions) + `training_manifest_ic3.json`. W1 submitted 22:20 (jobs
 9542684-91: base_c0..c5 354 rows, ic2 60, sigma_hero_recheck 5). Waves W2–W6
 submit on count-verified generation completion; see exp_066/README.
+
+**04:20 node-health incident (ccc0423/0424).** Both nodes went dark ~23:35 —
+every job segment placed there after ~23:40 produced zero output (logs
+untouched for hours, requeued segments never write their sbatch preamble)
+while jobs elsewhere completed normally. Five hours of apparent-but-fake
+progress: R3X frozen at 112/132, base-ext 0/30, ic3 stuck at T1's step-1500
+checkpoint. Recovery: ExcNodeList=ccc0423,ccc0424 stamped on every pending
+job; 16 zombie running jobs cancelled; r3x/r3xext/base_ext resubmitted with
+the exclusion (9544740-42; skip-if-exists dedupes); training chain resumes
+from step_01500 via T3 (9541936). Healthy-capacity note: only ~2 free H100s
+outside the sick pair at 04:20 — timeline now rides on overnight churn.
