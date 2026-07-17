@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eval Ladder v3 — One-Page Results</title>
+<style>
+  :root { --ink:#1a1d24; --sub:#5a6270; --line:#d8dce3; --accent:#0b5fa5; --hl:#eef4fa; --warn:#8a5a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font:12.5px/1.42 "Segoe UI",system-ui,-apple-system,sans-serif; color:var(--ink); background:#fff; padding:26px 34px; max-width:1180px; margin:0 auto; }
+  h1 { font-size:21px; letter-spacing:-.2px; }
+  h1 small { font-weight:400; color:var(--sub); font-size:12px; margin-left:10px; }
+  h2 { font-size:13.5px; text-transform:uppercase; letter-spacing:.6px; color:var(--accent); margin:18px 0 6px; border-bottom:1.5px solid var(--line); padding-bottom:3px; }
+  table { border-collapse:collapse; width:100%; font-size:11.5px; }
+  th,td { border:1px solid var(--line); padding:2.5px 6px; text-align:left; vertical-align:top; }
+  th { background:var(--hl); font-weight:600; white-space:nowrap; }
+  td.num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  tr.grp td { background:#f7f8fa; }
+  .best { font-weight:700; color:var(--accent); }
+  .bad { color:#a03030; }
+  .muted { color:var(--sub); }
+  .pill { display:inline-block; background:var(--hl); border:1px solid var(--line); border-radius:9px; padding:0 7px; margin:1px 3px 1px 0; font-size:11px; white-space:nowrap; }
+  .cols { display:flex; gap:22px; align-items:flex-start; }
+  .cols > div { flex:1; min-width:0; }
+  .fn { font-size:10.8px; color:var(--sub); margin-top:5px; }
+  .strip { display:flex; gap:6px; flex-wrap:wrap; margin:6px 0 2px; font-size:11.5px; }
+  .strip span { background:var(--hl); border:1px solid var(--line); border-radius:4px; padding:3px 8px; }
+  .strip b { color:var(--accent); }
+  .arrow { align-self:center; color:var(--sub); }
+  @media print { body { padding:8mm 10mm; } .pill,.strip span { border-color:#bbb; } }
+</style>
+</head>
+<body>
+
+<h1>Eval Ladder v3 — Full Run, One Page
+  <small>LTX-2 19B · campaign 2026-07-16/17 · scored under certified <b>eval/v3.0.0</b> (+amendments 1–3) and <b>v4.0.0</b> (cross-check)</small>
+</h1>
+
+<h2>Process</h2>
+<div class="strip">
+  <span>corpus <b>222 clips / 39 classes</b> (std121, owner-validated taxonomy, sidedness owner-final)</span><span class="arrow">→</span>
+  <span>frozen split <b>v1.1: 182 train / 40 test</b></span><span class="arrow">→</span>
+  <span><b>ic3</b> IC-LoRA generalist retrained on split-aligned data (5,000 steps, ID+OOD+control validation)</span><span class="arrow">→</span>
+  <span><b>~780 videos</b> generated, all arms, all H100</span><span class="arrow">→</span>
+  <span>scored <b>2,134 rows × 2 instruments, 0 error rows</b>, H100-pure</span>
+</div>
+<div class="fn">Discipline: pre-registered plan &amp; contrasts · paired items, seeds 42/43/44 · deltas not absolutes · exact cross-class sign tests · σ_seed MDE gate on every delta · per-class trust map (†&nbsp;never backs a claim) · fail-forward (nothing adjusted after outcomes).</div>
+
+<h2>The ladder — tier = (was the class trained?) × (endpoint band)</h2>
+<div class="cols">
+<div>
+<table>
+  <tr><th>Model</th><th>Tier</th><th>Endpoints come from</th><th class="num">videos</th></tr>
+  <tr class="grp"><td rowspan="2"><b>base</b> (frozen, no adapter)</td><td>P</td><td>prompt only — does the prior contain the effect?</td><td class="num">150</td></tr>
+  <tr class="grp"><td>PE</td><td>+ endpoint conditioning (sidedness-keyed)</td><td class="num">234</td></tr>
+  <tr><td rowspan="3"><b>11 specialist LoRAs</b><br><span class="muted">one per class, own train band</span></td><td>SEEN</td><td>own <i>train</i> clips (ckpt 250 + 2000)</td><td class="num">132</td></tr>
+  <tr><td>UNSEEN·own</td><td>own <i>test</i> clips — never trained on</td><td class="num">132</td></tr>
+  <tr><td>FOREIGN</td><td>other classes' test clips, prefix-only</td><td class="num">132</td></tr>
+  <tr class="grp"><td rowspan="4"><b>ic3 generalist</b><br><span class="muted">one IC-LoRA, 32 classes, reads style off a demo reference</span></td><td>A held-in</td><td>trained classes × train clips</td><td class="num">45</td></tr>
+  <tr class="grp"><td>B unseen</td><td>trained classes × test clips</td><td class="num">99</td></tr>
+  <tr class="grp"><td>C zero-shot</td><td>held-out classes (never trained)</td><td class="num">21</td></tr>
+  <tr class="grp"><td>X foreign</td><td><b>same donor pairs as specialist-FOREIGN → paired twins</b></td><td class="num">132</td></tr>
+  <tr><td><b>ic2</b> (frozen, contaminated)</td><td>R4/R5</td><td>comparison arm only, never headlines</td><td class="num">60</td></tr>
+</table>
+</div>
+<div>
+<table>
+  <tr><th>Rule</th><th>Value</th></tr>
+  <tr><td>Test hygiene</td><td>no adapter ever trains on a test-band clip</td></tr>
+  <tr><td>Foreign endpoints</td><td>sidedness-matched, <b>prefix-only</b> — endpoints carry no information about the transition</td></tr>
+  <tr><td>Reference for scoring</td><td>base/specialists → own GT clip · ic tiers → the demo reference fed · X twins → recipient's frozen reference, <b>identical across twins</b></td></tr>
+  <tr><td>Comparisons</td><td>same items across arms; <b>margin</b> (target − intruder class) is the cross-family channel; ic-arm app_ref† not level-comparable with own-GT arms</td></tr>
+  <tr><td>Controls</td><td>degenerate hold / lerp synthesized per item, scored in the same tables</td></tr>
+  <tr><td>Contract</td><td>480×640×121@24 · 30 steps · CFG 4.0 · uniform for every arm</td></tr>
+</table>
+</div>
+</div>
+
+<h2>Results — eval v3.0.0 (certified · trusted-class channel means)</h2>
+<table>
+  <tr><th>model·tier</th><th class="num">n cls</th><th class="num">app_ref ↑</th><th class="num">margin ↑</th><th class="num">cam_dtw ↓</th><th class="num">seam_z ↓</th><th class="num">near-copy</th></tr>
+  <tr><td>base·P</td><td class="num">39</td><td class="num">0.445</td><td class="num">0.073</td><td class="num">1.184</td><td class="num">6.39</td><td class="num">4%</td></tr>
+  <tr><td>base·PE</td><td class="num">39</td><td class="num">0.659</td><td class="num">0.175</td><td class="num">1.059</td><td class="num">7.50</td><td class="num">100%</td></tr>
+  <tr class="grp"><td>spec·SEEN@2000</td><td class="num">11</td><td class="num best">0.845</td><td class="num best">0.306</td><td class="num">0.698</td><td class="num">4.22</td><td class="num">98%</td></tr>
+  <tr class="grp"><td>spec·UNSEEN@2000</td><td class="num">11</td><td class="num">0.706</td><td class="num">0.237</td><td class="num">1.019</td><td class="num best">0.04</td><td class="num">100%</td></tr>
+  <tr class="grp"><td>spec·FOREIGN</td><td class="num">11</td><td class="num bad">0.205</td><td class="num bad">−0.141</td><td class="num">1.197</td><td class="num">2.01</td><td class="num">0%</td></tr>
+  <tr><td>ic3·A held-in</td><td class="num">15</td><td class="num">0.347†</td><td class="num">0.240</td><td class="num">1.204</td><td class="num best">0.02</td><td class="num">0%</td></tr>
+  <tr><td>ic3·B unseen</td><td class="num">25</td><td class="num">0.408†</td><td class="num">0.187</td><td class="num">1.051</td><td class="num">4.42</td><td class="num">3%</td></tr>
+  <tr><td>ic3·C zero-shot</td><td class="num">4</td><td class="num">0.287†</td><td class="num bad">0.038</td><td class="num">1.113</td><td class="num">−0.15</td><td class="num">0%</td></tr>
+  <tr><td>ic3·X foreign</td><td class="num">11</td><td class="num bad">0.162†</td><td class="num bad">−0.240</td><td class="num">1.237</td><td class="num">7.64</td><td class="num">0%</td></tr>
+  <tr><td>ic2·R4 (contaminated)</td><td class="num">8</td><td class="num">0.321†</td><td class="num">0.221</td><td class="num">1.195</td><td class="num">1.29</td><td class="num">0%</td></tr>
+  <tr class="grp"><td>CONTROL hold / lerp</td><td class="num">26/15</td><td class="num">0.358 / 0.262</td><td class="num">−0.010 / −0.031</td><td class="num">1.071 / 1.145</td><td class="num muted">outlier-dom. / −1.15</td><td class="num">47% / 46%</td></tr>
+</table>
+<div class="fn">† ic arms score against the <i>demo reference</i> (pre-registered) — compare arms on <b>margin</b>; own-GT app_ref also rides near-copy inflation (own GT is in the corpus → near-copy ~100% definitional). Ckpt-250 rows, obj_match (n=1 trusted class), and full n-per-cell: <code>outputs/eval/ladder_v3/_contrasts/tier_table.md</code>.</div>
+
+<h2>Results — eval v4.0.0 (cross-check · rank-normalized metrics · not re-certified)</h2>
+<table>
+  <tr><th>model·tier</th><th class="num">app_ref ↑ (v4 rank)</th><th class="num">app_ref_v3 ↑ (bridge)</th><th class="num">margin ↑</th><th class="num">cam_zpr ↓</th><th class="num">obj_csls ↓</th><th class="num">near-copy</th></tr>
+  <tr><td>base·P</td><td class="num">0.774</td><td class="num">0.445</td><td class="num">0.073</td><td class="num">0.446</td><td class="num">0.216</td><td class="num">4%</td></tr>
+  <tr><td>base·PE</td><td class="num">0.871</td><td class="num">0.659</td><td class="num">0.175</td><td class="num">0.263</td><td class="num">0.022</td><td class="num">100%</td></tr>
+  <tr class="grp"><td>spec·SEEN@2000</td><td class="num best">0.999</td><td class="num">0.845</td><td class="num best">0.306</td><td class="num best">0.053</td><td class="num">−0.106</td><td class="num">98%</td></tr>
+  <tr class="grp"><td>spec·UNSEEN@2000</td><td class="num">0.994</td><td class="num">0.706</td><td class="num">0.237</td><td class="num">0.177</td><td class="num">0.022</td><td class="num">100%</td></tr>
+  <tr class="grp"><td>spec·FOREIGN</td><td class="num bad">0.661</td><td class="num">0.205</td><td class="num bad">−0.141</td><td class="num">0.437</td><td class="num">0.291</td><td class="num">0%</td></tr>
+  <tr><td>ic3·A held-in</td><td class="num">0.945</td><td class="num">0.347</td><td class="num">0.240</td><td class="num">0.381</td><td class="num">0.159</td><td class="num">0%</td></tr>
+  <tr><td>ic3·B unseen</td><td class="num">0.906</td><td class="num">0.408</td><td class="num">0.187</td><td class="num">0.352</td><td class="num">0.164</td><td class="num">3%</td></tr>
+  <tr><td>ic3·C zero-shot</td><td class="num">0.828</td><td class="num">0.287</td><td class="num bad">0.038</td><td class="num">0.317</td><td class="num muted">†</td><td class="num">0%</td></tr>
+  <tr><td>ic3·X foreign</td><td class="num bad">0.547</td><td class="num">0.162</td><td class="num bad">−0.240</td><td class="num">0.455</td><td class="num">0.280</td><td class="num">0%</td></tr>
+  <tr><td>ic2·R4 (contaminated)</td><td class="num">0.876</td><td class="num">0.321</td><td class="num">0.221</td><td class="num">0.360</td><td class="num">0.152</td><td class="num">0%</td></tr>
+  <tr class="grp"><td>CONTROL hold / lerp</td><td class="num bad">0.228 / 0.480</td><td class="num">0.358 / 0.262</td><td class="num">−0.010 / −0.031</td><td class="num">0.319 / 0.714</td><td class="num">0.356 / †</td><td class="num">47% / 46%</td></tr>
+</table>
+<div class="fn">Shared columns (margin, near-copy, seam, copy) are identical to v3 — same computation, same rows. Bridge: v4's carried <code>app_ref_v3</code> reproduces certified v3 <code>app_ref</code> to <b>0.00000 on all 20 labels</b>. v4's rank composite separates the degenerate controls far more sharply (control 0.228 vs base·P 0.774). Full table: <code>outputs/eval/ladder_v4h/_contrasts/tier_table_v4.md</code>.</div>
+
+<h2>Pre-registered contrasts — paired same-item deltas (v3 certified; v4 verdict alongside)</h2>
+<table>
+  <tr><th>Contrast (A − B)</th><th>Question</th><th>Key channel</th><th class="num">Δ</th><th class="num">classes (p, 2-sided)</th><th class="num">≥MDE</th><th>v4 agrees</th></tr>
+  <tr><td><b>C1</b> base·PE − base·P</td><td>what conditioning buys</td><td>app_ref / margin / camera</td><td class="num">+0.229 / +0.114 / better</td><td class="num">21/22 (&lt;0.001) · 18/22 (0.004) · 9/10 (0.021)</td><td class="num">YES</td><td>YES (cam_zpr 9/10, 0.021)</td></tr>
+  <tr><td><b>C3</b> spec SEEN − UNSEEN</td><td>content overfit</td><td>app_ref (class-level)</td><td class="num">0.845 → 0.706</td><td class="num muted">tier table</td><td class="num">—</td><td>YES</td></tr>
+  <tr><td><b>C4</b> spec·UNSEEN − base·PE</td><td>specialist value</td><td>appearance · seam_z</td><td class="num">−0.020 · <b>−10.8</b></td><td class="num">null (0.18) · 10/11 (0.012)</td><td class="num">no · YES</td><td>YES (app null)</td></tr>
+  <tr class="grp"><td><b>C5 (PRIMARY)</b> ic3·B − spec·UNSEEN</td><td>generalist vs specialist, identical items</td><td><b>margin</b> · copy_max · seam_z</td><td class="num"><b>−0.018</b> · −0.647 · +18.0</td><td class="num">2/5 (1.0) · 0/6 (0.031) · 4/6 (0.69)</td><td class="num">no · YES · YES*</td><td>YES (margin parity)</td></tr>
+  <tr><td><b>C8</b> ic3·B − base·PE</td><td>generalist value</td><td>margin · seam_z · copy_max</td><td class="num">−0.016 · <b>−19.4</b> · −0.591</td><td class="num">null (0.36) · 21/25 impr. (0.001) · 0/25 (&lt;0.001)</td><td class="num">no · YES · YES</td><td>YES</td></tr>
+  <tr class="grp"><td><b>C9 (confirmatory)</b> spec·FOREIGN − ic3·X twins</td><td>effect transfer to foreign endpoints</td><td>app_ref · margin</td><td class="num">+0.042 · +0.094</td><td class="num"><b>6/6 (0.031) · 6/6 (0.031)</b></td><td class="num">YES · YES</td><td><b>YES — 6/6 (0.031)</b></td></tr>
+  <tr><td><b>C10b</b> ic3·B − ic2·R4</td><td>cost of decontaminating the split</td><td>margin</td><td class="num">−0.002</td><td class="num">4/7 (1.0)</td><td class="num">no</td><td>YES (null)</td></tr>
+  <tr><td><b>C11</b> ic3 A − B</td><td>generalist held-in gap</td><td>margin (class-level)</td><td class="num">0.240 vs 0.187</td><td class="num muted">descriptive</td><td class="num">—</td><td>YES</td></tr>
+  <tr><td><b>C6</b> ic3·C − base·PE</td><td>zero-shot onto unseen classes</td><td>margin</td><td class="num bad">−0.048</td><td class="num muted">1/3 · descriptive n≤4</td><td class="num">—</td><td>YES</td></tr>
+</table>
+<div class="fn">MDE = 1.96·σ_seed·√(2/n) per channel (amendment-1). *seam heavy-tailed, sign-weak. C5/C8 app_ref crosses reference conventions — reported, not claim-bearing. Full stats: <code>outputs/eval/ladder_v3/_contrasts/contrasts.md</code> · v4: <code>ladder_v4h/_contrasts/contrasts_v4.md</code>.</div>
+
+</body>
+</html>
