@@ -23,6 +23,18 @@ for v3 numbers. Bars: bar1 S3 d=1.734 · bar2 29/29 deployed+LOO · bar4 gap 0.1
 p=0.018 · bar6 swap+hard-cut 37/37 · bar7 11/11 · bar8 warm 0.0 + two-class parity · bar9 3 metrics
 pass / 3 controls fail.
 
+20:39 — **Grid v3 built end-to-end (tier-first) — everything ready for one-paste max-parallel launch.**
+Amendment 2 corrected with split-verified arithmetic (tier C = hero/gas/illustration/raven, n=4;
+hole has 0 test clips; C6/C7 stay descriptive). Executed: live_concert_2 quarantined + manifest
+222 clips (cert amendment-3, sha 5a7a8be9); split v1.1 built+tagged (live_concert test =
+live_concert_0; 38 classes byte-identical; 182/40); killed R2/R3 partials + suspect hero_flight
+R5 quarantined. Built: exp_064 ic3 retrain (151 clips/403 pairs, owner-final keying, 19-clip
+precompute delta, +control validation sample); build_ladder_items_v3.py -> frozen tier-first grid
+(base_ext 10 / A 15 / B 33 / C 7 / X 44 rows x3 seeds) + missing cond clips; exp_065
+manifest-driven runner (nullable adapter, optional reference) + job_grid.sbatch; exp_062 gains
+LADDER_GRID override + r3xext mode (X-extension prefix-only BOTH twin sides, exp_062-consistent);
+PLAN_v3.md = clean operative doc + launch sheet. Blocked only on Duo re-auth for sbatch.
+
 22:20 — **Taxonomy v2 ADOPTED (owner validated 39/39) → sidedness fold → scoring UNBLOCKED → B1 submitted.**
 Owner signed off all 39 classes in the viewer (two correction exports folded; final counts
 transform 17 / overlay 12 [add 6, state 5, remove 1] / cover 4 / traverse 6 / cut 0; two standing
