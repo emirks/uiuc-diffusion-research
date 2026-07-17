@@ -103,7 +103,7 @@ validation:
   frame_rate: 24.0
   seed: 42
   inference_steps: 30
-  interval: 2500
+  interval: 5000
   guidance_scale: 4.0
   stg_scale: 1.0
   stg_blocks:

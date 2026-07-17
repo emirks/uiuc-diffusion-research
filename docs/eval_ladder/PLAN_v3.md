@@ -127,3 +127,14 @@ job; 16 zombie running jobs cancelled; r3x/r3xext/base_ext resubmitted with
 the exclusion (9544740-42; skip-if-exists dedupes); training chain resumes
 from step_01500 via T3 (9541936). Healthy-capacity note: only ~2 free H100s
 outside the sick pair at 04:20 — timeline now rides on overnight churn.
+
+**00:45 Fri deadline-mode restructure.** Presentation is TODAY. Training chain
+replaced: single-shot 3h55 job 9545634 (resumes step_01500, finishes 5000 in
+one window — no inter-chunk reload/queue gaps) + 1h59 safeties 9545635/36;
+validation cut to final-round-only (interval 5000; inline ID+OOD+control still
+runs). Grids re-pointed to the new tail (9545637/38), throttles removed.
+Canaries 9545620/21 probe the sick nodes — if they answer, exclusions lift and
+15 GPUs return. A100/V100/A40 pools evaluated and rejected: VRAM-insufficient
+or cross-GPU drift would contaminate the certified cache/arms (H100-only stays
+a frozen instrument property). Scoring order unchanged (12 certified jobs
+queued; W2/W4 on gen completion; W5/W6 on grids).
