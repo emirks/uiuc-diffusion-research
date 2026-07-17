@@ -78,3 +78,25 @@ manifests/grid and unchanged.
 | base PE-keyed extension | 9541867 | array 0-5, CHUNKS=2 |
 | ic3 A/B/C grid | 9541868 | array 0-20%15, CHUNKS=7, afterany:9541862 |
 | ic3 X grid | 9541869 | array 0-17%15, CHUNKS=6, afterany:9541862 |
+
+**21:10 resubmission — walltime 3:55 → 1:59 (backfill fix).** After 40 min at
+0 running, diagnosis: the 15 free H100s (ccc0423/24) are PLANNED for a 400G
+owner-partition job that starts when the current 256G CPU jobs end (~00:00);
+only backfill that *ends before then* is admitted — a 59-min foreign job got
+in while every 4h GPU job (ours + ~10 others) sat pending. All our task shapes
+need ≤~70 min, so everything was cancelled and resubmitted at `--time=1:59:00`
+(same knobs otherwise). Training becomes a 5-chunk resume chain (~1h50 compute
+each; DONE marker fast-exits unused chunks). Short walltime also wins every
+future backfill window. TIMEOUT tail-risk is covered by skip-if-exists +
+straggler resubmit.
+
+| what | job id | shape |
+|---|---|---|
+| ic3 train T1→…→T5 | 9541934-38 | 5×1h59 chain, resume + DONE fast-exit |
+| specialists SEEN+UNSEEN·own (r2r3) | 9541939 | array 0-29%15 |
+| hero_flight (b1) | 9541940 | array 0-2 |
+| specialists UNSEEN·foreign B8 (r3x) | 9541941 | array 0-23%15 |
+| X-extension recipients (r3xext) | 9541942 | array 0-8 |
+| base PE-keyed extension | 9541943 | array 0-5, CHUNKS=2 |
+| ic3 A/B/C grid | 9541944 | array 0-20%15, CHUNKS=7, afterany:9541938 |
+| ic3 X grid | 9541945 | array 0-17%15, CHUNKS=6, afterany:9541938 |
