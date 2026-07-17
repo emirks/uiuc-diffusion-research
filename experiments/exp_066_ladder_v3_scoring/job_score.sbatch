@@ -11,10 +11,12 @@
 #   LABEL (required, via --export=ALL,LABEL=base_c0) -> dataset/eval_${LABEL}.json
 #   TRAIN (optional) -> --training dataset/${TRAIN}.json (ic3 arms use
 #   training_manifest_ic3.json for tier joins + M2c copy-vs-training)
-# Code = eval-v3-spec worktree (26e6e72): byte-identical to tag eval/v3.0.0
-# (docs-only diff, verified) + amendment records in-tree. Corpus = MAIN's
-# corrected manifest (222 clips, amendments 2-3). cwd = MAIN so the manifests'
-# relative data/ paths resolve. GPU node only (shared cache discipline).
+# Code = eval-v3.0.0 worktree: clean tree EXACTLY at the tag, so the
+# versioning stamp marks rows certified (hard rule #1). First W1 attempt ran
+# from the amendments branch (code byte-identical, but stamp correctly said
+# UNCERTIFIED: "HEAD tag is None") — those labels are rescored. Amendments 2-3
+# authorize the corrected corpus (222 clips) on the docs plane. cwd = MAIN so
+# the manifests' relative data/ paths resolve. GPU node only (cache discipline).
 set -x
 source ~/.bashrc
 module load anaconda3/2024.10
@@ -22,7 +24,7 @@ source "$(conda info --base)/etc/profile.d/conda.sh"
 LAB=/projects/illinois/eng/cs/jrehg/users/emirkisa
 conda activate "$LAB/envs/diffusion"
 MAIN=$LAB/diffusion-research
-WT=$MAIN/.claude/worktrees/eval-v3-spec
+WT=$MAIN/.claude/worktrees/eval-v3.0.0
 EXP=$MAIN/experiments/exp_066_ladder_v3_scoring
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
 cd $MAIN
