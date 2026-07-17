@@ -162,7 +162,7 @@
   },
   "live_concert": {
    "dedup_pass": "exp_058",
-   "n_clips": 8,
+   "n_clips": 7,
    "raw_dir": "data/processed/transitions/onesided_transitions/onesided_object_camera_live-concert",
    "sidedness": "onesided",
    "tags": [
@@ -1895,22 +1895,6 @@
    "source_resolution": [
     1080,
     1620
-   ],
-   "std": {
-    "fps": 24.0,
-    "frames": 121,
-    "height": 640,
-    "width": 480
-   }
-  },
-  "live_concert/live_concert_2.mp4": {
-   "class": "live_concert",
-   "contract_ok": true,
-   "source": "data/processed/transitions/onesided_transitions/onesided_object_camera_live-concert/live_concert_2.mp4",
-   "source_match": "exact",
-   "source_resolution": [
-    1438,
-    1080
    ],
    "std": {
     "fps": 24.0,
@@ -3938,7 +3922,7 @@
  },
  "corpus_root": "data/processed/transitions_std121",
  "n_classes": 39,
- "n_clips": 223,
+ "n_clips": 222,
  "problems": [],
  "schema": 1,
  "std_contract": {
