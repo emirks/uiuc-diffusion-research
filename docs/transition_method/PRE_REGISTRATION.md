@@ -58,3 +58,38 @@ Experiment-side, from the existing DINO / copy_max machinery: must separate "per
 the endpoint content" from "imports reference-clip content", computable on existing tier-C
 generations, and reportable alongside every zero-shot claim. Until defined, guard #6 uses
 copy_max-vs-reference + the interim ID-vs-tier-C copy_max stratification as the leak proxy.
+
+---
+
+# AMENDMENT 1 — 2026-07-18, after Stage-2 unblinding, BEFORE any exp_068/069/071 score
+Justified by evidence independent of the un-scored arms (Stage-2 result + identifiability
+table), declared before those arms are unblinded. Adjudicated by the advisor.
+
+Stage-2 (residual reference) result: certified margin DOWN vs ic3 on every tier (A −0.014,
+B −0.027 sig, C −0.064 sig); pre-registered bar NOT MET (STAGE2_VERDICT.md). Residual
+reference is recorded as a FAILED method claim (no rescue); it survives only as the middle
+rung of the content-removal ladder (raw → residual → moments).
+
+1. **Primary endpoint amended to TIER B** (trained classes, unseen endpoints, n=99 — the
+   well-measured tier). ANY arm vs ic3 succeeds iff tier-B margin is within MDE 0.037 AND has
+   NO significant downward sign test. Tier-C margin is RECORDED but DEMOTED to non-decisive
+   (identifiability: only gas_transformation appearance-scorable + low-ID; 6/7 holdout are
+   camera-blind). Zero-shot claims route through 2AFC (style-from-reference + content
+   preservation) + leak_excess, NOT tier-C margin.
+2. **Instrument dissociation (paper asset)**: at tier C the certified margin partially
+   ANTI-rewards the true goal — margin measures class-typicality (which the prompt already
+   supplies, so base·PE scores 0.175 zero-shot by free prompt-following), while faithful
+   reference-following constrains the output AWAY from prompt-typical appearance. Seen-class:
+   the two correlate; zero-shot: they dissociate. Hence 2AFC is load-bearing for zero-shot.
+3. **exp_071 (moments) gets the FULL paired 165-item certified eval** regardless of screens
+   (it is the pivot; its non-inferiority needs the tier-B n=99 pairing).
+4. **The M1-vs-M2 test (recorded verbatim, pre-unblinding)**: exp_071 (moments, content-free)
+   vs exp_067 (residual) on TIER B —
+   - **moments ≥ residual on tier B → M2 wins** (residual failed by deleting the endpoint
+     anchor/basis that made raw reference readable; a cleaner content-free code transfers
+     better) → content-free moment conditioning is VIABLE → disentanglement headline.
+   - **moments << residual on tier B → M1 wins** (appearance content is load-bearing) → honest
+     CHARACTERIZATION headline ("what an in-context transition demo actually carries").
+   Either is publishable; only residual-as-method is dead.
+5. 3a/3b screening amended: tier-B subset decisive, tier-C recorded only. An arm re-enters as
+   a headline component only if it clears ic3 on the tier-B bar above.
