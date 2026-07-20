@@ -1,4 +1,5 @@
 ## 2026-07-20
+- `11:32` docs(eval_ladder): added `build_viewer.py` + `viewer_template.html` — full inspection viewer (`outputs/reports/ladder_viewer/index.html`), superset of the 11:24 `_viewer` build: question presets mapped to the C1–C11 contrasts (paired-family filtering + per-contrast anchor arm), any-metric lens with MDE-gated Δ coloring, trust-map † integration, blind-audit mode with per-card reveal, near-copy/camera/seed/band filters, extremes sorting, per-family flag+note export (seeds the 2AFC pair list), controls-as-floor chips, and embedded certified tier/contrast tables. 366 families / 1,137 certified rows, all videos verified on disk.
 - `11:24` docs(eval_ladder): added `build_ladder_viewer.py` — joins the 20 exp_066 eval manifests, all certified ladder-v3 per-item rows, and the certification trust map into a self-contained side-by-side HTML viewer (`outputs/eval/ladder_v3/_viewer/index.html`): one card per (class, endpoints clip, seed) with GT/demo/reference clips + every arm's video and metric chips (crossfade-control floors, Δ vs keyed base, trust †, live filtered aggregates). Serve from repo root via `python3 -m http.server`.
 
 ## 2026-07-18
