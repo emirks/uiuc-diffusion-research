@@ -15,6 +15,7 @@ import collections
 import glob
 import html
 import json
+import math
 import os
 import re
 import sys
@@ -26,7 +27,7 @@ TRUST_MAP = os.path.join(REPO, "outputs/eval/certification/3.0.0-draft.8/exam/tr
 OUT_DIR = os.path.join(REPO, "outputs/reports/ladder_viewer")
 TAU_COPY = 0.858  # amendment-1; embedded near_copy flags used draft 0.88 -> reflag
 
-METRICS = ["margin", "app_ref", "cam_dtw", "obj_match", "copy_max", "max_seam_z"]
+METRICS = ["margin", "app_ref", "app_target", "cam_dtw", "obj_match", "copy_max", "max_seam_z"]
 MDE = {"margin": 0.037, "app_ref": 0.024, "cam_dtw": 0.076,
        "obj_match": 0.008, "copy_max": 0.022, "max_seam_z": 0.27}
 LOWER_BETTER = ["cam_dtw", "max_seam_z", "copy_max"]
@@ -84,6 +85,13 @@ PRESETS = [
 ]
 
 
+def num(v):
+    """NaN/Inf are valid Python-json but invalid JSON — browsers refuse to parse them."""
+    if isinstance(v, float) and not math.isfinite(v):
+        return None
+    return v
+
+
 def rel(p):
     if not p:
         return None
@@ -136,13 +144,14 @@ def main():
                 "tags": r.get("tags") or [], "sidedness": r.get("sidedness"),
                 "cond": {}, "refDemo": None, "refEx": None, "arms": [], "controls": []})
             near = (r.get("copy_max") is not None and r["copy_max"] >= TAU_COPY)
+            top1 = (r.get("apps_top3") or [[None, None]])[0]
             row = {"a": arm,
-                   "m": {k: r.get(k) for k in METRICS},
+                   "m": {k: num(r.get(k)) for k in METRICS},
                    "near": near,
                    "deg": bool(r.get("core_degenerate")),
                    "xh": bool(r.get("cross_high")),
                    "camv": bool(r.get("cam_valid")),
-                   "top1": (r.get("apps_top3") or [[None, None]])[0]}
+                   "top1": [top1[0], num(top1[1])]}
             if is_ctrl:
                 ck = (fk, arm)
                 if ck in ctrl_seen:
@@ -193,7 +202,7 @@ def main():
         return html.escape(open(p).read()) if os.path.exists(p) else "(missing)"
 
     tpl = open(os.path.join(os.path.dirname(__file__), "viewer_template.html")).read()
-    out = (tpl.replace("__DATA_JSON__", json.dumps(data))
+    out = (tpl.replace("__DATA_JSON__", json.dumps(data, allow_nan=False))
               .replace("__PRE_TIER__", pre("outputs/eval/ladder_v3/_contrasts/tier_table.md"))
               .replace("__PRE_CONTRASTS__", pre("outputs/eval/ladder_v3/_contrasts/contrasts.md")))
     os.makedirs(OUT_DIR, exist_ok=True)
