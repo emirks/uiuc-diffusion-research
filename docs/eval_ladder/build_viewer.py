@@ -162,6 +162,8 @@ def main():
                 continue
             man = manifests.get((label, iid))
             if man:
+                rv_name = os.path.basename(man.get("reference_video") or "")
+                row["refOwn"] = rv_name == f"{clip}.mp4"
                 row["v"] = rel(man["generated_video"])
                 cp, cs = man.get("condition_prefix"), man.get("condition_suffix")
                 if cp and not fam["cond"].get("p"):

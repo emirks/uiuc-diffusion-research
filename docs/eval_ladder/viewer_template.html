@@ -36,6 +36,7 @@
   .badge { font-size:10px; padding:1px 7px; border-radius:8px; border:1px solid var(--line); color:var(--dim); }
   .badge.cam { color:var(--warn); border-color:var(--warn); }
   .badge.near { color:var(--bad); border-color:var(--bad); font-weight:600; }
+  .badge.gtish { color:var(--warn); border-color:var(--warn); }
   .badge.deg { color:var(--bad); border-color:var(--bad); }
   .famHead .sp { flex:1; }
   .famHead button { background:var(--panel); color:var(--dim); border:1px solid var(--line); border-radius:6px;
@@ -235,7 +236,8 @@ function armCell(f, a, anc, p, blindOrder){
   }
   const untr = !trusted(f.style,lens) ? 'untr':'';
   const name = S.blind ? `model ${blindOrder+1}` : (AM[a.a]?AM[a.a][0]:a.a);
-  const flags = (a.near?'<span class="badge near">near-copy</span>':'')
+  const flags = (a.near?(a.refOwn?'<span class="badge gtish" title="scoring reference IS this item\'s own GT clip (same endpoints) — copy_max is content-saturated there; even the crossfade control scores 1.0. NOT evidence of copying.">≈GT (same-content ref)</span>'
+                                 :'<span class="badge near">near-copy of reference</span>'):'')
               + (a.deg?'<span class="badge deg">degenerate</span>':'');
   const chips = S.blind ? '' :
       `<div class="chipsRow">
@@ -243,7 +245,7 @@ function armCell(f, a, anc, p, blindOrder){
         ${lens!=='margin'?chipHtml('mrg',a.m.margin):''}
         ${lens!=='app_ref'?chipHtml('app',a.m.app_ref):''}
         ${lens!=='max_seam_z'?chipHtml('seam',a.m.max_seam_z):''}
-        ${lens!=='copy_max'?chipHtml('copy',a.m.copy_max, a.near?'dn':''):''}
+        ${lens!=='copy_max'?chipHtml('copy',a.m.copy_max, (a.near&&!a.refOwn)?'dn':''):''}
         ${isCam(f)&&lens!=='cam_dtw'?chipHtml('cam',a.m.cam_dtw):''}
       </div>`;
   return `<div class="cell">
@@ -327,7 +329,7 @@ function detailModal(f){
       <div class="cellTitle">${AM[a.a]?AM[a.a][0]:a.a}</div></div>`).join('')}</div>
    <table class="mt"><tr><th>arm</th>${cols.map(c=>`<th>${c}${!trusted(f.style,c)?' †':''}</th>`).join('')}<th>flags</th><th>looks-like (top1)</th></tr>
    ${rows.map(a=>`<tr><td>${AM[a.a]?AM[a.a][0]:a.a}</td>${cols.map(c=>`<td>${fmt(a.m[c])}</td>`).join('')}
-     <td>${[a.near?'near-copy':'',a.deg?'degenerate':'',a.xh?'cross-high':''].filter(Boolean).join(', ')}</td>
+     <td>${[a.near?(a.refOwn?'≈GT(own-ref)':'near-copy'):'',a.deg?'degenerate':'',a.xh?'cross-high':''].filter(Boolean).join(', ')}</td>
      <td>${a.top1&&a.top1[0]?a.top1[0]+' '+fmt(a.top1[1]):''}</td></tr>`).join('')}</table>
    <div class="note" style="margin-top:8px">† = metric untrusted for this class (certification trust map). near-copy at copy_max ≥ ${D.tauCopy}. app_target = raw similarity to target class pool; margin = app_target − best intruder.</div>
    <h3>Note (saved locally)</h3>
