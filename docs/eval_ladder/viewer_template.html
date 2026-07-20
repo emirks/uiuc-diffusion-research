@@ -251,10 +251,19 @@ function armCell(f, a, anc, p, blindOrder){
     <div class="cellTitle ${S.blind?'':''}">${name} ${isAnc&&!S.blind?'<span class="note">(anchor)</span>':''} ${flags}</div>
     ${chips}</div>`;
 }
-function auxCell(src, title){
+function auxCell(src, title, clip){
   if(!src) return '';
-  return `<div class="cell"><video preload="none" muted loop playsinline data-src="${src}"></video>
+  return `<div class="cell"><video preload="none" muted loop playsinline data-src="${src}" ${clip?`data-clip="${clip}"`:''}></video>
     <div class="cellTitle aux">${title}</div></div>`;
+}
+// clamp playback of endpoint cells to the exact conditioning frames (24 fps contract)
+const CLIP_P = 9/24, CLIP_S = 8/24;
+function attachClamp(v){
+  const mode=v.dataset.clip;
+  const range=()=> mode==='p' ? [0, CLIP_P] : [Math.max(0,(v.duration||0)-CLIP_S), v.duration||0];
+  v.addEventListener('loadedmetadata',()=>{ v.currentTime=range()[0]; });
+  v.addEventListener('timeupdate',()=>{ const [lo,hi]=range();
+    if(v.currentTime>hi+0.04 || v.currentTime<lo-0.04) v.currentTime=lo; });
 }
 function famCard(f){
   const p=presetById[S.preset], anc=anchorArm(f,p);
@@ -279,8 +288,10 @@ function famCard(f){
       <button data-act="flag" class="${flagOn}">🚩</button>
     </div>
     <div class="strip">
-      ${auxCell(f.cond.p,'endpoints A (cond. prefix)')}
-      ${auxCell(f.cond.s,'endpoints B (cond. suffix)')}
+      ${auxCell(f.cond.p,'endpoint A · first 9 frames (model input)','p')}
+      ${auxCell(f.cond.s,'endpoint B · last 8 frames (model input)','s')}
+      ${f.cond.p&&!f.cond.s&&!S.blind?'<div class="ctrlCell"><div><b>prefix-only</b></div><div>one-sided item: no end anchor given — the model gets only the 9 start frames + prompt</div></div>':''}
+      ${auxCell(f.cond.p, f.band==='foreign'?'endpoints source · full clip (recipient class — NOT model input)':'source clip GT · full (NOT model input)')}
       ${auxCell(f.refDemo, S.blind?'reference demo':'reference demo (IC input — the style to perform)')}
       ${!f.refDemo?auxCell(f.refEx,'class exemplar (scoring ref)'):''}
       ${arms.map((a,i)=>armCell(f,a,anc,p,i)).join('')}
@@ -298,6 +309,7 @@ function render(){
   const el=document.getElementById('cards');
   el.innerHTML=list.slice(0,shown).map(famCard).join('');
   el.querySelectorAll('video').forEach(v=>io.observe(v));
+  el.querySelectorAll('video[data-clip]').forEach(attachClamp);
   document.getElementById('stats').textContent=
     `${list.length} families match · showing ${Math.min(shown,list.length)} · preset anchor: ${presetById[S.preset].anchor||'auto'} · lens: ${S.lens}${LB.has(S.lens)?' (lower better)':''} · MDE ${MDE[S.lens]}`;
   document.getElementById('hdrStats').textContent=`${FAM.length} families · ${FAM.reduce((n,f)=>n+f.arms.length,0)} certified rows`;
@@ -337,10 +349,14 @@ document.getElementById('cards').addEventListener('click',e=>{
   const card=e.target.closest('.fam'); const f=FAM.find(x=>x.key===card.dataset.key);
   const act=btn.dataset.act;
   if(act==='play'){ card.querySelectorAll('video').forEach(v=>{ if(!v.src&&v.dataset.src)v.src=v.dataset.src;
-      v.currentTime=0; v.play().catch(()=>{}); }); }
+      v.currentTime = (v.dataset.clip==='s'&&v.duration) ? Math.max(0,v.duration-CLIP_S) : 0;
+      v.play().catch(()=>{}); }); }
   if(act==='detail'){ detailModal(f); }
   if(act==='reveal'){ const keep=S.blind; S.blind=false; const html=famCard(f); S.blind=keep;
-      card.outerHTML=html; document.querySelectorAll(`[data-key="${CSS.escape(f.key)}"] video`).forEach(v=>io.observe(v)); }
+      card.outerHTML=html;
+      const nc=document.querySelector(`[data-key="${CSS.escape(f.key)}"]`);
+      nc.querySelectorAll('video').forEach(v=>io.observe(v));
+      nc.querySelectorAll('video[data-clip]').forEach(attachClamp); }
   if(act==='flag'){ if(FLAGS[f.key]) delete FLAGS[f.key]; else FLAGS[f.key]={note:'',at:new Date().toISOString()};
       localStorage.setItem('ladderFlags',JSON.stringify(FLAGS)); render(); }
 });
