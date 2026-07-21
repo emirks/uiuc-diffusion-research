@@ -4,18 +4,19 @@
 set -eo pipefail
 DR=/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research
 EX=$DR/experiments/exp_073_cond_bleed_fix
-H100="--partition=HCESC-H100-secondary --account=hcesc-h100 --gres=gpu:H100:1"
-H200="--partition=HCESC-H200-secondary --account=hcesc-h200 --gres=gpu:H200:1"
+# Generation runs on the CAMPUS-WIDE secondary pool (138 nodes) — short idempotent jobs, so
+# 4h walltime + preemptibility is fine, and it frees the lab HCESC node for the long trainings.
+GEN="--partition=secondary --account=campusclusterusers --gres=gpu:H100:1 --requeue"
 
 spec() {  # class seed arm
-  sbatch --parsable --job-name=exp073_gen_${1}_${3}_s${2} $H100 --time=01:59:00 \
+  sbatch --parsable --job-name=exp073_gen_${1}_${3}_s${2} $GEN --time=01:59:00 \
     --export=ALL,MODE=specialist,CLS=$1,SEED=$2,ARM=$3 $EX/job_gen.sbatch
 }
 ic3() {  # arm seed tag manifest extra_export
   local arm=$1 seed=$2 tag=$3 manifest=$4 extra=$5
   local AD=outputs/training/exp_073_cond_bleed_fix/ic3_${arm}/checkpoints/lora_weights_step_05000.safetensors
   local OR=outputs/videos/exp_073_cond_bleed_fix/ic3/${arm}
-  sbatch --parsable --job-name=exp073_gen_ic3_${arm}_${tag}_s${seed} $H200 --time=03:59:00 \
+  sbatch --parsable --job-name=exp073_gen_ic3_${arm}_${tag}_s${seed} $GEN --time=03:59:00 \
     --export=ALL,MODE=ic3,MANIFEST=$manifest,SEED=$seed,ADAPTER=$AD,OUT_ROOT=$OR,$extra $EX/job_gen.sbatch
 }
 
