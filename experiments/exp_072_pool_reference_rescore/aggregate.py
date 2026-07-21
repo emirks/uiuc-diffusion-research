@@ -15,9 +15,10 @@ import numpy as np
 REPO = pathlib.Path(__file__).resolve().parents[2]
 NPZ = REPO / ".claude/worktrees/eval-v4-cert/outputs/eval/certification/4.0.0-draft.1/analysis/distance_matrices.npz"
 MATRIX = "m1a_S3"  # v4 kernel — owner default 2026-07-20; rows scored by the v4 instrument
-TIER = {"r1": "base·PE", "r2_ckpt2000": "spec SEEN(A)", "r3_ckpt2000": "spec UNSEEN(B)",
-        "ic3_a": "ic3 held-in(A)", "ic3_b": "ic3 unseen(B)", "ic3_c": "ic3 zero-shot(C)"}
-ORDER = ["r1", "r2_ckpt2000", "r3_ckpt2000", "ic3_a", "ic3_b", "ic3_c"]
+TIER = {"r0": "base·P", "r1": "base·PE", "r2_ckpt2000": "spec SEEN(A)", "r3_ckpt2000": "spec UNSEEN(B)",
+        "r3x": "spec FOREIGN(X)", "ic3_a": "ic3 held-in(A)", "ic3_b": "ic3 unseen(B)",
+        "ic3_c": "ic3 zero-shot(C)", "ic3_x": "ic3 foreign(X)"}
+ORDER = ["r0", "r1", "r2_ckpt2000", "r3_ckpt2000", "r3x", "ic3_a", "ic3_b", "ic3_c", "ic3_x"]
 
 
 def ceilings():
@@ -35,7 +36,7 @@ def ceilings():
 def main():
     ceil = ceilings()
     per_item = collections.defaultdict(list)  # (arm, style, source_item) -> app_ref over refs
-    for f in glob.glob(str(REPO / "outputs/eval/exp_072_pool_v4/pool_c*/items.jsonl")):
+    for f in glob.glob(str(REPO / "outputs/eval/exp_072_pool_v4/pool_[cx]*/items.jsonl")):
         for line in open(f):
             r = json.loads(line)
             if r["arm"].startswith("control") or r.get("app_ref") is None:

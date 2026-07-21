@@ -67,8 +67,8 @@ ARM_META = {  # arm -> [display name, tier group, keyed?]
 }
 ARM_ORDER = {a: i for i, a in enumerate(ARM_META)}
 FOREIGN_ARMS = {"r3x", "ic3_x"}
-# pool-lane status for arms with no per-item value yet
-POOL_QUEUED = {"r0", "r3x", "ic3_x"}  # harness fill jobs 9609271-72
+# arms whose pool-lane rows are still in the queue (empty since fills 9609271-72 landed)
+POOL_QUEUED = set()
 
 PRESETS = [
     {"id": "all", "name": "All arms (browse)", "arms": [], "anchor": None, "cross": False,

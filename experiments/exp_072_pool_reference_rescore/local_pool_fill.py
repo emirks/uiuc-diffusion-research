@@ -112,7 +112,7 @@ def main():
     print("== validation vs harness pool rows (exp_072_pool_v4/pool_c*) ==")
     val, bad = 0, 0
     seen_arms = set()
-    for f in sorted(glob.glob(str(REPO / "outputs/eval/exp_072_pool_v4/pool_c*/items.jsonl"))):
+    for f in sorted(glob.glob(str(REPO / "outputs/eval/exp_072_pool_v4/pool_[cx]*/items.jsonl"))):
         for line in open(f):
             r = json.loads(line)
             if r["arm"].startswith("control") or r.get("app_ref") is None:
@@ -134,7 +134,7 @@ def main():
                   f"{'OK' if ok else 'MISMATCH'}")
     if val == 0:  # rows don't embed paths -> validate via the chunk manifests
         harness = {}
-        for f in sorted(glob.glob(str(REPO / "outputs/eval/exp_072_pool_v4/pool_c*/items.jsonl"))):
+        for f in sorted(glob.glob(str(REPO / "outputs/eval/exp_072_pool_v4/pool_[cx]*/items.jsonl"))):
             for line in open(f):
                 r = json.loads(line)
                 if not r["arm"].startswith("control") and r.get("app_ref") is not None:
@@ -162,7 +162,7 @@ def main():
     items_out = {}
     per_item = collections.defaultdict(list)
     meta_of = {}
-    for f in sorted(glob.glob(str(REPO / "outputs/eval/exp_072_pool_v4/pool_c*/items.jsonl"))):
+    for f in sorted(glob.glob(str(REPO / "outputs/eval/exp_072_pool_v4/pool_[cx]*/items.jsonl"))):
         for line in open(f):
             r = json.loads(line)
             if r["arm"].startswith("control") or r.get("app_ref") is None:
