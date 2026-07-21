@@ -97,6 +97,31 @@ misc/advised_method_impl copy is the parent's — untouched).
 7d2ddb8); K4 fix-arm loss diverges >2× vs null/original at matched steps → halt; K5 (post-eval)
 nullA−nullB floor comparable to fix−nullA effect → INDETERMINATE.
 
+## Pre-registration ADDENDUM (CONSULT 2 — committed before any score unblinded)
+
+- **One-sided negative control**: n=24 stratified ic3 rows (12 manifest_ic3 one-sided proportional
+  across tiers A:4/B:7/C:1; 12 manifest_ic3_x proportional across recipient classes), fixed RNG
+  seed 20260721, deterministic — FROZEN in `control_draw.json` (build_control_draw.py). All three
+  arms (fix/nullA/nullB) × 3 seeds. Subclass-overlap with the 38 corrected two-sided clips = **0**
+  (checked; no force-include needed).
+- **Control decision rule**: drift metric = suffix_lpips; per-item Δ = median over 3 seeds.
+  Floor_1s = P75 of |Δ(nullA,nullB)| over the 24. CLEAN iff (i) sign test on 24 Δ(fix,nullA)
+  p≥0.05 OR (p<0.05 but median|Δ| < max(Floor_1s,0.01)); AND (ii) P75|Δ(fix,nullA)| ≤ 1.5×
+  max(Floor_1s,0.01). Else DRIFT-FLAGGED (does not overturn primary; reported in headline tier).
+- **Specialist one-sided control**: NOT generated. Documented instead by sha256 of the 9 reused
+  one-sided `_keyed` step-02000 checkpoints (unchanged originals): animalization a646704d,
+  color_rain 0ad575a3, gas_transformation 63fd6651, illustration_scene d635536e, polygon 724f522e,
+  portal 8a380c8d, shadow 8fb44506, super_fast_run df4576ea, wireframe 3052a9ee.
+- **Direction convention**: Δ = metric(nullA) − metric(fix) for lower-is-better (lpips/seam);
+  metric(fix) − metric(nullA) for higher-is-better (dino/margin). Positive Δ ALWAYS favors fix.
+- **Verdict = exact two-sided binomial SIGN test on suffix_lpips per-item deltas (F2 primary)**;
+  Wilcoxon + median Δ are SECONDARY descriptors only. Keyed join on (item_id, seed); missing key
+  = hard error. Per-tier breakdown descriptive.
+- **Unblinding order (pre-registered)**: (1) freeze compare_suffix.py + record its sha256; (2)
+  dry-run it on nullA-vs-nullB (expect NULL) — pipeline validation; (3) compute the material bar
+  from nullA-nullB deltas; (4) ONLY THEN unblind fix-vs-nullA. No metric shopping, no post-hoc
+  item selection, no extra seeds after unblinding.
+
 ## How to run
 
 ```
