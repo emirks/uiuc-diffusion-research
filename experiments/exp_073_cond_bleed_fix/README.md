@@ -51,10 +51,12 @@ misc/advised_method_impl copy is the parent's — untouched).
 **Manipulation check (gate, before training):**
 - K1 (prefix identity, fp32): median per-clip prefix rel-L2(standalone-first9, full[:2]) < 0.02
   AND < 0.1× the suffix rel-L2. If FAIL → STOP + reconsult (scope would become prefix+suffix
-  + all 11 specialists). RESULT: [FILLED AFTER GATE]
+  + all 11 specialists). RESULT: **PASS** — median prefix rel-L2 = 8.3e-5 (max 1.2e-4), 28
+  clips (job 9604698, gate_stats.json). Prefix is bit-clean; §14-b's sub-clip≠slice worry
+  does not hold for the frame-aligned prefix → one-sided items genuinely untouched.
 - K2 (suffix material, fp32): median suffix rel-L2(standalone-last9-last, full[-1]) > 0.05.
   If trivial (<0.02) → report back (bug cannot matter; contradicts exp_051).
-  RESULT: [FILLED AFTER GATE]
+  RESULT: **PASS** — median suffix rel-L2 = 0.280 (range 0.186–0.416). The bug is large.
 
 **Predictions:**
 - P1 (PRIMARY): on two-sided eval items, `suffix_lpips` improves (↓) in the fix arm vs nullA.

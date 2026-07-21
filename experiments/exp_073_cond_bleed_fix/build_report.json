@@ -1,0 +1,728 @@
+{
+  "specialist": [
+    {
+      "clip": "shadow_smoke/shadow_smoke_1",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.2990611493587494
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_2",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.1966942697763443
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_3",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.3482164740562439
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_4",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.1863303929567337
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_5",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.31612277030944824
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_6",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.26659882068634033
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_8",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.31661418080329895
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_9",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.23273466527462006
+    },
+    {
+      "clip": "hero_flight/hero_flight_0",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.2681977152824402
+    },
+    {
+      "clip": "hero_flight/hero_flight_1",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.37910884618759155
+    },
+    {
+      "clip": "hero_flight/hero_flight_2",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.2795080244541168
+    },
+    {
+      "clip": "hero_flight/hero_flight_3",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.4156624674797058
+    },
+    {
+      "clip": "hero_flight/hero_flight_4",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.30671995878219604
+    },
+    {
+      "clip": "hero_flight/hero_flight_7",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.3451694846153259
+    },
+    {
+      "clip": "hero_flight/hero_flight_8",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.32684004306793213
+    },
+    {
+      "clip": "hero_flight/hero_flight_9",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.34719762206077576
+    }
+  ],
+  "ic3": [
+    {
+      "clip": "air_bending/air_bending_0",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.26716071367263794
+    },
+    {
+      "clip": "air_bending/air_bending_2",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.3496689200401306
+    },
+    {
+      "clip": "air_bending/air_bending_3",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.2776050865650177
+    },
+    {
+      "clip": "animalization/animalization_1",
+      "corrected": false
+    },
+    {
+      "clip": "animalization/animalization_3",
+      "corrected": false
+    },
+    {
+      "clip": "animalization/animalization_4",
+      "corrected": false
+    },
+    {
+      "clip": "animalization/animalization_5",
+      "corrected": false
+    },
+    {
+      "clip": "animalization/animalization_6",
+      "corrected": false
+    },
+    {
+      "clip": "animalization/animalization_7",
+      "corrected": false
+    },
+    {
+      "clip": "color_rain/color_rain_1",
+      "corrected": false
+    },
+    {
+      "clip": "color_rain/color_rain_3",
+      "corrected": false
+    },
+    {
+      "clip": "color_rain/color_rain_5",
+      "corrected": false
+    },
+    {
+      "clip": "color_rain/color_rain_6",
+      "corrected": false
+    },
+    {
+      "clip": "color_rain/color_rain_7",
+      "corrected": false
+    },
+    {
+      "clip": "color_rain/color_rain_8",
+      "corrected": false
+    },
+    {
+      "clip": "cotton_cloud/cotton_cloud_1",
+      "corrected": false
+    },
+    {
+      "clip": "cotton_cloud/cotton_cloud_2",
+      "corrected": false
+    },
+    {
+      "clip": "cotton_cloud/cotton_cloud_4",
+      "corrected": false
+    },
+    {
+      "clip": "cotton_cloud/cotton_cloud_6",
+      "corrected": false
+    },
+    {
+      "clip": "cotton_cloud/cotton_cloud_8",
+      "corrected": false
+    },
+    {
+      "clip": "display_transition/display_transition_1",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.22891519963741302
+    },
+    {
+      "clip": "display_transition/display_transition_2",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.25974637269973755
+    },
+    {
+      "clip": "display_transition/display_transition_3",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.2320738583803177
+    },
+    {
+      "clip": "earth_element/earth_element_0",
+      "corrected": false
+    },
+    {
+      "clip": "earth_element/earth_element_1",
+      "corrected": false
+    },
+    {
+      "clip": "earth_element/earth_element_2",
+      "corrected": false
+    },
+    {
+      "clip": "earth_element/earth_element_3",
+      "corrected": false
+    },
+    {
+      "clip": "earth_element/earth_element_6",
+      "corrected": false
+    },
+    {
+      "clip": "earth_wave/earth_wave_0",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.2471524327993393
+    },
+    {
+      "clip": "earth_wave/earth_wave_1",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.2795632779598236
+    },
+    {
+      "clip": "earth_wave/earth_wave_2",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.2855576276779175
+    },
+    {
+      "clip": "earth_wave/earth_wave_4",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.25839871168136597
+    },
+    {
+      "clip": "fire_element/fire_element_0",
+      "corrected": false
+    },
+    {
+      "clip": "fire_element/fire_element_1",
+      "corrected": false
+    },
+    {
+      "clip": "fire_element/fire_element_4",
+      "corrected": false
+    },
+    {
+      "clip": "firelava/firelava_0",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.257648229598999
+    },
+    {
+      "clip": "firelava/firelava_1",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.22548119723796844
+    },
+    {
+      "clip": "firelava/firelava_2",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.26331213116645813
+    },
+    {
+      "clip": "firelava/firelava_3",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.3611036241054535
+    },
+    {
+      "clip": "firelava/firelava_5",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.26824405789375305
+    },
+    {
+      "clip": "flame/flame_transition_0",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.30921444296836853
+    },
+    {
+      "clip": "flame/flame_transition_1",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.2633260190486908
+    },
+    {
+      "clip": "flying_cam_transition/flying_cam_transition_1",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.23117640614509583
+    },
+    {
+      "clip": "flying_cam_transition/flying_cam_transition_2",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.29146501421928406
+    },
+    {
+      "clip": "flying_cam_transition/flying_cam_transition_3",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.28981414437294006
+    },
+    {
+      "clip": "giant_grab/giant_grab_0",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.2811526656150818
+    },
+    {
+      "clip": "giant_grab/giant_grab_1",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.2645840048789978
+    },
+    {
+      "clip": "giant_grab/giant_grab_2",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.28073686361312866
+    },
+    {
+      "clip": "giant_grab/giant_grab_4",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.4419393837451935
+    },
+    {
+      "clip": "live_concert/live_concert_1",
+      "corrected": false
+    },
+    {
+      "clip": "live_concert/live_concert_3",
+      "corrected": false
+    },
+    {
+      "clip": "live_concert/live_concert_4",
+      "corrected": false
+    },
+    {
+      "clip": "live_concert/live_concert_5",
+      "corrected": false
+    },
+    {
+      "clip": "live_concert/live_concert_6",
+      "corrected": false
+    },
+    {
+      "clip": "live_concert/live_concert_7",
+      "corrected": false
+    },
+    {
+      "clip": "luminous_gaze/luminous_gaze_0",
+      "corrected": false
+    },
+    {
+      "clip": "luminous_gaze/luminous_gaze_1",
+      "corrected": false
+    },
+    {
+      "clip": "luminous_gaze/luminous_gaze_2",
+      "corrected": false
+    },
+    {
+      "clip": "melt_transition/melt_transition_1",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.2742072343826294
+    },
+    {
+      "clip": "melt_transition/melt_transition_3",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.3113842010498047
+    },
+    {
+      "clip": "melt_transition/melt_transition_4",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.2545509338378906
+    },
+    {
+      "clip": "money_rain/money_rain_0",
+      "corrected": false
+    },
+    {
+      "clip": "money_rain/money_rain_1",
+      "corrected": false
+    },
+    {
+      "clip": "money_rain/money_rain_2",
+      "corrected": false
+    },
+    {
+      "clip": "money_rain/money_rain_4",
+      "corrected": false
+    },
+    {
+      "clip": "money_rain/money_rain_6",
+      "corrected": false
+    },
+    {
+      "clip": "money_rain/money_rain_7",
+      "corrected": false
+    },
+    {
+      "clip": "monstrosity/monstrosity_0",
+      "corrected": false
+    },
+    {
+      "clip": "monstrosity/monstrosity_1",
+      "corrected": false
+    },
+    {
+      "clip": "monstrosity/monstrosity_2",
+      "corrected": false
+    },
+    {
+      "clip": "mystification/mystification_2",
+      "corrected": false
+    },
+    {
+      "clip": "mystification/mystification_3",
+      "corrected": false
+    },
+    {
+      "clip": "mystification/mystification_4",
+      "corrected": false
+    },
+    {
+      "clip": "mystification/mystification_5",
+      "corrected": false
+    },
+    {
+      "clip": "nature_bloom/nature_bloom_0",
+      "corrected": false
+    },
+    {
+      "clip": "nature_bloom/nature_bloom_2",
+      "corrected": false
+    },
+    {
+      "clip": "plasma_explosion/plasma_explosion_0",
+      "corrected": false
+    },
+    {
+      "clip": "plasma_explosion/plasma_explosion_1",
+      "corrected": false
+    },
+    {
+      "clip": "plasma_explosion/plasma_explosion_4",
+      "corrected": false
+    },
+    {
+      "clip": "polygon/polygon_0",
+      "corrected": false
+    },
+    {
+      "clip": "polygon/polygon_1",
+      "corrected": false
+    },
+    {
+      "clip": "polygon/polygon_2",
+      "corrected": false
+    },
+    {
+      "clip": "polygon/polygon_3",
+      "corrected": false
+    },
+    {
+      "clip": "polygon/polygon_5",
+      "corrected": false
+    },
+    {
+      "clip": "polygon/polygon_6",
+      "corrected": false
+    },
+    {
+      "clip": "polygon/polygon_7",
+      "corrected": false
+    },
+    {
+      "clip": "portal/portal_0",
+      "corrected": false
+    },
+    {
+      "clip": "portal/portal_10",
+      "corrected": false
+    },
+    {
+      "clip": "portal/portal_11",
+      "corrected": false
+    },
+    {
+      "clip": "portal/portal_12",
+      "corrected": false
+    },
+    {
+      "clip": "portal/portal_13",
+      "corrected": false
+    },
+    {
+      "clip": "portal/portal_2",
+      "corrected": false
+    },
+    {
+      "clip": "portal/portal_5",
+      "corrected": false
+    },
+    {
+      "clip": "portal/portal_6",
+      "corrected": false
+    },
+    {
+      "clip": "portal/portal_7",
+      "corrected": false
+    },
+    {
+      "clip": "portal/portal_8",
+      "corrected": false
+    },
+    {
+      "clip": "portal/portal_9",
+      "corrected": false
+    },
+    {
+      "clip": "run_set_on_fire/action_run_setonfire_6",
+      "corrected": false
+    },
+    {
+      "clip": "run_set_on_fire/action_run_setonfire_7",
+      "corrected": false
+    },
+    {
+      "clip": "saint_glow/saint_glow_0",
+      "corrected": false
+    },
+    {
+      "clip": "saint_glow/saint_glow_1",
+      "corrected": false
+    },
+    {
+      "clip": "saint_glow/saint_glow_2",
+      "corrected": false
+    },
+    {
+      "clip": "sakura_petals/sakura_petals_0",
+      "corrected": false
+    },
+    {
+      "clip": "sakura_petals/sakura_petals_2",
+      "corrected": false
+    },
+    {
+      "clip": "shadow/shadow_0",
+      "corrected": false
+    },
+    {
+      "clip": "shadow/shadow_1",
+      "corrected": false
+    },
+    {
+      "clip": "shadow/shadow_11",
+      "corrected": false
+    },
+    {
+      "clip": "shadow/shadow_12",
+      "corrected": false
+    },
+    {
+      "clip": "shadow/shadow_13",
+      "corrected": false
+    },
+    {
+      "clip": "shadow/shadow_14",
+      "corrected": false
+    },
+    {
+      "clip": "shadow/shadow_2",
+      "corrected": false
+    },
+    {
+      "clip": "shadow/shadow_4",
+      "corrected": false
+    },
+    {
+      "clip": "shadow/shadow_5",
+      "corrected": false
+    },
+    {
+      "clip": "shadow/shadow_6",
+      "corrected": false
+    },
+    {
+      "clip": "shadow/shadow_7",
+      "corrected": false
+    },
+    {
+      "clip": "shadow/shadow_8",
+      "corrected": false
+    },
+    {
+      "clip": "shadow/shadow_9",
+      "corrected": false
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_1",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.2990611493587494
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_2",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.1966949999332428
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_3",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.3482130765914917
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_4",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.18632912635803223
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_5",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.3161207139492035
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_6",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.2665973901748657
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_8",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.3166123926639557
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_9",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.23273250460624695
+    },
+    {
+      "clip": "super_fast_run/super_fast_run_1",
+      "corrected": false
+    },
+    {
+      "clip": "super_fast_run/super_fast_run_10",
+      "corrected": false
+    },
+    {
+      "clip": "super_fast_run/super_fast_run_12",
+      "corrected": false
+    },
+    {
+      "clip": "super_fast_run/super_fast_run_2",
+      "corrected": false
+    },
+    {
+      "clip": "super_fast_run/super_fast_run_4",
+      "corrected": false
+    },
+    {
+      "clip": "super_fast_run/super_fast_run_5",
+      "corrected": false
+    },
+    {
+      "clip": "super_fast_run/super_fast_run_6",
+      "corrected": false
+    },
+    {
+      "clip": "super_fast_run/super_fast_run_7",
+      "corrected": false
+    },
+    {
+      "clip": "super_fast_run/super_fast_run_8",
+      "corrected": false
+    },
+    {
+      "clip": "super_fast_run/super_fast_run_9",
+      "corrected": false
+    },
+    {
+      "clip": "water_bending/water_bending_0",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.28228887915611267
+    },
+    {
+      "clip": "water_bending/water_bending_1",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.34011077880859375
+    },
+    {
+      "clip": "water_bending/water_bending_2",
+      "corrected": true,
+      "suffix_rel_l2_bf16": 0.30286556482315063
+    },
+    {
+      "clip": "water_element/water_element_0",
+      "corrected": false
+    },
+    {
+      "clip": "water_element/water_element_1",
+      "corrected": false
+    },
+    {
+      "clip": "water_element/water_element_2",
+      "corrected": false
+    },
+    {
+      "clip": "water_element/water_element_5",
+      "corrected": false
+    },
+    {
+      "clip": "wireframe/wireframe_1",
+      "corrected": false
+    },
+    {
+      "clip": "wireframe/wireframe_2",
+      "corrected": false
+    },
+    {
+      "clip": "wireframe/wireframe_3",
+      "corrected": false
+    },
+    {
+      "clip": "wireframe/wireframe_4",
+      "corrected": false
+    },
+    {
+      "clip": "wireframe/wireframe_5",
+      "corrected": false
+    },
+    {
+      "clip": "wireframe/wireframe_6",
+      "corrected": false
+    },
+    {
+      "clip": "wireframe/wireframe_8",
+      "corrected": false
+    },
+    {
+      "clip": "wonderland/wonderland_0",
+      "corrected": false
+    },
+    {
+      "clip": "wonderland/wonderland_2",
+      "corrected": false
+    }
+  ]
+}

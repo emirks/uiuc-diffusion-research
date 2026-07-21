@@ -1,0 +1,158 @@
+{
+  "n_clips": 28,
+  "dtype": "float32",
+  "prefix_rel_l2": {
+    "median": 8.333019650308415e-05,
+    "max": 0.00012237644114065915,
+    "min": 7.434992585331202e-05
+  },
+  "suffix_rel_l2": {
+    "median": 0.27971169352531433,
+    "max": 0.41553425788879395,
+    "min": 0.1860794574022293
+  },
+  "K1_prefix_identity_pass": true,
+  "K2_suffix_material_pass": true,
+  "rows": [
+    {
+      "clip": "shadow_smoke/shadow_smoke_1",
+      "prefix_rel_l2": 8.291412814287469e-05,
+      "suffix_rel_l2": 0.2991907298564911
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_2",
+      "prefix_rel_l2": 8.682390034664422e-05,
+      "suffix_rel_l2": 0.1986556202173233
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_3",
+      "prefix_rel_l2": 7.9500547144562e-05,
+      "suffix_rel_l2": 0.3487803637981415
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_4",
+      "prefix_rel_l2": 7.732435187790543e-05,
+      "suffix_rel_l2": 0.1860794574022293
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_5",
+      "prefix_rel_l2": 7.608831219840795e-05,
+      "suffix_rel_l2": 0.31720709800720215
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_6",
+      "prefix_rel_l2": 8.17797626950778e-05,
+      "suffix_rel_l2": 0.26665374636650085
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_8",
+      "prefix_rel_l2": 9.125946235144511e-05,
+      "suffix_rel_l2": 0.31465834379196167
+    },
+    {
+      "clip": "shadow_smoke/shadow_smoke_9",
+      "prefix_rel_l2": 7.745216134935617e-05,
+      "suffix_rel_l2": 0.2333819717168808
+    },
+    {
+      "clip": "hero_flight/hero_flight_0",
+      "prefix_rel_l2": 7.892784924479201e-05,
+      "suffix_rel_l2": 0.2682083249092102
+    },
+    {
+      "clip": "hero_flight/hero_flight_1",
+      "prefix_rel_l2": 8.333019650308415e-05,
+      "suffix_rel_l2": 0.3793119192123413
+    },
+    {
+      "clip": "hero_flight/hero_flight_2",
+      "prefix_rel_l2": 8.141835132846609e-05,
+      "suffix_rel_l2": 0.28004708886146545
+    },
+    {
+      "clip": "hero_flight/hero_flight_3",
+      "prefix_rel_l2": 8.479237294523045e-05,
+      "suffix_rel_l2": 0.41553425788879395
+    },
+    {
+      "clip": "hero_flight/hero_flight_4",
+      "prefix_rel_l2": 7.935063331387937e-05,
+      "suffix_rel_l2": 0.3071554899215698
+    },
+    {
+      "clip": "hero_flight/hero_flight_7",
+      "prefix_rel_l2": 8.120439451886341e-05,
+      "suffix_rel_l2": 0.3450346887111664
+    },
+    {
+      "clip": "hero_flight/hero_flight_8",
+      "prefix_rel_l2": 8.85207045939751e-05,
+      "suffix_rel_l2": 0.326105535030365
+    },
+    {
+      "clip": "hero_flight/hero_flight_9",
+      "prefix_rel_l2": 8.287321543321013e-05,
+      "suffix_rel_l2": 0.34730538725852966
+    },
+    {
+      "clip": "air_bending/air_bending_0",
+      "prefix_rel_l2": 8.476610673824325e-05,
+      "suffix_rel_l2": 0.26748034358024597
+    },
+    {
+      "clip": "air_bending/air_bending_2",
+      "prefix_rel_l2": 8.354422607226297e-05,
+      "suffix_rel_l2": 0.3502451777458191
+    },
+    {
+      "clip": "air_bending/air_bending_3",
+      "prefix_rel_l2": 0.00012237644114065915,
+      "suffix_rel_l2": 0.2748153507709503
+    },
+    {
+      "clip": "display_transition/display_transition_1",
+      "prefix_rel_l2": 0.00011025867570424452,
+      "suffix_rel_l2": 0.22844360768795013
+    },
+    {
+      "clip": "display_transition/display_transition_2",
+      "prefix_rel_l2": 8.424247789662331e-05,
+      "suffix_rel_l2": 0.2599796652793884
+    },
+    {
+      "clip": "display_transition/display_transition_3",
+      "prefix_rel_l2": 8.145497849909589e-05,
+      "suffix_rel_l2": 0.2302784025669098
+    },
+    {
+      "clip": "earth_wave/earth_wave_0",
+      "prefix_rel_l2": 7.434992585331202e-05,
+      "suffix_rel_l2": 0.2494257092475891
+    },
+    {
+      "clip": "earth_wave/earth_wave_1",
+      "prefix_rel_l2": 7.600477692903951e-05,
+      "suffix_rel_l2": 0.27971169352531433
+    },
+    {
+      "clip": "earth_wave/earth_wave_2",
+      "prefix_rel_l2": 8.598168642492965e-05,
+      "suffix_rel_l2": 0.2856268286705017
+    },
+    {
+      "clip": "earth_wave/earth_wave_4",
+      "prefix_rel_l2": 9.770198084879667e-05,
+      "suffix_rel_l2": 0.25886037945747375
+    },
+    {
+      "clip": "firelava/firelava_0",
+      "prefix_rel_l2": 8.581315341871232e-05,
+      "suffix_rel_l2": 0.2586236000061035
+    },
+    {
+      "clip": "firelava/firelava_1",
+      "prefix_rel_l2": 9.510906966170296e-05,
+      "suffix_rel_l2": 0.2259443998336792
+    }
+  ]
+}

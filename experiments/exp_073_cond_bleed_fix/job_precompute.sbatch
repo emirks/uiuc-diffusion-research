@@ -9,8 +9,8 @@
 #SBATCH --output=/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_073_cond_bleed_fix/logs/slurm/%x-%j.out
 # Partition/account passed at submit time, e.g.:
 #   sbatch --partition=HCESC-H100-secondary --account=hcesc-h100 --export=ALL,MODE=gate job_precompute.sbatch
-set -euo pipefail
-source ~/.bashrc
+set -eo pipefail
+source ~/.bashrc || true
 DR=/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research
 WT=/projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix
 VENV=/projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-official/.venv
