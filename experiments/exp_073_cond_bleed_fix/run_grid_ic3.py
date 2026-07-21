@@ -66,6 +66,8 @@ def main() -> None:
     ap.add_argument("--out-root", dest="out_root", default=None, help="override OUT_ROOT (REPO-relative or abs)")
     ap.add_argument("--two-sided-only", dest="two_sided_only", action="store_true",
                     help="generate only rows with a suffix (not prefix_only) — the fix-affected rows")
+    ap.add_argument("--only-ids", dest="only_ids", default=None,
+                    help="comma-separated row ids to keep (e.g. the pre-registered control subset)")
     args = ap.parse_args()
 
     global OUT_ROOT
@@ -83,6 +85,9 @@ def main() -> None:
     rows = [r for r in doc["rows"] if not r.get("deferred")]
     if args.two_sided_only:
         rows = [r for r in rows if not r["prefix_only"]]
+    if args.only_ids:
+        keep = set(args.only_ids.split(","))
+        rows = [r for r in rows if r["id"] in keep]
     rows = rows[args.chunk::args.num_chunks]
 
     def out_path(r):
