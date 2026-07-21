@@ -29,6 +29,7 @@ if [ "$MODE" = "specialist" ]; then
         --class "$CLS" --seed "$SEED" --arm "$ARM"
 elif [ "$MODE" = "ic3" ]; then
     EXTRA=""; [ "${TWO_SIDED_ONLY:-0}" = "1" ] && EXTRA="--two-sided-only"
+    [ -n "${ONLY_IDS:-}" ] && EXTRA="$EXTRA --only-ids $ONLY_IDS"
     PYTHONPATH="$TR/src" "$VENV/bin/python" run_grid_ic3.py \
         --manifest "$MANIFEST" --seed "$SEED" --adapter "$ADAPTER" --out-root "$OUT_ROOT" \
         --chunk "${CHUNK:-0}" --num-chunks "${NUM_CHUNKS:-1}" $EXTRA
