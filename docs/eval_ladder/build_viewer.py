@@ -1,9 +1,20 @@
 """Build the ladder results viewer (single self-contained HTML + embedded data).
 
-Joins all certified ladder_v3 items.jsonl rows with the exp_066 eval manifests
-(video paths, endpoint conditioning clips, in-context reference demos), groups
-rows into FAMILIES — (style, endpoint clip, seed) — the paired-twin comparison
-unit, and emits outputs/reports/ladder_viewer/index.html.
+v4-instrument edition (owner directive 2026-07-21: v4 default for all lanes).
+Joins ladder_v4h items.jsonl rows with the exp_066 eval manifests (video paths,
+endpoint conditioning clips, in-context reference demos) and the exp_072 pool
+yardstick index (pool-mean app_ref + per-class GT ceilings -> achieved-%),
+groups rows into FAMILIES — (style, endpoint clip, seed) — and emits
+outputs/reports/ladder_viewer/index.html.
+
+Reference semantics carried per row (this is what 'which reference' means):
+  - row app_ref:   base/specialists -> the item's OWN GT clip (content-matched,
+                   inflated, copy_max saturated); IC arms -> the DEMO clip;
+                   foreign arms -> a DONOR-class clip.
+  - pool/pct:      exp_072 pool lane — mean over the same-class reference POOL
+                   (own clip + original demo excluded), divided by the class GT
+                   ceiling (same-class off-diagonal mean of the certified v4
+                   pairwise matrix). One uniform setting for every arm.
 
 Serve from the repo root so root-relative video paths resolve:
     cd $LAB/diffusion-research && python3 -m http.server 8890
@@ -21,23 +32,29 @@ import re
 import sys
 
 REPO = "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research"
-EVAL_ROOT = os.path.join(REPO, "outputs/eval/ladder_v3")
+EVAL_ROOT = os.path.join(REPO, "outputs/eval/ladder_v4h")
 MANIFEST_DIR = os.path.join(REPO, "experiments/exp_066_ladder_v3_scoring/dataset")
-TRUST_MAP = os.path.join(REPO, "outputs/eval/certification/3.0.0-draft.8/exam/trust_map.json")
+TRUST_MAP = os.path.join(
+    REPO, ".claude/worktrees/eval-v4-cert/outputs/eval/certification/4.0.0-draft.1/exam/trust_map.json")
+POOL_INDEX = os.path.join(REPO, "outputs/eval/exp_072_pool_v4/local_fill/pool_index.json")
 OUT_DIR = os.path.join(REPO, "outputs/reports/ladder_viewer")
-TAU_COPY = 0.858  # amendment-1; embedded near_copy flags used draft 0.88 -> reflag
+TAU_COPY = 0.858  # amendment-1 threshold (v3-calibrated; v4 rows reflagged the same way)
 
-METRICS = ["margin", "app_ref", "app_target", "cam_dtw", "obj_match", "copy_max", "max_seam_z"]
-MDE = {"margin": 0.037, "app_ref": 0.024, "cam_dtw": 0.076,
-       "obj_match": 0.008, "copy_max": 0.022, "max_seam_z": 0.27}
+METRICS = ["margin", "app_ref", "app_ref_v3", "app_target", "cam_zpr", "cam_dtw",
+           "obj_csls", "copy_max", "max_seam_z"]
+# indicative delta thresholds for chip coloring: margin/copy/seam are v3-measured
+# sigma_seed MDEs; app_ref/pct/cam_zpr are provisional (v4 sigma_seed not yet measured)
+MDE = {"margin": 0.037, "app_ref": 0.03, "pct": 0.03, "cam_zpr": 0.05,
+       "cam_dtw": 0.076, "copy_max": 0.022, "max_seam_z": 0.27}
 LOWER_BETTER = ["cam_dtw", "max_seam_z", "copy_max"]
-TRUST_KEY = {"app_ref": "m1a", "cam_dtw": "m1b", "obj_match": "m1c", "margin": "m2b"}
+TRUST_KEY = {"app_ref": "m1a", "pct": "m1a", "cam_zpr": "m1b", "cam_dtw": "m1b",
+             "obj_csls": "m1c", "margin": "m2b"}
 
-ARM_META = {  # canonical order, display name, group
-    "r0":           ["Base · prompt only (P)", "base"],
-    "r1":           ["Base · +endpoints (PE)", "base"],
-    "r1k":          ["Base · +keyword", "base"],
-    "r1k_ext":      ["Base · +keyword (ext)", "base"],
+ARM_META = {  # arm -> [display name, tier group, keyed?]
+    "r0":           ["Base · prompt only", "base"],
+    "r1":           ["Base · endpoints (P+S always)", "base"],
+    "r1k":          ["Base · endpoints KEYED (prefix-only)", "base"],
+    "r1k_ext":      ["Base · endpoints KEYED (prefix-only, ext)", "base"],
     "r2_ckpt250":   ["Specialist SEEN @250", "spec"],
     "r2_ckpt2000":  ["Specialist SEEN @2000", "spec"],
     "r3_ckpt250":   ["Specialist UNSEEN @250", "spec"],
@@ -51,28 +68,34 @@ ARM_META = {  # canonical order, display name, group
     "ic3_x":        ["IC-LoRA · foreign (X)", "ic"],
 }
 ARM_ORDER = {a: i for i, a in enumerate(ARM_META)}
+FOREIGN_ARMS = {"r3x", "ic3_x"}
+# pool-lane status for arms with no per-item value yet
+POOL_QUEUED = {"r0", "r3x", "ic3_x"}  # harness fill jobs 9609271-72
 
 PRESETS = [
     {"id": "all", "name": "All arms (browse)", "arms": [], "anchor": None, "cross": False,
-     "note": "Every family; anchor defaults to Base+endpoints when present."},
-    {"id": "c1", "name": "C1 · What endpoint conditioning buys", "arms": ["r0", "r1"],
+     "note": "Every family; anchor defaults to the keyed conditioned base when present."},
+    {"id": "c1", "name": "C1 · What endpoint conditioning buys", "arms": ["r0", "r1", "r1k", "r1k_ext"],
      "anchor": "r0", "cross": False,
-     "note": "Base prompt-only vs base + endpoint anchors, identical items."},
+     "note": "Base prompt-only vs base + endpoint anchors, identical items. On one-sided items the conditioned base shown is the KEYED (prefix-only) one."},
     {"id": "c4", "name": "C4 · Specialist value (own unseen items)",
-     "arms": ["r1", "r3_ckpt250", "r3_ckpt2000"], "anchor": "r1", "cross": False,
-     "note": "Per-class weights vs keyed base on the class's own test clips."},
+     "arms": ["r1", "r1k", "r1k_ext", "r3_ckpt250", "r3_ckpt2000"], "anchor": "r1", "cross": False,
+     "note": "Per-class weights vs conditioned base on the class's own test clips (keyed base on one-sided items)."},
     {"id": "c5", "name": "C5 · Generalist vs specialist (PRIMARY)",
      "arms": ["r3_ckpt2000", "ic3_b"], "anchor": "r3_ckpt2000", "cross": False,
      "note": "Same unseen items: one in-context generalist vs the class's own specialist."},
     {"id": "c8", "name": "C8 · Generalist value over base",
-     "arms": ["r1", "ic3_b"], "anchor": "r1", "cross": False,
-     "note": "IC-LoRA unseen-tier vs keyed base, identical items."},
+     "arms": ["r1", "r1k", "r1k_ext", "ic3_b"], "anchor": "r1", "cross": False,
+     "note": "IC-LoRA unseen-tier vs conditioned base, identical items (keyed base on one-sided)."},
     {"id": "c67", "name": "C6/C7 · Zero-shot (holdout classes)",
-     "arms": ["r1", "ic3_c", "ic2_r5"], "anchor": "r1", "cross": False,
+     "arms": ["r1", "r1k", "r1k_ext", "ic3_c", "ic2_r5"], "anchor": "r1", "cross": False,
      "note": "Holdout classes never trained. Margin partially anti-rewards reference-following here (Amendment 1) — trust your eyes + cam classes."},
     {"id": "c9", "name": "C9 · Foreign-endpoint effect transfer",
      "arms": ["r3x", "ic3_x"], "anchor": "r3x", "cross": False,
-     "note": "Donor transition on recipient-class endpoints, prefix-only. Specialist collapses; ic3 reads the reference."},
+     "note": "Donor transition on recipient-class endpoints, prefix-only. Ceiling here is a donor-class PROXY — ranking only."},
+    {"id": "kb", "name": "K · Keyed vs cracked base (one-sided)",
+     "arms": ["r1", "r1k", "r1k_ext"], "anchor": "r1k", "cross": False, "showCracked": True,
+     "note": "One-sided items only place r1 is shown: r1 saw the END anchor too (cracked — the outcome was given). r1k is the honest prefix-only base."},
     {"id": "c3", "name": "C3 · Overfit gap (SEEN vs UNSEEN)",
      "arms": ["r2_ckpt2000", "r3_ckpt2000"], "anchor": "r3_ckpt2000", "cross": True,
      "note": "Items DIFFER (train vs test clips) — class-level comparison only, no per-item deltas."},
@@ -114,8 +137,14 @@ def parse_item_id(iid):
 
 def main():
     trust_raw = json.load(open(TRUST_MAP))
-    trust = {cls: {met: bool(v.get(k, False)) for met, k in TRUST_KEY.items()}
+    trust = {cls: {k: bool(v.get(k, False)) for k in ("m1a", "m1b", "m1c", "m2b")}
              for cls, v in trust_raw.items()}
+
+    pool = {"ceilings": {}, "items": {}}
+    if os.path.exists(POOL_INDEX):
+        pool = json.load(open(POOL_INDEX))
+    ceilings = pool.get("ceilings", {})
+    pool_items = pool.get("items", {})
 
     manifests = {}  # (label, item_id) -> manifest item
     for f in sorted(glob.glob(os.path.join(MANIFEST_DIR, "eval_*.json"))):
@@ -124,7 +153,7 @@ def main():
             manifests[(label, it["item_id"])] = it
 
     fams = {}
-    n_rows = n_ctrl = n_skip = 0
+    n_rows = n_ctrl = n_skip = n_pool = 0
     ctrl_seen = set()
     for f in sorted(glob.glob(os.path.join(EVAL_ROOT, "*", "items.jsonl"))):
         label = os.path.basename(os.path.dirname(f))
@@ -142,6 +171,7 @@ def main():
             fam = fams.setdefault(fk, {
                 "key": fk, "style": style, "clip": clip, "seed": seed,
                 "tags": r.get("tags") or [], "sidedness": r.get("sidedness"),
+                "ceil": num(ceilings.get(style)),
                 "cond": {}, "refDemo": None, "refEx": None, "arms": [], "controls": []})
             near = (r.get("copy_max") is not None and r["copy_max"] >= TAU_COPY)
             top1 = (r.get("apps_top3") or [[None, None]])[0]
@@ -152,6 +182,14 @@ def main():
                    "xh": bool(r.get("cross_high")),
                    "camv": bool(r.get("cam_valid")),
                    "top1": [top1[0], num(top1[1])]}
+            pi = pool_items.get(iid)
+            if pi is not None:
+                row["pool"] = num(pi["pool"])
+                row["poolN"] = pi["n"]
+                row["poolSrc"] = "h" if pi["src"] == "harness" else "l"
+                c = ceilings.get(style)
+                row["pct"] = num(pi["pool"] / c) if c else None
+                n_pool += 1
             if is_ctrl:
                 ck = (fk, arm)
                 if ck in ctrl_seen:
@@ -163,9 +201,12 @@ def main():
             man = manifests.get((label, iid))
             if man:
                 rv_name = os.path.basename(man.get("reference_video") or "")
-                row["refOwn"] = rv_name == f"{clip}.mp4"
+                own = rv_name == f"{clip}.mp4"
+                row["refKind"] = ("own" if own else
+                                  ("donor" if arm in FOREIGN_ARMS else "demo"))
                 row["v"] = rel(man["generated_video"])
                 cp, cs = man.get("condition_prefix"), man.get("condition_suffix")
+                row["cnd"] = ("PS" if (cp and cs) else "P" if cp else "0")
                 if cp and not fam["cond"].get("p"):
                     fam["cond"]["p"] = rel(cp["video"])
                 if cs and not fam["cond"].get("s"):
@@ -195,9 +236,10 @@ def main():
             fam["band"] = "canonical"
 
     families = sorted(fams.values(), key=lambda f: (f["style"], f["clip"], f["seed"]))
-    data = {"families": families, "trust": trust, "mde": MDE,
+    data = {"families": families, "trust": trust, "trustKey": TRUST_KEY, "mde": MDE,
             "lowerBetter": LOWER_BETTER, "armMeta": ARM_META, "presets": PRESETS,
-            "tauCopy": TAU_COPY}
+            "tauCopy": TAU_COPY, "poolQueued": sorted(POOL_QUEUED),
+            "hasPool": bool(pool_items)}
 
     def pre(path):
         p = os.path.join(REPO, path)
@@ -205,8 +247,8 @@ def main():
 
     tpl = open(os.path.join(os.path.dirname(__file__), "viewer_template.html")).read()
     out = (tpl.replace("__DATA_JSON__", json.dumps(data, allow_nan=False))
-              .replace("__PRE_TIER__", pre("outputs/eval/ladder_v3/_contrasts/tier_table.md"))
-              .replace("__PRE_CONTRASTS__", pre("outputs/eval/ladder_v3/_contrasts/contrasts.md")))
+              .replace("__PRE_TIER__", pre("outputs/eval/ladder_v4h/_contrasts/tier_table_v4.md"))
+              .replace("__PRE_CONTRASTS__", pre("outputs/eval/ladder_v4h/_contrasts/contrasts_v4.md")))
     os.makedirs(OUT_DIR, exist_ok=True)
     out_path = os.path.join(OUT_DIR, "index.html")
     open(out_path, "w").write(out)
@@ -214,7 +256,7 @@ def main():
     bands = collections.Counter(f["band"] for f in families)
     print(f"[done] {out_path}")
     print(f"  families={len(families)}  gen-rows={n_rows}  control-rows={n_ctrl}  skipped={n_skip}")
-    print(f"  bands: {dict(bands)}")
+    print(f"  bands: {dict(bands)}  rows-with-pool%={n_pool}  ceilings={len(ceilings)}")
     missing = sum(1 for f in families for a in f["arms"]
                   if a.get("v") and not os.path.exists(os.path.join(REPO, a["v"].lstrip("/"))))
     novid = sum(1 for f in families for a in f["arms"] if not a.get("v"))

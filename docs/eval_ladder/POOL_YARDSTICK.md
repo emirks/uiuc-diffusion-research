@@ -55,6 +55,19 @@ Rows: `outputs/eval/exp_072_pool_v4/`. Current full table:
 validated to 1e-6 against harness rows): `local_pool_pilot_v4.py`;
 stability/ceiling analysis: `ref_stability.py` (same dir).
 
+Arms the harness lane doesn't cover (r1k/r1k_ext, ic2, ckpt250 specialists —
+plus r0/r3x/ic3_x while their fill jobs queue): `local_pool_fill.py` (same dir)
+computes their pool means with the exact v4 kernel from cached features
+(validates against harness rows first) and writes the viewer-facing index
+`outputs/eval/exp_072_pool_v4/local_fill/pool_index.json`. Locally-filled
+values are marked (dashed chip / `~`) until harness rows confirm them.
+
+The ladder viewer (`docs/eval_ladder/build_viewer.py` →
+`outputs/reports/ladder_viewer/index.html`) consumes this index and shows the
+triplet per generation: raw pool score (details), class ceiling (family badge),
+achieved-% (chip). Same reporting rules apply there (trusted classes only,
+`≥ceil` annotation, `*` donor-proxy for the foreign tier).
+
 ## Current headline (2026-07-21, 2,616 pairs + fills in flight)
 
 | % of GT ceiling | A seen | B unseen | C zero-shot† | X foreign* |
