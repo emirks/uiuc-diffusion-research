@@ -57,3 +57,15 @@ re-run) · O8–O12 post-lock (Δ-novelty roster, judge calibration, archive
 rescoring, repo-guideline update, main-checkout hygiene) · PR #2 merge
 timing (owner). Certification cost after the perf work: ~35–40 min on one
 H100, floor set by the deliberately cold anchors.
+
+## Pool-reference yardstick + GT ceilings (standing lane, owner-adopted 2026-07-21)
+
+Every cross-arm appearance comparison is ALSO computed on the pool-reference
+yardstick: score each generation against the class's reference pool
+(leave-own-clip / leave-demo-out), report **raw · per-class GT ceiling ·
+achieved-%** — one uniform setting for every arm incl. the foreign tier.
+Validation (reference-swap stability, v4 d′ 1.71, σ_ref ±0.044): `docs/FINDINGS.md`
+F-001. Method + reporting rules + how-to: `docs/eval_ladder/POOL_YARDSTICK.md`.
+Machinery: `experiments/exp_072_pool_reference_rescore/`. Instrument default is
+v4 (owner directive 2026-07-20; `app_ref_v3` bridge carried in every row).
+Secondary lane — never displaces certified margin or pre-registered bars.
