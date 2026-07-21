@@ -35,8 +35,11 @@ training — manifest-only re-scoring; features come from the warm certified cac
 - Items: existing exp_066 eval manifests — arms r1 (150), r2_ckpt2000+r3_ckpt2000
   (132), ic3_a/b/c (165). Same generated videos, new `reference_video` per row;
   `item_id` suffixed `__ref_<clip>`.
-- Scoring: certified `eval/v3.0.0` worktree, H100 lane, shared warm cache —
-  identical invocation to exp_066/067 (no --training; M2c not needed here).
+- Scoring: **v4.0.0 instrument** (eval-v4-cert worktree; owner directive 2026-07-20:
+  v4 is the lane instrument — better d' 1.71 vs 1.52, ref-swap noise 11% vs 30% of
+  range). Rows also carry the `app_ref_v3` bridge field (byte-identical to certified
+  v3 app_ref), so v3 continuity comes free. H100 lane, shared warm cache; no --training.
+  First submission (9603416–22, v3 worktree) was canceled before running.
 - PILOT (first, small): classes portal / shadow_smoke / super_fast_run, all five
   arms, ≤4 refs per item — a fast preview of the cross-arm picture.
 
