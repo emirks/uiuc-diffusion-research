@@ -75,9 +75,13 @@ misc/advised_method_impl copy is the parent's — untouched).
 - Metric = `suffix_lpips`. Per-item delta = median over the 3 gen seeds of
   `[lpips(nullA) − lpips(fix)]`; positive = fix better. Item = clip×rung (seeds are correlated
   replicates, NOT independent n). Ties dropped; exact two-sided binomial SIGN test on the rest.
-- Families: **F2 = ic3 two-sided eval items pooled across tiers (POWERED)**; F1 = specialist
+- Families: **F2 = ic3 two-sided eval items pooled across tiers (primary)**; F1 = specialist
   two-sided items (shadow_smoke+hero_flight, step-2000 only). If F1 n<10 items → F1 descriptive-only.
-  n(F1) = [FILLED AFTER MANIFESTS]; n(F2) = [FILLED AFTER MANIFESTS].
+  **n(F1) = 8** (shadow_smoke 4 + hero_flight 4, from ladder_items_v2.json R2+R3) → below the
+  n≥10 threshold → **F1 DESCRIPTIVE-ONLY**. **n(F2) = 15** (manifest_ic3 two-sided rows: tierA 3,
+  tierB 9, tierC 3; manifest_ic3_x has 0 two-sided). Sign test on n=15 needs ≥12/15 favorable
+  for p<0.05 — small; NULL/underpowered is a pre-registered live outcome. One-sided negative
+  control uses the remaining ic3 rows (manifest_ic3 one-sided + all 44 manifest_ic3_x).
 - Material bar: median improvement ≥ max(P75 of |nullA−nullB| item deltas on the same
   items/metric, 0.01 LPIPS absolute).
 
