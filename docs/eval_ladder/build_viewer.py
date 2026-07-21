@@ -60,8 +60,6 @@ ARM_META = {  # arm -> [display name, tier group, keyed?]
     "r3_ckpt250":   ["Specialist UNSEEN @250", "spec"],
     "r3_ckpt2000":  ["Specialist UNSEEN @2000", "spec"],
     "r3x":          ["Specialist FOREIGN", "spec"],
-    "ic2_r4":       ["ic2 legacy · unseen", "ic"],
-    "ic2_r5":       ["ic2 legacy · zero-shot", "ic"],
     "ic3_a":        ["IC-LoRA · held-in (A)", "ic"],
     "ic3_b":        ["IC-LoRA · unseen (B)", "ic"],
     "ic3_c":        ["IC-LoRA · zero-shot (C)", "ic"],
@@ -88,7 +86,7 @@ PRESETS = [
      "arms": ["r1", "r1k", "r1k_ext", "ic3_b"], "anchor": "r1", "cross": False,
      "note": "IC-LoRA unseen-tier vs conditioned base, identical items (keyed base on one-sided)."},
     {"id": "c67", "name": "C6/C7 · Zero-shot (holdout classes)",
-     "arms": ["r1", "r1k", "r1k_ext", "ic3_c", "ic2_r5"], "anchor": "r1", "cross": False,
+     "arms": ["r1", "r1k", "r1k_ext", "ic3_c"], "anchor": "r1", "cross": False,
      "note": "Holdout classes never trained. Margin partially anti-rewards reference-following here (Amendment 1) — trust your eyes + cam classes."},
     {"id": "c9", "name": "C9 · Foreign-endpoint effect transfer",
      "arms": ["r3x", "ic3_x"], "anchor": "r3x", "cross": False,
@@ -163,8 +161,8 @@ def main():
             is_ctrl = arm.startswith("control")
             key_id = iid.split("__", 1)[1] if is_ctrl else iid
             parsed = parse_item_id(key_id)
-            if parsed is None or arm == "sigma_hero_recheck":
-                n_skip += 1
+            if parsed is None or (not is_ctrl and arm not in ARM_META):
+                n_skip += 1  # sigma_hero_recheck, ic2 legacy (owner: viewer shows ic3 only)
                 continue
             style, clip, seed = parsed
             fk = f"{style}|{clip}|{seed}"
@@ -224,18 +222,19 @@ def main():
     for fam in fams.values():
         fam["arms"].sort(key=lambda x: ARM_ORDER.get(x["a"], 99))
         have = {a["a"] for a in fam["arms"]}
-        if "ic3_c" in have or "ic2_r5" in have:
+        if "ic3_c" in have:
             fam["band"] = "holdout"
         elif "r3x" in have or "ic3_x" in have:
             fam["band"] = "foreign"
         elif "r2_ckpt2000" in have or "r2_ckpt250" in have or "ic3_a" in have:
             fam["band"] = "train"
-        elif "r3_ckpt2000" in have or "r3_ckpt250" in have or "ic3_b" in have or "ic2_r4" in have:
+        elif "r3_ckpt2000" in have or "r3_ckpt250" in have or "ic3_b" in have:
             fam["band"] = "test"
         else:
             fam["band"] = "canonical"
 
-    families = sorted(fams.values(), key=lambda f: (f["style"], f["clip"], f["seed"]))
+    families = sorted((f for f in fams.values() if f["arms"]),
+                      key=lambda f: (f["style"], f["clip"], f["seed"]))
     data = {"families": families, "trust": trust, "trustKey": TRUST_KEY, "mde": MDE,
             "lowerBetter": LOWER_BETTER, "armMeta": ARM_META, "presets": PRESETS,
             "tauCopy": TAU_COPY, "poolQueued": sorted(POOL_QUEUED),
