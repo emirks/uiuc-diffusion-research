@@ -1,0 +1,37 @@
+model:
+  # No neural model — this experiment is a data engine.
+  shader_bank: "/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/gl-transitions/transitions"
+
+inputs:
+  # 9-frame endpoint clips (*_start9.mp4 / *_end9.mp4), latest set = exp_062.
+  cond_dir: "experiments/exp_062_ladder_r2r3_specialists/dataset/cond"
+  # Reference real transitions, for the side-by-side ground-truth column.
+  real_dir: "data/processed/transitions_std121"
+
+inference:
+  height: 640
+  width: 480
+  num_frames: 121          # (121 - 1) % 4 == 0
+  anchor_frames: 9         # start9 / end9 block length
+  fps: 24
+
+sampling:
+  # Sample plan: how many clips to render for the demo.
+  n_pairs_same: 4          # endpoints from the SAME real clip (matches training data)
+  n_pairs_cross: 4         # endpoints from DIFFERENT clips (the new counterfactual axis)
+  n_operators_per_pair: 5  # distinct operators applied to each endpoint pair
+  n_counterfactual: 12     # one fixed pair × N operators (content fixed, operator varies)
+  n_shared_operators: 3    # N operators, each applied to several pairs ...
+  n_pairs_per_shared_operator: 4   # ... (operator fixed, content varies)
+  extensions: ["boomerang", "hold", "flow"]
+  p_flip: 0.6
+  p_swap: 0.5
+  endpoint_tol: 2.0          # per-SHADER gate, at default params (bank admission)
+  endpoint_tol_operator: 0.5 # per-OPERATOR gate, at sampled params, on the real frames
+
+runtime:
+  seed: 20260722
+  device: "cpu"            # EGL/llvmpipe — no GPU needed
+
+outputs:
+  dir: "outputs/videos/exp_075_procedural_transition_engine"

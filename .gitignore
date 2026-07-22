@@ -54,3 +54,6 @@ src/LTX-2_OLD/
 *.pth
 *.onnx
 *.gguf
+# slurm job logs written next to the experiment
+experiments/**/*_[0-9]*.out
+experiments/**/*_[0-9]*.err
