@@ -6,14 +6,18 @@ Fixes the prompt defects found 2026-07-22 (docs/eval_ladder/PROMPT_REDESIGN.md):
   - foreign (R3X/R4X) prompts were the endpoints clip's OWN full caption,
     directly contradicting the donor transition the arm is graded on.
 
-Corrected prompt rules (prompt states ONLY the endpoints' knowledge):
-  prefix-only rows : "ICTRANS <Scene1>"                       (nothing about the
-                     transition or the end scene — weights/reference must carry it)
-  prefix+suffix    : "ICTRANS <Scene1> <Scene2-capitalized>"  (both scenes are
-                     endpoint knowledge; the transition WORDING is removed)
+Corrected prompt rules (owner 2026-07-22: keep the transition marker for
+TRAINING ALIGNMENT — these are inference-only reruns on models trained with
+"ICTRANS <S1>. The scene transforms into <S2>."; only the OUTCOME is removed):
+  prefix-only rows : "ICTRANS <Scene1> The scene transforms into"   (dangling
+                     marker keeps the transition cue; the end scene is withheld —
+                     weights/reference must supply it)
+  prefix+suffix    : full original caption — with both anchors given, Scene2 is
+                     endpoint knowledge; prompt UNCHANGED => two-sided rows are
+                     EXCLUDED here (the original generations are their own twins)
 
 Outputs (dataset/):
-  manifest_ic3_cx.json    ic3 adapter — R5 (zero-shot, keyed) + R4X (foreign, prefix-only)
+  manifest_ic3_cx.json    ic3 adapter — R5 one-sided (zero-shot) + R4X (foreign)
   manifest_r3x_<cls>.json one per specialist class — R3X rows (prefix-only)
 
 Usage: python3 experiments/exp_074_prompt_fix_rerun/build_manifests.py
@@ -40,18 +44,12 @@ def load_captions():
     return caps
 
 
-def corrected_prompt(caption: str, prefix_only: bool, marker: bool = False) -> str:
-    """marker=False (V1): outcome AND transition wording removed.
-    marker=True  (V2, prefix-only rows only): outcome removed but the phrase
-    kept as 'The scene transforms.' — format-shift control for CURRENT models,
-    which never saw a caption without the phrase."""
+def corrected_prompt(caption: str) -> str:
+    """Prefix-only rows: keep everything up to and INCLUDING the transition
+    marker, withhold only the end-scene description."""
     assert caption.count(MARKER) == 1, caption[:80]
-    s1, s2 = caption.split(MARKER)
-    s1 = s1.strip()
-    if prefix_only:
-        return f"ICTRANS {s1} The scene transforms." if marker else f"ICTRANS {s1}"
-    s2 = s2.strip()
-    return f"ICTRANS {s1} {s2[0].upper()}{s2[1:]}"
+    s1 = caption.split(MARKER)[0].strip()
+    return f"ICTRANS {s1} {MARKER.strip()}"
 
 
 def main():
@@ -64,28 +62,16 @@ def main():
     assert ic3["adapter"] == ic3x["adapter"]
     rows = []
     for r in [x for x in ic3["rows"] if x["rung"] == "R5"] + ic3x["rows"]:
+        if not r["prefix_only"]:
+            continue   # two-sided: corrected prompt == original -> originals are the twins
         r = dict(r)
-        r["prompt"] = corrected_prompt(caps[r["endpoints"]], r["prefix_only"])
+        r["prompt"] = corrected_prompt(caps[r["endpoints"]])
         r.pop("deferred", None)
         rows.append(r)
     doc = {"adapter": ic3["adapter"], "target_modules": IC3_TARGETS, "rows": rows}
     (EXP / "dataset/manifest_ic3_cx.json").write_text(json.dumps(doc, indent=1))
     n5 = sum(1 for r in rows if r["rung"] == "R5")
     print(f"[done] manifest_ic3_cx.json: {len(rows)} rows (R5={n5}, R4X={len(rows) - n5})")
-
-    # V2 marker-control lane: prefix-only rows only, rung suffixed 'M'
-    rows_m = []
-    for r in rows:
-        if not r["prefix_only"]:
-            continue
-        r = dict(r)
-        r["prompt"] = corrected_prompt(caps[r["endpoints"]], True, marker=True)
-        r["rung"] += "M"
-        r["id"] = r["id"].replace("R5__", "R5M__").replace("R4X__", "R4XM__")
-        rows_m.append(r)
-    doc = {"adapter": ic3["adapter"], "target_modules": IC3_TARGETS, "rows": rows_m}
-    (EXP / "dataset/manifest_ic3_cx_m.json").write_text(json.dumps(doc, indent=1))
-    print(f"[done] manifest_ic3_cx_m.json: {len(rows_m)} rows (marker control)")
 
     # ---- specialists: R3X (foreign endpoints, prefix-only, ckpt2000) --------
     # combos from the ORIGINAL eval manifests (ladder_items_v2's r3x section
@@ -104,7 +90,7 @@ def main():
                 "rung": "R3X", "class": cls, "clip": clip, "endpoints": clip,
                 "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
                 "prefix_only": True,
-                "prompt": corrected_prompt(caps[clip], prefix_only=True),
+                "prompt": corrected_prompt(caps[clip]),
                 "reference_class": None, "reference": None,
             })
         adapter = (f"outputs/training/exp_062_ladder_r2r3_specialists/"
@@ -112,11 +98,7 @@ def main():
         assert (REPO / adapter).exists(), adapter
         doc = {"adapter": adapter, "target_modules": SPEC_TARGETS, "rows": rows}
         (EXP / f"dataset/manifest_r3x_{cls}.json").write_text(json.dumps(doc, indent=1))
-        rows_m = [dict(r, prompt=corrected_prompt(caps[r["clip"]], True, marker=True),
-                       rung="R3XM", id=r["id"].replace("R3X__", "R3XM__")) for r in rows]
-        doc = {"adapter": adapter, "target_modules": SPEC_TARGETS, "rows": rows_m}
-        (EXP / f"dataset/manifest_r3x_{cls}_m.json").write_text(json.dumps(doc, indent=1))
-        print(f"[done] manifest_r3x_{cls}(.json + _m.json): {len(rows)} rows each")
+        print(f"[done] manifest_r3x_{cls}.json: {len(rows)} rows")
 
 
 if __name__ == "__main__":

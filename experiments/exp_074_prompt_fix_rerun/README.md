@@ -14,24 +14,25 @@ as the ladder originals — ONLY the prompt changes:
 
 | rows | arms | old prompt | corrected prompt |
 |---|---|---|---|
-| R5 one-sided (5×3) | ic3 zero-shot | `ICTRANS S1. The scene transforms into S2.` | `ICTRANS S1` |
-| R5 two-sided (2×3) | ic3 zero-shot | same | `ICTRANS S1 S2` (transition wording removed) |
-| R4X (44×3) | ic3 foreign | recipient's full caption (incl. ITS outcome) | `ICTRANS <recipient S1>` |
+| R5 one-sided (4×3) | ic3 zero-shot | `ICTRANS S1. The scene transforms into S2.` | `ICTRANS S1. The scene transforms into` |
+| R4X (44×3) | ic3 foreign | recipient's full caption (incl. ITS outcome) | `ICTRANS <recipient S1>. The scene transforms into` |
 | R3X (44×3) | specialist foreign | same | same |
 
-285 generations, twin-matched 1:1 to the originals (same id scheme, outputs
-under this experiment's root). Prompt rule: state ONLY the endpoints'
-knowledge — one-sided gets Scene 1 alone; two-sided gets both scenes with no
-transition phrasing; the transition itself must come from weights (R3X) or the
-in-context reference (R4X/R5).
+276 generations, twin-matched 1:1 to the originals (same id scheme, outputs
+under this experiment's root). Prompt rule (owner 2026-07-22): withhold only
+the OUTCOME, keep the transition marker for TRAINING ALIGNMENT — these are
+inference-only reruns on models trained with the full-caption format, and a
+dangling `…The scene transforms into` stays closest to the training text
+statistics while removing the end-scene information. Two-sided rows are
+EXCLUDED: with both anchors given, Scene 2 is endpoint knowledge, so their
+corrected prompt equals the original — the existing generations are their own
+twins. The transition itself must come from weights (R3X) or the in-context
+reference (R4X/R5).
 
-**V2 marker-control lane** (rungs `R5M`/`R4XM`/`R3XM`, prefix-only rows only,
-276 gens): prompt = `ICTRANS <Scene1> The scene transforms.` — outcome removed
-but the transition phrase kept (grammatically complete, no object). Rationale:
-the CURRENT adapters never saw a caption without that phrase, so V1 confounds
-outcome-removal with format shift. V2−original isolates outcome removal at
-fixed phrasing; V1−V2 isolates the phrase/format effect. (Retrained models per
-PROMPT_REDESIGN will drop the phrase in training too — no mismatch there.)
+An earlier no-marker variant (`ICTRANS S1` alone) was cancelled before any
+output was produced; a hand-drafted `manifest_*_m.json` set ("…The scene
+transforms." complete-sentence variant, rung R3XM/R4XM/R5M) sits in dataset/
+unlaunched — a possible marker-phrasing ablation arm.
 
 Pre-registered predictions (2026-07-22, before scoring):
 1. Foreign forensic flips toward the donor: baseline top-1 "looks-like" is
