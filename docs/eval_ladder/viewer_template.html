@@ -1,561 +1,277 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Eval Ladder Viewer — transitions · v4 instrument</title>
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Ladder v4 — side-by-side viewer</title>
 <style>
-  :root { --bg:#101216; --panel:#181b22; --card:#1e222b; --line:#2c3140; --txt:#dde3ee;
-          --dim:#8b93a7; --acc:#5aa9ff; --good:#3fd68f; --bad:#ff6b6b; --warn:#ffb84d; }
-  * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--txt);
-         font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
-  header { position:sticky; top:0; z-index:30; background:var(--panel); border-bottom:1px solid var(--line);
-           padding:8px 16px; display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
-  header h1 { font-size:15px; margin:0 12px 0 0; font-weight:600; }
-  .tabs button { background:none; border:none; color:var(--dim); font:inherit; padding:6px 10px; cursor:pointer;
-                 border-bottom:2px solid transparent; }
-  .tabs button.on { color:var(--txt); border-color:var(--acc); }
-  #layout { display:flex; align-items:flex-start; }
-  aside { position:sticky; top:49px; width:270px; flex:0 0 270px; height:calc(100vh - 49px); overflow-y:auto;
-          background:var(--panel); border-right:1px solid var(--line); padding:12px; }
-  aside h3 { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--dim); margin:14px 0 6px; }
-  aside select, aside input[type=text] { width:100%; background:var(--card); color:var(--txt);
-        border:1px solid var(--line); border-radius:6px; padding:6px 8px; font:inherit; }
-  .opt { display:flex; align-items:center; gap:8px; margin:4px 0; color:var(--txt); cursor:pointer; font-size:13px; }
-  .chips { display:flex; flex-wrap:wrap; gap:4px; max-height:180px; overflow-y:auto; }
-  .chip { font-size:11px; padding:2px 8px; border-radius:10px; border:1px solid var(--line);
-          background:var(--card); color:var(--dim); cursor:pointer; user-select:none; }
-  .chip.on { background:#24436b; color:#cfe4ff; border-color:#3a6ea5; }
-  #presetNote { font-size:12px; color:var(--warn); margin-top:6px; }
-  main { flex:1; padding:14px 18px 80px; min-width:0; }
-  #stats { color:var(--dim); font-size:12px; margin-bottom:10px; }
-  .fam { background:var(--card); border:1px solid var(--line); border-radius:10px; margin-bottom:16px; padding:10px 12px; }
-  .famHead { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
-  .famHead b { font-size:14px; }
-  .badge { font-size:10px; padding:1px 7px; border-radius:8px; border:1px solid var(--line); color:var(--dim); }
-  .badge.cam { color:var(--warn); border-color:var(--warn); }
-  .badge.near { color:var(--bad); border-color:var(--bad); font-weight:600; }
-  .badge.gtish { color:var(--warn); border-color:var(--warn); }
-  .badge.deg { color:var(--bad); border-color:var(--bad); }
-  .badge.crack { color:#fff; background:#8a2b2b; border-color:var(--bad); font-weight:700; }
-  .famHead .sp { flex:1; }
-  .famHead button { background:var(--panel); color:var(--dim); border:1px solid var(--line); border-radius:6px;
-                    padding:3px 9px; cursor:pointer; font-size:12px; }
-  .famHead button.flagOn { color:var(--warn); border-color:var(--warn); }
-  .strip { display:flex; gap:10px; overflow-x:auto; padding-bottom:6px; }
-  .cell { flex:0 0 232px; }
-  .cell video { width:232px; height:174px; object-fit:contain; background:#000; border-radius:6px; display:block; }
-  .cellTitle { font-size:12px; margin:4px 0 0; color:var(--txt); font-weight:600;
-               white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .cellTitle.aux { color:var(--dim); font-weight:500; }
-  .condLine { font-size:11px; color:var(--dim); margin:1px 0 3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .chipsRow { display:flex; flex-wrap:wrap; gap:4px; font-size:11px; margin-top:2px; }
-  .mchip { padding:1px 6px; border-radius:6px; background:var(--panel); border:1px solid var(--line); color:var(--dim); }
-  .mchip.lens { font-size:12px; color:var(--txt); }
-  .mchip.up { color:var(--good); border-color:#2c6b4f; }
-  .mchip.dn { color:var(--bad); border-color:#6b2c2c; }
-  .mchip.anchor { color:var(--acc); border-color:#2c4a6b; }
-  .mchip.untr { text-decoration:line-through dotted; }
-  .mchip.pctc { color:#b7e3ff; border-color:#31597f; }
-  .mchip.pctc.local { border-style:dashed; }
-  .mchip.pend { color:var(--dim); border-style:dotted; }
-  .mchip.proto { color:var(--warn); border-color:var(--warn); }
-  .ctrlCell { flex:0 0 170px; font-size:11px; color:var(--dim); background:var(--panel);
-              border:1px dashed var(--line); border-radius:6px; padding:6px 8px; }
-  .ctrlCell div { margin-bottom:4px; }
-  pre { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:12px;
-        overflow-x:auto; font-size:12px; line-height:1.4; }
-  #modal { position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:50; display:none;
-           align-items:flex-start; justify-content:center; overflow-y:auto; padding:30px 16px; }
-  #modalBox { background:var(--card); border:1px solid var(--line); border-radius:12px;
-              max-width:1500px; width:100%; padding:16px 20px; }
-  table.mt { border-collapse:collapse; width:100%; font-size:12px; margin-top:10px; }
-  table.mt th, table.mt td { border:1px solid var(--line); padding:4px 8px; text-align:right; }
-  table.mt th:first-child, table.mt td:first-child { text-align:left; }
-  .note { color:var(--dim); font-size:12px; }
-  a { color:var(--acc); }
-  textarea { width:100%; background:var(--panel); color:var(--txt); border:1px solid var(--line);
-             border-radius:6px; font:inherit; padding:6px; }
-</style>
-</head>
-<body>
+:root{--bg:#101215;--card:#191c21;--edge:#2a2f37;--fg:#dde3ea;--dim:#8b95a1;
+--green:#39d98a;--red:#ff6b6b;--amber:#ffc857;--blue:#6ab7ff;--cyan:#7fd8e8;}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);
+font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{position:sticky;top:0;z-index:9;background:#0c0e11f2;border-bottom:1px solid var(--edge);
+padding:10px 16px;backdrop-filter:blur(4px)}
+h1{font-size:16px;margin:0 0 8px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tab{padding:4px 12px;border:1px solid var(--edge);border-radius:14px;cursor:pointer;color:var(--dim)}
+.tab.on{background:#26547c;color:#fff;border-color:#3a6ea5}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:13px}
+select,input[type=text]{background:#14171b;color:var(--fg);border:1px solid var(--edge);
+border-radius:6px;padding:3px 8px}
+#agg{margin:6px 16px 0;overflow-x:auto}
+#agg table{border-collapse:collapse;font-size:12px;white-space:nowrap}
+#agg td,#agg th{padding:2px 9px;border-bottom:1px solid var(--edge);text-align:right}
+#agg th{color:var(--dim);font-weight:500}#agg td:first-child,#agg th:first-child{text-align:left}
+main{padding:12px 16px}
+.card{background:var(--card);border:1px solid var(--edge);border-radius:10px;
+padding:10px 12px;margin-bottom:16px}
+.chead{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.chead b{font-size:15px}.chead .dim{color:var(--dim);font-size:12px}
+.floor{font-size:12px;color:var(--amber)}
+.ceilb{font-size:12px;color:var(--cyan)}
+.strip{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;align-items:stretch}
+.grp{flex:0 0 auto;border:1px solid var(--edge);border-radius:10px;padding:8px 8px 6px;position:relative}
+.grp>h5{margin:0 0 6px;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim)}
+.grp .row{display:flex;gap:10px}
+.grp.inputs{border-color:#6b5b1e;background:#16150f}
+.grp.inputs>h5{color:var(--amber)}
+.grp.ctx{border-color:#2e4d38;background:#0f1512}
+.grp.ctx>h5{color:var(--green)}
+.grp.outs{border-color:#2c4a6b;background:#0f1319}
+.grp.outs>h5{color:var(--blue)}
+.cell{flex:0 0 252px;background:#14171b;border:1px solid var(--edge);border-radius:8px;padding:6px}
+.cell.gt{border-color:#3a5f43}.cell.demo{border-color:#3a4d6e}.cell.ep{border-color:#5a5433}
+.cell.txt{flex:0 0 220px;display:flex;flex-direction:column}
+.cell.txt .ptext{font-size:11px;color:var(--fg);line-height:1.4;overflow-y:auto;max-height:150px;
+background:#0d0f12;border-radius:4px;padding:6px;flex:1}
+.cell h4{margin:0 0 4px;font-size:12px;font-weight:600;color:var(--blue);
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cell.gt h4{color:var(--green)}.cell.ep h4{color:var(--amber)}
+video{width:240px;height:180px;background:#000;border-radius:4px;display:block;object-fit:contain}
+.cond{font-size:11px;color:var(--dim);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;font-size:11px}
+.chip{padding:1px 6px;border-radius:9px;background:#20242a;color:var(--dim)}
+.chip.g{background:#153826;color:var(--green)}.chip.r{background:#3a1a1a;color:var(--red)}
+.chip.a{background:#3a2f14;color:var(--amber)}
+.chip.pct{background:#16323a;color:var(--cyan);font-weight:700}
+.chip.pct.local{outline:1px dashed #2d5a66}
+.chip.copy{background:#5c1f1f;color:#ff9c9c;font-weight:700}
+.chip.crack{background:#6b1414;color:#fff;font-weight:700}
+.delta{color:var(--blue)}
+.pbtn{margin-left:auto;background:#26547c;border:0;color:#fff;border-radius:6px;
+padding:3px 10px;cursor:pointer;font-size:12px}
+.note{font-size:11px;color:var(--dim);margin-top:4px;max-width:240px;
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#count{color:var(--dim);font-size:12px;margin:0 16px}
+.missing{color:var(--red);font-size:11px}
+#legend{font-size:11px;color:var(--dim);margin:4px 16px 0}
+</style></head><body>
 <header>
-  <h1>Eval Ladder Viewer <span class="note">· v4.0.0 instrument (owner default) · pool yardstick: raw + % of GT ceiling</span></h1>
-  <div class="tabs">
-    <button data-tab="explore" class="on">Explore</button>
-    <button data-tab="agg">Aggregates</button>
-    <button data-tab="proto">Protocol & semantics</button>
-  </div>
-  <span class="sp" style="flex:1"></span>
-  <span id="hdrStats" class="note"></span>
-</header>
-
-<div id="layout">
-<aside id="sidebar">
-  <h3>Question (preset)</h3>
-  <select id="preset"></select>
-  <div id="presetNote"></div>
-
-  <h3>Model tier</h3>
-  <div class="chips" id="tiers"></div>
-
-  <h3>Metric lens</h3>
-  <select id="lens">
-    <option value="margin">margin (style-vs-intruders, ↑)</option>
-    <option value="app_ref">app_ref v4 (vs row reference, ↑)</option>
-    <option value="pct">% of GT ceiling (pool yardstick, ↑)</option>
-    <option value="cam_zpr">cam_zpr v4 (camera traj, ↑)</option>
-    <option value="copy_max">copy_max (leak diagnostic, ↓)</option>
-    <option value="max_seam_z">max_seam_z (seam integrity, ↓)</option>
-  </select>
-
-  <h3>Sort</h3>
-  <select id="sort">
-    <option value="class">class / clip</option>
-    <option value="dDesc">Δ vs anchor ↓ (best for arm)</option>
-    <option value="dAsc">Δ vs anchor ↑ (worst for arm)</option>
-    <option value="absD">|Δ| ↓ (extremes first)</option>
-    <option value="shuffle">shuffle (audit mode)</option>
-  </select>
-
-  <h3>Seed</h3>
-  <select id="seed">
-    <option value="42">42 only</option><option value="43">43 only</option>
-    <option value="44">44 only</option><option value="all">all seeds</option>
-  </select>
-
-  <h3>Sidedness</h3>
-  <div class="chips" id="sided"></div>
-
-  <h3>Band</h3>
-  <div class="chips" id="bands"></div>
-
-  <h3>Classes <input type="text" id="classSearch" placeholder="filter…" style="margin-top:4px"></h3>
-  <div class="chips" id="classes"></div>
-
-  <h3>Options</h3>
-  <label class="opt"><input type="checkbox" id="blind"> blind mode (hide labels/scores)</label>
-  <label class="opt"><input type="checkbox" id="showCracked"> show cracked base on one-sided (r1 saw end anchor)</label>
-  <label class="opt"><input type="checkbox" id="nearOnly"> near-copy rows only</label>
-  <label class="opt"><input type="checkbox" id="camOnly"> camera classes only</label>
-  <label class="opt"><input type="checkbox" id="flaggedOnly"> flagged only</label>
-
-  <h3>Flags / notes</h3>
-  <button id="export" class="chip" style="font-size:12px;padding:5px 10px">⬇ export flags JSON</button>
-  <div class="note" id="flagCount" style="margin-top:6px"></div>
-</aside>
-
-<main>
-  <div id="explore">
-    <div id="stats"></div>
-    <div id="cards"></div>
-    <div style="text-align:center;margin:20px"><button id="more" class="chip" style="font-size:13px;padding:8px 16px">load more</button></div>
-  </div>
-  <div id="agg" style="display:none">
-    <h2>Per-arm means (v4 rows + pool yardstick)</h2>
-    <div class="note">Computed over the embedded rows. Untrusted class×metric cells excluded from metric means; % of ceiling only over trusted classes with pool data. Absolutes are NOT comparable across tiers on row app_ref (reference differs: own-GT vs demo) — the "% of ceiling" column IS the comparable one.</div>
-    <div id="armTable"></div>
-    <h2>Tier table (v4, as-published)</h2>
-    <pre>__PRE_TIER__</pre>
-    <h2>Contrasts (v4, as-published)</h2>
-    <pre>__PRE_CONTRASTS__</pre>
-  </div>
-  <div id="proto" style="display:none">
-    <h2>Reference semantics & how to inspect</h2>
-    <pre id="protoText"></pre>
-  </div>
-</main>
+<h1>Eval ladder — v4 instrument <span class="dim" style="font-size:12px">(pool yardstick: % of GT ceiling · GT green · demo blue · anchors amber · floors amber)</span></h1>
+<div class="tabs" id="tabs"></div>
+<div class="bar">
+model tier <select id="ftier"><option value="">all</option><option value="base">baseline</option><option value="spec">specialist</option><option value="ic">generalist (IC)</option></select>
+sidedness <select id="fside"><option value="">all</option><option value="onesided">one-sided</option><option value="twosided">two-sided</option></select>
+class <select id="fcls"><option value="">all</option></select>
+seed <select id="fseed"><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="">all</option></select>
+sort <select id="fsort"><option value="cls">class</option><option value="dmargin">Δmargin ic3−spec</option><option value="dpct">Δ%ceil ic3−spec</option><option value="pct">best %ceil</option></select>
+find <input id="fq" type="text" placeholder="class or clip…" size="18">
+<label style="color:var(--dim)"><input type="checkbox" id="fcrack"> show cracked r1 on one-sided</label>
+<span id="count"></span>
 </div>
-
-<div id="modal"><div id="modalBox"></div></div>
-
-<script id="data" type="application/json">__DATA_JSON__</script>
+</header>
+<div id="agg"></div>
+<div id="legend">row app/copy are vs each cell's own reference (<b>vs own GT</b> = inflated + copy-saturated, <b>vs demo</b> = real leak signal, <b>vs donor</b> = foreign) — the <b>% of ceil</b> chip (pool yardstick, same-class pool ÷ GT ceiling) is the ONLY cross-arm comparable number. Dashed % = local exact-kernel fill (harness-validated). † = metric untrusted for the class. One-sided items: only the start anchor is model input; P+S-conditioned r1 there = <b>CRACKED</b> (saw the outcome), hidden when the keyed base exists.</div>
+<main id="main"></main>
 <script>
-const D = JSON.parse(document.getElementById('data').textContent);
-const FAM = D.families, MDE = D.mde, LB = new Set(D.lowerBetter), TRUST = D.trust,
-      TK = D.trustKey, AM = D.armMeta, QUEUED = new Set(D.poolQueued);
-const PAGE = 12;
-let shown = PAGE;
-const S = { preset:'all', lens:'margin', sort:'class', seed:'42', bands:new Set(), sided:new Set(),
-            tiers:new Set(), classes:new Set(), blind:false, showCracked:false,
-            nearOnly:false, camOnly:false, flaggedOnly:false };
-const FLAGS = JSON.parse(localStorage.getItem('ladderFlags')||'{}');
-
-const allBands = [...new Set(FAM.map(f=>f.band))].sort();
-const allClasses = [...new Set(FAM.map(f=>f.style))].sort();
-const TIER_NAMES = {base:'baseline', spec:'specialist', ic:'generalist (IC)'};
-const presetById = Object.fromEntries(D.presets.map(p=>[p.id,p]));
-
-function fmt(v){ return v==null?'—':(Math.abs(v)>=100?v.toFixed(0):Math.abs(v)>=10?v.toFixed(1):v.toFixed(3)); }
-function fmtL(lens,v){ return lens==='pct' ? (v==null?'—':Math.round(v*100)+'%') : fmt(v); }
-function mval(a,lens){ return lens==='pct' ? (a.pct==null?null:a.pct) : a.m[lens]; }
-function trusted(style, lens){ const t=TRUST[style], k=TK[lens];
-  return !t || !k ? true : !!t[k]; }
-function isCam(f){ return (f.tags||[]).includes('camera'); }
-function grp(a){ return AM[a]?AM[a][1]:'?'; }
-function seededShuffle(arr, seedStr){
-  let h=2166136261; for(const c of seedStr) h=(h^c.charCodeAt(0))*16777619>>>0;
-  const a=[...arr];
-  for(let i=a.length-1;i>0;i--){ h=(h*1103515245+12345)>>>0; const j=h%(i+1); [a[i],a[j]]=[a[j],a[i]]; }
-  return a;
-}
-// crack rule: on ONE-SIDED items r1 was conditioned on the end anchor too (P+S)
-// -> it saw the transition's outcome. The honest conditioned base there is r1k.
-function isCracked(f,a){ return f.sidedness==='onesided' && a.a==='r1'; }
-function visibleArms(f,p){
-  let arms=f.arms;
-  if(p.arms.length) arms=arms.filter(a=>p.arms.includes(a.a));
-  if(S.tiers.size) arms=arms.filter(a=>S.tiers.has(grp(a.a)));
-  if(!(S.showCracked||p.showCracked)){
-    const hasKeyed=arms.some(a=>a.a==='r1k'||a.a==='r1k_ext');
-    if(hasKeyed) arms=arms.filter(a=>!isCracked(f,a));   // keyed base replaces cracked r1
-    // no keyed run for this item -> r1 stays visible but is loudly badged CRACKED
-  }
-  return arms;
-}
-function anchorArm(f, p, arms){
-  const has=x=>arms.some(a=>a.a===x);
-  let pref=p.anchor?[p.anchor]:[];
-  if(f.sidedness==='onesided' && p.anchor==='r1') pref=['r1k','r1k_ext','r1'];
-  for(const x of [...pref,'r1k','r1k_ext','r1']) if(has(x)) return x;
-  return arms[0] && arms[0].a;
-}
-function famDelta(f, p, lens){
-  const arms=visibleArms(f,p); const anc=anchorArm(f,p,arms);
-  const av=arms.find(a=>a.a===anc); if(!av||mval(av,lens)==null) return null;
-  const ds=arms.filter(a=>a.a!==anc && mval(a,lens)!=null).map(a=>{
-    let d=mval(a,lens)-mval(av,lens); return LB.has(lens)?-d:d; });
-  return ds.length?ds.reduce((x,y)=>x+y,0)/ds.length:null;
-}
-function passFilters(f){
-  const p=presetById[S.preset];
-  if(S.seed!=='all' && String(f.seed)!==S.seed) return false;
-  if(S.bands.size && !S.bands.has(f.band)) return false;
-  if(S.sided.size && !S.sided.has(f.sidedness)) return false;
-  if(S.classes.size && !S.classes.has(f.style)) return false;
-  if(S.camOnly && !isCam(f)) return false;
-  if(S.nearOnly && !f.arms.some(a=>a.near && a.refKind!=='own')) return false;
-  if(S.flaggedOnly && !FLAGS[f.key]) return false;
-  const have=visibleArms(f,p);
-  if(!have.length) return false;
-  if(p.arms.length && !p.cross){
-    if(have.length<2 || !have.some(a=>a.a===anchorArm(f,p,have))) return false;
-  }
-  return true;
-}
-function currentList(){
-  const p=presetById[S.preset];
-  let list=FAM.filter(passFilters);
-  if(S.sort==='shuffle') return seededShuffle(list,'audit0');
-  if(S.sort==='class') return list;   // pre-sorted by style/clip/seed
-  const key=f=>famDelta(f,p,S.lens);
-  const withD=list.map(f=>[key(f),f]).filter(x=>x[0]!=null);
-  if(S.sort==='dDesc') withD.sort((a,b)=>b[0]-a[0]);
-  if(S.sort==='dAsc') withD.sort((a,b)=>a[0]-b[0]);
-  if(S.sort==='absD') withD.sort((a,b)=>Math.abs(b[0])-Math.abs(a[0]));
-  return withD.map(x=>x[1]);
-}
-
-const REF_DESC = {own:'own GT clip (content-matched — inflated; copy_max saturated)',
-                  demo:'demo clip (different same-class clip — copy_max is a REAL leak signal)',
-                  donor:'donor-class clip (foreign tier)'};
-function condDesc(f,a){
-  const ic=grp(a.a)==='ic';
-  const base = a.cnd==='0' ? 'no conditioning — prompt only'
-             : a.cnd==='PS' ? 'prefix + suffix (9+8 frames)'
-             : a.cnd==='P' ? 'prefix only (first 9 frames)' : '';
-  if(!base) return '';
-  return (ic?'ref demo + ':'') + base;
-}
-function pctChip(f,a){
-  if(!trusted(f.style,'pct') && a.pct!=null)
-    return `<span class="mchip pend" title="class untrusted for the appearance metric (v4 exam) — % suppressed">% †untrusted</span>`;
-  if(a.pct!=null){
-    const pr=Math.round(a.pct*100);
-    const star=f.band==='foreign'?'*':'';
-    const local=a.poolSrc==='l';
-    const proto=a.pct>1.0?` <span class="mchip proto" title="scores above the GT ceiling — prototype-mode signature, not 'better than perfect'">≥ceil</span>`:'';
-    return `<span class="mchip pctc ${local?'local':''}" title="pool yardstick: mean app_ref over ${a.poolN} same-class pool refs ÷ class GT ceiling ${fmt(f.ceil)}${star?' (donor-class PROXY ceiling — ranking only)':''}${local?' — local exact-kernel fill; harness confirmation queued':''}">${pr}% of ceil${star}</span>${proto}`;
-  }
-  if(a.pool!=null && f.ceil==null)
-    return `<span class="mchip pend">% — no ceiling (class has <2 clips)</span>`;
-  if(QUEUED.has(a.a)) return `<span class="mchip pend" title="pool-lane scoring job queued (exp_072 fill)">% pending (queued)</span>`;
-  if(!D.hasPool) return `<span class="mchip pend">% pending</span>`;
-  return `<span class="mchip pend" title="no pool rows for this item (yet)">% —</span>`;
-}
-function armCell(f, a, anc, p, blindOrder){
-  const lens=S.lens, arms=visibleArms(f,p), av=arms.find(x=>x.a===anc);
-  const isAnc=a.a===anc;
-  let dCls='';
-  if(!isAnc && av && mval(av,lens)!=null && mval(a,lens)!=null){
-    let d=mval(a,lens)-mval(av,lens); if(LB.has(lens)) d=-d;
-    dCls = Math.abs(d)<=(MDE[lens]||0) ? '' : (d>0?'up':'dn');
-  }
-  const untr = !trusted(f.style,lens) ? 'untr':'';
-  const name = S.blind ? `model ${blindOrder+1}` : (AM[a.a]?AM[a.a][0]:a.a);
-  const crack = isCracked(f,a)&&!S.blind ? '<span class="badge crack" title="one-sided transition but this arm was conditioned on the END anchor too — the outcome was given. Compare r1k instead.">CRACKED · saw end anchor</span>' : '';
-  const flags = (a.near?(a.refKind==='own'?'<span class="badge gtish" title="scoring reference IS this item\'s own GT clip (same endpoints) — copy_max is content-saturated there; even the crossfade control scores 1.0. NOT evidence of copying.">≈GT (same-content ref)</span>'
-                                 :'<span class="badge near">near-copy of reference</span>'):'')
-              + (a.deg?'<span class="badge deg">degenerate</span>':'');
-  const chips = S.blind ? '' :
-      `<div class="condLine" title="what the model was given for this arm">${condDesc(f,a)}</div>
-       <div class="chipsRow">
-        <span class="mchip lens ${isAnc?'anchor':dCls} ${untr}">${lens} ${fmtL(lens,mval(a,lens))}</span>
-        ${lens!=='app_ref'?`<span class="mchip" title="v4 appearance vs THIS ROW's reference: ${REF_DESC[a.refKind]||'—'}">app ${fmt(a.m.app_ref)}</span>`:''}
-        ${lens!=='pct'?pctChip(f,a):''}
-        ${lens!=='margin'?`<span class="mchip">mrg ${fmt(a.m.margin)}</span>`:''}
-        ${lens!=='cam_zpr'&&isCam(f)?`<span class="mchip">cam ${fmt(a.m.cam_zpr)}</span>`:''}
-      </div>
-      <div class="chipsRow">
-        ${lens!=='copy_max'?`<span class="mchip ${(a.near&&a.refKind!=='own')?'dn':''}" title="leak diagnostic vs ${REF_DESC[a.refKind]||'row reference'}">copy ${fmt(a.m.copy_max)}</span>`:''}
-        ${a.xh?'<span class="mchip dn">cross-high</span>':''}
-        ${lens!=='max_seam_z'?`<span class="mchip">seam ${fmt(a.m.max_seam_z)}</span>`:''}
-        ${a.m.obj_csls!=null?`<span class="mchip">obj ${fmt(a.m.obj_csls)}</span>`:''}
-        <span class="mchip" title="reference used by this row's app/copy scores">vs ${a.refKind==='own'?'own GT':a.refKind==='demo'?'demo':a.refKind==='donor'?'donor':'—'}</span>
-      </div>`;
-  return `<div class="cell">
-    <video preload="none" muted loop playsinline data-src="${a.v||''}"></video>
-    <div class="cellTitle">${name} ${isAnc&&!S.blind?'<span class="note">(anchor)</span>':''} ${crack} ${flags}</div>
-    ${chips}</div>`;
-}
-function auxCell(src, title, clip){
-  if(!src) return '';
-  return `<div class="cell"><video preload="none" muted loop playsinline data-src="${src}" ${clip?`data-clip="${clip}"`:''}></video>
-    <div class="cellTitle aux">${title}</div></div>`;
-}
-// endpoint cells: clamp playback to the exact conditioning frames (24 fps contract)
-// and slow them down so a 9-frame anchor reads as a ~1.2s loop instead of a flicker
-const CLIP_P = 9/24, CLIP_S = 8/24, EP_RATE = 0.3;
-function attachClamp(v){
-  const mode=v.dataset.clip;
-  const range=()=> mode==='p' ? [0, CLIP_P] : [Math.max(0,(v.duration||0)-CLIP_S), v.duration||0];
-  v.addEventListener('loadedmetadata',()=>{ v.currentTime=range()[0]; v.playbackRate=EP_RATE; });
-  v.addEventListener('timeupdate',()=>{ const [lo,hi]=range();
-    if(v.currentTime>hi+0.04 || v.currentTime<lo-0.04) v.currentTime=lo; });
-}
-function famCard(f){
-  const p=presetById[S.preset];
-  let arms=visibleArms(f,p);
-  const anc=anchorArm(f,p,arms);
-  if(S.blind) arms=seededShuffle(arms,f.key);
-  const d=famDelta(f,p,S.lens);
-  const oneS=f.sidedness==='onesided';
-  const camB=isCam(f)?'<span class="badge cam">camera-class · appearance metrics blind</span>':'';
-  const trustB=!trusted(f.style,S.lens)?`<span class="badge deg">† ${S.lens} untrusted for ${f.style}</span>`:'';
-  const flagOn=FLAGS[f.key]?'flagOn':'';
-  const ceilB=(!S.blind&&f.ceil!=null)?`<span class="badge" title="per-class GT ceiling: same-class off-diagonal mean of the certified v4 pairwise matrix${f.band==='foreign'?' — donor-class PROXY':''}">ceiling ${fmt(f.ceil)}${f.band==='foreign'?'*':''}</span>`:'';
-  const ctrl = f.controls.length && !S.blind ? `<div class="ctrlCell"><div><b>controls</b> (synthesized, no video)</div>${
-      f.controls.map(c=>`<div>${c.a.replace('control_','')}: ${S.lens==='pct'?'app':S.lens} ${fmt(c.m[S.lens==='pct'?'app_ref':S.lens])} · mrg ${fmt(c.m.margin)} · app ${fmt(c.m.app_ref)}</div>`).join('')}</div>`:'';
-  const oneSNote = oneS&&!S.blind?`<div class="ctrlCell"><div><b>one-sided</b></div><div>only the START anchor is given (prefix, 9 frames). There is no end anchor — the outcome must be invented. Arms conditioned P+S here are marked <b>CRACKED</b>${S.showCracked||p.showCracked?'':' and hidden when a keyed run exists'}.</div></div>`:'';
-  return `<div class="fam" data-key="${f.key}">
-    <div class="famHead">
-      <b>${f.style}</b><span class="note">· ${f.clip} · seed ${f.seed} · ${f.band}</span>
-      ${(f.tags||[]).map(t=>`<span class="badge">${t}</span>`).join('')}
-      <span class="badge">${f.sidedness||''}</span>${ceilB}${camB}${trustB}
-      ${d!=null&&!S.blind?`<span class="mchip ${Math.abs(d)<=(MDE[S.lens]||0)?'':(d>0?'up':'dn')}">Δ ${S.lens} ${fmtL(S.lens,d)}</span>`:''}
-      <span class="sp"></span>
-      <button data-act="play">▶ play all</button>
-      ${S.blind?`<button data-act="reveal">reveal</button>`:''}
-      <button data-act="detail">details</button>
-      <button data-act="flag" class="${flagOn}">🚩</button>
-    </div>
-    <div class="strip">
-      ${auxCell(f.cond.p,'start anchor · first 9 frames (model input)','p')}
-      ${!oneS?auxCell(f.cond.s,'end anchor · last 8 frames (model input)','s'):''}
-      ${oneSNote}
-      ${auxCell(f.cond.p, f.band==='foreign'?'endpoints source · full clip (recipient class — NOT model input)':'source clip GT · full (NOT model input)')}
-      ${auxCell(f.refDemo, S.blind?'reference demo':'reference demo (IC input — the style to perform)')}
-      ${!f.refDemo?auxCell(f.refEx,'class exemplar (row scoring ref)'):''}
-      ${arms.map((a,i)=>armCell(f,a,anc,p,i)).join('')}
-      ${ctrl}
-    </div></div>`;
-}
-
-const io=new IntersectionObserver(es=>{
-  es.forEach(e=>{ if(e.isIntersecting){ const v=e.target;
-    if(!v.src && v.dataset.src){ v.src=v.dataset.src; } io.unobserve(v); } });
-},{rootMargin:'400px'});
-
-function render(){
-  const list=currentList();
-  const el=document.getElementById('cards');
-  el.innerHTML=list.slice(0,shown).map(famCard).join('');
-  el.querySelectorAll('video').forEach(v=>io.observe(v));
-  el.querySelectorAll('video[data-clip]').forEach(attachClamp);
-  const nPool=FAM.reduce((n,f)=>n+f.arms.filter(a=>a.pct!=null).length,0);
-  document.getElementById('stats').textContent=
-    `${list.length} families match · showing ${Math.min(shown,list.length)} · anchor: ${presetById[S.preset].anchor||'auto (keyed base)'} · lens: ${S.lens}${LB.has(S.lens)?' (lower better)':''} · Δ threshold ${MDE[S.lens]||'—'} (indicative — v4 σ_seed not yet measured)`;
-  document.getElementById('hdrStats').textContent=
-    `${FAM.length} families · ${FAM.reduce((n,f)=>n+f.arms.length,0)} v4 rows · ${nPool} with pool-%`;
-  document.getElementById('more').style.display=shown<list.length?'':'none';
-  document.getElementById('flagCount').textContent=`${Object.keys(FLAGS).length} flagged`;
-  document.getElementById('presetNote').textContent=presetById[S.preset].note||'';
-}
-
-function detailModal(f){
-  const cols=['margin','app_ref','app_ref_v3','app_target','cam_zpr','cam_dtw','obj_csls','copy_max','max_seam_z'];
-  const rows=[...f.arms,...f.controls];
-  const t=`<h2 style="margin-top:0">${f.style} · ${f.clip} · seed ${f.seed} · ${f.sidedness||''} ${f.ceil!=null?`· GT ceiling ${fmt(f.ceil)}${f.band==='foreign'?'* (donor proxy)':''}`:''}</h2>
-   <div class="strip">${f.arms.map(a=>`<div class="cell">
-      <video preload="metadata" controls muted loop playsinline src="${a.v||''}"></video>
-      <div class="cellTitle">${AM[a.a]?AM[a.a][0]:a.a}${isCracked(f,a)?' <span class="badge crack">CRACKED</span>':''}</div>
-      <div class="condLine">${condDesc(f,a)}</div></div>`).join('')}</div>
-   <table class="mt"><tr><th>arm</th><th>cond</th><th>row ref</th><th>pool app</th><th>% of ceil</th>${cols.map(c=>`<th>${c}${!trusted(f.style,c)?' †':''}</th>`).join('')}<th>flags</th><th>looks-like (top1)</th></tr>
-   ${rows.map(a=>`<tr><td>${AM[a.a]?AM[a.a][0]:a.a}</td><td>${a.cnd||'—'}</td><td>${a.refKind||'—'}</td>
-     <td>${a.pool!=null?fmt(a.pool)+(a.poolSrc==='l'?' ~':''):'—'}</td>
-     <td>${a.pct!=null?Math.round(a.pct*100)+'%':(QUEUED.has(a.a)?'pending':'—')}</td>
-     ${cols.map(c=>`<td>${fmt(a.m[c])}</td>`).join('')}
-     <td>${[a.near?(a.refKind==='own'?'≈GT(own-ref)':'near-copy'):'',a.deg?'degenerate':'',a.xh?'cross-high':'',isCracked(f,a)?'CRACKED':''].filter(Boolean).join(', ')}</td>
-     <td>${a.top1&&a.top1[0]?a.top1[0]+' '+fmt(a.top1[1]):''}</td></tr>`).join('')}</table>
-   <div class="note" style="margin-top:8px">† = metric untrusted for this class (v4 exam trust map). near-copy at copy_max ≥ ${D.tauCopy}.
-   "row ref" = what app_ref/copy_max on this row were scored against (own = the item's own GT clip; demo = IC demo; donor = foreign donor clip).
-   "pool app" = mean v4 app_ref over the same-class reference pool (own clip + demo excluded); "~" = local exact-kernel fill, harness confirmation queued.
-   % of ceil = pool app ÷ class GT ceiling. app_ref_v3 = certified-instrument bridge value.</div>
-   <h3>Note (saved locally)</h3>
-   <textarea id="famNote" rows="3">${(FLAGS[f.key]&&FLAGS[f.key].note)||''}</textarea>
-   <div style="margin-top:8px"><button class="chip" style="font-size:13px;padding:6px 12px" onclick="saveNote('${f.key}')">save note + flag</button>
-   <button class="chip" style="font-size:13px;padding:6px 12px" onclick="document.getElementById('modal').style.display='none'">close</button></div>`;
-  document.getElementById('modalBox').innerHTML=t;
-  document.getElementById('modal').style.display='flex';
-}
-window.saveNote=function(key){
-  const note=document.getElementById('famNote').value.trim();
-  if(note) FLAGS[key]={note, at:new Date().toISOString()}; else delete FLAGS[key];
-  localStorage.setItem('ladderFlags',JSON.stringify(FLAGS));
-  document.getElementById('modal').style.display='none'; render();
+const D = __DATA_JSON__;
+const PANELS = {
+ all:       {label:"All", test:c=>true},
+ cond:      {label:"Conditioning (R0 vs base)", test:c=>c.cells.r0&&(c.cells.r1||c.cells.r1k||c.cells.r1k_ext)},
+ tierA:     {label:"Held-in A (SEEN)", test:c=>c.cells.ic3_a||c.cells.r2_ckpt250||c.cells.r2_ckpt2000},
+ tierB:     {label:"Unseen B (PRIMARY)", test:c=>c.cells.ic3_b||c.cells.r3_ckpt250||c.cells.r3_ckpt2000},
+ tierC:     {label:"Zero-shot C", test:c=>c.cells.ic3_c},
+ tierX:     {label:"Foreign transfer X", test:c=>c.cells.r3x||c.cells.ic3_x},
 };
-
-document.getElementById('cards').addEventListener('click',e=>{
-  const btn=e.target.closest('button'); if(!btn) return;
-  const card=e.target.closest('.fam'); const f=FAM.find(x=>x.key===card.dataset.key);
-  const act=btn.dataset.act;
-  if(act==='play'){ card.querySelectorAll('video').forEach(v=>{ if(!v.src&&v.dataset.src)v.src=v.dataset.src;
-      v.currentTime = (v.dataset.clip==='s'&&v.duration) ? Math.max(0,v.duration-CLIP_S) : 0;
-      v.play().catch(()=>{}); }); }
-  if(act==='detail'){ detailModal(f); }
-  if(act==='reveal'){ const keep=S.blind; S.blind=false; const html=famCard(f); S.blind=keep;
-      card.outerHTML=html;
-      const nc=document.querySelector(`[data-key="${CSS.escape(f.key)}"]`);
-      nc.querySelectorAll('video').forEach(v=>io.observe(v));
-      nc.querySelectorAll('video[data-clip]').forEach(attachClamp); }
-  if(act==='flag'){ if(FLAGS[f.key]) delete FLAGS[f.key]; else FLAGS[f.key]={note:'',at:new Date().toISOString()};
-      localStorage.setItem('ladderFlags',JSON.stringify(FLAGS)); render(); }
-});
-document.getElementById('modal').addEventListener('click',e=>{ if(e.target.id==='modal') e.target.style.display='none'; });
-
-// ---- controls wiring ----
-const sel=(id,key)=>{ document.getElementById(id).addEventListener('change',e=>{ S[key]=e.target.value; shown=PAGE; render(); }); };
-const chk=(id,key)=>{ document.getElementById(id).addEventListener('change',e=>{ S[key]=e.target.checked; shown=PAGE; render(); }); };
-const pSel=document.getElementById('preset');
-D.presets.forEach(p=>{ const o=document.createElement('option'); o.value=p.id; o.textContent=p.name; pSel.appendChild(o); });
-sel('preset','preset'); sel('lens','lens'); sel('sort','sort'); sel('seed','seed');
-chk('blind','blind'); chk('showCracked','showCracked');
-chk('nearOnly','nearOnly'); chk('camOnly','camOnly'); chk('flaggedOnly','flaggedOnly');
-function chipSet(elId, values, set, names){
-  const el=document.getElementById(elId);
-  el.innerHTML=values.map(v=>`<span class="chip ${set.has(v)?'on':''}" data-v="${v}">${(names&&names[v])||v}</span>`).join('');
-  el.onclick=e=>{ const c=e.target.closest('.chip'); if(!c)return;
-    set.has(c.dataset.v)?set.delete(c.dataset.v):set.add(c.dataset.v); shown=PAGE; chipSet(elId,values,set,names); render(); };
+let panel="tierB";
+const $=s=>document.querySelector(s);
+const fmt=(v,d=3)=>v==null?"–":(+v).toFixed(d);
+const pfmt=v=>v==null?"–":Math.round(v*100)+"%";
+function trustMark(cls,ch){const t=D.trust[cls];return t&&t[ch]===false?"†":"";}
+function cracked(c,a){return c.sidedness==="onesided"&&a==="r1";}
+function armsOf(c){
+ let arms=D.arm_order.filter(a=>c.cells[a]);
+ const tier=$("#ftier").value;
+ if(tier)arms=arms.filter(a=>D.arm_tier[a]===tier);
+ if(!$("#fcrack").checked && c.sidedness==="onesided" && arms.some(a=>a==="r1k"||a==="r1k_ext"))
+   arms=arms.filter(a=>a!=="r1");
+ return arms;
 }
-chipSet('tiers',['base','spec','ic'],S.tiers,TIER_NAMES);
-chipSet('sided',['onesided','twosided'],S.sided);
-chipSet('bands',allBands,S.bands);
-chipSet('classes',allClasses,S.classes);
-document.getElementById('classSearch').addEventListener('input',e=>{
-  const q=e.target.value.toLowerCase();
-  chipSet('classes',allClasses.filter(c=>c.includes(q)),S.classes);
-});
-document.getElementById('more').addEventListener('click',()=>{ shown+=PAGE; render(); });
-document.getElementById('export').addEventListener('click',()=>{
-  const blob=new Blob([JSON.stringify(FLAGS,null,1)],{type:'application/json'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='ladder_flags.json'; a.click();
-});
-document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{
-  document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));
-  ['explore','agg','proto'].forEach(t=>document.getElementById(t).style.display=(b.dataset.tab===t?'':'none'));
-  document.getElementById('sidebar').style.display=(b.dataset.tab==='explore'?'':'none');
-}));
-
-// ---- aggregates: per-arm means, trust-filtered, + pool-% column ----
-(function(){
-  const lenses=['margin','app_ref','cam_zpr','copy_max','max_seam_z'];
-  const acc={};
-  FAM.forEach(f=>f.arms.forEach(a=>{
-    const k=a.a+'|'+f.band; acc[k]=acc[k]||{arm:a.a,band:f.band,n:0,sums:{},ns:{},near:0,pctS:0,pctN:0};
-    acc[k].n++; if(a.near&&a.refKind!=='own')acc[k].near++;
-    if(a.pct!=null && trusted(f.style,'pct')){ acc[k].pctS+=a.pct; acc[k].pctN++; }
-    lenses.forEach(l=>{ if(a.m[l]!=null && trusted(f.style,l)){ acc[k].sums[l]=(acc[k].sums[l]||0)+a.m[l]; acc[k].ns[l]=(acc[k].ns[l]||0)+1; } });
-  }));
-  const rows=Object.values(acc).sort((a,b)=>(Object.keys(AM).indexOf(a.arm)-Object.keys(AM).indexOf(b.arm))||a.band.localeCompare(b.band));
-  document.getElementById('armTable').innerHTML=`<table class="mt"><tr><th>arm</th><th>tier</th><th>band</th><th>n</th><th>% of ceiling (pool)</th>${
-    lenses.map(l=>`<th>${l}</th>`).join('')}<th>near-copy% (real refs)</th></tr>${
-    rows.map(r=>`<tr><td>${AM[r.arm]?AM[r.arm][0]:r.arm}</td><td>${TIER_NAMES[grp(r.arm)]||''}</td><td>${r.band}</td><td>${r.n}</td>
-      <td>${r.pctN?Math.round(100*r.pctS/r.pctN)+'% (n='+r.pctN+')':(QUEUED.has(r.arm)?'pending':'—')}</td>${
-      lenses.map(l=>`<td>${r.ns[l]?fmt(r.sums[l]/r.ns[l]):'—'}</td>`).join('')}<td>${(100*r.near/r.n).toFixed(0)}%</td></tr>`).join('')}</table>`;
-})();
-
-document.getElementById('protoText').textContent=`WHICH SCORE USES WHICH REFERENCE (read this first)
-
-Two reference regimes coexist in this viewer:
-
-1. ROW scores (app_ref, copy_max on each row) — scored against that row's
-   ASSIGNED reference, which DIFFERS by arm family:
-     - base + specialists  -> the item's OWN GT clip (same endpoints, same
-       content). Content-matched => app_ref inflated, copy_max saturated
-       (even a crossfade control scores 1.0 there). Chip says "vs own GT".
-     - IC arms (ic2/ic3)   -> the DEMO clip (a different same-class clip).
-       Here copy_max is a REAL leak signal. Chip says "vs demo".
-     - foreign arms        -> a DONOR-class clip. Chip says "vs donor".
-   => row app_ref is NOT comparable across those families.
-
-2. POOL yardstick (the "% of ceil" chip) — exp_072: every arm scored against
-   the same-class reference POOL (own clip excluded, IC demo excluded),
-   pool-mean divided by the class GT CEILING (same-class off-diagonal mean of
-   the certified v4 pairwise matrix = what a perfect generation scores).
-   ONE uniform setting for every arm — this is the cross-arm comparable number.
-   Rules: stats live on raw scores; % only for trusted classes; >100% =
-   "prototype mode" (annotated, not celebrated); foreign ceilings are
-   donor-class PROXIES (ranking only, starred *). Dashed chip = local
-   exact-kernel fill (validated vs harness), harness job still queued.
-
-SIDEDNESS & THE "CRACKED" RULE
-- one-sided transitions: the model gets ONLY the start anchor (prefix, 9
-  frames). r1 was run with prefix+suffix everywhere, so on one-sided items it
-  SAW the outcome -> badge "CRACKED", hidden whenever the keyed base (r1k /
-  r1k_ext, prefix-only) exists. Preset "K" shows the two side by side.
-- specialists and IC arms were conditioned KEYED from the start (prefix-only
-  on one-sided classes; prefix+suffix on the two two-sided classes).
-- every generation cell states its conditioning under the title:
-  "no conditioning", "prefix only (first 9 frames)", "prefix + suffix
-  (9+8 frames)", with "ref demo +" prepended for IC arms.
-
-SUGGESTED QUALITATIVE PASS
-1. CALIBRATE (per class): watch the reference demo + class exemplar, note the
-   controls' scores. Only then look at model outputs.
-2. BLIND AUDIT (per tier): preset = the question, sort = shuffle, blind ON.
-   Guess best performer, reveal, flag disagreements (they seed the 2AFC list).
-3. EXTREMES: sort by Delta vs anchor (down, then up). Check WHY the metric
-   moved: real transfer vs leak (near-copy badge) vs seams vs typicality.
-4. LEAK PASS: "near-copy rows only" + lens copy_max — IC arms only (own-GT
-   rows are excluded from this filter by design).
-5. CAMERA PASS: "camera classes only" + lens cam_zpr; appearance chips are
-   daggered there.
-6. SEAM PASS: lens max_seam_z, extremes.
-
-READING RULES
-- Only same-family (same endpoints+seed) comparisons are fair on row scores;
-  cross-arm claims go through the pool % or the certified margin channel.
-- Delta chip colors use INDICATIVE thresholds (v3-measured sigma_seed where
-  available; v4 sigma_seed not yet measured) — gray = within threshold.
-- Dagger = v4 exam trust map says this metric cannot see this class.
-- near-copy at copy_max >= ${D.tauCopy} (amendment-1 threshold).
-- Zero-shot margin partially ANTI-rewards faithful reference-following
-  (Amendment 1) — eyes + 2AFC carry that tier.
-
-Export your flags (sidebar) when done — they seed the 2AFC pair list.`;
-
-render();
-</script>
-</body>
-</html>
+function baseCell(c){return c.cells.r1k||c.cells.r1k_ext||c.cells.r1||null;}
+function specCell(c){return c.cells.r3_ckpt2000||c.cells.r2_ckpt2000||c.cells.r3x||null;}
+function icCell(c){return c.cells.ic3_b||c.cells.ic3_a||c.cells.ic3_c||c.cells.ic3_x||null;}
+function chip(lbl,v,cls,extra){return `<span class="chip ${cls||''}" title="${extra||''}">${lbl} ${v}</span>`;}
+const CND={"P":"prefix only (first 9 frames)","PS":"prefix + suffix (9+8 frames)","0":"no conditioning — prompt only"};
+function condLine(cell){
+ if(!cell.cnd)return "";
+ const ic=D.arm_tier[cell.arm]==="ic";
+ return `<div class="cond" title="model input for this arm">${ic?"ref demo + ":""}${CND[cell.cnd]||""}</div>`;
+}
+function pctChip(c,cell){
+ if(cell.pct!=null){
+  if(trustMark(c.cls,"app_ref"))return chip("%ceil","†","","class untrusted for appearance — % suppressed");
+  const over=cell.pct>1.0?" ≥ceil":"";
+  return `<span class="chip pct ${cell.psrc==='l'?'local':''}" title="pool yardstick: mean v4 app_ref over ${cell.pooln} same-class pool refs (${fmt(cell.pool)}) ÷ class GT ceiling ${fmt(c.ceil)}${c.foreign?' — donor-class PROXY (ranking only)':''}${cell.psrc==='l'?' — local exact-kernel fill':''}">${pfmt(cell.pct)}${c.foreign?"*":""} of ceil${over}</span>`;
+ }
+ return chip("%ceil","pending","","pool score not computed yet for this item");
+}
+function cellHtml(c,cell){
+ const fl=c.floors.lerp||{};
+ let mc="";
+ if(cell.margin!=null&&fl.margin!=null){
+   mc=cell.margin>fl.margin+0.02?"g":(cell.margin<fl.margin-0.02?"r":"a");}
+ const b=baseCell(c);
+ let d="";
+ if(b&&b.arm!==cell.arm&&cell.margin!=null&&b.margin!=null)
+   d=`<span class="chip delta" title="vs ${b.arm} · MDE ${D.mde.margin} (v3-derived, indicative)">Δm ${(cell.margin-b.margin>=0?"+":"")+fmt(cell.margin-b.margin)}</span>`;
+ const refT={own:"own GT (inflated, copy-saturated)",demo:"demo (real leak signal)",donor:"donor clip"}[cell.ref]||"";
+ // appearance/motion group first (with %), then leakage, then the rest
+ const chips=[
+  chip("app"+trustMark(c.cls,"app_ref"),fmt(cell.app_ref,2),"","v4 app_ref vs "+refT),
+  pctChip(c,cell),
+  chip("m"+trustMark(c.cls,"margin"),fmt(cell.margin),mc,"margin (crossfade floor "+fmt(fl.margin)+")"),
+ ];
+ if((c.tags||[]).includes("camera")) chips.push(chip("cam"+trustMark(c.cls,"cam_zpr"),fmt(cell.cam_zpr,2),"","cam_zpr (v4)"));
+ chips.push(cell.near?(cell.ref==="own"
+    ?chip("≈GT ref",fmt(cell.copy_max,2),"a","copy_max vs OWN GT is content-saturated (crossfade control scores 1.0) — NOT evidence of copying")
+    :`<span class="chip copy" title="copy_max ≥ ${D.tau} vs ${refT}">NEAR-COPY ${fmt(cell.copy_max,2)}</span>`)
+   :chip("copy",fmt(cell.copy_max,2),"","copy_max vs "+refT+" · τ="+D.tau));
+ if(cell.xh)chips.push('<span class="chip a">cross-high</span>');
+ chips.push(chip("seam",fmt(cell.seam,1),cell.seam>6?"a":"","max_seam_z"));
+ if(cell.obj!=null) chips.push(chip("obj"+trustMark(c.cls,"obj"),fmt(cell.obj,2),"","obj_csls (v4)"));
+ chips.push(chip("vs",{own:"own GT",demo:"demo",donor:"donor"}[cell.ref]||"–","","reference used by this row's app/copy"));
+ if(d) chips.push(d);
+ if(cell.deg) chips.push('<span class="chip r">core_degenerate</span>');
+ const crk=cracked(c,cell.arm)?'<span class="chip crack" title="one-sided item but this arm was conditioned on the END anchor too — the outcome was given. Compare the keyed base (r1k) instead.">CRACKED</span>':"";
+ const missing=!cell.video;
+ return `<div class="cell"><h4 title="${cell.item_id}">${D.arm_label[cell.arm]||cell.arm} ${crk}</h4>
+ ${missing?'<div class="missing">video missing</div>':`<video preload="none" muted loop playsinline data-src="${cell.video}"></video>`}
+ ${condLine(cell)}
+ <div class="chips">${chips.join("")}</div></div>`;
+}
+function promptHtml(c){
+ return `<div class="cell ep txt"><h4>prompt — SAME for all arms</h4>
+ <div class="ptext">${c.prompt?c.prompt.replace(/</g,"&lt;"):"(caption not archived for this clip)"}</div>
+ <div class="note" title="prompt parity across rungs is by design; negative prompt shared: 'worst quality, inconsistent motion, distorted, jittery'">r0 gets ONLY this; others add anchors/demo</div></div>`;
+}
+function epHtml(c){
+ const one=c.sidedness==="onesided";
+ let h=`<div class="cell ep"><h4>start anchor · first 9 frames</h4>
+ <video preload="none" muted loop playsinline data-src="${c.ep_video}" data-clip="p"></video>
+ <div class="note">${one?"one-sided: this is ALL the model gets — no end anchor":"prefix conditioning"}</div></div>`;
+ if(!one) h+=`<div class="cell ep"><h4>end anchor · last 8 frames</h4>
+ <video preload="none" muted loop playsinline data-src="${c.ep_video}" data-clip="s"></video>
+ <div class="note">suffix conditioning</div></div>`;
+ return h;
+}
+function gtHtml(c){
+ const own=c.ep_cls===c.cls;
+ return `<div class="cell gt"><h4>${own?"GT — endpoints' own transition (NOT model input)":"endpoints donor clip ("+c.ep_cls+") — NOT model input"}</h4>
+ <video preload="none" muted loop playsinline data-src="${c.ep_video}"></video>
+ <div class="note">${c.ep_video.split("/").slice(-2).join("/")}</div></div>`;
+}
+function refHtml(c,r){
+ const demo=r.arms.some(a=>a.startsWith("ic"));
+ return `<div class="cell demo"><h4>${demo?"demo reference (ic input)":"scoring reference"}</h4>
+ <video preload="none" muted loop playsinline data-src="${r.path}"></video>
+ <div class="note">${r.path.split("/").slice(-2).join("/")} · ${r.arms.join(", ")}</div></div>`;
+}
+function cardHtml(c,i){
+ const fl=c.floors.lerp,fh=c.floors.hold;
+ const cells=armsOf(c).map(a=>cellHtml(c,c.cells[a]));
+ const icRefs=c.refs.filter(r=>r.arms.some(a=>a.startsWith("ic")));
+ const ctxRefs=c.refs.filter(r=>!r.arms.some(a=>a.startsWith("ic")));
+ const inputs=promptHtml(c)+epHtml(c)+icRefs.map(r=>refHtml(c,r)).join("");
+ const ctx=gtHtml(c)+ctxRefs.map(r=>refHtml(c,r)).join("");
+ return `<div class="card" data-i="${i}">
+ <div class="chead"><b>${c.cls}</b><span class="dim">endpoints ${c.clip} · seed ${c.seed} · ${c.sidedness||""} · ${(c.tags||[]).join(",")}</span>
+ ${c.ceil!=null?`<span class="ceilb" title="per-class GT ceiling: same-class off-diagonal mean of the certified v4 pairwise matrix${c.foreign?" — donor-class PROXY":""}">GT ceiling ${fmt(c.ceil,2)}${c.foreign?"*":""}</span>`:""}
+ ${fl?`<span class="floor">crossfade floor: m ${fmt(fl.margin)} app ${fmt(fl.app_ref,2)}</span>`:""}
+ ${fh?`<span class="floor" style="opacity:.7">hold: m ${fmt(fh.margin)}</span>`:""}
+ <button class="pbtn" onclick="playAll(this)">▶ play all</button></div>
+ <div class="strip">
+  <div class="grp inputs"><h5>model inputs</h5><div class="row">${inputs}</div></div>
+  <div class="grp ctx"><h5>context — not input</h5><div class="row">${ctx}</div></div>
+  <div class="grp outs"><h5>outputs</h5><div class="row">${cells.join("")}</div></div>
+ </div></div>`;
+}
+// anchor cells: clamp to the exact conditioning frames (24fps) + slow loop so 9 frames read nicely
+const CLIP_P=9/24, CLIP_S=8/24, EP_RATE=0.3;
+function attachClamp(v){
+ const mode=v.dataset.clip;
+ const range=()=>mode==="p"?[0,CLIP_P]:[Math.max(0,(v.duration||0)-CLIP_S),v.duration||0];
+ v.addEventListener("loadedmetadata",()=>{v.currentTime=range()[0];v.playbackRate=EP_RATE;});
+ v.addEventListener("timeupdate",()=>{const[lo,hi]=range();
+  if(v.currentTime>hi+0.04||v.currentTime<lo-0.04)v.currentTime=lo;});
+}
+function playAll(btn){
+ btn.closest(".card").querySelectorAll("video").forEach(v=>{
+  if(!v.src)v.src=v.dataset.src; if(!v.dataset.clip)v.currentTime=0; v.play();});
+}
+function visible(){
+ let cs=D.cards.filter(PANELS[panel].test);
+ const cls=$("#fcls").value, seed=$("#fseed").value, q=$("#fq").value.toLowerCase(), side=$("#fside").value;
+ if(cls)cs=cs.filter(c=>c.cls===cls);
+ if(seed)cs=cs.filter(c=>c.seed===seed);
+ if(side)cs=cs.filter(c=>c.sidedness===side);
+ if(q)cs=cs.filter(c=>(c.cls+" "+c.clip).toLowerCase().includes(q));
+ cs=cs.filter(c=>armsOf(c).length);
+ const s=$("#fsort").value;
+ const icsp=(c,k)=>{const i=icCell(c),sp=specCell(c);
+   return i&&sp&&i[k]!=null&&sp[k]!=null?i[k]-sp[k]:-1e9;};
+ if(s==="dmargin")cs=cs.slice().sort((a,b)=>icsp(b,"margin")-icsp(a,"margin"));
+ else if(s==="dpct")cs=cs.slice().sort((a,b)=>icsp(b,"pct")-icsp(a,"pct"));
+ else if(s==="pct")cs=cs.slice().sort((a,b)=>{
+   const f=c=>Math.max(...armsOf(c).map(x=>c.cells[x].pct??-1e9));return f(b)-f(a);});
+ return cs;
+}
+function agg(cs){
+ const by={};
+ cs.forEach(c=>armsOf(c).forEach(a=>{const x=c.cells[a];
+  const e=by[a]??={n:0,m:0,ap:0,s:0,nc:0,ncn:0,mn:0,an:0,sn:0,p:0,pn:0};
+  e.n++;
+  if(x.margin!=null){e.m+=x.margin;e.mn++;}
+  if(x.app_ref!=null){e.ap+=x.app_ref;e.an++;}
+  if(x.seam!=null){e.s+=x.seam;e.sn++;}
+  if(x.pct!=null&&!trustMark(c.cls,"app_ref")){e.p+=x.pct;e.pn++;}
+  if(x.ref!=="own"){e.ncn++;if(x.near)e.nc++;}}));
+ let fm=0,fa=0,fn=0;
+ cs.forEach(c=>{if(c.floors.lerp){fm+=c.floors.lerp.margin??0;fa+=c.floors.lerp.app_ref??0;fn++;}});
+ const rows=D.arm_order.filter(a=>by[a]).map(a=>{const e=by[a];
+  return `<tr><td>${D.arm_label[a]||a}</td><td>${e.n}</td><td style="color:var(--cyan);font-weight:700">${e.pn?Math.round(100*e.p/e.pn)+"%":"–"}</td><td>${fmt(e.m/e.mn)}</td><td>${fmt(e.ap/e.an,2)}</td><td>${fmt(e.s/e.sn,1)}</td><td>${e.ncn?(100*e.nc/e.ncn).toFixed(0)+"%":"–"}</td></tr>`;});
+ $("#agg").innerHTML=`<table><tr><th>arm (filtered set)</th><th>n</th><th>% of ceil</th><th>margin</th><th>app_ref</th><th>seam z</th><th>near-copy (real refs)</th></tr>
+ ${fn?`<tr><td style="color:var(--amber)">crossfade floor</td><td>${fn}</td><td>–</td><td style="color:var(--amber)">${fmt(fm/fn)}</td><td style="color:var(--amber)">${fmt(fa/fn,2)}</td><td>–</td><td>–</td></tr>`:""}
+ ${rows.join("")}</table>`;
+}
+let io;
+function render(){
+ const cs=visible();
+ $("#count").textContent=cs.length+" items";
+ $("#main").innerHTML=cs.slice(0,400).map((c,i)=>cardHtml(c,i)).join("");
+ agg(cs);
+ document.querySelectorAll("video[data-clip]").forEach(attachClamp);
+ io&&io.disconnect();
+ io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting)e.target.querySelectorAll("video").forEach(v=>{
+   if(!v.src){v.src=v.dataset.src;v.play().catch(()=>{});}});
+ }),{rootMargin:"200px"});
+ document.querySelectorAll(".card").forEach(c=>io.observe(c));
+}
+function initTabs(){
+ $("#tabs").innerHTML=Object.entries(PANELS).map(([k,p])=>
+  `<span class="tab${k===panel?" on":""}" data-p="${k}">${p.label}</span>`).join("");
+ document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{panel=t.dataset.p;initTabs();render();});
+}
+const classes=[...new Set(D.cards.map(c=>c.cls))].sort();
+classes.forEach(c=>{const o=document.createElement("option");o.value=o.textContent=c;$("#fcls").append(o);});
+["ftier","fside","fcls","fseed","fsort"].forEach(id=>$("#"+id).onchange=render);
+$("#fq").oninput=()=>render();
+$("#fcrack").onchange=render;
+initTabs();render();
+</script></body></html>
