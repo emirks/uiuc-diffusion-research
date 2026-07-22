@@ -1,0 +1,71 @@
+{
+ "adapter": "outputs/training/exp_062_ladder_r2r3_specialists/color_rain_keyed/checkpoints/lora_weights_step_02000.safetensors",
+ "target_modules": [
+  "attn1.to_k",
+  "attn1.to_q",
+  "attn1.to_v",
+  "attn1.to_out.0",
+  "attn2.to_k",
+  "attn2.to_q",
+  "attn2.to_v",
+  "attn2.to_out.0"
+ ],
+ "rows": [
+  {
+   "id": "R3X__color_rain__gas_transformation_6",
+   "model": "spec_color_rain",
+   "tier": "X",
+   "rung": "R3X",
+   "class": "color_rain",
+   "clip": "gas_transformation_6",
+   "endpoints": "gas_transformation_6",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A bearded man wearing a white cap, a green cable-knit quarter-zip sweater, blue pants, and white sneakers sits on a yellow fire hydrant next to a road under a clear blue sky.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3X__color_rain__illustration_scene_7",
+   "model": "spec_color_rain",
+   "tier": "X",
+   "rung": "R3X",
+   "class": "color_rain",
+   "clip": "illustration_scene_7",
+   "endpoints": "illustration_scene_7",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A young man in a leather jacket and denim shorts leans against a railing by a stone wall.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3X__color_rain__portal_4",
+   "model": "spec_color_rain",
+   "tier": "X",
+   "rung": "R3X",
+   "class": "color_rain",
+   "clip": "portal_4",
+   "endpoints": "portal_4",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A cartoon character with teal hair and a green apron rests their head on their hand while holding a pen over a notebook at a checkout counter inside a dimly lit convenience store with green fluorescent lighting.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3X__color_rain__wireframe_7",
+   "model": "spec_color_rain",
+   "tier": "X",
+   "rung": "R3X",
+   "class": "color_rain",
+   "clip": "wireframe_7",
+   "endpoints": "wireframe_7",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A green serum bottle sits among cacti on rocks.",
+   "reference_class": null,
+   "reference": null
+  }
+ ]
+}

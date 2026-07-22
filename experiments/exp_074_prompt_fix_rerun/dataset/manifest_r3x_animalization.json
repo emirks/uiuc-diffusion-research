@@ -1,0 +1,71 @@
+{
+ "adapter": "outputs/training/exp_062_ladder_r2r3_specialists/animalization_keyed/checkpoints/lora_weights_step_02000.safetensors",
+ "target_modules": [
+  "attn1.to_k",
+  "attn1.to_q",
+  "attn1.to_v",
+  "attn1.to_out.0",
+  "attn2.to_k",
+  "attn2.to_q",
+  "attn2.to_v",
+  "attn2.to_out.0"
+ ],
+ "rows": [
+  {
+   "id": "R3X__animalization__color_rain_0",
+   "model": "spec_animalization",
+   "tier": "X",
+   "rung": "R3X",
+   "class": "animalization",
+   "clip": "color_rain_0",
+   "endpoints": "color_rain_0",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A woman with long black hair and large sunglasses stands in a warm-lit kitchen, wearing a brown leather jacket, a light blue button-down shirt, and a brown skirt while holding a white telephone receiver to her ear.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3X__animalization__portal_4",
+   "model": "spec_animalization",
+   "tier": "X",
+   "rung": "R3X",
+   "class": "animalization",
+   "clip": "portal_4",
+   "endpoints": "portal_4",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A cartoon character with teal hair and a green apron rests their head on their hand while holding a pen over a notebook at a checkout counter inside a dimly lit convenience store with green fluorescent lighting.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3X__animalization__shadow_10",
+   "model": "spec_animalization",
+   "tier": "X",
+   "rung": "R3X",
+   "class": "animalization",
+   "clip": "shadow_10",
+   "endpoints": "shadow_10",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A smiling woman in a leather jacket, white top and light jeans sits against an iron fence.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3X__animalization__wireframe_7",
+   "model": "spec_animalization",
+   "tier": "X",
+   "rung": "R3X",
+   "class": "animalization",
+   "clip": "wireframe_7",
+   "endpoints": "wireframe_7",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A green serum bottle sits among cacti on rocks.",
+   "reference_class": null,
+   "reference": null
+  }
+ ]
+}

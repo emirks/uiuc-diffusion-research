@@ -1,0 +1,71 @@
+{
+ "adapter": "outputs/training/exp_062_ladder_r2r3_specialists/hero_flight_keyed/checkpoints/lora_weights_step_02000.safetensors",
+ "target_modules": [
+  "attn1.to_k",
+  "attn1.to_q",
+  "attn1.to_v",
+  "attn1.to_out.0",
+  "attn2.to_k",
+  "attn2.to_q",
+  "attn2.to_v",
+  "attn2.to_out.0"
+ ],
+ "rows": [
+  {
+   "id": "R3X__hero_flight__air_bending_1",
+   "model": "spec_hero_flight",
+   "tier": "X",
+   "rung": "R3X",
+   "class": "hero_flight",
+   "clip": "air_bending_1",
+   "endpoints": "air_bending_1",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A figure in a white knit balaclava and bright red hoodie leans against the hood of a blue car in a dusky parking lot, cradling a black motorcycle helmet in red-gloved hands.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3X__hero_flight__giant_grab_3",
+   "model": "spec_hero_flight",
+   "tier": "X",
+   "rung": "R3X",
+   "class": "hero_flight",
+   "clip": "giant_grab_3",
+   "endpoints": "giant_grab_3",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A woman with long dark hair stands in a green grassy field under a clear sky, wearing a bright pink matching sweatshirt and sweatpants set featuring the white number \"88\" and holding a small pink handbag in the warm sunlight.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3X__hero_flight__shadow_smoke_0",
+   "model": "spec_hero_flight",
+   "tier": "X",
+   "rung": "R3X",
+   "class": "hero_flight",
+   "clip": "shadow_smoke_0",
+   "endpoints": "shadow_smoke_0",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A young man with curly dark hair and a mustache, wearing a dark green cardigan over a white collared shirt and a patterned tie, lies in a field of yellow wildflowers below rocky mountains reading a large newspaper, seen from a close low frontal angle.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3X__hero_flight__water_bending_3",
+   "model": "spec_hero_flight",
+   "tier": "X",
+   "rung": "R3X",
+   "class": "hero_flight",
+   "clip": "water_bending_3",
+   "endpoints": "water_bending_3",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A young woman with long black hair, glasses, and a lollipop in her mouth stretches an open palm toward the camera, wearing a fluffy pink crop top and skirt outside a Japanese storefront hung with red banners and painted signs.",
+   "reference_class": null,
+   "reference": null
+  }
+ ]
+}

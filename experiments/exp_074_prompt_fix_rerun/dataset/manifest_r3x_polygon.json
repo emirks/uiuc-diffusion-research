@@ -1,0 +1,71 @@
+{
+ "adapter": "outputs/training/exp_062_ladder_r2r3_specialists/polygon_keyed/checkpoints/lora_weights_step_02000.safetensors",
+ "target_modules": [
+  "attn1.to_k",
+  "attn1.to_q",
+  "attn1.to_v",
+  "attn1.to_out.0",
+  "attn2.to_k",
+  "attn2.to_q",
+  "attn2.to_v",
+  "attn2.to_out.0"
+ ],
+ "rows": [
+  {
+   "id": "R3X__polygon__animalization_0",
+   "model": "spec_polygon",
+   "tier": "X",
+   "rung": "R3X",
+   "class": "polygon",
+   "clip": "animalization_0",
+   "endpoints": "animalization_0",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A woman in a red bomber jacket poses against a blue studio backdrop, hands on hips.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3X__polygon__color_rain_0",
+   "model": "spec_polygon",
+   "tier": "X",
+   "rung": "R3X",
+   "class": "polygon",
+   "clip": "color_rain_0",
+   "endpoints": "color_rain_0",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A woman with long black hair and large sunglasses stands in a warm-lit kitchen, wearing a brown leather jacket, a light blue button-down shirt, and a brown skirt while holding a white telephone receiver to her ear.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3X__polygon__portal_4",
+   "model": "spec_polygon",
+   "tier": "X",
+   "rung": "R3X",
+   "class": "polygon",
+   "clip": "portal_4",
+   "endpoints": "portal_4",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A cartoon character with teal hair and a green apron rests their head on their hand while holding a pen over a notebook at a checkout counter inside a dimly lit convenience store with green fluorescent lighting.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3X__polygon__wireframe_7",
+   "model": "spec_polygon",
+   "tier": "X",
+   "rung": "R3X",
+   "class": "polygon",
+   "clip": "wireframe_7",
+   "endpoints": "wireframe_7",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A green serum bottle sits among cacti on rocks.",
+   "reference_class": null,
+   "reference": null
+  }
+ ]
+}
