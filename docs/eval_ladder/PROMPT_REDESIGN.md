@@ -46,10 +46,13 @@ removed the class *name*, not the *outcome*. Three consequences:
 ## 3 · Immediate patch (running): exp_074, inference-only
 
 Corrected prompts on the EXISTING adapters — prompt states only the
-endpoints' knowledge: one-sided/foreign → `ICTRANS <Scene1>`; two-sided →
-`ICTRANS <Scene1> <Scene2>` (transition wording removed). R5 + R4X + R3X, 285
-gens twin-matched to originals, then v4 scoring + pool yardstick + forensic.
-See `experiments/exp_074_prompt_fix_rerun/README.md` (predictions
+endpoints' knowledge: one-sided/foreign → `ICTRANS <Scene1>` (V1); two-sided →
+`ICTRANS <Scene1> <Scene2>` (transition wording removed). Plus a V2
+marker-control lane (`… The scene transforms.` — phrase kept, outcome
+removed) because current adapters never trained without the phrase: V2−orig
+isolates outcome removal, V1−V2 isolates the format shift. R5 + R4X + R3X,
+561 gens twin-matched to originals, then v4 scoring + pool yardstick +
+forensic. See `experiments/exp_074_prompt_fix_rerun/README.md` (predictions
 pre-registered there).
 
 ## 4 · Retrain proposal (the real fix — next campaign)

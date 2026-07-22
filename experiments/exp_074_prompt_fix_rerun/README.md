@@ -25,6 +25,14 @@ knowledge — one-sided gets Scene 1 alone; two-sided gets both scenes with no
 transition phrasing; the transition itself must come from weights (R3X) or the
 in-context reference (R4X/R5).
 
+**V2 marker-control lane** (rungs `R5M`/`R4XM`/`R3XM`, prefix-only rows only,
+276 gens): prompt = `ICTRANS <Scene1> The scene transforms.` — outcome removed
+but the transition phrase kept (grammatically complete, no object). Rationale:
+the CURRENT adapters never saw a caption without that phrase, so V1 confounds
+outcome-removal with format shift. V2−original isolates outcome removal at
+fixed phrasing; V1−V2 isolates the phrase/format effect. (Retrained models per
+PROMPT_REDESIGN will drop the phrase in training too — no mismatch there.)
+
 Pre-registered predictions (2026-07-22, before scoring):
 1. Foreign forensic flips toward the donor: baseline top-1 "looks-like" is
    recipient 76%/83% (r3x/ic3_x), donor only 14%/8%. Corrected prompts raise

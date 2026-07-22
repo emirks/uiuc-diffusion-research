@@ -1,0 +1,71 @@
+{
+ "adapter": "outputs/training/exp_062_ladder_r2r3_specialists/super_fast_run_keyed/checkpoints/lora_weights_step_02000.safetensors",
+ "target_modules": [
+  "attn1.to_k",
+  "attn1.to_q",
+  "attn1.to_v",
+  "attn1.to_out.0",
+  "attn2.to_k",
+  "attn2.to_q",
+  "attn2.to_v",
+  "attn2.to_out.0"
+ ],
+ "rows": [
+  {
+   "id": "R3XM__super_fast_run__animalization_0",
+   "model": "spec_super_fast_run",
+   "tier": "X",
+   "rung": "R3XM",
+   "class": "super_fast_run",
+   "clip": "animalization_0",
+   "endpoints": "animalization_0",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A woman in a red bomber jacket poses against a blue studio backdrop, hands on hips. The scene transforms.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3XM__super_fast_run__illustration_scene_4",
+   "model": "spec_super_fast_run",
+   "tier": "X",
+   "rung": "R3XM",
+   "class": "super_fast_run",
+   "clip": "illustration_scene_4",
+   "endpoints": "illustration_scene_4",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A blonde woman with sunglasses and a headscarf blows a kiss with both hands at her cheeks. The scene transforms.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3XM__super_fast_run__polygon_4",
+   "model": "spec_super_fast_run",
+   "tier": "X",
+   "rung": "R3XM",
+   "class": "super_fast_run",
+   "clip": "polygon_4",
+   "endpoints": "polygon_4",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A young woman with her hair in a bun stands on a cobblestone street in bright daylight, wearing an oversized white graphic t-shirt, a long black skirt, white socks, and black loafers. The scene transforms.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3XM__super_fast_run__shadow_10",
+   "model": "spec_super_fast_run",
+   "tier": "X",
+   "rung": "R3XM",
+   "class": "super_fast_run",
+   "clip": "shadow_10",
+   "endpoints": "shadow_10",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A smiling woman in a leather jacket, white top and light jeans sits against an iron fence. The scene transforms.",
+   "reference_class": null,
+   "reference": null
+  }
+ ]
+}

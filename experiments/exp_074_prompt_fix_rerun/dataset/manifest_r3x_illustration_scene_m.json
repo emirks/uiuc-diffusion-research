@@ -1,0 +1,71 @@
+{
+ "adapter": "outputs/training/exp_062_ladder_r2r3_specialists/illustration_scene_keyed/checkpoints/lora_weights_step_02000.safetensors",
+ "target_modules": [
+  "attn1.to_k",
+  "attn1.to_q",
+  "attn1.to_v",
+  "attn1.to_out.0",
+  "attn2.to_k",
+  "attn2.to_q",
+  "attn2.to_v",
+  "attn2.to_out.0"
+ ],
+ "rows": [
+  {
+   "id": "R3XM__illustration_scene__gas_transformation_6",
+   "model": "spec_illustration_scene",
+   "tier": "X",
+   "rung": "R3XM",
+   "class": "illustration_scene",
+   "clip": "gas_transformation_6",
+   "endpoints": "gas_transformation_6",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A bearded man wearing a white cap, a green cable-knit quarter-zip sweater, blue pants, and white sneakers sits on a yellow fire hydrant next to a road under a clear blue sky. The scene transforms.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3XM__illustration_scene__portal_4",
+   "model": "spec_illustration_scene",
+   "tier": "X",
+   "rung": "R3XM",
+   "class": "illustration_scene",
+   "clip": "portal_4",
+   "endpoints": "portal_4",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A cartoon character with teal hair and a green apron rests their head on their hand while holding a pen over a notebook at a checkout counter inside a dimly lit convenience store with green fluorescent lighting. The scene transforms.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3XM__illustration_scene__shadow_10",
+   "model": "spec_illustration_scene",
+   "tier": "X",
+   "rung": "R3XM",
+   "class": "illustration_scene",
+   "clip": "shadow_10",
+   "endpoints": "shadow_10",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A smiling woman in a leather jacket, white top and light jeans sits against an iron fence. The scene transforms.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3XM__illustration_scene__wireframe_7",
+   "model": "spec_illustration_scene",
+   "tier": "X",
+   "rung": "R3XM",
+   "class": "illustration_scene",
+   "clip": "wireframe_7",
+   "endpoints": "wireframe_7",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A green serum bottle sits among cacti on rocks. The scene transforms.",
+   "reference_class": null,
+   "reference": null
+  }
+ ]
+}

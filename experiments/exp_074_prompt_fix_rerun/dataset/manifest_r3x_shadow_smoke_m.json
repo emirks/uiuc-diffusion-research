@@ -1,0 +1,71 @@
+{
+ "adapter": "outputs/training/exp_062_ladder_r2r3_specialists/shadow_smoke_keyed/checkpoints/lora_weights_step_02000.safetensors",
+ "target_modules": [
+  "attn1.to_k",
+  "attn1.to_q",
+  "attn1.to_v",
+  "attn1.to_out.0",
+  "attn2.to_k",
+  "attn2.to_q",
+  "attn2.to_v",
+  "attn2.to_out.0"
+ ],
+ "rows": [
+  {
+   "id": "R3XM__shadow_smoke__air_bending_1",
+   "model": "spec_shadow_smoke",
+   "tier": "X",
+   "rung": "R3XM",
+   "class": "shadow_smoke",
+   "clip": "air_bending_1",
+   "endpoints": "air_bending_1",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A figure in a white knit balaclava and bright red hoodie leans against the hood of a blue car in a dusky parking lot, cradling a black motorcycle helmet in red-gloved hands. The scene transforms.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3XM__shadow_smoke__firelava_4",
+   "model": "spec_shadow_smoke",
+   "tier": "X",
+   "rung": "R3XM",
+   "class": "shadow_smoke",
+   "clip": "firelava_4",
+   "endpoints": "firelava_4",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A young blonde woman in black cat-eye sunglasses and a white rhinestone-lettered tank top holds an orange lollipop to her mouth in bright sunlight, standing before the huge gray shutter doors of an industrial warehouse. The scene transforms.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3XM__shadow_smoke__flying_cam_transition_4",
+   "model": "spec_shadow_smoke",
+   "tier": "X",
+   "rung": "R3XM",
+   "class": "shadow_smoke",
+   "clip": "flying_cam_transition_4",
+   "endpoints": "flying_cam_transition_4",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A woman with a black bowl cut and wire glasses crouches on green parkland grass in a black sleeveless dress and long black gloves, holding an open black folding fan beside her head under a clear blue sky. The scene transforms.",
+   "reference_class": null,
+   "reference": null
+  },
+  {
+   "id": "R3XM__shadow_smoke__hero_flight_5",
+   "model": "spec_shadow_smoke",
+   "tier": "X",
+   "rung": "R3XM",
+   "class": "shadow_smoke",
+   "clip": "hero_flight_5",
+   "endpoints": "hero_flight_5",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "ICTRANS A man with a beard and glasses, wearing a yellow beanie, a cream-colored sweater, and yellow trousers, sits in a cream armchair reading a book in a warm, sunlit room. The scene transforms.",
+   "reference_class": null,
+   "reference": null
+  }
+ ]
+}
