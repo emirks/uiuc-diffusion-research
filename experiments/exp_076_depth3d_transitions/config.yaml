@@ -1,0 +1,29 @@
+model:
+  depth_model: "depth-anything/Depth-Anything-V2-Small-hf"   # Apache-2.0 checkpoint
+
+inputs:
+  cond_dir: "experiments/exp_062_ladder_r2r3_specialists/dataset/cond"
+  depth_cache: "outputs/analysis/exp_076_depth_cache"
+
+inference:
+  height: 640
+  width: 480
+  anchor_frames: 9      # the two given buckets, copied through verbatim
+  n_middle: 15          # rendered transition frames -> 33 total, (33-1) % 4 == 0
+  fps: 24
+  mesh_step: 2          # depth-mesh vertex spacing in pixels
+
+sampling:
+  n_pairs: 8               # endpoint pairs, drawn across different source clips
+  n_operators_per_pair: 3
+  n_counterfactual: 10     # one fixed pair x N operators
+  n_shared_operators: 2    # N operators x several pairs
+  n_pairs_per_shared_operator: 4
+  family_showcase: true    # one clean operator per camera family, on one pair
+
+runtime:
+  seed: 760722
+  device: "cpu"
+
+outputs:
+  dir: "outputs/videos/exp_076_depth3d_transitions"
