@@ -30,6 +30,21 @@ arms:
     conditioning: none
     note: prompt only — no prefix/suffix/reference. If it sits near the pool floor, the leak is gone.
 
+  # ---- v2.1.0: the two CLEAN baselines the comparison needs, generated on the treatment
+  # endpoints (owner call 2026-07-23). Neither carries a reference, so neither can copy a demo.
+  base_prompt:
+    kind: base
+    adapter: null
+    targets: null
+    conditioning: none
+    note: prompt only, on a treatment endpoint (sidedness-aware). Baseline #1.
+  base_cond:
+    kind: base
+    adapter: null
+    targets: null
+    note: prompt + endpoint conditioning (prefix/suffix), NO reference. Baseline #2 — the honest
+      no-adapter twin of specialist/generalist (base+reference is a copier, never a baseline).
+
   spec_animalization:      {kind: specialist, class: animalization,      targets: attn, step: 2000}
   spec_color_rain:         {kind: specialist, class: color_rain,         targets: attn, step: 2000}
   spec_gas_transformation: {kind: specialist, class: gas_transformation, targets: attn, step: 2000}

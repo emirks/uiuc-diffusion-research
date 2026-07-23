@@ -1,13 +1,13 @@
 """ladder2 — build the results viewer.
 
-    python eval_ladder/viewer/build.py [--out outputs/reports/ladder_viewer/index.html]
+    python eval_ladder/viewer/build.py [--out outputs/reports/ladder2/index.html]
 
 One self-contained HTML file: the ontology matrix, live statistics for whatever is selected,
 every metric table, and the per-input presentation cards. Video is referenced by relative path,
 so serve from the REPO ROOT:
 
     cd $LAB/diffusion-research && python3 -m http.server 8890
-    -> http://localhost:8890/outputs/reports/ladder_viewer/index.html
+    -> http://localhost:8890/outputs/reports/ladder2/index.html
 
 The data model has exactly two levels and no joins at view time:
 
@@ -117,15 +117,32 @@ def build() -> dict:
     by_id = {r["item_id"]: r for r in rows}
     ceil = run_eval.ceilings()
     metrics = per_item_metrics()
-    base_by_key = {r["input_key"]: r["item_id"] for r in rows if r["arm"] == "base"}
+    def tier_of(r: dict) -> str:
+        """The five tiers the viewer aligns into fixed columns. The two clean BASELINES are
+        prompt-only and prompt+endpoint (sidedness-aware, NO reference). base WITH a reference is
+        NOT a baseline — it is a copier (it reproduces the demo), shown separately and labelled."""
+        arm = r["arm"]
+        if arm in ("text_floor", "base_prompt"):
+            return "prompt_only"
+        if arm == "base_cond" or (arm == "base" and not r.get("reference")):
+            return "prompt_endpoint"
+        if arm == "base":                       # base WITH reference
+            return "copier"
+        if arm == "ic_gen":
+            return "generalist"
+        if arm.startswith("spec_"):
+            return "specialist"
+        return "other"
 
     def gen_entry(r: dict) -> dict | None:
         m = metrics.get(r["item_id"])
         if m is None:
             return None
+        # a baseline video is shared per (endpoint, sided) via video_key; treatments use item_id
+        vkey = r.get("video_key", r["item_id"])
         vids = {}
         for s in SEEDS:
-            p = GENS / r["arm"] / f"{r['item_id']}__s{s}.mp4"
+            p = GENS / r["arm"] / f"{vkey}__s{s}.mp4"
             if p.exists():
                 vids[str(s)] = rel(p)
         cond = ("none" if r.get("conditioning") == "none" or not r["endpoint"]
@@ -135,76 +152,95 @@ def build() -> dict:
             "novelty": r["ref_novelty"], "content": r["content"], "donor": r["donor_class"],
             "pct_type": r["pct_type"], "cond": cond, "ref": r.get("reference"),
             "mismatched_ref": bool(r.get("mismatched_reference")),
-            "ceil": ceil.get(r["gt_pool_class"]),
-            "tier": ("base" if r["arm"] == "base" else "floor" if r["arm"] == "text_floor"
-                     else "generalist" if r["arm"] == "ic_gen" else "specialist"),
+            "ceil": ceil.get(r["gt_pool_class"]), "tier": tier_of(r),
         }
         e["m"] = {k: (None if m.get(k) is None or m.get(k) != m.get(k) else round(m[k], 6))
                   for k, _l, _d, _dp, _g in METRICS}
         e["f"] = {k: (None if m.get(k) is None or m.get(k) != m.get(k) else round(m[k], 4))
                   for k, _l in FLAGS}
         e["pct"] = None if m.get("pct") != m.get("pct") else round(m.get("pct", float("nan")), 6)
-        # the keyed join, resolved once at build time
-        twin = base_by_key.get(r["input_key"])
-        if r["arm"] not in ("base", "text_floor") and twin and twin in metrics:
-            bp = metrics[twin].get("pct")
-            e["b_pct"] = None if bp != bp else round(bp, 6)
-            e["b_id"] = twin
         return e
 
-    cards: dict[str, dict] = {}
+    # ---- index the clean baselines by (donor, endpoint, sided): the video is content-identical
+    # across donors, but its pool-% is scored against THIS card's donor pool, so key by donor. ----
+    prompt_only_idx: dict[tuple, dict] = {}
+    prompt_end_idx: dict[tuple, dict] = {}
     for r in rows:
+        t = tier_of(r)
+        if t not in ("prompt_only", "prompt_endpoint") or not r["endpoint"]:
+            continue
         g = gen_entry(r)
         if g is None:
             continue
-        key = r["input_key"]
-        if key not in cards:
-            ep, sided = r["endpoint"], r["sided"]
-            pre = suf = None
-            if ep:
-                paths = ec.cond_paths(ep, sided)
-                pre = rel(paths["prefix"])
-                suf = rel(paths["suffix"]) if sided == "two" else None
-            cards[key] = {
-                "key": key, "prompt": r["prompt"], "endpoint": ep, "sided": sided,
-                "endpoint_class": r.get("endpoint_class"),
-                "endpoint_split": r.get("endpoint_split"),
-                "prefix_video": pre, "suffix_video": suf,
-                "endpoint_video": clip_video(ep) if ep else None,
-                "reference": r.get("reference"),
-                "reference_class": prompts.clip_class(r["reference"]) if r.get("reference") else None,
-                "reference_video": clip_video(r["reference"]) if r.get("reference") else None,
-                "gens": [],
-            }
-        cards[key]["gens"].append(g)
+        key = (r["donor_class"], r["endpoint"], r["sided"])
+        idx = prompt_only_idx if t == "prompt_only" else prompt_end_idx
+        # prefer the dedicated v2.1.0 arms; only fall back to an old base-no-ref twin
+        if key not in idx or r["arm"] in ("base_prompt", "base_cond"):
+            idx[key] = g
 
-    tier_rank = {"floor": 0, "base": 1, "specialist": 2, "generalist": 3}
-    ordered = []
-    for c in cards.values():
-        c["gens"].sort(key=lambda g: (tier_rank[g["tier"]], g["arm"]))
-        ordered.append(c)
-    # hardest first: zero-shot before unseen before seen; foreign before cross before same
+    # ---- a CARD is one transition applied to one endpoint: (donor, endpoint, sided) ----------
+    # slots hold the four aligned tiers + the copier; each is a list (usually one gen).
+    def new_card(r: dict) -> dict:
+        ep, sided = r["endpoint"], r["sided"]
+        paths = ec.cond_paths(ep, sided)
+        return {
+            "key": f"{r['donor_class']}|{ep}|{sided}",
+            "donor": r["donor_class"], "endpoint": ep, "sided": sided,
+            "prompt": r["prompt"],
+            "endpoint_class": r.get("endpoint_class"), "endpoint_split": r.get("endpoint_split"),
+            "prefix_video": rel(paths["prefix"]),
+            "suffix_video": rel(paths["suffix"]) if sided == "two" else None,
+            "endpoint_video": clip_video(ep),
+            "slots": {"prompt_only": [], "prompt_endpoint": [],
+                      "specialist": [], "generalist": [], "copier": []},
+        }
+
+    cards: dict[str, dict] = {}
+    for r in rows:
+        if tier_of(r) not in ("specialist", "generalist", "copier"):
+            continue                                    # baselines are attached, not carded
+        g = gen_entry(r)
+        if g is None:
+            continue
+        key = f"{r['donor_class']}|{r['endpoint']}|{r['sided']}"
+        card = cards.get(key) or cards.setdefault(key, new_card(r))
+        # carry the generalist's / copier's reference demo for its conditioning ribbon
+        if r.get("reference"):
+            g["ref_class"] = prompts.clip_class(r["reference"])
+            g["ref_video"] = clip_video(r["reference"])
+        card["slots"][g["tier"]].append(g)
+
+    # attach the clean baselines to every card by (donor, endpoint, sided)
+    for card in cards.values():
+        k = (card["donor"], card["endpoint"], card["sided"])
+        if k in prompt_only_idx:
+            card["slots"]["prompt_only"] = [prompt_only_idx[k]]
+        if k in prompt_end_idx:
+            card["slots"]["prompt_endpoint"] = [prompt_end_idx[k]]
+
+    # order cards hardest-first by the treatments they carry
     nrank = {n: i for i, n in enumerate(reversed(NOVELTY_ORDER))}
     crank = {c: i for i, c in enumerate(reversed(CONTENT_ORDER))}
     def card_sort(c):
-        t = [g for g in c["gens"] if g["tier"] != "base"]
-        t = t or c["gens"]
-        return (min(nrank.get(g["novelty"], 9) for g in t),
-                min(crank.get(g["content"], 9) for g in t), c["key"])
-    ordered.sort(key=card_sort)
+        t = c["slots"]["generalist"] + c["slots"]["specialist"]
+        return (min((nrank.get(g["novelty"], 9) for g in t), default=9),
+                min((crank.get(g["content"], 9) for g in t), default=9), c["key"])
+    ordered = sorted(cards.values(), key=card_sort)
 
-    treatments = [g for c in ordered for g in c["gens"] if g["tier"] not in ("base", "floor")]
+    treatments = [g for c in ordered for s in ("specialist", "generalist")
+                  for g in c["slots"][s]]
     matrix = collections.Counter((g["novelty"], g["content"]) for g in treatments)
 
+    n_vid = sum(len(g["videos"]) for c in ordered for s in c["slots"].values() for g in s)
     return {
         "meta": {
             "ladder": "ladder2",
-            "instrument": "transition_eval 4.0.0-draft.1 (m1a_S3)",
-            "registry_rows": len(rows), "generations": sum(
-                len(g["videos"]) for c in ordered for g in c["gens"]),
+            "instrument": "transition_eval 4.0.0 (m1a_S3)",
+            "registry_rows": len(rows), "generations": n_vid,
             "cards": len(ordered), "seeds": list(SEEDS),
             "px_prefix": ec.PX_PREFIX, "suffix_gen_frames": ec.SUFFIX_GEN_FRAMES,
             "frames": 121,
+            "tiers": ["prompt_only", "prompt_endpoint", "specialist", "generalist", "copier"],
         },
         "metrics": [{"k": k, "label": l, "dir": d, "dp": dp, "group": g}
                     for k, l, d, dp, g in METRICS],
@@ -219,7 +255,7 @@ def build() -> dict:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default="outputs/reports/ladder_viewer/index.html")
+    ap.add_argument("--out", default="outputs/reports/ladder2/index.html")
     args = ap.parse_args()
     data = build()
     out = REPO_ROOT / args.out

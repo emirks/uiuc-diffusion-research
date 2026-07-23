@@ -93,8 +93,10 @@ def plan(seeds: list[int], chunks: int) -> None:
             # seatbelt 4: the keyed join is EXACT. A treatment row with no base twin is an
             # error, never a silently-dropped or folded row. (This is the defect that flipped
             # two verdicts in the previous ladder.)
+            # base, text_floor and the two v2.1.0 clean baselines are un-twinned by design —
+            # they ARE baselines, not treatments joined to one.
             twin = None
-            if row["arm"] not in ("base", "text_floor"):
+            if row["arm"] not in ("base", "text_floor", "base_prompt", "base_cond"):
                 base = by_key.get(row["input_key"])
                 if base is None:
                     missing_twin.append(row["item_id"])

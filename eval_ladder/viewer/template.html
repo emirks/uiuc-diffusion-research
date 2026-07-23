@@ -104,15 +104,31 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
 .cellbox{flex:0 0 210px;background:var(--card2);border:1px solid var(--edge);border-radius:8px;
  padding:8px;display:flex;flex-direction:column;gap:6px}
 .cellbox.wide{flex:0 0 300px}
-.cellbox.blank{background:transparent !important;border:1px dashed #262b33 !important;
- opacity:.5;justify-content:center}
+.cellbox.blank{background:transparent !important;border:1px dashed #2a3038 !important;
+ opacity:.55;justify-content:center;min-height:150px}
 .cellbox.blank .bl{color:var(--dim2);font-size:10px;text-align:center;line-height:1.5}
-.cellbox.blank .bl b{color:var(--dim);font-weight:600;display:block;font-size:10.5px}
-/* per-group box tint — a glance tells you input vs context vs output */
-.grp.inputs .cellbox{background:#111c22;border-color:#1e3a44}
-.grp.ctx .cellbox{background:#181a1e;border-color:#2b2f36}
-.grp.outs .cellbox{background:#121b14;border-color:#204029}
-.grp.outs .cellbox h4{color:#cdeccd}
+.cellbox.blank .bl b{color:var(--dim);font-weight:600;display:block;font-size:10.5px;margin-bottom:3px}
+
+/* ONE horizontal row per card: an input band, then the aligned five-tier output band. */
+.grp.all{padding:10px 12px}
+.grp.all .row{align-items:stretch}
+.band{display:flex;gap:10px;flex:0 0 auto;align-items:stretch}
+.out-band{border-left:2px dashed var(--edge2);margin-left:6px;padding-left:12px}
+.cellbox.in{background:#111c22;border-color:#1e3a44}
+.cellbox.ctxbox{background:#17181c;border-color:#2b2f36;opacity:.9}
+/* per-tier tint so the same model reads as the same colour down every card */
+.cellbox.out.prompt_only{background:#10161d;border-color:#25384a}
+.cellbox.out.prompt_endpoint{background:#0f1a20;border-color:#1f4657}
+.cellbox.out.specialist{background:#101d15;border-color:#20502f}
+.cellbox.out.specialist h4{color:#bfe9c6}
+.cellbox.out.generalist{background:#181229;border-color:#3d2f66}
+.cellbox.out.generalist h4{color:#d3c4f5}
+.cellbox.out.copier{background:#21131400;border:1px dashed #5c2426;opacity:.7}
+.cellbox.out.copier h4{color:#e79aa0}
+.demo{margin-top:2px;border-top:1px solid var(--edge);padding-top:4px}
+.demo .dl{display:block;color:var(--ref);font-size:9px;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+.demo video{aspect-ratio:3/4;width:100%;border-radius:4px}
+.hl{color:#7ecbff}
 .cellbox h4{font-size:11px;line-height:1.35}
 .cellbox h4 .arm{color:var(--dim);font-weight:400;display:block;font-size:10px}
 .cellbox video{width:100%;aspect-ratio:3/4;object-fit:cover;background:#000;border-radius:5px;
@@ -246,57 +262,62 @@ function selAll(on){
 }
 
 // ---------------------------------------------------------------- filtering
-/** Treatment gens matching the current selection. Base/floor are never selected here —
- *  they are comparison arms and are pulled in per-card. */
-function selectedGens(){
-  const out = [];
-  for(const card of D.cards) for(const g of card.gens){
-    if(g.tier==="base"||g.tier==="floor") continue;
-    if(!tiers.has(g.tier)) continue;
-    if(sel.size && !sel.has(keyOf(g.novelty,g.content))) continue;
-    if(donor && g.donor!==donor) continue;
-    out.push(g);
-  }
-  return out;
+const TIERS = ["prompt_only","prompt_endpoint","specialist","generalist","copier"];
+const flat  = card => TIERS.flatMap(t => card.slots[t]);                 // every gen in a card
+const treatmentsOf = card => card.slots.specialist.concat(card.slots.generalist);
+
+/** A card matches the selection if it carries a treatment (specialist/generalist) in a selected
+ *  ontology cell, of an enabled tier, and (if set) the chosen donor. */
+function cardMatches(card){
+  const t = treatmentsOf(card).filter(g =>
+    tiers.has(g.tier) &&
+    (!sel.size || sel.has(keyOf(g.novelty,g.content))) &&
+    (!donor || g.donor===donor));
+  return t.length ? t : null;
 }
 function selectedCards(){
-  const ok = new Set(selectedGens().map(g=>g.id));
-  return D.cards.filter(c=>c.gens.some(g=>ok.has(g.id)))
-                .map(c=>({card:c, hit:c.gens.filter(g=>ok.has(g.id))}));
+  const out = [];
+  for(const card of D.cards){ const hit = cardMatches(card); if(hit) out.push({card, hit}); }
+  return out;
 }
+function selectedGens(){ return selectedCards().flatMap(e => e.hit); }   // matching treatments
+function shownGens(){ return selectedCards().flatMap(e => flat(e.card)); } // + baselines/copier
 
 // ---------------------------------------------------------------- statistics
-/** Mirrors run_eval.report(): level = mean pool-%, margin = mean(pct - base pct),
- *  unit of analysis is the DONOR CLASS (per-donor mean, then a sign test at 80%). */
-function cellStats(gens){
+/** Per cell: level = mean pool-%, margin = mean(treatment − CLEAN prompt+endpoint baseline),
+ *  paired per card (same endpoint) so it is honest; unit of analysis is the donor class
+ *  (per-donor mean, then a sign test at 80%). The base+reference copier is never the baseline. */
+function cellStats(entries){
   const by = {};
-  for(const g of gens) (by[g.cell] = by[g.cell]||[]).push(g);
-  return Object.entries(by).map(([cell,gs])=>{
-    const types = new Set(gs.map(g=>g.pct_type));
-    const level = mean(gs.map(g=>g.pct));
-    const deltas = gs.filter(g=>g.b_pct!=null&&g.pct!=null).map(g=>g.pct-g.b_pct);
+  for(const {card,hit} of entries){
+    const base = card.slots.prompt_endpoint[0];      // clean, donor-independent, this endpoint
+    for(const g of hit) (by[g.cell] = by[g.cell]||[]).push({g, base});
+  }
+  return Object.entries(by).map(([cell,items])=>{
+    const gs = items.map(i=>i.g);
+    const type = [...new Set(gs.map(g=>g.pct_type))].join("/");
     const perDonor = {};
-    for(const g of gs) if(g.b_pct!=null&&g.pct!=null)
-      (perDonor[g.donor] = perDonor[g.donor]||[]).push(g.pct-g.b_pct);
+    for(const {g,base} of items) if(base && base.pct!=null && g.pct!=null)
+      (perDonor[g.donor] = perDonor[g.donor]||[]).push(g.pct - base.pct);
     const dn = Object.keys(perDonor).length;
     const pos = Object.values(perDonor).filter(v=>mean(v)>0).length;
-    const invalid = gs.some(g=>g.tier==="generalist") && gs.some(g=>g.ref);
-    return {cell, n:gs.length, type:[...types].join("/"), level,
-            dpp: deltas.length? mean(deltas)*100 : null, pos, dn, invalid,
-            base: mean(gs.map(g=>g.b_pct))};
-  }).sort((a,b)=>a.cell<b.cell?-1:1);
+    return {cell, n:gs.length, type, level: mean(gs.map(g=>g.pct)),
+            dpp: dn ? mean(Object.values(perDonor).flat())*100 : null, pos, dn,
+            base: mean(items.map(i=>i.base?i.base.pct:null))};
+  });
 }
 
-function headlineTable(gens){
-  const rows = cellStats(gens).sort((a,b)=>            // decreasing level; empty levels last
+function headlineTable(entries){
+  const rows = cellStats(entries).sort((a,b)=>
     (b.level==null?-Infinity:b.level) - (a.level==null?-Infinity:a.level));
   if(!rows.length) return "<div class='empty'>nothing selected</div>";
   let h = `<div class="tw"><table class="d"><thead><tr>
-    <th class="l">cell</th><th>n</th><th>%type</th><th>base %</th><th>level %</th>
-    <th>Δpp vs base</th><th>donors +</th><th class="l">verdict</th></tr></thead><tbody>`;
+    <th class="l">cell</th><th>n</th><th>%type</th><th>prompt+end base %</th><th>level %</th>
+    <th>Δpp vs clean base</th><th>donors +</th><th class="l">verdict</th></tr></thead><tbody>`;
+  let pending = false;
   for(const r of rows){
-    const v = r.invalid ? `<span class="tag inv">INVALID</span>`
-      : r.dn===0 ? `<span class="tag floor">floor</span>`
+    if(r.dn===0) pending = true;
+    const v = r.dn===0 ? `<span class="tag floor">baseline pending</span>`
       : (r.pos/r.dn>=0.8) ? `<span class="tag pass">PASS</span>`
       : `<span class="tag weak">weak</span>`;
     h += `<tr><td class="l">${r.cell}</td><td class="num">${r.n}</td>
@@ -307,14 +328,11 @@ function headlineTable(gens){
       <td class="num">${r.dn?r.pos+"/"+r.dn:"—"}</td><td class="l">${v}</td></tr>`;
   }
   h += "</tbody></table></div>";
-  if(rows.some(r=>r.invalid)) h += `<div class="note"><b>INVALID</b> = the base twin wins this cell by
-    reproducing the in-context demo, so pool-% rewards the wrong behaviour. Numbers retained because
-    they were pre-registered; the claim-bearing readout for these cells is the transfer index
-    (Amendment-1), not this margin.</div>`;
-  h += `<div class="note"><b>%_same</b> is cross-class comparable and headline-eligible.
-    <b>(%_proxy)</b> is content-capped — absolute level is ranking-only, the claim is Δpp, where the
-    identical cap cancels. Unit of analysis is the donor class: per-donor mean, then a sign test
-    (PASS at ≥80% of donors positive).</div>`;
+  h += `<div class="note">Margin is vs the <b>clean prompt+endpoint baseline</b> (sidedness-aware,
+    no reference) — <b>not</b> the base+reference copier. <b>%_same</b> is cross-class comparable;
+    <b>(%_proxy)</b> is content-capped (Δpp is the claim). Unit = donor class, sign test, PASS at
+    ≥80% positive.` + (pending ? ` <b>“baseline pending”</b> = the clean prompt+endpoint baseline
+    for these endpoints is still generating.` : "") + `</div>`;
   return h;
 }
 
@@ -372,22 +390,25 @@ function armRollup(gens){
 }
 
 function drawStats(){
-  const gens = selectedGens();
+  const entries = selectedCards();
   const el = document.getElementById("stats");
-  if(!gens.length){ el.innerHTML = "<div class='empty'>no rows match — select a matrix cell</div>"; return; }
+  if(!entries.length){ el.innerHTML = "<div class='empty'>no rows match — select a matrix cell</div>"; return; }
+  const gens = entries.flatMap(e => e.hit);      // treatments
+  const all  = entries.flatMap(e => flat(e.card)); // + baselines + copier
   el.innerHTML =
-    `<details class="tbl" open><summary>headline — pool-% and margin vs base
-       <span class="hint">${gens.length} rows</span></summary>${headlineTable(gens)}</details>
+    `<details class="tbl" open><summary>headline — pool-% and margin vs the clean baseline
+       <span class="hint">${gens.length} treatment rows</span></summary>
+       ${headlineTable(entries)}</details>
      <details class="tbl"><summary>reference-relative metrics
-       <span class="hint">M1a · M1b · M1c · M2a, mean over the same-class GT pool</span></summary>
-       ${metricTable(gens,"ref")}</details>
+       <span class="hint">M1a · M1b · M1c · M2a — all tiers, mean over the same-class GT pool</span></summary>
+       ${metricTable(all,"ref")}</details>
      <details class="tbl"><summary>per-generation metrics
-       <span class="hint">M2b intrusion · M3a endpoint fidelity · M3b seam · timing scalars</span></summary>
-       ${metricTable(gens,"gen")}</details>
+       <span class="hint">M2b intrusion · M3a endpoint fidelity · M3b seam · timing scalars — all tiers</span></summary>
+       ${metricTable(all,"gen")}</details>
      <details class="tbl"><summary>flag rates
-       <span class="hint">fraction of scored generations</span></summary>${flagTable(gens)}</details>
+       <span class="hint">fraction of scored generations — all tiers</span></summary>${flagTable(all)}</details>
      <details class="tbl"><summary>per-arm rollup
-       <span class="hint">across every selected cell</span></summary>${armRollup(gens)}</details>`;
+       <span class="hint">every arm in the selection</span></summary>${armRollup(all)}</details>`;
 }
 
 // ---------------------------------------------------------------- conditioning bar
@@ -426,105 +447,80 @@ function vid(src, cls=""){
                   data-src="${D.meta.rel}${src}"></video>`
              : `<div class="miss">not available</div>`;
 }
-// A blank slot holds an arm's COLUMN position when this input has no answer from that arm, so the
-// same model always sits at the same x across every card — base under base, ic_gen under ic_gen.
-const ARM_TITLE = {base:"BASE · no adapter", text_floor:"TEXT FLOOR · prompt only",
-                   ic_gen:"IC-LoRA GENERALIST"};
-function armTitle(arm){ return ARM_TITLE[arm] || "SPECIALIST · " + arm.replace(/^spec_/, ""); }
-function blankBox(arm){
-  return `<div class="cellbox blank"><div class="bl"><b>${arm}</b>no generation<br>for this input</div></div>`;
-}
-function genBox(g, card){
-  const chips = [];
-  const pc = g.pct==null?null:g.pct;
-  chips.push(`<span class="chip big ${g.b_pct!=null?(g.pct>g.b_pct?"g":"r"):""}">%ceil <b>${pct(pc)}</b></span>`);
-  if(g.b_pct!=null){
-    const d = (g.pct-g.b_pct)*100;
-    chips.push(`<span class="chip ${d>0?"g":"r"}">Δ vs base <b>${(d>0?"+":"")+d.toFixed(1)}pp</b></span>`);
+// The five aligned tiers, fixed left→right, so the same model is always the same column.
+const TIER_LABEL = {
+  prompt_only:    ["① PROMPT ONLY",      "baseline · no conditioning"],
+  prompt_endpoint:["② PROMPT + ENDPOINT","baseline · prefix/suffix, no demo"],
+  specialist:     ["③ SPECIALIST",       "transition in the weights"],
+  generalist:     ["④ IC-LoRA GENERALIST","transition from a demo of the class"],
+  copier:         ["⚠ BASE + DEMO",       "NOT a baseline — copies the demo"],
+};
+function outBox(tier, list, card){
+  const [name, sub] = TIER_LABEL[tier];
+  if(!list.length){
+    const why = tier==="prompt_only" ? "baseline<br>generating…"
+      : tier==="prompt_endpoint" ? "baseline<br>generating…"
+      : tier==="copier" ? "no copier<br>for this task" : "not run<br>for this task";
+    return `<div class="cellbox out ${tier} blank"><div class="bl"><b>${name}</b>${why}</div></div>`;
   }
-  chips.push(`<span class="chip">app <b>${fmt(g.m.app_ref,3)}</b></span>`);
-  chips.push(`<span class="chip">copy <b>${fmt(g.m.copy_max,2)}</b></span>`);
-  const sz = g.m.max_seam_z;
-  chips.push(`<span class="chip ${sz>6?"r":sz>3?"a":""}">seam z <b>${fmt(sz,1)}</b></span>`);
-  chips.push(`<span class="chip">pre_dino <b>${fmt(g.m.prefix_dino,3)}</b></span>`);
-  if(g.f.near_copy>0) chips.push(`<span class="chip r">near_copy ${fmt(g.f.near_copy,2)}</span>`);
-  const tierName = {base:"BASE · no adapter", floor:"TEXT FLOOR · prompt only",
-                    specialist:"SPECIALIST", generalist:"IC-LoRA GENERALIST"}[g.tier];
-  return `<div class="cellbox">
-    <h4>${tierName}<span class="arm">${g.arm} · ${g.cell}</span></h4>
-    ${condBar(g,card)}
-    ${vid(g.videos[seed] || Object.values(g.videos)[0])}
-    <div class="chips">${chips.join("")}</div></div>`;
-}
-/** The fixed OUTPUT column order shared by every visible card. Union of arms actually shown
- *  (base + the selected treatments), canonically ordered so the same model is always the same
- *  column: base · text_floor · specialists (alphabetical) · ic_gen. */
-function columnArms(entries){
-  const present = new Set();
-  for(const e of entries)
-    for(const g of e.card.gens)
-      if(g.tier==="base"||g.tier==="floor"||e.hit.some(h=>h.id===g.id)) present.add(g.arm);
-  const specs = [...present].filter(a=>a.startsWith("spec_")).sort();
-  const order = [];
-  if(present.has("base")) order.push("base");
-  if(present.has("text_floor")) order.push("text_floor");
-  order.push(...specs);
-  if(present.has("ic_gen")) order.push("ic_gen");
-  return order;
+  return list.map(g=>{
+    const chips = [
+      `<span class="chip big">%ceil <b>${pct(g.pct)}</b></span>`,
+      `<span class="chip">app <b>${fmt(g.m.app_ref,3)}</b></span>`,
+      `<span class="chip">copy <b>${fmt(g.m.copy_max,2)}</b></span>`,
+      `<span class="chip ${g.m.max_seam_z>6?"r":g.m.max_seam_z>3?"a":""}">seam z <b>${fmt(g.m.max_seam_z,1)}</b></span>`,
+      `<span class="chip">pre_dino <b>${fmt(g.m.prefix_dino,3)}</b></span>`,
+    ];
+    if(g.f.near_copy>0) chips.push(`<span class="chip r">near_copy ${fmt(g.f.near_copy,2)}</span>`);
+    const lbl = g.novelty && g.novelty!=="none" ? `${g.cell} · ${g.novelty}` : g.cell;
+    return `<div class="cellbox out ${tier}">
+      <h4>${name}<span class="arm">${sub} · ${lbl}</span></h4>
+      ${condBar(g,card)}
+      ${vid(g.videos[seed] || Object.values(g.videos)[0])}
+      ${g.ref_video?`<div class="demo"><span class="dl">demo ref · ${g.ref_class}</span>${vid(g.ref_video)}</div>`:""}
+      <div class="chips">${chips.join("")}</div></div>`;
+  }).join("");
 }
 
-function cardHtml(entry, cols){
+// One card = one transition applied to one endpoint. Everything — inputs, context, the five tier
+// outputs — lives in ONE horizontal scrollable row, so the tiers align vertically across cards.
+function cardHtml(entry){
   const c = entry.card;
-  const shownGens = c.gens.filter(g=>g.tier==="base"||g.tier==="floor"||entry.hit.some(h=>h.id===g.id));
-  const byArm = Object.fromEntries(shownGens.map(g=>[g.arm, g]));
-
-  // INPUTS — fixed 4 slots so prompt/prefix/suffix/demo line up across every card
   const inputs =
-    `<div class="cellbox wide"><h4>PROMPT<span class="arm">identical for every arm</span></h4>
+    `<div class="cellbox in wide"><h4>PROMPT<span class="arm">identical for every tier</span></h4>
        <div class="ptext">${c.prompt.replace(/</g,"&lt;")}</div></div>` +
-    `<div class="cellbox"><h4>PREFIX — first ${D.meta.px_prefix} frames<span class="arm">model input</span></h4>
-       ${vid(c.prefix_video)}<div class="fn">${c.endpoint||""}</div></div>` +
+    `<div class="cellbox in"><h4>PREFIX · ${D.meta.px_prefix}f<span class="arm">start anchor</span></h4>
+       ${vid(c.prefix_video)}</div>` +
     (c.sided==="two"
-      ? `<div class="cellbox"><h4>SUFFIX — last ${D.meta.px_prefix} frames<span class="arm">model input · two-sided</span></h4>
-       ${vid(c.suffix_video)}<div class="fn">${c.endpoint}</div></div>`
-      : `<div class="cellbox blank"><div class="bl"><b>suffix</b>one-sided —<br>no end anchor</div></div>`) +
-    (c.reference_video
-      ? `<div class="cellbox"><h4>IN-CONTEXT DEMO<span class="arm">model input · IC-LoRA only</span></h4>
-       ${vid(c.reference_video)}<div class="fn">${c.reference} · ${c.reference_class}</div></div>`
-      : `<div class="cellbox blank"><div class="bl"><b>demo</b>no in-context<br>reference</div></div>`);
+      ? `<div class="cellbox in"><h4>SUFFIX · ${D.meta.px_prefix}f<span class="arm">end anchor</span></h4>${vid(c.suffix_video)}</div>`
+      : `<div class="cellbox in blank"><div class="bl"><b>suffix</b>one-sided<br>no end anchor</div></div>`) +
+    `<div class="cellbox ctxbox"><h4>ENDPOINT SOURCE<span class="arm">context · not an input</span></h4>
+       ${c.endpoint_video?vid(c.endpoint_video):`<div class="miss">DAVIS — off-distribution</div>`}
+       <div class="fn">${c.endpoint} · ${c.endpoint_class||"davis"}</div></div>`;
 
-  const ctx = c.endpoint_video
-    ? `<div class="cellbox"><h4>endpoint's own clip<span class="arm">NOT a model input</span></h4>
-       ${vid(c.endpoint_video)}<div class="fn">${c.endpoint} · ${c.endpoint_class} · ${c.endpoint_split||""}</div></div>`
-    : `<div class="cellbox"><h4>endpoint source<span class="arm">DAVIS — no corpus clip</span></h4>
-       <div class="miss">off-distribution footage</div><div class="fn">${c.endpoint||""}</div></div>`;
+  const outs = ["prompt_only","prompt_endpoint","specialist","generalist","copier"]
+    .map(t => outBox(t, c.slots[t], c)).join("");
 
-  // OUTPUTS — one slot per fixed column; blank where this input has no answer from that arm
-  const outs = cols.map(arm => byArm[arm] ? genBox(byArm[arm], c) : blankBox(arm)).join("");
-
-  const tags = [...new Set(entry.hit.map(g=>g.novelty+" · "+g.content))];
+  const tags = [...new Set(treatmentsOf(c).map(g=>g.novelty+" · "+g.content))];
   return `<div class="card">
-    <div class="chead"><b>${c.endpoint||"—"}</b>
-      <span class="dim">${c.sided}-sided · ${tags.join(" | ")}</span>
-      <span class="pill">
-        <span class="chip">${shownGens.length} arms</span>
-        <button class="pbtn" onclick="playAll(this)">↻ restart row synced</button></span></div>
-    <div class="grp inputs"><h5>model inputs</h5><div class="row">${inputs}</div></div>
-    <div class="grp ctx"><h5>context — not given to the model</h5><div class="row">${ctx}</div></div>
-    <div class="grp outs"><h5>outputs — aligned by model (blank = arm didn't answer this input)</h5>
-      <div class="row">${outs}</div></div>
+    <div class="chead"><b>${c.endpoint}</b>
+      <span class="dim">transition <b class="hl">${c.donor}</b> · ${c.sided}-sided · ${tags.join(" | ")}</span>
+      <span class="pill"><button class="pbtn" onclick="playAll(this)">↻ restart row synced</button></span></div>
+    <div class="grp all"><div class="row">
+      <div class="band in-band">${inputs}</div>
+      <div class="band out-band">${outs}</div>
+    </div></div>
   </div>`;
 }
 
 function drawCards(){
   const entries = selectedCards();
   document.getElementById("cardinfo").textContent =
-    `${entries.length} inputs match · showing ${Math.min(shown,entries.length)}`;
+    `${entries.length} transition×endpoint rows · showing ${Math.min(shown,entries.length)}`;
   const el = document.getElementById("cards");
-  if(!entries.length){ el.innerHTML = "<div class='empty'>no inputs match the selection</div>";
+  if(!entries.length){ el.innerHTML = "<div class='empty'>no rows match the selection</div>";
     document.getElementById("more").innerHTML=""; return; }
-  const cols = columnArms(entries);              // shared across all cards -> vertical alignment
-  el.innerHTML = entries.slice(0,shown).map(e=>cardHtml(e,cols)).join("");
+  el.innerHTML = entries.slice(0,shown).map(cardHtml).join("");
   document.getElementById("more").innerHTML = entries.length>shown
     ? `<button class="btn" onclick="shown+=${PAGE};drawCards()">show ${Math.min(PAGE,entries.length-shown)} more of ${entries.length-shown}</button>` : "";
   lazy();
