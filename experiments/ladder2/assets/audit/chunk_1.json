@@ -1,0 +1,191 @@
+[
+ {
+  "clip": "gas_transformation_7",
+  "class": "gas_transformation",
+  "sided": "onesided",
+  "S1": "A man in a cowboy hat, red jacket and cream trousers leans against a brown corrugated wall.",
+  "S2": null,
+  "start_img": "experiments/ladder2/assets/audit/gas_transformation_7__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "gas_transformation_8",
+  "class": "gas_transformation",
+  "sided": "onesided",
+  "S1": "Under bright overhead lighting inside a metallic elevator, a man with vibrant purple hair and sunglasses takes a mirror selfie while wearing a long grey coat, a shiny silver shirt, and black trousers.",
+  "S2": null,
+  "start_img": "experiments/ladder2/assets/audit/gas_transformation_8__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "gas_transformation_9",
+  "class": "gas_transformation",
+  "sided": "onesided",
+  "S1": "A young man with curly brown hair sits on a paved plaza in the warm golden hour sunlight, wearing a light blue short-sleeved shirt over a white t-shirt and light blue jeans while holding a red popsicle.",
+  "S2": null,
+  "start_img": "experiments/ladder2/assets/audit/gas_transformation_9__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "giant_grab_3",
+  "class": "giant_grab",
+  "sided": "twosided",
+  "S1": "A woman with long dark hair stands in a green grassy field under a clear sky, wearing a bright pink matching sweatshirt and sweatpants set featuring the white number \"88\" and holding a small pink handbag in the warm sunlight.",
+  "S2": "a vast green field of grass stretches toward a distant line of trees under a pale, clear sky.",
+  "start_img": "experiments/ladder2/assets/audit/giant_grab_3__start.png",
+  "end_img": "experiments/ladder2/assets/audit/giant_grab_3__end.png"
+ },
+ {
+  "clip": "hero_flight_0",
+  "class": "hero_flight",
+  "sided": "twosided",
+  "S1": "A muscular, bearded man with long blonde hair stands on a rooftop under a clear blue sky, wearing a sparkly pink and blue bodysuit and a voluminous pink feathered cape with a city skyline in the background.",
+  "S2": "a first-person perspective shows a clenched fist in a light blue sleeve with pink dots extended over a city street and skyline under a bright, sunny sky.",
+  "start_img": "experiments/ladder2/assets/audit/hero_flight_0__start.png",
+  "end_img": "experiments/ladder2/assets/audit/hero_flight_0__end.png"
+ },
+ {
+  "clip": "hero_flight_1",
+  "class": "hero_flight",
+  "sided": "twosided",
+  "S1": "A dark French Bulldog wearing a red superhero mask and cape stands on a large rock in a sunny outdoor setting with green trees and a clear blue sky in the background.",
+  "S2": "a dark-furred arm and hand are raised in the foreground, pointing toward a lush green valley under a bright, sunny sky.",
+  "start_img": "experiments/ladder2/assets/audit/hero_flight_1__start.png",
+  "end_img": "experiments/ladder2/assets/audit/hero_flight_1__end.png"
+ },
+ {
+  "clip": "hero_flight_2",
+  "class": "hero_flight",
+  "sided": "twosided",
+  "S1": "A blonde woman wearing a black latex mini dress with a red Adidas logo panel, sheer tights, and black flats stands next to the open door of a classic black car in an outdoor parking lot.",
+  "S2": "an arm clad in a shiny black sleeve is extended with a clenched fist toward brick buildings under a clear blue sky.",
+  "start_img": "experiments/ladder2/assets/audit/hero_flight_2__start.png",
+  "end_img": "experiments/ladder2/assets/audit/hero_flight_2__end.png"
+ },
+ {
+  "clip": "hero_flight_3",
+  "class": "hero_flight",
+  "sided": "twosided",
+  "S1": "A Black man with short textured hair and a goatee is shown in profile wearing a purple polo shirt with a yellow collar against a background of bright blue sky and white clouds.",
+  "S2": "a high-angle view looks down a city street lined with tall buildings and green trees under a bright blue sky filled with white clouds.",
+  "start_img": "experiments/ladder2/assets/audit/hero_flight_3__start.png",
+  "end_img": "experiments/ladder2/assets/audit/hero_flight_3__end.png"
+ },
+ {
+  "clip": "hero_flight_4",
+  "class": "hero_flight",
+  "sided": "twosided",
+  "S1": "A woman with curly brown hair sits on a tall blue stool on an indoor tennis court under bright overhead light, wearing a light blue polo shirt, matching shorts, white socks, and holding a cream-colored drawstring bag.",
+  "S2": "a bare arm with a clenched fist is positioned in the foreground against a high-angle view of a city skyline featuring a prominent building with a green dome and spire under a bright, daytime sky.",
+  "start_img": "experiments/ladder2/assets/audit/hero_flight_4__start.png",
+  "end_img": "experiments/ladder2/assets/audit/hero_flight_4__end.png"
+ },
+ {
+  "clip": "hero_flight_5",
+  "class": "hero_flight",
+  "sided": "twosided",
+  "S1": "A man with a beard and glasses, wearing a yellow beanie, a cream-colored sweater, and yellow trousers, sits in a cream armchair reading a book in a warm, sunlit room.",
+  "S2": "a person's arm in a beige knit sweater with a clenched fist is positioned in the foreground against a sunny urban landscape of multi-story buildings under a blue sky.",
+  "start_img": "experiments/ladder2/assets/audit/hero_flight_5__start.png",
+  "end_img": "experiments/ladder2/assets/audit/hero_flight_5__end.png"
+ },
+ {
+  "clip": "hero_flight_6",
+  "class": "hero_flight",
+  "sided": "twosided",
+  "S1": "A man in a green sweater and pink beanie stands outside a Parisian caf\u00e9 holding a shopping bag and a pink jacket.",
+  "S2": "a first-person aerial view above a narrow European street, a green-sleeved arm stretched out ahead.",
+  "start_img": "experiments/ladder2/assets/audit/hero_flight_6__start.png",
+  "end_img": "experiments/ladder2/assets/audit/hero_flight_6__end.png"
+ },
+ {
+  "clip": "hero_flight_7",
+  "class": "hero_flight",
+  "sided": "twosided",
+  "S1": "A tanned woman wearing a white bikini and a white head towel reclines on a poolside lounge chair in bright sunlight with cucumber slices over her eyes, next to a bottle of gummies and a large white book.",
+  "S2": "a person's bare arm with a clenched fist is extended over a terracotta-tiled rooftop overlooking a city street lined with houses and distant buildings under a bright, clear sky.",
+  "start_img": "experiments/ladder2/assets/audit/hero_flight_7__start.png",
+  "end_img": "experiments/ladder2/assets/audit/hero_flight_7__end.png"
+ },
+ {
+  "clip": "hero_flight_8",
+  "class": "hero_flight",
+  "sided": "twosided",
+  "S1": "In a crowded, dimly lit nightclub with blue and purple ambient lighting, a woman with short bleached blonde hair wearing a black lace bralette holds a dark glass bottle while surrounded by other partygoers.",
+  "S2": "a person's arm and clenched fist wearing a black wristband are extended in the foreground on a rooftop with air conditioning units, a large tank, and an antenna, set against a city skyline during sunset.",
+  "start_img": "experiments/ladder2/assets/audit/hero_flight_8__start.png",
+  "end_img": "experiments/ladder2/assets/audit/hero_flight_8__end.png"
+ },
+ {
+  "clip": "hero_flight_9",
+  "class": "hero_flight",
+  "sided": "twosided",
+  "S1": "A middle-aged man with dark hair and glasses, wearing a grey blazer over a light blue sweater and white collared shirt, sits at a table inside a warmly lit cafe reading a book, viewed through a window covered in raindrops.",
+  "S2": "in a high-angle view looking down a city street, a fist in a suit sleeve is extended in the foreground while a person wearing a grey jacket and dark pants is suspended in mid-air between tall buildings under an overcast sky.",
+  "start_img": "experiments/ladder2/assets/audit/hero_flight_9__start.png",
+  "end_img": "experiments/ladder2/assets/audit/hero_flight_9__end.png"
+ },
+ {
+  "clip": "hole_transition_0",
+  "class": "hole_transition",
+  "sided": "twosided",
+  "S1": "A man in a black suit crouches against a red graffiti-covered door, staring ahead.",
+  "S2": "a woman in a white top holding a small black case up to the camera under neon bar lights.",
+  "start_img": "experiments/ladder2/assets/audit/hole_transition_0__start.png",
+  "end_img": "experiments/ladder2/assets/audit/hole_transition_0__end.png"
+ },
+ {
+  "clip": "illustration_scene_0",
+  "class": "illustration_scene",
+  "sided": "onesided",
+  "S1": "A young woman with beaded braids and dark sunglasses poses in front of a plain grey wall under direct flash lighting, wearing a black and white leather jacket with \"U.B. TUFF\" printed on the front.",
+  "S2": null,
+  "start_img": "experiments/ladder2/assets/audit/illustration_scene_0__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "illustration_scene_1",
+  "class": "illustration_scene",
+  "sided": "onesided",
+  "S1": "A young man with a mustache, wearing a white bandana, a white t-shirt, grey shorts, and red and black sneakers, sits on a black equipment case next to a brick wall under bright flash lighting.",
+  "S2": null,
+  "start_img": "experiments/ladder2/assets/audit/illustration_scene_1__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "illustration_scene_2",
+  "class": "illustration_scene",
+  "sided": "onesided",
+  "S1": "A Black man wearing a tan double-breasted suit, a white shirt, and a dark patterned tie stands outdoors with his hands clasped behind a bright red car hood, surrounded by palm trees and lush greenery under bright daylight.",
+  "S2": null,
+  "start_img": "experiments/ladder2/assets/audit/illustration_scene_2__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "illustration_scene_3",
+  "class": "illustration_scene",
+  "sided": "onesided",
+  "S1": "A blonde woman wearing a blue and white checkered beanie, a blue athletic jersey, and gold jewelry touches her lip while posing outdoors at night under warm lighting with blurry streetlights in the background.",
+  "S2": null,
+  "start_img": "experiments/ladder2/assets/audit/illustration_scene_3__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "illustration_scene_4",
+  "class": "illustration_scene",
+  "sided": "onesided",
+  "S1": "A blonde woman with sunglasses and a headscarf blows a kiss with both hands at her cheeks.",
+  "S2": null,
+  "start_img": "experiments/ladder2/assets/audit/illustration_scene_4__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "illustration_scene_5",
+  "class": "illustration_scene",
+  "sided": "onesided",
+  "S1": "A Black male model poses in a desert landscape filled with cacti under a warm sunset sky, wearing a black western-style jacket with white fringe, a bright yellow shirt, black wide-leg trousers, and a turquoise necklace.",
+  "S2": null,
+  "start_img": "experiments/ladder2/assets/audit/illustration_scene_5__start.png",
+  "end_img": null
+ }
+]

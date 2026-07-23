@@ -1,0 +1,186 @@
+[
+ {
+  "item_id": "base__72f70066891b34ea__s42__ref_animalization_0",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__72f70066891b34ea__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/animalization/animalization_0.mp4",
+  "style": "animalization",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-fit pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/animalization_1_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__72f70066891b34ea__s42__ref_animalization_3",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__72f70066891b34ea__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/animalization/animalization_3.mp4",
+  "style": "animalization",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-fit pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/animalization_1_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__72f70066891b34ea__s42__ref_animalization_5",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__72f70066891b34ea__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/animalization/animalization_5.mp4",
+  "style": "animalization",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-fit pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/animalization_1_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__72f70066891b34ea__s42__ref_animalization_7",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__72f70066891b34ea__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/animalization/animalization_7.mp4",
+  "style": "animalization",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-fit pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/animalization_1_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__a5cc9501fa0704a5__s42__ref_illustration_scene_2",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__a5cc9501fa0704a5__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/illustration_scene/illustration_scene_2.mp4",
+  "style": "illustration_scene",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-fit pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/illustration_scene_0_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__a5cc9501fa0704a5__s42__ref_illustration_scene_4",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__a5cc9501fa0704a5__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/illustration_scene/illustration_scene_4.mp4",
+  "style": "illustration_scene",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-fit pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/illustration_scene_0_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__a5cc9501fa0704a5__s42__ref_illustration_scene_6",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__a5cc9501fa0704a5__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/illustration_scene/illustration_scene_6.mp4",
+  "style": "illustration_scene",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-fit pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/illustration_scene_0_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__a5cc9501fa0704a5__s42__ref_illustration_scene_8",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__a5cc9501fa0704a5__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/illustration_scene/illustration_scene_8.mp4",
+  "style": "illustration_scene",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-fit pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/illustration_scene_0_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__32b35ab3a0783d89__s42__ref_shadow_smoke_2",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__32b35ab3a0783d89__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_2.mp4",
+  "style": "shadow_smoke",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-fit pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/shadow_smoke_1_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/shadow_smoke_1_end9.mp4",
+   "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__32b35ab3a0783d89__s42__ref_shadow_smoke_4",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__32b35ab3a0783d89__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_4.mp4",
+  "style": "shadow_smoke",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-fit pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/shadow_smoke_1_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/shadow_smoke_1_end9.mp4",
+   "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__32b35ab3a0783d89__s42__ref_shadow_smoke_6",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__32b35ab3a0783d89__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_6.mp4",
+  "style": "shadow_smoke",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-fit pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/shadow_smoke_1_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/shadow_smoke_1_end9.mp4",
+   "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__32b35ab3a0783d89__s42__ref_shadow_smoke_8",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__32b35ab3a0783d89__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_8.mp4",
+  "style": "shadow_smoke",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-fit pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/shadow_smoke_1_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/shadow_smoke_1_end9.mp4",
+   "num_frames": 8
+  }
+ }
+]
