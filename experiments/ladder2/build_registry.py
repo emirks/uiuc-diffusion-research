@@ -52,6 +52,7 @@ PRIORITY = {
     "G-fit": "P0", "G-unseen-same": "P0", "G-unseen-cross": "P0",
     "G-memo-probe": "P1", "G-zs-cross": "P1",
     "G-zs-same": "P2",
+    "G-ref-control": "P1",
     "SP-foreign": "P2", "G-unseen-foreign": "P2", "G-zs-foreign": "P2",
     "text_floor": "P0",
 }
@@ -129,7 +130,8 @@ def content_of(endpoint_class: str, donor_class: str, foreign: bool) -> str:
 
 
 def make_row(cell: str, arm: str, endpoint: str, donor_class: str, corpus: Corpus,
-             token: str, reference: str | None = None) -> dict:
+             token: str, reference: str | None = None,
+             mismatched_reference: bool = False) -> dict:
     ep_class = prompts.clip_class(endpoint)
     sided = corpus.sided[donor_class]
     assert corpus.sided[ep_class] == sided, (
@@ -140,6 +142,7 @@ def make_row(cell: str, arm: str, endpoint: str, donor_class: str, corpus: Corpu
     ec.cond_paths(endpoint, sided)                       # seatbelt 6: windows exist, one rule
     row = {
         "item_id": f"{cell}__{arm}__{endpoint}" + (f"__ref_{reference}" if reference else ""),
+        "mismatched_reference": mismatched_reference,
         "cell": cell,
         "priority": PRIORITY[cell],
         "arm": arm,
@@ -201,6 +204,15 @@ def build_rows(corpus: Corpus, token: str) -> list[dict]:
         for clip in rotate(corpus.eval_endpoints(sided, exclude_class=cls), i * 3, CROSS_PER_DONOR):
             rows.append(make_row("G-unseen-cross", arm, clip, cls, corpus, token,
                                  reference=test[0]))
+        # reference-USE control: byte-identical input to G-unseen-same except the demo, which
+        # comes from a DIFFERENT class. Without it, G-unseen-same and G-memo-probe cannot show
+        # the model actually uses the demo rather than the endpoint + token alone. Scored
+        # against the SAME pool as its twin, so the pair isolates the demo's contribution.
+        wrong = [d for d in corpus.g_pool if d != cls and corpus.sided[d] == sided]
+        if wrong:
+            rows.append(make_row("G-ref-control", arm, test[1], cls, corpus, token,
+                                 reference=corpus.test[wrong[i % len(wrong)]][0],
+                                 mismatched_reference=True))
 
     # ---------------- zero-shot: reference from a class the generalist never trained on
     for i, cls in enumerate(sorted(corpus.held_out)):
@@ -283,6 +295,13 @@ def seatbelts(rows: list[dict], corpus: Corpus, inv: dict, token: str) -> None:
             if r["content"] != "same":
                 assert prompts.clip_class(r["reference"]) != r["endpoint_class"], \
                     f"{r['item_id']}: cross row whose reference shares the endpoint class"
+            elif r.get("mismatched_reference"):
+                # the control INVERTS the invariant on purpose: same content, wrong demo
+                assert prompts.clip_class(r["reference"]) != r["donor_class"], \
+                    f"{r['item_id']}: reference-use control whose demo is the donor class"
+            else:
+                assert prompts.clip_class(r["reference"]) == r["donor_class"], \
+                    f"{r['item_id']}: same-content row whose demo is not the donor class"
             if r["ref_novelty"] == "zero_shot":
                 assert r["reference"] not in trained_clips, f"{r['item_id']}: zs ref was trained"
         # Only the fit anchors may use content the ARM ITSELF was trained on. "train band" is
