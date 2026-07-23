@@ -86,15 +86,16 @@
 <main>
 
 <h1>ladder2 — the clean transition eval campaign</h1>
-<p class="muted">One campaign · non-leaking prompts · specialists + generalist · one inference pass · one eval, categorized by <b>reference-novelty × content</b>. <b>Status:</b> <span class="status">PROPOSAL — awaiting approval.</span> Judgment is the advisor's; facts, counts, samples, and the endpoint audit are verified against the repo on 2026-07-22.</p>
+<p class="muted">One campaign · non-leaking prompts · specialists + generalist · one inference pass · one eval, categorized by <b>reference-novelty × content</b>. <b>Status:</b> <span class="status"><b class="ok">BUILT &amp; EXECUTING</b> — registry frozen, 8 seatbelts green, pilot training chained.</span> Judgment is the advisor's; every count below is read out of the built <code>registry.jsonl</code>, not planned.</p>
+<div class="callout good"><b>What is real as of 2026-07-22 evening.</b> <code>registry.jsonl</code> = <b class="num">355 items → 710 generations</b> (P0 432 · P1 184 · P2 94). 12 training configs emitted with inline ID/OOD/control validation. All conditioning windows cut (222 corpus clips + 6 DAVIS pseudo-clips). Prompt renderer unit-tested (13 tests). Running: token probe → cond-clean precompute → prepare (verdict · rebuild · text embeddings · assemble) → 2-model pilot, chained with Slurm dependencies so nothing waits on a human.</div>
 
 <h2 class="sec" id="tl">TL;DR</h2>
 <div class="card"><div class="kv">
 <div>Prompts</div><div><b class="new">Leak-free, builder-rendered</b>: one-sided <code>"{S1}. sksz."</code>, two-sided <code>"{S1}. sksz. {S2}."</code>. <b class="ok">Audited one-by-one vs the frames: 0 transition leaks / 81 endpoints.</b> (Token <code>TR4NS1T10N</code> was tested and rejected — 8 subwords + transition prior; see prompts.)</div>
 <div>Two axes</div><div><b>Reference novelty</b> — <em>seen</em> (exact training demo) → <em>unseen</em> (new demo of a trained class) → <em>zero-shot</em> (held-out class). <b>Content</b> — <em>same / cross / foreign(DAVIS)</em>. Endpoints are always <b>test-band (untrained) content</b>, sidedness-matched, except two fit anchors.</div>
 <div>Your 3-tier</div><div>Adopted — with one added cell (<b>G-memo-probe</b>) so the seen→unseen gap holds endpoint-novelty fixed and cleanly separates "<em>memorized the exact demo</em>" from "<em>abstracts the transition</em>."</div>
-<div>%</div><div>Reported everywhere, <b>typed</b>: <code>%_same</code> (fair, cross-class comparable, headline-eligible) vs <code>%_proxy</code> (cross/foreign/DAVIS — content-capped, ranking-only). Headline for cross/foreign = margin Δ(treat−base)+2AFC.</div>
-<div>Volume</div><div><b class="num new">~730 generations</b>, tiered P0/P1/P2 so in-distribution headlines land first; DAVIS is gated &amp; additive.</div>
+<div>%</div><div>Reported everywhere, <b>typed</b>: <code>%_same</code> (fair, cross-class comparable, headline-eligible) vs <code>%_proxy</code> (cross/foreign/DAVIS — content-capped, ranking-only). Headline for cross/foreign = <b>Δ percentage-points</b> (treat−base, same input) + 2AFC — both arms eat the identical content cap, so it cancels in the difference.</div>
+<div>Volume</div><div><b class="num new">710 generations</b> / 355 registry items, tiered P0 (432) · P1 (184) · P2 (94) so in-distribution headlines land first; DAVIS is gated &amp; additive.</div>
 <div>Structure</div><div>one folder <code>experiments/ladder2/</code>, one <code>registry.jsonl</code>; seatbelts + controls. Dossier: <code>$LAB/misc/ladder2_redesign/DOSSIER.md</code>.</div>
 </div></div>
 
@@ -119,20 +120,24 @@
 <div class="tblwrap"><table>
 <tr><th>cell</th><th>ref novelty</th><th>endpoint</th><th>content</th><th>n</th><th>status</th></tr>
 <tr><td colspan="6" style="background:var(--card)"><b>Specialist</b> (transition baked in — no reference axis)</td></tr>
-<tr><td>SP-fit</td><td>—</td><td>train</td><td>same</td><td class="num">~11</td><td><span class="tag san">sanity</span></td></tr>
-<tr><td>SP-same</td><td>—</td><td>test</td><td>same</td><td class="num">11→9/11</td><td><span class="tag claim">CLAIM</span></td></tr>
-<tr><td>SP-cross</td><td>—</td><td>test</td><td>cross</td><td class="num">11→9/11</td><td><span class="tag claim">CLAIM</span></td></tr>
-<tr><td>SP-foreign</td><td>—</td><td>DAVIS</td><td>foreign</td><td class="num">~6</td><td><span class="tag gate">gated margin</span></td></tr>
+<tr><td>SP-fit</td><td>—</td><td>train</td><td>same</td><td class="num">11</td><td><span class="tag san">sanity</span> <span class="tag p0">P0</span></td></tr>
+<tr><td>SP-same</td><td>—</td><td>test</td><td>same</td><td class="num">22 → 9/11 classes</td><td><span class="tag claim">CLAIM</span> <span class="tag p0">P0</span></td></tr>
+<tr><td>SP-cross</td><td>—</td><td>test</td><td>cross</td><td class="num">22 → 9/11 classes</td><td><span class="tag claim">CLAIM</span> <span class="tag p0">P0</span></td></tr>
+<tr><td>SP-foreign</td><td>—</td><td>DAVIS</td><td>foreign</td><td class="num">6</td><td><span class="tag gate">gated margin</span> <span class="tag p2">P2</span></td></tr>
 <tr><td colspan="6" style="background:var(--card)"><b>Generalist</b> (IC-LoRA — reference carries the transition)</td></tr>
-<tr><td>G-fit</td><td>seen (train)</td><td>train</td><td>same</td><td class="num">~10</td><td><span class="tag san">memorization ceiling</span></td></tr>
-<tr><td><b>G-memo-probe</b></td><td>seen (train)</td><td><b>test</b></td><td>same</td><td class="num">~18→14/18</td><td><span class="tag claim">CLAIM (new — the seen→unseen anchor)</span></td></tr>
-<tr><td>G-unseen-same</td><td>unseen (test)</td><td>test</td><td>same</td><td class="num">~25→18/25</td><td><span class="tag claim">CLAIM</span></td></tr>
-<tr><td>G-unseen-cross</td><td>unseen (test)</td><td>test</td><td>cross</td><td class="num">~28→21/30</td><td><span class="tag claim">CLAIM</span> (+interference sub-tag)</td></tr>
-<tr><td>G-unseen-foreign</td><td>unseen (test)</td><td>DAVIS</td><td>foreign</td><td class="num">~6</td><td><span class="tag gate">gated headline-external</span></td></tr>
-<tr><td>G-zs-cross</td><td>zero-shot</td><td>test</td><td>cross</td><td class="num">5→5/5</td><td><span class="tag claim">CLAIM (fragile)</span></td></tr>
-<tr><td>G-zs-same</td><td>zero-shot</td><td>held-out</td><td>same</td><td class="num">5→5/5</td><td><span class="tag exp">exploratory (fragile)</span></td></tr>
-<tr><td>G-zs-foreign</td><td>zero-shot</td><td>DAVIS</td><td>foreign</td><td class="num">~4</td><td><span class="tag exp">exploratory gated</span></td></tr>
+<tr><td>G-fit</td><td>seen (train)</td><td>train</td><td>same</td><td class="num">13</td><td><span class="tag san">memorization ceiling</span> <span class="tag p0">P0</span></td></tr>
+<tr><td><b>G-memo-probe</b></td><td>seen (train)</td><td><b>test</b></td><td>same</td><td class="num">13</td><td><span class="tag claim">CLAIM (the seen→unseen anchor)</span> <span class="tag p1">P1</span></td></tr>
+<tr><td>G-unseen-same</td><td>unseen (test)</td><td>test</td><td>same</td><td class="num">13</td><td><span class="tag claim">CLAIM</span> <span class="tag p0">P0</span></td></tr>
+<tr><td>G-unseen-cross</td><td>unseen (test)</td><td>test</td><td>cross</td><td class="num">26</td><td><span class="tag claim">CLAIM</span> (+interference sub-tag) <span class="tag p0">P0</span></td></tr>
+<tr><td><b>G-ref-control</b></td><td>unseen, <b>MISMATCHED</b></td><td>test</td><td>same</td><td class="num">13</td><td><span class="tag gate">CONTROL — does the model actually use the demo?</span> <span class="tag p1">P1</span></td></tr>
+<tr><td>G-unseen-foreign</td><td>unseen (test)</td><td>DAVIS</td><td>foreign</td><td class="num">6</td><td><span class="tag gate">gated headline-external</span> <span class="tag p2">P2</span></td></tr>
+<tr><td>G-zs-cross</td><td>zero-shot</td><td>test</td><td>cross</td><td class="num">20 → 9/10 donors</td><td><span class="tag claim">CLAIM (fragile)</span> <span class="tag p1">P1</span></td></tr>
+<tr><td>G-zs-same</td><td>zero-shot</td><td>held-out</td><td>same</td><td class="num">8</td><td><span class="tag exp">exploratory (fragile)</span> <span class="tag p2">P2</span></td></tr>
+<tr><td>G-zs-foreign</td><td>zero-shot</td><td>DAVIS</td><td>foreign</td><td class="num">4</td><td><span class="tag exp">exploratory gated</span> <span class="tag p2">P2</span></td></tr>
+<tr><td>text_floor</td><td>—</td><td><b>none</b></td><td>—</td><td class="num">12</td><td><span class="tag san">leak-proof: prompt only, no conditioning</span> <span class="tag p0">P0</span></td></tr>
+<tr><td colspan="6" style="background:var(--card)"><b>base</b> — 166 deduplicated twins (one per distinct input), the denominator of every margin</td></tr>
 </table></div>
+<div class="callout warn"><b>G-ref-control is new since the proposal</b> and it is load-bearing: without it, <code>G-unseen-same</code> and <code>G-memo-probe</code> cannot distinguish "the model used the in-context demo" from "the endpoint and the token were enough." It is byte-identical to its <code>G-unseen-same</code> twin except the demo, which comes from a <em>different</em> class, and it is scored against the <em>same</em> pool — so the pair isolates the demo's contribution.</div>
 <div class="callout"><b>The two generalization gaps this buys:</b> <b>seen→unseen</b> = <code>G-memo-probe − G-unseen-same</code> (endpoint held fixed) = <em>demo-instance memorization</em>; <b>unseen→zero-shot</b> = <em>class generalization</em>. That's the capability-vs-lookup distinction. <b>Free headline</b> the grid also enables: <code>SP-same vs G-unseen-same</code> on the same class = "does in-context match the specialist's baked-in ceiling?" — the cost of IC vs specialization (derived, no new gens).</div>
 <h3>Rules (asserted at build)</h3>
 <ul>
@@ -232,15 +237,17 @@
 </table></div>
 <h3>DAVIS pick (distinctive foreground object)</h3>
 <p>All <b>90</b> sequences screened; ~35 keep. Cleanest singles: car-turn, lucia*, hike*, blackswan, tennis*, bear, mallard-water, kite-surf*, surf*, snowboard*, kid-football*, elephant, breakdance-flare*, rhino, car-shadow, rollerblade* <span class="muted">(* human)</span>.</p>
-<div class="card"><b>Proposed external roster</b> (fixed, shared across donors): one-sided singles <code>{lucia, mallard-water, car-turn}</code> · two-sided pairs <code>{(blackswan→rhino), (tennis→snowboard), (bear→elephant)}</code>. Needs hand-written captions + 854×480→480×640 resize.</div>
+<div class="card"><b>External roster — BUILT and verified on the rendered windows</b> (fixed, shared across donors, captions hand-written and run through the same renderer): one-sided singles <code>{lucia, mallard-water, <b class="new">hike</b>}</code> · two-sided pairs <code>{(blackswan→rhino), (tennis→snowboard), (bear→elephant)}</code>.
+<div class="callout bad" style="margin-bottom:0"><b><code>car-turn</code> was rejected.</b> It was in the proposed roster from the sequence-level screen, but the 854×480 → 480×640 portrait centre crop of that sequence contains <b>no distinctive foreground object at all</b> — it is shot <em>from</em> the car, so the crop is road, meadow and a mountain. Replaced by <code>hike</code>. Lesson applied to the whole roster: every window was checked frame-by-frame <em>after</em> cropping, not before. Two-sided suffixes also take the <b>first</b> 9 frames of the B sequence (DAVIS clips are not transitions, so any well-framed window is a valid end scene — and rhino's last frames crop to a headless rump).</div></div>
 
 <h2 class="sec" id="counts">How many generations</h2>
+<p class="muted">Read out of the built registry, not estimated. A <b>row × a seed = exactly one video</b>; every item carries 2 seeds.</p>
 <div class="tblwrap"><table>
-<tr><th>priority</th><th>cells</th><th class="num">gens</th></tr>
-<tr><td><span class="tag p0">P0 (must)</span></td><td>SP-same · SP-cross · G-unseen-same · G-unseen-cross · fit anchors · base · text_floor — full in-distribution capability + reference-dominance; no held-out ckpt, no DAVIS</td><td class="num">~470</td></tr>
-<tr><td><span class="tag p1">P1 (high)</span></td><td>G-memo-probe (validates your 3-tier) · G-zs-cross — needs held-out checkpoint</td><td class="num">~110</td></tr>
-<tr><td><span class="tag p2">P2 (gated/exploratory)</span></td><td>SP-foreign · G-unseen-foreign · G-zs-foreign (behind DAVIS pilot gate) · G-zs-same (fragile) · interference balancing</td><td class="num">~150</td></tr>
-<tr><td><b>grand total</b></td><td>~280 treatment items + base (input-hash dedup) + text_floor 24</td><td class="num"><b>~730</b></td></tr>
+<tr><th>priority</th><th>cells</th><th class="num">items</th><th class="num">gens</th></tr>
+<tr><td><span class="tag p0">P0 (must)</span></td><td>SP-same · SP-cross · G-unseen-same · G-unseen-cross · fit anchors · base · text_floor — full in-distribution capability + reference dominance; no held-out ckpt, no DAVIS</td><td class="num">216</td><td class="num">432</td></tr>
+<tr><td><span class="tag p1">P1 (high)</span></td><td>G-memo-probe · G-zs-cross · <b>G-ref-control</b> — the 3-tier validation and the demo-use control</td><td class="num">92</td><td class="num">184</td></tr>
+<tr><td><span class="tag p2">P2 (gated/exploratory)</span></td><td>SP-foreign · G-unseen-foreign · G-zs-foreign (behind the DAVIS pilot gate) · G-zs-same (fragile)</td><td class="num">47</td><td class="num">94</td></tr>
+<tr><td><b>grand total</b></td><td>189 treatment + 166 base (input-hash dedup, includes text_floor)</td><td class="num"><b>355</b></td><td class="num"><b>710</b></td></tr>
 </table></div>
 <div class="callout"><b>Cutting below P0 still yields a complete, publishable ladder.</b> DAVIS is additive, never load-bearing. GPU ≈ 30–40 H100-h + external; ~1.5 weeks to scored results, ~2 weeks buffer before Aug 16. Stats: unit=class; per-class mean of <code>(treatment−base)</code> v4 margin toward the cell's GT pool; one-sided sign test α=0.05 (n=5→5/5, n=11→9/11, n=18→14/18, n=25→18/25).</div>
 
@@ -256,6 +263,20 @@
 <div>Seeds</div><div>≥2 per eval item.</div>
 </div>
 <div class="callout good"><b>Your metric question:</b> <code>app_ref</code> is <b>pairwise</b> (gen vs one reference). The <b>pool score</b> = mean over the class pool = closeness to the class as a whole (mean-of-pairwise, not centroid). The <b>%</b> = <code>pool / class-ceiling</code>; the ceiling carries the same class-spread penalty so it cancels — only %_same is cross-class comparable, and <b>&gt;100% is legal</b>. Stats on raw; % is presentation.</div>
+<h3>The report table — % everywhere, claims still typed</h3>
+<p>You wanted the percentage to be the headline. It is — with one rule that keeps it honest. <code>run_eval.py --mode report</code> emits a single table and <b>hard-refuses</b> to aggregate across % types:</p>
+<pre>cell              n  %type   level %   Δpp vs base   donors +   verdict
+SP-same          22   same     87.4%         +21.3      10/11     positive
+SP-cross         22  proxy   (41.2%)         +18.7       9/11     positive
+G-unseen-same    13   same     81.0%         +15.9      11/13     positive
+G-ref-control    13   same    (…)            …           …        control
+                                    ^ greyed: content-capped level, ranking only</pre>
+<ul>
+<li><b>Same-content cells</b> (SP-same, G-memo-probe, G-unseen-same, G-zs-same): the absolute <code>%_same</code> IS the headline, directly comparable across classes.</li>
+<li><b>Cross / foreign cells</b>: the headline is <b>Δ percentage-points</b> = %<sub>proxy</sub>(treat) − %<sub>proxy</sub>(base) on the same input. Both arms are capped identically by the borrowed content, so the cap subtracts out and the Δpp is a fair, %-denominated effect size. The absolute level is still shown — greyed, labelled ranking-only.</li>
+<li>Unit of analysis is the <b>class</b>: per-donor mean of the margin, then a one-sided sign test.</li>
+</ul>
+<p class="muted">Numbers in the sample table above are illustrative formatting, not results — nothing is scored yet.</p>
 
 <h2 class="sec" id="seatbelts">Seatbelts &amp; controls</h2>
 <div class="tblwrap"><table>
@@ -267,8 +288,12 @@
 <tr><td>mask = f(conditioning); unit-tested on two-sided cross</td><td>foreign mis-mask</td></tr>
 <tr><td>one shared <code>encode_conditioning()</code> + train-start smoke assert</td><td>suffix bleed</td></tr>
 <tr><td><b>cell-derivation asserts</b>: novelty=f(ref_split,held_in) only · content class-disjointness (incl. zero-shot self-ref guard) · only fit anchors carry train endpoints · %-typing firewall</td><td>taxonomy drift / mislabeled cells</td></tr>
-<tr><td><b>clean-anchor pre-flight</b> (morph-profile change in the conditioning window below threshold)</td><td>mid-effect endpoints (polygon/raven/giant_grab)</td></tr>
+<tr><td><b>clip → class read from the frozen split</b>, never string-split</td><td>silent mislabelling (<code>action_run_setonfire_6</code> is class <code>run_set_on_fire</code>; <code>flame_transition_0</code> is <code>flame</code>)</td></tr>
+<tr><td><b>equal source counts</b> in every assembled training root</td><td>the trainer pairs sources by relative path and <b>silently skips</b> mismatches</td></tr>
+<tr><td>eval endpoints must be <b>audited</b> (checked against their own frames)</td><td>an unaudited caption sneaking into a claim-bearing row</td></tr>
 </table></div>
+<div class="callout good"><b>Two of these fired during the build and caught real bugs</b> — an <code>item_id</code> collision (text_floor drew from two overlapping class pools) and a train-band endpoint rule that had to be made per-<em>arm</em> (a held-out class's train clips are untrained content for every arm, so they are legitimate eval endpoints). The clip→class rule was added after the string-split assumption was caught mislabelling two classes.</div>
+<p class="muted">The clean-anchor pre-flight check was <b>dropped by the owner</b>; residual: the polygon / raven / giant_grab_3 conditioning windows are slightly mid-effect.</p>
 <div class="callout warn"><b>Two controls that must run (advisor flags):</b> (1) <b>reference-use control</b> — a mismatched-reference / 2AFC run on the <em>held-in ref cells</em> (not just DAVIS), or the G-unseen &amp; memo-probe claims can't show the model actually <em>uses</em> the demo vs just endpoint+token. (2) <b>base-accepts-reference</b> — verify the base model (no adapter) ingests an IC reference clip before trusting any generalist margin (<code>run_grid_inference</code> supports nullable adapter + optional ref, so likely fine — but smoke-test it).</div>
 
 <h2 class="sec" id="health">LoRA-health checklist</h2>
@@ -278,27 +303,29 @@
 <div class="card"><b>Live + validation</b><br><span class="muted">loss descending (IC~0.18) · per-σ bucket · concept emerges (c2v ~250) · OOD not near-copying ref · control no drift · ref-swap RMS≠0 · raw appearance not normalized · flags-off≡base bit-exact · config+commit snapshot · resume-safe · W&amp;B live</span></div>
 </div>
 
-<h2 class="sec" id="plan">Plan &amp; timeline</h2>
+<h2 class="sec" id="plan">Plan &amp; status</h2>
 <ol>
-<li><b>Build (no GPU).</b> splits + shared encode + builder + seatbelts + render_prompt tests + token probe + DAVIS captions/resize + <b>base-accepts-reference smoke test</b> → fill counts/probe here → <b>approval gate.</b></li>
-<li><b>Pilot · ½ day.</b> 2 specialists (one/two-sided) → inline validation @500 vs health bars.</li>
-<li><b>Fleet.</b> 9 more specialists + generalist. exp_073/074 read as they land.</li>
-<li><b>DAVIS pilot gate</b> (16 gens) → claim-bearing or showcase.</li>
-<li><b>Generate → score → analyze</b> (P0→P1→P2, base-dedup, ≥2 seeds, reference-use control on held-in cells) → propose F-blocks.</li>
+<li><b class="ok">DONE — build (no GPU).</b> Renderer + 13 unit tests · one shared conditioning definition · registry with 8 seatbelts · 12 training configs · inventory (139 clips, 0 missing latents) · conditioning windows for all 222 corpus clips · DAVIS roster built and verified.</li>
+<li><b>RUNNING — token probe</b> (base-model inertness, pre-registered rule: adding the token must move the base no more than changing the seed does) + the <b>base-accepts-IC-reference</b> smoke test on the same allocation.</li>
+<li><b>CHAINED — prepare</b> (verdict → rebuild registry/configs → text embeddings → assemble roots) then the <b>2-model pilot</b>: <code>spec_shadow_smoke</code> (two-sided, exercises the isolation-encoded suffix) + <code>spec_color_rain</code> (one-sided).</li>
+<li><b>GATE at pilot step 500</b> — smoke assert logged · loss descending, no NaN · ID filmstrip shows class-effect onset · control shows no drift. <b>Abort rule:</b> no ID onset by step 1000 → stop the fleet, do not revert to leaky prompts.</li>
+<li><b>Fleet</b> — 9 more specialists on <code>secondary</code>, generalist on one lab slot (~5 h &gt; secondary's 4 h cap).</li>
+<li><b>Generate → score → report</b> P0 → P1 → P2, ≥2 seeds, base deduped by input hash; DAVIS lanes only after their own 16-gen gate.</li>
 </ol>
+<div class="card"><b>Queue policy.</b> <code>secondary</code> is the workhorse (preemptible, 4 h cap): every ladder2 job is resumable — training resumes from checkpoints every 250 steps, generation skips existing outputs — so a preemption costs minutes. Short walltimes are requested deliberately because they backfill sooner. The lab HCESC partitions are shared with teammates: never more than 4 ladder2 jobs there at once.</div>
 
-<h2 class="sec" id="approve">Decisions I need</h2>
+<h2 class="sec" id="approve">Decisions taken (and the ones you should know about)</h2>
 <div class="card"><ol>
-<li><b>The ontology</b> (reference-novelty seen/unseen/zero-shot × same/cross/foreign; always-test endpoints; the added <b>G-memo-probe</b> so seen→unseen is clean)?</li>
-<li><b>% typing</b> (%_same headline-eligible, %_proxy ranking-only incl. DAVIS "to see") — good?</li>
-<li><b>~730-gen budget &amp; P0/P1/P2 priority</b> — good, or trim/expand?</li>
-<li><b>Anchor finding:</b> add the clean-anchor check + skip effect-onset-immediate clips (polygon/raven/giant_grab) — agree?</li>
-<li><b>Token</b> <code>sksz</code> (TR4NS1T10N rejected) · <b>seatbelts + the two controls</b> · <b>bleed-fix fold-in</b> — all OK?</li>
+<li><b>The fleet is gated ~2–3 h behind a 2-model pilot.</b> Everything else parallelises; the leak-free training prompt is the one genuinely new variable, and a systematic defect would otherwise cost a 12-model rerun. This is a deliberate, small deviation from "everything at once".</li>
+<li><b>Cross / foreign headlines are Δ percentage-points vs base, not absolute %.</b> The compliant version of "base it on the percentage": the identical content cap cancels in the difference. <code>%_same</code> stays the absolute headline for same-content cells.</li>
+<li><b>Lab-partition plan:</b> the generalist (~5 h, does not fit <code>secondary</code>'s 4 h cap) + a short probe + at most 2 rescue slots — never more than 4 at once. Everything else on <code>secondary</code> with requeue + resume.</li>
+<li><b>Abort rule, pre-committed:</b> if a pilot specialist shows no in-distribution effect onset by step 1000, the fleet stops and the filmstrips come back for judgment — reverting to leaky prompts is <em>not</em> an available fix.</li>
+<li><b>Training prompt == inference prompt</b>, enforced structurally: the same <code>render_prompt()</code> call emits the training captions and the registry rows. Every prior <code>conditions/</code> tree is discarded (they hold the leaky caption).</li>
 </ol>
-<p style="margin-bottom:0"><b>On your yes</b>, I build step 1 (no GPU, incl. the base-accepts-reference + reference-use control checks) and return with probe results + exact counts for the pilot go.</p></div>
+<p style="margin-bottom:0" class="muted">Owner-dropped: the clean-anchor pre-flight check. Owner-confirmed earlier: the ontology, the % typing, the holdout (10 classes, split v1.2), the token shortlist, the bleed-fix fold-in.</p></div>
 
 <hr>
-<p class="muted" style="font-size:12px">ladder2/REFERENCE.html · updated 2026-07-22 · single source of truth = <code>registry.jsonl</code>; dossier = <code>$LAB/misc/ladder2_redesign/DOSSIER.md</code>. Videos resolve when served from the repo root. Nothing trained or generated yet.</p>
+<p class="muted" style="font-size:12px">ladder2/REFERENCE.html · updated 2026-07-22 (build complete) · single source of truth = <code>registry.jsonl</code> (355 items / 710 generations, 8 seatbelts green); dossier = <code>$LAB/misc/ladder2_redesign/DOSSIER.md</code>; code on branch <code>ladder2</code>. Videos resolve when served from the repo root. No model trained yet — the pilot is chained behind the token probe.</p>
 </main>
 </div>
 <script>
