@@ -125,6 +125,8 @@ def run_text(device: str) -> None:
         "--output-dir", str(CONDITIONS),
         "--model-path", str(MODEL),
         "--text-encoder-path", str(GEMMA),
+        "--caption-column", "caption",
+        "--media-column", "video",     # default is "media_path"; our rows key on "video"
         "--device", device,
         "--overwrite",  # stale embeddings from an earlier token would silently poison training
     ]
