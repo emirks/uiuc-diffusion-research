@@ -95,3 +95,34 @@ conformance check. So each of these is an assert, not a convention.
 8. **%-typing firewall**: `%_same` (endpoint class == donor) is headline-eligible;
    `%_proxy` (cross/foreign) is content-capped and ranking-only — its claim is the margin
    Δpp vs base, where the identical cap cancels. `run_eval.py` refuses to mix the two.
+
+## Infrastructure map (versioned like the instrument)
+
+| piece | where | rule |
+|---|---|---|
+| design version | `VERSION` (semver) | bumps only with `SPEC.md` — see `VERSIONING.md` |
+| run records | `reports/v<DESIGN>-R<N>.md` | append-only; **newest VALID\* record = the current result** |
+| results viewer | `viewer/build.py` → `outputs/reports/ladder_viewer/index.html` | stable LATEST path; `--freeze <run-id>` writes the immutable per-run copy |
+| decision log | `$LAB/misc/ladder2_redesign/DOSSIER.md` | campaign narrative, advisor rulings |
+
+Rebuild the viewer any time (idempotent, ~10 s):
+
+    python eval_ladder/viewer/build.py
+    # serve from the repo root so the videos resolve:
+    python3 -m http.server 8890   ->  http://localhost:8890/outputs/reports/ladder_viewer/index.html
+
+## Side-by-side suitability (honest status, 2026-07-23)
+
+The viewer's card unit is a **task** = (transition donor, endpoint, sidedness); every tier that
+answered that task appears in one aligned row. Coverage today is partial **by design history,
+not by accident**: specialist cells (SP-*) and generalist cells (G-*) drew their endpoints
+independently, so only the overlap carries both tiers on one endpoint. Zero-shot donors are
+held-out classes — no specialist can exist for them, structurally. The two clean baselines
+(`base_prompt`, `base_cond`) were designed in v2.1.0 but their generation lane was stopped
+before completion (owner call); where they are missing, cards fall back to an old no-reference
+base twin when one exists, and the headline marks margins "baseline pending" rather than
+silently substituting the base+demo copier (which is NOT a baseline — it reproduces the demo).
+
+To make every non-zero-shot task fully 4-tier in the next design: draw SP and G cells from one
+shared endpoint roster, and generate the two clean baselines on that same roster (v2.1.0's
+`add_baselines.py` already dedups them to one video per endpoint — ~194 videos, ~4 GPU-h).

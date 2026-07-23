@@ -332,7 +332,8 @@ function headlineTable(entries){
     no reference) — <b>not</b> the base+reference copier. <b>%_same</b> is cross-class comparable;
     <b>(%_proxy)</b> is content-capped (Δpp is the claim). Unit = donor class, sign test, PASS at
     ≥80% positive.` + (pending ? ` <b>“baseline pending”</b> = the clean prompt+endpoint baseline
-    for these endpoints is still generating.` : "") + `</div>`;
+    for these endpoints was not generated (the baseline lane was stopped 2026-07-23); their margin
+    needs that lane re-run.` : "") + `</div>`;
   return h;
 }
 
@@ -458,8 +459,8 @@ const TIER_LABEL = {
 function outBox(tier, list, card){
   const [name, sub] = TIER_LABEL[tier];
   if(!list.length){
-    const why = tier==="prompt_only" ? "baseline<br>generating…"
-      : tier==="prompt_endpoint" ? "baseline<br>generating…"
+    const why = (tier==="prompt_only"||tier==="prompt_endpoint")
+        ? "clean baseline<br>not generated<br>(lane stopped)"
       : tier==="copier" ? "no copier<br>for this task"
       : tier==="specialist" && card.donor_heldout
         ? "held-out class —<br>no specialist exists<br>(by design)"
@@ -467,20 +468,20 @@ function outBox(tier, list, card){
     return `<div class="cellbox out ${tier} blank"><div class="bl"><b>${name}</b>${why}</div></div>`;
   }
   return list.map(g=>{
-    const chips = [
+    const chips = g.scored ? [
       `<span class="chip big">%ceil <b>${pct(g.pct)}</b></span>`,
       `<span class="chip">app <b>${fmt(g.m.app_ref,3)}</b></span>`,
       `<span class="chip">copy <b>${fmt(g.m.copy_max,2)}</b></span>`,
       `<span class="chip ${g.m.max_seam_z>6?"r":g.m.max_seam_z>3?"a":""}">seam z <b>${fmt(g.m.max_seam_z,1)}</b></span>`,
       `<span class="chip">pre_dino <b>${fmt(g.m.prefix_dino,3)}</b></span>`,
-    ];
-    if(g.f.near_copy>0) chips.push(`<span class="chip r">near_copy ${fmt(g.f.near_copy,2)}</span>`);
-    const lbl = g.novelty && g.novelty!=="none" ? `${g.cell} · ${g.novelty}` : g.cell;
+    ] : [`<span class="chip a big">unscored — video only</span>`];
+    if(g.scored && g.f.near_copy>0) chips.push(`<span class="chip r">near_copy ${fmt(g.f.near_copy,2)}</span>`);
+    const lbl = `${g.cell} · ${g.novelty}`;
+    // the box only INDICATES its inputs (bar + ribbon); the demo clip itself lives in INPUTS
     return `<div class="cellbox out ${tier}">
       <h4>${name}<span class="arm">${sub} · ${lbl}</span></h4>
       ${condBar(g,card)}
       ${vid(g.videos[seed] || Object.values(g.videos)[0])}
-      ${g.ref_video?`<div class="demo"><span class="dl">demo ref · ${g.ref_class}</span>${vid(g.ref_video)}</div>`:""}
       <div class="chips">${chips.join("")}</div></div>`;
   }).join("");
 }
@@ -489,6 +490,14 @@ function outBox(tier, list, card){
 // outputs — lives in ONE horizontal scrollable row, so the tiers align vertically across cards.
 function cardHtml(entry){
   const c = entry.card;
+  // INPUTS owns every input; each output box only INDICATES which of these it received
+  // (its conditioning bar + reference ribbon). The IC demo is an input to ④/⚠ only.
+  const refBoxes = (c.refs||[]).map(r=>
+    `<div class="cellbox in" style="border-color:${r.mismatched?'#5c2426':'#3b3163'};background:${r.mismatched?'#1c1113':'#141127'}">
+       <h4>${r.mismatched?"✕ MISMATCHED DEMO":"◧ IC DEMO"} · ${r.cls||"?"}
+         <span class="arm">input to ${r.tiers.map(t=>t==="generalist"?"④ generalist":"⚠ base+demo").join(" + ")} only</span></h4>
+       ${vid(r.video)}
+       <div class="fn">${r.clip}</div></div>`).join("");
   const inputs =
     `<div class="cellbox in wide"><h4>PROMPT<span class="arm">identical for every tier</span></h4>
        <div class="ptext">${c.prompt.replace(/</g,"&lt;")}</div></div>` +
@@ -497,6 +506,7 @@ function cardHtml(entry){
     (c.sided==="two"
       ? `<div class="cellbox in"><h4>SUFFIX · ${D.meta.px_prefix}f<span class="arm">end anchor</span></h4>${vid(c.suffix_video)}</div>`
       : `<div class="cellbox in blank"><div class="bl"><b>suffix</b>one-sided<br>no end anchor</div></div>`) +
+    refBoxes +
     `<div class="cellbox ctxbox"><h4>ENDPOINT SOURCE<span class="arm">context · not an input</span></h4>
        ${c.endpoint_video?vid(c.endpoint_video):`<div class="miss">DAVIS — off-distribution</div>`}
        <div class="fn">${c.endpoint} · ${c.endpoint_class||"davis"}</div></div>`;
@@ -611,7 +621,9 @@ document.addEventListener("click", e => {
 
 const m = D.meta;
 document.getElementById("sub").innerHTML =
-  `<span class="mono">${m.ladder}</span> · instrument <span class="mono">${m.instrument}</span> ·
+  `<span class="mono">${m.ladder}</span> · design <b class="mono">v${m.design_version}</b> ·
+   latest record <b class="mono">${m.run.id}</b> <span class="mono">(${m.run.status})</span> ·
+   instrument <span class="mono">${m.instrument}</span> ·
    ${m.registry_rows} registry rows · ${m.cards} transition×endpoint tasks · ${m.generations} videos ·
    seeds ${m.seeds.join(", ")} · ${m.frames}f @ prefix ${m.px_prefix} / suffix ${m.suffix_gen_frames}
    <br>side-by-side coverage: <b>${m.coverage.spec_and_gen}</b> of ${m.coverage.tasks} tasks carry

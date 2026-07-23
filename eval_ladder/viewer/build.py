@@ -68,15 +68,24 @@ FLAGS = [("near_copy", "near_copy"), ("cross_high", "cross_high"),
          ("app_saturated", "app_sat"), ("core_degenerate", "core_degen"),
          ("intruder", "intruder")]
 
-NOVELTY_ORDER = ["none", "seen", "unseen", "zero_shot"]
+#: The 3x3 ontology the owner specified (2026-07-23). Specialists have no reference axis, so
+#: their novelty is the ENDPOINT's: SP-fit (trained endpoint) -> seen, every other SP-* -> unseen.
+#: Zero-shot donors are held-out classes -> a specialist cannot exist there by design.
+NOVELTY_ORDER = ["seen", "unseen", "zero_shot"]
 CONTENT_ORDER = ["same", "cross", "foreign"]
-NOVELTY_LABEL = {"none": "no reference<br><span>specialist</span>",
-                 "seen": "seen<br><span>trained demo</span>",
-                 "unseen": "unseen<br><span>new demo, trained class</span>",
-                 "zero_shot": "zero-shot<br><span>held-out class</span>"}
-CONTENT_LABEL = {"same": "same<br><span>endpoint = donor class</span>",
-                 "cross": "cross<br><span>endpoint from another class</span>",
-                 "foreign": "foreign<br><span>DAVIS footage</span>"}
+NOVELTY_LABEL = {"seen": "seen<br><span>held-in training sample</span>",
+                 "unseen": "unseen<br><span>held-in test sample</span>",
+                 "zero_shot": "zero-shot<br><span>held-out sample</span>"}
+CONTENT_LABEL = {"same": "same<br><span>test sample from reference's class</span>",
+                 "cross": "cross<br><span>test sample from other class</span>",
+                 "foreign": "foreign<br><span>DAVIS endpoints</span>"}
+
+
+def novelty_view(r: dict) -> str:
+    """The matrix row a treatment lands in (see NOVELTY_ORDER comment)."""
+    if r["arm"].startswith("spec_"):
+        return "seen" if r["cell"] == "SP-fit" else "unseen"
+    return r["ref_novelty"]
 
 
 def rel(p: Path) -> str:
@@ -135,9 +144,6 @@ def build() -> dict:
         return "other"
 
     def gen_entry(r: dict) -> dict | None:
-        m = metrics.get(r["item_id"])
-        if m is None:
-            return None
         # a baseline video is shared per (endpoint, sided) via video_key = "<dir>/<name>";
         # treatments keep row x seed = one video under their own arm dir
         vk = r.get("video_key")
@@ -147,20 +153,28 @@ def build() -> dict:
             p = GENS / vdir / f"{vname}__s{s}.mp4"
             if p.exists():
                 vids[str(s)] = rel(p)
+        # UNSCORED but rendered videos still show (with an "unscored" badge) — hiding a video the
+        # user can play because a number is missing would misrepresent what exists on disk.
+        m = metrics.get(r["item_id"])
+        if m is None and not vids:
+            return None
+        m = m or {}
         cond = ("none" if r.get("conditioning") == "none" or not r["endpoint"]
                 else "prefix+suffix" if r["sided"] == "two" else "prefix")
         e = {
             "id": r["item_id"], "arm": r["arm"], "cell": r["cell"], "videos": vids,
-            "novelty": r["ref_novelty"], "content": r["content"], "donor": r["donor_class"],
+            "novelty": novelty_view(r), "content": r["content"], "donor": r["donor_class"],
             "pct_type": r["pct_type"], "cond": cond, "ref": r.get("reference"),
             "mismatched_ref": bool(r.get("mismatched_reference")),
             "ceil": ceil.get(r["gt_pool_class"]), "tier": tier_of(r),
+            "scored": bool(metrics.get(r["item_id"])),
         }
         e["m"] = {k: (None if m.get(k) is None or m.get(k) != m.get(k) else round(m[k], 6))
                   for k, _l, _d, _dp, _g in METRICS}
         e["f"] = {k: (None if m.get(k) is None or m.get(k) != m.get(k) else round(m[k], 4))
                   for k, _l in FLAGS}
-        e["pct"] = None if m.get("pct") != m.get("pct") else round(m.get("pct", float("nan")), 6)
+        e["pct"] = (None if m.get("pct") is None or m.get("pct") != m.get("pct")
+                    else round(m["pct"], 6))
         return e
 
     # ---- index the clean baselines by (donor, endpoint, sided): the video is content-identical
@@ -220,6 +234,23 @@ def build() -> dict:
         if k in prompt_end_idx:
             card["slots"]["prompt_endpoint"] = [prompt_end_idx[k]]
 
+    # ---- INPUTS section owns every input (owner call 2026-07-23): the IC demo clips move out of
+    # the output boxes into the card's input band; each output box only INDICATES what it received
+    # (conditioning bar + reference ribbon). One entry per distinct demo clip used on this card.
+    for card in cards.values():
+        refs: dict[str, dict] = {}
+        for slot in ("generalist", "copier"):
+            for g in card["slots"][slot]:
+                if not g.get("ref"):
+                    continue
+                e = refs.setdefault(g["ref"], {
+                    "clip": g["ref"], "cls": g.get("ref_class"),
+                    "video": g.get("ref_video"), "mismatched": g["mismatched_ref"],
+                    "tiers": []})
+                if slot not in e["tiers"]:
+                    e["tiers"].append(slot)
+        card["refs"] = sorted(refs.values(), key=lambda e: e["clip"])
+
     # order cards hardest-first by the treatments they carry
     nrank = {n: i for i, n in enumerate(reversed(NOVELTY_ORDER))}
     crank = {c: i for i, c in enumerate(reversed(CONTENT_ORDER))}
@@ -254,6 +285,8 @@ def build() -> dict:
     return {
         "meta": {
             "ladder": "ladder2",
+            "design_version": (LADDER / "VERSION").read_text().strip(),
+            "run": latest_run(),
             "instrument": "transition_eval 4.0.0 (m1a_S3)",
             "registry_rows": len(rows), "generations": n_vid,
             "cards": len(ordered), "seeds": list(SEEDS),
@@ -273,12 +306,23 @@ def build() -> dict:
     }
 
 
-def main() -> None:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default="outputs/reports/ladder_viewer/index.html")
-    args = ap.parse_args()
-    data = build()
-    out = REPO_ROOT / args.out
+def latest_run() -> dict:
+    """The newest run record and its status — the viewer header always names which record its
+    numbers belong to, so 'the latest valid one' is answerable from the page itself."""
+    recs = sorted((LADDER / "reports").glob("v*-R*.md"),
+                  key=lambda p: int(p.stem.rsplit("-R", 1)[1]))
+    if not recs:
+        return {"id": "unrecorded", "status": "NO RUN RECORD"}
+    rec = recs[-1]
+    status = "UNKNOWN"
+    for line in rec.read_text().splitlines():
+        if "**Status:" in line:
+            status = line.split("**Status:", 1)[1].split("**")[0].strip(" `·")
+            break
+    return {"id": rec.stem, "status": status}
+
+
+def emit(data: dict, out: Path) -> None:
     # Video src is repo-root-relative, but the browser resolves it against the HTML's own URL.
     # Prepend the relative hop from the viewer back to the repo root so paths resolve whether the
     # page is served over http from the repo root OR opened directly as a file://.
@@ -287,9 +331,27 @@ def main() -> None:
     tpl = (HERE / "template.html").read_text()
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(tpl.replace("/*__DATA__*/null", json.dumps(data, separators=(",", ":"))))
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out", default="outputs/reports/ladder_viewer/index.html",
+                    help="the stable LATEST viewer path")
+    ap.add_argument("--freeze", metavar="RUN_ID",
+                    help="also write an immutable copy to outputs/eval_ladder/<RUN_ID>/viewer.html"
+                         " (done once per run record, linked from reports/<RUN_ID>.md)")
+    args = ap.parse_args()
+    data = build()
+    out = REPO_ROOT / args.out
+    emit(data, out)
     m = data["meta"]
     print(f"[viewer] {m['cards']} cards, {m['generations']} videos -> {args.out} "
-          f"({out.stat().st_size / 1e6:.1f} MB)")
+          f"({out.stat().st_size / 1e6:.1f} MB)  [design v{m['design_version']} · "
+          f"{m['run']['id']} {m['run']['status']}]")
+    if args.freeze:
+        frozen = REPO_ROOT / "outputs/eval_ladder" / args.freeze / "viewer.html"
+        emit(data, frozen)
+        print(f"[viewer] frozen copy -> {frozen.relative_to(REPO_ROOT)}")
     print(f"[viewer] serve from the repo root:  python3 -m http.server 8890")
 
 

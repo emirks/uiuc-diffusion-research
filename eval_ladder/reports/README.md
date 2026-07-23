@@ -64,3 +64,9 @@ the **current run's results viewer** is kept at `outputs/reports/ladder_viewer/i
 (uncommitted artifact; the versioned copy lives in the run's own directory).
 
 *(R1 predates this rule; its artifacts stay at the paths its record names. The rule binds from R2.)*
+
+## Frozen viewers
+
+- `v2.0.0-R1` → `outputs/eval_ladder/v2.0.0-R1/viewer.html` (frozen 2026-07-23; includes the
+  partial v2.1.0 baseline videos that existed when the lane was stopped)
+- Stable latest: `outputs/reports/ladder_viewer/index.html` — always rebuilt from current data.
