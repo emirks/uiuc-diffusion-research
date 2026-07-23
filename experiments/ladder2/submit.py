@@ -38,6 +38,17 @@ HCESC_CAP = 4  # politeness: teammates share these nodes
 SPECIALIST_TIME = "02:30:00"   # 2000 steps ~= 1.5-2 h + inline validation
 GENERALIST_TIME = "06:00:00"   # 5000 steps ~= 4 h 45 m measured -> HCESC only (secondary caps at 4 h)
 
+MODEL_LOAD_MIN = 12            # measured: transformer + VAE + Gemma load before the first sample
+MIN_PER_GEN = 3                # measured: 480x640x121 @ 30 steps on an H100, with headroom
+
+
+def gen_walltime(rows_per_chunk: int) -> str:
+    """Ask for what the chunk needs, not the queue cap — short jobs backfill sooner, and on a
+    saturated cluster backfill is the only thing that actually starts a job."""
+    minutes = MODEL_LOAD_MIN + MIN_PER_GEN * rows_per_chunk
+    minutes = max(40, min(minutes, 230))          # stay under secondary's 4 h cap
+    return f"{minutes // 60:02d}:{minutes % 60:02d}:00"
+
 
 def sh(cmd: list[str]) -> str:
     out = subprocess.run(cmd, capture_output=True, text=True, check=True).stdout.strip()
@@ -86,13 +97,17 @@ def submit_gen(arms: list[str], seeds: list[str], priority: str | None, chunks: 
             continue
         k = min(chunks, n)
         target = SECONDARY if where == "secondary" else HCESC[where]
+        per_chunk = -(-n // k)
+        walltime = gen_walltime(per_chunk)
         for seed in seeds:
             sh(["sbatch", f"--job-name=ladder2_gen_{arm}_s{seed}", f"--array=0-{k - 1}", *target,
+                f"--time={walltime}",
                 f"--export=ALL,ARM={arm},SEED={seed},NCHUNKS={k}"
                 + (f",PRIORITY={priority}" if priority else "")
                 + (f",CELLS={cells}" if cells else ""),
                 str(HERE / "job_gen.sbatch")])
-        print(f"[submit] {arm}: {n} rows x {len(seeds)} seeds over {k} chunks")
+        print(f"[submit] {arm}: {n} rows x {len(seeds)} seeds over {k} chunks "
+              f"(~{per_chunk}/chunk, walltime {walltime})")
 
 
 def status() -> None:
