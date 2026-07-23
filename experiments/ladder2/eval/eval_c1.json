@@ -1,19 +1,5 @@
 [
  {
-  "item_id": "SP-fit__spec_animalization__animalization_1__s43__ref_animalization_4",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_animalization/SP-fit__spec_animalization__animalization_1__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/animalization/animalization_4.mp4",
-  "style": "animalization",
-  "n_endpoints": 1,
-  "arm": "spec_animalization",
-  "twin_of": "base__72f70066891b34ea__s43",
-  "notes": "ladder2 SP-fit pct=same seed=43",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/animalization_1_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
   "item_id": "SP-same__spec_animalization__animalization_0__s42__ref_animalization_5",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_animalization/SP-same__spec_animalization__animalization_0__s42.mp4",
   "reference_video": "data/processed/transitions_std121/animalization/animalization_5.mp4",
@@ -24,48 +10,6 @@
   "notes": "ladder2 SP-same pct=same seed=42",
   "condition_prefix": {
    "video": "experiments/ladder2/conds/animalization_0_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-same__spec_animalization__animalization_0__s43__ref_animalization_6",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_animalization/SP-same__spec_animalization__animalization_0__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/animalization/animalization_6.mp4",
-  "style": "animalization",
-  "n_endpoints": 1,
-  "arm": "spec_animalization",
-  "twin_of": "base__34669300d62f48fd__s43",
-  "notes": "ladder2 SP-same pct=same seed=43",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/animalization_0_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-same__spec_animalization__animalization_2__s42__ref_animalization_7",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_animalization/SP-same__spec_animalization__animalization_2__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/animalization/animalization_7.mp4",
-  "style": "animalization",
-  "n_endpoints": 1,
-  "arm": "spec_animalization",
-  "twin_of": "base__2966388bcb55ee2f__s42",
-  "notes": "ladder2 SP-same pct=same seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/animalization_2_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-cross__spec_animalization__color_rain_0__s43__ref_animalization_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_animalization/SP-cross__spec_animalization__color_rain_0__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/animalization/animalization_0.mp4",
-  "style": "animalization",
-  "n_endpoints": 1,
-  "arm": "spec_animalization",
-  "twin_of": "base__cea07623a3e45afb__s43",
-  "notes": "ladder2 SP-cross pct=proxy seed=43",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/color_rain_0_start9.mp4",
    "num_frames": 9
   }
  },
@@ -84,48 +28,6 @@
   }
  },
  {
-  "item_id": "SP-cross__spec_animalization__color_rain_2__s43__ref_animalization_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_animalization/SP-cross__spec_animalization__color_rain_2__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/animalization/animalization_0.mp4",
-  "style": "animalization",
-  "n_endpoints": 1,
-  "arm": "spec_animalization",
-  "twin_of": "base__46972c648aba3951__s43",
-  "notes": "ladder2 SP-cross pct=proxy seed=43",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/color_rain_2_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-foreign__spec_animalization__davis_hike__s42__ref_animalization_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_animalization/SP-foreign__spec_animalization__davis_hike__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/animalization/animalization_0.mp4",
-  "style": "animalization",
-  "n_endpoints": 1,
-  "arm": "spec_animalization",
-  "twin_of": "base__f2ee2438429d8e9e__s42",
-  "notes": "ladder2 SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-foreign__spec_animalization__davis_hike__s43__ref_animalization_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_animalization/SP-foreign__spec_animalization__davis_hike__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/animalization/animalization_0.mp4",
-  "style": "animalization",
-  "n_endpoints": 1,
-  "arm": "spec_animalization",
-  "twin_of": "base__f2ee2438429d8e9e__s43",
-  "notes": "ladder2 SP-foreign pct=proxy seed=43",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
   "item_id": "SP-foreign__spec_animalization__davis_lucia__s42__ref_animalization_0",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_animalization/SP-foreign__spec_animalization__davis_lucia__s42.mp4",
   "reference_video": "data/processed/transitions_std121/animalization/animalization_0.mp4",
@@ -140,37 +42,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_animalization__davis_lucia__s43__ref_animalization_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_animalization/SP-foreign__spec_animalization__davis_lucia__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/animalization/animalization_0.mp4",
-  "style": "animalization",
-  "n_endpoints": 1,
-  "arm": "spec_animalization",
-  "twin_of": "base__24919d2d95b28378__s43",
-  "notes": "ladder2 SP-foreign pct=proxy seed=43",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-foreign__spec_color_rain__davis_mallard_water__s42__ref_color_rain_0",
+  "item_id": "SP-foreign__spec_color_rain__davis_mallard_water__s42__ref_color_rain_3",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_color_rain/SP-foreign__spec_color_rain__davis_mallard_water__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/color_rain/color_rain_0.mp4",
-  "style": "color_rain",
-  "n_endpoints": 1,
-  "arm": "spec_color_rain",
-  "twin_of": "base__e1846b3e56d0069e__s42",
-  "notes": "ladder2 SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_mallard_water_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-foreign__spec_color_rain__davis_mallard_water__s42__ref_color_rain_5",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_color_rain/SP-foreign__spec_color_rain__davis_mallard_water__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/color_rain/color_rain_5.mp4",
+  "reference_video": "data/processed/transitions_std121/color_rain/color_rain_3.mp4",
   "style": "color_rain",
   "n_endpoints": 1,
   "arm": "spec_color_rain",
@@ -196,9 +70,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_color_rain__davis_mallard_water__s43__ref_color_rain_5",
+  "item_id": "SP-foreign__spec_color_rain__davis_mallard_water__s43__ref_color_rain_6",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_color_rain/SP-foreign__spec_color_rain__davis_mallard_water__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/color_rain/color_rain_5.mp4",
+  "reference_video": "data/processed/transitions_std121/color_rain/color_rain_6.mp4",
   "style": "color_rain",
   "n_endpoints": 1,
   "arm": "spec_color_rain",
@@ -210,23 +84,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_gas_transformation__davis_mallard_water__s42__ref_gas_transformation_0",
+  "item_id": "SP-foreign__spec_gas_transformation__davis_mallard_water__s42__ref_gas_transformation_3",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_gas_transformation/SP-foreign__spec_gas_transformation__davis_mallard_water__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/gas_transformation/gas_transformation_0.mp4",
-  "style": "gas_transformation",
-  "n_endpoints": 1,
-  "arm": "spec_gas_transformation",
-  "twin_of": "base__e1846b3e56d0069e__s42",
-  "notes": "ladder2 SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_mallard_water_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-foreign__spec_gas_transformation__davis_mallard_water__s42__ref_gas_transformation_4",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_gas_transformation/SP-foreign__spec_gas_transformation__davis_mallard_water__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/gas_transformation/gas_transformation_4.mp4",
+  "reference_video": "data/processed/transitions_std121/gas_transformation/gas_transformation_3.mp4",
   "style": "gas_transformation",
   "n_endpoints": 1,
   "arm": "spec_gas_transformation",
@@ -252,9 +112,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_gas_transformation__davis_mallard_water__s43__ref_gas_transformation_4",
+  "item_id": "SP-foreign__spec_gas_transformation__davis_mallard_water__s43__ref_gas_transformation_5",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_gas_transformation/SP-foreign__spec_gas_transformation__davis_mallard_water__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/gas_transformation/gas_transformation_4.mp4",
+  "reference_video": "data/processed/transitions_std121/gas_transformation/gas_transformation_5.mp4",
   "style": "gas_transformation",
   "n_endpoints": 1,
   "arm": "spec_gas_transformation",
@@ -266,27 +126,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_hero_flight__davis_blackswan_rhino__s42__ref_hero_flight_0",
+  "item_id": "SP-foreign__spec_hero_flight__davis_blackswan_rhino__s42__ref_hero_flight_3",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_hero_flight/SP-foreign__spec_hero_flight__davis_blackswan_rhino__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/hero_flight/hero_flight_0.mp4",
-  "style": "hero_flight",
-  "n_endpoints": 2,
-  "arm": "spec_hero_flight",
-  "twin_of": "base__7393ffe87a8344d2__s42",
-  "notes": "ladder2 SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_blackswan_rhino_start9.mp4",
-   "num_frames": 9
-  },
-  "condition_suffix": {
-   "video": "experiments/ladder2/conds/davis_blackswan_rhino_end9.mp4",
-   "num_frames": 8
-  }
- },
- {
-  "item_id": "SP-foreign__spec_hero_flight__davis_blackswan_rhino__s42__ref_hero_flight_4",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_hero_flight/SP-foreign__spec_hero_flight__davis_blackswan_rhino__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/hero_flight/hero_flight_4.mp4",
+  "reference_video": "data/processed/transitions_std121/hero_flight/hero_flight_3.mp4",
   "style": "hero_flight",
   "n_endpoints": 2,
   "arm": "spec_hero_flight",
@@ -320,9 +162,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_hero_flight__davis_blackswan_rhino__s43__ref_hero_flight_4",
+  "item_id": "SP-foreign__spec_hero_flight__davis_blackswan_rhino__s43__ref_hero_flight_5",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_hero_flight/SP-foreign__spec_hero_flight__davis_blackswan_rhino__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/hero_flight/hero_flight_4.mp4",
+  "reference_video": "data/processed/transitions_std121/hero_flight/hero_flight_5.mp4",
   "style": "hero_flight",
   "n_endpoints": 2,
   "arm": "spec_hero_flight",
@@ -338,23 +180,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_illustration_scene__davis_hike__s42__ref_illustration_scene_0",
+  "item_id": "SP-foreign__spec_illustration_scene__davis_hike__s42__ref_illustration_scene_3",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_illustration_scene/SP-foreign__spec_illustration_scene__davis_hike__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/illustration_scene/illustration_scene_0.mp4",
-  "style": "illustration_scene",
-  "n_endpoints": 1,
-  "arm": "spec_illustration_scene",
-  "twin_of": "base__f2ee2438429d8e9e__s42",
-  "notes": "ladder2 SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-foreign__spec_illustration_scene__davis_hike__s42__ref_illustration_scene_4",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_illustration_scene/SP-foreign__spec_illustration_scene__davis_hike__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/illustration_scene/illustration_scene_4.mp4",
+  "reference_video": "data/processed/transitions_std121/illustration_scene/illustration_scene_3.mp4",
   "style": "illustration_scene",
   "n_endpoints": 1,
   "arm": "spec_illustration_scene",
@@ -380,20 +208,6 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_polygon__davis_lucia__s42__ref_polygon_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_polygon/SP-foreign__spec_polygon__davis_lucia__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/polygon/polygon_0.mp4",
-  "style": "polygon",
-  "n_endpoints": 1,
-  "arm": "spec_polygon",
-  "twin_of": "base__24919d2d95b28378__s42",
-  "notes": "ladder2 SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
   "item_id": "SP-foreign__spec_polygon__davis_lucia__s42__ref_polygon_4",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_polygon/SP-foreign__spec_polygon__davis_lucia__s42.mp4",
   "reference_video": "data/processed/transitions_std121/polygon/polygon_4.mp4",
@@ -408,9 +222,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_polygon__davis_lucia__s43__ref_polygon_0",
+  "item_id": "SP-foreign__spec_polygon__davis_lucia__s43__ref_polygon_1",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_polygon/SP-foreign__spec_polygon__davis_lucia__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/polygon/polygon_0.mp4",
+  "reference_video": "data/processed/transitions_std121/polygon/polygon_1.mp4",
   "style": "polygon",
   "n_endpoints": 1,
   "arm": "spec_polygon",
@@ -422,9 +236,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_polygon__davis_lucia__s43__ref_polygon_4",
+  "item_id": "SP-foreign__spec_polygon__davis_lucia__s43__ref_polygon_7",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_polygon/SP-foreign__spec_polygon__davis_lucia__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/polygon/polygon_4.mp4",
+  "reference_video": "data/processed/transitions_std121/polygon/polygon_7.mp4",
   "style": "polygon",
   "n_endpoints": 1,
   "arm": "spec_polygon",
@@ -432,20 +246,6 @@
   "notes": "ladder2 SP-foreign pct=proxy seed=43",
   "condition_prefix": {
    "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-foreign__spec_polygon__davis_mallard_water__s42__ref_polygon_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_polygon/SP-foreign__spec_polygon__davis_mallard_water__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/polygon/polygon_0.mp4",
-  "style": "polygon",
-  "n_endpoints": 1,
-  "arm": "spec_polygon",
-  "twin_of": "base__e1846b3e56d0069e__s42",
-  "notes": "ladder2 SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_mallard_water_start9.mp4",
    "num_frames": 9
   }
  },
@@ -464,9 +264,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_polygon__davis_mallard_water__s43__ref_polygon_0",
+  "item_id": "SP-foreign__spec_polygon__davis_mallard_water__s43__ref_polygon_1",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_polygon/SP-foreign__spec_polygon__davis_mallard_water__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/polygon/polygon_0.mp4",
+  "reference_video": "data/processed/transitions_std121/polygon/polygon_1.mp4",
   "style": "polygon",
   "n_endpoints": 1,
   "arm": "spec_polygon",
@@ -478,9 +278,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_polygon__davis_mallard_water__s43__ref_polygon_4",
+  "item_id": "SP-foreign__spec_polygon__davis_mallard_water__s43__ref_polygon_7",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_polygon/SP-foreign__spec_polygon__davis_mallard_water__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/polygon/polygon_4.mp4",
+  "reference_video": "data/processed/transitions_std121/polygon/polygon_7.mp4",
   "style": "polygon",
   "n_endpoints": 1,
   "arm": "spec_polygon",
@@ -488,20 +288,6 @@
   "notes": "ladder2 SP-foreign pct=proxy seed=43",
   "condition_prefix": {
    "video": "experiments/ladder2/conds/davis_mallard_water_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-foreign__spec_portal__davis_hike__s42__ref_portal_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_portal/SP-foreign__spec_portal__davis_hike__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/portal/portal_0.mp4",
-  "style": "portal",
-  "n_endpoints": 1,
-  "arm": "spec_portal",
-  "twin_of": "base__f2ee2438429d8e9e__s42",
-  "notes": "ladder2 SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
    "num_frames": 9
   }
  },
@@ -520,9 +306,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_portal__davis_hike__s43__ref_portal_0",
+  "item_id": "SP-foreign__spec_portal__davis_hike__s43__ref_portal_1",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_portal/SP-foreign__spec_portal__davis_hike__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/portal/portal_0.mp4",
+  "reference_video": "data/processed/transitions_std121/portal/portal_1.mp4",
   "style": "portal",
   "n_endpoints": 1,
   "arm": "spec_portal",
@@ -534,9 +320,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_portal__davis_hike__s43__ref_portal_12",
+  "item_id": "SP-foreign__spec_portal__davis_hike__s43__ref_portal_4",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_portal/SP-foreign__spec_portal__davis_hike__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/portal/portal_12.mp4",
+  "reference_video": "data/processed/transitions_std121/portal/portal_4.mp4",
   "style": "portal",
   "n_endpoints": 1,
   "arm": "spec_portal",
@@ -544,20 +330,6 @@
   "notes": "ladder2 SP-foreign pct=proxy seed=43",
   "condition_prefix": {
    "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-foreign__spec_portal__davis_lucia__s42__ref_portal_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_portal/SP-foreign__spec_portal__davis_lucia__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/portal/portal_0.mp4",
-  "style": "portal",
-  "n_endpoints": 1,
-  "arm": "spec_portal",
-  "twin_of": "base__24919d2d95b28378__s42",
-  "notes": "ladder2 SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
    "num_frames": 9
   }
  },
@@ -576,9 +348,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_portal__davis_lucia__s43__ref_portal_0",
+  "item_id": "SP-foreign__spec_portal__davis_lucia__s43__ref_portal_1",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_portal/SP-foreign__spec_portal__davis_lucia__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/portal/portal_0.mp4",
+  "reference_video": "data/processed/transitions_std121/portal/portal_1.mp4",
   "style": "portal",
   "n_endpoints": 1,
   "arm": "spec_portal",
@@ -590,9 +362,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_portal__davis_lucia__s43__ref_portal_12",
+  "item_id": "SP-foreign__spec_portal__davis_lucia__s43__ref_portal_4",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_portal/SP-foreign__spec_portal__davis_lucia__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/portal/portal_12.mp4",
+  "reference_video": "data/processed/transitions_std121/portal/portal_4.mp4",
   "style": "portal",
   "n_endpoints": 1,
   "arm": "spec_portal",
@@ -600,20 +372,6 @@
   "notes": "ladder2 SP-foreign pct=proxy seed=43",
   "condition_prefix": {
    "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-foreign__spec_shadow__davis_mallard_water__s42__ref_shadow_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_shadow/SP-foreign__spec_shadow__davis_mallard_water__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/shadow/shadow_0.mp4",
-  "style": "shadow",
-  "n_endpoints": 1,
-  "arm": "spec_shadow",
-  "twin_of": "base__e1846b3e56d0069e__s42",
-  "notes": "ladder2 SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_mallard_water_start9.mp4",
    "num_frames": 9
   }
  },
@@ -632,9 +390,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_shadow__davis_mallard_water__s43__ref_shadow_0",
+  "item_id": "SP-foreign__spec_shadow__davis_mallard_water__s43__ref_shadow_1",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_shadow/SP-foreign__spec_shadow__davis_mallard_water__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/shadow/shadow_0.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow/shadow_1.mp4",
   "style": "shadow",
   "n_endpoints": 1,
   "arm": "spec_shadow",
@@ -646,9 +404,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_shadow__davis_mallard_water__s43__ref_shadow_12",
+  "item_id": "SP-foreign__spec_shadow__davis_mallard_water__s43__ref_shadow_2",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_shadow/SP-foreign__spec_shadow__davis_mallard_water__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/shadow/shadow_12.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow/shadow_2.mp4",
   "style": "shadow",
   "n_endpoints": 1,
   "arm": "spec_shadow",
@@ -656,20 +414,6 @@
   "notes": "ladder2 SP-foreign pct=proxy seed=43",
   "condition_prefix": {
    "video": "experiments/ladder2/conds/davis_mallard_water_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-foreign__spec_shadow__davis_hike__s42__ref_shadow_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_shadow/SP-foreign__spec_shadow__davis_hike__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/shadow/shadow_0.mp4",
-  "style": "shadow",
-  "n_endpoints": 1,
-  "arm": "spec_shadow",
-  "twin_of": "base__f2ee2438429d8e9e__s42",
-  "notes": "ladder2 SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
    "num_frames": 9
   }
  },
@@ -688,9 +432,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_shadow__davis_hike__s43__ref_shadow_0",
+  "item_id": "SP-foreign__spec_shadow__davis_hike__s43__ref_shadow_1",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_shadow/SP-foreign__spec_shadow__davis_hike__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/shadow/shadow_0.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow/shadow_1.mp4",
   "style": "shadow",
   "n_endpoints": 1,
   "arm": "spec_shadow",
@@ -702,9 +446,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_shadow__davis_hike__s43__ref_shadow_12",
+  "item_id": "SP-foreign__spec_shadow__davis_hike__s43__ref_shadow_2",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_shadow/SP-foreign__spec_shadow__davis_hike__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/shadow/shadow_12.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow/shadow_2.mp4",
   "style": "shadow",
   "n_endpoints": 1,
   "arm": "spec_shadow",
@@ -713,24 +457,6 @@
   "condition_prefix": {
    "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
    "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-foreign__spec_shadow_smoke__davis_tennis_snowboard__s42__ref_shadow_smoke_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_shadow_smoke/SP-foreign__spec_shadow_smoke__davis_tennis_snowboard__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_0.mp4",
-  "style": "shadow_smoke",
-  "n_endpoints": 2,
-  "arm": "spec_shadow_smoke",
-  "twin_of": "base__0d4a8eb3573003f2__s42",
-  "notes": "ladder2 SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_tennis_snowboard_start9.mp4",
-   "num_frames": 9
-  },
-  "condition_suffix": {
-   "video": "experiments/ladder2/conds/davis_tennis_snowboard_end9.mp4",
-   "num_frames": 8
   }
  },
  {
@@ -752,9 +478,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_shadow_smoke__davis_tennis_snowboard__s43__ref_shadow_smoke_0",
+  "item_id": "SP-foreign__spec_shadow_smoke__davis_tennis_snowboard__s43__ref_shadow_smoke_1",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_shadow_smoke/SP-foreign__spec_shadow_smoke__davis_tennis_snowboard__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_0.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_1.mp4",
   "style": "shadow_smoke",
   "n_endpoints": 2,
   "arm": "spec_shadow_smoke",
@@ -770,9 +496,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_shadow_smoke__davis_tennis_snowboard__s43__ref_shadow_smoke_4",
+  "item_id": "SP-foreign__spec_shadow_smoke__davis_tennis_snowboard__s43__ref_shadow_smoke_7",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_shadow_smoke/SP-foreign__spec_shadow_smoke__davis_tennis_snowboard__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_4.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_7.mp4",
   "style": "shadow_smoke",
   "n_endpoints": 2,
   "arm": "spec_shadow_smoke",
@@ -785,20 +511,6 @@
   "condition_suffix": {
    "video": "experiments/ladder2/conds/davis_tennis_snowboard_end9.mp4",
    "num_frames": 8
-  }
- },
- {
-  "item_id": "SP-foreign__spec_super_fast_run__davis_hike__s42__ref_super_fast_run_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_super_fast_run/SP-foreign__spec_super_fast_run__davis_hike__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/super_fast_run/super_fast_run_0.mp4",
-  "style": "super_fast_run",
-  "n_endpoints": 1,
-  "arm": "spec_super_fast_run",
-  "twin_of": "base__f2ee2438429d8e9e__s42",
-  "notes": "ladder2 SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
-   "num_frames": 9
   }
  },
  {
@@ -816,9 +528,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_super_fast_run__davis_hike__s43__ref_super_fast_run_0",
+  "item_id": "SP-foreign__spec_super_fast_run__davis_hike__s43__ref_super_fast_run_1",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_super_fast_run/SP-foreign__spec_super_fast_run__davis_hike__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/super_fast_run/super_fast_run_0.mp4",
+  "reference_video": "data/processed/transitions_std121/super_fast_run/super_fast_run_1.mp4",
   "style": "super_fast_run",
   "n_endpoints": 1,
   "arm": "spec_super_fast_run",
@@ -830,9 +542,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_super_fast_run__davis_hike__s43__ref_super_fast_run_2",
+  "item_id": "SP-foreign__spec_super_fast_run__davis_hike__s43__ref_super_fast_run_5",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_super_fast_run/SP-foreign__spec_super_fast_run__davis_hike__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/super_fast_run/super_fast_run_2.mp4",
+  "reference_video": "data/processed/transitions_std121/super_fast_run/super_fast_run_5.mp4",
   "style": "super_fast_run",
   "n_endpoints": 1,
   "arm": "spec_super_fast_run",
@@ -840,20 +552,6 @@
   "notes": "ladder2 SP-foreign pct=proxy seed=43",
   "condition_prefix": {
    "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-foreign__spec_super_fast_run__davis_lucia__s42__ref_super_fast_run_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_super_fast_run/SP-foreign__spec_super_fast_run__davis_lucia__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/super_fast_run/super_fast_run_0.mp4",
-  "style": "super_fast_run",
-  "n_endpoints": 1,
-  "arm": "spec_super_fast_run",
-  "twin_of": "base__24919d2d95b28378__s42",
-  "notes": "ladder2 SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
    "num_frames": 9
   }
  },
@@ -872,9 +570,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_super_fast_run__davis_lucia__s43__ref_super_fast_run_0",
+  "item_id": "SP-foreign__spec_super_fast_run__davis_lucia__s43__ref_super_fast_run_1",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_super_fast_run/SP-foreign__spec_super_fast_run__davis_lucia__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/super_fast_run/super_fast_run_0.mp4",
+  "reference_video": "data/processed/transitions_std121/super_fast_run/super_fast_run_1.mp4",
   "style": "super_fast_run",
   "n_endpoints": 1,
   "arm": "spec_super_fast_run",
@@ -886,9 +584,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_super_fast_run__davis_lucia__s43__ref_super_fast_run_2",
+  "item_id": "SP-foreign__spec_super_fast_run__davis_lucia__s43__ref_super_fast_run_5",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_super_fast_run/SP-foreign__spec_super_fast_run__davis_lucia__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/super_fast_run/super_fast_run_2.mp4",
+  "reference_video": "data/processed/transitions_std121/super_fast_run/super_fast_run_5.mp4",
   "style": "super_fast_run",
   "n_endpoints": 1,
   "arm": "spec_super_fast_run",
@@ -896,20 +594,6 @@
   "notes": "ladder2 SP-foreign pct=proxy seed=43",
   "condition_prefix": {
    "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-foreign__spec_wireframe__davis_mallard_water__s42__ref_wireframe_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_wireframe/SP-foreign__spec_wireframe__davis_mallard_water__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/wireframe/wireframe_0.mp4",
-  "style": "wireframe",
-  "n_endpoints": 1,
-  "arm": "spec_wireframe",
-  "twin_of": "base__e1846b3e56d0069e__s42",
-  "notes": "ladder2 SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_mallard_water_start9.mp4",
    "num_frames": 9
   }
  },
@@ -928,9 +612,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_wireframe__davis_mallard_water__s43__ref_wireframe_0",
+  "item_id": "SP-foreign__spec_wireframe__davis_mallard_water__s43__ref_wireframe_1",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_wireframe/SP-foreign__spec_wireframe__davis_mallard_water__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/wireframe/wireframe_0.mp4",
+  "reference_video": "data/processed/transitions_std121/wireframe/wireframe_1.mp4",
   "style": "wireframe",
   "n_endpoints": 1,
   "arm": "spec_wireframe",
@@ -942,9 +626,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_wireframe__davis_mallard_water__s43__ref_wireframe_4",
+  "item_id": "SP-foreign__spec_wireframe__davis_mallard_water__s43__ref_wireframe_7",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_wireframe/SP-foreign__spec_wireframe__davis_mallard_water__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/wireframe/wireframe_4.mp4",
+  "reference_video": "data/processed/transitions_std121/wireframe/wireframe_7.mp4",
   "style": "wireframe",
   "n_endpoints": 1,
   "arm": "spec_wireframe",
@@ -952,20 +636,6 @@
   "notes": "ladder2 SP-foreign pct=proxy seed=43",
   "condition_prefix": {
    "video": "experiments/ladder2/conds/davis_mallard_water_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "SP-foreign__spec_wireframe__davis_hike__s42__ref_wireframe_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_wireframe/SP-foreign__spec_wireframe__davis_hike__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/wireframe/wireframe_0.mp4",
-  "style": "wireframe",
-  "n_endpoints": 1,
-  "arm": "spec_wireframe",
-  "twin_of": "base__f2ee2438429d8e9e__s42",
-  "notes": "ladder2 SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
    "num_frames": 9
   }
  },
@@ -984,9 +654,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_wireframe__davis_hike__s43__ref_wireframe_0",
+  "item_id": "SP-foreign__spec_wireframe__davis_hike__s43__ref_wireframe_1",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_wireframe/SP-foreign__spec_wireframe__davis_hike__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/wireframe/wireframe_0.mp4",
+  "reference_video": "data/processed/transitions_std121/wireframe/wireframe_1.mp4",
   "style": "wireframe",
   "n_endpoints": 1,
   "arm": "spec_wireframe",
@@ -998,9 +668,9 @@
   }
  },
  {
-  "item_id": "SP-foreign__spec_wireframe__davis_hike__s43__ref_wireframe_4",
+  "item_id": "SP-foreign__spec_wireframe__davis_hike__s43__ref_wireframe_7",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/spec_wireframe/SP-foreign__spec_wireframe__davis_hike__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/wireframe/wireframe_4.mp4",
+  "reference_video": "data/processed/transitions_std121/wireframe/wireframe_7.mp4",
   "style": "wireframe",
   "n_endpoints": 1,
   "arm": "spec_wireframe",
@@ -1012,16 +682,186 @@
   }
  },
  {
-  "item_id": "base__f2ee2438429d8e9e__s42__ref_animalization_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__f2ee2438429d8e9e__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/animalization/animalization_0.mp4",
+  "item_id": "base__46972c648aba3951__s42__ref_animalization_3",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__46972c648aba3951__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/animalization/animalization_3.mp4",
   "style": "animalization",
   "n_endpoints": 1,
   "arm": "base",
   "twin_of": null,
-  "notes": "ladder2 base:SP-foreign pct=proxy seed=42",
+  "notes": "ladder2 base:SP-cross pct=proxy seed=42",
   "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
+   "video": "experiments/ladder2/conds/color_rain_2_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__46972c648aba3951__s42__ref_animalization_7",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__46972c648aba3951__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/animalization/animalization_7.mp4",
+  "style": "animalization",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-cross pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/color_rain_2_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__568b88d4f41a136b__s42__ref_hero_flight_4",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__568b88d4f41a136b__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/hero_flight/hero_flight_4.mp4",
+  "style": "hero_flight",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-fit pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/hero_flight_0_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/hero_flight_0_end9.mp4",
+   "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__568b88d4f41a136b__s42__ref_hero_flight_8",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__568b88d4f41a136b__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/hero_flight/hero_flight_8.mp4",
+  "style": "hero_flight",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-fit pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/hero_flight_0_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/hero_flight_0_end9.mp4",
+   "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__9b0ffe5874f296a5__s42__ref_illustration_scene_3",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__9b0ffe5874f296a5__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/illustration_scene/illustration_scene_3.mp4",
+  "style": "illustration_scene",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-cross pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/luminous_gaze_3_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__9b0ffe5874f296a5__s42__ref_illustration_scene_7",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__9b0ffe5874f296a5__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/illustration_scene/illustration_scene_7.mp4",
+  "style": "illustration_scene",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-cross pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/luminous_gaze_3_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__d909ffc8b1258d77__s42__ref_portal_11",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__d909ffc8b1258d77__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/portal/portal_11.mp4",
+  "style": "portal",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-same pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/portal_4_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__d909ffc8b1258d77__s42__ref_portal_5",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__d909ffc8b1258d77__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/portal/portal_5.mp4",
+  "style": "portal",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-same pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/portal_4_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__fe3fa4605af34c5e__s42__ref_shadow_smoke_3",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__fe3fa4605af34c5e__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_3.mp4",
+  "style": "shadow_smoke",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-cross pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/earth_wave_3_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/earth_wave_3_end9.mp4",
+   "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__fe3fa4605af34c5e__s42__ref_shadow_smoke_7",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__fe3fa4605af34c5e__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_7.mp4",
+  "style": "shadow_smoke",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-cross pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/earth_wave_3_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/earth_wave_3_end9.mp4",
+   "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__2cca2f2df7a58247__s42__ref_wireframe_3",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__2cca2f2df7a58247__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/wireframe/wireframe_3.mp4",
+  "style": "wireframe",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-same pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/wireframe_7_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__2cca2f2df7a58247__s42__ref_wireframe_8",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__2cca2f2df7a58247__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/wireframe/wireframe_8.mp4",
+  "style": "wireframe",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:SP-same pct=same seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/wireframe_7_start9.mp4",
    "num_frames": 9
   }
  },
@@ -1040,20 +880,6 @@
   }
  },
  {
-  "item_id": "base__f2ee2438429d8e9e__s43__ref_animalization_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__f2ee2438429d8e9e__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/animalization/animalization_0.mp4",
-  "style": "animalization",
-  "n_endpoints": 1,
-  "arm": "base",
-  "twin_of": null,
-  "notes": "ladder2 base:SP-foreign pct=proxy seed=43",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
   "item_id": "base__24919d2d95b28378__s42__ref_animalization_0",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__24919d2d95b28378__s42.mp4",
   "reference_video": "data/processed/transitions_std121/animalization/animalization_0.mp4",
@@ -1064,48 +890,6 @@
   "notes": "ladder2 base:SP-foreign pct=proxy seed=42",
   "condition_prefix": {
    "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "base__24919d2d95b28378__s43__ref_animalization_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__24919d2d95b28378__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/animalization/animalization_0.mp4",
-  "style": "animalization",
-  "n_endpoints": 1,
-  "arm": "base",
-  "twin_of": null,
-  "notes": "ladder2 base:SP-foreign pct=proxy seed=43",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "base__e1846b3e56d0069e__s42__ref_color_rain_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__e1846b3e56d0069e__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/color_rain/color_rain_0.mp4",
-  "style": "color_rain",
-  "n_endpoints": 1,
-  "arm": "base",
-  "twin_of": null,
-  "notes": "ladder2 base:SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_mallard_water_start9.mp4",
-   "num_frames": 9
-  }
- },
- {
-  "item_id": "base__e1846b3e56d0069e__s43__ref_color_rain_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__e1846b3e56d0069e__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/color_rain/color_rain_0.mp4",
-  "style": "color_rain",
-  "n_endpoints": 1,
-  "arm": "base",
-  "twin_of": null,
-  "notes": "ladder2 base:SP-foreign pct=proxy seed=43",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_mallard_water_start9.mp4",
    "num_frames": 9
   }
  },
@@ -1128,45 +912,9 @@
   }
  },
  {
-  "item_id": "base__7393ffe87a8344d2__s43__ref_hero_flight_0",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__7393ffe87a8344d2__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/hero_flight/hero_flight_0.mp4",
-  "style": "hero_flight",
-  "n_endpoints": 2,
-  "arm": "base",
-  "twin_of": null,
-  "notes": "ladder2 base:SP-foreign pct=proxy seed=43",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_blackswan_rhino_start9.mp4",
-   "num_frames": 9
-  },
-  "condition_suffix": {
-   "video": "experiments/ladder2/conds/davis_blackswan_rhino_end9.mp4",
-   "num_frames": 8
-  }
- },
- {
-  "item_id": "base__0d4a8eb3573003f2__s42__ref_shadow_smoke_0",
+  "item_id": "base__0d4a8eb3573003f2__s42__ref_shadow_smoke_3",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__0d4a8eb3573003f2__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_0.mp4",
-  "style": "shadow_smoke",
-  "n_endpoints": 2,
-  "arm": "base",
-  "twin_of": null,
-  "notes": "ladder2 base:SP-foreign pct=proxy seed=42",
-  "condition_prefix": {
-   "video": "experiments/ladder2/conds/davis_tennis_snowboard_start9.mp4",
-   "num_frames": 9
-  },
-  "condition_suffix": {
-   "video": "experiments/ladder2/conds/davis_tennis_snowboard_end9.mp4",
-   "num_frames": 8
-  }
- },
- {
-  "item_id": "base__0d4a8eb3573003f2__s42__ref_shadow_smoke_4",
-  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__0d4a8eb3573003f2__s42.mp4",
-  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_4.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_3.mp4",
   "style": "shadow_smoke",
   "n_endpoints": 2,
   "arm": "base",
@@ -1200,9 +948,9 @@
   }
  },
  {
-  "item_id": "base__0d4a8eb3573003f2__s43__ref_shadow_smoke_4",
+  "item_id": "base__0d4a8eb3573003f2__s43__ref_shadow_smoke_5",
   "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__0d4a8eb3573003f2__s43.mp4",
-  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_4.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_5.mp4",
   "style": "shadow_smoke",
   "n_endpoints": 2,
   "arm": "base",
@@ -1215,6 +963,462 @@
   "condition_suffix": {
    "video": "experiments/ladder2/conds/davis_tennis_snowboard_end9.mp4",
    "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__317e927bf7a1cb7b__s42__ref_gas_transformation_2",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__317e927bf7a1cb7b__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/gas_transformation/gas_transformation_2.mp4",
+  "style": "gas_transformation",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__317e927bf7a1cb7b__s42__ref_gas_transformation_7",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__317e927bf7a1cb7b__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/gas_transformation/gas_transformation_7.mp4",
+  "style": "gas_transformation",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__d4ea75a0aa4a84df__s42__ref_hero_flight_2",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__d4ea75a0aa4a84df__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/hero_flight/hero_flight_2.mp4",
+  "style": "hero_flight",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_tennis_snowboard_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/davis_tennis_snowboard_end9.mp4",
+   "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__d4ea75a0aa4a84df__s42__ref_hero_flight_7",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__d4ea75a0aa4a84df__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/hero_flight/hero_flight_7.mp4",
+  "style": "hero_flight",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_tennis_snowboard_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/davis_tennis_snowboard_end9.mp4",
+   "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__207a851ee531e1ad__s42__ref_money_rain_3",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__207a851ee531e1ad__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/money_rain/money_rain_3.mp4",
+  "style": "money_rain",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__82f2ab85d7ea1077__s42__ref_money_rain_0",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__82f2ab85d7ea1077__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/money_rain/money_rain_0.mp4",
+  "style": "money_rain",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__82f2ab85d7ea1077__s42__ref_money_rain_6",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__82f2ab85d7ea1077__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/money_rain/money_rain_6.mp4",
+  "style": "money_rain",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__eb13447b297eabe0__s42__ref_polygon_2",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__eb13447b297eabe0__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/polygon/polygon_2.mp4",
+  "style": "polygon",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_mallard_water_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__eb13447b297eabe0__s42__ref_polygon_7",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__eb13447b297eabe0__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/polygon/polygon_7.mp4",
+  "style": "polygon",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_mallard_water_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__83909f75e70e5564__s42__ref_polygon_2",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__83909f75e70e5564__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/polygon/polygon_2.mp4",
+  "style": "polygon",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__83909f75e70e5564__s42__ref_polygon_7",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__83909f75e70e5564__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/polygon/polygon_7.mp4",
+  "style": "polygon",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__b0fe623f14a1639a__s42__ref_portal_11",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__b0fe623f14a1639a__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/portal/portal_11.mp4",
+  "style": "portal",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__b0fe623f14a1639a__s42__ref_portal_4",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__b0fe623f14a1639a__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/portal/portal_4.mp4",
+  "style": "portal",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__0999a6bd74d417da__s42__ref_shadow_11",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__0999a6bd74d417da__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow/shadow_11.mp4",
+  "style": "shadow",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__0999a6bd74d417da__s42__ref_shadow_2",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__0999a6bd74d417da__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow/shadow_2.mp4",
+  "style": "shadow",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__89ebf3bd8c02c017__s42__ref_shadow_smoke_3",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__89ebf3bd8c02c017__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_3.mp4",
+  "style": "shadow_smoke",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_bear_elephant_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/davis_bear_elephant_end9.mp4",
+   "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__89ebf3bd8c02c017__s42__ref_shadow_smoke_7",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__89ebf3bd8c02c017__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_7.mp4",
+  "style": "shadow_smoke",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_bear_elephant_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/davis_bear_elephant_end9.mp4",
+   "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__4403313b8c10c769__s42__ref_super_fast_run_12",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__4403313b8c10c769__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/super_fast_run/super_fast_run_12.mp4",
+  "style": "super_fast_run",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__4403313b8c10c769__s42__ref_super_fast_run_5",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__4403313b8c10c769__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/super_fast_run/super_fast_run_5.mp4",
+  "style": "super_fast_run",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__e420288cf929ea1c__s42__ref_super_fast_run_12",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__e420288cf929ea1c__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/super_fast_run/super_fast_run_12.mp4",
+  "style": "super_fast_run",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_mallard_water_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__e420288cf929ea1c__s42__ref_super_fast_run_5",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__e420288cf929ea1c__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/super_fast_run/super_fast_run_5.mp4",
+  "style": "super_fast_run",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_mallard_water_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__9483504d15373efd__s42__ref_wireframe_3",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__9483504d15373efd__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/wireframe/wireframe_3.mp4",
+  "style": "wireframe",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__9483504d15373efd__s42__ref_wireframe_7",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__9483504d15373efd__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/wireframe/wireframe_7.mp4",
+  "style": "wireframe",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-unseen-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_hike_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__ecec594074a63fc4__s42__ref_firelava_1",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__ecec594074a63fc4__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/firelava/firelava_1.mp4",
+  "style": "firelava",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-zs-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_blackswan_rhino_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/davis_blackswan_rhino_end9.mp4",
+   "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__ecec594074a63fc4__s42__ref_firelava_5",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__ecec594074a63fc4__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/firelava/firelava_5.mp4",
+  "style": "firelava",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-zs-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_blackswan_rhino_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/davis_blackswan_rhino_end9.mp4",
+   "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__8b80964a9c831a5b__s42__ref_luminous_gaze_1",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__8b80964a9c831a5b__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/luminous_gaze/luminous_gaze_1.mp4",
+  "style": "luminous_gaze",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-zs-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_mallard_water_start9.mp4",
+   "num_frames": 9
+  }
+ },
+ {
+  "item_id": "base__447182b996e88fbd__s42__ref_melt_transition_3",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__447182b996e88fbd__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/melt_transition/melt_transition_3.mp4",
+  "style": "melt_transition",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-zs-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_bear_elephant_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/davis_bear_elephant_end9.mp4",
+   "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__1d03a66f5de744c5__s42__ref_melt_transition_4",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__1d03a66f5de744c5__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/melt_transition/melt_transition_4.mp4",
+  "style": "melt_transition",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-zs-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_blackswan_rhino_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/davis_blackswan_rhino_end9.mp4",
+   "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__6f8abf28aa840f15__s42__ref_raven_transition_2",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__6f8abf28aa840f15__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/raven_transition/raven_transition_2.mp4",
+  "style": "raven_transition",
+  "n_endpoints": 2,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-zs-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_blackswan_rhino_start9.mp4",
+   "num_frames": 9
+  },
+  "condition_suffix": {
+   "video": "experiments/ladder2/conds/davis_blackswan_rhino_end9.mp4",
+   "num_frames": 8
+  }
+ },
+ {
+  "item_id": "base__7043d13789fbc08f__s42__ref_saint_glow_3",
+  "generated_video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ladder2/base/base__7043d13789fbc08f__s42.mp4",
+  "reference_video": "data/processed/transitions_std121/saint_glow/saint_glow_3.mp4",
+  "style": "saint_glow",
+  "n_endpoints": 1,
+  "arm": "base",
+  "twin_of": null,
+  "notes": "ladder2 base:G-zs-foreign pct=proxy seed=42",
+  "condition_prefix": {
+   "video": "experiments/ladder2/conds/davis_lucia_start9.mp4",
+   "num_frames": 9
   }
  }
 ]
