@@ -14,16 +14,17 @@
 #          --gres=gpu:H100:1 experiments/ladder2/job_score.sbatch
 set -eo pipefail
 source ~/.bashrc
-module load anaconda3/2024.10
-source "$(conda info --base)/etc/profile.d/conda.sh"
 LAB=/projects/illinois/eng/cs/jrehg/users/emirkisa
-conda activate "$LAB/envs/diffusion"
+# Call the env's interpreter DIRECTLY rather than `conda activate`: when several array tasks
+# start at once the activation can fail silently and leave system python, which then dies with
+# ModuleNotFoundError: torch ~10s in. An absolute interpreter path cannot fail that way.
+PY_BIN="$LAB/envs/diffusion/bin/python"
 MAIN=$LAB/diffusion-research
 WT=$MAIN/.claude/worktrees/eval-v4-cert
 CHUNK="${SLURM_ARRAY_TASK_ID:-0}"
 cd "$MAIN"
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader || true
-PYTHONPATH=$WT/src python -m diffusion.transition_eval.score \
+PYTHONPATH=$WT/src "$PY_BIN" -m diffusion.transition_eval.score \
   --manifest "$MAIN/experiments/ladder2/eval/eval_c${CHUNK}.json" \
   --corpus  "$MAIN/data/processed/transitions_std121/corpus_manifest.json" \
   --label   "c${CHUNK}" \
