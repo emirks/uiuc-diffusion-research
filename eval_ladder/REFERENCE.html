@@ -86,6 +86,12 @@
 <main>
 
 <h1>ladder2 — the clean transition eval campaign</h1>
+<div class="callout"><b>Historical design pitch (v2.0.0, pre-run).</b> The authority is now
+<code>eval_ladder/SPEC.md</code> (design v2.1.0: +<code>base_prompt</code>/<code>base_cond</code>
+clean baselines, video shared per endpoint via <code>video_key</code>); results are in
+<code>eval_ladder/reports/</code> (current: <code>v2.0.0-R1.md</code>) and the live viewer at
+<code>outputs/reports/ladder_viewer/index.html</code>. Counts below predate the DAVIS expansion
+(final: 444 frozen rows → 888 generations, + 303 baseline rows).</div>
 <p class="muted">One campaign · non-leaking prompts · specialists + generalist · one inference pass · one eval, categorized by <b>reference-novelty × content</b>. <b>Status:</b> <span class="status"><b class="ok">BUILT &amp; EXECUTING</b> — registry frozen, 8 seatbelts green, pilot training chained.</span> Judgment is the advisor's; every count below is read out of the built <code>registry.jsonl</code>, not planned.</p>
 <div class="callout good"><b>What is real as of 2026-07-22 evening.</b> <code>registry.jsonl</code> = <b class="num">355 items → 710 generations</b> (P0 432 · P1 184 · P2 94). 12 training configs emitted with inline ID/OOD/control validation. All conditioning windows cut (222 corpus clips + 6 DAVIS pseudo-clips). Prompt renderer unit-tested (13 tests). Running: token probe → cond-clean precompute → prepare (verdict · rebuild · text embeddings · assemble) → 2-model pilot, chained with Slurm dependencies so nothing waits on a human.</div>
 
