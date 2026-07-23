@@ -126,3 +126,31 @@ silently substituting the base+demo copier (which is NOT a baseline — it repro
 To make every non-zero-shot task fully 4-tier in the next design: draw SP and G cells from one
 shared endpoint roster, and generate the two clean baselines on that same roster (v2.1.0's
 `add_baselines.py` already dedups them to one video per endpoint — ~194 videos, ~4 GPU-h).
+
+## TODO — next design (v3.0.0): CTT tasks, all tiers by construction
+
+*Owner directive, 2026-07-23. This is the committed shape of the next MAJOR design bump; held
+here so it survives until that campaign starts.*
+
+The v2 defect to fix is structural: SP-* and G-* cells drew their endpoints independently, so
+only 39/177 tasks are fully side-by-side. v3 inverts the build order — the **task roster comes
+first, the arms are projections of it**:
+
+1. **CTT task** (Creative Transition Transfer) = `(endpoints, target transition)` — the atomic
+   unit. Endpoints are sidedness-typed (one/two); the target transition is a donor class (or a
+   held-out class for zero-shot tasks).
+2. **Every task generates on every tier it can support**, from one registry:
+   ① prompt only · ② prompt + endpoints · ③ specialist (exists iff the donor is a trained
+   class) · ④ generalist (IC demo). Same prompt, same conditioning windows, same seeds — the
+   tier is the *only* variable. All four scored by the same instrument, same pool rule.
+3. **Enumerate the greatest space first, then choose the subspace**: the full grid is
+   endpoints × donors × sidedness × novelty(seen/unseen/zero-shot) × content(same/cross/foreign).
+   Enumerate it exhaustively in `build_registry.py`, then select a budgeted subspace that keeps
+   the process healthy — balanced per-donor and per-cell n (pre-register minimum n per claim
+   cell), ≥2 seeds, hardest cells first, fit anchors kept tiny. Selection rule is written in the
+   registry builder and pre-registered, never hand-picked.
+4. Deliverable: near-every card in the viewer shows all four tiers; the only structural blanks
+   are specialist × zero-shot (impossible by design) and mismatched-demo controls.
+
+Cost note from v2: the clean-baseline half of this is already scaffolded (`add_baselines.py`,
+video dedup per endpoint) — the missing piece is drawing all cells from the shared roster.
