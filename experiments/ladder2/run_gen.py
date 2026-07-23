@@ -123,11 +123,13 @@ def main() -> None:
 
     adapter, target_modules = resolve_adapter(args.arm, arms_cfg)
     inf = arms_cfg["inference"]
-    h, w, f = arms_cfg["resolution"]
+    # ValidationSample.video_dims is (WIDTH, HEIGHT, FRAMES) — the corpus is portrait
+    # 480x640, so this reads 480 wide by 640 high (same tuple exp_074 generated with).
+    vw, vh, vf = arms_cfg["resolution"]
     val_cfg = ValidationConfig(
         samples=[build_sample(r) for r in todo],
         negative_prompt="worst quality, inconsistent motion, distorted, jittery",
-        video_dims=(h, w, f), frame_rate=24.0, seed=args.seed,
+        video_dims=(vw, vh, vf), frame_rate=24.0, seed=args.seed,
         inference_steps=inf["steps"], interval=1, guidance_scale=inf["guidance_scale"],
         stg_scale=inf["stg_scale"], stg_blocks=inf["stg_blocks"], stg_mode=inf["stg_mode"],
         generate_audio=False,
