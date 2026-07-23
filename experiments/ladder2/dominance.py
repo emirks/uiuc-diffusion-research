@@ -58,11 +58,80 @@ def feats_of(path: Path, ext: DinoExtractor) -> np.ndarray:
     return f
 
 
+def plan_b() -> None:
+    """Amendment-1 Pass B manifests: score each cross-cell generation against the RECIPIENT pool
+    (endpoint_class corpus, excluding the endpoint clip AND the reference clip), plus the four
+    per-input_key ANCHORS (reference clip and endpoint clip scored against both pools, self-excluded).
+    T and C are normalised by those anchors, so they must be scored with the same instrument."""
+    rows = [json.loads(x) for x in (HERE / "registry.jsonl").read_text().splitlines() if x.strip()]
+    base_by_key = {r["input_key"]: r for r in rows if r["arm"] == "base"}
+    CROSS = {"G-unseen-cross", "G-zs-cross"}
+    items, anchors_done = [], set()
+
+    def pool(cls: str, banned: set) -> list[str]:
+        clips = sorted(p.stem for p in (STD / cls).glob("*.mp4"))
+        return [c for c in clips if c not in banned][:8]
+
+    for r in rows:
+        if r["arm"] != "ic_gen" or r["cell"] not in CROSS:
+            continue
+        twin = base_by_key.get(r["input_key"])
+        rec_cls = r["endpoint_class"]
+        banned = {r["reference"], r["endpoint"]}
+        # (a) both arms' generations vs the RECIPIENT pool
+        for arm_row, arm in ((r, "ic_gen"), (twin, "base")):
+            if arm_row is None:
+                continue
+            for seed in (42, 43):
+                g = GENS / arm_row["arm"] / f"{arm_row['item_id']}__s{seed}.mp4"
+                if not g.exists():
+                    continue
+                for ref_clip in pool(rec_cls, banned):
+                    items.append({
+                        "item_id": f"RECP__{arm}__{r['item_id']}__s{seed}__ref_{ref_clip}",
+                        "generated_video": str(g),
+                        "reference_video": f"data/processed/transitions_std121/{rec_cls}/{ref_clip}.mp4",
+                        "style": rec_cls, "arm": f"recp_{arm}",
+                        "n_endpoints": 2 if r["sided"] == "two" else 1,
+                        "notes": f"Amendment-1 PassB recipient-pool {r['cell']}"})
+        # (b) anchors, once per input_key: the reference clip and the endpoint clip themselves,
+        #     each scored against BOTH pools with self excluded
+        if r["input_key"] in anchors_done:
+            continue
+        anchors_done.add(r["input_key"])
+        for role, clip, cls_of in (("ref", r["reference"], prompts.clip_class(r["reference"])),
+                                   ("ep", r["endpoint"], rec_cls)):
+            src = STD / cls_of / f"{clip}.mp4"
+            if not src.exists():
+                continue
+            for pool_name, pool_cls in (("D", r["donor_class"]), ("R", rec_cls)):
+                for ref_clip in pool(pool_cls, {clip}):
+                    items.append({
+                        "item_id": f"ANCH__{pool_name}_{role}__{r['input_key']}__ref_{ref_clip}",
+                        "generated_video": str(src),
+                        "reference_video": f"data/processed/transitions_std121/{pool_cls}/{ref_clip}.mp4",
+                        "style": pool_cls, "arm": f"anchor_{pool_name}{role}",
+                        "n_endpoints": 2 if r["sided"] == "two" else 1,
+                        "notes": "Amendment-1 PassB anchor"})
+    d = HERE / "eval_recp"
+    d.mkdir(parents=True, exist_ok=True)
+    for old in d.glob("eval_c*.json"):
+        old.unlink()
+    for i in range(6):
+        (d / f"eval_c{i}.json").write_text(json.dumps(items[i::6], indent=1))
+    print(f"[planB] {len(items)} rows ({len(anchors_done)} input_keys anchored) -> 6 chunks in "
+          f"{d.relative_to(REPO_ROOT)}")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--mode", choices=["passA"], default="passA")
+    ap.add_argument("--mode", choices=["passA", "planB"], default="passA")
     ap.add_argument("--limit", type=int, default=0)
     args = ap.parse_args()
+
+    if args.mode == "planB":      # manifest-only; must not do Pass-A's globbing first
+        plan_b()
+        return
 
     rows = [json.loads(x) for x in (HERE / "registry.jsonl").read_text().splitlines() if x.strip()]
     base_by_key = {r["input_key"]: r for r in rows if r["arm"] == "base"}
