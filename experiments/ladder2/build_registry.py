@@ -46,6 +46,10 @@ INVENTORY = HERE / "train/inventory.json"
 
 #: how many cross recipients each donor gets (sidedness-matched, deterministic round-robin)
 CROSS_PER_DONOR = 2
+#: DAVIS endpoints per donor. Owner call 2026-07-23: the foreign lane is only generation, so run it
+#: at meaningful n instead of a token gate — ALL donors, 2 DAVIS endpoints each. The %-typing
+#: discipline is unchanged: foreign stays %_proxy and its claim is the margin vs base, never the level.
+FOREIGN_PER_DONOR = 2
 
 PRIORITY = {
     "SP-fit": "P0", "SP-same": "P0", "SP-cross": "P0",
@@ -247,23 +251,27 @@ def build_rows(corpus: Corpus, token: str) -> list[dict]:
         pool = davis_by_side[sided]
         return pool[i % len(pool)]
 
-    # specialists: both two-sided + the first four one-sided donors
-    sp_foreign = [c for c in corpus.roster if corpus.sided[c] == "two"] + \
-                 [c for c in corpus.roster if corpus.sided[c] == "one"][:4]
-    for i, cls in enumerate(sp_foreign):
-        rows.append(make_row("SP-foreign", f"spec_{cls}", davis_pick(corpus.sided[cls], i),
-                             cls, corpus, token))
-    # generalist, unseen demo
-    for i, cls in enumerate(corpus.g_pool[:6]):
-        rows.append(make_row("G-unseen-foreign", "ic_gen", davis_pick(corpus.sided[cls], i),
-                             cls, corpus, token, reference=corpus.test[cls][0]))
-    # generalist, zero-shot demo
-    for i, cls in enumerate(sorted(corpus.held_out)[:4]):
+    # specialists: EVERY donor x FOREIGN_PER_DONOR DAVIS endpoints
+    for i, cls in enumerate(corpus.roster):
+        for j in range(FOREIGN_PER_DONOR):
+            rows.append(make_row("SP-foreign", f"spec_{cls}",
+                                 davis_pick(corpus.sided[cls], i * FOREIGN_PER_DONOR + j),
+                                 cls, corpus, token))
+    # generalist, unseen demo: every g_pool donor
+    for i, cls in enumerate(corpus.g_pool):
+        for j in range(FOREIGN_PER_DONOR):
+            rows.append(make_row("G-unseen-foreign", "ic_gen",
+                                 davis_pick(corpus.sided[cls], i * FOREIGN_PER_DONOR + j),
+                                 cls, corpus, token, reference=corpus.test[cls][0]))
+    # generalist, zero-shot demo: every held-out donor
+    for i, cls in enumerate(sorted(corpus.held_out)):
         pool = corpus.train[cls] + corpus.test[cls]
-        if len(pool) < 1:
+        if not pool:
             continue
-        rows.append(make_row("G-zs-foreign", "ic_gen", davis_pick(corpus.sided[cls], i),
-                             cls, corpus, token, reference=pool[0]))
+        for j in range(FOREIGN_PER_DONOR):
+            rows.append(make_row("G-zs-foreign", "ic_gen",
+                                 davis_pick(corpus.sided[cls], i * FOREIGN_PER_DONOR + j),
+                                 cls, corpus, token, reference=pool[0]))
 
     # ---------------- base twins: identical input, no adapter (margin denominator)
     seen: set[str] = set()
