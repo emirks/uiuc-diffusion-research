@@ -10,7 +10,7 @@ Single entry point for everything learned in this project.
 | File | Area | Key subjects |
 |------|------|-------------|
 | [`models/ltx2/pipeline_api.md`](models/ltx2/pipeline_api.md) | LTX-2 | Diffusers API classes, two-stage recipe, C2V index formulas, CFG cond/uncond batching, conditioning patterns summary, pitfalls & fixes |
-| [`models/ltx2/conditioning.md`](models/ltx2/conditioning.md) | LTX-2 | VAE encoding, patchification, RoPE positions, denoise mask, in-grid vs guiding-latent conditioning (deep reference) |
+| [`models/ltx2/conditioning.md`](models/ltx2/conditioning.md) | LTX-2 | VAE encoding, patchification, RoPE positions, denoise mask, in-grid vs guiding-latent conditioning (deep reference); **§5.4 reference/in-context conditioning BLEEDS on the no-adapter model → base+reference is never an eval baseline (baselines = prompt-only or prompt+endpoint only)** |
 | [`models/ltx2/spatial_locality.md`](models/ltx2/spatial_locality.md) | LTX-2 | P=1 vs P=2 patch geometry; token-to-pixel brick mapping; why global attention still yields localized representations (exp_021+) |
 | [`models/ltx2/denoising_schedule.md`](models/ltx2/denoising_schedule.md) | LTX-2 | Dynamic sigma shift, why step_size is large at end, three generation phases (coarse/content/cleanup) |
 | [`models/ltx2/audio_path.md`](models/ltx2/audio_path.md) | LTX-2 | What flows into `audio_hidden_states`: shape derivation, Stage-1 audio-scheduler trajectory, encoded-silent vs zeros, `prepare_audio_latents` footguns |
