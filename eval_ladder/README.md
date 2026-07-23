@@ -168,8 +168,15 @@ first, the arms are projections of it**:
    the process healthy — balanced per-donor and per-cell n (pre-register minimum n per claim
    cell), ≥2 seeds, hardest cells first, fit anchors kept tiny. Selection rule is written in the
    registry builder and pre-registered, never hand-picked.
-4. Deliverable: near-every card in the viewer shows all four tiers; the only structural blanks
-   are specialist × zero-shot (impossible by design) and mismatched-demo controls.
+4. **Schema: every row is `task_id × tier × seed`** — the tier is a first-class column and the
+   task id is the join key, so side-by-side is the default and the keyed-join class of defect
+   cannot exist. ①②④ exist for every task; ③ exists iff the donor is trained.
+5. Deliverable: near-every card in the viewer shows all four tiers. The complete exception
+   list (confirmed against v2, 2026-07-23): specialist × zero-shot (held-out donor — training
+   one would destroy held-out-ness), mismatched-demo controls (only demo-taking tiers), and the
+   fit anchors ("seen" is tier-relative: trained endpoint vs trained demo, so their seen-rows
+   don't align 1:1 — keep them tiny). Fully-4-tier fraction ≈ fraction of tasks with trained
+   donors, so the roster weights trained donors and zero-shot stays its own deliberate block.
 
 Cost note from v2: the clean-baseline half of this is already scaffolded (`add_baselines.py`,
 video dedup per endpoint) — the missing piece is drawing all cells from the shared roster.
