@@ -1,0 +1,164 @@
+[
+ {
+  "clip": "saint_glow_3",
+  "class": "saint_glow",
+  "sided": "onesided",
+  "S1": "A young woman with wavy blonde hair crouches on a city sidewalk, resting her chin on her hand, wearing a black sleeveless top, blue jeans, and sandals, with city buildings and traffic in the background.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/saint_glow_3__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "sakura_petals_0",
+  "class": "sakura_petals",
+  "sided": "onesided",
+  "S1": "An astronaut in a white spacesuit with a reflective purple visor stands on the metal framework of a skyscraper overlooking a sprawling city filled with tall buildings and billboards under an overcast sky.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/sakura_petals_0__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "seamless_transition_0",
+  "class": "seamless_transition",
+  "sided": "twosided",
+  "S1": "A man with glasses, a mustache, and a goatee wears a wet black suit, white shirt, and striped tie while standing under a chrome showerhead with streams of water falling over him against a blue tiled wall.",
+  "S2": "a young woman with long dark hair stands leaning against a light-colored wall, wearing a beige hoodie under an open plaid jacket, loose olive green pants, and brown suede slip-on shoes on a wooden parquet floor.",
+  "start_img": "eval_ladder/assets/audit/seamless_transition_0__start.png",
+  "end_img": "eval_ladder/assets/audit/seamless_transition_0__end.png"
+ },
+ {
+  "clip": "shadow_0",
+  "class": "shadow",
+  "sided": "onesided",
+  "S1": "A woman in a form-fitting, light green metallic dress stands with her arms crossed on dark rocks in front of a large, cresting ocean wave.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/shadow_0__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "shadow_10",
+  "class": "shadow",
+  "sided": "onesided",
+  "S1": "A smiling woman in a leather jacket, white top and light jeans sits against an iron fence.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/shadow_10__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "shadow_3",
+  "class": "shadow",
+  "sided": "onesided",
+  "S1": "A man wearing a dark blue hoodie with \"PACE CLUB\" printed on the front points his index fingers to his face while baring his decorated teeth against a solid blue background.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/shadow_3__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "shadow_smoke_0",
+  "class": "shadow_smoke",
+  "sided": "twosided",
+  "S1": "A young man with curly dark hair and a mustache, wearing a dark green cardigan over a white collared shirt and a patterned tie, lies in a field of yellow wildflowers below rocky mountains reading a large newspaper, seen from a close low frontal angle.",
+  "S2": "a bearded man in a black suit and sunglasses riding an orange BMX bike down a sunlit suburban street with his legs spread wide, cars parked along the road behind him.",
+  "start_img": "eval_ladder/assets/audit/shadow_smoke_0__start.png",
+  "end_img": "eval_ladder/assets/audit/shadow_smoke_0__end.png"
+ },
+ {
+  "clip": "shadow_smoke_1",
+  "class": "shadow_smoke",
+  "sided": "twosided",
+  "S1": "An older man in a flowing white traditional robe and a black hat rollerblades across a city crosswalk with cars and a pagoda-roofed building behind him.",
+  "S2": "a blond man in a navy suit and sunglasses carrying a briefcase while riding a skateboard down a suburban hill past stone steps and a green lawn.",
+  "start_img": "eval_ladder/assets/audit/shadow_smoke_1__start.png",
+  "end_img": "eval_ladder/assets/audit/shadow_smoke_1__end.png"
+ },
+ {
+  "clip": "shadow_smoke_7",
+  "class": "shadow_smoke",
+  "sided": "twosided",
+  "S1": "A teenager in a camouflage bucket hat, dark sunglasses and a red and navy gradient sweatshirt stands under a basketball hoop against a clear blue sky, holding a basketball under one arm, seen from a low angle.",
+  "S2": "a long-haired young man in a dark jacket, loose blue cargo trousers and teal sneakers climbing on top of a green metal dumpster in bright sunlight, his hair blowing across his face.",
+  "start_img": "eval_ladder/assets/audit/shadow_smoke_7__start.png",
+  "end_img": "eval_ladder/assets/audit/shadow_smoke_7__end.png"
+ },
+ {
+  "clip": "super_fast_run_0",
+  "class": "super_fast_run",
+  "sided": "onesided",
+  "S1": "A young woman with dark hair stands in a narrow paved alleyway, wearing a black Adidas soccer jersey tucked into a long, ruffled black skirt with a white lace-trimmed apron and a decorative charm belt.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/super_fast_run_0__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "super_fast_run_10",
+  "class": "super_fast_run",
+  "sided": "onesided",
+  "S1": "A man in sunglasses, a dark green hoodie and white cap stands in a bright industrial kitchen.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/super_fast_run_10__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "super_fast_run_3",
+  "class": "super_fast_run",
+  "sided": "onesided",
+  "S1": "A sweaty young Black man with short curly hair and a serious expression looks directly at the camera while wearing a red tank top in a dimly lit indoor setting.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/super_fast_run_3__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "water_bending_3",
+  "class": "water_bending",
+  "sided": "twosided",
+  "S1": "A young woman with long black hair, glasses, and a lollipop in her mouth stretches an open palm toward the camera, wearing a fluffy pink crop top and skirt outside a Japanese storefront hung with red banners and painted signs.",
+  "S2": "a woman with long black hair shouting into a white megaphone in a bright blue sweater, patterned black-and-white pants, and chunky platform boots on a wide paved plaza before a dark glass building.",
+  "start_img": "eval_ladder/assets/audit/water_bending_3__start.png",
+  "end_img": "eval_ladder/assets/audit/water_bending_3__end.png"
+ },
+ {
+  "clip": "water_element_4",
+  "class": "water_element",
+  "sided": "onesided",
+  "S1": "A young man with long black hair, wearing a grey beanie, a bright orange patched jacket, and blue jeans, stands with crossed arms while leaning against a metal pole on a city street under natural daylight.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/water_element_4__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "wireframe_0",
+  "class": "wireframe",
+  "sided": "onesided",
+  "S1": "The lower legs of a person wearing grey trousers and black Salomon sneakers are suspended in the air in an indoor setting with a wooden beam, a white wall, and a tiled wall under harsh flash lighting.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/wireframe_0__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "wireframe_1",
+  "class": "wireframe",
+  "sided": "onesided",
+  "S1": "A green glass bottle labeled \"Kahf\" with water droplets on its surface is framed by pieces of mossy driftwood against a dark teal background.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/wireframe_1__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "wireframe_7",
+  "class": "wireframe",
+  "sided": "onesided",
+  "S1": "A green serum bottle sits among cacti on rocks.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/wireframe_7__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "wonderland_0",
+  "class": "wonderland",
+  "sided": "onesided",
+  "S1": "A young Black man wearing a blue denim jacket, matching jeans, and white sneakers sits on a green utility box on a sunny city sidewalk while holding a phone to his ear, with pedestrians and a storefront with a red awning in the background.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/wonderland_0__start.png",
+  "end_img": null
+ }
+]

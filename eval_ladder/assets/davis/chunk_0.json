@@ -1,0 +1,182 @@
+[
+ {
+  "seq": "bear",
+  "img": "eval_ladder/assets/davis/bear.png"
+ },
+ {
+  "seq": "bike-packing",
+  "img": "eval_ladder/assets/davis/bike-packing.png"
+ },
+ {
+  "seq": "blackswan",
+  "img": "eval_ladder/assets/davis/blackswan.png"
+ },
+ {
+  "seq": "bmx-bumps",
+  "img": "eval_ladder/assets/davis/bmx-bumps.png"
+ },
+ {
+  "seq": "bmx-trees",
+  "img": "eval_ladder/assets/davis/bmx-trees.png"
+ },
+ {
+  "seq": "boat",
+  "img": "eval_ladder/assets/davis/boat.png"
+ },
+ {
+  "seq": "boxing-fisheye",
+  "img": "eval_ladder/assets/davis/boxing-fisheye.png"
+ },
+ {
+  "seq": "breakdance",
+  "img": "eval_ladder/assets/davis/breakdance.png"
+ },
+ {
+  "seq": "breakdance-flare",
+  "img": "eval_ladder/assets/davis/breakdance-flare.png"
+ },
+ {
+  "seq": "bus",
+  "img": "eval_ladder/assets/davis/bus.png"
+ },
+ {
+  "seq": "camel",
+  "img": "eval_ladder/assets/davis/camel.png"
+ },
+ {
+  "seq": "car-roundabout",
+  "img": "eval_ladder/assets/davis/car-roundabout.png"
+ },
+ {
+  "seq": "car-shadow",
+  "img": "eval_ladder/assets/davis/car-shadow.png"
+ },
+ {
+  "seq": "car-turn",
+  "img": "eval_ladder/assets/davis/car-turn.png"
+ },
+ {
+  "seq": "cat-girl",
+  "img": "eval_ladder/assets/davis/cat-girl.png"
+ },
+ {
+  "seq": "classic-car",
+  "img": "eval_ladder/assets/davis/classic-car.png"
+ },
+ {
+  "seq": "color-run",
+  "img": "eval_ladder/assets/davis/color-run.png"
+ },
+ {
+  "seq": "cows",
+  "img": "eval_ladder/assets/davis/cows.png"
+ },
+ {
+  "seq": "crossing",
+  "img": "eval_ladder/assets/davis/crossing.png"
+ },
+ {
+  "seq": "dance-jump",
+  "img": "eval_ladder/assets/davis/dance-jump.png"
+ },
+ {
+  "seq": "dance-twirl",
+  "img": "eval_ladder/assets/davis/dance-twirl.png"
+ },
+ {
+  "seq": "dancing",
+  "img": "eval_ladder/assets/davis/dancing.png"
+ },
+ {
+  "seq": "disc-jockey",
+  "img": "eval_ladder/assets/davis/disc-jockey.png"
+ },
+ {
+  "seq": "dog",
+  "img": "eval_ladder/assets/davis/dog.png"
+ },
+ {
+  "seq": "dog-agility",
+  "img": "eval_ladder/assets/davis/dog-agility.png"
+ },
+ {
+  "seq": "dog-gooses",
+  "img": "eval_ladder/assets/davis/dog-gooses.png"
+ },
+ {
+  "seq": "dogs-jump",
+  "img": "eval_ladder/assets/davis/dogs-jump.png"
+ },
+ {
+  "seq": "dogs-scale",
+  "img": "eval_ladder/assets/davis/dogs-scale.png"
+ },
+ {
+  "seq": "drift-chicane",
+  "img": "eval_ladder/assets/davis/drift-chicane.png"
+ },
+ {
+  "seq": "drift-straight",
+  "img": "eval_ladder/assets/davis/drift-straight.png"
+ },
+ {
+  "seq": "drift-turn",
+  "img": "eval_ladder/assets/davis/drift-turn.png"
+ },
+ {
+  "seq": "drone",
+  "img": "eval_ladder/assets/davis/drone.png"
+ },
+ {
+  "seq": "elephant",
+  "img": "eval_ladder/assets/davis/elephant.png"
+ },
+ {
+  "seq": "flamingo",
+  "img": "eval_ladder/assets/davis/flamingo.png"
+ },
+ {
+  "seq": "goat",
+  "img": "eval_ladder/assets/davis/goat.png"
+ },
+ {
+  "seq": "gold-fish",
+  "img": "eval_ladder/assets/davis/gold-fish.png"
+ },
+ {
+  "seq": "hike",
+  "img": "eval_ladder/assets/davis/hike.png"
+ },
+ {
+  "seq": "hockey",
+  "img": "eval_ladder/assets/davis/hockey.png"
+ },
+ {
+  "seq": "horsejump-high",
+  "img": "eval_ladder/assets/davis/horsejump-high.png"
+ },
+ {
+  "seq": "horsejump-low",
+  "img": "eval_ladder/assets/davis/horsejump-low.png"
+ },
+ {
+  "seq": "india",
+  "img": "eval_ladder/assets/davis/india.png"
+ },
+ {
+  "seq": "judo",
+  "img": "eval_ladder/assets/davis/judo.png"
+ },
+ {
+  "seq": "kid-football",
+  "img": "eval_ladder/assets/davis/kid-football.png"
+ },
+ {
+  "seq": "kite-surf",
+  "img": "eval_ladder/assets/davis/kite-surf.png"
+ },
+ {
+  "seq": "kite-walk",
+  "img": "eval_ladder/assets/davis/kite-walk.png"
+ }
+]
