@@ -74,8 +74,15 @@ def base_config(name: str, targets: list[str], lr: float, steps: int, ckpt_every
     if cond_clean:
         video["cond_clean_latents_dir"] = "cond_clean_latents"
     return {
+        # RESUME WIRING (load-bearing): `checkpoints.no_resume: false` alone does NOT resume —
+        # trainer._load_checkpoint() returns immediately when model.load_checkpoint is null, so a
+        # requeued job silently restarts at step 0. Pointing it at this run's own checkpoint dir
+        # makes _find_checkpoint() pick the latest step_*.safetensors and _resolve_resume_state()
+        # restore optimizer/scheduler/RNG/step from the training_state_step_*.pt beside it. On a
+        # first run the directory is empty, _find_checkpoint returns None, and training starts at 0.
         "model": {"model_path": str(MODEL), "text_encoder_path": str(GEMMA),
-                  "training_mode": "lora", "load_checkpoint": None},
+                  "training_mode": "lora",
+                  "load_checkpoint": str(OUT_TRAIN / name / "checkpoints")},
         "lora": {"rank": 32, "alpha": 32, "dropout": 0.0, "target_modules": targets},
         "training_strategy": {"name": "flexible", "video": video},
         "optimization": {"learning_rate": lr, "steps": steps, "batch_size": 1,
