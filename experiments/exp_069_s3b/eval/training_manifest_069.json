@@ -1,0 +1,2174 @@
+{
+ "adapter_id": "exp069_s3b_step_05000",
+ "base_model": "ltx-2-19b-dev",
+ "clips": [
+  "air_bending/air_bending_0.mp4",
+  "air_bending/air_bending_2.mp4",
+  "air_bending/air_bending_3.mp4",
+  "animalization/animalization_1.mp4",
+  "animalization/animalization_3.mp4",
+  "animalization/animalization_4.mp4",
+  "animalization/animalization_5.mp4",
+  "animalization/animalization_6.mp4",
+  "animalization/animalization_7.mp4",
+  "color_rain/color_rain_1.mp4",
+  "color_rain/color_rain_3.mp4",
+  "color_rain/color_rain_5.mp4",
+  "color_rain/color_rain_6.mp4",
+  "color_rain/color_rain_7.mp4",
+  "color_rain/color_rain_8.mp4",
+  "cotton_cloud/cotton_cloud_1.mp4",
+  "cotton_cloud/cotton_cloud_2.mp4",
+  "cotton_cloud/cotton_cloud_4.mp4",
+  "cotton_cloud/cotton_cloud_6.mp4",
+  "cotton_cloud/cotton_cloud_8.mp4",
+  "display_transition/display_transition_1.mp4",
+  "display_transition/display_transition_2.mp4",
+  "display_transition/display_transition_3.mp4",
+  "earth_element/earth_element_0.mp4",
+  "earth_element/earth_element_1.mp4",
+  "earth_element/earth_element_2.mp4",
+  "earth_element/earth_element_3.mp4",
+  "earth_element/earth_element_6.mp4",
+  "earth_wave/earth_wave_0.mp4",
+  "earth_wave/earth_wave_1.mp4",
+  "earth_wave/earth_wave_2.mp4",
+  "earth_wave/earth_wave_4.mp4",
+  "fire_element/fire_element_0.mp4",
+  "fire_element/fire_element_1.mp4",
+  "fire_element/fire_element_4.mp4",
+  "firelava/firelava_0.mp4",
+  "firelava/firelava_1.mp4",
+  "firelava/firelava_2.mp4",
+  "firelava/firelava_3.mp4",
+  "firelava/firelava_5.mp4",
+  "flame/flame_transition_0.mp4",
+  "flame/flame_transition_1.mp4",
+  "flying_cam_transition/flying_cam_transition_1.mp4",
+  "flying_cam_transition/flying_cam_transition_2.mp4",
+  "flying_cam_transition/flying_cam_transition_3.mp4",
+  "giant_grab/giant_grab_0.mp4",
+  "giant_grab/giant_grab_1.mp4",
+  "giant_grab/giant_grab_2.mp4",
+  "giant_grab/giant_grab_4.mp4",
+  "live_concert/live_concert_1.mp4",
+  "live_concert/live_concert_3.mp4",
+  "live_concert/live_concert_4.mp4",
+  "live_concert/live_concert_5.mp4",
+  "live_concert/live_concert_6.mp4",
+  "live_concert/live_concert_7.mp4",
+  "luminous_gaze/luminous_gaze_0.mp4",
+  "luminous_gaze/luminous_gaze_1.mp4",
+  "luminous_gaze/luminous_gaze_2.mp4",
+  "melt_transition/melt_transition_1.mp4",
+  "melt_transition/melt_transition_3.mp4",
+  "melt_transition/melt_transition_4.mp4",
+  "money_rain/money_rain_0.mp4",
+  "money_rain/money_rain_1.mp4",
+  "money_rain/money_rain_2.mp4",
+  "money_rain/money_rain_4.mp4",
+  "money_rain/money_rain_6.mp4",
+  "money_rain/money_rain_7.mp4",
+  "monstrosity/monstrosity_0.mp4",
+  "monstrosity/monstrosity_1.mp4",
+  "monstrosity/monstrosity_2.mp4",
+  "mystification/mystification_2.mp4",
+  "mystification/mystification_3.mp4",
+  "mystification/mystification_4.mp4",
+  "mystification/mystification_5.mp4",
+  "nature_bloom/nature_bloom_0.mp4",
+  "nature_bloom/nature_bloom_2.mp4",
+  "plasma_explosion/plasma_explosion_0.mp4",
+  "plasma_explosion/plasma_explosion_1.mp4",
+  "plasma_explosion/plasma_explosion_4.mp4",
+  "polygon/polygon_0.mp4",
+  "polygon/polygon_1.mp4",
+  "polygon/polygon_2.mp4",
+  "polygon/polygon_3.mp4",
+  "polygon/polygon_5.mp4",
+  "polygon/polygon_6.mp4",
+  "polygon/polygon_7.mp4",
+  "portal/portal_0.mp4",
+  "portal/portal_10.mp4",
+  "portal/portal_11.mp4",
+  "portal/portal_12.mp4",
+  "portal/portal_13.mp4",
+  "portal/portal_2.mp4",
+  "portal/portal_5.mp4",
+  "portal/portal_6.mp4",
+  "portal/portal_7.mp4",
+  "portal/portal_8.mp4",
+  "portal/portal_9.mp4",
+  "run_set_on_fire/action_run_setonfire_6.mp4",
+  "run_set_on_fire/action_run_setonfire_7.mp4",
+  "saint_glow/saint_glow_0.mp4",
+  "saint_glow/saint_glow_1.mp4",
+  "saint_glow/saint_glow_2.mp4",
+  "sakura_petals/sakura_petals_0.mp4",
+  "sakura_petals/sakura_petals_2.mp4",
+  "shadow/shadow_0.mp4",
+  "shadow/shadow_1.mp4",
+  "shadow/shadow_11.mp4",
+  "shadow/shadow_12.mp4",
+  "shadow/shadow_13.mp4",
+  "shadow/shadow_14.mp4",
+  "shadow/shadow_2.mp4",
+  "shadow/shadow_4.mp4",
+  "shadow/shadow_5.mp4",
+  "shadow/shadow_6.mp4",
+  "shadow/shadow_7.mp4",
+  "shadow/shadow_8.mp4",
+  "shadow/shadow_9.mp4",
+  "shadow_smoke/shadow_smoke_1.mp4",
+  "shadow_smoke/shadow_smoke_2.mp4",
+  "shadow_smoke/shadow_smoke_3.mp4",
+  "shadow_smoke/shadow_smoke_4.mp4",
+  "shadow_smoke/shadow_smoke_5.mp4",
+  "shadow_smoke/shadow_smoke_6.mp4",
+  "shadow_smoke/shadow_smoke_8.mp4",
+  "shadow_smoke/shadow_smoke_9.mp4",
+  "super_fast_run/super_fast_run_1.mp4",
+  "super_fast_run/super_fast_run_10.mp4",
+  "super_fast_run/super_fast_run_12.mp4",
+  "super_fast_run/super_fast_run_2.mp4",
+  "super_fast_run/super_fast_run_4.mp4",
+  "super_fast_run/super_fast_run_5.mp4",
+  "super_fast_run/super_fast_run_6.mp4",
+  "super_fast_run/super_fast_run_7.mp4",
+  "super_fast_run/super_fast_run_8.mp4",
+  "super_fast_run/super_fast_run_9.mp4",
+  "water_bending/water_bending_0.mp4",
+  "water_bending/water_bending_1.mp4",
+  "water_bending/water_bending_2.mp4",
+  "water_element/water_element_0.mp4",
+  "water_element/water_element_1.mp4",
+  "water_element/water_element_2.mp4",
+  "water_element/water_element_5.mp4",
+  "wireframe/wireframe_1.mp4",
+  "wireframe/wireframe_2.mp4",
+  "wireframe/wireframe_3.mp4",
+  "wireframe/wireframe_4.mp4",
+  "wireframe/wireframe_5.mp4",
+  "wireframe/wireframe_6.mp4",
+  "wireframe/wireframe_8.mp4",
+  "wonderland/wonderland_0.mp4",
+  "wonderland/wonderland_2.mp4"
+ ],
+ "pairs": [
+  {
+   "target": "air_bending/air_bending_0.mp4",
+   "reference": "air_bending/air_bending_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "air_bending/air_bending_0.mp4",
+   "reference": "air_bending/air_bending_3.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "air_bending/air_bending_2.mp4",
+   "reference": "air_bending/air_bending_3.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "air_bending/air_bending_2.mp4",
+   "reference": "air_bending/air_bending_0.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "air_bending/air_bending_3.mp4",
+   "reference": "air_bending/air_bending_0.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "air_bending/air_bending_3.mp4",
+   "reference": "air_bending/air_bending_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "animalization/animalization_1.mp4",
+   "reference": "animalization/animalization_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_1.mp4",
+   "reference": "animalization/animalization_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_1.mp4",
+   "reference": "animalization/animalization_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_3.mp4",
+   "reference": "animalization/animalization_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_3.mp4",
+   "reference": "animalization/animalization_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_3.mp4",
+   "reference": "animalization/animalization_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_4.mp4",
+   "reference": "animalization/animalization_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_4.mp4",
+   "reference": "animalization/animalization_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_4.mp4",
+   "reference": "animalization/animalization_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_5.mp4",
+   "reference": "animalization/animalization_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_5.mp4",
+   "reference": "animalization/animalization_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_5.mp4",
+   "reference": "animalization/animalization_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_6.mp4",
+   "reference": "animalization/animalization_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_6.mp4",
+   "reference": "animalization/animalization_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_6.mp4",
+   "reference": "animalization/animalization_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_7.mp4",
+   "reference": "animalization/animalization_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_7.mp4",
+   "reference": "animalization/animalization_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "animalization/animalization_7.mp4",
+   "reference": "animalization/animalization_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_1.mp4",
+   "reference": "color_rain/color_rain_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_1.mp4",
+   "reference": "color_rain/color_rain_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_1.mp4",
+   "reference": "color_rain/color_rain_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_3.mp4",
+   "reference": "color_rain/color_rain_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_3.mp4",
+   "reference": "color_rain/color_rain_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_3.mp4",
+   "reference": "color_rain/color_rain_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_5.mp4",
+   "reference": "color_rain/color_rain_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_5.mp4",
+   "reference": "color_rain/color_rain_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_5.mp4",
+   "reference": "color_rain/color_rain_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_6.mp4",
+   "reference": "color_rain/color_rain_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_6.mp4",
+   "reference": "color_rain/color_rain_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_6.mp4",
+   "reference": "color_rain/color_rain_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_7.mp4",
+   "reference": "color_rain/color_rain_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_7.mp4",
+   "reference": "color_rain/color_rain_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_7.mp4",
+   "reference": "color_rain/color_rain_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_8.mp4",
+   "reference": "color_rain/color_rain_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_8.mp4",
+   "reference": "color_rain/color_rain_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "color_rain/color_rain_8.mp4",
+   "reference": "color_rain/color_rain_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "cotton_cloud/cotton_cloud_1.mp4",
+   "reference": "cotton_cloud/cotton_cloud_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "cotton_cloud/cotton_cloud_1.mp4",
+   "reference": "cotton_cloud/cotton_cloud_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "cotton_cloud/cotton_cloud_1.mp4",
+   "reference": "cotton_cloud/cotton_cloud_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "cotton_cloud/cotton_cloud_2.mp4",
+   "reference": "cotton_cloud/cotton_cloud_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "cotton_cloud/cotton_cloud_2.mp4",
+   "reference": "cotton_cloud/cotton_cloud_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "cotton_cloud/cotton_cloud_2.mp4",
+   "reference": "cotton_cloud/cotton_cloud_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "cotton_cloud/cotton_cloud_4.mp4",
+   "reference": "cotton_cloud/cotton_cloud_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "cotton_cloud/cotton_cloud_4.mp4",
+   "reference": "cotton_cloud/cotton_cloud_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "cotton_cloud/cotton_cloud_4.mp4",
+   "reference": "cotton_cloud/cotton_cloud_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "cotton_cloud/cotton_cloud_6.mp4",
+   "reference": "cotton_cloud/cotton_cloud_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "cotton_cloud/cotton_cloud_6.mp4",
+   "reference": "cotton_cloud/cotton_cloud_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "cotton_cloud/cotton_cloud_6.mp4",
+   "reference": "cotton_cloud/cotton_cloud_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "cotton_cloud/cotton_cloud_8.mp4",
+   "reference": "cotton_cloud/cotton_cloud_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "cotton_cloud/cotton_cloud_8.mp4",
+   "reference": "cotton_cloud/cotton_cloud_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "cotton_cloud/cotton_cloud_8.mp4",
+   "reference": "cotton_cloud/cotton_cloud_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "display_transition/display_transition_1.mp4",
+   "reference": "display_transition/display_transition_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "display_transition/display_transition_1.mp4",
+   "reference": "display_transition/display_transition_3.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "display_transition/display_transition_2.mp4",
+   "reference": "display_transition/display_transition_3.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "display_transition/display_transition_2.mp4",
+   "reference": "display_transition/display_transition_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "display_transition/display_transition_3.mp4",
+   "reference": "display_transition/display_transition_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "display_transition/display_transition_3.mp4",
+   "reference": "display_transition/display_transition_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "earth_element/earth_element_0.mp4",
+   "reference": "earth_element/earth_element_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "earth_element/earth_element_0.mp4",
+   "reference": "earth_element/earth_element_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "earth_element/earth_element_0.mp4",
+   "reference": "earth_element/earth_element_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "earth_element/earth_element_1.mp4",
+   "reference": "earth_element/earth_element_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "earth_element/earth_element_1.mp4",
+   "reference": "earth_element/earth_element_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "earth_element/earth_element_1.mp4",
+   "reference": "earth_element/earth_element_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "earth_element/earth_element_2.mp4",
+   "reference": "earth_element/earth_element_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "earth_element/earth_element_2.mp4",
+   "reference": "earth_element/earth_element_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "earth_element/earth_element_2.mp4",
+   "reference": "earth_element/earth_element_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "earth_element/earth_element_3.mp4",
+   "reference": "earth_element/earth_element_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "earth_element/earth_element_3.mp4",
+   "reference": "earth_element/earth_element_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "earth_element/earth_element_3.mp4",
+   "reference": "earth_element/earth_element_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "earth_element/earth_element_6.mp4",
+   "reference": "earth_element/earth_element_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "earth_element/earth_element_6.mp4",
+   "reference": "earth_element/earth_element_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "earth_element/earth_element_6.mp4",
+   "reference": "earth_element/earth_element_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "earth_wave/earth_wave_0.mp4",
+   "reference": "earth_wave/earth_wave_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "earth_wave/earth_wave_0.mp4",
+   "reference": "earth_wave/earth_wave_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "earth_wave/earth_wave_0.mp4",
+   "reference": "earth_wave/earth_wave_4.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "earth_wave/earth_wave_1.mp4",
+   "reference": "earth_wave/earth_wave_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "earth_wave/earth_wave_1.mp4",
+   "reference": "earth_wave/earth_wave_4.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "earth_wave/earth_wave_1.mp4",
+   "reference": "earth_wave/earth_wave_0.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "earth_wave/earth_wave_2.mp4",
+   "reference": "earth_wave/earth_wave_4.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "earth_wave/earth_wave_2.mp4",
+   "reference": "earth_wave/earth_wave_0.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "earth_wave/earth_wave_2.mp4",
+   "reference": "earth_wave/earth_wave_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "earth_wave/earth_wave_4.mp4",
+   "reference": "earth_wave/earth_wave_0.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "earth_wave/earth_wave_4.mp4",
+   "reference": "earth_wave/earth_wave_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "earth_wave/earth_wave_4.mp4",
+   "reference": "earth_wave/earth_wave_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "fire_element/fire_element_0.mp4",
+   "reference": "fire_element/fire_element_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "fire_element/fire_element_0.mp4",
+   "reference": "fire_element/fire_element_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "fire_element/fire_element_1.mp4",
+   "reference": "fire_element/fire_element_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "fire_element/fire_element_1.mp4",
+   "reference": "fire_element/fire_element_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "fire_element/fire_element_4.mp4",
+   "reference": "fire_element/fire_element_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "fire_element/fire_element_4.mp4",
+   "reference": "fire_element/fire_element_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "firelava/firelava_0.mp4",
+   "reference": "firelava/firelava_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "firelava/firelava_0.mp4",
+   "reference": "firelava/firelava_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "firelava/firelava_0.mp4",
+   "reference": "firelava/firelava_3.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "firelava/firelava_1.mp4",
+   "reference": "firelava/firelava_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "firelava/firelava_1.mp4",
+   "reference": "firelava/firelava_3.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "firelava/firelava_1.mp4",
+   "reference": "firelava/firelava_5.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "firelava/firelava_2.mp4",
+   "reference": "firelava/firelava_3.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "firelava/firelava_2.mp4",
+   "reference": "firelava/firelava_5.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "firelava/firelava_2.mp4",
+   "reference": "firelava/firelava_0.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "firelava/firelava_3.mp4",
+   "reference": "firelava/firelava_5.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "firelava/firelava_3.mp4",
+   "reference": "firelava/firelava_0.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "firelava/firelava_3.mp4",
+   "reference": "firelava/firelava_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "firelava/firelava_5.mp4",
+   "reference": "firelava/firelava_0.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "firelava/firelava_5.mp4",
+   "reference": "firelava/firelava_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "firelava/firelava_5.mp4",
+   "reference": "firelava/firelava_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "flame/flame_transition_0.mp4",
+   "reference": "flame/flame_transition_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "flame/flame_transition_1.mp4",
+   "reference": "flame/flame_transition_0.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "flying_cam_transition/flying_cam_transition_1.mp4",
+   "reference": "flying_cam_transition/flying_cam_transition_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "flying_cam_transition/flying_cam_transition_1.mp4",
+   "reference": "flying_cam_transition/flying_cam_transition_3.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "flying_cam_transition/flying_cam_transition_2.mp4",
+   "reference": "flying_cam_transition/flying_cam_transition_3.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "flying_cam_transition/flying_cam_transition_2.mp4",
+   "reference": "flying_cam_transition/flying_cam_transition_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "flying_cam_transition/flying_cam_transition_3.mp4",
+   "reference": "flying_cam_transition/flying_cam_transition_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "flying_cam_transition/flying_cam_transition_3.mp4",
+   "reference": "flying_cam_transition/flying_cam_transition_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "giant_grab/giant_grab_0.mp4",
+   "reference": "giant_grab/giant_grab_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "giant_grab/giant_grab_0.mp4",
+   "reference": "giant_grab/giant_grab_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "giant_grab/giant_grab_0.mp4",
+   "reference": "giant_grab/giant_grab_4.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "giant_grab/giant_grab_1.mp4",
+   "reference": "giant_grab/giant_grab_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "giant_grab/giant_grab_1.mp4",
+   "reference": "giant_grab/giant_grab_4.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "giant_grab/giant_grab_1.mp4",
+   "reference": "giant_grab/giant_grab_0.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "giant_grab/giant_grab_2.mp4",
+   "reference": "giant_grab/giant_grab_4.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "giant_grab/giant_grab_2.mp4",
+   "reference": "giant_grab/giant_grab_0.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "giant_grab/giant_grab_2.mp4",
+   "reference": "giant_grab/giant_grab_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "giant_grab/giant_grab_4.mp4",
+   "reference": "giant_grab/giant_grab_0.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "giant_grab/giant_grab_4.mp4",
+   "reference": "giant_grab/giant_grab_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "giant_grab/giant_grab_4.mp4",
+   "reference": "giant_grab/giant_grab_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "live_concert/live_concert_1.mp4",
+   "reference": "live_concert/live_concert_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_1.mp4",
+   "reference": "live_concert/live_concert_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_1.mp4",
+   "reference": "live_concert/live_concert_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_3.mp4",
+   "reference": "live_concert/live_concert_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_3.mp4",
+   "reference": "live_concert/live_concert_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_3.mp4",
+   "reference": "live_concert/live_concert_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_4.mp4",
+   "reference": "live_concert/live_concert_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_4.mp4",
+   "reference": "live_concert/live_concert_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_4.mp4",
+   "reference": "live_concert/live_concert_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_5.mp4",
+   "reference": "live_concert/live_concert_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_5.mp4",
+   "reference": "live_concert/live_concert_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_5.mp4",
+   "reference": "live_concert/live_concert_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_6.mp4",
+   "reference": "live_concert/live_concert_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_6.mp4",
+   "reference": "live_concert/live_concert_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_6.mp4",
+   "reference": "live_concert/live_concert_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_7.mp4",
+   "reference": "live_concert/live_concert_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_7.mp4",
+   "reference": "live_concert/live_concert_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "live_concert/live_concert_7.mp4",
+   "reference": "live_concert/live_concert_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "luminous_gaze/luminous_gaze_0.mp4",
+   "reference": "luminous_gaze/luminous_gaze_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "luminous_gaze/luminous_gaze_0.mp4",
+   "reference": "luminous_gaze/luminous_gaze_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "luminous_gaze/luminous_gaze_1.mp4",
+   "reference": "luminous_gaze/luminous_gaze_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "luminous_gaze/luminous_gaze_1.mp4",
+   "reference": "luminous_gaze/luminous_gaze_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "luminous_gaze/luminous_gaze_2.mp4",
+   "reference": "luminous_gaze/luminous_gaze_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "luminous_gaze/luminous_gaze_2.mp4",
+   "reference": "luminous_gaze/luminous_gaze_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "melt_transition/melt_transition_1.mp4",
+   "reference": "melt_transition/melt_transition_3.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "melt_transition/melt_transition_1.mp4",
+   "reference": "melt_transition/melt_transition_4.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "melt_transition/melt_transition_3.mp4",
+   "reference": "melt_transition/melt_transition_4.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "melt_transition/melt_transition_3.mp4",
+   "reference": "melt_transition/melt_transition_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "melt_transition/melt_transition_4.mp4",
+   "reference": "melt_transition/melt_transition_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "melt_transition/melt_transition_4.mp4",
+   "reference": "melt_transition/melt_transition_3.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "money_rain/money_rain_0.mp4",
+   "reference": "money_rain/money_rain_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_0.mp4",
+   "reference": "money_rain/money_rain_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_0.mp4",
+   "reference": "money_rain/money_rain_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_1.mp4",
+   "reference": "money_rain/money_rain_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_1.mp4",
+   "reference": "money_rain/money_rain_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_1.mp4",
+   "reference": "money_rain/money_rain_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_2.mp4",
+   "reference": "money_rain/money_rain_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_2.mp4",
+   "reference": "money_rain/money_rain_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_2.mp4",
+   "reference": "money_rain/money_rain_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_4.mp4",
+   "reference": "money_rain/money_rain_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_4.mp4",
+   "reference": "money_rain/money_rain_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_4.mp4",
+   "reference": "money_rain/money_rain_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_6.mp4",
+   "reference": "money_rain/money_rain_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_6.mp4",
+   "reference": "money_rain/money_rain_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_6.mp4",
+   "reference": "money_rain/money_rain_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_7.mp4",
+   "reference": "money_rain/money_rain_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_7.mp4",
+   "reference": "money_rain/money_rain_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "money_rain/money_rain_7.mp4",
+   "reference": "money_rain/money_rain_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "monstrosity/monstrosity_0.mp4",
+   "reference": "monstrosity/monstrosity_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "monstrosity/monstrosity_0.mp4",
+   "reference": "monstrosity/monstrosity_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "monstrosity/monstrosity_1.mp4",
+   "reference": "monstrosity/monstrosity_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "monstrosity/monstrosity_1.mp4",
+   "reference": "monstrosity/monstrosity_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "monstrosity/monstrosity_2.mp4",
+   "reference": "monstrosity/monstrosity_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "monstrosity/monstrosity_2.mp4",
+   "reference": "monstrosity/monstrosity_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "mystification/mystification_2.mp4",
+   "reference": "mystification/mystification_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "mystification/mystification_2.mp4",
+   "reference": "mystification/mystification_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "mystification/mystification_2.mp4",
+   "reference": "mystification/mystification_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "mystification/mystification_3.mp4",
+   "reference": "mystification/mystification_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "mystification/mystification_3.mp4",
+   "reference": "mystification/mystification_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "mystification/mystification_3.mp4",
+   "reference": "mystification/mystification_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "mystification/mystification_4.mp4",
+   "reference": "mystification/mystification_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "mystification/mystification_4.mp4",
+   "reference": "mystification/mystification_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "mystification/mystification_4.mp4",
+   "reference": "mystification/mystification_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "mystification/mystification_5.mp4",
+   "reference": "mystification/mystification_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "mystification/mystification_5.mp4",
+   "reference": "mystification/mystification_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "mystification/mystification_5.mp4",
+   "reference": "mystification/mystification_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "nature_bloom/nature_bloom_0.mp4",
+   "reference": "nature_bloom/nature_bloom_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "nature_bloom/nature_bloom_2.mp4",
+   "reference": "nature_bloom/nature_bloom_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "plasma_explosion/plasma_explosion_0.mp4",
+   "reference": "plasma_explosion/plasma_explosion_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "plasma_explosion/plasma_explosion_0.mp4",
+   "reference": "plasma_explosion/plasma_explosion_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "plasma_explosion/plasma_explosion_1.mp4",
+   "reference": "plasma_explosion/plasma_explosion_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "plasma_explosion/plasma_explosion_1.mp4",
+   "reference": "plasma_explosion/plasma_explosion_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "plasma_explosion/plasma_explosion_4.mp4",
+   "reference": "plasma_explosion/plasma_explosion_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "plasma_explosion/plasma_explosion_4.mp4",
+   "reference": "plasma_explosion/plasma_explosion_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_0.mp4",
+   "reference": "polygon/polygon_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_0.mp4",
+   "reference": "polygon/polygon_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_0.mp4",
+   "reference": "polygon/polygon_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_1.mp4",
+   "reference": "polygon/polygon_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_1.mp4",
+   "reference": "polygon/polygon_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_1.mp4",
+   "reference": "polygon/polygon_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_2.mp4",
+   "reference": "polygon/polygon_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_2.mp4",
+   "reference": "polygon/polygon_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_2.mp4",
+   "reference": "polygon/polygon_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_3.mp4",
+   "reference": "polygon/polygon_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_3.mp4",
+   "reference": "polygon/polygon_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_3.mp4",
+   "reference": "polygon/polygon_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_5.mp4",
+   "reference": "polygon/polygon_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_5.mp4",
+   "reference": "polygon/polygon_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_5.mp4",
+   "reference": "polygon/polygon_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_6.mp4",
+   "reference": "polygon/polygon_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_6.mp4",
+   "reference": "polygon/polygon_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_6.mp4",
+   "reference": "polygon/polygon_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_7.mp4",
+   "reference": "polygon/polygon_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_7.mp4",
+   "reference": "polygon/polygon_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "polygon/polygon_7.mp4",
+   "reference": "polygon/polygon_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_0.mp4",
+   "reference": "portal/portal_10.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_0.mp4",
+   "reference": "portal/portal_11.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_0.mp4",
+   "reference": "portal/portal_12.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_10.mp4",
+   "reference": "portal/portal_11.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_10.mp4",
+   "reference": "portal/portal_12.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_10.mp4",
+   "reference": "portal/portal_13.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_11.mp4",
+   "reference": "portal/portal_12.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_11.mp4",
+   "reference": "portal/portal_13.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_11.mp4",
+   "reference": "portal/portal_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_12.mp4",
+   "reference": "portal/portal_13.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_12.mp4",
+   "reference": "portal/portal_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_12.mp4",
+   "reference": "portal/portal_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_13.mp4",
+   "reference": "portal/portal_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_13.mp4",
+   "reference": "portal/portal_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_13.mp4",
+   "reference": "portal/portal_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_2.mp4",
+   "reference": "portal/portal_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_2.mp4",
+   "reference": "portal/portal_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_2.mp4",
+   "reference": "portal/portal_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_5.mp4",
+   "reference": "portal/portal_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_5.mp4",
+   "reference": "portal/portal_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_5.mp4",
+   "reference": "portal/portal_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_6.mp4",
+   "reference": "portal/portal_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_6.mp4",
+   "reference": "portal/portal_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_6.mp4",
+   "reference": "portal/portal_9.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_7.mp4",
+   "reference": "portal/portal_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_7.mp4",
+   "reference": "portal/portal_9.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_7.mp4",
+   "reference": "portal/portal_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_8.mp4",
+   "reference": "portal/portal_9.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_8.mp4",
+   "reference": "portal/portal_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_8.mp4",
+   "reference": "portal/portal_10.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_9.mp4",
+   "reference": "portal/portal_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_9.mp4",
+   "reference": "portal/portal_10.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "portal/portal_9.mp4",
+   "reference": "portal/portal_11.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "run_set_on_fire/action_run_setonfire_6.mp4",
+   "reference": "run_set_on_fire/action_run_setonfire_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "run_set_on_fire/action_run_setonfire_7.mp4",
+   "reference": "run_set_on_fire/action_run_setonfire_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "saint_glow/saint_glow_0.mp4",
+   "reference": "saint_glow/saint_glow_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "saint_glow/saint_glow_0.mp4",
+   "reference": "saint_glow/saint_glow_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "saint_glow/saint_glow_1.mp4",
+   "reference": "saint_glow/saint_glow_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "saint_glow/saint_glow_1.mp4",
+   "reference": "saint_glow/saint_glow_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "saint_glow/saint_glow_2.mp4",
+   "reference": "saint_glow/saint_glow_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "saint_glow/saint_glow_2.mp4",
+   "reference": "saint_glow/saint_glow_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "sakura_petals/sakura_petals_0.mp4",
+   "reference": "sakura_petals/sakura_petals_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "sakura_petals/sakura_petals_2.mp4",
+   "reference": "sakura_petals/sakura_petals_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_0.mp4",
+   "reference": "shadow/shadow_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_0.mp4",
+   "reference": "shadow/shadow_11.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_0.mp4",
+   "reference": "shadow/shadow_12.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_1.mp4",
+   "reference": "shadow/shadow_11.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_1.mp4",
+   "reference": "shadow/shadow_12.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_1.mp4",
+   "reference": "shadow/shadow_13.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_11.mp4",
+   "reference": "shadow/shadow_12.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_11.mp4",
+   "reference": "shadow/shadow_13.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_11.mp4",
+   "reference": "shadow/shadow_14.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_12.mp4",
+   "reference": "shadow/shadow_13.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_12.mp4",
+   "reference": "shadow/shadow_14.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_12.mp4",
+   "reference": "shadow/shadow_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_13.mp4",
+   "reference": "shadow/shadow_14.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_13.mp4",
+   "reference": "shadow/shadow_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_13.mp4",
+   "reference": "shadow/shadow_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_14.mp4",
+   "reference": "shadow/shadow_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_14.mp4",
+   "reference": "shadow/shadow_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_14.mp4",
+   "reference": "shadow/shadow_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_2.mp4",
+   "reference": "shadow/shadow_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_2.mp4",
+   "reference": "shadow/shadow_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_2.mp4",
+   "reference": "shadow/shadow_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_4.mp4",
+   "reference": "shadow/shadow_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_4.mp4",
+   "reference": "shadow/shadow_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_4.mp4",
+   "reference": "shadow/shadow_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_5.mp4",
+   "reference": "shadow/shadow_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_5.mp4",
+   "reference": "shadow/shadow_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_5.mp4",
+   "reference": "shadow/shadow_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_6.mp4",
+   "reference": "shadow/shadow_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_6.mp4",
+   "reference": "shadow/shadow_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_6.mp4",
+   "reference": "shadow/shadow_9.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_7.mp4",
+   "reference": "shadow/shadow_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_7.mp4",
+   "reference": "shadow/shadow_9.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_7.mp4",
+   "reference": "shadow/shadow_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_8.mp4",
+   "reference": "shadow/shadow_9.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_8.mp4",
+   "reference": "shadow/shadow_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_8.mp4",
+   "reference": "shadow/shadow_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_9.mp4",
+   "reference": "shadow/shadow_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_9.mp4",
+   "reference": "shadow/shadow_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow/shadow_9.mp4",
+   "reference": "shadow/shadow_11.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_1.mp4",
+   "reference": "shadow_smoke/shadow_smoke_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_1.mp4",
+   "reference": "shadow_smoke/shadow_smoke_3.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_1.mp4",
+   "reference": "shadow_smoke/shadow_smoke_4.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_2.mp4",
+   "reference": "shadow_smoke/shadow_smoke_3.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_2.mp4",
+   "reference": "shadow_smoke/shadow_smoke_4.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_2.mp4",
+   "reference": "shadow_smoke/shadow_smoke_5.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_3.mp4",
+   "reference": "shadow_smoke/shadow_smoke_4.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_3.mp4",
+   "reference": "shadow_smoke/shadow_smoke_5.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_3.mp4",
+   "reference": "shadow_smoke/shadow_smoke_6.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_4.mp4",
+   "reference": "shadow_smoke/shadow_smoke_5.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_4.mp4",
+   "reference": "shadow_smoke/shadow_smoke_6.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_4.mp4",
+   "reference": "shadow_smoke/shadow_smoke_8.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_5.mp4",
+   "reference": "shadow_smoke/shadow_smoke_6.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_5.mp4",
+   "reference": "shadow_smoke/shadow_smoke_8.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_5.mp4",
+   "reference": "shadow_smoke/shadow_smoke_9.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_6.mp4",
+   "reference": "shadow_smoke/shadow_smoke_8.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_6.mp4",
+   "reference": "shadow_smoke/shadow_smoke_9.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_6.mp4",
+   "reference": "shadow_smoke/shadow_smoke_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_8.mp4",
+   "reference": "shadow_smoke/shadow_smoke_9.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_8.mp4",
+   "reference": "shadow_smoke/shadow_smoke_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_8.mp4",
+   "reference": "shadow_smoke/shadow_smoke_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_9.mp4",
+   "reference": "shadow_smoke/shadow_smoke_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_9.mp4",
+   "reference": "shadow_smoke/shadow_smoke_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "shadow_smoke/shadow_smoke_9.mp4",
+   "reference": "shadow_smoke/shadow_smoke_3.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_1.mp4",
+   "reference": "super_fast_run/super_fast_run_10.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_1.mp4",
+   "reference": "super_fast_run/super_fast_run_12.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_1.mp4",
+   "reference": "super_fast_run/super_fast_run_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_10.mp4",
+   "reference": "super_fast_run/super_fast_run_12.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_10.mp4",
+   "reference": "super_fast_run/super_fast_run_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_10.mp4",
+   "reference": "super_fast_run/super_fast_run_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_12.mp4",
+   "reference": "super_fast_run/super_fast_run_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_12.mp4",
+   "reference": "super_fast_run/super_fast_run_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_12.mp4",
+   "reference": "super_fast_run/super_fast_run_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_2.mp4",
+   "reference": "super_fast_run/super_fast_run_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_2.mp4",
+   "reference": "super_fast_run/super_fast_run_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_2.mp4",
+   "reference": "super_fast_run/super_fast_run_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_4.mp4",
+   "reference": "super_fast_run/super_fast_run_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_4.mp4",
+   "reference": "super_fast_run/super_fast_run_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_4.mp4",
+   "reference": "super_fast_run/super_fast_run_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_5.mp4",
+   "reference": "super_fast_run/super_fast_run_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_5.mp4",
+   "reference": "super_fast_run/super_fast_run_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_5.mp4",
+   "reference": "super_fast_run/super_fast_run_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_6.mp4",
+   "reference": "super_fast_run/super_fast_run_7.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_6.mp4",
+   "reference": "super_fast_run/super_fast_run_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_6.mp4",
+   "reference": "super_fast_run/super_fast_run_9.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_7.mp4",
+   "reference": "super_fast_run/super_fast_run_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_7.mp4",
+   "reference": "super_fast_run/super_fast_run_9.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_7.mp4",
+   "reference": "super_fast_run/super_fast_run_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_8.mp4",
+   "reference": "super_fast_run/super_fast_run_9.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_8.mp4",
+   "reference": "super_fast_run/super_fast_run_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_8.mp4",
+   "reference": "super_fast_run/super_fast_run_10.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_9.mp4",
+   "reference": "super_fast_run/super_fast_run_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_9.mp4",
+   "reference": "super_fast_run/super_fast_run_10.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "super_fast_run/super_fast_run_9.mp4",
+   "reference": "super_fast_run/super_fast_run_12.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "water_bending/water_bending_0.mp4",
+   "reference": "water_bending/water_bending_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "water_bending/water_bending_0.mp4",
+   "reference": "water_bending/water_bending_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "water_bending/water_bending_1.mp4",
+   "reference": "water_bending/water_bending_2.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "water_bending/water_bending_1.mp4",
+   "reference": "water_bending/water_bending_0.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "water_bending/water_bending_2.mp4",
+   "reference": "water_bending/water_bending_0.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "water_bending/water_bending_2.mp4",
+   "reference": "water_bending/water_bending_1.mp4",
+   "conditioning": "twosided"
+  },
+  {
+   "target": "water_element/water_element_0.mp4",
+   "reference": "water_element/water_element_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "water_element/water_element_0.mp4",
+   "reference": "water_element/water_element_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "water_element/water_element_0.mp4",
+   "reference": "water_element/water_element_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "water_element/water_element_1.mp4",
+   "reference": "water_element/water_element_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "water_element/water_element_1.mp4",
+   "reference": "water_element/water_element_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "water_element/water_element_1.mp4",
+   "reference": "water_element/water_element_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "water_element/water_element_2.mp4",
+   "reference": "water_element/water_element_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "water_element/water_element_2.mp4",
+   "reference": "water_element/water_element_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "water_element/water_element_2.mp4",
+   "reference": "water_element/water_element_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "water_element/water_element_5.mp4",
+   "reference": "water_element/water_element_0.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "water_element/water_element_5.mp4",
+   "reference": "water_element/water_element_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "water_element/water_element_5.mp4",
+   "reference": "water_element/water_element_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_1.mp4",
+   "reference": "wireframe/wireframe_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_1.mp4",
+   "reference": "wireframe/wireframe_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_1.mp4",
+   "reference": "wireframe/wireframe_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_2.mp4",
+   "reference": "wireframe/wireframe_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_2.mp4",
+   "reference": "wireframe/wireframe_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_2.mp4",
+   "reference": "wireframe/wireframe_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_3.mp4",
+   "reference": "wireframe/wireframe_4.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_3.mp4",
+   "reference": "wireframe/wireframe_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_3.mp4",
+   "reference": "wireframe/wireframe_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_4.mp4",
+   "reference": "wireframe/wireframe_5.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_4.mp4",
+   "reference": "wireframe/wireframe_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_4.mp4",
+   "reference": "wireframe/wireframe_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_5.mp4",
+   "reference": "wireframe/wireframe_6.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_5.mp4",
+   "reference": "wireframe/wireframe_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_5.mp4",
+   "reference": "wireframe/wireframe_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_6.mp4",
+   "reference": "wireframe/wireframe_8.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_6.mp4",
+   "reference": "wireframe/wireframe_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_6.mp4",
+   "reference": "wireframe/wireframe_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_8.mp4",
+   "reference": "wireframe/wireframe_1.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_8.mp4",
+   "reference": "wireframe/wireframe_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wireframe/wireframe_8.mp4",
+   "reference": "wireframe/wireframe_3.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wonderland/wonderland_0.mp4",
+   "reference": "wonderland/wonderland_2.mp4",
+   "conditioning": "onesided"
+  },
+  {
+   "target": "wonderland/wonderland_2.mp4",
+   "reference": "wonderland/wonderland_0.mp4",
+   "conditioning": "onesided"
+  }
+ ]
+}

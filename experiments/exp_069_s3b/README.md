@@ -32,3 +32,13 @@ sbatch --partition=secondary --account=campusclusterusers --gres=gpu:H100:1 \
 ## Outputs / eval
 `outputs/training/exp_069_s3b/s3b/`. Eval = tier-C SCREEN + inline; full certified eval
 only if Stage-3 screen winner (rule in exp_068 README).
+
+## Grad-ratio pre-gate: SUPERSEDED (2026-07-18)
+The standalone grad_ratio_check.py failed 3× on a dtype mismatch (my check bypasses the
+trainer's accelerate autocast/dtype pipeline — the latent reaches patchify_proj at fp32).
+Rather than burn more GPU on a diagnostic that DUPLICATES a runtime guard, exp_069 launched
+at λ_margin=0.3 relying on the ONLINE activation band `train/margin_active_lowsigma ∈ [0.1,0.8]`
+(measured on the real run once margin ramps in at step 1000). If it sits sustained ≈1.0 →
+halve λ_margin and restart (margin not active until step 1000 → ≤1h waste). The standalone
+check would need a `torch.autocast("cuda", bfloat16)` wrap around the forward to work; not
+worth a GPU slot given the online guard is strictly better (measured on the real training).

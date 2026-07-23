@@ -86,13 +86,19 @@ def main():
                                              lora_dropout=0.0, init_lora_weights=True))
     sd = load_file(str(ADAPTER)); sd = {k.replace("diffusion_model.", "", 1): v for k, v in sd.items()}
     set_peft_model_state_dict(model.get_base_model(), sd)
-    model = model.to(device)
+    # PEFT initializes LoRA layers in fp32; cast the whole model to bf16 to match the base
+    # (the real trainer does this via the accelerator; the standalone check must do it too).
+    model = model.to(device=device, dtype=torch.bfloat16)
     for _, p in model.named_parameters():
         p.requires_grad_("lora" in _.lower())
 
+    def _dev(v):
+        if torch.is_tensor(v):
+            return v.to(device=device, dtype=torch.bfloat16) if v.is_floating_point() else v.to(device)
+        return v
     batch = load_one_batch()
-    batch = {k: ({kk: (vv.to(device) if torch.is_tensor(vv) else vv) for kk, vv in v.items()}
-                 if isinstance(v, dict) else v) for k, v in batch.items()}
+    batch = {k: ({kk: _dev(vv) for kk, vv in v.items()} if isinstance(v, dict) else v)
+             for k, v in batch.items()}
 
     s_fm = TransitionStrategy(video_cfg(lambda_par=0.25, margin_enabled=False))
     s_full = TransitionStrategy(video_cfg(lambda_par=0.25, margin_enabled=True,
