@@ -26,6 +26,25 @@ Endpoints are always untrained content (test band, held-out, or DAVIS), strictly
 sidedness-matched (one↔one, two↔two) — except the two fit anchors, which deliberately use
 train endpoints to measure the memorisation ceiling.
 
+### Cell-assignment consistency across tiers (audited 2026-07-23)
+
+Is a task's ontology cell the same for every tier that answers it? Half yes, half tier-relative
+— by design, and now verified against the registry:
+
+- **Content (same/cross/foreign) — consistent, always.** It is a pure function of the *task*
+  (endpoint class vs donor class), so every tier on a card shares it. Audited: **0 mismatches**
+  across all 39 shared specialist+generalist tasks. "Cross uses only test clips of other
+  classes" holds for 66/68 cross endpoints; the other 2 (`display_transition_1`,
+  `monstrosity_0`) carry a "train" split label but belong to **held-out classes** — no arm ever
+  trained on them (the per-arm untrained-content rule), so they are equivalent where it matters.
+- **Novelty (seen/unseen/zero-shot) — tier-relative by definition.** It grades the exposure of
+  the tier's *variable input*: the **demo** for the generalist, the **endpoint** for the
+  specialist (which has no demo). On the 39 shared tasks the two views coincide for 39 of 50
+  spec–gen row pairs (unseen/unseen); the 11 exceptions are all **G-memo-probe** — same task,
+  *trained* demo — where the misalignment is deliberate: it IS the memorisation probe. So a
+  card can legitimately sit in "unseen" for its specialist row and "seen" for its memo-probe
+  generalist row; the viewer places each row by its own tier's novelty.
+
 Two gaps fall out of the grid: `G-memo-probe − G-unseen-same` = demo-instance memorisation
 (endpoint novelty held fixed), and `G-unseen-* − G-zs-*` = class generalisation.
 

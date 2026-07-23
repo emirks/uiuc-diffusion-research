@@ -182,6 +182,12 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
 <div class="panel">
   <h2>ontology — click cells, row or column headers to select (multi-select)</h2>
   <table class="mx" id="mx"></table>
+  <div class="note"><b>Consistency:</b> <b>content</b> is a pure function of the task (endpoint
+  class vs donor class) — identical for every tier on a card (audited: 0 mismatches).
+  <b>novelty</b> is tier-relative: it grades the tier's <i>variable input</i> — the demo for the
+  generalist, the endpoint for the specialist. The two coincide on shared tasks except
+  G-memo-probe (trained demo on an unseen-endpoint task) — that misalignment is deliberate: it
+  IS the memorisation probe, and each row sits in its own tier's novelty.</div>
   <div class="mxbar">
     <button class="btn" onclick="selAll(1)">select all</button>
     <button class="btn" onclick="selAll(0)">clear</button>
