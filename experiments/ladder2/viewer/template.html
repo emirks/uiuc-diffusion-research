@@ -1,0 +1,526 @@
+<meta charset="utf-8">
+<title>ladder2 — eval ladder results</title>
+<style>
+:root{--bg:#0e1014;--card:#171a1f;--card2:#1d2127;--edge:#2a2f37;--edge2:#3a414c;
+ --fg:#dde3ea;--dim:#8b95a1;--dim2:#666f7a;
+ --pre:#2dd4bf;--suf:#f5a524;--ref:#a78bfa;--bad:#f2555a;--good:#4ade80;--warn:#fbbf24;
+ --sel:#3b82f6;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+ font:13px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3,h4,h5{margin:0;font-weight:600}
+a{color:var(--sel)}
+.wrap{max-width:1900px;margin:0 auto;padding:16px}
+header{border-bottom:1px solid var(--edge);padding-bottom:12px;margin-bottom:16px}
+header h1{font-size:20px;letter-spacing:.2px}
+header .sub{color:var(--dim);font-size:12px;margin-top:4px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* ---------------------------------------------------------------- matrix */
+.panel{background:var(--card);border:1px solid var(--edge);border-radius:10px;
+ padding:14px;margin-bottom:14px}
+.panel>h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);
+ margin-bottom:10px}
+.mx{border-collapse:separate;border-spacing:4px;width:100%;max-width:900px}
+.mx th,.mx td{padding:0}
+.mx .corner{width:150px}
+.mx th.ch,.mx th.rh{background:var(--card2);border:1px solid var(--edge);border-radius:7px;
+ padding:7px 9px;cursor:pointer;font-size:11px;font-weight:600;text-align:left;
+ color:var(--fg);user-select:none;transition:.12s}
+.mx th.ch{text-align:center}
+.mx th span{display:block;font-weight:400;color:var(--dim2);font-size:10px;margin-top:2px}
+.mx th.ch:hover,.mx th.rh:hover{border-color:var(--edge2);background:#232830}
+.mx td.c{background:var(--card2);border:1px solid var(--edge);border-radius:7px;
+ padding:10px 6px;text-align:center;cursor:pointer;user-select:none;transition:.12s}
+.mx td.c .n{font-size:17px;font-weight:600}
+.mx td.c .l{font-size:10px;color:var(--dim2);margin-top:1px}
+.mx td.c:hover{border-color:var(--edge2)}
+.mx td.c.on{background:#132b4d;border-color:var(--sel);box-shadow:inset 0 0 0 1px var(--sel)}
+.mx td.c.on .l{color:#9dc4f5}
+.mx td.c.empty{opacity:.28;cursor:default}
+.mxbar{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.btn{background:var(--card2);border:1px solid var(--edge);color:var(--fg);border-radius:6px;
+ padding:5px 10px;cursor:pointer;font-size:11px;font-family:inherit}
+.btn:hover{border-color:var(--edge2)}
+.btn.on{background:#132b4d;border-color:var(--sel)}
+.seg{display:inline-flex;border:1px solid var(--edge);border-radius:6px;overflow:hidden}
+.seg button{background:var(--card2);border:0;border-right:1px solid var(--edge);color:var(--dim);
+ padding:5px 10px;cursor:pointer;font-size:11px;font-family:inherit}
+.seg button:last-child{border-right:0}
+.seg button.on{background:#132b4d;color:var(--fg)}
+.lbl{color:var(--dim);font-size:11px}
+
+/* ---------------------------------------------------------------- tables */
+details.tbl{border:1px solid var(--edge);border-radius:8px;margin-bottom:8px;background:var(--card)}
+details.tbl>summary{padding:9px 12px;cursor:pointer;font-size:12px;font-weight:600;
+ list-style:none;display:flex;align-items:center;gap:8px}
+details.tbl>summary::-webkit-details-marker{display:none}
+details.tbl>summary:before{content:"▸";color:var(--dim);font-size:10px;transition:.15s}
+details.tbl[open]>summary:before{transform:rotate(90deg)}
+details.tbl>summary .hint{color:var(--dim2);font-weight:400;font-size:11px;margin-left:auto}
+.tw{overflow-x:auto;padding:0 12px 12px}
+table.d{border-collapse:collapse;width:100%;font-size:11.5px;white-space:nowrap}
+table.d th,table.d td{padding:4px 9px;text-align:right;border-bottom:1px solid #22262d}
+table.d th{color:var(--dim);font-weight:600;text-align:right;position:sticky;top:0;
+ background:var(--card);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em}
+table.d td:first-child,table.d th:first-child,
+table.d td.l,table.d th.l{text-align:left}
+table.d tbody tr:hover{background:#1e232a}
+table.d .num{font-family:ui-monospace,Menlo,monospace}
+.pos{color:var(--good)}.neg{color:var(--bad)}.mut{color:var(--dim2)}
+.tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;
+ border:1px solid}
+.tag.pass{color:var(--good);border-color:#245c37;background:#12261a}
+.tag.weak{color:var(--warn);border-color:#5c4a1c;background:#241d0e}
+.tag.inv{color:var(--bad);border-color:#5c2426;background:#261214}
+.tag.floor{color:var(--dim);border-color:var(--edge);background:var(--card2)}
+.note{color:var(--dim2);font-size:11px;margin-top:8px;line-height:1.6}
+
+/* ---------------------------------------------------------------- cards */
+.card{background:var(--card);border:1px solid var(--edge);border-radius:10px;
+ margin-bottom:12px;overflow:hidden}
+.chead{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#13161b;
+ border-bottom:1px solid var(--edge);flex-wrap:wrap}
+.chead b{font-size:13px}
+.chead .dim{color:var(--dim);font-size:11px}
+.chead .pill{margin-left:auto;display:flex;gap:6px;align-items:center}
+.grp{padding:10px 12px;border-bottom:1px solid #20242b}
+.grp:last-child{border-bottom:0}
+.grp>h5{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim);
+ margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.grp.inputs>h5:before{content:"";width:7px;height:7px;border-radius:2px;background:var(--pre)}
+.grp.ctx>h5:before{content:"";width:7px;height:7px;border-radius:2px;background:var(--dim2)}
+.grp.outs>h5:before{content:"";width:7px;height:7px;border-radius:2px;background:var(--good)}
+.grp.ctx{background:#12141899}
+.row{display:flex;gap:10px;overflow-x:auto;padding-bottom:3px;align-items:flex-start}
+.cellbox{flex:0 0 210px;background:var(--card2);border:1px solid var(--edge);border-radius:8px;
+ padding:8px;display:flex;flex-direction:column;gap:6px}
+.cellbox.wide{flex:0 0 300px}
+.cellbox h4{font-size:11px;line-height:1.35}
+.cellbox h4 .arm{color:var(--dim);font-weight:400;display:block;font-size:10px}
+.cellbox video{width:100%;aspect-ratio:3/4;object-fit:cover;background:#000;border-radius:5px;
+ display:block}
+.cellbox .miss{width:100%;aspect-ratio:3/4;display:grid;place-items:center;color:var(--dim2);
+ background:#0b0d10;border-radius:5px;font-size:11px}
+.cellbox .fn{color:var(--dim2);font-size:10px;word-break:break-all;line-height:1.35}
+.ptext{font-size:11px;color:#c7d0da;line-height:1.5;max-height:170px;overflow:auto}
+
+/* ------------------------------------------------- CONDITIONING BAR */
+.cond{border:1px solid var(--edge);border-radius:5px;overflow:hidden;background:#0b0d10}
+.cond .track{display:flex;height:16px;position:relative}
+.cond .seg-p{background:linear-gradient(180deg,#2dd4bf,#14a89a)}
+.cond .seg-s{background:linear-gradient(180deg,#f5a524,#c47f10)}
+.cond .seg-g{flex:1;background:repeating-linear-gradient(-45deg,#1b1f26 0 5px,#141820 5px 10px)}
+.cond .seg-n{flex:1;background:repeating-linear-gradient(-45deg,#22262d 0 5px,#191d23 5px 10px)}
+.cond .cap{display:flex;justify-content:space-between;padding:3px 6px;font-size:9.5px;
+ letter-spacing:.03em;font-weight:600;text-transform:uppercase}
+.cond .cap .p{color:var(--pre)}
+.cond .cap .s{color:var(--suf)}
+.cond .cap .g{color:var(--dim2);font-weight:400;text-transform:none;letter-spacing:0}
+.cond .cap .none{color:var(--dim);font-weight:600}
+.refbar{display:flex;align-items:center;gap:6px;padding:4px 7px;border-radius:5px;
+ background:#1e1a33;border:1px solid #3b3163;font-size:10px;color:#c9bcf5;font-weight:600;
+ letter-spacing:.02em}
+.refbar.mismatch{background:#2c1618;border-color:#5c2426;color:#f0a7ab}
+.refbar .clip{font-weight:400;color:#9b8fd0;font-family:ui-monospace,Menlo,monospace;
+ overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.refbar.mismatch .clip{color:#d1898e}
+
+.chips{display:flex;flex-wrap:wrap;gap:3px}
+.chip{font-size:9.5px;padding:1px 5px;border-radius:4px;border:1px solid var(--edge);
+ color:var(--dim);background:#14171c;font-family:ui-monospace,Menlo,monospace}
+.chip b{color:var(--fg);font-weight:600}
+.chip.g{border-color:#245c37;color:var(--good)}
+.chip.r{border-color:#5c2426;color:var(--bad)}
+.chip.a{border-color:#5c4a1c;color:var(--warn)}
+.chip.big{font-size:11px;padding:2px 7px}
+.pbtn{background:#132b4d;border:1px solid var(--sel);color:#cfe2fb;border-radius:5px;
+ padding:3px 9px;cursor:pointer;font-size:10.5px;font-family:inherit}
+.empty{padding:36px;text-align:center;color:var(--dim2)}
+.more{padding:12px;text-align:center}
+</style>
+
+<div class="wrap">
+<header>
+  <h1>eval ladder — results viewer</h1>
+  <div class="sub" id="sub"></div>
+</header>
+
+<div class="panel">
+  <h2>ontology — click cells, row or column headers to select (multi-select)</h2>
+  <table class="mx" id="mx"></table>
+  <div class="mxbar">
+    <button class="btn" onclick="selAll(1)">select all</button>
+    <button class="btn" onclick="selAll(0)">clear</button>
+    <span class="lbl" style="margin-left:8px">arms</span>
+    <span class="seg" id="tiers"></span>
+    <span class="lbl" style="margin-left:8px">seed</span>
+    <span class="seg" id="seeds"></span>
+    <span class="lbl" style="margin-left:8px">donor class</span>
+    <select id="donor" class="btn"></select>
+    <span class="lbl" id="selinfo" style="margin-left:auto"></span>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>statistics for the selection</h2>
+  <div id="stats"></div>
+</div>
+
+<div class="panel">
+  <h2 style="display:flex;align-items:center;gap:10px">generations
+    <span class="lbl" id="cardinfo" style="text-transform:none;letter-spacing:0"></span></h2>
+  <div id="cards"></div>
+  <div class="more" id="more"></div>
+</div>
+</div>
+
+<script>
+const D = /*__DATA__*/null;
+const PAGE = 25;
+let shown = PAGE;
+
+// ---------------------------------------------------------------- selection state
+const sel = new Set();                       // "novelty|content"
+let tiers = new Set(["specialist","generalist"]);
+let seed = String(D.meta.seeds[0]);
+let donor = "";
+
+const keyOf = (n,c) => n+"|"+c;
+const fmt = (v,dp=3) => (v==null||!isFinite(v)) ? "—" : v.toFixed(dp);
+const pct = v => (v==null||!isFinite(v)) ? "—" : (v*100).toFixed(1)+"%";
+const mean = a => { a = a.filter(x=>x!=null&&isFinite(x)); return a.length? a.reduce((s,x)=>s+x,0)/a.length : null; };
+
+// ---------------------------------------------------------------- matrix
+function drawMatrix(){
+  const t = document.getElementById("mx");
+  let h = "<tr><th class='corner'></th>";
+  for(const c of D.content_order)
+    h += `<th class="ch" onclick="togCol('${c}')">${D.content_label[c]}</th>`;
+  h += "</tr>";
+  for(const n of D.novelty_order){
+    h += `<tr><th class="rh" onclick="togRow('${n}')">${D.novelty_label[n]}</th>`;
+    for(const c of D.content_order){
+      const k = keyOf(n,c), cnt = D.matrix[k]||0;
+      h += cnt===0
+        ? `<td class="c empty"><div class="n">–</div></td>`
+        : `<td class="c ${sel.has(k)?"on":""}" onclick="tog('${k}')">
+             <div class="n">${cnt}</div><div class="l">rows</div></td>`;
+    }
+    h += "</tr>";
+  }
+  t.innerHTML = h;
+}
+function tog(k){ sel.has(k)?sel.delete(k):sel.add(k); render(); }
+function togRow(n){
+  const ks = D.content_order.map(c=>keyOf(n,c)).filter(k=>(D.matrix[k]||0)>0);
+  const all = ks.every(k=>sel.has(k));
+  ks.forEach(k=> all?sel.delete(k):sel.add(k)); render();
+}
+function togCol(c){
+  const ks = D.novelty_order.map(n=>keyOf(n,c)).filter(k=>(D.matrix[k]||0)>0);
+  const all = ks.every(k=>sel.has(k));
+  ks.forEach(k=> all?sel.delete(k):sel.add(k)); render();
+}
+function selAll(on){
+  sel.clear();
+  if(on) for(const k in D.matrix) if(D.matrix[k]>0) sel.add(k);
+  render();
+}
+
+// ---------------------------------------------------------------- filtering
+/** Treatment gens matching the current selection. Base/floor are never selected here —
+ *  they are comparison arms and are pulled in per-card. */
+function selectedGens(){
+  const out = [];
+  for(const card of D.cards) for(const g of card.gens){
+    if(g.tier==="base"||g.tier==="floor") continue;
+    if(!tiers.has(g.tier)) continue;
+    if(sel.size && !sel.has(keyOf(g.novelty,g.content))) continue;
+    if(donor && g.donor!==donor) continue;
+    out.push(g);
+  }
+  return out;
+}
+function selectedCards(){
+  const ok = new Set(selectedGens().map(g=>g.id));
+  return D.cards.filter(c=>c.gens.some(g=>ok.has(g.id)))
+                .map(c=>({card:c, hit:c.gens.filter(g=>ok.has(g.id))}));
+}
+
+// ---------------------------------------------------------------- statistics
+/** Mirrors run_eval.report(): level = mean pool-%, margin = mean(pct - base pct),
+ *  unit of analysis is the DONOR CLASS (per-donor mean, then a sign test at 80%). */
+function cellStats(gens){
+  const by = {};
+  for(const g of gens) (by[g.cell] = by[g.cell]||[]).push(g);
+  return Object.entries(by).map(([cell,gs])=>{
+    const types = new Set(gs.map(g=>g.pct_type));
+    const level = mean(gs.map(g=>g.pct));
+    const deltas = gs.filter(g=>g.b_pct!=null&&g.pct!=null).map(g=>g.pct-g.b_pct);
+    const perDonor = {};
+    for(const g of gs) if(g.b_pct!=null&&g.pct!=null)
+      (perDonor[g.donor] = perDonor[g.donor]||[]).push(g.pct-g.b_pct);
+    const dn = Object.keys(perDonor).length;
+    const pos = Object.values(perDonor).filter(v=>mean(v)>0).length;
+    const invalid = gs.some(g=>g.tier==="generalist") && gs.some(g=>g.ref);
+    return {cell, n:gs.length, type:[...types].join("/"), level,
+            dpp: deltas.length? mean(deltas)*100 : null, pos, dn, invalid,
+            base: mean(gs.map(g=>g.b_pct))};
+  }).sort((a,b)=>a.cell<b.cell?-1:1);
+}
+
+function headlineTable(gens){
+  const rows = cellStats(gens);
+  if(!rows.length) return "<div class='empty'>nothing selected</div>";
+  let h = `<div class="tw"><table class="d"><thead><tr>
+    <th class="l">cell</th><th>n</th><th>%type</th><th>base %</th><th>level %</th>
+    <th>Δpp vs base</th><th>donors +</th><th class="l">verdict</th></tr></thead><tbody>`;
+  for(const r of rows){
+    const v = r.invalid ? `<span class="tag inv">INVALID</span>`
+      : r.dn===0 ? `<span class="tag floor">floor</span>`
+      : (r.pos/r.dn>=0.8) ? `<span class="tag pass">PASS</span>`
+      : `<span class="tag weak">weak</span>`;
+    h += `<tr><td class="l">${r.cell}</td><td class="num">${r.n}</td>
+      <td class="num mut">${r.type}</td>
+      <td class="num mut">${r.base==null?"—":(r.type==="same"?pct(r.base):"("+pct(r.base)+")")}</td>
+      <td class="num"><b>${r.type==="same"?pct(r.level):"("+pct(r.level)+")"}</b></td>
+      <td class="num ${r.dpp==null?"":(r.dpp>0?"pos":"neg")}">${r.dpp==null?"—":(r.dpp>0?"+":"")+r.dpp.toFixed(1)}</td>
+      <td class="num">${r.dn?r.pos+"/"+r.dn:"—"}</td><td class="l">${v}</td></tr>`;
+  }
+  h += "</tbody></table></div>";
+  if(rows.some(r=>r.invalid)) h += `<div class="note"><b>INVALID</b> = the base twin wins this cell by
+    reproducing the in-context demo, so pool-% rewards the wrong behaviour. Numbers retained because
+    they were pre-registered; the claim-bearing readout for these cells is the transfer index
+    (Amendment-1), not this margin.</div>`;
+  h += `<div class="note"><b>%_same</b> is cross-class comparable and headline-eligible.
+    <b>(%_proxy)</b> is content-capped — absolute level is ranking-only, the claim is Δpp, where the
+    identical cap cancels. Unit of analysis is the donor class: per-donor mean, then a sign test
+    (PASS at ≥80% of donors positive).</div>`;
+  return h;
+}
+
+function metricTable(gens, group){
+  const ms = D.metrics.filter(m=>m.group===group);
+  const by = {};
+  for(const g of gens) (by[g.cell+" "+g.arm] = by[g.cell+" "+g.arm]||[]).push(g);
+  let h = `<div class="tw"><table class="d"><thead><tr><th class="l">cell</th><th class="l">arm</th><th>n</th>`;
+  for(const m of ms) h += `<th title="${m.dir==="up"?"higher is better":m.dir==="down"?"lower is better":"informational"}">${m.label}${m.dir==="up"?" ↑":m.dir==="down"?" ↓":""}</th>`;
+  h += `</tr></thead><tbody>`;
+  for(const k of Object.keys(by).sort()){
+    const gs = by[k], [cell,arm] = k.split(" ");
+    h += `<tr><td class="l">${cell}</td><td class="l mut">${arm}</td><td class="num">${gs.length}</td>`;
+    for(const m of ms){
+      const v = mean(gs.map(g=>g.m[m.k]));
+      h += `<td class="num">${fmt(v,m.dp)}</td>`;
+    }
+    h += "</tr>";
+  }
+  return h + "</tbody></table></div>";
+}
+
+function flagTable(gens){
+  const by = {};
+  for(const g of gens) (by[g.cell+" "+g.arm] = by[g.cell+" "+g.arm]||[]).push(g);
+  let h = `<div class="tw"><table class="d"><thead><tr><th class="l">cell</th><th class="l">arm</th><th>n</th>`;
+  for(const f of D.flags) h += `<th>${f.label}</th>`;
+  h += `</tr></thead><tbody>`;
+  for(const k of Object.keys(by).sort()){
+    const gs = by[k], [cell,arm] = k.split(" ");
+    h += `<tr><td class="l">${cell}</td><td class="l mut">${arm}</td><td class="num">${gs.length}</td>`;
+    for(const f of D.flags) h += `<td class="num">${fmt(mean(gs.map(g=>g.f[f.k])),3)}</td>`;
+    h += "</tr>";
+  }
+  return h + "</tbody></table></div>";
+}
+
+function armRollup(gens){
+  const by = {};
+  for(const g of gens) (by[g.arm] = by[g.arm]||[]).push(g);
+  let h = `<div class="tw"><table class="d"><thead><tr><th class="l">arm</th><th>items</th>
+    <th>raw app_ref</th><th>pool-%</th><th>copy_max ↓</th><th>near_copy ↓</th>
+    <th>prefix_dino ↑</th><th>seam_z ↓</th></tr></thead><tbody>`;
+  for(const a of Object.keys(by).sort()){
+    const gs = by[a];
+    h += `<tr><td class="l">${a}</td><td class="num">${gs.length}</td>
+      <td class="num">${fmt(mean(gs.map(g=>g.m.app_ref)),4)}</td>
+      <td class="num">${pct(mean(gs.map(g=>g.pct)))}</td>
+      <td class="num">${fmt(mean(gs.map(g=>g.m.copy_max)),3)}</td>
+      <td class="num">${fmt(mean(gs.map(g=>g.f.near_copy)),3)}</td>
+      <td class="num">${fmt(mean(gs.map(g=>g.m.prefix_dino)),3)}</td>
+      <td class="num">${fmt(mean(gs.map(g=>g.m.max_seam_z)),2)}</td></tr>`;
+  }
+  return h + "</tbody></table></div>";
+}
+
+function drawStats(){
+  const gens = selectedGens();
+  const el = document.getElementById("stats");
+  if(!gens.length){ el.innerHTML = "<div class='empty'>no rows match — select a matrix cell</div>"; return; }
+  el.innerHTML =
+    `<details class="tbl" open><summary>headline — pool-% and margin vs base
+       <span class="hint">${gens.length} rows</span></summary>${headlineTable(gens)}</details>
+     <details class="tbl"><summary>reference-relative metrics
+       <span class="hint">M1a · M1b · M1c · M2a, mean over the same-class GT pool</span></summary>
+       ${metricTable(gens,"ref")}</details>
+     <details class="tbl"><summary>per-generation metrics
+       <span class="hint">M2b intrusion · M3a endpoint fidelity · M3b seam · timing scalars</span></summary>
+       ${metricTable(gens,"gen")}</details>
+     <details class="tbl"><summary>flag rates
+       <span class="hint">fraction of scored generations</span></summary>${flagTable(gens)}</details>
+     <details class="tbl"><summary>per-arm rollup
+       <span class="hint">across every selected cell</span></summary>${armRollup(gens)}</details>`;
+}
+
+// ---------------------------------------------------------------- conditioning bar
+/** The distinct visual identity of each conditioning mode — read it before the video. */
+function condBar(g, card){
+  const F = D.meta.frames, P = D.meta.px_prefix, S = D.meta.suffix_gen_frames;
+  let bar;
+  if(g.cond === "none"){
+    bar = `<div class="track"><div class="seg-n"></div></div>
+           <div class="cap"><span class="none">prompt only — no conditioning</span>
+             <span class="g">${F}f generated</span></div>`;
+  } else if(g.cond === "prefix"){
+    bar = `<div class="track">
+             <div class="seg-p" style="width:${100*P/F}%"></div><div class="seg-g"></div></div>
+           <div class="cap"><span class="p">prefix ${P}f</span>
+             <span class="g">${F-P}f generated · one-sided, no end anchor</span></div>`;
+  } else {
+    bar = `<div class="track">
+             <div class="seg-p" style="width:${100*P/F}%"></div><div class="seg-g"></div>
+             <div class="seg-s" style="width:${100*S/F}%"></div></div>
+           <div class="cap"><span class="p">prefix ${P}f</span>
+             <span class="g">${F-P-S}f generated</span><span class="s">suffix ${S}f</span></div>`;
+  }
+  let ref = "";
+  if(g.ref) ref = `<div class="refbar ${g.mismatched_ref?"mismatch":""}">
+      <span>${g.mismatched_ref?"✕ mismatched demo (control)":"◧ in-context demo"}</span>
+      <span class="clip">${g.ref}</span></div>`;
+  return ref + `<div class="cond">${bar}</div>`;
+}
+
+// ---------------------------------------------------------------- cards
+function vid(src, cls=""){
+  return src ? `<video class="${cls}" preload="none" muted loop playsinline data-src="${src}"></video>`
+             : `<div class="miss">not available</div>`;
+}
+function genBox(g, card){
+  const chips = [];
+  const pc = g.pct==null?null:g.pct;
+  chips.push(`<span class="chip big ${g.b_pct!=null?(g.pct>g.b_pct?"g":"r"):""}">%ceil <b>${pct(pc)}</b></span>`);
+  if(g.b_pct!=null){
+    const d = (g.pct-g.b_pct)*100;
+    chips.push(`<span class="chip ${d>0?"g":"r"}">Δ vs base <b>${(d>0?"+":"")+d.toFixed(1)}pp</b></span>`);
+  }
+  chips.push(`<span class="chip">app <b>${fmt(g.m.app_ref,3)}</b></span>`);
+  chips.push(`<span class="chip">copy <b>${fmt(g.m.copy_max,2)}</b></span>`);
+  const sz = g.m.max_seam_z;
+  chips.push(`<span class="chip ${sz>6?"r":sz>3?"a":""}">seam z <b>${fmt(sz,1)}</b></span>`);
+  chips.push(`<span class="chip">pre_dino <b>${fmt(g.m.prefix_dino,3)}</b></span>`);
+  if(g.f.near_copy>0) chips.push(`<span class="chip r">near_copy ${fmt(g.f.near_copy,2)}</span>`);
+  const tierName = {base:"BASE · no adapter", floor:"TEXT FLOOR · prompt only",
+                    specialist:"SPECIALIST", generalist:"IC-LoRA GENERALIST"}[g.tier];
+  return `<div class="cellbox">
+    <h4>${tierName}<span class="arm">${g.arm} · ${g.cell}</span></h4>
+    ${condBar(g,card)}
+    ${vid(g.videos[seed] || Object.values(g.videos)[0])}
+    <div class="chips">${chips.join("")}</div></div>`;
+}
+function cardHtml(entry, i){
+  const c = entry.card;
+  // outputs: every arm that answered this exact input, base first for comparison
+  const gens = c.gens.filter(g=>g.tier==="base"||g.tier==="floor"||entry.hit.some(h=>h.id===g.id));
+  const inputs = [
+    `<div class="cellbox wide"><h4>PROMPT<span class="arm">identical for every arm below</span></h4>
+       <div class="ptext">${c.prompt.replace(/</g,"&lt;")}</div></div>`,
+    `<div class="cellbox"><h4>PREFIX — first ${D.meta.px_prefix} frames<span class="arm">model input</span></h4>
+       ${vid(c.prefix_video)}<div class="fn">${c.endpoint||""}</div></div>`,
+    c.suffix_video ? `<div class="cellbox"><h4>SUFFIX — last ${D.meta.px_prefix} frames<span class="arm">model input · two-sided</span></h4>
+       ${vid(c.suffix_video)}<div class="fn">${c.endpoint}</div></div>` : "",
+    c.reference_video ? `<div class="cellbox"><h4>IN-CONTEXT DEMO<span class="arm">model input · IC-LoRA arms only</span></h4>
+       ${vid(c.reference_video)}<div class="fn">${c.reference} · ${c.reference_class}</div></div>` : "",
+  ].join("");
+  const ctx = [
+    c.endpoint_video ? `<div class="cellbox"><h4>endpoint's own clip<span class="arm">NOT a model input</span></h4>
+       ${vid(c.endpoint_video)}<div class="fn">${c.endpoint} · ${c.endpoint_class} · ${c.endpoint_split||""}</div></div>`
+      : `<div class="cellbox"><h4>endpoint source<span class="arm">DAVIS — no corpus clip</span></h4>
+       <div class="miss">off-distribution footage</div><div class="fn">${c.endpoint||""}</div></div>`,
+  ].join("");
+  const nov = entry.hit[0], tags = [...new Set(entry.hit.map(g=>g.novelty+" · "+g.content))];
+  return `<div class="card">
+    <div class="chead"><b>${c.endpoint||"—"}</b>
+      <span class="dim">${c.sided}-sided · ${tags.join(" | ")}</span>
+      <span class="pill">
+        <span class="chip">${gens.length} arms</span>
+        <button class="pbtn" onclick="playAll(this)">▶ play all</button></span></div>
+    <div class="grp inputs"><h5>model inputs</h5><div class="row">${inputs}</div></div>
+    <div class="grp ctx"><h5>context — not given to the model</h5><div class="row">${ctx}</div></div>
+    <div class="grp outs"><h5>outputs — ${gens.length} arms on this identical input</h5>
+      <div class="row">${gens.map(g=>genBox(g,c)).join("")}</div></div>
+  </div>`;
+}
+
+function drawCards(){
+  const entries = selectedCards();
+  document.getElementById("cardinfo").textContent =
+    `${entries.length} inputs match · showing ${Math.min(shown,entries.length)}`;
+  const el = document.getElementById("cards");
+  if(!entries.length){ el.innerHTML = "<div class='empty'>no inputs match the selection</div>";
+    document.getElementById("more").innerHTML=""; return; }
+  el.innerHTML = entries.slice(0,shown).map(cardHtml).join("");
+  document.getElementById("more").innerHTML = entries.length>shown
+    ? `<button class="btn" onclick="shown+=${PAGE};drawCards()">show ${Math.min(PAGE,entries.length-shown)} more of ${entries.length-shown}</button>` : "";
+  lazy();
+}
+
+// video: only load what scrolls into view
+let io;
+function lazy(){
+  if(io) io.disconnect();
+  io = new IntersectionObserver(es=>es.forEach(e=>{
+    const v = e.target;
+    if(e.isIntersecting){ if(!v.src) v.src = v.dataset.src; v.play().catch(()=>{}); }
+    else v.pause();
+  }), {rootMargin:"150px"});
+  document.querySelectorAll("video").forEach(v=>io.observe(v));
+}
+function playAll(btn){
+  btn.closest(".card").querySelectorAll("video").forEach(v=>{
+    if(!v.src) v.src = v.dataset.src; v.currentTime = 0; v.play().catch(()=>{});
+  });
+}
+
+// ---------------------------------------------------------------- chrome
+function drawControls(){
+  document.getElementById("tiers").innerHTML =
+    ["specialist","generalist"].map(t=>
+      `<button class="${tiers.has(t)?"on":""}" onclick="togTier('${t}')">${t}</button>`).join("");
+  document.getElementById("seeds").innerHTML = D.meta.seeds.map(s=>
+    `<button class="${String(s)===seed?"on":""}" onclick="setSeed('${s}')">${s}</button>`).join("");
+  const donors = [...new Set(D.cards.flatMap(c=>c.gens.map(g=>g.donor)))].filter(Boolean).sort();
+  const d = document.getElementById("donor");
+  if(!d.options.length){
+    d.innerHTML = `<option value="">all (${donors.length})</option>` +
+      donors.map(x=>`<option value="${x}">${x}</option>`).join("");
+    d.onchange = e => { donor = e.target.value; shown = PAGE; render(); };
+  }
+}
+function togTier(t){ tiers.has(t)?tiers.delete(t):tiers.add(t); shown=PAGE; render(); }
+function setSeed(s){ seed = s; render(); }
+
+function render(){
+  shown = Math.max(shown, PAGE);
+  drawMatrix(); drawControls(); drawStats(); drawCards();
+  const n = selectedGens().length;
+  document.getElementById("selinfo").textContent =
+    sel.size ? `${sel.size} ontology cells · ${n} generations` : `all ontology cells · ${n} generations`;
+}
+
+const m = D.meta;
+document.getElementById("sub").innerHTML =
+  `<span class="mono">${m.ladder}</span> · instrument <span class="mono">${m.instrument}</span> ·
+   ${m.registry_rows} registry rows · ${m.cards} distinct inputs · ${m.generations} videos ·
+   seeds ${m.seeds.join(", ")} · ${m.frames}f @ prefix ${m.px_prefix} / suffix ${m.suffix_gen_frames}`;
+selAll(1);
+</script>
