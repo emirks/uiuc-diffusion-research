@@ -21,7 +21,7 @@
    "endpoints": "color_rain_0",
    "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
    "prefix_only": true,
-   "prompt": "ICTRANS A woman with long black hair and large sunglasses stands in a warm-lit kitchen, wearing a brown leather jacket, a light blue button-down shirt, and a brown skirt while holding a white telephone receiver to her ear.",
+   "prompt": "ICTRANS A woman with long black hair and large sunglasses stands in a warm-lit kitchen, wearing a brown leather jacket, a light blue button-down shirt, and a brown skirt while holding a white telephone receiver to her ear. The scene transforms into",
    "reference_class": null,
    "reference": null
   },
@@ -35,7 +35,7 @@
    "endpoints": "illustration_scene_7",
    "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
    "prefix_only": true,
-   "prompt": "ICTRANS A young man in a leather jacket and denim shorts leans against a railing by a stone wall.",
+   "prompt": "ICTRANS A young man in a leather jacket and denim shorts leans against a railing by a stone wall. The scene transforms into",
    "reference_class": null,
    "reference": null
   },
@@ -49,7 +49,7 @@
    "endpoints": "portal_4",
    "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
    "prefix_only": true,
-   "prompt": "ICTRANS A cartoon character with teal hair and a green apron rests their head on their hand while holding a pen over a notebook at a checkout counter inside a dimly lit convenience store with green fluorescent lighting.",
+   "prompt": "ICTRANS A cartoon character with teal hair and a green apron rests their head on their hand while holding a pen over a notebook at a checkout counter inside a dimly lit convenience store with green fluorescent lighting. The scene transforms into",
    "reference_class": null,
    "reference": null
   },
@@ -63,7 +63,7 @@
    "endpoints": "wireframe_7",
    "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
    "prefix_only": true,
-   "prompt": "ICTRANS A green serum bottle sits among cacti on rocks.",
+   "prompt": "ICTRANS A green serum bottle sits among cacti on rocks. The scene transforms into",
    "reference_class": null,
    "reference": null
   }

@@ -21,7 +21,7 @@
    "endpoints": "animalization_0",
    "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
    "prefix_only": true,
-   "prompt": "ICTRANS A woman in a red bomber jacket poses against a blue studio backdrop, hands on hips.",
+   "prompt": "ICTRANS A woman in a red bomber jacket poses against a blue studio backdrop, hands on hips. The scene transforms into",
    "reference_class": null,
    "reference": null
   },
@@ -35,7 +35,7 @@
    "endpoints": "gas_transformation_6",
    "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
    "prefix_only": true,
-   "prompt": "ICTRANS A bearded man wearing a white cap, a green cable-knit quarter-zip sweater, blue pants, and white sneakers sits on a yellow fire hydrant next to a road under a clear blue sky.",
+   "prompt": "ICTRANS A bearded man wearing a white cap, a green cable-knit quarter-zip sweater, blue pants, and white sneakers sits on a yellow fire hydrant next to a road under a clear blue sky. The scene transforms into",
    "reference_class": null,
    "reference": null
   },
@@ -49,7 +49,7 @@
    "endpoints": "illustration_scene_7",
    "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
    "prefix_only": true,
-   "prompt": "ICTRANS A young man in a leather jacket and denim shorts leans against a railing by a stone wall.",
+   "prompt": "ICTRANS A young man in a leather jacket and denim shorts leans against a railing by a stone wall. The scene transforms into",
    "reference_class": null,
    "reference": null
   },
@@ -63,7 +63,7 @@
    "endpoints": "polygon_8",
    "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
    "prefix_only": true,
-   "prompt": "ICTRANS A young woman with long black hair, wearing bright pink undereye makeup, silver chain necklaces, and a blue jacket with white faux fur trim, smiles and shows her braces while touching her lip in front of a wooden paneled wall.",
+   "prompt": "ICTRANS A young woman with long black hair, wearing bright pink undereye makeup, silver chain necklaces, and a blue jacket with white faux fur trim, smiles and shows her braces while touching her lip in front of a wooden paneled wall. The scene transforms into",
    "reference_class": null,
    "reference": null
   }
