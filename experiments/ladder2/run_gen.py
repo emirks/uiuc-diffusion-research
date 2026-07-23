@@ -1,0 +1,156 @@
+"""ladder2 — the generator. Consumes `registry.jsonl` rows for ONE arm.
+
+    row  x  seed  ==  exactly one video
+
+Nothing is decided here. The row already carries the prompt, the conditioning, the reference
+and the arm; this script only loads that arm's adapter once and renders its rows. Selection is
+by `--arm` (which model) and optionally `--priority` (which wave), so a generation job is
+always "this model, these rows".
+
+    cd $LAB/LTX-2-official/packages/ltx-trainer
+    uv run --frozen python <repo>/experiments/ladder2/run_gen.py \
+        --arm spec_color_rain --seed 42 [--priority P0] [--chunk 0 --num-chunks 4]
+
+Skip-if-exists on the output path, so preemption + requeue simply continues.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+import torch
+import yaml
+from peft import LoraConfig, get_peft_model, set_peft_model_state_dict
+from safetensors.torch import load_file
+
+from ltx_trainer.config import (
+    PrefixConditionConfig,
+    ReferenceConditionConfig,
+    SuffixConditionConfig,
+    ValidationConfig,
+    ValidationSample,
+)
+from ltx_trainer.model_loader import load_transformer
+from ltx_trainer.progress import TrainingProgress
+from ltx_trainer.validation_runner import ValidationRunner
+
+HERE = Path(__file__).resolve().parent
+REPO_ROOT = HERE.parents[1]
+sys.path.insert(0, str(HERE))
+
+import encode_conditioning as ec  # noqa: E402
+import prompts  # noqa: E402
+
+LAB = Path("/projects/illinois/eng/cs/jrehg/users/emirkisa")
+MODEL = LAB / "cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors"
+GEMMA = LAB / "cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
+STD = REPO_ROOT / "data/processed/transitions_std121"
+REGISTRY = HERE / "registry.jsonl"
+ARMS = HERE / "arms.yaml"
+OUT_ROOT = REPO_ROOT / "outputs/videos/ladder2"
+
+
+def build_sample(row: dict) -> ValidationSample:
+    """Conditioning is a pure function of the row — the same rule the mask uses at eval."""
+    conds = []
+    if row.get("conditioning") != "none" and row["endpoint"] is not None:
+        paths = ec.cond_paths(row["endpoint"], row["sided"])
+        conds.append(PrefixConditionConfig(video=str(paths["prefix"]), num_frames=ec.PX_PREFIX))
+        if row["sided"] == "two":
+            conds.append(SuffixConditionConfig(video=str(paths["suffix"]),
+                                               num_frames=ec.SUFFIX_GEN_FRAMES))
+    if row.get("reference"):
+        # authoritative clip -> class (clip names do NOT reliably encode the class)
+        ref_path = STD / prompts.clip_class(row["reference"]) / f"{row['reference']}.mp4"
+        assert ref_path.exists(), f"reference clip not found: {ref_path}"
+        conds.append(ReferenceConditionConfig(video=str(ref_path), downscale_factor=1,
+                                              temporal_scale_factor=1, include_in_output=False))
+    return ValidationSample(prompt=row["prompt"], conditions=conds)
+
+
+def load_rows(arm: str, priority: str | None) -> list[dict]:
+    rows = [json.loads(line) for line in REGISTRY.read_text().splitlines() if line.strip()]
+    rows = [r for r in rows if r["arm"] == arm]
+    if priority:
+        keep = set(priority.split(","))
+        rows = [r for r in rows if r["priority"] in keep]
+    return rows
+
+
+def resolve_adapter(arm: str, arms_cfg: dict) -> tuple[Path | None, list[str]]:
+    spec = arms_cfg["arms"][arm]
+    if spec.get("adapter", "unset") is None or spec["kind"] in ("base", "text_floor"):
+        return None, []
+    path = REPO_ROOT / arms_cfg["adapter_template"].format(arm=arm, step=spec["step"])
+    assert path.exists(), f"adapter missing for {arm}: {path}"
+    return path, arms_cfg["targets"][spec["targets"]]
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--arm", required=True)
+    ap.add_argument("--seed", type=int, required=True)
+    ap.add_argument("--priority", default=None, help="e.g. P0 or P0,P1")
+    ap.add_argument("--chunk", type=int, default=0)
+    ap.add_argument("--num-chunks", type=int, default=1)
+    ap.add_argument("--rank", type=int, default=32)
+    ap.add_argument("--alpha", type=int, default=32)
+    args = ap.parse_args()
+
+    arms_cfg = yaml.safe_load(ARMS.read_text())
+    assert args.seed in arms_cfg["seeds"], f"seed {args.seed} is not a registered seed"
+    rows = load_rows(args.arm, args.priority)[args.chunk::args.num_chunks]
+    assert rows, f"no registry rows for arm={args.arm} priority={args.priority}"
+
+    def out_path(r: dict) -> Path:
+        return OUT_ROOT / r["arm"] / f"{r['item_id']}__s{args.seed}.mp4"
+
+    todo = [r for r in rows if not out_path(r).exists()]
+    print(f"[gen] arm={args.arm} seed={args.seed} chunk={args.chunk}/{args.num_chunks}: "
+          f"{len(todo)}/{len(rows)} to generate")
+    if not todo:
+        print("[gen] nothing to do")
+        return
+    for r in todo:
+        out_path(r).parent.mkdir(parents=True, exist_ok=True)
+
+    adapter, target_modules = resolve_adapter(args.arm, arms_cfg)
+    inf = arms_cfg["inference"]
+    h, w, f = arms_cfg["resolution"]
+    val_cfg = ValidationConfig(
+        samples=[build_sample(r) for r in todo],
+        negative_prompt="worst quality, inconsistent motion, distorted, jittery",
+        video_dims=(h, w, f), frame_rate=24.0, seed=args.seed,
+        inference_steps=inf["steps"], interval=1, guidance_scale=inf["guidance_scale"],
+        stg_scale=inf["stg_scale"], stg_blocks=inf["stg_blocks"], stg_mode=inf["stg_mode"],
+        generate_audio=False,
+    )
+
+    device = torch.device("cuda")
+    runner = ValidationRunner(config=val_cfg, model_path=MODEL, text_encoder_path=GEMMA)
+    transformer = load_transformer(MODEL, device="cpu", dtype=torch.bfloat16)
+    if adapter is not None:
+        print(f"[gen] adapter {adapter.name} ({len(target_modules)} target modules)")
+        transformer = get_peft_model(transformer, LoraConfig(
+            r=args.rank, lora_alpha=args.alpha, target_modules=target_modules,
+            lora_dropout=0.0, init_lora_weights=True))
+        sd = {k.replace("diffusion_model.", "", 1): v for k, v in load_file(str(adapter)).items()}
+        set_peft_model_state_dict(transformer.get_base_model(), sd)
+    else:
+        print(f"[gen] {args.arm}: no adapter (base weights)")
+    transformer = transformer.to(device).eval()
+
+    tmp = OUT_ROOT / "_runner" / f"{args.arm}_s{args.seed}_c{args.chunk}"
+    saved = runner.run(transformer=transformer, step=0, output_dir=tmp, device=device,
+                       progress=TrainingProgress(enabled=True, total_steps=1))
+    for idx, path in saved:
+        dst = out_path(todo[idx])
+        Path(path).rename(dst)
+        print(f"[done] {todo[idx]['item_id']} s{args.seed} -> {dst.relative_to(REPO_ROOT)}")
+
+
+if __name__ == "__main__":
+    main()

@@ -206,7 +206,11 @@ exceptions (§5.1 pre-registered handling applies until harmonized).
    specialist rungs or re-curate.
 2. **portal clip 0** — fully cartoon-animated; medium heterogeneity poisons DINO/m1a stats;
    replace exemplar.
-3. **live_concert** — roster all-dup (already tracked); fix before any rung consumes it.
+3. **live_concert** — ~~roster all-dup~~ **[CORRECTED 2026-07-22: this "all-dup" claim is stale/wrong.
+   PLAN.md Amendment 2 (owner visual review 2026-07-16) found exactly ONE true duplicate
+   (`live_concert_2`, quarantined to `_removed/`); the remaining clips are distinct. live_concert is a
+   USABLE class — 7 clips (6 train / 1 test), mechanism=traverse, sidedness=A_only. Used as a held-out
+   zero-shot class in ladder2 split v1.2. `live_concert_2` is barred from ref+endpoint roles.]**
 4. **flying_cam_transition / live_concert notes were empty** in v1 — behaviors now documented
    (§5) from filmstrip inspection.
 5. ~~v1 taxonomy files are untracked~~ **DONE** — v1 archived at `docs/taxonomy/v1_PROTOCOL.md`

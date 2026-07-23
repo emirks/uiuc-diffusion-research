@@ -1,0 +1,126 @@
+model:
+  model_path: /projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors
+  text_encoder_path: /projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized
+  training_mode: lora
+  load_checkpoint: null
+lora:
+  rank: 32
+  alpha: 32
+  dropout: 0.0
+  target_modules:
+  - attn1.to_k
+  - attn1.to_q
+  - attn1.to_v
+  - attn1.to_out.0
+  - attn2.to_k
+  - attn2.to_q
+  - attn2.to_v
+  - attn2.to_out.0
+  - ff.net.0.proj
+  - ff.net.2
+training_strategy:
+  name: flexible
+  video:
+    is_generated: true
+    latents_dir: latents
+    conditions:
+    - type: reference
+      latents_dir: reference_latents
+      probability: 1.0
+    - type: mask
+      mask_dir: masks
+      probability: 1.0
+    cond_clean_latents_dir: cond_clean_latents
+optimization:
+  learning_rate: 0.0002
+  steps: 5000
+  batch_size: 1
+  gradient_accumulation_steps: 1
+  max_grad_norm: 1.0
+  optimizer_type: adamw
+  scheduler_type: linear
+  scheduler_params: {}
+  enable_gradient_checkpointing: true
+acceleration:
+  mixed_precision_mode: bf16
+  quantization: null
+  load_text_encoder_in_8bit: false
+  offload_optimizer_during_validation: false
+data:
+  preprocessed_data_root: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/ladder2/dataset/roots/ic_gen
+  num_dataloader_workers: 2
+validation:
+  samples:
+  - prompt: An older man in a flowing white traditional robe and a black hat rollerblades across a city crosswalk with cars and a pagoda-roofed building behind him. sksz. a blond man in a navy suit and sunglasses carrying a briefcase while riding a skateboard down a suburban hill past stone steps and a green lawn.
+    conditions:
+    - type: prefix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/ladder2/conds/shadow_smoke_1_start9.mp4
+      num_frames: 9
+    - type: suffix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/ladder2/conds/shadow_smoke_1_end9.mp4
+      num_frames: 8
+    - type: reference
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/shadow_smoke/shadow_smoke_0.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+  - prompt: A young man with slicked-back dark hair and a serious expression crouches in front of a chain-link fence, wearing a bright red sweatshirt and dark pants under soft natural light. sksz.
+    conditions:
+    - type: prefix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/ladder2/conds/color_rain_1_start9.mp4
+      num_frames: 9
+    - type: reference
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/color_rain/color_rain_2.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+  - prompt: A woman with her hair pulled back wears yellow-tinted square sunglasses, gold hoop earrings, and a fuzzy yellow and green tie-dye cardigan while sitting inside a car with tan leather seats. sksz.
+    conditions:
+    - type: prefix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/ladder2/conds/saint_glow_0_start9.mp4
+      num_frames: 9
+    - type: reference
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/saint_glow/saint_glow_1.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+  - prompt: A young man with slicked-back dark hair and a serious expression crouches in front of a chain-link fence, wearing a bright red sweatshirt and dark pants under soft natural light.
+  negative_prompt: worst quality, inconsistent motion, distorted, jittery
+  video_dims:
+  - 480
+  - 640
+  - 121
+  frame_rate: 24.0
+  seed: 42
+  inference_steps: 30
+  interval: 250
+  guidance_scale: 4.0
+  stg_scale: 1.0
+  stg_blocks:
+  - 29
+  stg_mode: stg_v
+  generate_audio: false
+  skip_initial_validation: false
+checkpoints:
+  interval: 500
+  keep_last_n: -1
+  precision: bfloat16
+  no_resume: false
+flow_matching:
+  timestep_sampling_mode: shifted_logit_normal
+  timestep_sampling_params: {}
+hub:
+  push_to_hub: false
+  hub_model_id: null
+wandb:
+  enabled: true
+  project: ladder2
+  entity: null
+  tags:
+  - ltx2
+  - ladder2
+  - generalist
+  - ic_lora
+  log_validation_videos: true
+seed: 42
+output_dir: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/training/ladder2/ic_gen
