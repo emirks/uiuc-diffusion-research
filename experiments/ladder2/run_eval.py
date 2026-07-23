@@ -67,9 +67,21 @@ def pool_refs(row: dict) -> list[str]:
     return [c for c in clips if c not in banned][:MAX_POOL_REFS]
 
 
+def already_scored() -> set[str]:
+    """item_ids already present in a scored chunk — generation accumulates over hours, so each
+    planning pass must cover only what is NEW or the same rows get re-scored every cycle."""
+    seen: set[str] = set()
+    for f in SCORES.glob("*/items.jsonl"):
+        for line in f.read_text().splitlines():
+            if line.strip():
+                seen.add(json.loads(line)["item_id"])
+    return seen
+
+
 def plan(seeds: list[int], chunks: int) -> None:
     rows = load_registry()
     by_key = {r["input_key"]: r for r in rows if r["arm"] == "base"}
+    scored = already_scored()
 
     items, missing_gen, missing_twin = [], [], []
     for row in rows:
@@ -100,8 +112,11 @@ def plan(seeds: list[int], chunks: int) -> None:
                     cond["condition_suffix"] = {"video": str(paths["suffix"].relative_to(REPO_ROOT)),
                                                 "num_frames": ec.SUFFIX_GEN_FRAMES}
             for ref_clip in pool_refs(row):
+                eval_id = f"{row['item_id']}__s{seed}__ref_{ref_clip}"
+                if eval_id in scored:
+                    continue
                 items.append({
-                    "item_id": f"{row['item_id']}__s{seed}__ref_{ref_clip}",
+                    "item_id": eval_id,
                     "generated_video": str(path),
                     "reference_video": f"data/processed/transitions_std121/"
                                        f"{prompts.clip_class(ref_clip)}/{ref_clip}.mp4",
@@ -120,8 +135,8 @@ def plan(seeds: list[int], chunks: int) -> None:
     for i in range(chunks):
         part = items[i::chunks]
         (EVAL_DIR / f"eval_c{i}.json").write_text(json.dumps(part, indent=1))
-    print(f"[plan] {len(items)} (generation x pool-reference) rows -> {chunks} chunks "
-          f"in {EVAL_DIR.relative_to(REPO_ROOT)}")
+    print(f"[plan] {len(items)} NEW (generation x pool-reference) rows -> {chunks} chunks "
+          f"in {EVAL_DIR.relative_to(REPO_ROOT)}  ({len(scored)} already scored, skipped)")
     if missing_gen:
         print(f"[plan] {len(missing_gen)} generations not yet rendered (skipped): "
               f"{missing_gen[:4]}{' ...' if len(missing_gen) > 4 else ''}")
