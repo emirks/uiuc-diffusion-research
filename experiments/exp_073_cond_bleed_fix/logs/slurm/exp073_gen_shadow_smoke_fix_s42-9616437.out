@@ -1,0 +1,38 @@
+USER      JOB_ID     STATUS   PARTITION          #GPU   RUNTIME   REQUESTED  COMMAND                   
+-------------------------------------------------------------------------------------------------------
+[32mxucao2    9609685    RUNNING  HCESC-H100-high    4  13:44:13  1-12:00:00  sbatch_v31_resume.sbatch  [0m
+[32mxucao2    9614981    PENDING  HCESC-H100-normal  0      0:00  1-00:00:00  e4d_sweep_eval.sbatch     [0m
+[32mxucao2    9614980    PENDING  HCESC-H100-normal  0      0:00  1-00:00:00  e4d_sweep_eval.sbatch     [0m
+[32mxucao2    9614979    PENDING  HCESC-H100-normal  0      0:00  1-00:00:00  e4d_sweep_eval.sbatch     [0m
+[32mxucao2    9614978    PENDING  HCESC-H100-normal  0      0:00  1-00:00:00  e4d_sweep_eval.sbatch     [0m
+[32mxucao2    9614977    PENDING  HCESC-H100-normal  0      0:00  1-00:00:00  e4d_sweep_eval.sbatch     [0m
+[32mxucao2    9614976    PENDING  HCESC-H100-normal  0      0:00  1-00:00:00  e4d_sweep_eval.sbatch     [0m
+[32mxucao2    9614975    PENDING  HCESC-H100-normal  0      0:00  1-00:00:00  e4d_sweep_eval.sbatch     [0m
+[32msamyakj   9615440    RUNNING  HCESC-H100-normal  1   2:46:07     8:00:00  bash                      [0m
+[32msamyakj   9614564    RUNNING  HCESC-H100-normal  1   5:50:20     8:00:00  bash                      [0m
+[32mxucao2    9615222    PENDING  HCESC-H200-high    0      0:00  2-00:00:00  sbatch_qwen30b.sbatch     [0m
+[32mxucao2    9614950    PENDING  HCESC-H200-normal  0      0:00  1-00:00:00  e4d_sweep.sbatch          [0m
+[32mxucao2    9614965    PENDING  HCESC-H200-normal  0      0:00  4-00:00:00  e4d_h200_train_link.sbatch[0m
+[32mxucao2    9614960    PENDING  HCESC-H200-normal  0      0:00  1-00:00:00  e4d_sweep.sbatch          [0m
+[32mxucao2    9614958    PENDING  HCESC-H200-normal  0      0:00  1-00:00:00  e4d_sweep.sbatch          [0m
+[32mxucao2    9614956    PENDING  HCESC-H200-normal  0      0:00  1-00:00:00  e4d_sweep.sbatch          [0m
+[32mxucao2    9614954    PENDING  HCESC-H200-normal  0      0:00  1-00:00:00  e4d_sweep.sbatch          [0m
+[32mxucao2    9614952    PENDING  HCESC-H200-normal  0      0:00  1-00:00:00  e4d_sweep.sbatch          [0m
+[32mxucao2    9614967    PENDING  HCESC-H200-normal  0      0:00  4-00:00:00  e4d_h200_train_link.sbatch[0m
+[32mxucao2    9614966    PENDING  HCESC-H200-normal  0      0:00  4-00:00:00  e4d_h200_train_link.sbatch[0m
+[32mxucao2    9614948    RUNNING  HCESC-H200-normal  4   5:18:38  1-00:00:00  e4d_sweep.sbatch          [0m
+[32msv69      9611301    RUNNING  HCESC-H200-normal  4  14:36:34  2-00:00:00  run_phy_flash_rl.sh       [0m
+[32maditya63  9613016    PENDING  HCESC-L40S-normal  0      0:00    10:00:00  a1_28m_tw02_normal.sbatch [0m
+[32mhkh       9613593    PENDING  HCESC-L40S-normal  0      0:00  4-00:00:00  run.sh                    [0m
+[32mziruiw3   9614463    PENDING  HCESC-L40S-normal  0      0:00    12:00:00  evcond_tex.sbatch         [0m
+[32mziruiw3   9614464    PENDING  HCESC-L40S-normal  0      0:00    10:00:00  evcond_ss.sbatch          [0m
+[32mziruiw3   9614465    PENDING  HCESC-L40S-normal  0      0:00    12:00:00  evcond_shape.sbatch       [0m
+[32maditya63  9612707_0  PENDING  HCESC-L40S-normal  0      0:00    10:00:00  beatA1_28m.sbatch         [0m
+[32maditya63  9612707_2  RUNNING  HCESC-L40S-normal  1      6:42    10:00:00  beatA1_28m.sbatch         [0m
+[32msv69      9614484    RUNNING  HCESC-L40S-normal  2   4:49:22  2-00:00:00  eval.sh                   [0m
+[32mhkh       9613204    RUNNING  HCESC-L40S-normal  4  10:00:11  4-00:00:00  run.sh                    [0m
+[32mboote     9604970    RUNNING  HCESC-L40S-normal  1  19:56:53  2-00:00:00  run_mano.sbatch           [0m
+[gen] host=ccc0423.campuscluster.illinois.edu MODE=specialist Wed Jul 22 09:20:13 CDT 2026
+GPU 0: NVIDIA H100 80GB HBM3 (UUID: GPU-a280f48c-92c7-a42b-5a62-30cf0e6ca991)
+[done] shadow_smoke s42 (R2): nothing to do
+[gen] done Wed Jul 22 09:26:19 CDT 2026

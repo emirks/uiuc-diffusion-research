@@ -1,0 +1,60 @@
+USER      JOB_ID     STATUS   PARTITION                               #GPU     RUNTIME   REQUESTED  COMMAND                   
+------------------------------------------------------------------------------------------------------------------------------
+[32mxucao2    9603079    PENDING  HCESC-H100-high                         0        0:00  1-12:00:00  sbatch_v31_resume.sbatch  [0m
+[32markimjh   9586163    RUNNING  HCESC-H100-normal                       4    10:21:31  5-00:00:00  train_qwen3_vl_gaze.sh    [0m
+[32mziruiw3   9603744    RUNNING  HCESC-H100-normal                       1       59:08     8:00:00  selfsup_job_d200.sbatch   [0m
+[32mxucao2    9602257    PENDING  HCESC-H100-normal,IllinoisComputes-GPU  0        0:00  2-00:00:00  egoexo4d_train_link.sbatch[0m
+[32mxucao2    9602263    PENDING  HCESC-H100-normal,IllinoisComputes-GPU  0        0:00  2-00:00:00  egoexo4d_train_link.sbatch[0m
+[32mxucao2    9602262    PENDING  HCESC-H100-normal,IllinoisComputes-GPU  0        0:00  2-00:00:00  egoexo4d_train_link.sbatch[0m
+[32mxucao2    9602261    PENDING  HCESC-H100-normal,IllinoisComputes-GPU  0        0:00  2-00:00:00  egoexo4d_train_link.sbatch[0m
+[32mxucao2    9602260    PENDING  HCESC-H100-normal,IllinoisComputes-GPU  0        0:00  2-00:00:00  egoexo4d_train_link.sbatch[0m
+[32mxucao2    9602259    PENDING  HCESC-H100-normal,IllinoisComputes-GPU  0        0:00  2-00:00:00  egoexo4d_train_link.sbatch[0m
+[32mxucao2    9602258    PENDING  HCESC-H100-normal,IllinoisComputes-GPU  0        0:00  2-00:00:00  egoexo4d_train_link.sbatch[0m
+[32markimjh   9602821    PENDING  HCESC-H200-normal                       0        0:00  5-00:00:00  train_qwen3_vl_gaze.sh    [0m
+[32msv69      9602367    RUNNING  HCESC-H200-normal                       4     6:32:43  2-00:00:00  run_phy_flash_rl.sh       [0m
+[32msv69      9587145    RUNNING  HCESC-H200-normal                       4  1-00:04:27  3-00:00:00  run.sh                    [0m
+[32maditya63  9604248    PENDING  HCESC-L40S-normal                       0        0:00     6:00:00  ssc_tp05.sbatch           [0m
+[32msv69      9591562    RUNNING  HCESC-L40S-normal                       2    15:37:57  2-00:00:00  eval.sh                   [0m
+[32maditya63  9603969_0  RUNNING  HCESC-L40S-normal                       1       45:05    10:00:00  ssc.sbatch                [0m
+[32mboote     9603915    RUNNING  HCESC-L40S-normal                       1       49:48     7:00:00  sh                        [0m
+[32markimjh   9602825    RUNNING  HCESC-L40S-normal                       1     3:08:29  7-00:00:00  watch_runs.sh             [0m
+[32msamyakj   9602640    RUNNING  HCESC-L40S-normal                       1     4:01:23     8:00:00  bash                      [0m
+[32msv69      9602280    RUNNING  HCESC-L40S-normal                       1     9:51:59  2-00:00:00  eval.sh                   [0m
+[job] host=ccc0439.campuscluster.illinois.edu mode=gate Tue Jul 21 13:13:52 CDT 2026
+GPU 0: NVIDIA H100 80GB HBM3 (UUID: GPU-e1a13d54-6d79-3061-32d8-b5d3c38f3a00)
+[gate] fp32, 28 clips (16 specialist + 12 ic3 two-sided)
+  shadow_smoke/shadow_smoke_1          prefix_rel=0.00008  suffix_rel=0.29919
+  shadow_smoke/shadow_smoke_2          prefix_rel=0.00009  suffix_rel=0.19866
+  shadow_smoke/shadow_smoke_3          prefix_rel=0.00008  suffix_rel=0.34878
+  shadow_smoke/shadow_smoke_4          prefix_rel=0.00008  suffix_rel=0.18608
+  shadow_smoke/shadow_smoke_5          prefix_rel=0.00008  suffix_rel=0.31721
+  shadow_smoke/shadow_smoke_6          prefix_rel=0.00008  suffix_rel=0.26665
+  shadow_smoke/shadow_smoke_8          prefix_rel=0.00009  suffix_rel=0.31466
+  shadow_smoke/shadow_smoke_9          prefix_rel=0.00008  suffix_rel=0.23338
+  hero_flight/hero_flight_0           prefix_rel=0.00008  suffix_rel=0.26821
+  hero_flight/hero_flight_1           prefix_rel=0.00008  suffix_rel=0.37931
+  hero_flight/hero_flight_2           prefix_rel=0.00008  suffix_rel=0.28005
+  hero_flight/hero_flight_3           prefix_rel=0.00008  suffix_rel=0.41553
+  hero_flight/hero_flight_4           prefix_rel=0.00008  suffix_rel=0.30716
+  hero_flight/hero_flight_7           prefix_rel=0.00008  suffix_rel=0.34503
+  hero_flight/hero_flight_8           prefix_rel=0.00009  suffix_rel=0.32611
+  hero_flight/hero_flight_9           prefix_rel=0.00008  suffix_rel=0.34731
+  air_bending/air_bending_0           prefix_rel=0.00008  suffix_rel=0.26748
+  air_bending/air_bending_2           prefix_rel=0.00008  suffix_rel=0.35025
+  air_bending/air_bending_3           prefix_rel=0.00012  suffix_rel=0.27482
+  display_transition/display_transition_1    prefix_rel=0.00011  suffix_rel=0.22844
+  display_transition/display_transition_2    prefix_rel=0.00008  suffix_rel=0.25998
+  display_transition/display_transition_3    prefix_rel=0.00008  suffix_rel=0.23028
+  earth_wave/earth_wave_0            prefix_rel=0.00007  suffix_rel=0.24943
+  earth_wave/earth_wave_1            prefix_rel=0.00008  suffix_rel=0.27971
+  earth_wave/earth_wave_2            prefix_rel=0.00009  suffix_rel=0.28563
+  earth_wave/earth_wave_4            prefix_rel=0.00010  suffix_rel=0.25886
+  firelava/firelava_0              prefix_rel=0.00009  suffix_rel=0.25862
+  firelava/firelava_1              prefix_rel=0.00010  suffix_rel=0.22594
+
+[gate] prefix median rel_l2 = 0.00008  (K1 pass if <0.02 AND <0.1x suffix)
+[gate] suffix median rel_l2 = 0.27971  (K2 pass if >0.05)
+[gate] K1_prefix_identity_pass = True
+[gate] K2_suffix_material_pass = True
+[gate] wrote /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_073_cond_bleed_fix/gate_stats.json
+[job] done Tue Jul 21 13:17:00 CDT 2026

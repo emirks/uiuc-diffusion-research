@@ -1,0 +1,66 @@
+USER      JOB_ID     STATUS   PARTITION          #GPU   RUNTIME   REQUESTED  COMMAND                   
+-------------------------------------------------------------------------------------------------------
+[32mxucao2    9609685    RUNNING  HCESC-H100-high    4  13:44:13  1-12:00:00  sbatch_v31_resume.sbatch  [0m
+[32mxucao2    9614981    PENDING  HCESC-H100-normal  0      0:00  1-00:00:00  e4d_sweep_eval.sbatch     [0m
+[32mxucao2    9614980    PENDING  HCESC-H100-normal  0      0:00  1-00:00:00  e4d_sweep_eval.sbatch     [0m
+[32mxucao2    9614979    PENDING  HCESC-H100-normal  0      0:00  1-00:00:00  e4d_sweep_eval.sbatch     [0m
+[32mxucao2    9614978    PENDING  HCESC-H100-normal  0      0:00  1-00:00:00  e4d_sweep_eval.sbatch     [0m
+[32mxucao2    9614977    PENDING  HCESC-H100-normal  0      0:00  1-00:00:00  e4d_sweep_eval.sbatch     [0m
+[32mxucao2    9614976    PENDING  HCESC-H100-normal  0      0:00  1-00:00:00  e4d_sweep_eval.sbatch     [0m
+[32mxucao2    9614975    PENDING  HCESC-H100-normal  0      0:00  1-00:00:00  e4d_sweep_eval.sbatch     [0m
+[32msamyakj   9615440    RUNNING  HCESC-H100-normal  1   2:46:07     8:00:00  bash                      [0m
+[32msamyakj   9614564    RUNNING  HCESC-H100-normal  1   5:50:20     8:00:00  bash                      [0m
+[32mxucao2    9615222    PENDING  HCESC-H200-high    0      0:00  2-00:00:00  sbatch_qwen30b.sbatch     [0m
+[32mxucao2    9614950    PENDING  HCESC-H200-normal  0      0:00  1-00:00:00  e4d_sweep.sbatch          [0m
+[32mxucao2    9614965    PENDING  HCESC-H200-normal  0      0:00  4-00:00:00  e4d_h200_train_link.sbatch[0m
+[32mxucao2    9614960    PENDING  HCESC-H200-normal  0      0:00  1-00:00:00  e4d_sweep.sbatch          [0m
+[32mxucao2    9614958    PENDING  HCESC-H200-normal  0      0:00  1-00:00:00  e4d_sweep.sbatch          [0m
+[32mxucao2    9614956    PENDING  HCESC-H200-normal  0      0:00  1-00:00:00  e4d_sweep.sbatch          [0m
+[32mxucao2    9614954    PENDING  HCESC-H200-normal  0      0:00  1-00:00:00  e4d_sweep.sbatch          [0m
+[32mxucao2    9614952    PENDING  HCESC-H200-normal  0      0:00  1-00:00:00  e4d_sweep.sbatch          [0m
+[32mxucao2    9614967    PENDING  HCESC-H200-normal  0      0:00  4-00:00:00  e4d_h200_train_link.sbatch[0m
+[32mxucao2    9614966    PENDING  HCESC-H200-normal  0      0:00  4-00:00:00  e4d_h200_train_link.sbatch[0m
+[32mxucao2    9614948    RUNNING  HCESC-H200-normal  4   5:18:38  1-00:00:00  e4d_sweep.sbatch          [0m
+[32msv69      9611301    RUNNING  HCESC-H200-normal  4  14:36:34  2-00:00:00  run_phy_flash_rl.sh       [0m
+[32maditya63  9613016    PENDING  HCESC-L40S-normal  0      0:00    10:00:00  a1_28m_tw02_normal.sbatch [0m
+[32mhkh       9613593    PENDING  HCESC-L40S-normal  0      0:00  4-00:00:00  run.sh                    [0m
+[32mziruiw3   9614463    PENDING  HCESC-L40S-normal  0      0:00    12:00:00  evcond_tex.sbatch         [0m
+[32mziruiw3   9614464    PENDING  HCESC-L40S-normal  0      0:00    10:00:00  evcond_ss.sbatch          [0m
+[32mziruiw3   9614465    PENDING  HCESC-L40S-normal  0      0:00    12:00:00  evcond_shape.sbatch       [0m
+[32maditya63  9612707_0  PENDING  HCESC-L40S-normal  0      0:00    10:00:00  beatA1_28m.sbatch         [0m
+[32maditya63  9612707_2  RUNNING  HCESC-L40S-normal  1      6:42    10:00:00  beatA1_28m.sbatch         [0m
+[32msv69      9614484    RUNNING  HCESC-L40S-normal  2   4:49:22  2-00:00:00  eval.sh                   [0m
+[32mhkh       9613204    RUNNING  HCESC-L40S-normal  4  10:00:11  4-00:00:00  run.sh                    [0m
+[32mboote     9604970    RUNNING  HCESC-L40S-normal  1  19:56:53  2-00:00:00  run_mano.sbatch           [0m
+[gen] host=ccc0423.campuscluster.illinois.edu MODE=specialist Wed Jul 22 09:20:13 CDT 2026
+GPU 0: NVIDIA H100 80GB HBM3 (UUID: GPU-74d8a629-f0bd-8373-837a-210dbc128622)
+[info] shadow_smoke s43 R2: 4 pending, prefix+suffix, steps [2000]
+[info] building ValidationRunner (class=shadow_smoke, seed=43)
+[32mDEBUG   [0m Loading text encoder for validation embedding  ]8;id=821159;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py\[2mvalidation_runner.py[0m]8;;\[2m:[0m]8;id=675879;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py#262\[2m262[0m]8;;\
+         caching[33m...[0m                                     [2m                        [0m
+[32mDEBUG   [0m Loading embeddings processor for validation    ]8;id=690471;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py\[2mvalidation_runner.py[0m]8;;\[2m:[0m]8;id=660050;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py#267\[2m267[0m]8;;\
+         embedding caching[33m...[0m                           [2m                        [0m
+[34mINFO    [0m Pre-computing embeddings for [1;36m4[0m validation      ]8;id=861363;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py\[2mvalidation_runner.py[0m]8;;\[2m:[0m]8;id=901788;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py#272\[2m272[0m]8;;\
+         prompts[33m...[0m                                     [2m                        [0m
+[32mDEBUG   [0m Validation prompt embeddings cached. Text      ]8;id=359107;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py\[2mvalidation_runner.py[0m]8;;\[2m:[0m]8;id=42474;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py#293\[2m293[0m]8;;\
+         encoder unloaded.                              [2m                        [0m
+[32mDEBUG   [0m Loading VAE encoder for validation media       ]8;id=117657;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py\[2mvalidation_runner.py[0m]8;;\[2m:[0m]8;id=407663;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py#327\[2m327[0m]8;;\
+         encoding[33m...[0m                                    [2m                        [0m
+[34mINFO    [0m Pre-encoding conditioning media for [1;36m4[0m          ]8;id=566207;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py\[2mvalidation_runner.py[0m]8;;\[2m:[0m]8;id=152517;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py#333\[2m333[0m]8;;\
+         validation samples[33m...[0m                          [2m                        [0m
+[34mINFO    [0m Validation conditioning media cached on CPU.   ]8;id=601174;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py\[2mvalidation_runner.py[0m]8;;\[2m:[0m]8;id=942324;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py#341\[2m341[0m]8;;\
+[32mDEBUG   [0m Loading video VAE decoder for validation[33m...[0m    ]8;id=561834;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py\[2mvalidation_runner.py[0m]8;;\[2m:[0m]8;id=913901;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py#410\[2m410[0m]8;;\
+[info] loading transformer + PEFT wrap
+[34mINFO    [0m Building transformer with attention backends -- self:       ]8;id=709655;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-official/packages/ltx-core/src/ltx_core/model/transformer/model.py\[2mmodel.py[0m]8;;\[2m:[0m]8;id=787649;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-official/packages/ltx-core/src/ltx_core/model/transformer/model.py#82\[2m82[0m]8;;\
+         SDPA[1m[[0mCUDNN_ATTENTION>FLASH_ATTENTION>EFFICIENT_ATTENTION>MA [2m           [0m
+         TH[1m][0m, masked:                                                [2m           [0m
+         SDPA[1m[[0mCUDNN_ATTENTION>FLASH_ATTENTION>EFFICIENT_ATTENTION>MA [2m           [0m
+         TH[1m][0m                                                         [2m           [0m
+[info] shadow_smoke R2/R3 step 2000: generating 4 samples
+[34mINFO    [0m 🎥 Validation samples for step [1;36m2000[0m saved in   ]8;id=754455;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py\[2mvalidation_runner.py[0m]8;;\[2m:[0m]8;id=370570;file:///projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src/ltx_trainer/validation_runner.py#239\[2m239[0m]8;;\
+         samples                                        [2m                        [0m
+[done] R2__shadow_smoke__shadow_smoke_2__s43__ckpt2000.mp4
+[done] R2__shadow_smoke__shadow_smoke_9__s43__ckpt2000.mp4
+[done] R3__shadow_smoke__shadow_smoke_7__s43__ckpt2000.mp4
+[done] R3__shadow_smoke__shadow_smoke_0__s43__ckpt2000.mp4
+[gen] done Wed Jul 22 09:42:16 CDT 2026
