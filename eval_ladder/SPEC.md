@@ -91,6 +91,23 @@ Two gaps fall out of the grid and are the reason it is a grid:
 with the adapter removed. `text_floor` is the leak-proof floor: if it sits near the pool floor,
 the prompt is not carrying the answer.
 
+**v2.1.0 adds the two CLEAN baselines** (owner call 2026-07-23: base *with* a reference is a
+copier — it reproduces the demo — so it is never a baseline):
+
+| arm | gets | rows |
+|---|---|---|
+| `base_prompt` | prompt only, on a treatment task's endpoint | 177 (one per task) |
+| `base_cond` | prompt + endpoint conditioning, **no reference** | 126 (only tasks without a clean no-ref `base` twin of the same donor) |
+
+Baselines split the row unit from the video unit, deliberately: **scoring is per task**
+(`donor, endpoint, sided` — the pool-% must be taken against that task's donor pool), but the
+arm never sees the donor, so its **video is per `(endpoint, sided)`**, shared through
+`video_key = "<dir>/<name>"` which `run_gen`/`run_eval`/the viewer all resolve identically.
+Where a no-reference `base` twin already generated the identical input, `video_key` points at
+its video and only the re-scoring against the new donor pool is added (97 of 303 rows; 194 new
+videos instead of 708). Derived, not authored: `add_baselines.py`, replace-only, frozen 444
+asserted untouched.
+
 Arms and their pinned checkpoints live in `arms.yaml`. **Checkpoints are pinned before any score
 is seen** — fixed-checkpoint selection, never post-hoc best-checkpoint picking.
 

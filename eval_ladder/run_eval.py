@@ -55,7 +55,10 @@ def load_registry() -> list[dict]:
 
 
 def gen_path(row: dict, seed: int) -> Path:
-    return GENS / row["arm"] / f"{row['item_id']}__s{seed}.mp4"
+    # baseline rows share one canonical video per (endpoint, sided): video_key = "<dir>/<name>"
+    vk = row.get("video_key")
+    d, name = vk.split("/", 1) if vk else (row["arm"], row["item_id"])
+    return GENS / d / f"{name}__s{seed}.mp4"
 
 
 # ------------------------------------------------------------------------------- plan

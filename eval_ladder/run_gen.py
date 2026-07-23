@@ -113,12 +113,24 @@ def main() -> None:
 
     arms_cfg = yaml.safe_load(ARMS.read_text())
     assert args.seed in arms_cfg["seeds"], f"seed {args.seed} is not a registered seed"
-    rows = load_rows(args.arm, args.priority, args.cells)[args.chunk::args.num_chunks]
-    assert rows, f"no registry rows for arm={args.arm} priority={args.priority} cells={args.cells}"
+    rows = load_rows(args.arm, args.priority, args.cells)
 
     def out_path(r: dict) -> Path:
+        # Baseline rows share one canonical video per (endpoint, sided) through
+        # video_key = "<dir>/<name>" — the arm never sees the donor, so per-task outputs would
+        # be byte-duplicates. Rows without video_key keep row x seed = one video.
+        vk = r.get("video_key")
+        d, name = vk.split("/", 1) if vk else (r["arm"], r["item_id"])
         suffix = f"__ck{args.step}" if args.step else ""
-        return OUT_ROOT / (r["arm"] + suffix) / f"{r['item_id']}__s{args.seed}.mp4"
+        return OUT_ROOT / (d + suffix) / f"{name}__s{args.seed}.mp4"
+
+    # dedup by canonical path BEFORE chunk slicing, so two array tasks can never race on the
+    # same shared video; then slice. (No-op for arms without video_key.)
+    seen_paths: set[Path] = set()
+    rows = [r for r in rows
+            if (p := out_path(r)) not in seen_paths and not seen_paths.add(p)]
+    rows = rows[args.chunk::args.num_chunks]
+    assert rows, f"no registry rows for arm={args.arm} priority={args.priority} cells={args.cells}"
 
     todo = [r for r in rows if not out_path(r).exists()]
     print(f"[gen] arm={args.arm} seed={args.seed} chunk={args.chunk}/{args.num_chunks}: "

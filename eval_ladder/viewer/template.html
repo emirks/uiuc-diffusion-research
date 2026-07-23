@@ -460,7 +460,10 @@ function outBox(tier, list, card){
   if(!list.length){
     const why = tier==="prompt_only" ? "baseline<br>generating…"
       : tier==="prompt_endpoint" ? "baseline<br>generating…"
-      : tier==="copier" ? "no copier<br>for this task" : "not run<br>for this task";
+      : tier==="copier" ? "no copier<br>for this task"
+      : tier==="specialist" && card.donor_heldout
+        ? "held-out class —<br>no specialist exists<br>(by design)"
+      : "not run<br>for this task";
     return `<div class="cellbox out ${tier} blank"><div class="bl"><b>${name}</b>${why}</div></div>`;
   }
   return list.map(g=>{
@@ -609,7 +612,11 @@ document.addEventListener("click", e => {
 const m = D.meta;
 document.getElementById("sub").innerHTML =
   `<span class="mono">${m.ladder}</span> · instrument <span class="mono">${m.instrument}</span> ·
-   ${m.registry_rows} registry rows · ${m.cards} distinct inputs · ${m.generations} videos ·
-   seeds ${m.seeds.join(", ")} · ${m.frames}f @ prefix ${m.px_prefix} / suffix ${m.suffix_gen_frames}`;
+   ${m.registry_rows} registry rows · ${m.cards} transition×endpoint tasks · ${m.generations} videos ·
+   seeds ${m.seeds.join(", ")} · ${m.frames}f @ prefix ${m.px_prefix} / suffix ${m.suffix_gen_frames}
+   <br>side-by-side coverage: <b>${m.coverage.spec_and_gen}</b> of ${m.coverage.tasks} tasks carry
+   specialist AND generalist on the same endpoint (${m.coverage.spec_only} specialist-only ·
+   ${m.coverage.gen_only} generalist-only, of which ${m.coverage.heldout_tasks} are held-out donors —
+   no specialist can exist by design)`;
 selAll(1);
 </script>

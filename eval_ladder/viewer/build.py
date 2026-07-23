@@ -138,11 +138,13 @@ def build() -> dict:
         m = metrics.get(r["item_id"])
         if m is None:
             return None
-        # a baseline video is shared per (endpoint, sided) via video_key; treatments use item_id
-        vkey = r.get("video_key", r["item_id"])
+        # a baseline video is shared per (endpoint, sided) via video_key = "<dir>/<name>";
+        # treatments keep row x seed = one video under their own arm dir
+        vk = r.get("video_key")
+        vdir, vname = vk.split("/", 1) if vk else (r["arm"], r["item_id"])
         vids = {}
         for s in SEEDS:
-            p = GENS / r["arm"] / f"{vkey}__s{s}.mp4"
+            p = GENS / vdir / f"{vname}__s{s}.mp4"
             if p.exists():
                 vids[str(s)] = rel(p)
         cond = ("none" if r.get("conditioning") == "none" or not r["endpoint"]
@@ -231,6 +233,23 @@ def build() -> dict:
                   for g in c["slots"][s]]
     matrix = collections.Counter((g["novelty"], g["content"]) for g in treatments)
 
+    # ---- cross-tier coverage: the honest answer to "can I see every tier on one task?" ------
+    spec_classes = sorted({r["donor_class"] for r in rows if r["arm"].startswith("spec_")})
+    for c in ordered:
+        c["donor_heldout"] = c["donor"] not in spec_classes
+    n_both = sum(1 for c in ordered if c["slots"]["specialist"] and c["slots"]["generalist"])
+    n_spec = sum(1 for c in ordered if c["slots"]["specialist"] and not c["slots"]["generalist"])
+    n_gen = sum(1 for c in ordered if c["slots"]["generalist"] and not c["slots"]["specialist"])
+    coverage = {
+        "tasks": len(ordered), "spec_and_gen": n_both, "spec_only": n_spec, "gen_only": n_gen,
+        "heldout_tasks": sum(1 for c in ordered if c["donor_heldout"]),
+        "note": (f"{n_both} of {len(ordered)} tasks carry BOTH a specialist and the generalist "
+                 f"on the same endpoint — full 4-tier side-by-side. Zero-shot donors are "
+                 f"held-out classes, so no specialist can exist for them (structural, not a "
+                 f"data gap). To make every non-zero-shot task 4-tier, ladder 2.2 should draw "
+                 f"specialist and generalist cells from one shared endpoint roster."),
+    }
+
     n_vid = sum(len(g["videos"]) for c in ordered for s in c["slots"].values() for g in s)
     return {
         "meta": {
@@ -241,6 +260,7 @@ def build() -> dict:
             "px_prefix": ec.PX_PREFIX, "suffix_gen_frames": ec.SUFFIX_GEN_FRAMES,
             "frames": 121,
             "tiers": ["prompt_only", "prompt_endpoint", "specialist", "generalist", "copier"],
+            "coverage": coverage,
         },
         "metrics": [{"k": k, "label": l, "dir": d, "dp": dp, "group": g}
                     for k, l, d, dp, g in METRICS],
@@ -255,7 +275,7 @@ def build() -> dict:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default="outputs/reports/ladder2/index.html")
+    ap.add_argument("--out", default="outputs/reports/ladder_viewer/index.html")
     args = ap.parse_args()
     data = build()
     out = REPO_ROOT / args.out

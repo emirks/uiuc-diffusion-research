@@ -58,7 +58,9 @@ Per-run outputs go to `outputs/eval_ladder/R<N>/` — mirroring the instrument's
 `outputs/eval/certification/<version>/`. The run's viewer is built into that directory and linked
 from the record, so a viewer is always versioned with the run that produced it.
 
-`../REFERENCE.html` is the only always-latest HTML: it is the face of the **design**, not of a run,
-and is regenerated when `VERSION` bumps.
+`../REFERENCE.html` is the only always-latest design HTML: it is the face of the **design**, not
+of a run, and is regenerated when `VERSION` bumps. For day-to-day reading, a convenience copy of
+the **current run's results viewer** is kept at `outputs/reports/ladder_viewer/index.html`
+(uncommitted artifact; the versioned copy lives in the run's own directory).
 
 *(R1 predates this rule; its artifacts stay at the paths its record names. The rule binds from R2.)*

@@ -29,12 +29,16 @@ CHUNK="${SLURM_ARRAY_TASK_ID:-0}"
 # "c$CHUNK" label makes each pass overwrite the previous pass's items.jsonl and silently
 # destroy already-scored rows. run_eval report globs */items.jsonl, so extra dirs are free.
 PASS="${SLURM_ARRAY_JOB_ID:-$SLURM_JOB_ID}"
+# MANIFEST_DIR / SCORE_OUT are env-overridable so side lanes (the convergence diagnostic's
+# eval_diag chunks -> outputs/eval/ladder2_diag) reuse this script instead of forking it.
+MDIR="${MANIFEST_DIR:-eval_ladder/eval}"
+SOUT="${SCORE_OUT:-outputs/eval/ladder2}"
 cd "$MAIN"
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader || true
 PYTHONPATH=$WT/src "$PY_BIN" -m diffusion.transition_eval.score \
-  --manifest "$MAIN/eval_ladder/eval/eval_c${CHUNK}.json" \
+  --manifest "$MAIN/${MDIR}/eval_c${CHUNK}.json" \
   --corpus  "$MAIN/data/processed/transitions_std121/corpus_manifest.json" \
   --label   "c${CHUNK}_p${PASS}" \
-  --out-root "$MAIN/outputs/eval/ladder2" \
+  --out-root "$MAIN/${SOUT}" \
   --cache-dir "$MAIN/outputs/eval/cache"
 echo "=== EXIT $? ==="
