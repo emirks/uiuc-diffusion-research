@@ -557,7 +557,7 @@ function drawControls(){
       `<button class="${tiers.has(t)?"on":""}" onclick="togTier('${t}')">${t}</button>`).join("");
   document.getElementById("seeds").innerHTML = D.meta.seeds.map(s=>
     `<button class="${String(s)===seed?"on":""}" onclick="setSeed('${s}')">${s}</button>`).join("");
-  const donors = [...new Set(D.cards.flatMap(c=>c.gens.map(g=>g.donor)))].filter(Boolean).sort();
+  const donors = [...new Set(D.cards.map(c=>c.donor))].filter(Boolean).sort();
   const d = document.getElementById("donor");
   if(!d.options.length){
     d.innerHTML = `<option value="">all (${donors.length})</option>` +
