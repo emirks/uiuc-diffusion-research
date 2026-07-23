@@ -155,28 +155,52 @@ The v2 defect to fix is structural: SP-* and G-* cells drew their endpoints inde
 only 39/177 tasks are fully side-by-side. v3 inverts the build order — the **task roster comes
 first, the arms are projections of it**:
 
-1. **CTT task** (Creative Transition Transfer) = `(endpoints, target transition)` — the atomic
-   unit. Endpoints are sidedness-typed (one/two); the target transition is a donor class (or a
-   held-out class for zero-shot tasks).
-2. **Every task generates on every tier it can support**, from one registry:
-   ① prompt only · ② prompt + endpoints · ③ specialist (exists iff the donor is a trained
-   class) · ④ generalist (IC demo). Same prompt, same conditioning windows, same seeds — the
-   tier is the *only* variable. All four scored by the same instrument, same pool rule.
-3. **Enumerate the greatest space first, then choose the subspace**: the full grid is
-   endpoints × donors × sidedness × novelty(seen/unseen/zero-shot) × content(same/cross/foreign).
-   Enumerate it exhaustively in `build_registry.py`, then select a budgeted subspace that keeps
-   the process healthy — balanced per-donor and per-cell n (pre-register minimum n per claim
-   cell), ≥2 seeds, hardest cells first, fit anchors kept tiny. Selection rule is written in the
-   registry builder and pre-registered, never hand-picked.
-4. **Schema: every row is `task_id × tier × seed`** — the tier is a first-class column and the
-   task id is the join key, so side-by-side is the default and the keyed-join class of defect
-   cannot exist. ①②④ exist for every task; ③ exists iff the donor is trained.
-5. Deliverable: near-every card in the viewer shows all four tiers. The complete exception
-   list (confirmed against v2, 2026-07-23): specialist × zero-shot (held-out donor — training
-   one would destroy held-out-ness), mismatched-demo controls (only demo-taking tiers), and the
-   fit anchors ("seen" is tier-relative: trained endpoint vs trained demo, so their seen-rows
-   don't align 1:1 — keep them tiny). Fully-4-tier fraction ≈ fraction of tasks with trained
-   donors, so the roster weights trained donors and zero-shot stays its own deliberate block.
+*Definitions audited 2026-07-23 against the v2 registry before adoption — the earlier draft
+treated derived facts (content, sidedness, novelty) as free roster axes, which is the exact
+"same fact written twice" root cause behind every v2 seatbelt. Corrected below.*
+
+1. **CTT task** (Creative Transition Transfer) = `(endpoint, target transition)` — the atomic
+   unit. The *endpoint* is the content clip whose anchors are cut (prefix 9f, + suffix iff
+   two-sided); the *target transition* (donor) is a transition class — trained, or held-out.
+   **Validity constraint, not an axis:** sidedness is a property of the donor class, and a task
+   is valid iff the endpoint is sidedness-compatible (it has a B scene iff the donor is
+   two-sided).
+2. **Derived, never hand-assigned:**
+   - **content** is TASK-level — same ⟺ endpoint class == donor · cross ⟺ untrained corpus
+     endpoint of another class (held-in test band, or any held-out-class clip — untrained for
+     every arm) · foreign ⟺ DAVIS. Identical for every tier on the card (v2 audit: 0
+     mismatches). It binds the firewall: same → `%_same` headline-eligible; cross/foreign →
+     `%_proxy`, margin-only.
+   - **novelty** is ROW-level and tier-relative — it grades the tier's *variable input*.
+     Generalist = the **demo**: seen (trained demo) · unseen (new demo of a trained class) ·
+     zero-shot (demo of a held-out class). Specialist = the **endpoint**, hence binary: seen
+     (trained endpoint = fit anchor) · unseen (everything else, incl. DAVIS). **Zero-shot
+     exists only on the demo axis.** Tiers ①② carry no novelty — they have no transition
+     source.
+3. **Tiers** — every task generates on every tier it supports; same prompt, same conditioning
+   windows, same seeds; the tier is the *only* variable. ① prompt only · ② prompt + endpoint
+   anchors · ③ specialist (exists iff donor trained) · ④ generalist (IC demo). All scored by
+   one instrument, one pool rule. The base+demo **copier is a diagnostic, not a tier** — it
+   reproduces the demo and must never serve as a baseline.
+4. **The demo assignment is part of the design** — it is what *creates* ④'s novelty, so it
+   cannot be a hand-pick: demo class == donor, demo sidedness matches, demo ≠ the endpoint
+   clip and excluded from the scoring pool (copy-guard), and the roster's assignment rule
+   states which demo-novelty each task probes. The mismatched-demo control keeps its own cell.
+5. **Enumerate the greatest space, then pre-register the subspace.** The free axes are only
+   **endpoints × donors** (× demo assignment for ④); everything else derives. Enumerate the
+   full valid task space exhaustively in `build_registry.py`, then select a budgeted subspace
+   that keeps the process healthy — balanced per-donor and per-cell n (pre-registered minimum
+   n per claim cell), ≥2 seeds, hardest cells first, fit anchors kept tiny. The selection rule
+   lives in the builder, pre-registered, never hand-picked.
+6. **Schema: every row is `task_id × tier × seed`** (+ demo id on ④ rows) — tier is a
+   first-class column, task_id is the join key, so side-by-side is the default and the
+   keyed-join defect class cannot exist. ①②④ exist for every task; ③ iff the donor is trained.
+7. **Deliverable & exceptions:** near-every card shows all four tiers. Complete exception list
+   (confirmed against v2): specialist × zero-shot donors (structural — training one would
+   destroy held-out-ness), the mismatched-demo control (demo-taking tiers only), and the fit
+   anchors ("seen" is tier-relative — trained endpoint vs trained demo — so their seen-rows
+   don't align 1:1; keep them tiny). Fully-4-tier fraction ≈ fraction of tasks with trained
+   donors → weight the roster toward trained donors; zero-shot stays its own deliberate block.
 
 Cost note from v2: the clean-baseline half of this is already scaffolded (`add_baselines.py`,
 video dedup per endpoint) — the missing piece is drawing all cells from the shared roster.
