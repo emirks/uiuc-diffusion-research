@@ -27,16 +27,13 @@ nvidia-smi -L || true
 
 # seatbelt 6: the root's cond_clean tree really is the isolation encode (or absent by design)
 PYTHONPATH="$DR/experiments/ladder2" "$VENV/bin/python" - "$MODEL" <<'PY'
-import json, sys
+import sys
 from pathlib import Path
 sys.path.insert(0, "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/ladder2")
-import encode_conditioning as ec, prompts
-name = sys.argv[1]
+import encode_conditioning as ec
 L2 = Path("/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/ladder2")
-inv = json.loads((L2 / "train/inventory.json").read_text())
-meta = inv["models"][name]
-two = (meta["kind"] == "generalist") or (prompts.sidedness()[meta["classes"][0]] == "two")
-print(ec.smoke_assert(L2 / "dataset/roots" / name, two_sided=two))
+# sidedness is decided per SAMPLE inside smoke_assert (the generalist root mixes both)
+print(ec.smoke_assert(L2 / "dataset/roots" / sys.argv[1]))
 PY
 
 cd "$TR"

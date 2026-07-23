@@ -155,26 +155,45 @@ def write_cond_clean(orig_pt: Path, dst_pt: Path, clip_mp4: Path, correct_suffix
     return out
 
 
-def smoke_assert(root: Path, two_sided: bool, n: int = 3) -> str:
+def smoke_assert(root: Path, n_per_side: int = 2) -> str:
     """Train-start check: does this root's cond_clean tree really carry the isolation encode?
 
-    Compares cond_clean vs latents for a few clips. Two-sided roots MUST differ in exactly
-    the last latent frame and nowhere else; one-sided roots MUST be bitwise identical.
+    The expectation is PER SAMPLE, not per root: the generalist's tree legitimately mixes
+    corrected two-sided clips with bitwise one-sided copies (the copies exist so the trainer's
+    per-relative-path source matching stays complete). A two-sided sample must differ from its
+    latents in exactly the last latent frame and nowhere else; a one-sided sample must be
+    bitwise identical. Sidedness comes from the clip's class, read out of the frozen split.
     """
+    import sys
+
     import torch
+
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import prompts  # noqa: PLC0415
 
     cc_dir, lat_dir = root / "cond_clean_latents", root / "latents"
     if not cc_dir.exists():
-        return f"[smoke] {root.name}: no cond_clean tree (one-sided root) — OK"
-    checked = 0
-    for cc in sorted(cc_dir.rglob("*.pt"))[:n]:
-        lat_pt = lat_dir / cc.relative_to(cc_dir)
+        return f"[smoke] {root.name}: no cond_clean tree (one-sided specialist root) — OK"
+
+    sided = prompts.sidedness()
+    seen = {"one": 0, "two": 0}
+    for cc in sorted(cc_dir.rglob("*.pt")):
+        cls = cc.relative_to(cc_dir).parts[0]
+        want = sided[cls]
+        if seen[want] >= n_per_side:
+            continue
         a = torch.load(cc, map_location="cpu", weights_only=True)["latents"]
-        b = torch.load(lat_pt, map_location="cpu", weights_only=True)["latents"]
+        b = torch.load(lat_dir / cc.relative_to(cc_dir), map_location="cpu",
+                       weights_only=True)["latents"]
         assert torch.equal(a[:, :-1], b[:, :-1]), f"{cc.name}: non-suffix frames differ"
         differs = not torch.equal(a[:, -1:], b[:, -1:])
-        assert differs == two_sided, (
-            f"{cc.name}: suffix anchor {'differs' if differs else 'identical'} "
-            f"but root is {'two' if two_sided else 'one'}-sided")
-        checked += 1
-    return f"[smoke] {root.name}: cond_clean verified on {checked} clips (two_sided={two_sided})"
+        assert differs == (want == "two"), (
+            f"{cc.name} ({cls}, {want}-sided): suffix anchor "
+            f"{'differs' if differs else 'is identical'} — the bleed fix is not in effect")
+        seen[want] += 1
+        if all(v >= n_per_side for v in seen.values()):
+            break
+    if not any(seen.values()):
+        raise AssertionError(f"{root.name}: cond_clean tree present but no sample could be checked")
+    return (f"[smoke] {root.name}: cond_clean verified — {seen['two']} two-sided (suffix anchor "
+            f"corrected) + {seen['one']} one-sided (bitwise identical)")
