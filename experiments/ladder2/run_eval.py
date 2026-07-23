@@ -176,13 +176,21 @@ def report() -> None:
     base_by_key = {r["input_key"]: r["item_id"] for r in rows.values() if r["arm"] == "base"}
 
     cells: dict[str, list[tuple[str, float, float | None]]] = collections.defaultdict(list)
+    unpaired: dict[str, int] = collections.defaultdict(int)
     for item_id, value in pct.items():
         row = rows[item_id]
         if row["arm"] == "base":
             continue
         twin = base_by_key.get(row["input_key"])
-        delta = (value - pct[twin]) if twin in pct else None
-        cells[row["cell"]].append((row["donor_class"], value, delta))
+        if twin is None:
+            sys.exit(f"[report] KEYED-JOIN FAILURE: {item_id} has no base twin in the registry")
+        base_value = pct.get(twin)
+        if row["arm"] != "text_floor" and base_value is None:
+            # the twin exists in the registry but has not been scored yet — say so out loud
+            # rather than letting the row quietly vanish from the margin statistics
+            unpaired[row["cell"]] += 1
+        cells[row["cell"]].append((row["donor_class"], value,
+                                   (value - base_value) if base_value is not None else None))
 
     print(f"\n{'cell':16s} {'n':>3s} {'%type':>6s} {'level %':>9s} {'Δpp vs base':>12s} "
           f"{'donors +':>9s}  verdict")
@@ -204,10 +212,14 @@ def report() -> None:
         dpp = st.mean(deltas) * 100 if deltas else float("nan")
         headline = f"{level:8.1%}" if ptype == "same" else f"({level:7.1%})"
         verdict = "—" if not n_d else ("positive" if pos / n_d >= 0.8 else "weak")
+        flag = f"  [{unpaired[cell]} unpaired]" if unpaired.get(cell) else ""
         print(f"{cell:16s} {len(vals):3d} {ptype:>6s} {headline:>9s} {dpp:>+11.1f}  "
-              f"{pos:>4d}/{n_d:<4d}  {verdict}")
+              f"{pos:>4d}/{n_d:<4d}  {verdict}{flag}")
     print("\n%_same = fair, cross-class comparable, headline-eligible.")
     print("(%_proxy) = content-capped level, ranking only — the CLAIM for those cells is Δpp.")
+    if unpaired:
+        print(f"[report] {sum(unpaired.values())} rows had a registered base twin that is not "
+              f"scored yet — they contribute a level but no Δpp. Not a fold, but not complete.")
 
 
 def main() -> None:
