@@ -99,9 +99,14 @@ def submit_gen(arms: list[str], seeds: list[str], priority: str | None, chunks: 
         target = SECONDARY if where == "secondary" else HCESC[where]
         per_chunk = -(-n // k)
         walltime = gen_walltime(per_chunk)
+        # OWNER RULE: the DAVIS/foreign lane is additive, never load-bearing. Submit it with a
+        # large `nice` so it can only ever consume slots nothing else wants — it must not delay
+        # ic_gen, the base arm, or any specialist generation.
+        foreign = (priority == "P2") or (cells is not None and "foreign" in cells)
+        nice = ["--nice=5000"] if foreign else []
         for seed in seeds:
             sh(["sbatch", f"--job-name=ladder2_gen_{arm}_s{seed}", f"--array=0-{k - 1}", *target,
-                f"--time={walltime}",
+                *nice, f"--time={walltime}",
                 f"--export=ALL,ARM={arm},SEED={seed},NCHUNKS={k}"
                 + (f",PRIORITY={priority}" if priority else "")
                 # pipe-separated: a comma here would be eaten by --export itself
