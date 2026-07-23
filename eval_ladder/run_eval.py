@@ -213,9 +213,10 @@ def report() -> None:
         row = rows[item_id]
         if row["arm"] == "base":
             continue
-        if row["arm"] == "text_floor":
-            # the leak-proof floor is prompt-only: no conditioning, so no base twin exists by
-            # design (plan() excludes it from twinning too). It contributes a LEVEL, not a margin.
+        if row["arm"] in ("text_floor", "base_prompt", "base_cond"):
+            # un-twinned by design (plan() excludes them from twinning too): text_floor is the
+            # leak-proof floor, base_prompt/base_cond ARE the clean baselines other rows margin
+            # against. They contribute a LEVEL, not a margin.
             cells[row["cell"]].append((row["donor_class"], value, None))
             continue
         twin = base_by_key.get(row["input_key"])

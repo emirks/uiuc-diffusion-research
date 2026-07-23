@@ -137,10 +137,11 @@ def main() -> None:
     groups: dict[tuple[str, str], list[str]] = collections.defaultdict(list)
     for item in per_item:
         row = registry[item]
-        arm = row["arm"] if row["arm"] in ("base", "text_floor", "ic_gen") else "specialist"
+        arm = (row["arm"] if row["arm"] in ("base", "text_floor", "base_prompt", "base_cond",
+                                            "ic_gen") else "specialist")
         groups[(row["cell"], arm)].append(item)
 
-    order = ["specialist", "ic_gen", "base", "text_floor"]
+    order = ["specialist", "ic_gen", "base", "base_cond", "base_prompt", "text_floor"]
 
     def emit(title: str, fields: list[tuple], note: str) -> None:
         print(f"\n#### {title}\n")
