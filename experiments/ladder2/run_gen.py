@@ -86,11 +86,13 @@ def load_rows(arm: str, priority: str | None, cells: str | None = None) -> list[
     return rows
 
 
-def resolve_adapter(arm: str, arms_cfg: dict) -> tuple[Path | None, list[str]]:
+def resolve_adapter(arm: str, arms_cfg: dict, step: int | None = None) -> tuple[Path | None, list[str]]:
+    """`step` overrides the arm's pinned checkpoint — used ONLY by the convergence diagnostic
+    (ckpt-4500 vs ckpt-5000). Claim-bearing generation always uses the pinned step from arms.yaml."""
     spec = arms_cfg["arms"][arm]
     if spec.get("adapter", "unset") is None or spec["kind"] in ("base", "text_floor"):
         return None, []
-    path = REPO_ROOT / arms_cfg["adapter_template"].format(arm=arm, step=spec["step"])
+    path = REPO_ROOT / arms_cfg["adapter_template"].format(arm=arm, step=step or spec["step"])
     assert path.exists(), f"adapter missing for {arm}: {path}"
     return path, arms_cfg["targets"][spec["targets"]]
 
@@ -101,6 +103,8 @@ def main() -> None:
     ap.add_argument("--seed", type=int, required=True)
     ap.add_argument("--priority", default=None, help="e.g. P0 or P0,P1")
     ap.add_argument("--cells", default=None, help="comma-separated cell names")
+    ap.add_argument("--step", type=int, default=None,
+                    help="override the pinned checkpoint (convergence diagnostic only)")
     ap.add_argument("--chunk", type=int, default=0)
     ap.add_argument("--num-chunks", type=int, default=1)
     ap.add_argument("--rank", type=int, default=32)
@@ -113,7 +117,8 @@ def main() -> None:
     assert rows, f"no registry rows for arm={args.arm} priority={args.priority} cells={args.cells}"
 
     def out_path(r: dict) -> Path:
-        return OUT_ROOT / r["arm"] / f"{r['item_id']}__s{args.seed}.mp4"
+        suffix = f"__ck{args.step}" if args.step else ""
+        return OUT_ROOT / (r["arm"] + suffix) / f"{r['item_id']}__s{args.seed}.mp4"
 
     todo = [r for r in rows if not out_path(r).exists()]
     print(f"[gen] arm={args.arm} seed={args.seed} chunk={args.chunk}/{args.num_chunks}: "
@@ -124,7 +129,7 @@ def main() -> None:
     for r in todo:
         out_path(r).parent.mkdir(parents=True, exist_ok=True)
 
-    adapter, target_modules = resolve_adapter(args.arm, arms_cfg)
+    adapter, target_modules = resolve_adapter(args.arm, arms_cfg, args.step)
     inf = arms_cfg["inference"]
     # ValidationSample.video_dims is (WIDTH, HEIGHT, FRAMES) — the corpus is portrait
     # 480x640, so this reads 480 wide by 640 high (same tuple exp_074 generated with).
