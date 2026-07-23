@@ -171,9 +171,17 @@ def report() -> None:
 
     # (item_id, seed) -> pool mean over references
     pool: dict[tuple[str, int], list[float]] = collections.defaultdict(list)
+    # DEDUP (load-bearing): scoring ran as several incremental passes under distinct labels. A row
+    # planned twice — a generation that landed between one pass's plan and its score — is written
+    # to both passes' items.jsonl. Counting it twice silently reweights that generation's pool
+    # mean. 798 of 12,500 written rows are such repeats.
+    seen_eval_ids: set[str] = set()
     for f in sorted(SCORES.glob("*/items.jsonl")):
         for line in f.read_text().splitlines():
             r = json.loads(line)
+            if r["item_id"] in seen_eval_ids:
+                continue
+            seen_eval_ids.add(r["item_id"])
             if r.get("app_ref") is None:
                 continue
             head, _, _ref = r["item_id"].rpartition("__ref_")
