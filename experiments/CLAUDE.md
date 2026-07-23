@@ -75,4 +75,3 @@ outputs:
 - New experiment number = `max(existing NNN) + 1`, zero-padded to 3 digits.
 - Outputs go under `outputs/` only — never inside `experiments/`.
 - Experiment-specific one-off math (e.g. `compute_clip_frame_idx`) stays in `run.py`, not in `src/`.
-- **Every LoRA / fine-tuning run MUST configure inline validation** (at the checkpoint cadence) that exercises the *exact* task being trained — real conditioning, never a text-only proxy — with **three sample groups: in-distribution (held-in), out-of-distribution (unseen/foreign), and a control (should NOT trigger the behavior)**. Template: exp_051 `config_c2v.yaml`. Rationale + how-to in the `exp-design` skill. Owner directive 2026-07-16.
