@@ -123,14 +123,111 @@ def plan_b() -> None:
           f"{d.relative_to(REPO_ROOT)}")
 
 
+def report_b() -> None:
+    """Amendment-1 Pass B verdict. Formulas and thresholds were locked in the dossier BEFORE any
+    recipient-pool score existed; nothing here was chosen after seeing a number."""
+    import run_eval
+
+    ceil = run_eval.ceilings()
+    reg = {r["item_id"]: r for r in run_eval.load_registry()}
+    base_by_key = {r["input_key"]: r for r in run_eval.load_registry() if r["arm"] == "base"}
+
+    def pooled(dirs, prefix):
+        """-> {key: mean app_ref} for item_ids starting with `prefix`."""
+        acc = collections.defaultdict(list)
+        for d in dirs:
+            for f in Path(d).glob("*/items.jsonl"):
+                for line in f.read_text().splitlines():
+                    if not line.strip():
+                        continue
+                    r = json.loads(line)
+                    if not r["item_id"].startswith(prefix) or r.get("app_ref") is None:
+                        continue
+                    head, _, _ref = r["item_id"].rpartition("__ref_")
+                    acc[head].append(r["app_ref"])
+        return {k: st.mean(v) for k, v in acc.items()}
+
+    RECP = REPO_ROOT / "outputs/eval/ladder2_recp"
+    DON = REPO_ROOT / "outputs/eval/ladder2"
+    recp = pooled([RECP], "RECP__")          # RECP__<arm>__<item_id>__s<seed>
+    anch = pooled([RECP], "ANCH__")          # ANCH__<D|R>_<ref|ep>__<input_key>
+    donor = pooled([DON], "")                # <item_id>__s<seed>
+
+    rowsB, degen = [], 0
+    for item_id, row in reg.items():
+        if row["arm"] != "ic_gen" or row["cell"] not in ("G-unseen-cross", "G-zs-cross"):
+            continue
+        k = row["input_key"]
+        rec_cls, don_cls = row["endpoint_class"], row["donor_class"]
+        if don_cls not in ceil or rec_cls not in ceil:
+            continue
+        a = {n: anch.get(f"ANCH__{n}__{k}") for n in ("D_ref", "D_ep", "R_ref", "R_ep")}
+        if any(v is None for v in a.values()):
+            continue
+        D_ref, D_ep = a["D_ref"] / ceil[don_cls], a["D_ep"] / ceil[don_cls]
+        R_ref, R_ep = a["R_ref"] / ceil[rec_cls], a["R_ep"] / ceil[rec_cls]
+        if abs(D_ref - D_ep) < 0.05 or abs(R_ep - R_ref) < 0.05:   # pre-committed 5pp guard
+            degen += 1
+            continue
+        twin = base_by_key.get(k)
+        per_arm = {}
+        for arm, rid in (("ic_gen", item_id), ("base", twin["item_id"] if twin else None)):
+            if rid is None:
+                continue
+            Ds = [donor.get(f"{rid}__s{s}") for s in (42, 43)]
+            Rs = [recp.get(f"RECP__{arm}__{item_id}__s{s}") for s in (42, 43)]
+            Ds = [x for x in Ds if x is not None]; Rs = [x for x in Rs if x is not None]
+            if not Ds or not Rs:
+                continue
+            D = st.mean(Ds) / ceil[don_cls]
+            R = st.mean(Rs) / ceil[rec_cls]
+            T = min(1.0, max(0.0, (D - D_ep) / (D_ref - D_ep)))
+            C = min(1.0, max(0.0, (R - R_ref) / (R_ep - R_ref)))
+            quad = ("transfer" if T >= .5 and C >= .5 else
+                    "reference won" if T >= .5 else
+                    "endpoint-prior won" if C >= .5 else "mush")
+            per_arm[arm] = {"T": T, "C": C, "TI": min(T, C), "quad": quad}
+        if len(per_arm) == 2:
+            rowsB.append({"item_id": item_id, "cell": row["cell"], "donor": don_cls, **per_arm})
+
+    if not rowsB:
+        sys.exit(f"[reportB] no complete (ic_gen, base) pairs yet ({degen} anchor_degenerate)")
+
+    print(f"\n=== AMENDMENT-1 PASS B — transfer index (n={len(rowsB)} paired items, "
+          f"{degen} anchor_degenerate excluded) ===")
+    print(f"{'cell':16s} {'arm':7s} {'n':>4s} {'T':>6s} {'C':>6s} {'TI':>6s}   quadrants")
+    print("-" * 78)
+    for cell in ("G-unseen-cross", "G-zs-cross"):
+        sub = [r for r in rowsB if r["cell"] == cell]
+        if not sub:
+            continue
+        for arm in ("ic_gen", "base"):
+            q = collections.Counter(r[arm]["quad"] for r in sub)
+            print(f"{cell:16s} {arm:7s} {len(sub):4d} {st.mean(r[arm]['T'] for r in sub):6.2f} "
+                  f"{st.mean(r[arm]['C'] for r in sub):6.2f} {st.mean(r[arm]['TI'] for r in sub):6.2f}   "
+                  + ", ".join(f"{k} {v}" for k, v in q.most_common()))
+        d = [r["ic_gen"]["TI"] - r["base"]["TI"] for r in sub]
+        per_donor = collections.defaultdict(list)
+        for r in sub:
+            per_donor[r["donor"]].append(r["ic_gen"]["TI"] - r["base"]["TI"])
+        pos = sum(1 for v in per_donor.values() if st.mean(v) > 0)
+        print(f"{'':16s} {'ΔTI':7s} {len(sub):4d} {'':6s} {'':6s} {st.mean(d)*100:+5.1f}pp  "
+              f"donors positive {pos}/{len(per_donor)}\n")
+    (HERE / "dominance_passB.json").write_text(json.dumps(rowsB, indent=1))
+    print("TI = min(T, C), locked pre-scoring. T = donor manner arrived; C = endpoint content kept.")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--mode", choices=["passA", "planB"], default="passA")
+    ap.add_argument("--mode", choices=["passA", "planB", "reportB"], default="passA")
     ap.add_argument("--limit", type=int, default=0)
     args = ap.parse_args()
 
     if args.mode == "planB":      # manifest-only; must not do Pass-A's globbing first
         plan_b()
+        return
+    if args.mode == "reportB":
+        report_b()
         return
 
     rows = [json.loads(x) for x in (HERE / "registry.jsonl").read_text().splitlines() if x.strip()]
