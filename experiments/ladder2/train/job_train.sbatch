@@ -39,6 +39,9 @@ PY
 cd "$TR"
 OUT=$("$VENV/bin/python" -c "import yaml;print(yaml.safe_load(open('$CONFIG'))['output_dir'])")
 STEPS=$("$VENV/bin/python" -c "import yaml;print(yaml.safe_load(open('$CONFIG'))['optimization']['steps'])")
+# _find_checkpoint RAISES on a path that is neither file nor dir, so the resume target must
+# exist even on a first run; an EMPTY dir makes it return None and training starts at step 0.
+mkdir -p "$OUT/checkpoints"
 echo "[train] output_dir=$OUT steps=$STEPS"
 PYTHONPATH="$TR/src" "$VENV/bin/python" scripts/train.py "$CONFIG" --disable-progress-bars
 FINAL=$(printf "%05d" "$STEPS")
