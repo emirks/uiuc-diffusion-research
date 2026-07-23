@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -78,7 +79,9 @@ def load_rows(arm: str, priority: str | None, cells: str | None = None) -> list[
         keep = set(priority.split(","))
         rows = [r for r in rows if r["priority"] in keep]
     if cells:
-        want = set(cells.split(","))
+        # NOTE: Slurm's --export is itself comma-separated, so a comma-joined list silently
+        # truncates to its first element. Accept "|" (what submit.py sends) as well as ",".
+        want = {c for c in re.split(r"[,|]", cells) if c}
         rows = [r for r in rows if r["cell"] in want]
     return rows
 

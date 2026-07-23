@@ -104,7 +104,8 @@ def submit_gen(arms: list[str], seeds: list[str], priority: str | None, chunks: 
                 f"--time={walltime}",
                 f"--export=ALL,ARM={arm},SEED={seed},NCHUNKS={k}"
                 + (f",PRIORITY={priority}" if priority else "")
-                + (f",CELLS={cells}" if cells else ""),
+                # pipe-separated: a comma here would be eaten by --export itself
+                + (f",CELLS={cells.replace(',', '|')}" if cells else ""),
                 str(HERE / "job_gen.sbatch")])
         print(f"[submit] {arm}: {n} rows x {len(seeds)} seeds over {k} chunks "
               f"(~{per_chunk}/chunk, walltime {walltime})")
