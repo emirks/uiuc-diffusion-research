@@ -37,13 +37,17 @@ arms:
     adapter: null
     targets: null
     conditioning: none
-    note: prompt only, on a treatment endpoint (sidedness-aware). Baseline #1.
+    # NOTE: never put a bare "#N" inside these unquoted scalars — YAML starts a comment at
+    # "space + #", silently truncating (base_prompt) or breaking the parse on the continuation
+    # line (base_cond). This killed generation jobs 9646776-78 at yaml.safe_load.
+    note: "prompt only, on a treatment endpoint (sidedness-aware). Baseline #1."
   base_cond:
     kind: base
     adapter: null
     targets: null
-    note: prompt + endpoint conditioning (prefix/suffix), NO reference. Baseline #2 — the honest
-      no-adapter twin of specialist/generalist (base+reference is a copier, never a baseline).
+    note: "prompt + endpoint conditioning (prefix/suffix), NO reference. Baseline #2 — the
+      honest no-adapter twin of specialist/generalist (base+reference is a copier, never a
+      baseline)."
 
   spec_animalization:      {kind: specialist, class: animalization,      targets: attn, step: 2000}
   spec_color_rain:         {kind: specialist, class: color_rain,         targets: attn, step: 2000}
