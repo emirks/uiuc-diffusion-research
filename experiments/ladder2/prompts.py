@@ -71,7 +71,9 @@ def captions() -> dict[str, str]:
 @lru_cache(maxsize=1)
 def audited_clips() -> frozenset[str]:
     """Clips whose caption was checked against its frames — the only eval-eligible endpoints."""
-    return frozenset(_load_any(REPO_ROOT / AUDITED_SOURCE)) | frozenset(AUDITED_EXTRA)
+    # DAVIS captions are hand-written against the rendered windows -> audited by construction
+    return (frozenset(_load_any(REPO_ROOT / AUDITED_SOURCE)) | frozenset(AUDITED_EXTRA)
+            | frozenset(davis()))
 
 
 @lru_cache(maxsize=1)
@@ -107,15 +109,44 @@ def clip_index() -> dict[str, str]:
 
 
 def clip_class(clip: str) -> str:
-    """Authoritative clip -> class."""
+    """Authoritative clip -> class ('davis' for the foreign roster)."""
+    if is_davis(clip):
+        return "davis"
     try:
         return clip_index()[clip]
     except KeyError:
         raise KeyError(f"{clip} is not in split_v1.2") from None
 
 
+@lru_cache(maxsize=1)
+def davis() -> dict[str, dict]:
+    """DAVIS pseudo-clips (the foreign endpoint roster) -> {s1, s2, sided}.
+
+    Off-distribution real footage has no corpus caption, so `davis.yaml` carries hand-written
+    static snapshots in the same voice. They flow through the SAME renderer as every corpus
+    endpoint — a foreign row is not a special case anywhere downstream.
+    """
+    import yaml
+
+    cfg = yaml.safe_load((Path(__file__).resolve().parent / "davis.yaml").read_text())
+    out = {}
+    for name, e in (cfg.get("one_sided") or {}).items():
+        out[name] = {"s1": _trim(e["caption"]), "s2": None, "sided": "one"}
+    for name, e in (cfg.get("two_sided") or {}).items():
+        out[name] = {"s1": _trim(e["prefix"]["caption"]), "s2": _trim(e["suffix"]["caption"]),
+                     "sided": "two"}
+    return out
+
+
+def is_davis(clip: str) -> bool:
+    return clip in davis()
+
+
 def split_caption(clip: str) -> tuple[str, str]:
     """clip -> (S1, S2), both stripped of trailing punctuation/whitespace."""
+    if is_davis(clip):
+        e = davis()[clip]
+        return e["s1"], (e["s2"] or "")
     cap = captions().get(clip)
     if cap is None:
         raise KeyError(f"no caption for {clip}")
@@ -144,9 +175,15 @@ def render_prompt(clip: str, sided: str, token: str) -> str:
     return f"{s1}. {token}. {s2}."
 
 
+def clip_sidedness(clip: str) -> str:
+    """'one' | 'two' for any endpoint — corpus clips inherit their class, DAVIS carries its own
+    (a DAVIS pair is two-sided because the roster pairs two scenes, not because of a class)."""
+    return davis()[clip]["sided"] if is_davis(clip) else sidedness()[clip_class(clip)]
+
+
 def render_for_clip(clip: str, token: str) -> str:
-    """Render using the clip's own class sidedness (the training case)."""
-    return render_prompt(clip, sidedness()[clip_class(clip)], token)
+    """Render using the clip's own sidedness (the training case)."""
+    return render_prompt(clip, clip_sidedness(clip), token)
 
 
 if __name__ == "__main__":  # tiny CLI: eyeball a few renders
@@ -154,4 +191,4 @@ if __name__ == "__main__":  # tiny CLI: eyeball a few renders
 
     tok = sys.argv[1] if len(sys.argv) > 1 else "sksz"
     for clip in sys.argv[2:] or ["color_rain_0", "shadow_smoke_7", "earth_element_6"]:
-        print(f"--- {clip} [{sidedness()[clip_class(clip)]}-sided]\n{render_for_clip(clip, tok)}\n")
+        print(f"--- {clip} [{clip_sidedness(clip)}-sided]\n{render_for_clip(clip, tok)}\n")

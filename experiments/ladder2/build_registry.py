@@ -133,11 +133,12 @@ def make_row(cell: str, arm: str, endpoint: str, donor_class: str, corpus: Corpu
              token: str, reference: str | None = None,
              mismatched_reference: bool = False) -> dict:
     ep_class = prompts.clip_class(endpoint)
+    foreign = prompts.is_davis(endpoint)
     sided = corpus.sided[donor_class]
-    assert corpus.sided[ep_class] == sided, (
-        f"{cell}: sidedness mismatch endpoint={ep_class}({corpus.sided[ep_class]}) "
+    assert prompts.clip_sidedness(endpoint) == sided, (
+        f"{cell}: sidedness mismatch endpoint={endpoint}({prompts.clip_sidedness(endpoint)}) "
         f"donor={donor_class}({sided})")
-    content = content_of(ep_class, donor_class, foreign=False)
+    content = content_of(ep_class, donor_class, foreign=foreign)
     prompt = prompts.render_prompt(endpoint, sided, token)
     ec.cond_paths(endpoint, sided)                       # seatbelt 6: windows exist, one rule
     row = {
@@ -151,8 +152,8 @@ def make_row(cell: str, arm: str, endpoint: str, donor_class: str, corpus: Corpu
         "donor_class": donor_class,
         "endpoint": endpoint,
         "endpoint_class": ep_class,
-        "endpoint_split": corpus.band(endpoint),
-        "endpoint_source": corpus.endpoint_source(endpoint),
+        "endpoint_split": "davis" if foreign else corpus.band(endpoint),
+        "endpoint_source": "davis" if foreign else corpus.endpoint_source(endpoint),
         "sided": sided,
         "reference": reference,
         "reference_split": corpus.band(reference) if reference else None,
@@ -233,6 +234,36 @@ def build_rows(corpus: Corpus, token: str) -> list[dict]:
             rows.append(make_row("G-zs-cross", arm, clip, cls, corpus, token, reference=ref))
         if same_endpoint is not None:
             rows.append(make_row("G-zs-same", arm, same_endpoint, cls, corpus, token, reference=ref))
+
+    # ---------------- foreign (DAVIS): does a corpus-learned transition apply to arbitrary
+    # real footage? Gated lane: %-suppressed to ranking-only, claim = margin vs base + 2AFC.
+    davis_by_side = {"one": [], "two": []}
+    for name, entry in prompts.davis().items():
+        davis_by_side[entry["sided"]].append(name)
+    for side in davis_by_side:
+        davis_by_side[side].sort()
+
+    def davis_pick(sided: str, i: int) -> str:
+        pool = davis_by_side[sided]
+        return pool[i % len(pool)]
+
+    # specialists: both two-sided + the first four one-sided donors
+    sp_foreign = [c for c in corpus.roster if corpus.sided[c] == "two"] + \
+                 [c for c in corpus.roster if corpus.sided[c] == "one"][:4]
+    for i, cls in enumerate(sp_foreign):
+        rows.append(make_row("SP-foreign", f"spec_{cls}", davis_pick(corpus.sided[cls], i),
+                             cls, corpus, token))
+    # generalist, unseen demo
+    for i, cls in enumerate(corpus.g_pool[:6]):
+        rows.append(make_row("G-unseen-foreign", "ic_gen", davis_pick(corpus.sided[cls], i),
+                             cls, corpus, token, reference=corpus.test[cls][0]))
+    # generalist, zero-shot demo
+    for i, cls in enumerate(sorted(corpus.held_out)[:4]):
+        pool = corpus.train[cls] + corpus.test[cls]
+        if len(pool) < 1:
+            continue
+        rows.append(make_row("G-zs-foreign", "ic_gen", davis_pick(corpus.sided[cls], i),
+                             cls, corpus, token, reference=pool[0]))
 
     # ---------------- base twins: identical input, no adapter (margin denominator)
     seen: set[str] = set()

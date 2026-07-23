@@ -59,10 +59,21 @@ def test_marker_never_survives_any_render():
 def test_rendered_prompts_carry_no_transition_verbs():
     """The audited-endpoint guarantee, re-asserted mechanically on every render."""
     for clip in sorted(prompts.audited_clips()):
-        sided = prompts.sidedness()[prompts.clip_class(clip)]
+        sided = prompts.clip_sidedness(clip)
         low = prompts.render_prompt(clip, sided, TOKEN).lower()
         for bad in LEAK_WORDS:
             assert bad not in low, f"{clip}: leak word {bad!r}"
+
+
+def test_davis_roster_renders_and_is_leak_free():
+    roster = prompts.davis()
+    assert len(roster) == 6, roster.keys()
+    for name, entry in roster.items():
+        out = prompts.render_prompt(name, entry["sided"], TOKEN)
+        assert f" {TOKEN}." in out and ".." not in out
+        for bad in LEAK_WORDS:
+            assert bad not in out.lower(), f"{name}: leak word {bad!r}"
+        assert (entry["s2"] is not None) == (entry["sided"] == "two")
 
 
 def test_sidedness_sources_agree_and_are_complete():
