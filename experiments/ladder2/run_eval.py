@@ -132,6 +132,10 @@ def plan(seeds: list[int], chunks: int) -> None:
         sys.exit(f"[plan] KEYED-JOIN FAILURE: {len(missing_twin)} rows without a base twin: "
                  f"{missing_twin[:5]}")
     EVAL_DIR.mkdir(parents=True, exist_ok=True)
+    # clear STALE chunks from earlier passes: a pass with fewer chunks would otherwise leave
+    # eval_c{n}.json files behind, and a later scoring array would re-score their old contents.
+    for old in EVAL_DIR.glob("eval_c*.json"):
+        old.unlink()
     for i in range(chunks):
         part = items[i::chunks]
         (EVAL_DIR / f"eval_c{i}.json").write_text(json.dumps(part, indent=1))
