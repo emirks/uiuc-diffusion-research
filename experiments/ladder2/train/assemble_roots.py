@@ -112,7 +112,7 @@ def main() -> None:
         sys.exit(f"[assemble] {len(missing_cc)} cond_clean latents missing (run precompute "
                  f"--mode cond-clean first): {missing_cc[:8]}")
 
-    print(f"[assemble] {len(inv['models'])} roots -> {ROOTS.relative_to(REPO_ROOT)}")
+    print(f"[assemble] {len(inv['models'])} roots -> {ROOTS}")
     for name, meta in inv["models"].items():
         clips = inv["clips"][name]
         if meta["kind"] == "specialist":

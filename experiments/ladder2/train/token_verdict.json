@@ -1,0 +1,34 @@
+{
+  "rule": "effect/noise <= 1.0 (median over clips)",
+  "clips": [
+    "animalization_0",
+    "color_rain_0",
+    "polygon_4",
+    "super_fast_run_0"
+  ],
+  "candidates": {
+    "sksz": {
+      "n": 4,
+      "median_ratio": 0.20891959981990638,
+      "inert": true,
+      "ratios": [
+        0.2822298023538011,
+        0.11077717137169554,
+        0.1356093972860117,
+        0.3835125697356874
+      ]
+    },
+    "qvtr": {
+      "n": 4,
+      "median_ratio": 0.24698591877909387,
+      "inert": true,
+      "ratios": [
+        0.34846751301047485,
+        0.1246952133790794,
+        0.14550432454771292,
+        0.35424517374274317
+      ]
+    }
+  },
+  "winner": "sksz"
+}
