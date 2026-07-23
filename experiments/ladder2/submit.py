@@ -75,11 +75,12 @@ def submit_train(names: list[str], where: str) -> None:
 
 
 def submit_gen(arms: list[str], seeds: list[str], priority: str | None, chunks: int,
-               where: str) -> None:
+               where: str, cells: str | None = None) -> None:
     rows = [json.loads(x) for x in (HERE / "registry.jsonl").read_text().splitlines() if x.strip()]
     for arm in arms:
         n = sum(1 for r in rows if r["arm"] == arm
-                and (priority is None or r["priority"] in priority.split(",")))
+                and (priority is None or r["priority"] in priority.split(","))
+                and (cells is None or r["cell"] in cells.split(",")))
         if not n:
             print(f"[submit] {arm}: no rows for priority={priority} — skipped")
             continue
@@ -88,7 +89,8 @@ def submit_gen(arms: list[str], seeds: list[str], priority: str | None, chunks: 
         for seed in seeds:
             sh(["sbatch", f"--job-name=ladder2_gen_{arm}_s{seed}", f"--array=0-{k - 1}", *target,
                 f"--export=ALL,ARM={arm},SEED={seed},NCHUNKS={k}"
-                + (f",PRIORITY={priority}" if priority else ""),
+                + (f",PRIORITY={priority}" if priority else "")
+                + (f",CELLS={cells}" if cells else ""),
                 str(HERE / "job_gen.sbatch")])
         print(f"[submit] {arm}: {n} rows x {len(seeds)} seeds over {k} chunks")
 
@@ -123,6 +125,7 @@ def main() -> None:
     g.add_argument("--arms", required=True)
     g.add_argument("--seeds", default="42,43")
     g.add_argument("--priority", default=None)
+    g.add_argument("--cells", default=None, help="comma-separated registry cells")
     g.add_argument("--chunks", type=int, default=4)
     g.add_argument("--where", default="secondary", choices=["secondary", *HCESC])
     sub.add_parser("status")
@@ -138,7 +141,7 @@ def main() -> None:
         submit_train(names, args.where)
     elif args.cmd == "gen":
         submit_gen(args.arms.split(","), args.seeds.split(","), args.priority, args.chunks,
-                   args.where)
+                   args.where, args.cells)
     else:
         status()
 

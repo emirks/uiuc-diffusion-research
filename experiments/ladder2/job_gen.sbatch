@@ -28,5 +28,5 @@ nvidia-smi --query-gpu=name,memory.total --format=csv,noheader || true
 cd "$TRAINER"
 uv run --frozen python "$DR/experiments/ladder2/run_gen.py" \
     --arm "$ARM" --seed "$SEED" --chunk "$CHUNK" --num-chunks "$NCHUNKS" \
-    ${PRIORITY:+--priority "$PRIORITY"}
+    ${PRIORITY:+--priority "$PRIORITY"} ${CELLS:+--cells "$CELLS"}
 echo "[gen] done $(date)"

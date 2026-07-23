@@ -71,12 +71,15 @@ def build_sample(row: dict) -> ValidationSample:
     return ValidationSample(prompt=row["prompt"], conditions=conds)
 
 
-def load_rows(arm: str, priority: str | None) -> list[dict]:
+def load_rows(arm: str, priority: str | None, cells: str | None = None) -> list[dict]:
     rows = [json.loads(line) for line in REGISTRY.read_text().splitlines() if line.strip()]
     rows = [r for r in rows if r["arm"] == arm]
     if priority:
         keep = set(priority.split(","))
         rows = [r for r in rows if r["priority"] in keep]
+    if cells:
+        want = set(cells.split(","))
+        rows = [r for r in rows if r["cell"] in want]
     return rows
 
 
@@ -94,6 +97,7 @@ def main() -> None:
     ap.add_argument("--arm", required=True)
     ap.add_argument("--seed", type=int, required=True)
     ap.add_argument("--priority", default=None, help="e.g. P0 or P0,P1")
+    ap.add_argument("--cells", default=None, help="comma-separated cell names")
     ap.add_argument("--chunk", type=int, default=0)
     ap.add_argument("--num-chunks", type=int, default=1)
     ap.add_argument("--rank", type=int, default=32)
@@ -102,8 +106,8 @@ def main() -> None:
 
     arms_cfg = yaml.safe_load(ARMS.read_text())
     assert args.seed in arms_cfg["seeds"], f"seed {args.seed} is not a registered seed"
-    rows = load_rows(args.arm, args.priority)[args.chunk::args.num_chunks]
-    assert rows, f"no registry rows for arm={args.arm} priority={args.priority}"
+    rows = load_rows(args.arm, args.priority, args.cells)[args.chunk::args.num_chunks]
+    assert rows, f"no registry rows for arm={args.arm} priority={args.priority} cells={args.cells}"
 
     def out_path(r: dict) -> Path:
         return OUT_ROOT / r["arm"] / f"{r['item_id']}__s{args.seed}.mp4"
