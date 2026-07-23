@@ -196,6 +196,11 @@ def report() -> None:
         row = rows[item_id]
         if row["arm"] == "base":
             continue
+        if row["arm"] == "text_floor":
+            # the leak-proof floor is prompt-only: no conditioning, so no base twin exists by
+            # design (plan() excludes it from twinning too). It contributes a LEVEL, not a margin.
+            cells[row["cell"]].append((row["donor_class"], value, None))
+            continue
         twin = base_by_key.get(row["input_key"])
         if twin is None:
             sys.exit(f"[report] KEYED-JOIN FAILURE: {item_id} has no base twin in the registry")
