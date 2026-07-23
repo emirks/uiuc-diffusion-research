@@ -12,8 +12,11 @@
 # directive 2026-07-20: v4 is the lane instrument). Shared warm feature cache.
 #   sbatch --array=0-7 --partition=secondary --account=campusclusterusers \
 #          --gres=gpu:H100:1 experiments/ladder2/job_score.sbatch
+# NOTE: source bashrc BEFORE `set -e`, and tolerate its failure. The interactive job-monitoring
+# hook in ~/.bashrc shells out to `scontrol` on stale array ids and returns non-zero; under
+# `set -eo pipefail` that killed scoring chunks 7 seconds in with an empty log.
+source ~/.bashrc || true
 set -eo pipefail
-source ~/.bashrc
 LAB=/projects/illinois/eng/cs/jrehg/users/emirkisa
 # Call the env's interpreter DIRECTLY rather than `conda activate`: when several array tasks
 # start at once the activation can fail silently and leave system python, which then dies with
