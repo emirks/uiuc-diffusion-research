@@ -33,7 +33,7 @@ HCESC = {
     "h200": ["--partition=HCESC-H200-normal", "--account=hcesc-h200", "--gres=gpu:H200:1"],
     "l40s": ["--partition=HCESC-L40S-normal", "--account=hcesc-l40s", "--gres=gpu:L40S:1"],
 }
-HCESC_CAP = 4  # politeness: teammates share these nodes
+HCESC_CAP = 4  # politeness default: teammates share these nodes (--hcesc-cap to burst)
 
 SPECIALIST_TIME = "02:30:00"   # 2000 steps ~= 1.5-2 h + inline validation
 GENERALIST_TIME = "06:00:00"   # 5000 steps ~= 4 h 45 m measured -> HCESC only (secondary caps at 4 h)
@@ -66,7 +66,7 @@ def models() -> list[str]:
     return json.loads((HERE / "train/configs/index.json").read_text())
 
 
-def submit_train(names: list[str], where: str) -> None:
+def submit_train(names: list[str], where: str, cap: int = HCESC_CAP) -> None:
     for name in names:
         cfg = HERE / f"train/configs/{name}.yaml"
         assert cfg.exists(), f"no config for {name} (run train/make_configs.py)"
@@ -74,8 +74,8 @@ def submit_train(names: list[str], where: str) -> None:
         place = where
         if place == "auto":
             place = "h200" if generalist else "secondary"
-        if place != "secondary" and hcesc_in_flight() >= HCESC_CAP:
-            print(f"[submit] HCESC cap {HCESC_CAP} reached — {name} goes to secondary instead")
+        if place != "secondary" and hcesc_in_flight() >= cap:
+            print(f"[submit] HCESC cap {cap} reached — {name} goes to secondary instead")
             place = "secondary"
         if generalist and place == "secondary":
             sys.exit("[submit] ic_gen needs >4 h; it does not fit secondary. Free an HCESC slot.")
@@ -137,6 +137,8 @@ def main() -> None:
     t.add_argument("--models", default=None)
     t.add_argument("--fleet", action="store_true", help="everything not already trained")
     t.add_argument("--where", default="auto", choices=["auto", "secondary", *HCESC])
+    t.add_argument("--hcesc-cap", type=int, default=HCESC_CAP,
+                   help="max concurrent ladder2 jobs on the shared lab partitions")
     g = sub.add_parser("gen")
     g.add_argument("--arms", required=True)
     g.add_argument("--seeds", default="42,43")
@@ -154,7 +156,7 @@ def main() -> None:
             names = [m for m in models() if m not in done]
         else:
             names = args.models.split(",")
-        submit_train(names, args.where)
+        submit_train(names, args.where, args.hcesc_cap)
     elif args.cmd == "gen":
         submit_gen(args.arms.split(","), args.seeds.split(","), args.priority, args.chunks,
                    args.where, args.cells)
