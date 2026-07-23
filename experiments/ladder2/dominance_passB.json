@@ -1,0 +1,767 @@
+[
+ {
+  "item_id": "G-unseen-cross__ic_gen__color_rain_0__ref_animalization_0",
+  "cell": "G-unseen-cross",
+  "donor": "animalization",
+  "ic_gen": {
+   "T": 0.16702193853714414,
+   "C": 0.10500431090243305,
+   "TI": 0.10500431090243305,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.9811260791162854,
+   "C": 0.6064807856386009,
+   "TI": 0.6064807856386009,
+   "quad": "transfer"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__color_rain_2__ref_animalization_0",
+  "cell": "G-unseen-cross",
+  "donor": "animalization",
+  "ic_gen": {
+   "T": 0.32034401867737283,
+   "C": 0.40322779178668006,
+   "TI": 0.32034401867737283,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.9838429001840665,
+   "C": 0.6892766834421806,
+   "TI": 0.6892766834421806,
+   "quad": "transfer"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__earth_element_4__ref_color_rain_0",
+  "cell": "G-unseen-cross",
+  "donor": "color_rain",
+  "ic_gen": {
+   "T": 0.0,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.641766658650389,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__earth_element_6__ref_color_rain_0",
+  "cell": "G-unseen-cross",
+  "donor": "color_rain",
+  "ic_gen": {
+   "T": 0.7180886113765467,
+   "C": 0.5288942798774258,
+   "TI": 0.5288942798774258,
+   "quad": "transfer"
+  },
+  "base": {
+   "T": 0.6545847096537715,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__gas_transformation_6__ref_earth_element_4",
+  "cell": "G-unseen-cross",
+  "donor": "earth_element",
+  "ic_gen": {
+   "T": 0.0,
+   "C": 0.10708388976569135,
+   "TI": 0.0,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.8727987932585796,
+   "C": 0.09135607624134989,
+   "TI": 0.09135607624134989,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__gas_transformation_7__ref_earth_element_4",
+  "cell": "G-unseen-cross",
+  "donor": "earth_element",
+  "ic_gen": {
+   "T": 0.8402564770382973,
+   "C": 0.26510591729852273,
+   "TI": 0.26510591729852273,
+   "quad": "reference won"
+  },
+  "base": {
+   "T": 0.07919534264080687,
+   "C": 0.1259462807184218,
+   "TI": 0.07919534264080687,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__illustration_scene_7__ref_gas_transformation_6",
+  "cell": "G-unseen-cross",
+  "donor": "gas_transformation",
+  "ic_gen": {
+   "T": 0.5706634631363209,
+   "C": 0.4082878543186502,
+   "TI": 0.4082878543186502,
+   "quad": "reference won"
+  },
+  "base": {
+   "T": 0.8291211986927379,
+   "C": 0.24930621299029165,
+   "TI": 0.24930621299029165,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__live_concert_0__ref_gas_transformation_6",
+  "cell": "G-unseen-cross",
+  "donor": "gas_transformation",
+  "ic_gen": {
+   "T": 0.3005321057366961,
+   "C": 0.43461938577050085,
+   "TI": 0.3005321057366961,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.8612440455491343,
+   "C": 0.0509662354697182,
+   "TI": 0.0509662354697182,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__display_transition_1__ref_hero_flight_5",
+  "cell": "G-unseen-cross",
+  "donor": "hero_flight",
+  "ic_gen": {
+   "T": 0.0,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 1.0,
+   "C": 0.41901913457165846,
+   "TI": 0.41901913457165846,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__earth_wave_3__ref_hero_flight_5",
+  "cell": "G-unseen-cross",
+  "donor": "hero_flight",
+  "ic_gen": {
+   "T": 0.3040897097625336,
+   "C": 0.21083846213650997,
+   "TI": 0.21083846213650997,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 1.0,
+   "C": 0.3595019615176916,
+   "TI": 0.3595019615176916,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__monstrosity_0__ref_illustration_scene_4",
+  "cell": "G-unseen-cross",
+  "donor": "illustration_scene",
+  "ic_gen": {
+   "T": 0.16494462713589447,
+   "C": 0.5454866946033907,
+   "TI": 0.16494462713589447,
+   "quad": "endpoint-prior won"
+  },
+  "base": {
+   "T": 0.9111481345878022,
+   "C": 0.10663195847780314,
+   "TI": 0.10663195847780314,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__mystification_0__ref_illustration_scene_4",
+  "cell": "G-unseen-cross",
+  "donor": "illustration_scene",
+  "ic_gen": {
+   "T": 0.8331966092425487,
+   "C": 0.37117521277933846,
+   "TI": 0.37117521277933846,
+   "quad": "reference won"
+  },
+  "base": {
+   "T": 0.8558244462674323,
+   "C": 0.4421827177057566,
+   "TI": 0.4421827177057566,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__polygon_4__ref_money_rain_1",
+  "cell": "G-unseen-cross",
+  "donor": "money_rain",
+  "ic_gen": {
+   "T": 0.0,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 1.0,
+   "C": 0.16149816533392503,
+   "TI": 0.16149816533392503,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__polygon_8__ref_money_rain_1",
+  "cell": "G-unseen-cross",
+  "donor": "money_rain",
+  "ic_gen": {
+   "T": 0.46673612108730367,
+   "C": 0.8988873363349376,
+   "TI": 0.46673612108730367,
+   "quad": "endpoint-prior won"
+  },
+  "base": {
+   "T": 1.0,
+   "C": 0.1304093567251459,
+   "TI": 0.1304093567251459,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__portal_4__ref_polygon_4",
+  "cell": "G-unseen-cross",
+  "donor": "polygon",
+  "ic_gen": {
+   "T": 0.30160318128936486,
+   "C": 0.5339946477384029,
+   "TI": 0.30160318128936486,
+   "quad": "endpoint-prior won"
+  },
+  "base": {
+   "T": 0.9213929674649978,
+   "C": 0.08402763832481594,
+   "TI": 0.08402763832481594,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__saint_glow_3__ref_polygon_4",
+  "cell": "G-unseen-cross",
+  "donor": "polygon",
+  "ic_gen": {
+   "T": 0.5339670296136141,
+   "C": 0.35904716116800794,
+   "TI": 0.35904716116800794,
+   "quad": "reference won"
+  },
+  "base": {
+   "T": 0.9091301609562579,
+   "C": 0.2639688918319893,
+   "TI": 0.2639688918319893,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__shadow_3__ref_portal_1",
+  "cell": "G-unseen-cross",
+  "donor": "portal",
+  "ic_gen": {
+   "T": 0.383715186925383,
+   "C": 0.38437598676992407,
+   "TI": 0.383715186925383,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.9956531525194832,
+   "C": 0.14812921802330242,
+   "TI": 0.14812921802330242,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__super_fast_run_0__ref_portal_1",
+  "cell": "G-unseen-cross",
+  "donor": "portal",
+  "ic_gen": {
+   "T": 0.0,
+   "C": 0.5349316630377214,
+   "TI": 0.0,
+   "quad": "endpoint-prior won"
+  },
+  "base": {
+   "T": 0.9940916025223737,
+   "C": 0.20632760548461135,
+   "TI": 0.20632760548461135,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__water_element_4__ref_shadow_10",
+  "cell": "G-unseen-cross",
+  "donor": "shadow",
+  "ic_gen": {
+   "T": 0.670669273014987,
+   "C": 0.18507586561615974,
+   "TI": 0.18507586561615974,
+   "quad": "reference won"
+  },
+  "base": {
+   "T": 0.0,
+   "C": 0.290995487807729,
+   "TI": 0.0,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__wireframe_0__ref_shadow_10",
+  "cell": "G-unseen-cross",
+  "donor": "shadow",
+  "ic_gen": {
+   "T": 0.289978793095075,
+   "C": 0.14548582692595888,
+   "TI": 0.14548582692595888,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.8740833274874944,
+   "C": 0.3002080715627845,
+   "TI": 0.3002080715627845,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__raven_transition_2__ref_shadow_smoke_0",
+  "cell": "G-unseen-cross",
+  "donor": "shadow_smoke",
+  "ic_gen": {
+   "T": 0.9078887696749146,
+   "C": 0.37134055180537334,
+   "TI": 0.37134055180537334,
+   "quad": "reference won"
+  },
+  "base": {
+   "T": 0.9222184122910841,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__color_rain_2__ref_super_fast_run_0",
+  "cell": "G-unseen-cross",
+  "donor": "super_fast_run",
+  "ic_gen": {
+   "T": 0.497336365809849,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.9769069965608773,
+   "C": 0.19105075766697063,
+   "TI": 0.19105075766697063,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__cotton_cloud_0__ref_super_fast_run_0",
+  "cell": "G-unseen-cross",
+  "donor": "super_fast_run",
+  "ic_gen": {
+   "T": 0.8489721554757179,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "reference won"
+  },
+  "base": {
+   "T": 0.9879006422492868,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__earth_element_6__ref_wireframe_0",
+  "cell": "G-unseen-cross",
+  "donor": "wireframe",
+  "ic_gen": {
+   "T": 0.07470352723569144,
+   "C": 0.6916060426846423,
+   "TI": 0.07470352723569144,
+   "quad": "endpoint-prior won"
+  },
+  "base": {
+   "T": 0.9650437246110442,
+   "C": 0.04968620988625464,
+   "TI": 0.04968620988625464,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__ic_gen__fire_element_2__ref_wireframe_0",
+  "cell": "G-unseen-cross",
+  "donor": "wireframe",
+  "ic_gen": {
+   "T": 0.6370388612520318,
+   "C": 0.8190366592485459,
+   "TI": 0.6370388612520318,
+   "quad": "transfer"
+  },
+  "base": {
+   "T": 0.9571344136334532,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__animalization_0__ref_cotton_cloud_1",
+  "cell": "G-zs-cross",
+  "donor": "cotton_cloud",
+  "ic_gen": {
+   "T": 0.7225613062898726,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "reference won"
+  },
+  "base": {
+   "T": 0.9873699059329302,
+   "C": 0.057361206706067314,
+   "TI": 0.057361206706067314,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__animalization_2__ref_cotton_cloud_1",
+  "cell": "G-zs-cross",
+  "donor": "cotton_cloud",
+  "ic_gen": {
+   "T": 0.0,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.9878707896979443,
+   "C": 0.10583002898013576,
+   "TI": 0.10583002898013576,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__hero_flight_5__ref_display_transition_1",
+  "cell": "G-zs-cross",
+  "donor": "display_transition",
+  "ic_gen": {
+   "T": 0.22689509217476478,
+   "C": 0.1370028461920924,
+   "TI": 0.1370028461920924,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.8875887641235525,
+   "C": 0.3005218671333324,
+   "TI": 0.3005218671333324,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__hero_flight_6__ref_display_transition_1",
+  "cell": "G-zs-cross",
+  "donor": "display_transition",
+  "ic_gen": {
+   "T": 0.44124396384497916,
+   "C": 0.7472785559433571,
+   "TI": 0.44124396384497916,
+   "quad": "endpoint-prior won"
+  },
+  "base": {
+   "T": 0.9381835816583431,
+   "C": 0.36542497578376026,
+   "TI": 0.36542497578376026,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__shadow_smoke_7__ref_firelava_0",
+  "cell": "G-zs-cross",
+  "donor": "firelava",
+  "ic_gen": {
+   "T": 0.600796934087968,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "reference won"
+  },
+  "base": {
+   "T": 0.9423466409481998,
+   "C": 0.019195145786840437,
+   "TI": 0.019195145786840437,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__water_bending_3__ref_firelava_0",
+  "cell": "G-zs-cross",
+  "donor": "firelava",
+  "ic_gen": {
+   "T": 0.8399432130426833,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "reference won"
+  },
+  "base": {
+   "T": 0.9059443121450811,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__earth_wave_3__ref_flying_cam_transition_1",
+  "cell": "G-zs-cross",
+  "donor": "flying_cam_transition",
+  "ic_gen": {
+   "T": 0.0,
+   "C": 0.2558264107202445,
+   "TI": 0.0,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.0,
+   "C": 0.44142952204210767,
+   "TI": 0.0,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__giant_grab_3__ref_flying_cam_transition_1",
+  "cell": "G-zs-cross",
+  "donor": "flying_cam_transition",
+  "ic_gen": {
+   "T": 0.9618748187603969,
+   "C": 0.9696115620165716,
+   "TI": 0.9618748187603969,
+   "quad": "transfer"
+  },
+  "base": {
+   "T": 1.0,
+   "C": 0.14253321748712652,
+   "TI": 0.14253321748712652,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__money_rain_3__ref_live_concert_1",
+  "cell": "G-zs-cross",
+  "donor": "live_concert",
+  "ic_gen": {
+   "T": 0.07978914014328321,
+   "C": 0.1804428794245217,
+   "TI": 0.07978914014328321,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.9980652043272012,
+   "C": 0.10068100948917351,
+   "TI": 0.10068100948917351,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__mystification_0__ref_live_concert_1",
+  "cell": "G-zs-cross",
+  "donor": "live_concert",
+  "ic_gen": {
+   "T": 0.12130199451323512,
+   "C": 0.27347326964463137,
+   "TI": 0.12130199451323512,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.9958858304383443,
+   "C": 0.45231577728057015,
+   "TI": 0.45231577728057015,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__polygon_4__ref_luminous_gaze_0",
+  "cell": "G-zs-cross",
+  "donor": "luminous_gaze",
+  "ic_gen": {
+   "T": 0.0,
+   "C": 0.180319582230239,
+   "TI": 0.0,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.9097184782828998,
+   "C": 0.2670009891484592,
+   "TI": 0.2670009891484592,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__polygon_8__ref_luminous_gaze_0",
+  "cell": "G-zs-cross",
+  "donor": "luminous_gaze",
+  "ic_gen": {
+   "T": 0.31820916994625875,
+   "C": 0.45445490428627033,
+   "TI": 0.31820916994625875,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.8769686196664842,
+   "C": 0.3939226877675442,
+   "TI": 0.3939226877675442,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__giant_grab_3__ref_melt_transition_1",
+  "cell": "G-zs-cross",
+  "donor": "melt_transition",
+  "ic_gen": {
+   "T": 0.700471740960317,
+   "C": 0.3365960502040333,
+   "TI": 0.3365960502040333,
+   "quad": "reference won"
+  },
+  "base": {
+   "T": 0.9530317986108167,
+   "C": 0.4206329731318144,
+   "TI": 0.4206329731318144,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__hero_flight_5__ref_melt_transition_1",
+  "cell": "G-zs-cross",
+  "donor": "melt_transition",
+  "ic_gen": {
+   "T": 0.5351281134876562,
+   "C": 0.2233524745947573,
+   "TI": 0.2233524745947573,
+   "quad": "reference won"
+  },
+  "base": {
+   "T": 0.9907695056908781,
+   "C": 0.42249010040005364,
+   "TI": 0.42249010040005364,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__super_fast_run_0__ref_monstrosity_0",
+  "cell": "G-zs-cross",
+  "donor": "monstrosity",
+  "ic_gen": {
+   "T": 0.17704812184283503,
+   "C": 0.6296675948138941,
+   "TI": 0.17704812184283503,
+   "quad": "endpoint-prior won"
+  },
+  "base": {
+   "T": 0.9012828060313723,
+   "C": 0.303540693385788,
+   "TI": 0.303540693385788,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__super_fast_run_3__ref_monstrosity_0",
+  "cell": "G-zs-cross",
+  "donor": "monstrosity",
+  "ic_gen": {
+   "T": 0.0,
+   "C": 0.6475366663965642,
+   "TI": 0.0,
+   "quad": "endpoint-prior won"
+  },
+  "base": {
+   "T": 0.9026437918441876,
+   "C": 0.22505773438133042,
+   "TI": 0.22505773438133042,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__air_bending_1__ref_raven_transition_0",
+  "cell": "G-zs-cross",
+  "donor": "raven_transition",
+  "ic_gen": {
+   "T": 0.25328833986140403,
+   "C": 0.6632768900548534,
+   "TI": 0.25328833986140403,
+   "quad": "endpoint-prior won"
+  },
+  "base": {
+   "T": 0.9628418198252487,
+   "C": 0.6742570951585976,
+   "TI": 0.6742570951585976,
+   "quad": "transfer"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__earth_wave_3__ref_raven_transition_0",
+  "cell": "G-zs-cross",
+  "donor": "raven_transition",
+  "ic_gen": {
+   "T": 0.0,
+   "C": 0.04579692224174188,
+   "TI": 0.0,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.889679156805755,
+   "C": 0.17034861656701508,
+   "TI": 0.17034861656701508,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__animalization_2__ref_saint_glow_0",
+  "cell": "G-zs-cross",
+  "donor": "saint_glow",
+  "ic_gen": {
+   "T": 0.819006271957747,
+   "C": 0.07261526831024954,
+   "TI": 0.07261526831024954,
+   "quad": "reference won"
+  },
+  "base": {
+   "T": 0.972878498502747,
+   "C": 0.11558628298807541,
+   "TI": 0.11558628298807541,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__ic_gen__color_rain_0__ref_saint_glow_0",
+  "cell": "G-zs-cross",
+  "donor": "saint_glow",
+  "ic_gen": {
+   "T": 0.4114485120402279,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "mush"
+  },
+  "base": {
+   "T": 0.9590870667793748,
+   "C": 0.23904714735345392,
+   "TI": 0.23904714735345392,
+   "quad": "reference won"
+  }
+ }
+]
