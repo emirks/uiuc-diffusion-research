@@ -24,7 +24,6 @@ Single entry point for everything learned in this project.
 | [`dataset/autotransition.md`](dataset/autotransition.md) | Dataset | AutoTransition (HF, 35k templates, 107 transition names, ~52.9 GB) — JSON schema, split-tar-not-gzip gotcha, partial-download recipe |
 | [`dataset/procedural_operators.md`](dataset/procedural_operators.md) | Dataset | Procedural transition operator engine — gl-transitions bank (125 shaders / 189 uniforms / licences), the endpoint-identity gate, headless moderngl+EGL recipe & the llvmpipe-vs-NVIDIA trap, ffmpeg xfade + `xfade-easing` fallbacks (measured 128× slower), diversity multipliers, endpoint-corpus sources, and the task-diversity phase-transition bibliography (Raventós et al.) |
 | [`eval_harness_v3.md`](eval_harness_v3.md) | Eval | Transition-eval harness v3 — CERTIFIED `eval/v3.0.0`; positioning, plan→infer→score flow, trust map, certification meaning; SPEC.md in-package is authoritative |
-| [`ideas.md`](ideas.md) | Research | Hypothesis / minimal-experiment sketches |
 | [`exp/exp_043_smoke_manifold.md`](exp/exp_043_smoke_manifold.md) | Experiment | Smoke "transition manifold" hypothesis — Phase-1 diagnostics (M1..M6) on cached exp_043 z0. `v_smoke` direction is real & specific; per-clip PC1 unshared; centroid bulges at t≈8. Phase-2/3 roadmap. |
 | [`exp/exp_043_inverted_noise_vs_gaussian.md`](exp/exp_043_inverted_noise_vs_gaussian.md) | Experiment | z1 (RF-inverted noise) vs matched-Gaussian deviation. **HYPOTHESIS REFUTED: z1's free-middle is white Gaussian (kurt +0.08, autocorr +0.02, temporal +0.02); the deviation lives only in the clamped anchors (= z0 slices). The smoke signature is in z0's free-middle (kurt +0.48, cross-clip cos +0.26), not z1's.** Replicated across portrait/landscape/square. Recommend sourcing signature from z0 + late-σ trajectory guidance. |
 | [`exp/exp_044_smoke_transition_injection.md`](exp/exp_044_smoke_transition_injection.md) | Experiment | Smoke-transition injection arc (goal: free-middle regen PSNR>18). exp_044 refutes the CFG hypothesis — recon→regen gap is solver self-consistency. exp_045 decode-ceiling (info wall). exp_046/047 perceptual donor recipes. **exp_049: σ-matched recon-trajectory injection RECOVERS recon (ss0 33.26 dB) for z1-rich clips, late-σ carries it (late=all); z1-poor saturate (~12-15); donor deployable only early-window. + @torch.inference_mode() OOM footgun.** |
@@ -99,7 +98,6 @@ outside §0. Designed for a reader who wasn't in the room.
 
 ### Research
 
-**`ideas.md`** — Scratch pad. Format: `Question / Hypothesis / Minimal experiment to falsify`.
 
 ---
 
