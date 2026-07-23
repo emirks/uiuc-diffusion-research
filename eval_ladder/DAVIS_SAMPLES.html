@@ -1,0 +1,135 @@
+<title>ladder2 — DAVIS (foreign) generations</title>
+<style>
+body{font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;max-width:1100px;margin:0 auto;padding:28px;background:#0f1216;color:#e6e8eb}
+@media(prefers-color-scheme:light){body{background:#fff;color:#1a1a1a}}
+h1{font-size:24px;margin-bottom:4px} .lede{color:#9aa4b0;margin-top:0}
+.card{border:1px solid #242a31;border-radius:12px;padding:16px 18px;margin:18px 0;background:#161b21}
+@media(prefers-color-scheme:light){.card{background:#f7f8fa;border-color:#e3e6ea}}
+h3{font-size:15px;margin:0 0 8px} .donor{color:#5a9bff} .dv{color:#e0913f}
+.tag{font-size:11px;background:#1b2129;border-radius:12px;padding:1px 8px;margin-left:6px;color:#9aa4b0}
+@media(prefers-color-scheme:light){.tag{background:#eef1f5}}
+.prompt{font-family:ui-monospace,monospace;font-size:12px;background:#12161b;border-radius:8px;padding:8px 11px;margin:8px 0;line-height:1.5}
+@media(prefers-color-scheme:light){.prompt{background:#f2f3f5}}
+.strips img{display:block;width:100%;max-width:660px;border-radius:6px;margin:4px 0;border:1px solid #242a31}
+.vids{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px}
+.vids figure{margin:0;font-size:11px;color:#9aa4b0;text-align:center}
+video{width:230px;border-radius:8px;background:#000;border:1px solid #242a31}
+.none{width:230px;height:130px;display:flex;align-items:center;justify-content:center;border:1px dashed #3a424c;border-radius:8px;font-size:11px;color:#7a838f}
+.note{border-left:3px solid #5a9bff;padding:10px 14px;background:#161b21;border-radius:8px;margin:14px 0;font-size:14px}
+@media(prefers-color-scheme:light){.note{background:#f7f8fa}}
+</style>
+<h1>ladder2 — DAVIS (foreign) generations</h1>
+<p class="lede">Corpus-learned transitions applied to <b>off-distribution real footage</b>. Each specialist output is paired with its <b>base twin on byte-identical input</b> (same endpoint, same prompt, same seed, no adapter), so the difference you see is the adapter alone.</p>
+<div class="note"><b>How to read these.</b> The strip above each pair is the actual conditioning window the model was given (first 9 frames; two-sided rows also show the suffix window). The prompt contains <b>no outcome text</b> — just the scene description and the neutral token <code>sksz</code>. Scoring keeps this lane typed as <code>%_proxy</code>: a DAVIS scene cannot look like a corpus class, so the claim is the <b>margin vs base</b>, never the absolute level.</div>
+
+<div class="card">
+  <h3>1. <span class="donor">color_rain</span> transition applied to <span class="dv">DAVIS hike</span>
+      <span class="tag">one-sided</span><span class="tag">seed 42</span></h3>
+  <div class="prompt">A hiker in a light purple shirt and olive trousers carrying a large black backpack walks across a bright rocky mountain slope. sksz.</div>
+  <div class="strips"><img src="assets/davis_prev/davis_hike_start9.png" alt="prefix window"></div>
+  <div class="vids">
+    <figure><video src="../../outputs/videos/ladder2/spec_color_rain/SP-foreign__spec_color_rain__davis_hike__s42.mp4" controls preload="metadata" muted loop></video>
+      <figcaption><b>specialist</b> — color_rain</figcaption></figure>
+    <figure><div class='none'>no base twin generated yet</div></figure>
+  </div>
+</div>
+<div class="card">
+  <h3>2. <span class="donor">color_rain</span> transition applied to <span class="dv">DAVIS hike</span>
+      <span class="tag">one-sided</span><span class="tag">seed 43</span></h3>
+  <div class="prompt">A hiker in a light purple shirt and olive trousers carrying a large black backpack walks across a bright rocky mountain slope. sksz.</div>
+  <div class="strips"><img src="assets/davis_prev/davis_hike_start9.png" alt="prefix window"></div>
+  <div class="vids">
+    <figure><video src="../../outputs/videos/ladder2/spec_color_rain/SP-foreign__spec_color_rain__davis_hike__s43.mp4" controls preload="metadata" muted loop></video>
+      <figcaption><b>specialist</b> — color_rain</figcaption></figure>
+    <figure><video src='../../outputs/videos/ladder2/base/base__f2ee2438429d8e9e__s43.mp4' controls preload='metadata' muted loop></video><figcaption>base — same input, no adapter</figcaption></figure>
+  </div>
+</div>
+<div class="card">
+  <h3>3. <span class="donor">gas_transformation</span> transition applied to <span class="dv">DAVIS lucia</span>
+      <span class="tag">one-sided</span><span class="tag">seed 42</span></h3>
+  <div class="prompt">A woman in a dark sleeveless dress with a bright orange backpack walks along a paved path beside tall sunlit grass and green shrubs. sksz.</div>
+  <div class="strips"><img src="assets/davis_prev/davis_lucia_start9.png" alt="prefix window"></div>
+  <div class="vids">
+    <figure><video src="../../outputs/videos/ladder2/spec_gas_transformation/SP-foreign__spec_gas_transformation__davis_lucia__s42.mp4" controls preload="metadata" muted loop></video>
+      <figcaption><b>specialist</b> — gas_transformation</figcaption></figure>
+    <figure><video src='../../outputs/videos/ladder2/base/base__24919d2d95b28378__s42.mp4' controls preload='metadata' muted loop></video><figcaption>base — same input, no adapter</figcaption></figure>
+  </div>
+</div>
+<div class="card">
+  <h3>4. <span class="donor">gas_transformation</span> transition applied to <span class="dv">DAVIS lucia</span>
+      <span class="tag">one-sided</span><span class="tag">seed 43</span></h3>
+  <div class="prompt">A woman in a dark sleeveless dress with a bright orange backpack walks along a paved path beside tall sunlit grass and green shrubs. sksz.</div>
+  <div class="strips"><img src="assets/davis_prev/davis_lucia_start9.png" alt="prefix window"></div>
+  <div class="vids">
+    <figure><video src="../../outputs/videos/ladder2/spec_gas_transformation/SP-foreign__spec_gas_transformation__davis_lucia__s43.mp4" controls preload="metadata" muted loop></video>
+      <figcaption><b>specialist</b> — gas_transformation</figcaption></figure>
+    <figure><video src='../../outputs/videos/ladder2/base/base__24919d2d95b28378__s43.mp4' controls preload='metadata' muted loop></video><figcaption>base — same input, no adapter</figcaption></figure>
+  </div>
+</div>
+<div class="card">
+  <h3>5. <span class="donor">hero_flight</span> transition applied to <span class="dv">DAVIS bear_elephant</span>
+      <span class="tag">two-sided</span><span class="tag">seed 42</span></h3>
+  <div class="prompt">A brown bear walks across gravel and dirt in front of a grey stone wall. sksz. a pale grey elephant walks across sandy ground beside white rocks and a shaded enclosure wall.</div>
+  <div class="strips"><img src="assets/davis_prev/davis_bear_elephant_start9.png" alt="prefix window"><img src="assets/davis_prev/davis_bear_elephant_end9.png" alt="suffix window"></div>
+  <div class="vids">
+    <figure><video src="../../outputs/videos/ladder2/spec_hero_flight/SP-foreign__spec_hero_flight__davis_bear_elephant__s42.mp4" controls preload="metadata" muted loop></video>
+      <figcaption><b>specialist</b> — hero_flight</figcaption></figure>
+    <figure><video src='../../outputs/videos/ladder2/base/base__f8afa1e096261181__s42.mp4' controls preload='metadata' muted loop></video><figcaption>base — same input, no adapter</figcaption></figure>
+  </div>
+</div>
+<div class="card">
+  <h3>6. <span class="donor">hero_flight</span> transition applied to <span class="dv">DAVIS bear_elephant</span>
+      <span class="tag">two-sided</span><span class="tag">seed 43</span></h3>
+  <div class="prompt">A brown bear walks across gravel and dirt in front of a grey stone wall. sksz. a pale grey elephant walks across sandy ground beside white rocks and a shaded enclosure wall.</div>
+  <div class="strips"><img src="assets/davis_prev/davis_bear_elephant_start9.png" alt="prefix window"><img src="assets/davis_prev/davis_bear_elephant_end9.png" alt="suffix window"></div>
+  <div class="vids">
+    <figure><video src="../../outputs/videos/ladder2/spec_hero_flight/SP-foreign__spec_hero_flight__davis_bear_elephant__s43.mp4" controls preload="metadata" muted loop></video>
+      <figcaption><b>specialist</b> — hero_flight</figcaption></figure>
+    <figure><video src='../../outputs/videos/ladder2/base/base__f8afa1e096261181__s43.mp4' controls preload='metadata' muted loop></video><figcaption>base — same input, no adapter</figcaption></figure>
+  </div>
+</div>
+<div class="card">
+  <h3>7. <span class="donor">illustration_scene</span> transition applied to <span class="dv">DAVIS mallard_water</span>
+      <span class="tag">one-sided</span><span class="tag">seed 42</span></h3>
+  <div class="prompt">A mallard duck with brown speckled plumage swims across rippling green water in bright daylight. sksz.</div>
+  <div class="strips"><img src="assets/davis_prev/davis_mallard_water_start9.png" alt="prefix window"></div>
+  <div class="vids">
+    <figure><video src="../../outputs/videos/ladder2/spec_illustration_scene/SP-foreign__spec_illustration_scene__davis_mallard_water__s42.mp4" controls preload="metadata" muted loop></video>
+      <figcaption><b>specialist</b> — illustration_scene</figcaption></figure>
+    <figure><video src='../../outputs/videos/ladder2/base/base__e1846b3e56d0069e__s42.mp4' controls preload='metadata' muted loop></video><figcaption>base — same input, no adapter</figcaption></figure>
+  </div>
+</div>
+<div class="card">
+  <h3>8. <span class="donor">illustration_scene</span> transition applied to <span class="dv">DAVIS mallard_water</span>
+      <span class="tag">one-sided</span><span class="tag">seed 43</span></h3>
+  <div class="prompt">A mallard duck with brown speckled plumage swims across rippling green water in bright daylight. sksz.</div>
+  <div class="strips"><img src="assets/davis_prev/davis_mallard_water_start9.png" alt="prefix window"></div>
+  <div class="vids">
+    <figure><video src="../../outputs/videos/ladder2/spec_illustration_scene/SP-foreign__spec_illustration_scene__davis_mallard_water__s43.mp4" controls preload="metadata" muted loop></video>
+      <figcaption><b>specialist</b> — illustration_scene</figcaption></figure>
+    <figure><video src='../../outputs/videos/ladder2/base/base__e1846b3e56d0069e__s43.mp4' controls preload='metadata' muted loop></video><figcaption>base — same input, no adapter</figcaption></figure>
+  </div>
+</div>
+<div class="card">
+  <h3>9. <span class="donor">shadow_smoke</span> transition applied to <span class="dv">DAVIS blackswan_rhino</span>
+      <span class="tag">two-sided</span><span class="tag">seed 42</span></h3>
+  <div class="prompt">A black swan with a red and white beak glides across dark green water in front of dense leafy foliage. sksz. a rhinoceros stands on red earth beside a rocky wall, framed between tall tree trunks.</div>
+  <div class="strips"><img src="assets/davis_prev/davis_blackswan_rhino_start9.png" alt="prefix window"><img src="assets/davis_prev/davis_blackswan_rhino_end9.png" alt="suffix window"></div>
+  <div class="vids">
+    <figure><video src="../../outputs/videos/ladder2/spec_shadow_smoke/SP-foreign__spec_shadow_smoke__davis_blackswan_rhino__s42.mp4" controls preload="metadata" muted loop></video>
+      <figcaption><b>specialist</b> — shadow_smoke</figcaption></figure>
+    <figure><video src='../../outputs/videos/ladder2/base/base__7393ffe87a8344d2__s42.mp4' controls preload='metadata' muted loop></video><figcaption>base — same input, no adapter</figcaption></figure>
+  </div>
+</div>
+<div class="card">
+  <h3>10. <span class="donor">shadow_smoke</span> transition applied to <span class="dv">DAVIS blackswan_rhino</span>
+      <span class="tag">two-sided</span><span class="tag">seed 43</span></h3>
+  <div class="prompt">A black swan with a red and white beak glides across dark green water in front of dense leafy foliage. sksz. a rhinoceros stands on red earth beside a rocky wall, framed between tall tree trunks.</div>
+  <div class="strips"><img src="assets/davis_prev/davis_blackswan_rhino_start9.png" alt="prefix window"><img src="assets/davis_prev/davis_blackswan_rhino_end9.png" alt="suffix window"></div>
+  <div class="vids">
+    <figure><video src="../../outputs/videos/ladder2/spec_shadow_smoke/SP-foreign__spec_shadow_smoke__davis_blackswan_rhino__s43.mp4" controls preload="metadata" muted loop></video>
+      <figcaption><b>specialist</b> — shadow_smoke</figcaption></figure>
+    <figure><video src='../../outputs/videos/ladder2/base/base__7393ffe87a8344d2__s43.mp4' controls preload='metadata' muted loop></video><figcaption>base — same input, no adapter</figcaption></figure>
+  </div>
+</div>
+<p class="lede" style="font-size:12px">Generated by ladder2 · registry.jsonl is the single source of truth · serve from the repo root for the videos to resolve.</p>

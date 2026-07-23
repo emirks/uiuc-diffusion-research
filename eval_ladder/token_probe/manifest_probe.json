@@ -1,0 +1,102 @@
+{
+ "adapter": null,
+ "target_modules": [],
+ "rows": [
+  {
+   "id": "color_rain_0__notok",
+   "rung": "probe",
+   "endpoints": "color_rain_0",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "A woman with long black hair and large sunglasses stands in a warm-lit kitchen, wearing a brown leather jacket, a light blue button-down shirt, and a brown skirt while holding a white telephone receiver to her ear."
+  },
+  {
+   "id": "color_rain_0__sksz",
+   "rung": "probe",
+   "endpoints": "color_rain_0",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "A woman with long black hair and large sunglasses stands in a warm-lit kitchen, wearing a brown leather jacket, a light blue button-down shirt, and a brown skirt while holding a white telephone receiver to her ear. sksz."
+  },
+  {
+   "id": "color_rain_0__qvtr",
+   "rung": "probe",
+   "endpoints": "color_rain_0",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "A woman with long black hair and large sunglasses stands in a warm-lit kitchen, wearing a brown leather jacket, a light blue button-down shirt, and a brown skirt while holding a white telephone receiver to her ear. qvtr."
+  },
+  {
+   "id": "animalization_0__notok",
+   "rung": "probe",
+   "endpoints": "animalization_0",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "A woman in a red bomber jacket poses against a blue studio backdrop, hands on hips."
+  },
+  {
+   "id": "animalization_0__sksz",
+   "rung": "probe",
+   "endpoints": "animalization_0",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "A woman in a red bomber jacket poses against a blue studio backdrop, hands on hips. sksz."
+  },
+  {
+   "id": "animalization_0__qvtr",
+   "rung": "probe",
+   "endpoints": "animalization_0",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "A woman in a red bomber jacket poses against a blue studio backdrop, hands on hips. qvtr."
+  },
+  {
+   "id": "super_fast_run_0__notok",
+   "rung": "probe",
+   "endpoints": "super_fast_run_0",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "A young woman with dark hair stands in a narrow paved alleyway, wearing a black Adidas soccer jersey tucked into a long, ruffled black skirt with a white lace-trimmed apron and a decorative charm belt."
+  },
+  {
+   "id": "super_fast_run_0__sksz",
+   "rung": "probe",
+   "endpoints": "super_fast_run_0",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "A young woman with dark hair stands in a narrow paved alleyway, wearing a black Adidas soccer jersey tucked into a long, ruffled black skirt with a white lace-trimmed apron and a decorative charm belt. sksz."
+  },
+  {
+   "id": "super_fast_run_0__qvtr",
+   "rung": "probe",
+   "endpoints": "super_fast_run_0",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "A young woman with dark hair stands in a narrow paved alleyway, wearing a black Adidas soccer jersey tucked into a long, ruffled black skirt with a white lace-trimmed apron and a decorative charm belt. qvtr."
+  },
+  {
+   "id": "polygon_4__notok",
+   "rung": "probe",
+   "endpoints": "polygon_4",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "A young woman with her hair in a bun stands on a cobblestone street in bright daylight, wearing an oversized white graphic t-shirt, a long black skirt, white socks, and black loafers."
+  },
+  {
+   "id": "polygon_4__sksz",
+   "rung": "probe",
+   "endpoints": "polygon_4",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "A young woman with her hair in a bun stands on a cobblestone street in bright daylight, wearing an oversized white graphic t-shirt, a long black skirt, white socks, and black loafers. sksz."
+  },
+  {
+   "id": "polygon_4__qvtr",
+   "rung": "probe",
+   "endpoints": "polygon_4",
+   "cond_dir": "experiments/exp_062_ladder_r2r3_specialists/dataset/cond",
+   "prefix_only": true,
+   "prompt": "A young woman with her hair in a bun stands on a cobblestone street in bright daylight, wearing an oversized white graphic t-shirt, a long black skirt, white socks, and black loafers. qvtr."
+  }
+ ]
+}

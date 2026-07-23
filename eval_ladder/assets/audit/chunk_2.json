@@ -1,0 +1,191 @@
+[
+ {
+  "clip": "illustration_scene_6",
+  "class": "illustration_scene",
+  "sided": "onesided",
+  "S1": "A young woman with beaded braids and black sunglasses stands in front of a textured grey wall, wearing a black and white leather jacket with \"U.B. TUFF\" printed on it under bright flash lighting.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/illustration_scene_6__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "illustration_scene_7",
+  "class": "illustration_scene",
+  "sided": "onesided",
+  "S1": "A young man in a leather jacket and denim shorts leans against a railing by a stone wall.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/illustration_scene_7__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "illustration_scene_8",
+  "class": "illustration_scene",
+  "sided": "onesided",
+  "S1": "A young woman with slicked-back dark hair and a neutral expression looks directly at the camera, wearing a blue athletic t-shirt with white lettering and two gold cross necklaces in a warmly lit indoor setting.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/illustration_scene_8__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "illustration_scene_9",
+  "class": "illustration_scene",
+  "sided": "onesided",
+  "S1": "A young woman with slicked-back dark hair and layered gold cross necklaces wears a blue athletic t-shirt with white lettering that reads \"MPENS?\" against a warm-toned indoor background.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/illustration_scene_9__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "jump_transition_1",
+  "class": "jump_transition",
+  "sided": "twosided",
+  "S1": "A man in an olive-green suit and dark sunglasses stands with hands behind his back on a stone slab amid mossy ancient temple ruins beneath dramatic storm clouds pierced by sunlight.",
+  "S2": "a man in a black suit and tie with dark sunglasses standing on the pink-tiled deck of a turquoise pool lined with pink loungers and a palm tree under a vivid blue sky.",
+  "start_img": "eval_ladder/assets/audit/jump_transition_1__start.png",
+  "end_img": "eval_ladder/assets/audit/jump_transition_1__end.png"
+ },
+ {
+  "clip": "live_concert_0",
+  "class": "live_concert",
+  "sided": "onesided",
+  "S1": "A smiling man and woman wearing matching black graphic t-shirts and bright pink sunglasses pose between beige curtains inside a small booth with a patterned teal ceiling and glowing light bulbs.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/live_concert_0__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "live_concert_4",
+  "class": "live_concert",
+  "sided": "onesided",
+  "S1": "A blonde woman wearing dark sunglasses and an oversized black leather jacket with a thick orange stripe down the sleeve is pictured at night on a street with cars in the background.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/live_concert_4__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "luminous_gaze_3",
+  "class": "luminous_gaze",
+  "sided": "onesided",
+  "S1": "A person with dark skin and short curly hair looks over their shoulder on a city street, wearing a grey jacket with a graphic on the back, illuminated by warm sunlight with a yellow construction crane and a modern building in the background.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/luminous_gaze_3__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "melt_transition_2",
+  "class": "melt_transition",
+  "sided": "twosided",
+  "S1": "A woman with a dark curly afro dotted with white flowers stands hands-behind-back on cobblestones in a plunging dark-green mini dress with garters and white lace stockings, before the arched wooden doors of a gothic brick building.",
+  "S2": "a woman with long dark hair and sunglasses bundled in a floor-length shaggy white fur coat, standing on a sunlit driveway between blue and brown wheelie bins in front of a tall hedge.",
+  "start_img": "eval_ladder/assets/audit/melt_transition_2__start.png",
+  "end_img": "eval_ladder/assets/audit/melt_transition_2__end.png"
+ },
+ {
+  "clip": "money_rain_3",
+  "class": "money_rain",
+  "sided": "onesided",
+  "S1": "A person wearing sunglasses, a brown blazer over a patterned shirt, blue trousers, and sandals sits on a green bench inside a boat cabin with wooden floors illuminated by bright sunlight.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/money_rain_3__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "monstrosity_0",
+  "class": "monstrosity",
+  "sided": "onesided",
+  "S1": "A young man wearing a dark coat, dark trousers, and a long grey scarf stands on a large rock in a field of white flowers, with snow-capped mountains under an overcast sky in the background.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/monstrosity_0__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "mystification_0",
+  "class": "mystification",
+  "sided": "onesided",
+  "S1": "A young Black man with short blonde hair, glasses, and a pearl necklace sits on a chair in front of a draped beige backdrop, wearing a red and black striped tank top, brown trousers, and black boots under warm studio lighting.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/mystification_0__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "nature_bloom_0",
+  "class": "nature_bloom",
+  "sided": "onesided",
+  "S1": "A young woman with slicked-back dark hair sits in the back seat of a car with beige leather seats, wearing an oversized olive green leather jacket with black lettering, black pants, and a zebra-print shoulder bag.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/nature_bloom_0__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "plasma_explosion_2",
+  "class": "plasma_explosion",
+  "sided": "onesided",
+  "S1": "A man with medium-length black hair wearing a black jacket, an olive green t-shirt, and matching cargo pants leans against a bright orange sports car in front of a grey building.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/plasma_explosion_2__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "polygon_0",
+  "class": "polygon",
+  "sided": "onesided",
+  "S1": "A young woman with her hair in double buns stands in bright sunlight on a sidewalk in front of a closed storefront with a red and yellow sign, wearing a black bralette, black pants, and an open white short-sleeved shirt.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/polygon_0__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "polygon_4",
+  "class": "polygon",
+  "sided": "onesided",
+  "S1": "A young woman with her hair in a bun stands on a cobblestone street in bright daylight, wearing an oversized white graphic t-shirt, a long black skirt, white socks, and black loafers.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/polygon_4__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "polygon_8",
+  "class": "polygon",
+  "sided": "onesided",
+  "S1": "A young woman with long black hair, wearing bright pink undereye makeup, silver chain necklaces, and a blue jacket with white faux fur trim, smiles and shows her braces while touching her lip in front of a wooden paneled wall.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/polygon_8__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "portal_0",
+  "class": "portal",
+  "sided": "onesided",
+  "S1": "A cartoon boy with brown hair and a surprised expression, wearing an orange patterned sweater, stands on a cobblestone street at dusk between old-fashioned buildings under an orange sky with silhouetted bats.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/portal_0__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "portal_1",
+  "class": "portal",
+  "sided": "onesided",
+  "S1": "A small, green figure with a glowing yellow mushroom cap and large white eyes stands on a textured tree branch, wearing a dark double-breasted jacket while holding an orange sphere and pointing upward against a blue and green gradient background.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/portal_1__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "portal_4",
+  "class": "portal",
+  "sided": "onesided",
+  "S1": "A cartoon character with teal hair and a green apron rests their head on their hand while holding a pen over a notebook at a checkout counter inside a dimly lit convenience store with green fluorescent lighting.",
+  "S2": null,
+  "start_img": "eval_ladder/assets/audit/portal_4__start.png",
+  "end_img": null
+ },
+ {
+  "clip": "raven_transition_2",
+  "class": "raven_transition",
+  "sided": "twosided",
+  "S1": "A pale woman with long dark hair in a black lace bodysuit lies draped along a moss-covered leaning tree trunk in a foggy green meadow ringed by dark pines.",
+  "S2": "a short-haired youth in a black sleeveless top, camouflage shorts, and black combat boots crouching on a concrete ledge against a deep blue sky, one hand holding a folded newspaper.",
+  "start_img": "eval_ladder/assets/audit/raven_transition_2__start.png",
+  "end_img": "eval_ladder/assets/audit/raven_transition_2__end.png"
+ }
+]

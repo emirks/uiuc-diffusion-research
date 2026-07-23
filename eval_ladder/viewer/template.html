@@ -1,0 +1,634 @@
+<meta charset="utf-8">
+<title>ladder2 — eval ladder results</title>
+<style>
+:root{--bg:#0e1014;--card:#171a1f;--card2:#1d2127;--edge:#2a2f37;--edge2:#3a414c;
+ --fg:#dde3ea;--dim:#8b95a1;--dim2:#666f7a;
+ --pre:#2dd4bf;--suf:#f5a524;--ref:#a78bfa;--bad:#f2555a;--good:#4ade80;--warn:#fbbf24;
+ --sel:#3b82f6;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);overflow-x:hidden;
+ font:13px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3,h4,h5{margin:0;font-weight:600}
+a{color:var(--sel)}
+.wrap{max-width:1900px;margin:0 auto;padding:16px}
+header{border-bottom:1px solid var(--edge);padding-bottom:12px;margin-bottom:16px}
+header h1{font-size:20px;letter-spacing:.2px}
+header .sub{color:var(--dim);font-size:12px;margin-top:4px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* ---------------------------------------------------------------- matrix */
+.panel{background:var(--card);border:1px solid var(--edge);border-radius:10px;
+ padding:14px;margin-bottom:14px}
+.panel>h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);
+ margin-bottom:10px}
+.mx{border-collapse:separate;border-spacing:4px;width:100%;max-width:900px}
+.mx th,.mx td{padding:0}
+.mx .corner{width:150px}
+.mx th.ch,.mx th.rh{background:var(--card2);border:1px solid var(--edge);border-radius:7px;
+ padding:7px 9px;cursor:pointer;font-size:11px;font-weight:600;text-align:left;
+ color:var(--fg);user-select:none;transition:.12s}
+.mx th.ch{text-align:center}
+.mx th span{display:block;font-weight:400;color:var(--dim2);font-size:10px;margin-top:2px}
+.mx th.ch:hover,.mx th.rh:hover{border-color:var(--edge2);background:#232830}
+.mx td.c{background:var(--card2);border:1px solid var(--edge);border-radius:7px;
+ padding:10px 6px;text-align:center;cursor:pointer;user-select:none;transition:.12s}
+.mx td.c .n{font-size:17px;font-weight:600}
+.mx td.c .l{font-size:10px;color:var(--dim2);margin-top:1px}
+.mx td.c:hover{border-color:var(--edge2)}
+.mx td.c.on{background:#132b4d;border-color:var(--sel);box-shadow:inset 0 0 0 1px var(--sel)}
+.mx td.c.on .l{color:#9dc4f5}
+.mx td.c.empty{opacity:.28;cursor:default}
+.mxbar{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.btn{background:var(--card2);border:1px solid var(--edge);color:var(--fg);border-radius:6px;
+ padding:5px 10px;cursor:pointer;font-size:11px;font-family:inherit}
+.btn:hover{border-color:var(--edge2)}
+.btn.on{background:#132b4d;border-color:var(--sel)}
+.seg{display:inline-flex;border:1px solid var(--edge);border-radius:6px;overflow:hidden}
+.seg button{background:var(--card2);border:0;border-right:1px solid var(--edge);color:var(--dim);
+ padding:5px 10px;cursor:pointer;font-size:11px;font-family:inherit}
+.seg button:last-child{border-right:0}
+.seg button.on{background:#132b4d;color:var(--fg)}
+.lbl{color:var(--dim);font-size:11px}
+
+/* ---------------------------------------------------------------- tables */
+details.tbl{border:1px solid var(--edge);border-radius:8px;margin-bottom:8px;background:var(--card)}
+details.tbl>summary{padding:9px 12px;cursor:pointer;font-size:12px;font-weight:600;
+ list-style:none;display:flex;align-items:center;gap:8px}
+details.tbl>summary::-webkit-details-marker{display:none}
+details.tbl>summary:before{content:"▸";color:var(--dim);font-size:10px;transition:.15s}
+details.tbl[open]>summary:before{transform:rotate(90deg)}
+details.tbl>summary .hint{color:var(--dim2);font-weight:400;font-size:11px;margin-left:auto}
+.tw{overflow-x:auto;padding:0 12px 12px}
+table.d{border-collapse:collapse;width:100%;font-size:11.5px;white-space:nowrap}
+table.d th,table.d td{padding:4px 9px;text-align:right;border-bottom:1px solid #22262d}
+table.d th{color:var(--dim);font-weight:600;text-align:right;position:sticky;top:0;
+ background:var(--card);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;
+ cursor:pointer;user-select:none}
+table.d th:hover{color:var(--fg)}
+table.d th .sar{color:var(--sel);margin-left:2px}
+table.d td:first-child,table.d th:first-child,
+table.d td.l,table.d th.l{text-align:left}
+table.d tbody tr:hover{background:#1e232a}
+table.d .num{font-family:ui-monospace,Menlo,monospace}
+.pos{color:var(--good)}.neg{color:var(--bad)}.mut{color:var(--dim2)}
+.tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;
+ border:1px solid}
+.tag.pass{color:var(--good);border-color:#245c37;background:#12261a}
+.tag.weak{color:var(--warn);border-color:#5c4a1c;background:#241d0e}
+.tag.inv{color:var(--bad);border-color:#5c2426;background:#261214}
+.tag.floor{color:var(--dim);border-color:var(--edge);background:var(--card2)}
+.note{color:var(--dim2);font-size:11px;margin-top:8px;line-height:1.6}
+
+/* ---------------------------------------------------------------- cards */
+.card{background:var(--card);border:1px solid var(--edge);border-radius:10px;
+ margin-bottom:12px;overflow:hidden;min-width:0;max-width:100%}
+.grp{min-width:0}
+.chead{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#13161b;
+ border-bottom:1px solid var(--edge);flex-wrap:wrap}
+.chead b{font-size:13px}
+.chead .dim{color:var(--dim);font-size:11px}
+.chead .pill{margin-left:auto;display:flex;gap:6px;align-items:center}
+.grp{padding:10px 12px;border-bottom:1px solid #20242b}
+.grp:last-child{border-bottom:0}
+.grp>h5{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim);
+ margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.grp.inputs>h5:before{content:"";width:7px;height:7px;border-radius:2px;background:var(--pre)}
+.grp.ctx>h5:before{content:"";width:7px;height:7px;border-radius:2px;background:var(--dim2)}
+.grp.outs>h5:before{content:"";width:7px;height:7px;border-radius:2px;background:var(--good)}
+.grp.ctx{background:#12141899}
+.row{display:flex;flex-wrap:nowrap;gap:10px;overflow-x:auto;overflow-y:hidden;
+ padding-bottom:6px;align-items:flex-start}
+.row::-webkit-scrollbar{height:9px}
+.row::-webkit-scrollbar-thumb{background:var(--edge2);border-radius:5px}
+.row::-webkit-scrollbar-track{background:#0d0f13}
+.cellbox{flex:0 0 210px;background:var(--card2);border:1px solid var(--edge);border-radius:8px;
+ padding:8px;display:flex;flex-direction:column;gap:6px}
+.cellbox.wide{flex:0 0 300px}
+.cellbox.blank{background:transparent !important;border:1px dashed #2a3038 !important;
+ opacity:.55;justify-content:center;min-height:150px}
+.cellbox.blank .bl{color:var(--dim2);font-size:10px;text-align:center;line-height:1.5}
+.cellbox.blank .bl b{color:var(--dim);font-weight:600;display:block;font-size:10.5px;margin-bottom:3px}
+
+/* ONE horizontal row per card: an input band, then the aligned five-tier output band. */
+.grp.all{padding:10px 12px}
+.grp.all .row{align-items:stretch}
+.band{display:flex;gap:10px;flex:0 0 auto;align-items:stretch}
+.out-band{border-left:2px dashed var(--edge2);margin-left:6px;padding-left:12px}
+.cellbox.in{background:#111c22;border-color:#1e3a44}
+.cellbox.ctxbox{background:#17181c;border-color:#2b2f36;opacity:.9}
+/* per-tier tint so the same model reads as the same colour down every card */
+.cellbox.out.prompt_only{background:#10161d;border-color:#25384a}
+.cellbox.out.prompt_endpoint{background:#0f1a20;border-color:#1f4657}
+.cellbox.out.specialist{background:#101d15;border-color:#20502f}
+.cellbox.out.specialist h4{color:#bfe9c6}
+.cellbox.out.generalist{background:#181229;border-color:#3d2f66}
+.cellbox.out.generalist h4{color:#d3c4f5}
+.cellbox.out.copier{background:#21131400;border:1px dashed #5c2426;opacity:.7}
+.cellbox.out.copier h4{color:#e79aa0}
+.demo{margin-top:2px;border-top:1px solid var(--edge);padding-top:4px}
+.demo .dl{display:block;color:var(--ref);font-size:9px;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+.demo video{aspect-ratio:3/4;width:100%;border-radius:4px}
+.hl{color:#7ecbff}
+.cellbox h4{font-size:11px;line-height:1.35}
+.cellbox h4 .arm{color:var(--dim);font-weight:400;display:block;font-size:10px}
+.cellbox video{width:100%;aspect-ratio:3/4;object-fit:cover;background:#000;border-radius:5px;
+ display:block}
+.cellbox .miss{width:100%;aspect-ratio:3/4;display:grid;place-items:center;color:var(--dim2);
+ background:#0b0d10;border-radius:5px;font-size:11px}
+.cellbox .fn{color:var(--dim2);font-size:10px;word-break:break-all;line-height:1.35}
+.ptext{font-size:11px;color:#c7d0da;line-height:1.5;max-height:170px;overflow:auto}
+
+/* ------------------------------------------------- CONDITIONING BAR */
+.cond{border:1px solid var(--edge);border-radius:5px;overflow:hidden;background:#0b0d10}
+.cond .track{display:flex;height:16px;position:relative}
+.cond .seg-p{background:linear-gradient(180deg,#2dd4bf,#14a89a)}
+.cond .seg-s{background:linear-gradient(180deg,#f5a524,#c47f10)}
+.cond .seg-g{flex:1;background:repeating-linear-gradient(-45deg,#1b1f26 0 5px,#141820 5px 10px)}
+.cond .seg-n{flex:1;background:repeating-linear-gradient(-45deg,#22262d 0 5px,#191d23 5px 10px)}
+.cond .cap{display:flex;justify-content:space-between;padding:3px 6px;font-size:9.5px;
+ letter-spacing:.03em;font-weight:600;text-transform:uppercase}
+.cond .cap .p{color:var(--pre)}
+.cond .cap .s{color:var(--suf)}
+.cond .cap .g{color:var(--dim2);font-weight:400;text-transform:none;letter-spacing:0}
+.cond .cap .none{color:var(--dim);font-weight:600}
+.refbar{display:flex;align-items:center;gap:6px;padding:4px 7px;border-radius:5px;
+ background:#1e1a33;border:1px solid #3b3163;font-size:10px;color:#c9bcf5;font-weight:600;
+ letter-spacing:.02em}
+.refbar.mismatch{background:#2c1618;border-color:#5c2426;color:#f0a7ab}
+.refbar .clip{font-weight:400;color:#9b8fd0;font-family:ui-monospace,Menlo,monospace;
+ overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.refbar.mismatch .clip{color:#d1898e}
+
+.chips{display:flex;flex-wrap:wrap;gap:3px}
+.chip{font-size:9.5px;padding:1px 5px;border-radius:4px;border:1px solid var(--edge);
+ color:var(--dim);background:#14171c;font-family:ui-monospace,Menlo,monospace}
+.chip b{color:var(--fg);font-weight:600}
+.chip.g{border-color:#245c37;color:var(--good)}
+.chip.r{border-color:#5c2426;color:var(--bad)}
+.chip.a{border-color:#5c4a1c;color:var(--warn)}
+.chip.big{font-size:11px;padding:2px 7px}
+.pbtn{background:#132b4d;border:1px solid var(--sel);color:#cfe2fb;border-radius:5px;
+ padding:3px 9px;cursor:pointer;font-size:10.5px;font-family:inherit}
+.empty{padding:36px;text-align:center;color:var(--dim2)}
+.more{padding:12px;text-align:center}
+</style>
+
+<div class="wrap">
+<header>
+  <h1>eval ladder — results viewer</h1>
+  <div class="sub" id="sub"></div>
+</header>
+
+<div class="panel">
+  <h2>ontology — click cells, row or column headers to select (multi-select)</h2>
+  <table class="mx" id="mx"></table>
+  <div class="mxbar">
+    <button class="btn" onclick="selAll(1)">select all</button>
+    <button class="btn" onclick="selAll(0)">clear</button>
+    <span class="lbl" style="margin-left:8px">arms</span>
+    <span class="seg" id="tiers"></span>
+    <span class="lbl" style="margin-left:8px">seed</span>
+    <span class="seg" id="seeds"></span>
+    <span class="lbl" style="margin-left:8px">donor class</span>
+    <select id="donor" class="btn"></select>
+    <span class="lbl" id="selinfo" style="margin-left:auto"></span>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>statistics for the selection</h2>
+  <div id="stats"></div>
+</div>
+
+<div class="panel">
+  <h2 style="display:flex;align-items:center;gap:10px">generations
+    <span class="lbl" id="cardinfo" style="text-transform:none;letter-spacing:0"></span></h2>
+  <div id="cards"></div>
+  <div class="more" id="more"></div>
+</div>
+</div>
+
+<script>
+const D = /*__DATA__*/null;
+const PAGE = 25;
+let shown = PAGE;
+
+// ---------------------------------------------------------------- selection state
+const sel = new Set();                       // "novelty|content"
+let tiers = new Set(["specialist","generalist"]);
+let seed = String(D.meta.seeds[0]);
+let donor = "";
+
+const keyOf = (n,c) => n+"|"+c;
+const fmt = (v,dp=3) => (v==null||!isFinite(v)) ? "—" : v.toFixed(dp);
+const pct = v => (v==null||!isFinite(v)) ? "—" : (v*100).toFixed(1)+"%";
+const mean = a => { a = a.filter(x=>x!=null&&isFinite(x)); return a.length? a.reduce((s,x)=>s+x,0)/a.length : null; };
+
+// ---------------------------------------------------------------- matrix
+function drawMatrix(){
+  const t = document.getElementById("mx");
+  let h = "<tr><th class='corner'></th>";
+  for(const c of D.content_order)
+    h += `<th class="ch" onclick="togCol('${c}')">${D.content_label[c]}</th>`;
+  h += "</tr>";
+  for(const n of D.novelty_order){
+    h += `<tr><th class="rh" onclick="togRow('${n}')">${D.novelty_label[n]}</th>`;
+    for(const c of D.content_order){
+      const k = keyOf(n,c), cnt = D.matrix[k]||0;
+      h += cnt===0
+        ? `<td class="c empty"><div class="n">–</div></td>`
+        : `<td class="c ${sel.has(k)?"on":""}" onclick="tog('${k}')">
+             <div class="n">${cnt}</div><div class="l">rows</div></td>`;
+    }
+    h += "</tr>";
+  }
+  t.innerHTML = h;
+}
+function tog(k){ sel.has(k)?sel.delete(k):sel.add(k); render(); }
+function togRow(n){
+  const ks = D.content_order.map(c=>keyOf(n,c)).filter(k=>(D.matrix[k]||0)>0);
+  const all = ks.every(k=>sel.has(k));
+  ks.forEach(k=> all?sel.delete(k):sel.add(k)); render();
+}
+function togCol(c){
+  const ks = D.novelty_order.map(n=>keyOf(n,c)).filter(k=>(D.matrix[k]||0)>0);
+  const all = ks.every(k=>sel.has(k));
+  ks.forEach(k=> all?sel.delete(k):sel.add(k)); render();
+}
+function selAll(on){
+  sel.clear();
+  if(on) for(const k in D.matrix) if(D.matrix[k]>0) sel.add(k);
+  render();
+}
+
+// ---------------------------------------------------------------- filtering
+const TIERS = ["prompt_only","prompt_endpoint","specialist","generalist","copier"];
+const flat  = card => TIERS.flatMap(t => card.slots[t]);                 // every gen in a card
+const treatmentsOf = card => card.slots.specialist.concat(card.slots.generalist);
+
+/** A card matches the selection if it carries a treatment (specialist/generalist) in a selected
+ *  ontology cell, of an enabled tier, and (if set) the chosen donor. */
+function cardMatches(card){
+  const t = treatmentsOf(card).filter(g =>
+    tiers.has(g.tier) &&
+    (!sel.size || sel.has(keyOf(g.novelty,g.content))) &&
+    (!donor || g.donor===donor));
+  return t.length ? t : null;
+}
+function selectedCards(){
+  const out = [];
+  for(const card of D.cards){ const hit = cardMatches(card); if(hit) out.push({card, hit}); }
+  return out;
+}
+function selectedGens(){ return selectedCards().flatMap(e => e.hit); }   // matching treatments
+function shownGens(){ return selectedCards().flatMap(e => flat(e.card)); } // + baselines/copier
+
+// ---------------------------------------------------------------- statistics
+/** Per cell: level = mean pool-%, margin = mean(treatment − CLEAN prompt+endpoint baseline),
+ *  paired per card (same endpoint) so it is honest; unit of analysis is the donor class
+ *  (per-donor mean, then a sign test at 80%). The base+reference copier is never the baseline. */
+function cellStats(entries){
+  const by = {};
+  for(const {card,hit} of entries){
+    const base = card.slots.prompt_endpoint[0];      // clean, donor-independent, this endpoint
+    for(const g of hit) (by[g.cell] = by[g.cell]||[]).push({g, base});
+  }
+  return Object.entries(by).map(([cell,items])=>{
+    const gs = items.map(i=>i.g);
+    const type = [...new Set(gs.map(g=>g.pct_type))].join("/");
+    const perDonor = {};
+    for(const {g,base} of items) if(base && base.pct!=null && g.pct!=null)
+      (perDonor[g.donor] = perDonor[g.donor]||[]).push(g.pct - base.pct);
+    const dn = Object.keys(perDonor).length;
+    const pos = Object.values(perDonor).filter(v=>mean(v)>0).length;
+    return {cell, n:gs.length, type, level: mean(gs.map(g=>g.pct)),
+            dpp: dn ? mean(Object.values(perDonor).flat())*100 : null, pos, dn,
+            base: mean(items.map(i=>i.base?i.base.pct:null))};
+  });
+}
+
+function headlineTable(entries){
+  const rows = cellStats(entries).sort((a,b)=>
+    (b.level==null?-Infinity:b.level) - (a.level==null?-Infinity:a.level));
+  if(!rows.length) return "<div class='empty'>nothing selected</div>";
+  let h = `<div class="tw"><table class="d"><thead><tr>
+    <th class="l">cell</th><th>n</th><th>%type</th><th>prompt+end base %</th><th>level %</th>
+    <th>Δpp vs clean base</th><th>donors +</th><th class="l">verdict</th></tr></thead><tbody>`;
+  let pending = false;
+  for(const r of rows){
+    if(r.dn===0) pending = true;
+    const v = r.dn===0 ? `<span class="tag floor">baseline pending</span>`
+      : (r.pos/r.dn>=0.8) ? `<span class="tag pass">PASS</span>`
+      : `<span class="tag weak">weak</span>`;
+    h += `<tr><td class="l">${r.cell}</td><td class="num">${r.n}</td>
+      <td class="num mut">${r.type}</td>
+      <td class="num mut">${r.base==null?"—":(r.type==="same"?pct(r.base):"("+pct(r.base)+")")}</td>
+      <td class="num"><b>${r.type==="same"?pct(r.level):"("+pct(r.level)+")"}</b></td>
+      <td class="num ${r.dpp==null?"":(r.dpp>0?"pos":"neg")}">${r.dpp==null?"—":(r.dpp>0?"+":"")+r.dpp.toFixed(1)}</td>
+      <td class="num">${r.dn?r.pos+"/"+r.dn:"—"}</td><td class="l">${v}</td></tr>`;
+  }
+  h += "</tbody></table></div>";
+  h += `<div class="note">Margin is vs the <b>clean prompt+endpoint baseline</b> (sidedness-aware,
+    no reference) — <b>not</b> the base+reference copier. <b>%_same</b> is cross-class comparable;
+    <b>(%_proxy)</b> is content-capped (Δpp is the claim). Unit = donor class, sign test, PASS at
+    ≥80% positive.` + (pending ? ` <b>“baseline pending”</b> = the clean prompt+endpoint baseline
+    for these endpoints was not generated (the baseline lane was stopped 2026-07-23); their margin
+    needs that lane re-run.` : "") + `</div>`;
+  return h;
+}
+
+function metricTable(gens, group){
+  const ms = D.metrics.filter(m=>m.group===group);
+  const by = {};
+  for(const g of gens) (by[g.cell+" "+g.arm] = by[g.cell+" "+g.arm]||[]).push(g);
+  let h = `<div class="tw"><table class="d"><thead><tr><th class="l">cell</th><th class="l">arm</th><th>n</th>`;
+  for(const m of ms) h += `<th title="${m.dir==="up"?"higher is better":m.dir==="down"?"lower is better":"informational"}">${m.label}${m.dir==="up"?" ↑":m.dir==="down"?" ↓":""}</th>`;
+  h += `</tr></thead><tbody>`;
+  for(const k of Object.keys(by).sort()){
+    const gs = by[k], [cell,arm] = k.split(" ");
+    h += `<tr><td class="l">${cell}</td><td class="l mut">${arm}</td><td class="num">${gs.length}</td>`;
+    for(const m of ms){
+      const v = mean(gs.map(g=>g.m[m.k]));
+      h += `<td class="num">${fmt(v,m.dp)}</td>`;
+    }
+    h += "</tr>";
+  }
+  return h + "</tbody></table></div>";
+}
+
+function flagTable(gens){
+  const by = {};
+  for(const g of gens) (by[g.cell+" "+g.arm] = by[g.cell+" "+g.arm]||[]).push(g);
+  let h = `<div class="tw"><table class="d"><thead><tr><th class="l">cell</th><th class="l">arm</th><th>n</th>`;
+  for(const f of D.flags) h += `<th>${f.label}</th>`;
+  h += `</tr></thead><tbody>`;
+  for(const k of Object.keys(by).sort()){
+    const gs = by[k], [cell,arm] = k.split(" ");
+    h += `<tr><td class="l">${cell}</td><td class="l mut">${arm}</td><td class="num">${gs.length}</td>`;
+    for(const f of D.flags) h += `<td class="num">${fmt(mean(gs.map(g=>g.f[f.k])),3)}</td>`;
+    h += "</tr>";
+  }
+  return h + "</tbody></table></div>";
+}
+
+function armRollup(gens){
+  const by = {};
+  for(const g of gens) (by[g.arm] = by[g.arm]||[]).push(g);
+  let h = `<div class="tw"><table class="d"><thead><tr><th class="l">arm</th><th>items</th>
+    <th>raw app_ref</th><th>pool-%</th><th>copy_max ↓</th><th>near_copy ↓</th>
+    <th>prefix_dino ↑</th><th>seam_z ↓</th></tr></thead><tbody>`;
+  for(const a of Object.keys(by).sort()){
+    const gs = by[a];
+    h += `<tr><td class="l">${a}</td><td class="num">${gs.length}</td>
+      <td class="num">${fmt(mean(gs.map(g=>g.m.app_ref)),4)}</td>
+      <td class="num">${pct(mean(gs.map(g=>g.pct)))}</td>
+      <td class="num">${fmt(mean(gs.map(g=>g.m.copy_max)),3)}</td>
+      <td class="num">${fmt(mean(gs.map(g=>g.f.near_copy)),3)}</td>
+      <td class="num">${fmt(mean(gs.map(g=>g.m.prefix_dino)),3)}</td>
+      <td class="num">${fmt(mean(gs.map(g=>g.m.max_seam_z)),2)}</td></tr>`;
+  }
+  return h + "</tbody></table></div>";
+}
+
+function drawStats(){
+  const entries = selectedCards();
+  const el = document.getElementById("stats");
+  if(!entries.length){ el.innerHTML = "<div class='empty'>no rows match — select a matrix cell</div>"; return; }
+  const gens = entries.flatMap(e => e.hit);      // treatments
+  const all  = entries.flatMap(e => flat(e.card)); // + baselines + copier
+  el.innerHTML =
+    `<details class="tbl" open><summary>headline — pool-% and margin vs the clean baseline
+       <span class="hint">${gens.length} treatment rows</span></summary>
+       ${headlineTable(entries)}</details>
+     <details class="tbl"><summary>reference-relative metrics
+       <span class="hint">M1a · M1b · M1c · M2a — all tiers, mean over the same-class GT pool</span></summary>
+       ${metricTable(all,"ref")}</details>
+     <details class="tbl"><summary>per-generation metrics
+       <span class="hint">M2b intrusion · M3a endpoint fidelity · M3b seam · timing scalars — all tiers</span></summary>
+       ${metricTable(all,"gen")}</details>
+     <details class="tbl"><summary>flag rates
+       <span class="hint">fraction of scored generations — all tiers</span></summary>${flagTable(all)}</details>
+     <details class="tbl"><summary>per-arm rollup
+       <span class="hint">every arm in the selection</span></summary>${armRollup(all)}</details>`;
+}
+
+// ---------------------------------------------------------------- conditioning bar
+/** The distinct visual identity of each conditioning mode — read it before the video. */
+function condBar(g, card){
+  const F = D.meta.frames, P = D.meta.px_prefix, S = D.meta.suffix_gen_frames;
+  let bar;
+  if(g.cond === "none"){
+    bar = `<div class="track"><div class="seg-n"></div></div>
+           <div class="cap"><span class="none">prompt only — no conditioning</span>
+             <span class="g">${F}f generated</span></div>`;
+  } else if(g.cond === "prefix"){
+    bar = `<div class="track">
+             <div class="seg-p" style="width:${100*P/F}%"></div><div class="seg-g"></div></div>
+           <div class="cap"><span class="p">prefix ${P}f</span>
+             <span class="g">${F-P}f generated · one-sided, no end anchor</span></div>`;
+  } else {
+    bar = `<div class="track">
+             <div class="seg-p" style="width:${100*P/F}%"></div><div class="seg-g"></div>
+             <div class="seg-s" style="width:${100*S/F}%"></div></div>
+           <div class="cap"><span class="p">prefix ${P}f</span>
+             <span class="g">${F-P-S}f generated</span><span class="s">suffix ${S}f</span></div>`;
+  }
+  let ref = "";
+  if(g.ref) ref = `<div class="refbar ${g.mismatched_ref?"mismatch":""}">
+      <span>${g.mismatched_ref?"✕ mismatched demo (control)":"◧ in-context demo"}</span>
+      <span class="clip">${g.ref}</span></div>`;
+  return ref + `<div class="cond">${bar}</div>`;
+}
+
+// ---------------------------------------------------------------- cards
+function vid(src, cls=""){
+  // D.meta.rel hops from the viewer's location back to the repo root so the browser resolves the
+  // repo-root-relative path correctly (this is why videos 404'd before).
+  return src ? `<video class="${cls}" preload="metadata" muted loop playsinline autoplay
+                  data-src="${D.meta.rel}${src}"></video>`
+             : `<div class="miss">not available</div>`;
+}
+// The five aligned tiers, fixed left→right, so the same model is always the same column.
+const TIER_LABEL = {
+  prompt_only:    ["① PROMPT ONLY",      "baseline · no conditioning"],
+  prompt_endpoint:["② PROMPT + ENDPOINT","baseline · prefix/suffix, no demo"],
+  specialist:     ["③ SPECIALIST",       "transition in the weights"],
+  generalist:     ["④ IC-LoRA GENERALIST","transition from a demo of the class"],
+  copier:         ["⚠ BASE + DEMO",       "NOT a baseline — copies the demo"],
+};
+function outBox(tier, list, card){
+  const [name, sub] = TIER_LABEL[tier];
+  if(!list.length){
+    const why = (tier==="prompt_only"||tier==="prompt_endpoint")
+        ? "clean baseline<br>not generated<br>(lane stopped)"
+      : tier==="copier" ? "no copier<br>for this task"
+      : tier==="specialist" && card.donor_heldout
+        ? "held-out class —<br>no specialist exists<br>(by design)"
+      : "not run<br>for this task";
+    return `<div class="cellbox out ${tier} blank"><div class="bl"><b>${name}</b>${why}</div></div>`;
+  }
+  return list.map(g=>{
+    const chips = g.scored ? [
+      `<span class="chip big">%ceil <b>${pct(g.pct)}</b></span>`,
+      `<span class="chip">app <b>${fmt(g.m.app_ref,3)}</b></span>`,
+      `<span class="chip">copy <b>${fmt(g.m.copy_max,2)}</b></span>`,
+      `<span class="chip ${g.m.max_seam_z>6?"r":g.m.max_seam_z>3?"a":""}">seam z <b>${fmt(g.m.max_seam_z,1)}</b></span>`,
+      `<span class="chip">pre_dino <b>${fmt(g.m.prefix_dino,3)}</b></span>`,
+    ] : [`<span class="chip a big">unscored — video only</span>`];
+    if(g.scored && g.f.near_copy>0) chips.push(`<span class="chip r">near_copy ${fmt(g.f.near_copy,2)}</span>`);
+    const lbl = `${g.cell} · ${g.novelty}`;
+    // the box only INDICATES its inputs (bar + ribbon); the demo clip itself lives in INPUTS
+    return `<div class="cellbox out ${tier}">
+      <h4>${name}<span class="arm">${sub} · ${lbl}</span></h4>
+      ${condBar(g,card)}
+      ${vid(g.videos[seed] || Object.values(g.videos)[0])}
+      <div class="chips">${chips.join("")}</div></div>`;
+  }).join("");
+}
+
+// One card = one transition applied to one endpoint. Everything — inputs, context, the five tier
+// outputs — lives in ONE horizontal scrollable row, so the tiers align vertically across cards.
+function cardHtml(entry){
+  const c = entry.card;
+  // INPUTS owns every input; each output box only INDICATES which of these it received
+  // (its conditioning bar + reference ribbon). The IC demo is an input to ④/⚠ only.
+  const refBoxes = (c.refs||[]).map(r=>
+    `<div class="cellbox in" style="border-color:${r.mismatched?'#5c2426':'#3b3163'};background:${r.mismatched?'#1c1113':'#141127'}">
+       <h4>${r.mismatched?"✕ MISMATCHED DEMO":"◧ IC DEMO"} · ${r.cls||"?"}
+         <span class="arm">input to ${r.tiers.map(t=>t==="generalist"?"④ generalist":"⚠ base+demo").join(" + ")} only</span></h4>
+       ${vid(r.video)}
+       <div class="fn">${r.clip}</div></div>`).join("");
+  const inputs =
+    `<div class="cellbox in wide"><h4>PROMPT<span class="arm">identical for every tier</span></h4>
+       <div class="ptext">${c.prompt.replace(/</g,"&lt;")}</div></div>` +
+    `<div class="cellbox in"><h4>PREFIX · ${D.meta.px_prefix}f<span class="arm">start anchor</span></h4>
+       ${vid(c.prefix_video)}</div>` +
+    (c.sided==="two"
+      ? `<div class="cellbox in"><h4>SUFFIX · ${D.meta.px_prefix}f<span class="arm">end anchor</span></h4>${vid(c.suffix_video)}</div>`
+      : `<div class="cellbox in blank"><div class="bl"><b>suffix</b>one-sided<br>no end anchor</div></div>`) +
+    refBoxes +
+    `<div class="cellbox ctxbox"><h4>ENDPOINT SOURCE<span class="arm">context · not an input</span></h4>
+       ${c.endpoint_video?vid(c.endpoint_video):`<div class="miss">DAVIS — off-distribution</div>`}
+       <div class="fn">${c.endpoint} · ${c.endpoint_class||"davis"}</div></div>`;
+
+  const outs = ["prompt_only","prompt_endpoint","specialist","generalist","copier"]
+    .map(t => outBox(t, c.slots[t], c)).join("");
+
+  const tags = [...new Set(treatmentsOf(c).map(g=>g.novelty+" · "+g.content))];
+  return `<div class="card">
+    <div class="chead"><b>${c.endpoint}</b>
+      <span class="dim">transition <b class="hl">${c.donor}</b> · ${c.sided}-sided · ${tags.join(" | ")}</span>
+      <span class="pill"><button class="pbtn" onclick="playAll(this)">↻ restart row synced</button></span></div>
+    <div class="grp all"><div class="row">
+      <div class="band in-band">${inputs}</div>
+      <div class="band out-band">${outs}</div>
+    </div></div>
+  </div>`;
+}
+
+function drawCards(){
+  const entries = selectedCards();
+  document.getElementById("cardinfo").textContent =
+    `${entries.length} transition×endpoint rows · showing ${Math.min(shown,entries.length)}`;
+  const el = document.getElementById("cards");
+  if(!entries.length){ el.innerHTML = "<div class='empty'>no rows match the selection</div>";
+    document.getElementById("more").innerHTML=""; return; }
+  el.innerHTML = entries.slice(0,shown).map(cardHtml).join("");
+  document.getElementById("more").innerHTML = entries.length>shown
+    ? `<button class="btn" onclick="shown+=${PAGE};drawCards()">show ${Math.min(PAGE,entries.length-shown)} more of ${entries.length-shown}</button>` : "";
+  lazy();
+}
+
+// video: autoplay everything that scrolls into view, pause what leaves (keeps many <video>
+// elements cheap). Muted+playsinline+autoplay means the browser allows unattended playback.
+let io;
+function lazy(){
+  if(io) io.disconnect();
+  io = new IntersectionObserver(es=>es.forEach(e=>{
+    const v = e.target;
+    if(e.isIntersecting){ if(!v.src) v.src = v.dataset.src; v.play().catch(()=>{}); }
+    else v.pause();
+  }), {rootMargin:"300px"});
+  document.querySelectorAll("video").forEach(v=>io.observe(v));
+}
+// restart every video in this card from frame 0 together, so the whole row loops in sync
+function playAll(btn){
+  const vids = [...btn.closest(".card").querySelectorAll("video")];
+  vids.forEach(v=>{ if(!v.src) v.src = v.dataset.src; });
+  const go = () => vids.forEach(v=>{ v.currentTime = 0; v.play().catch(()=>{}); });
+  const notReady = vids.filter(v=>v.readyState < 1);
+  if(!notReady.length){ go(); return; }
+  let left = notReady.length;
+  notReady.forEach(v=>v.addEventListener("loadedmetadata",
+    ()=>{ if(--left === 0) go(); }, {once:true}));
+}
+
+// ---------------------------------------------------------------- chrome
+function drawControls(){
+  document.getElementById("tiers").innerHTML =
+    ["specialist","generalist"].map(t=>
+      `<button class="${tiers.has(t)?"on":""}" onclick="togTier('${t}')">${t}</button>`).join("");
+  document.getElementById("seeds").innerHTML = D.meta.seeds.map(s=>
+    `<button class="${String(s)===seed?"on":""}" onclick="setSeed('${s}')">${s}</button>`).join("");
+  const donors = [...new Set(D.cards.map(c=>c.donor))].filter(Boolean).sort();
+  const d = document.getElementById("donor");
+  if(!d.options.length){
+    d.innerHTML = `<option value="">all (${donors.length})</option>` +
+      donors.map(x=>`<option value="${x}">${x}</option>`).join("");
+    d.onchange = e => { donor = e.target.value; shown = PAGE; render(); };
+  }
+}
+function togTier(t){ tiers.has(t)?tiers.delete(t):tiers.add(t); shown=PAGE; render(); }
+function setSeed(s){ seed = s; render(); }
+
+function render(){
+  shown = Math.max(shown, PAGE);
+  drawMatrix(); drawControls(); drawStats(); drawCards();
+  const n = selectedGens().length;
+  document.getElementById("selinfo").textContent =
+    sel.size ? `${sel.size} ontology cells · ${n} generations` : `all ontology cells · ${n} generations`;
+}
+
+// Any statistics table: click a header to sort by that column; click again to flip direction.
+// Text columns sort lexically, numeric columns (incl. %, parens, +) numerically; blanks sink.
+document.addEventListener("click", e => {
+  const th = e.target.closest("table.d th");
+  if(!th) return;
+  const table = th.closest("table"), head = table.tHead.rows[0], body = table.tBodies[0];
+  const idx = [...head.cells].indexOf(th);
+  const dir = th.dataset.dir === "asc" ? "desc" : "asc";
+  [...head.cells].forEach(c => { c.removeAttribute("data-dir"); c.querySelector(".sar")?.remove(); });
+  th.dataset.dir = dir;
+  const num = td => {
+    const t = td.textContent.trim().replace(/[()%,]/g, "").replace(/^\+/, "");
+    if(t === "" || t === "—") return null;
+    const n = parseFloat(t);
+    return isNaN(n) ? t.toLowerCase() : n;
+  };
+  [...body.rows].map(r => [r, num(r.cells[idx])])
+    .sort((a, b) => {
+      const x = a[1], y = b[1];
+      if(x === null) return 1;            // blanks always sink
+      if(y === null) return -1;
+      if(typeof x === "number" && typeof y === "number") return dir === "asc" ? x - y : y - x;
+      return dir === "asc" ? String(x).localeCompare(y) : String(y).localeCompare(x);
+    })
+    .forEach(([r]) => body.appendChild(r));
+  const ar = document.createElement("span");
+  ar.className = "sar"; ar.textContent = dir === "asc" ? "▲" : "▼";
+  th.appendChild(ar);
+});
+
+const m = D.meta;
+document.getElementById("sub").innerHTML =
+  `<span class="mono">${m.ladder}</span> · design <b class="mono">v${m.design_version}</b> ·
+   latest record <b class="mono">${m.run.id}</b> <span class="mono">(${m.run.status})</span> ·
+   instrument <span class="mono">${m.instrument}</span> ·
+   ${m.registry_rows} registry rows · ${m.cards} transition×endpoint tasks · ${m.generations} videos ·
+   seeds ${m.seeds.join(", ")} · ${m.frames}f @ prefix ${m.px_prefix} / suffix ${m.suffix_gen_frames}
+   <br>side-by-side coverage: <b>${m.coverage.spec_and_gen}</b> of ${m.coverage.tasks} tasks carry
+   specialist AND generalist on the same endpoint (${m.coverage.spec_only} specialist-only ·
+   ${m.coverage.gen_only} generalist-only, of which ${m.coverage.heldout_tasks} are held-out donors —
+   no specialist can exist by design)`;
+selAll(1);
+</script>

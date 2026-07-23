@@ -1,0 +1,73 @@
+# ladder2 — the FOREIGN endpoint roster (DAVIS): off-distribution real footage.
+#
+# One fixed roster, shared across every donor and arm, so the foreign lane costs a handful of
+# conditioning clips rather than a combinatorial explosion. Each entry is a pseudo-clip whose
+# conditioning windows live in conds/ exactly like a corpus clip, so nothing downstream needs
+# a special case.
+#
+# Selection rule (from the 90-sequence screen): a DISTINCTIVE FOREGROUND OBJECT that survives
+# the 854x480 landscape -> 480x640 portrait centre crop. Verified frame-by-frame on the
+# RENDERED windows, not on the raw sequence:
+#   * car-turn was in the proposed roster and is REJECTED — that sequence is shot FROM the car,
+#     so the portrait crop contains a road and a mountain and no distinctive object at all.
+#     Replaced by `hike`.
+#   * two-sided suffixes use the FIRST 9 frames of the B sequence, not the last: DAVIS clips are
+#     not transitions, so any well-framed window is a valid "end scene", and the opening frames
+#     are consistently better composed (rhino's last frames crop to a headless rump).
+#
+# Captions are hand-written static snapshots in the same voice as the corpus S1/S2, carrying no
+# transition wording, and go through the same render_prompt() as every other row.
+# Block style only — a comma inside YAML flow style silently truncates the caption.
+
+crop: "scale=-2:640,crop=480:640"    # landscape 854x480 -> portrait 480x640, centred
+window_frames: 9
+
+one_sided:
+  davis_lucia:
+    sequence: lucia
+    caption: >-
+      A woman in a dark sleeveless dress with a bright orange backpack walks along a paved
+      path beside tall sunlit grass and green shrubs
+  davis_mallard_water:
+    sequence: mallard-water
+    caption: >-
+      A mallard duck with brown speckled plumage swims across rippling green water in
+      bright daylight
+  davis_hike:
+    sequence: hike
+    caption: >-
+      A hiker in a light purple shirt and olive trousers carrying a large black backpack
+      walks across a bright rocky mountain slope
+
+two_sided:
+  davis_blackswan_rhino:
+    prefix:
+      sequence: blackswan
+      caption: >-
+        A black swan with a red and white beak glides across dark green water in front of
+        dense leafy foliage
+    suffix:
+      sequence: rhino
+      caption: >-
+        a rhinoceros stands on red earth beside a rocky wall, framed between tall tree trunks
+  davis_tennis_snowboard:
+    prefix:
+      sequence: tennis
+      caption: >-
+        A tennis player in a white shirt and black shorts runs across a red clay court in
+        front of a blue backdrop
+    suffix:
+      sequence: snowboard
+      caption: >-
+        a snowboarder in a black jacket and helmet rides across bright packed snow on a
+        blue and white board
+  davis_bear_elephant:
+    prefix:
+      sequence: bear
+      caption: >-
+        A brown bear walks across gravel and dirt in front of a grey stone wall
+    suffix:
+      sequence: elephant
+      caption: >-
+        a pale grey elephant walks across sandy ground beside white rocks and a shaded
+        enclosure wall

@@ -1,0 +1,71 @@
+# ladder2 — the arms (the only hand-written config in the campaign).
+#
+# Every generation row in registry.jsonl names one of these arms; run_gen.py loads the arm's
+# adapter and generates that arm's rows. Checkpoints are PINNED here before any score is seen
+# (fixed-ckpt selection, pre-registered — no post-hoc best-checkpoint picking).
+
+token: sksz            # transition-slot token; probe-gated (fallback qvtr). Set by train/token_verdict.py.
+seeds: [42, 43]        # >=2 seeds per eval item
+resolution: [480, 640, 121]
+inference: {steps: 30, guidance_scale: 4.0, stg_scale: 1.0, stg_blocks: [29], stg_mode: stg_v}
+
+targets:
+  attn: [attn1.to_k, attn1.to_q, attn1.to_v, attn1.to_out.0,
+         attn2.to_k, attn2.to_q, attn2.to_v, attn2.to_out.0]
+  attn_ffn: [attn1.to_k, attn1.to_q, attn1.to_v, attn1.to_out.0,
+             attn2.to_k, attn2.to_q, attn2.to_v, attn2.to_out.0,
+             ff.net.0.proj, ff.net.2]
+
+arms:
+  base:
+    kind: base
+    adapter: null
+    targets: null
+    note: no adapter; same conditioning + prompt as its treatment twin (keyed by input hash)
+
+  text_floor:
+    kind: text_floor
+    adapter: null
+    targets: null
+    conditioning: none
+    note: prompt only — no prefix/suffix/reference. If it sits near the pool floor, the leak is gone.
+
+  # ---- v2.1.0: the two CLEAN baselines the comparison needs, generated on the treatment
+  # endpoints (owner call 2026-07-23). Neither carries a reference, so neither can copy a demo.
+  base_prompt:
+    kind: base
+    adapter: null
+    targets: null
+    conditioning: none
+    # NOTE: never put a bare "#N" inside these unquoted scalars — YAML starts a comment at
+    # "space + #", silently truncating (base_prompt) or breaking the parse on the continuation
+    # line (base_cond). This killed generation jobs 9646776-78 at yaml.safe_load.
+    note: "prompt only, on a treatment endpoint (sidedness-aware). Baseline #1."
+  base_cond:
+    kind: base
+    adapter: null
+    targets: null
+    note: "prompt + endpoint conditioning (prefix/suffix), NO reference. Baseline #2 — the
+      honest no-adapter twin of specialist/generalist (base+reference is a copier, never a
+      baseline)."
+
+  spec_animalization:      {kind: specialist, class: animalization,      targets: attn, step: 2000}
+  spec_color_rain:         {kind: specialist, class: color_rain,         targets: attn, step: 2000}
+  spec_gas_transformation: {kind: specialist, class: gas_transformation, targets: attn, step: 2000}
+  spec_hero_flight:        {kind: specialist, class: hero_flight,        targets: attn, step: 2000}
+  spec_illustration_scene: {kind: specialist, class: illustration_scene, targets: attn, step: 2000}
+  spec_polygon:            {kind: specialist, class: polygon,            targets: attn, step: 2000}
+  spec_portal:             {kind: specialist, class: portal,             targets: attn, step: 2000}
+  spec_shadow:             {kind: specialist, class: shadow,             targets: attn, step: 2000}
+  spec_shadow_smoke:       {kind: specialist, class: shadow_smoke,       targets: attn, step: 2000}
+  spec_super_fast_run:     {kind: specialist, class: super_fast_run,     targets: attn, step: 2000}
+  spec_wireframe:          {kind: specialist, class: wireframe,          targets: attn, step: 2000}
+
+  ic_gen:
+    kind: generalist
+    targets: attn_ffn
+    step: 5000
+    note: IC-LoRA; the reference clip carries the transition. Trained on held-in classes only.
+
+# adapter path template for trained arms (filled by run_gen.py)
+adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors

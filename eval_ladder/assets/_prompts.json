@@ -1,0 +1,66 @@
+{
+ "color_rain_1": {
+  "side": "onesided",
+  "role": "spec seen\u00b7same (train)",
+  "s1": "A young man with slicked-back dark hair and a serious expression crouches in front of a chain-link fence, wearing a bright red sweatshirt and dark pants under soft natural light.",
+  "s2": "a young man with dark hair sits outdoors in front of a chain-link fence under soft daylight, with glossy orange liquid coating his face, hands, red sweatshirt, and dark pants",
+  "prompt_new": "A young man with slicked-back dark hair and a serious expression crouches in front of a chain-link fence, wearing a bright red sweatshirt and dark pants under soft natural light. sksz.",
+  "prompt_old": "A young man with slicked-back dark hair and a serious expression crouches in front of a chain-link fence, wearing a bright red sweatshirt and dark pants under soft natural light. The scene transforms into a young man with dark hair sits outdoors in front of a chain-link fence under soft daylight, with glossy orange liquid coating his face, hands, red sweatshirt, and dark pants."
+ },
+ "color_rain_0": {
+  "side": "onesided",
+  "role": "spec/gen unseen\u00b7same (test)",
+  "s1": "A woman with long black hair and large sunglasses stands in a warm-lit kitchen, wearing a brown leather jacket, a light blue button-down shirt, and a brown skirt while holding a white telephone receiver to her ear.",
+  "s2": "a woman wearing sunglasses, a leather jacket, and a long skirt stands in a kitchen illuminated by warm orange light, holding a telephone receiver to her ear while red liquid drips down her and the surrounding room",
+  "prompt_new": "A woman with long black hair and large sunglasses stands in a warm-lit kitchen, wearing a brown leather jacket, a light blue button-down shirt, and a brown skirt while holding a white telephone receiver to her ear. sksz.",
+  "prompt_old": "A woman with long black hair and large sunglasses stands in a warm-lit kitchen, wearing a brown leather jacket, a light blue button-down shirt, and a brown skirt while holding a white telephone receiver to her ear. The scene transforms into a woman wearing sunglasses, a leather jacket, and a long skirt stands in a kitchen illuminated by warm orange light, holding a telephone receiver to her ear while red liquid drips down her and the surrounding room."
+ },
+ "shadow_smoke_1": {
+  "side": "twosided",
+  "role": "gen ref (train)",
+  "s1": "An older man in a flowing white traditional robe and a black hat rollerblades across a city crosswalk with cars and a pagoda-roofed building behind him.",
+  "s2": "a blond man in a navy suit and sunglasses carrying a briefcase while riding a skateboard down a suburban hill past stone steps and a green lawn",
+  "prompt_new": "An older man in a flowing white traditional robe and a black hat rollerblades across a city crosswalk with cars and a pagoda-roofed building behind him. sksz. a blond man in a navy suit and sunglasses carrying a briefcase while riding a skateboard down a suburban hill past stone steps and a green lawn.",
+  "prompt_old": "An older man in a flowing white traditional robe and a black hat rollerblades across a city crosswalk with cars and a pagoda-roofed building behind him. The scene transforms into a blond man in a navy suit and sunglasses carrying a briefcase while riding a skateboard down a suburban hill past stone steps and a green lawn."
+ },
+ "shadow_smoke_7": {
+  "side": "twosided",
+  "role": "spec unseen\u00b7same (test)",
+  "s1": "A teenager in a camouflage bucket hat, dark sunglasses and a red and navy gradient sweatshirt stands under a basketball hoop against a clear blue sky, holding a basketball under one arm, seen from a low angle.",
+  "s2": "a long-haired young man in a dark jacket, loose blue cargo trousers and teal sneakers climbing on top of a green metal dumpster in bright sunlight, his hair blowing across his face",
+  "prompt_new": "A teenager in a camouflage bucket hat, dark sunglasses and a red and navy gradient sweatshirt stands under a basketball hoop against a clear blue sky, holding a basketball under one arm, seen from a low angle. sksz. a long-haired young man in a dark jacket, loose blue cargo trousers and teal sneakers climbing on top of a green metal dumpster in bright sunlight, his hair blowing across his face.",
+  "prompt_old": "A teenager in a camouflage bucket hat, dark sunglasses and a red and navy gradient sweatshirt stands under a basketball hoop against a clear blue sky, holding a basketball under one arm, seen from a low angle. The scene transforms into a long-haired young man in a dark jacket, loose blue cargo trousers and teal sneakers climbing on top of a green metal dumpster in bright sunlight, his hair blowing across his face."
+ },
+ "animalization_0": {
+  "side": "onesided",
+  "role": "foreign recipient (test)",
+  "s1": "A woman in a red bomber jacket poses against a blue studio backdrop, hands on hips.",
+  "s2": "a shaggy brown dog standing on the same blue backdrop",
+  "prompt_new": "A woman in a red bomber jacket poses against a blue studio backdrop, hands on hips. sksz.",
+  "prompt_old": "A woman in a red bomber jacket poses against a blue studio backdrop, hands on hips. The scene transforms into a shaggy brown dog standing on the same blue backdrop."
+ },
+ "hero_flight_5": {
+  "side": "twosided",
+  "role": "gen zero-shot\u00b7same (held-out test)",
+  "s1": "A man with a beard and glasses, wearing a yellow beanie, a cream-colored sweater, and yellow trousers, sits in a cream armchair reading a book in a warm, sunlit room.",
+  "s2": "a person's arm in a beige knit sweater with a clenched fist is positioned in the foreground against a sunny urban landscape of multi-story buildings under a blue sky",
+  "prompt_new": "A man with a beard and glasses, wearing a yellow beanie, a cream-colored sweater, and yellow trousers, sits in a cream armchair reading a book in a warm, sunlit room. sksz. a person's arm in a beige knit sweater with a clenched fist is positioned in the foreground against a sunny urban landscape of multi-story buildings under a blue sky.",
+  "prompt_old": "A man with a beard and glasses, wearing a yellow beanie, a cream-colored sweater, and yellow trousers, sits in a cream armchair reading a book in a warm, sunlit room. The scene transforms into a person's arm in a beige knit sweater with a clenched fist is positioned in the foreground against a sunny urban landscape of multi-story buildings under a blue sky."
+ },
+ "gas_transformation_6": {
+  "side": "onesided",
+  "role": "gen zero-shot (held-out test)",
+  "s1": "A bearded man wearing a white cap, a green cable-knit quarter-zip sweater, blue pants, and white sneakers sits on a yellow fire hydrant next to a road under a clear blue sky.",
+  "s2": "a bright orange fire hydrant stands on a red curb next to a paved road under a clear blue sky, with a faint, loop-shaped white cloud directly above it and green hills in the background",
+  "prompt_new": "A bearded man wearing a white cap, a green cable-knit quarter-zip sweater, blue pants, and white sneakers sits on a yellow fire hydrant next to a road under a clear blue sky. sksz.",
+  "prompt_old": "A bearded man wearing a white cap, a green cable-knit quarter-zip sweater, blue pants, and white sneakers sits on a yellow fire hydrant next to a road under a clear blue sky. The scene transforms into a bright orange fire hydrant stands on a red curb next to a paved road under a clear blue sky, with a faint, loop-shaped white cloud directly above it and green hills in the background."
+ },
+ "illustration_scene_4": {
+  "side": "onesided",
+  "role": "gen zero-shot donor ref (held-out train)",
+  "s1": "A blonde woman with sunglasses and a headscarf blows a kiss with both hands at her cheeks.",
+  "s2": "the same portrait drawn as a flat comic illustration in yellow and black",
+  "prompt_new": "A blonde woman with sunglasses and a headscarf blows a kiss with both hands at her cheeks. sksz.",
+  "prompt_old": "A blonde woman with sunglasses and a headscarf blows a kiss with both hands at her cheeks. The scene transforms into the same portrait drawn as a flat comic illustration in yellow and black."
+ }
+}

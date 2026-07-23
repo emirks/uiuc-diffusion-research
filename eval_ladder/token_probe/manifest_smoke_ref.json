@@ -1,0 +1,26 @@
+{
+  "adapter": null,
+  "target_modules": [],
+  "rows": [
+    {
+      "id": "smoke_base_ref__animalization_0__ref_color_rain_1",
+      "rung": "smoke",
+      "endpoints": "animalization_0",
+      "cond_dir": "eval_ladder/conds",
+      "prefix_only": true,
+      "prompt": "A woman in a red bomber jacket poses against a blue studio backdrop, hands on hips. sksz.",
+      "reference_class": "color_rain",
+      "reference": "color_rain_1"
+    },
+    {
+      "id": "smoke_base_noref__animalization_0",
+      "rung": "smoke",
+      "endpoints": "animalization_0",
+      "cond_dir": "eval_ladder/conds",
+      "prefix_only": true,
+      "prompt": "A woman in a red bomber jacket poses against a blue studio backdrop, hands on hips. sksz.",
+      "reference_class": null,
+      "reference": null
+    }
+  ]
+}
