@@ -22,12 +22,16 @@ PY_BIN="$LAB/envs/diffusion/bin/python"
 MAIN=$LAB/diffusion-research
 WT=$MAIN/.claude/worktrees/eval-v4-cert
 CHUNK="${SLURM_ARRAY_TASK_ID:-0}"
+# Label must be UNIQUE PER PASS: scoring is incremental and re-uses chunk indices, so a bare
+# "c$CHUNK" label makes each pass overwrite the previous pass's items.jsonl and silently
+# destroy already-scored rows. run_eval report globs */items.jsonl, so extra dirs are free.
+PASS="${SLURM_ARRAY_JOB_ID:-$SLURM_JOB_ID}"
 cd "$MAIN"
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader || true
 PYTHONPATH=$WT/src "$PY_BIN" -m diffusion.transition_eval.score \
   --manifest "$MAIN/experiments/ladder2/eval/eval_c${CHUNK}.json" \
   --corpus  "$MAIN/data/processed/transitions_std121/corpus_manifest.json" \
-  --label   "c${CHUNK}" \
+  --label   "c${CHUNK}_p${PASS}" \
   --out-root "$MAIN/outputs/eval/ladder2" \
   --cache-dir "$MAIN/outputs/eval/cache"
 echo "=== EXIT $? ==="
