@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -51,7 +52,10 @@ GEMMA = LAB / "cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
 STD = REPO_ROOT / "data/processed/transitions_std121"
 REGISTRY = HERE / "registry.jsonl"
 ARMS = HERE / "arms.yaml"
-OUT_ROOT = REPO_ROOT / "outputs/videos/ladder2"
+# exp_078: campaign-private output root. The default writes into the SHARED ladder2 video
+# tree, which the parallel dataset-expansion campaign reads; the bottleneck campaign points
+# this elsewhere so it can never add files under paths another campaign is scoring.
+OUT_ROOT = Path(os.environ.get("LADDER_OUT_ROOT", REPO_ROOT / "outputs/videos/ladder2"))
 
 
 def build_sample(row: dict) -> ValidationSample:
