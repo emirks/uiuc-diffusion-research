@@ -57,10 +57,20 @@ def load_registry() -> list[dict]:
     return [json.loads(x) for x in REGISTRY.read_text().splitlines() if x.strip()]
 
 
+# exp_078: a checkpoint-diagnostic run (a specific step, not the pinned one) writes into a
+# "<arm>__ck<step>" directory — exactly run_gen's `--step` suffix. Setting LADDER_GEN_STEP makes the
+# scorer look there. Unset => the pinned-checkpoint layout, byte-identical to prior behavior.
+_GEN_STEP = os.environ.get("LADDER_GEN_STEP")
+
+
 def gen_path(row: dict, seed: int) -> Path:
     # baseline rows share one canonical video per (endpoint, sided): video_key = "<dir>/<name>"
     vk = row.get("video_key")
     d, name = vk.split("/", 1) if vk else (row["arm"], row["item_id"])
+    # Only step-suffix the arms that were actually generated with a step override (not the frozen
+    # baseline/ic_gen videos, which have no suffix). run_gen applies the suffix to the DIRECTORY.
+    if _GEN_STEP and not vk and row["arm"] not in ("base", "text_floor", "base_prompt", "base_cond", "ic_gen"):
+        d = f"{d}__ck{_GEN_STEP}"
     return GENS / d / f"{name}__s{seed}.mp4"
 
 
