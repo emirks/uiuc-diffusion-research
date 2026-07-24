@@ -1,0 +1,71 @@
+# exp_079 SupCon-T — standalone operator encoder (advisor ruling V3, locked 2026-07-24).
+# Faithful record of the locked design; train.py reads the `encoder`, `supcon`, `optimization`,
+# `arms`, and `data` blocks. All paths relative to REPO_ROOT.
+
+model:
+  vae_model_id: "cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors"   # frozen VAE (encode only)
+  operator_encoder_src: "../../LTX-2-bneck/packages/ltx-trainer/src"        # OperatorTokenEncoder (import)
+
+data:
+  split: "experiments/exp_079_standalone_operator_encoder/split.json"
+  manip_latents: "experiments/exp_079_standalone_operator_encoder/dataset/manip_latents"
+  train_manips: ["identity", "reverse", "ease_in_g2", "ease_out_g05"]
+  heldout_manips: ["warp_g3", "warp_g033", "warp_g15", "warp_g067"]
+
+encoder:                       # OperatorTokenEncoder args — K=72, normal init, no skip
+  token_shape: [6, 4, 3]       # K = 72; coupling-compatible geometry kept for post-dataset
+  latent_channels: 128
+  width: 512
+  depth: 2
+  num_heads: 8
+  prefix_latent_frames: 2      # segment embedding marks WHERE endpoints are (not their content)
+  suffix_latent_frames: 1
+  skip_scale: 0.0              # no pooled-demo skip (this is not the b1r retry)
+  zero_init_output: false      # normal init — the encoder must learn a live code from scratch
+
+projection:                    # SupCon head on mean-pooled tokens
+  pool: "mean"                 # mean over the 72 tokens
+  hidden: 512
+  out_dim: 128
+  normalize: true
+
+supcon:
+  temperature: 0.1
+
+arms:
+  # E1 = SupCon-T (PRIMARY): composite (class, manipulation) labels.
+  # ablation = plain class-SupCon (owner's exact proposal): class-only labels.
+  E1:       {label_mode: "class_manip"}
+  ablation: {label_mode: "class"}
+
+optimization:
+  learning_rate: 3.0e-4
+  weight_decay: 0.01
+  scheduler: "cosine"
+  batch_size: 128              # P classes x K samples (class-balanced sampler)
+  sampler_classes_per_batch: 16
+  sampler_samples_per_class: 8
+  steps: 4000
+  warmup_steps: 100
+  augment: true                # spatial/color nuisance-invariance aug (NOT temporal)
+  seeds: [42, 43, 44]
+
+runtime:
+  device: cuda
+  dtype: bfloat16              # autocast; params fp32
+  num_workers: 4
+
+probes:                        # pre-registered bars (probes.py enforces)
+  sensitivity_min: 0.2         # metric 1 non-collapse (B1 0.0018, b1r 0.0075)
+  class_probe_report: true     # metric 2 (report; not a gate)
+  temporal_reverse_margin_min: 1.0    # metric 3 bars, on held-out zs classes
+  temporal_heldout_gamma_margin_min: 0.5
+  gamma_monotonicity_rho_min: 0.7
+  leak_report: true            # metric 4 (one-sided, non-gating)
+
+corpse_encoders:               # metric 5 — must FAIL sensitivity + temporal (harness calibration)
+  b1:  "outputs/training/bneck/b1"
+  b1r: "outputs/training/bneck/b1r"
+
+outputs:
+  dir: "outputs/exp_079"

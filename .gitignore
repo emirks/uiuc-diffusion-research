@@ -61,3 +61,4 @@ experiments/**/*_[0-9]*.err
 # ladder2 bulk artefacts (regenerable): conditioning window cuts + assembled training roots
 eval_ladder/conds/
 eval_ladder/dataset/
+experiments/exp_079_standalone_operator_encoder/dataset/
