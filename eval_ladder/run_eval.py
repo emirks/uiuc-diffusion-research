@@ -28,6 +28,7 @@ from __future__ import annotations
 import argparse
 import collections
 import json
+import os
 import statistics as st
 import sys
 from pathlib import Path
@@ -41,7 +42,9 @@ import prompts  # noqa: E402
 
 STD = REPO_ROOT / "data/processed/transitions_std121"
 REGISTRY = HERE / "registry.jsonl"
-GENS = REPO_ROOT / "outputs/videos/ladder2"
+# exp_078: a campaign that generates into a private video root (LADDER_OUT_ROOT, matching run_gen)
+# scores from there. Unset => the shared ladder2 tree, i.e. byte-identical to prior behavior.
+GENS = Path(os.environ.get("LADDER_OUT_ROOT", REPO_ROOT / "outputs/videos/ladder2"))
 EVAL_DIR = HERE / "eval"
 SCORES = REPO_ROOT / "outputs/eval/ladder2"
 NPZ = (REPO_ROOT / ".claude/worktrees/eval-v4-cert/outputs/eval/certification"
