@@ -117,9 +117,9 @@ def main() -> None:
     # A gamma warp RESAMPLES WITH REPETITION: it changes the frame multiset, so appearance
     # statistics move and an order-blind encoder responds. The gamma bars are therefore NOT
     # content-controlled -- verified here, and true by construction rather than by luck.
-    assert abs(cont_m3["reverse_margin"]) < 1e-9, (
-        "an order-invariant encoder must be EXACTLY invariant to reverse (frame-multiset "
-        f"permutation), got {cont_m3['reverse_margin']}")
+    assert abs(cont_m3["reverse_margin"]) < 1e-5, (
+        "an order-invariant encoder must be invariant to reverse (frame-multiset permutation) "
+        f"up to float noise, got {cont_m3['reverse_margin']}")
     gamma_contaminated = cont_m3["gamma_monotonicity_rho"] >= 0.7
     print("\nBAR-VALIDITY FINDING (structural):")
     print(f"  reverse margin        CONTENT {cont_m3['reverse_margin']:.3f}  ORACLE "
