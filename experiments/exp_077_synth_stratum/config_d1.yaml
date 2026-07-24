@@ -1,0 +1,66 @@
+# exp_077 D1 config — the culminating round-1 synthetic transition dataset build.
+# Reuses the smoke's LOCKED render values (extension: flow, num_frames 121, continuous timing)
+# and adds the D1 counts (fable round-3 locked spec). The smoke's config.yaml is left untouched.
+
+model:
+  shader_bank: "/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/gl-transitions/transitions"
+  ltx_checkpoint: "/projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors"
+  gemma: "/projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
+
+inputs:
+  # tightened synthetic endpoint bank (Stage 0). Clips are full 121-frame std clips; a
+  # cross-clip pair (A,B) takes start9 = A[:9], end9 = B[-9:].
+  bank_tightened: "data/processed/synth_endpoints/bank_tightened.json"
+  clips_dir: "data/processed/synth_endpoints"
+
+inference:
+  height: 640
+  width: 480
+  num_frames: 121          # LOCKED (round-1 = fixed 121 total; continuous WITHIN-clip timing)
+  anchor_frames: 9         # start9 / end9 pinned-endpoint block length
+  fps: 24
+
+sampling:
+  extension: "flow"        # LOCKED (visual+seam audit 2026-07-23): flow keeps motion alive in the
+                           # pure-A/pure-B phases -> continuous timing variation stays safe.
+  p_flip: 0.6
+  p_swap: 0.5
+  endpoint_tol: 2.0          # per-SHADER gate at defaults (bank admission, validate_bank)
+  endpoint_tol_operator: 0.5 # per-OPERATOR gate at sampled params on the real endpoint frames
+  # continuous transition-timing sampling (fractions of the [anchor-1, num_frames-anchor] window)
+  onset_frac_max: 0.60
+  dur_frac_min: 0.35
+  dur_min_frames: 12
+  max_gate_tries: 200        # per-operator rejection-sampling budget (endpoint identity)
+
+d1:
+  # ---- fable round-3 locked D1 spec ----
+  n_target_pairs: 384        # distinct TARGET endpoint pairs (cross-clip A/B)
+  ops_per_target: 8          # each target pair rendered under exactly 8 operators (384*8 = 3072 tuples)
+  n_ref_pairs: 768           # distinct REF pairs, each reused ~4x (768*4 = 3072)
+  ref_reuse: 4
+  min_distinct_shaders: 6    # per target pair: the 8 operators span >= 6 distinct shaders (assert)
+  aux_fraction: 0.5          # 50% of draws carry an aux-map (medium-bearing families)
+  aux_per_target: 4          # 4 aux + 4 non-aux per target pair -> 50% aux, mixed (assert)
+  n_holdout_shaders: 8       # HOLD OUT 8 shaders entirely (post-hoc held-out-operator diagnostic)
+
+runtime:
+  seed: 20260724
+  device: "cpu"
+
+outputs:
+  dir: "outputs/videos/exp_077_synth_stratum"          # render run_dir lands here (run_NNNN)
+  train_dir: "outputs/training/exp_077_synth_stratum"
+
+text:
+  token: "sksz"            # arms.yaml transition-slot token (leak-free; no operator names)
+  neutral_s1: "A scene"
+  neutral_s2: "A scene"    # render style = "{S1}. {token}. {S2}."
+
+train:
+  # FROZEN generalist (ic_gen) recipe — see make_configs.py::generalist_config. The DATA is the
+  # only variable; the recipe is copied byte-for-byte (rank32/a32 attn+FFN, lr 2e-4, 5000 steps,
+  # ckpt/500, reference+mask+cond_clean, bf16, grad-ckpt, batch1, seed42, shifted_logit_normal).
+  steps: 5000
+  ckpt_every: 500
+  real_replicas: 8          # real 385 pairs replicated x8 (~3080) to balance the 3072 synthetic

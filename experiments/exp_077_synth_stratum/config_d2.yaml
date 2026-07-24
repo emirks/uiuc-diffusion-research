@@ -1,0 +1,55 @@
+# exp_077 D2 config — REAL-STREAM redesign (D1 was rejected on visual review: fabricated
+# layer frames melted the scene). D2 plays both endpoint clips' REAL 121 frames in lockstep;
+# there is no extension policy in the D2 render path at all.
+#
+# LOCKED SPEC (do not tune without a new decision):
+#   real streams (extension: none) | window [8,112], onset/release each in the outer 20%
+#   | 10 easings (12 minus snap_early/snap_late) | ZERO aux maps | plain shaders only,
+#   minus hard blacklist, minus D1's 8 holdout shaders | sample_params(p_vary=0.85)
+
+model:
+  shader_bank: "/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/gl-transitions/transitions"
+
+inputs:
+  bank_tightened: "data/processed/synth_endpoints/bank_tightened.json"
+  clips_dir: "data/processed/synth_endpoints"
+  d1_audit: "experiments/exp_077_synth_stratum/D1_BUILD_AUDIT.json"   # -> holdout_shader_list
+
+inference:
+  height: 640
+  width: 480
+  num_frames: 121          # full standardised clip length; layers are the clips themselves
+  anchor_frames: 9         # pinned endpoint block length -> window [8, 112]
+  fps: 24
+
+sampling:
+  extension: "none"          # D2: REAL frames. The extension code path does not exist here.
+  aux_kind: null             # D2: ZERO aux maps
+  timing_frac: 0.20          # onset in t0+[0,0.20]*win ; release in t1-[0,0.20]*win (indep u1,u2)
+  p_flip: 0.6
+  p_swap: 0.5
+  p_vary: 0.85               # shaders.sample_params policy, unchanged from D1
+  endpoint_tol: 2.0          # gate-1: per-SHADER at defaults (bank admission)
+  endpoint_tol_operator: 0.5 # gate-2: per-OPERATOR at sampled params, PRODUCTION resolution
+  max_gate_tries: 20
+
+audit:
+  tuples_per_shader: 4       # balanced over the D2 bank -> ~4*n_shaders tuples, x2 clips each
+  min_tuples: 400
+  clip_cache: 36             # full 121-frame clips held in RAM (~111 MB each)
+  write_mp4: true
+  strip_frame_w: 240         # per-frame width in the saved per-clip filmstrips
+
+gate:
+  assert1_tol: 0.5           # pure-phase identity MAE (uint8 scale)
+  seam_max: 2.0              # Assert2: handoff step / bucket mean frame delta, BOTH handoffs
+  m2_max_dq: 0.5             # M2: max single-frame jump of the rescaled q(t)
+  tau: null                  # M1 threshold — CALIBRATED in Task 3, then frozen to D2_TAU.json
+
+runtime:
+  seed: 20260724
+  device: "cpu"              # EGL/llvmpipe software GL — never a GPU
+
+outputs:
+  dir: "outputs/videos/exp_077_synth_stratum_d2"
+  sheet_dir: "outputs/endpoint_candidates/d2_audit"

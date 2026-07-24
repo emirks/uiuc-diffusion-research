@@ -1,0 +1,37 @@
+{
+  "tau": 0.2543,
+  "metric": "M1 = p10 over ramp frames of max(zNCC(F[t],A_src[t]), zNCC(F[t],B_src[t])) @96x72 gray",
+  "assert1_tol": 0.5,
+  "seam_max": 2.0,
+  "m2_max_dq": 0.5,
+  "frozen": true,
+  "calibration": {
+    "tau": 0.2543,
+    "rule": "reject ALL labeled-bad AND pass >=90% labeled-good",
+    "m1_floor_from_bad": 0.2531,
+    "bad_needing_m1": [
+      "d2_0021_ref",
+      "d2_0002_tgt",
+      "d2_0020_ref"
+    ],
+    "bad_caught_by_other_legs": [
+      "d2_0007_tgt",
+      "d2_0008_tgt",
+      "d2_0029_ref",
+      "d2_0027_ref"
+    ],
+    "confusion_at_tau": {
+      "tau": 0.2543,
+      "good_pass_m1_leg": 28,
+      "n_good": 33,
+      "good_pass_rate_m1_leg": 0.8485,
+      "good_pass_full_gate": 27,
+      "good_pass_rate_full_gate": 0.8182,
+      "bad_rejected": 7,
+      "n_bad": 7,
+      "bad_reject_rate": 1.0
+    },
+    "feasible": false
+  },
+  "n_labeled": 40
+}

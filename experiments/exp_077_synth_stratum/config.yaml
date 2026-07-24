@@ -1,0 +1,60 @@
+model:
+  # gl-transitions shader bank (reused from exp_075; engine/ is a symlink to exp_075's engine).
+  shader_bank: "/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/gl-transitions/transitions"
+  # LTX-2 checkpoint (VAE encoder for latents/cond-clean) + Gemma (text embeddings).
+  ltx_checkpoint: "/projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors"
+  gemma: "/projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
+
+inputs:
+  # 9-frame endpoint clips (*_start9.mp4 / *_end9.mp4), exp_062 set (44 complete pairs).
+  cond_dir: "experiments/exp_062_ladder_r2r3_specialists/dataset/cond"
+
+inference:
+  height: 640
+  width: 480
+  num_frames: 121          # LENGTH parameter — plumbed through the whole render path; (num_frames-1)%4==0
+  anchor_frames: 9         # start9 / end9 block length (pinned endpoints)
+  fps: 24
+
+sampling:
+  # -- TASK 0d: tuples (shared-operator, different-endpoint counterfactual pairs) --
+  n_tuples: 20             # each tuple = 1 operator applied to 2 DIFFERENT endpoint pairs -> 2 clips
+  extension: "flow"        # layer-extension policy. VERDICT (visual+seam audit 2026-07-23, cmp_*.png):
+                           #   flow = motion continues forward, smoothest seams (+0.03/+0.28) -> USE THIS.
+                           #   boomerang REJECTED (replays motion BACKWARD, seam cos -1.00);
+                           #   hold REJECTED (freezes the scene mid-transition, the "everything stops" prior).
+                           # flow keeps motion alive in the pure-A/pure-B phases, so continuous onset/
+                           # duration timing variation stays safe (no freeze/reversal) — no need to fill-middle.
+  p_flip: 0.6
+  p_swap: 0.5
+  endpoint_tol: 2.0          # per-SHADER gate at defaults (bank admission)
+  endpoint_tol_operator: 0.5 # per-OPERATOR gate at sampled params, on the real endpoint frames
+  # continuous transition-timing sampling (fractions of the [anchor-1, num_frames-anchor] window)
+  onset_frac_max: 0.60     # onset drawn uniformly in [0, onset_frac_max] * window_len
+  dur_frac_min: 0.35       # duration drawn uniformly in [dur_frac_min, 1.0] * (window_end - onset)
+  dur_min_frames: 12       # floor on transition duration for visibility
+
+  # -- TASK 0e: operator-bank audit --
+  audit_n_operators: 160     # broad natural sample rendered on ONE fixed pair -> effective-K
+  audit_aux_per_family: 40   # forced draws per (aux shader, aux family) for gate-2 acceptance rates
+  audit_fixed_pair_index: 0  # index into the sorted same-clip pair ids (deterministic fixed endpoints)
+
+text:
+  token: "sksz"            # arms.yaml transition-slot token (leak-free; no operator names)
+  neutral_s1: "A scene"    # neutral start-scene snapshot (operator must not leak into text)
+  neutral_s2: "A scene"    # neutral end-scene snapshot; render style = "{S1}. {token}. {S2}."
+
+train:
+  # frozen ic_gen (generalist IC-LoRA) recipe — see make_train_config.py
+  steps: 50                # SMOKE test only (pipeline de-risk, not a real run)
+  rank: 32
+  alpha: 32
+  lr: 2.0e-4
+
+runtime:
+  seed: 20260723
+  device: "cpu"            # rendering is EGL/llvmpipe — no GPU
+
+outputs:
+  dir: "outputs/videos/exp_077_synth_stratum"
+  train_dir: "outputs/training/exp_077_synth_stratum"
