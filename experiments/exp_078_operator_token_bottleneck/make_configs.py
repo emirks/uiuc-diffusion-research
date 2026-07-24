@@ -116,6 +116,8 @@ def build(name: str, steps: int, bottleneck, ckpt_interval: int) -> dict:
     cfg["optimization"]["steps"] = steps
     cfg["checkpoints"]["interval"] = ckpt_interval
     cfg["output_dir"] = str(TRAIN_OUT / name)
+    if name == "m1lite":
+        cfg["data"]["preprocessed_data_root"] = str(EXP / "dataset" / "roots" / "m1lite")
     if bottleneck:
         bn = copy.deepcopy(BOTTLENECK_R if bottleneck == "r" else BOTTLENECK)
         cfg["training_strategy"]["video"]["conditions"][0]["bottleneck"] = bn
@@ -127,6 +129,7 @@ def build(name: str, steps: int, bottleneck, ckpt_interval: int) -> dict:
 CONFIGS = {
     # (steps, bottleneck, checkpoint interval)
     "b1r": (5000, "r", 500),   # retry: pooled-demo skip + enc lr 5e-4 + 10% ref-dropout
+    "m1lite": (5000, False, 500),  # M1-lite: plain IC-LoRA, single COARSE 192-tok reference
     "equiv_mine": (150, False, 1000),
     "equiv_lineage": (150, False, 1000),
     # lineage-vs-lineage self-consistency control: identical config and seed, unmodified
