@@ -71,4 +71,17 @@ arms:
     note: IC-LoRA; the reference clip carries the transition. Trained on held-in classes only.
 
 # adapter path template for trained arms (filled by run_gen.py)
+  # ---- exp_078 operator-token bottleneck (campaign `bneck`). Trains outside the ladder2 tree,
+  # so it carries its own adapter_template. `bottleneck` tells run_gen to rebuild the encoder
+  # from the same checkpoint file and route the demo through it.
+  b1:
+    kind: generalist
+    adapter: bneck
+    targets: attn_ffn
+    step: 5000
+    adapter_template: outputs/training/bneck/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck: {token_shape: [6, 4, 3], width: 512, depth: 2, num_heads: 8,
+                 prefix_latent_frames: 2, suffix_latent_frames: 1}
+
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
+

@@ -96,7 +96,8 @@ def resolve_adapter(arm: str, arms_cfg: dict, step: int | None = None) -> tuple[
     spec = arms_cfg["arms"][arm]
     if spec.get("adapter", "unset") is None or spec["kind"] in ("base", "text_floor"):
         return None, []
-    path = REPO_ROOT / arms_cfg["adapter_template"].format(arm=arm, step=step or spec["step"])
+    template = spec.get("adapter_template", arms_cfg["adapter_template"])
+    path = REPO_ROOT / template.format(arm=arm, step=step or spec["step"])
     assert path.exists(), f"adapter missing for {arm}: {path}"
     return path, arms_cfg["targets"][spec["targets"]]
 
@@ -172,6 +173,32 @@ def main() -> None:
     else:
         print(f"[gen] {args.arm}: no adapter (base weights)")
     transformer = transformer.to(device).eval()
+
+    # exp_078: if this arm is a bottleneck arm, reconstruct the operator-token encoder from the
+    # SAME checkpoint file (saved under its own prefix) and attach it, so inference mirrors
+    # training: the demo is compressed to K tokens before it ever enters the sequence.
+    bspec = arms_cfg["arms"][args.arm].get("bottleneck")
+    if bspec is not None:
+        from ltx_trainer.operator_encoder import OperatorTokenEncoder
+        f, h, w = bspec["token_shape"]
+        encoder = OperatorTokenEncoder(
+            token_shape=(f, h, w), width=bspec.get("width", 512), depth=bspec.get("depth", 2),
+            num_heads=bspec.get("num_heads", 8),
+            prefix_latent_frames=bspec.get("prefix_latent_frames", 2),
+            suffix_latent_frames=bspec.get("suffix_latent_frames", 1),
+        )
+        raw = load_file(str(adapter))
+        enc_sd = {k[len("operator_encoder."):]: v for k, v in raw.items() if k.startswith("operator_encoder.")}
+        missing, unexpected = encoder.load_state_dict(enc_sd, strict=True), None
+        encoder = encoder.to(device=device, dtype=torch.bfloat16).eval()
+        # Scale factors MUST match what training derived from the token shape, or the K tokens
+        # land on the wrong positional grid (silently — nothing raises).
+        th, tw, tf = vh // 32, vw // 32, (vf - 1) // 8 + 1
+        dsf, tsf = th // h, (tf - 1) // (f - 1)
+        assert th // h == tw // w, f"non-uniform spatial scale: {th}//{h} vs {tw}//{w}"
+        runner.attach_operator_encoder(encoder, downscale_factor=dsf, temporal_scale_factor=tsf)
+        print(f"[gen] operator-token bottleneck: K={f*h*w} shape=({f},{h},{w}) "
+              f"scale=(spatial {dsf}, temporal {tsf}), {len(enc_sd)} encoder tensors")
 
     tmp = OUT_ROOT / "_runner" / f"{args.arm}_s{args.seed}_c{args.chunk}"
     saved = runner.run(transformer=transformer, step=0, output_dir=tmp, device=device,
