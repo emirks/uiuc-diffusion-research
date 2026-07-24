@@ -16,7 +16,8 @@ import sys
 from pathlib import Path
 
 import torch
-import torch.nn.functional as F
+import torchvision.transforms.functional as TF
+from torchvision.transforms import InterpolationMode
 
 EXP = Path(__file__).resolve().parent
 REPO_ROOT = EXP.parents[1]
@@ -60,7 +61,9 @@ def main() -> None:
         if dst.exists():
             continue
         px = ec.preprocess(src)                              # [F,C,H,W] in [0,1], full res
-        px_c = F.interpolate(px, size=(COARSE_H, COARSE_W), mode="bilinear", align_corners=False)
+        # BICUBIC to match inference's _resize_and_center_crop EXACTLY (aspect is 4:3 both sides, so
+        # the center-crop is a no-op) — train==inference on the coarse reference, ic_gen's standard.
+        px_c = TF.resize(px, [COARSE_H, COARSE_W], interpolation=InterpolationMode.BICUBIC)
         lat = ec.encode(px_c, vae, device, torch.bfloat16)   # [1,128,16,4,3]
         lat0 = lat[0].to(torch.bfloat16).cpu()
         _, fF, fH, fW = lat0.shape

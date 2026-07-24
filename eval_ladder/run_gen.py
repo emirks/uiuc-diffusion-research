@@ -59,6 +59,7 @@ OUT_ROOT = Path(os.environ.get("LADDER_OUT_ROOT", REPO_ROOT / "outputs/videos/la
 
 
 def build_sample(row: dict) -> ValidationSample:
+    # ref_downscale set per-arm in main() (m1lite uses 5 for the coarse 128x96 reference)
     """Conditioning is a pure function of the row — the same rule the mask uses at eval."""
     conds = []
     if row.get("conditioning") != "none" and row["endpoint"] is not None:
@@ -71,7 +72,8 @@ def build_sample(row: dict) -> ValidationSample:
         # authoritative clip -> class (clip names do NOT reliably encode the class)
         ref_path = STD / prompts.clip_class(row["reference"]) / f"{row['reference']}.mp4"
         assert ref_path.exists(), f"reference clip not found: {ref_path}"
-        conds.append(ReferenceConditionConfig(video=str(ref_path), downscale_factor=1,
+        conds.append(ReferenceConditionConfig(video=str(ref_path),
+                                              downscale_factor=build_sample.ref_downscale,
                                               temporal_scale_factor=1, include_in_output=False))
     return ValidationSample(prompt=row["prompt"], conditions=conds)
 
@@ -118,6 +120,7 @@ def main() -> None:
 
     arms_cfg = yaml.safe_load(ARMS.read_text())
     assert args.seed in arms_cfg["seeds"], f"seed {args.seed} is not a registered seed"
+    build_sample.ref_downscale = arms_cfg['arms'][args.arm].get('ref_downscale', 1)
     rows = load_rows(args.arm, args.priority, args.cells)
 
     def out_path(r: dict) -> Path:

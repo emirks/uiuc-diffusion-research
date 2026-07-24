@@ -91,5 +91,12 @@ arms:
     adapter_template: outputs/training/bneck/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
     bottleneck: {token_shape: [6, 4, 3], width: 512, depth: 2, num_heads: 8,
                  prefix_latent_frames: 2, suffix_latent_frames: 1, skip_scale: 1.68}
+  m1lite:
+    kind: generalist
+    adapter: bneck
+    targets: attn_ffn
+    step: 5000
+    ref_downscale: 5
+    adapter_template: outputs/training/bneck/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
 
