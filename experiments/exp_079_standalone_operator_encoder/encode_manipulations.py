@@ -29,6 +29,8 @@ sys.path.insert(0, str(REPO_ROOT / "eval_ladder"))
 sys.path.insert(0, str(EXP))
 import encode_conditioning as ec          # noqa: E402
 from manip_utils import HELDOUT_MANIPS, TRAIN_MANIPS, manipulate  # noqa: E402
+# HELDOUT_MANIPS = 4 gamma warps (report-only) + 2 permutations (segment_swap, block_reversal),
+# the latter being the revised held-out GATE — probe-only and multiset-preserving.
 
 LAB = Path("/projects/illinois/eng/cs/jrehg/users/emirkisa")
 MODEL = LAB / "cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors"

@@ -26,7 +26,7 @@ import torch
 
 EXP = Path(__file__).resolve().parent
 sys.path.insert(0, str(EXP))
-from manip_utils import HELDOUT_MANIPS, TRAIN_MANIPS, manipulate  # noqa: E402
+from manip_utils import GAMMA_MANIPS, HELDOUT_MANIPS, PERM_MANIPS, TRAIN_MANIPS, manipulate  # noqa: E402
 from probes import m1_sensitivity, m2_class_separation, m3_temporal  # noqa: E402
 
 N_CLASSES, N_CLIPS_PER_CLASS, F, H, W, C = 4, 3, 16, 5, 4, 8
@@ -76,7 +76,8 @@ def build(kind: str, rng: np.random.Generator):
 
 
 def main() -> None:
-    print(f"{'encoder':9s} {'m1_sens':>9s} {'m2_class':>9s} {'m3_rev':>8s} {'m3_hoγ':>8s} {'m3_ρ':>7s}   verdict")
+    print(f"{'encoder':9s} {'m1_sens':>9s} {'m2_class':>9s} | GATES {'m3_rev':>8s} {'m3_perm':>8s}"
+          f" | REPORT-ONLY {'m3_hoγ':>8s} {'m3_ρ':>7s}")
     got = {}
     for kind in ("DEAD", "CONTENT", "ORACLE"):
         rng = np.random.default_rng(0)                        # same clips for every encoder
@@ -84,10 +85,12 @@ def main() -> None:
         sens = m1_sensitivity(z)
         ident = [i for i, r in enumerate(recs) if r["manip"] == "identity"]
         csep = m2_class_separation(z[ident], [recs[i]["cls"] for i in ident])
-        m3 = m3_temporal(z, recs, HELDOUT_MANIPS, TRAIN_MANIPS)
+        m3 = m3_temporal(z, recs, HELDOUT_MANIPS, TRAIN_MANIPS, PERM_MANIPS)
         got[kind] = (sens, m3)
-        print(f"{kind:9s} {sens:9.4f} {csep:9.2f} {m3['reverse_margin']:8.3f} "
-              f"{m3['heldout_gamma_margin']:8.3f} {m3['gamma_monotonicity_rho']:7.3f}")
+        print(f"{kind:9s} {sens:9.4f} {csep:9.2f} |       {m3['reverse_margin']:8.3f} "
+              f"{m3['heldout_permutation_margin']:8.3f} |             "
+              f"{m3['heldout_gamma_margin_REPORT_ONLY']:8.3f} "
+              f"{m3['gamma_monotonicity_rho_REPORT_ONLY']:7.3f}")
 
     # ---- the properties the battery MUST have for its bars to mean anything
     dead_s, dead_m3 = got["DEAD"]
@@ -102,8 +105,8 @@ def main() -> None:
         f"ORACLE must pass the reverse bar, got {orac_m3['reverse_margin']}"
     assert orac_m3["reverse_margin"] > 5 * max(cont_m3["reverse_margin"], 1e-9), \
         "metric 3 must separate an order-sensitive code from an order-blind one by a wide margin"
-    assert orac_m3["gamma_monotonicity_rho"] >= 0.7, \
-        f"ORACLE must show gamma monotonicity, got {orac_m3['gamma_monotonicity_rho']}"
+    # (no assertion on gamma monotonicity: it is a report-only diagnostic, not a gate — an
+    # order-blind code passes it, which is exactly why it was demoted.)
 
     print("\nHARNESS CONTROLS PASS:")
     print("  - DEAD    fails non-collapse (m1) as a collapsed encoder must")
@@ -120,19 +123,29 @@ def main() -> None:
     assert abs(cont_m3["reverse_margin"]) < 1e-5, (
         "an order-invariant encoder must be invariant to reverse (frame-multiset permutation) "
         f"up to float noise, got {cont_m3['reverse_margin']}")
-    gamma_contaminated = cont_m3["gamma_monotonicity_rho"] >= 0.7
-    print("\nBAR-VALIDITY FINDING (structural):")
-    print(f"  reverse margin        CONTENT {cont_m3['reverse_margin']:.3f}  ORACLE "
+    # GATE 2 (revised): the held-out PERMUTATION margin must inherit reverse's content-control.
+    assert abs(cont_m3["heldout_permutation_margin"]) < 1e-5, (
+        "GATE 2 must be content-controlled: an order-invariant encoder must be invariant to the "
+        f"probe permutations, got {cont_m3['heldout_permutation_margin']}")
+    assert orac_m3["heldout_permutation_margin"] >= 0.5, (
+        "a genuinely temporal code must clear the held-out permutation bar, got "
+        f"{orac_m3['heldout_permutation_margin']}")
+
+    gamma_contaminated = cont_m3["gamma_monotonicity_rho_REPORT_ONLY"] >= 0.7
+    print("\nBAR-VALIDITY EVIDENCE (structural — why the bars were revised pre-read):")
+    print(f"  GATE reverse margin        CONTENT {cont_m3['reverse_margin']:.3f}  ORACLE "
           f"{orac_m3['reverse_margin']:.3f}   -> CONTENT-CONTROLLED (permutation; exact invariance)")
-    print(f"  gamma monotonicity    CONTENT {cont_m3['gamma_monotonicity_rho']:.3f}  ORACLE "
-          f"{orac_m3['gamma_monotonicity_rho']:.3f}   -> "
-          f"{'CONTAMINATED: an order-blind code passes rho>=0.7' if gamma_contaminated else 'ok'}")
-    print(f"  heldout-gamma margin  CONTENT {cont_m3['heldout_gamma_margin']:.3f}  ORACLE "
-          f"{orac_m3['heldout_gamma_margin']:.3f}   -> weakly discriminative (warps move the "
-          "frame multiset, so both codes respond)")
-    print("  => the REVERSE margin is the load-bearing, confound-valid bar; the gamma bars must "
-          "not gate\n     a pass on their own. Referred to the advisor (bars are pre-registered; "
-          "the operator does not revise them).")
+    print(f"  GATE heldout-perm margin   CONTENT {cont_m3['heldout_permutation_margin']:.3f}  ORACLE "
+          f"{orac_m3['heldout_permutation_margin']:.3f}   -> CONTENT-CONTROLLED (probe-only "
+          "permutations; multiset preserved)")
+    print(f"  report gamma monotonicity  CONTENT {cont_m3['gamma_monotonicity_rho_REPORT_ONLY']:.3f}  "
+          f"ORACLE {orac_m3['gamma_monotonicity_rho_REPORT_ONLY']:.3f}   -> "
+          f"{'NOT content-controlled: an order-blind code passes rho>=0.7' if gamma_contaminated else 'ok'}")
+    print(f"  report heldout-gamma marg  CONTENT {cont_m3['heldout_gamma_margin_REPORT_ONLY']:.3f}  "
+          f"ORACLE {orac_m3['heldout_gamma_margin_REPORT_ONLY']:.3f}   -> weakly discriminative "
+          "(warps move the frame multiset)")
+    print("  => GATES = reverse + held-out permutation (both multiset-preserving). Gamma is "
+          "diagnostics only.\n     Advisor-ruled 2026-07-24, pre-read.")
 
 
 if __name__ == "__main__":

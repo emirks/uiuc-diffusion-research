@@ -10,7 +10,14 @@ data:
   split: "experiments/exp_079_standalone_operator_encoder/split.json"
   manip_latents: "experiments/exp_079_standalone_operator_encoder/dataset/manip_latents"
   train_manips: ["identity", "reverse", "ease_in_g2", "ease_out_g05"]
-  heldout_manips: ["warp_g3", "warp_g033", "warp_g15", "warp_g067"]
+  # gamma warps: REPORT-ONLY. They resample with repetition -> change the frame multiset -> an
+  # order-blind (content-only) code responds to them (measured rho=0.946 on the synthetic CONTENT
+  # encoder). Not content-controlled, so they cannot gate.
+  gamma_manips: ["warp_g3", "warp_g033", "warp_g15", "warp_g067"]
+  # held-out PERMUTATIONS: the generalization GATE. Probe-only (never in a training label) and
+  # multiset-preserving, so they inherit `reverse`'s content-control by construction.
+  perm_manips: ["segment_swap", "block_reversal"]
+  heldout_manips: ["warp_g3", "warp_g033", "warp_g15", "warp_g067", "segment_swap", "block_reversal"]
 
 encoder:                       # OperatorTokenEncoder args — K=72, normal init, no skip
   token_shape: [6, 4, 3]       # K = 72; coupling-compatible geometry kept for post-dataset
@@ -56,11 +63,14 @@ runtime:
   num_workers: 4
 
 probes:                        # pre-registered bars (probes.py enforces)
+  # REVISED 2026-07-24 pre-read, on the advisor's ruling, after the synthetic-control test showed
+  # the gamma bars were not content-controlled (an order-blind code scored rho=0.946 > the true
+  # oracle's 0.909, and the >=0.5 gamma-margin bar false-KILLed the oracle at 0.400).
   sensitivity_min: 0.2         # metric 1 non-collapse (B1 0.0018, b1r 0.0075)
   class_probe_report: true     # metric 2 (report; not a gate)
-  temporal_reverse_margin_min: 1.0    # metric 3 bars, on held-out zs classes
-  temporal_heldout_gamma_margin_min: 0.5
-  gamma_monotonicity_rho_min: 0.7
+  temporal_reverse_margin_min: 1.0        # GATE 1 — trained manipulation, content-controlled
+  heldout_permutation_margin_min: 0.5     # GATE 2 — median over perm_manips (held-out, probe-only)
+  gamma_report_only: true      # gamma margin + monotonicity: DIAGNOSTICS, never gating
   leak_report: true            # metric 4 (one-sided, non-gating)
 
 corpse_encoders:               # metric 5 — must FAIL sensitivity + temporal (harness calibration)

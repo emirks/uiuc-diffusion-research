@@ -28,8 +28,13 @@ strongest form that survives the class≈operator≈content confound.
   Pre-registered prediction: class-decode ≥95 %, reversal margin ≈0 (an info-free 26-way classifier).
 - **Temporal manipulations** (pixel-space, endpoints fixed for warps, nearest-frame resample, then
   VAE re-encoded — the LTX VAE is causal, so reversing *latents* is not reversing video):
-  TRAIN `{identity, reverse, ease-in γ=2, ease-out γ=0.5}`; HELD-OUT `{γ=3, γ=0.33, γ=1.5, γ=0.67}`
-  used only for the generalization probes.
+  TRAIN `{identity, reverse, ease-in γ=2, ease-out γ=0.5}`; HELD-OUT probe-only
+  `{γ=3, γ=0.33, γ=1.5, γ=0.67}` (report-only diagnostics) + `{segment-swap, block-reversal}`
+  (the generalization GATE).
+- **Permutation vs resampling (decides which probes are valid):** `reverse`, `segment-swap` and
+  `block-reversal` are PERMUTATIONS of the frame multiset — an order-invariant encoder is *exactly*
+  invariant to them, so any nonzero response is order information by construction. A γ warp
+  *resamples with repetition*, changing the multiset, so a content-only code responds to it.
 - **Split (PRIMARY, contamination-safe; `split.json`, frozen before training):**
   - **train** = 26 held-in classes' 139 clips − 1 held-out instance/class = **113 clips** × 4 train manips.
   - **heldout_instance** = 26 clips (1/class) → class-separation & instance-ID probes.
@@ -42,12 +47,27 @@ strongest form that survives the class≈operator≈content confound.
 2. **Class separation** (linear probe, held-out instances): discriminativeness only — NOT operator evidence.
 3. **Temporal generalization (LOAD-BEARING, confound-valid)** — on held-out zs classes:
    margin = d(z(V), z(m(V))) / median d(z(V), z(same-class other instances)).
-   **Bars (median seed, none collapsed):** reverse margin ≥1.0; held-out-γ margin ≥0.5;
-   γ-monotonicity Spearman ρ ≥0.7.
+   **GATES (median seed, none collapsed):** reverse margin ≥1.0; **held-out permutation margin
+   ≥0.5** (median over segment-swap + block-reversal). **γ margin and γ-monotonicity are
+   REPORT-ONLY** — bars revised pre-read on 2026-07-24 after the synthetic-control test showed an
+   order-blind encoder scores γ-monotonicity ρ=0.946 (> a true oracle's 0.909) while scoring
+   exactly 0.000 on both permutation gates.
 4. **Content-leak guards** (one-sided, non-gating): within-class instance-ID decode (low = content-light);
    endpoint-appearance R² from z vs raw pooled-feature baseline (report ratio). Never claimed as disentanglement.
 5. **Corpse controls:** run the battery on the B1 & b1r encoder outputs — must reproduce B1 ~0.002
    sensitivity and FAIL every temporal probe (certifies the harness on known-dead encoders).
+
+**Harness certification (`test_probe_harness.py`, CPU, run before any GPU spend).** Three synthetic
+encoders with known behaviour validate that the bars measure what they claim:
+
+| encoder | m1 sens | m2 class | GATE reverse | GATE held-out perm | γ margin | γ ρ |
+|---|---|---|---|---|---|---|
+| DEAD (constant)          | 0.000 | 0.25 (chance) | nan   | nan   | nan   | nan   |
+| CONTENT (order-blind)    | 1.143 | 1.00 | **0.000** | **0.000** | 0.299 | 0.946 |
+| ORACLE (temporal)        | 1.235 | 1.00 | **6.547** | **3.282** | 0.400 | 0.909 |
+
+DEAD fails non-collapse; CONTENT passes m1 and class-separation yet scores exactly 0 on both gates;
+ORACLE clears both. The γ columns show why they cannot gate.
 
 **Contingency (one, pre-authorized):** trained-class temporal pass but held-out-class fail → one
 retry swapping frozen VAE latents → frozen VideoMAE-v2 features. **KILL:** if held-out temporal still

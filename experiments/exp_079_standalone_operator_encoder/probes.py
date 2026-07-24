@@ -145,8 +145,18 @@ def m2_class_separation(z: np.ndarray, cls: list[str]) -> float:
 
 
 def m3_temporal(z: np.ndarray, recs: list[dict], heldout_manips: list[str],
-                train_manips: list[str]) -> dict:
-    """Margin of each manipulation relative to same-class instance spread. LOAD-BEARING."""
+                train_manips: list[str], perm_manips: list[str] | None = None) -> dict:
+    """Margin of each manipulation relative to same-class instance spread. LOAD-BEARING.
+
+    GATES (content-controlled — the manipulation is a PERMUTATION of the frame multiset, so an
+    order-invariant code is exactly invariant to it and any nonzero margin is order information):
+      * reverse_margin              (trained manipulation)
+      * heldout_permutation_margin  (median over probe-only permutations)
+    DIAGNOSTICS (report-only — gamma warps resample with repetition and move the multiset, so a
+    content-only code responds; measured rho=0.946 on the synthetic order-blind encoder):
+      * heldout_gamma_margin, gamma_monotonicity_rho
+    """
+    perm_manips = perm_manips or []
     idx = {(r["clip"], r["manip"]): i for i, r in enumerate(recs)}
     by_cls: dict[str, list[str]] = {}
     for r in recs:
@@ -187,12 +197,19 @@ def m3_temporal(z: np.ndarray, recs: list[dict], heldout_manips: list[str],
                     mono_rhos.append(float(rho))
 
     med = {m: float(np.median(v)) for m, v in per_manip.items()}
-    ho = [med[m] for m in heldout_manips if m in med]
+    gam = [med[m] for m in heldout_manips if m in med and m in MANIP_GAMMA]
+    perm = [med[m] for m in perm_manips if m in med]
     return {
         "margin_per_manip": med,
+        # --- GATES (content-controlled)
         "reverse_margin": med.get("reverse", float("nan")),
-        "heldout_gamma_margin": float(np.median(ho)) if ho else float("nan"),
-        "gamma_monotonicity_rho": float(np.median(mono_rhos)) if mono_rhos else float("nan"),
+        "heldout_permutation_margin": float(np.median(perm)) if perm else float("nan"),
+        "permutation_margins": {m: med[m] for m in perm_manips if m in med},
+        # --- DIAGNOSTICS (report-only; NOT content-controlled)
+        "heldout_gamma_margin_REPORT_ONLY": float(np.median(gam)) if gam else float("nan"),
+        "gamma_monotonicity_rho_REPORT_ONLY": float(np.median(mono_rhos)) if mono_rhos else float("nan"),
+        "gamma_caveat": "gamma warps change the frame multiset; an order-blind code responds "
+                        "(synthetic CONTENT encoder scored rho=0.946) — diagnostics only",
         "n_clips_scored": len(mono_rhos),
     }
 
@@ -279,16 +296,17 @@ def run_one(name: str, enc, head, cfg: dict, split: dict, latent_root: Path, dev
         z_hi, _ = embed(enc, head, latent_root, hi_recs, device)
         out["m2_class_sep_acc"] = m2_class_separation(z_hi, [r["cls"] for r in hi_recs])
         out["m2_chance"] = 1.0 / len({r["cls"] for r in hi_recs})
-    out["m3"] = m3_temporal(z_zs, zs_recs, ho_m, train_m)
+    out["m3"] = m3_temporal(z_zs, zs_recs, ho_m, train_m, cfg["data"].get("perm_manips", []))
     out["m4"] = m4_leak(z_zs, tok_zs, zs_recs, latent_root)
 
     p = cfg["probes"]
     m3 = out["m3"]
+    # Only content-controlled (multiset-preserving) manipulations gate. Gamma is reported, never gating.
     out["bars"] = {
         "m1_noncollapse": bool(out["m1_sensitivity"] >= p["sensitivity_min"]),
         "m3_reverse_margin": bool(m3["reverse_margin"] >= p["temporal_reverse_margin_min"]),
-        "m3_heldout_gamma": bool(m3["heldout_gamma_margin"] >= p["temporal_heldout_gamma_margin_min"]),
-        "m3_monotonicity": bool(m3["gamma_monotonicity_rho"] >= p["gamma_monotonicity_rho_min"]),
+        "m3_heldout_permutation": bool(
+            m3["heldout_permutation_margin"] >= p["heldout_permutation_margin_min"]),
     }
     out["PASS"] = all(out["bars"].values())
     return out
