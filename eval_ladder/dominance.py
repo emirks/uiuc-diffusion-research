@@ -222,23 +222,29 @@ def report_b() -> None:
           f"{degen} anchor_degenerate excluded) ===")
     print(f"{'cell':16s} {'arm':7s} {'n':>4s} {'T':>6s} {'C':>6s} {'TI':>6s}   quadrants")
     print("-" * 78)
+    arms_here = ["ic_gen", "base"] if DOM_ARM == "ic_gen" else [DOM_ARM]
     for cell in ("G-unseen-cross", "G-zs-cross"):
         sub = [r for r in rowsB if r["cell"] == cell]
         if not sub:
             continue
-        for arm in ("ic_gen", "base"):
+        for arm in arms_here:
             q = collections.Counter(r[arm]["quad"] for r in sub)
             print(f"{cell:16s} {arm:7s} {len(sub):4d} {st.mean(r[arm]['T'] for r in sub):6.2f} "
                   f"{st.mean(r[arm]['C'] for r in sub):6.2f} {st.mean(r[arm]['TI'] for r in sub):6.2f}   "
                   + ", ".join(f"{k} {v}" for k, v in q.most_common()))
-        d = [r["ic_gen"]["TI"] - r["base"]["TI"] for r in sub]
-        per_donor = collections.defaultdict(list)
-        for r in sub:
-            per_donor[r["donor"]].append(r["ic_gen"]["TI"] - r["base"]["TI"])
-        pos = sum(1 for v in per_donor.values() if st.mean(v) > 0)
-        print(f"{'':16s} {'ΔTI':7s} {len(sub):4d} {'':6s} {'':6s} {st.mean(d)*100:+5.1f}pp  "
-              f"donors positive {pos}/{len(per_donor)}\n")
-    (HERE / "dominance_passB.json").write_text(json.dumps(rowsB, indent=1))
+        # ΔTI vs base only defined for the ic_gen run (which scores both arms).
+        if DOM_ARM == "ic_gen":
+            per_donor = collections.defaultdict(list)
+            for r in sub:
+                per_donor[r["donor"]].append(r["ic_gen"]["TI"] - r["base"]["TI"])
+            d = [r["ic_gen"]["TI"] - r["base"]["TI"] for r in sub]
+            pos = sum(1 for v in per_donor.values() if st.mean(v) > 0)
+            print(f"{'':16s} {'ΔTI':7s} {len(sub):4d} {'':6s} {'':6s} {st.mean(d)*100:+5.1f}pp  "
+                  f"donors positive {pos}/{len(per_donor)}\n")
+    out_path = Path(DOM_OUT) / ("dominance_passB.json" if DOM_ARM == "ic_gen"
+                                else f"dominance_passB_{DOM_ARM}.json")
+    out_path.write_text(json.dumps(rowsB, indent=1))
+    print(f"[reportB] wrote {out_path}")
     print("TI = min(T, C), locked pre-scoring. T = donor manner arrived; C = endpoint content kept.")
 
 
