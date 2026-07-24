@@ -95,6 +95,7 @@ python experiments/exp_079_standalone_operator_encoder/probes.py --all
 
 ## Outputs
 
-- `dataset/manip_latents/<split>/<class>/<clip>__<manip>.pt` — 916 frozen VAE latents.
+- `dataset/manip_latents/<split>/<class>/<clip>__<manip>.pt` — **1006** frozen VAE latents
+  (113 train × 4 + 26 held-out-instance × 4 + 45 held-out-class × 10).
 - `outputs/exp_079/<arm>_seed<k>/encoder.pt` — trained encoder + projection head.
 - `outputs/exp_079/probe_table.json` — the pre-registered metrics per arm/seed + corpse controls.
