@@ -22,15 +22,12 @@ PY_BIN="$LAB/LTX-2-official/.venv/bin/python"
 WT=$LAB/diffusion-research/.claude/worktrees/bottleneck-branch
 EXP=$WT/experiments/exp_079_standalone_operator_encoder
 
-IDX="${SLURM_ARRAY_TASK_ID:-0}"
 ARMS=(E1 E1 E1 ablation ablation ablation)
 SEEDS=(42 43 44 42 43 44)
-export ARM="${ARMS[$IDX]}"
-export SEED="${SEEDS[$IDX]}"
 
 mkdir -p "$LAB/diffusion-research/outputs/logs/slurm"
 cd "$WT"
-echo "[e079-train] host=$(hostname) arm=$ARM seed=$SEED $(date)"
+echo "[e079-train] host=$(hostname) $(date)"
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader || true
 
 # Seatbelt: the manipulation latents must exist (the encode job is the dependency).
@@ -40,5 +37,23 @@ if [ "$N" -lt 100 ]; then
 fi
 echo "[e079-train] train manip latents: $N"
 
-"$PY_BIN" "$EXP/train.py"
+# Two modes. As a job ARRAY, one (arm,seed) per task. As a PLAIN job, all six run back-to-back in
+# one allocation — which is what a saturated queue actually rewards: waiting for one slot beats
+# waiting for six. Each run is small (8.7M params, latent-space, no 19B), so the bundle still fits
+# comfortably in a couple of hours.
+if [ -n "${SLURM_ARRAY_TASK_ID:-}" ]; then
+  IDX="$SLURM_ARRAY_TASK_ID"
+  export ARM="${ARMS[$IDX]}" SEED="${SEEDS[$IDX]}"
+  echo "[e079-train] array task $IDX -> arm=$ARM seed=$SEED"
+  "$PY_BIN" "$EXP/train.py"
+else
+  for IDX in "${!ARMS[@]}"; do
+    export ARM="${ARMS[$IDX]}" SEED="${SEEDS[$IDX]}"
+    if [ -f "$LAB/diffusion-research/outputs/exp_079/${ARM}_seed${SEED}/encoder.pt" ]; then
+      echo "[e079-train] skip $ARM seed=$SEED (already trained)"; continue
+    fi
+    echo "[e079-train] === run $((IDX+1))/6: arm=$ARM seed=$SEED $(date) ==="
+    "$PY_BIN" "$EXP/train.py"
+  done
+fi
 echo "[e079-train] done $(date)"
