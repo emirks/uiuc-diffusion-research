@@ -1,0 +1,269 @@
+{
+  "n_shaders": 72,
+  "draws_per_shader": 300,
+  "n_draws": 21600,
+  "draws_with_at_least_one_clamp": 2744,
+  "clamp_rate": 0.127,
+  "events_by_rule": {
+    "relative": 1169,
+    "relative_vec": 775,
+    "power_abs": 590,
+    "color_luma_resample": 254,
+    "relative_int": 120
+  },
+  "events_total": 2908,
+  "events_per_draw": 0.135,
+  "top_25_clamped_params": [
+    {
+      "param": "EdgeTransition.edge_brightness",
+      "n": 300
+    },
+    {
+      "param": "ColourDistance.power",
+      "n": 290
+    },
+    {
+      "param": "StarWipe.star_center",
+      "n": 176
+    },
+    {
+      "param": "crosshatch.center",
+      "n": 158
+    },
+    {
+      "param": "pinwheel.speed",
+      "n": 82
+    },
+    {
+      "param": "StaticFade.n_noise_pixels",
+      "n": 81
+    },
+    {
+      "param": "StripDatamoshGlitch.horizontalBars",
+      "n": 79
+    },
+    {
+      "param": "chessboard.grid_num",
+      "n": 77
+    },
+    {
+      "param": "TilesWave.tileCount",
+      "n": 74
+    },
+    {
+      "param": "WaterDrop.speed",
+      "n": 74
+    },
+    {
+      "param": "GridFlip.bgcolor",
+      "n": 72
+    },
+    {
+      "param": "squareswire.squares",
+      "n": 71
+    },
+    {
+      "param": "pixelize.squaresMin",
+      "n": 70
+    },
+    {
+      "param": "randomsquares.size",
+      "n": 70
+    },
+    {
+      "param": "StarWipe.border_color",
+      "n": 69
+    },
+    {
+      "param": "windowslice.count",
+      "n": 69
+    },
+    {
+      "param": "ripple.speed",
+      "n": 66
+    },
+    {
+      "param": "fadecolor.color",
+      "n": 61
+    },
+    {
+      "param": "GridFlip.size",
+      "n": 59
+    },
+    {
+      "param": "PuzzleRight.size",
+      "n": 55
+    },
+    {
+      "param": "hexagonalize.steps",
+      "n": 42
+    },
+    {
+      "param": "pixelize.steps",
+      "n": 41
+    },
+    {
+      "param": "polar_function.segments",
+      "n": 37
+    },
+    {
+      "param": "SimpleZoomOut.zoom_quickness",
+      "n": 24
+    },
+    {
+      "param": "directionalwipe.smoothness",
+      "n": 23
+    }
+  ],
+  "top_15_clamped_shaders": [
+    {
+      "shader": "EdgeTransition",
+      "n": 306
+    },
+    {
+      "shader": "ColourDistance",
+      "n": 290
+    },
+    {
+      "shader": "StarWipe",
+      "n": 269
+    },
+    {
+      "shader": "crosshatch",
+      "n": 183
+    },
+    {
+      "shader": "GridFlip",
+      "n": 178
+    },
+    {
+      "shader": "StripDatamoshGlitch",
+      "n": 148
+    },
+    {
+      "shader": "pixelize",
+      "n": 111
+    },
+    {
+      "shader": "PuzzleRight",
+      "n": 96
+    },
+    {
+      "shader": "randomsquares",
+      "n": 86
+    },
+    {
+      "shader": "windowslice",
+      "n": 85
+    },
+    {
+      "shader": "StaticFade",
+      "n": 82
+    },
+    {
+      "shader": "pinwheel",
+      "n": 82
+    },
+    {
+      "shader": "squareswire",
+      "n": 82
+    },
+    {
+      "shader": "WaterDrop",
+      "n": 79
+    },
+    {
+      "shader": "chessboard",
+      "n": 77
+    }
+  ],
+  "clamps_that_moved_a_DEFAULT_value": {
+    "ColourDistance.power": 48,
+    "EdgeTransition.edge_brightness": 37
+  },
+  "max_abs_delivered_value_top20": {
+    "StaticFade.n_noise_pixels": 600.0,
+    "ripple.amplitude": 299.8763,
+    "hexagonalize.steps": 150.0,
+    "pixelize.steps": 150.0,
+    "ripple.speed": 150.0,
+    "flyeye.zoom": 149.7499,
+    "StripDatamoshGlitch.horizontalBars": 126.0,
+    "WaterDrop.speed": 90.0,
+    "WaterDrop.amplitude": 89.9026,
+    "ButterflyWaveScrawler.waves": 89.6119,
+    "pixelize.squaresMin": 60.0,
+    "hexagonalize.horizontalHexagons": 59.9749,
+    "PolkaDotsCurtain.dots": 59.5559,
+    "StripDatamoshGlitch.verticalSlits": 53.9121,
+    "perlin.seed": 38.9246,
+    "chessboard.grid_num": 30.0,
+    "randomsquares.size": 30.0,
+    "squareswire.squares": 30.0,
+    "windowslice.count": 30.0,
+    "TilesWave.tileCount": 24.0
+  },
+  "colour_like_uniforms_in_keep_bank": {
+    "GridFlip.bgcolor": [
+      "vec4",
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "StarWipe.border_color": [
+      "vec4",
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "burn.color": [
+      "vec3",
+      [
+        0.9,
+        0.4,
+        0.2
+      ]
+    ],
+    "burn0.burnColor": [
+      "vec3",
+      [
+        1.0,
+        0.5,
+        0.0
+      ]
+    ],
+    "dissolve.uSpreadClr": [
+      "vec3",
+      [
+        1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "dissolve.uHotClr": [
+      "vec3",
+      [
+        0.9,
+        0.9,
+        0.2
+      ]
+    ],
+    "fadecolor.color": [
+      "vec3",
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ]
+  },
+  "n_violations": 0,
+  "violations": [],
+  "verdict": "PASS"
+}

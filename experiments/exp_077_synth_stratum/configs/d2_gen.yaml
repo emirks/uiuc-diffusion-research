@@ -1,0 +1,156 @@
+acceleration:
+  load_text_encoder_in_8bit: false
+  mixed_precision_mode: bf16
+  offload_optimizer_during_validation: false
+  quantization: null
+checkpoints:
+  interval: 500
+  keep_last_n: -1
+  no_resume: false
+  precision: bfloat16
+  save_training_state: minimal
+data:
+  num_dataloader_workers: 2
+  preprocessed_data_root: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/exp_077_synth_stratum_d2/d2full/dataset/roots/d2_combined
+flow_matching:
+  timestep_sampling_mode: shifted_logit_normal
+  timestep_sampling_params: {}
+hub:
+  hub_model_id: null
+  push_to_hub: false
+lora:
+  alpha: 32
+  dropout: 0.0
+  rank: 32
+  target_modules:
+  - attn1.to_k
+  - attn1.to_q
+  - attn1.to_v
+  - attn1.to_out.0
+  - attn2.to_k
+  - attn2.to_q
+  - attn2.to_v
+  - attn2.to_out.0
+  - ff.net.0.proj
+  - ff.net.2
+model:
+  load_checkpoint: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/training/exp_077_synth_stratum/d2_gen/checkpoints
+  model_path: /projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors
+  text_encoder_path: /projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized
+  training_mode: lora
+optimization:
+  batch_size: 1
+  enable_gradient_checkpointing: true
+  gradient_accumulation_steps: 1
+  learning_rate: 0.0002
+  max_grad_norm: 1.0
+  optimizer_type: adamw
+  scheduler_params: {}
+  scheduler_type: linear
+  steps: 5000
+output_dir: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/training/exp_077_synth_stratum/d2_gen
+seed: 42
+training_strategy:
+  audio: null
+  name: flexible
+  video:
+    cond_clean_latents_dir: cond_clean_latents
+    conditions:
+    - latents_dir: reference_latents
+      probability: 1.0
+      type: reference
+    - mask_dir: masks
+      probability: 1.0
+      type: mask
+    is_generated: true
+    latents_dir: latents
+validation:
+  frame_rate: 24.0
+  generate_audio: false
+  generate_video: true
+  guidance_scale: 4.0
+  images: null
+  include_reference_in_output: false
+  inference_steps: 30
+  interval: 1000
+  negative_prompt: worst quality, inconsistent motion, distorted, jittery
+  prompts: []
+  reference_downscale_factor: 1
+  reference_videos: null
+  samples:
+  - conditions:
+    - audio: null
+      duration: null
+      num_frames: 9
+      type: prefix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/shadow_smoke_1_start9.mp4
+    - audio: null
+      duration: null
+      num_frames: 8
+      type: suffix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/shadow_smoke_1_end9.mp4
+    - audio: null
+      downscale_factor: 1
+      include_in_output: false
+      temporal_scale_factor: 1
+      type: reference
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/shadow_smoke/shadow_smoke_0.mp4
+    prompt: An older man in a flowing white traditional robe and a black hat rollerblades across a city crosswalk with cars and a pagoda-roofed building behind him. sksz. a blond man in a navy suit and sunglasses carrying a briefcase while riding a skateboard down a suburban hill past stone steps and a green lawn.
+    seed: null
+    video_dims: null
+  - conditions:
+    - audio: null
+      duration: null
+      num_frames: 9
+      type: prefix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/color_rain_1_start9.mp4
+    - audio: null
+      downscale_factor: 1
+      include_in_output: false
+      temporal_scale_factor: 1
+      type: reference
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/color_rain/color_rain_2.mp4
+    prompt: A young man with slicked-back dark hair and a serious expression crouches in front of a chain-link fence, wearing a bright red sweatshirt and dark pants under soft natural light. sksz.
+    seed: null
+    video_dims: null
+  - conditions:
+    - audio: null
+      duration: null
+      num_frames: 9
+      type: prefix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/saint_glow_0_start9.mp4
+    - audio: null
+      downscale_factor: 1
+      include_in_output: false
+      temporal_scale_factor: 1
+      type: reference
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/saint_glow/saint_glow_1.mp4
+    prompt: A woman with her hair pulled back wears yellow-tinted square sunglasses, gold hoop earrings, and a fuzzy yellow and green tie-dye cardigan while sitting inside a car with tan leather seats. sksz.
+    seed: null
+    video_dims: null
+  - conditions: []
+    prompt: A young man with slicked-back dark hair and a serious expression crouches in front of a chain-link fence, wearing a bright red sweatshirt and dark pants under soft natural light.
+    seed: null
+    video_dims: null
+  seed: 42
+  skip_initial_validation: true
+  stg_blocks:
+  - 29
+  stg_mode: stg_v
+  stg_scale: 1.0
+  video_dims:
+  - 480
+  - 640
+  - 121
+wandb:
+  enabled: true
+  entity: null
+  log_validation_videos: true
+  project: exp077_synth_stratum
+  tags:
+  - ltx2
+  - exp077
+  - d2
+  - ic_gen
+  - synth_stratum
+  - param_clamp

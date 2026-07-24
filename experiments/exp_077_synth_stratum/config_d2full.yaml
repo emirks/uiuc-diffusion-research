@@ -1,0 +1,84 @@
+# exp_077 D2-FULL config — the FINAL synthetic transition dataset (D2_POLICY_FINAL.json).
+#
+# Everything here is LOCKED by D2_POLICY_FINAL.json + the task spec; nothing is tunable.
+#   REAL streams (extension: "none"), ZERO aux maps, 7 kept easings, 72 keep_shaders (blacklist
+#   applied at SAMPLING time), frozen gate (tau 0.2543 / max_pure 0.5 / seam 2.0 / dq 0.5),
+#   window [8,112] with onset = 8 + u1*0.20*104 and release = 112 - u2*0.20*104 (u1,u2 indep),
+#   ref and target of a tuple share operator + timing, NO per-frame floor leg (metadata flag only).
+
+model:
+  shader_bank: "/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/gl-transitions/transitions"
+  ltx_checkpoint: "/projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors"
+  gemma: "/projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
+
+inputs:
+  bank_tightened: "data/processed/synth_endpoints/bank_tightened.json"
+  clips_dir: "data/processed/synth_endpoints"
+  policy: "experiments/exp_077_synth_stratum/D2_POLICY_FINAL.json"
+  d1_audit: "experiments/exp_077_synth_stratum/D1_BUILD_AUDIT.json"   # -> holdout_shader_list
+
+inference:
+  height: 640
+  width: 480
+  num_frames: 121          # full standardised clip length; both layers ARE the source clips
+  anchor_frames: 9         # pinned endpoint block -> window [8, 112]
+  fps: 24
+
+sampling:
+  extension: "none"          # REAL frames only. The fabrication code path is never called.
+  aux_kind: null             # ZERO aux maps
+  timing_frac: 0.20
+  p_flip: 0.6
+  p_swap: 0.5
+  p_vary: 0.85
+  endpoint_tol: 2.0          # gate-1: per-SHADER at defaults (bank admission)
+  endpoint_tol_operator: 0.5 # gate-2: per-OPERATOR at sampled params, PRODUCTION resolution
+  max_gate_tries: 20
+  param_clamp: true          # 2026-07-24 RULING: clamp unbounded shader params (param_clamp.py).
+                             # Sampler wrapper UPSTREAM of the frozen gate -> strictly narrows the
+                             # input distribution, so tau/gate/blacklist are UNCHANGED (no recal).
+
+gate:                        # FROZEN — no re-picking (D2_TAU.json / D2_POLICY_FINAL.json)
+  tau: 0.2543
+  assert1_tol: 0.5
+  seam_max: 2.0
+  m2_max_dq: 0.5
+  m1_min_flag_threshold: -0.05   # NON-GATING metadata flag only
+
+d2:
+  n_target_pairs: 384        # distinct TARGET endpoint pairs (cross-clip A/B)
+  ops_per_target: 8          # 384 * 8 = 3072 PASSING tuples
+  n_ref_pairs: 768           # distinct REF pairs, each reused exactly 4x (768*4 = 3072)
+  ref_reuse: 4
+  min_distinct_shaders: 6     # asserted; the build actually delivers 8 distinct per pair
+  # ---- per-slot rejection sampling ----
+  attempts_per_shader: 5      # param/easing/flip/swap redraws before swapping shader
+  max_shader_swaps: 4         # then try up to 4 OTHER allowed shaders (never used by this pair)
+  timing_redraws: 3           # last resort only; timing is otherwise FIXED per slot (unbiased law)
+  overdraw_ceiling: 2.5       # budget ceiling on renders / accepted clips (monitored, reported)
+  clip_cache: 240             # whole tightened bank (227) stays hot -> one decode per clip per shard
+  strip_frame_w: 240
+  reject_mp4_per_shard: 6     # bounded sample of REJECTED clips kept for the viewer's audit section
+
+runtime:
+  seed: 20260724
+  device: "cpu"              # EGL/llvmpipe software GL — never a GPU
+
+outputs:
+  dir: "outputs/videos/exp_077_synth_stratum_d2"   # mass build lands in <dir>/d2full (audit/ untouched)
+  subdir: "d2full"
+  train_dir: "outputs/training/exp_077_synth_stratum"
+  viewer_dir: "outputs/viewers/d2_dataset"
+
+text:
+  token: "sksz"              # arms.yaml transition-slot token (leak-free; no operator names)
+  neutral_s1: "A scene"
+  neutral_s2: "A scene"      # render style = "{S1}. {token}. {S2}."
+
+train:
+  # FROZEN generalist (ic_gen) recipe — copied from the AS-RUN baseline config; DATA is the only
+  # variable. rank32/a32 attn+FFN, lr 2e-4, 5000 steps, ckpt/500, reference+mask+cond_clean,
+  # bf16, grad-ckpt, batch 1, seed 42, shifted_logit_normal.
+  steps: 5000
+  ckpt_every: 500
+  real_replicas: 8           # real 385 pairs x8 = 3080, balancing the 3072 synthetic (~50/50)
