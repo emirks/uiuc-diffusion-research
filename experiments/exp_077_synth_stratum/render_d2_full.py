@@ -10,9 +10,19 @@ PER-SLOT REJECTION SAMPLING (the thing that makes "exactly 8 per pair" true rath
 for each of the 8 slots of a target pair we redraw the operator (params / easing / flip / swap) up
 to `attempts_per_shader` times, then swap to another allowed shader NEVER used by this pair (so the
 >= 6-distinct-shaders constraint can only ever improve), until BOTH clips of the tuple pass the
-frozen gate. Timing is drawn ONCE per slot and held FIXED across attempts, so the declared timing
-law (u1, u2 ~ U[0,1] independent) survives the rejection sampling unbiased; only if a slot exhausts
-every shader do we redraw timing (recorded, expected 0).
+frozen gate AND the degenerate-frame gate. Timing is redrawn per attempt alongside the params
+(ratified 2026-07-24; see the note at the retry loop).
+
+ACCEPT = frozen gate AND DFG (2026-07-24 ruling)
+------------------------------------------------
+`dfg.py` is an ADDITIVE accept-criterion evaluated only on clips that already passed the frozen
+gate, so the accepted set is a strict SUBSET of the frozen gate's and tau = 0.2543 / the frozen
+gate / the 40-shader blacklist are UNTOUCHED (no recalibration). Its thresholds are the ones
+DFG_CALIB.json selected against a pre-committed acceptance bar.
+
+`param_clamp.py` is ABANDONED PERMANENTLY (its caps were the wrong sign for the two worst
+offenders and collapsed them onto the destructive constant). It is kept on disk as a record and
+NEVER runs: `param_filter=None`, i.e. the byte-identical validated sampling path.
 
 Reuses, unmodified: streams_real (real-stream render + gated operator sampling + timing),
 d2_metrics (all four metrics + the frozen `verdict`), render_d2 (ClipCache / filmstrips).
@@ -39,7 +49,7 @@ sys.path.insert(0, str(HERE))
 from diffusion.exp_utils import load_config  # noqa: E402
 
 import d2_metrics  # noqa: E402
-import param_clamp  # noqa: E402
+import dfg  # noqa: E402
 import render_d2 as rd2  # noqa: E402  (ClipCache / save_strip / strip_indices / git_commit)
 import streams_real as sr  # noqa: E402
 from engine import videoio  # noqa: E402
@@ -47,6 +57,7 @@ from engine.glrunner import GLRunner  # noqa: E402
 
 CONFIG_PATH = HERE / "config_d2full.yaml"
 PLAN = HERE / "d2full_plan.json"
+CALIB = HERE / "DFG_CALIB.json"
 log = logging.getLogger("exp077.d2full")
 
 
@@ -65,13 +76,15 @@ class GrayCache:
         return g
 
 
-def score(clip: np.ndarray, a_src, b_src, i0: int, j0: int, ga, gb) -> dict:
-    """d2_metrics.score_clip with the source grayscales supplied (identical numbers)."""
+def score(clip: np.ndarray, a_src, b_src, i0: int, j0: int, ga, gb) -> tuple[dict, np.ndarray]:
+    """d2_metrics.score_clip with the source grayscales supplied (identical numbers).
+
+    Also returns the clip's 96x72 grayscale so the DFG reuses it instead of recomputing it."""
+    gf = d2_metrics.to_small_gray(clip)
     out = {"assert1": d2_metrics.assert1_pure_phase(clip, a_src, b_src, i0, j0),
            "assert2": d2_metrics.assert2_seam(clip, i0, j0)}
-    out.update(d2_metrics.m1_m2(clip, a_src, b_src, i0, j0,
-                                gray=(d2_metrics.to_small_gray(clip), ga, gb)))
-    return out
+    out.update(d2_metrics.m1_m2(clip, a_src, b_src, i0, j0, gray=(gf, ga, gb)))
+    return out, gf
 
 
 def clip_row(stem: str, role: str, m: dict, v: dict, flag_thr: float) -> dict:
@@ -143,14 +156,31 @@ def main() -> None:
                      "blacklist": plan["blacklist"]})
         (meta_dir / "bank_info.json").write_text(json.dumps(info, indent=2))
 
-    # ---- parameter clamp (2026-07-24 ruling): sampler wrapper, gate/tau/blacklist UNCHANGED ----
-    pfilter = param_clamp.make_filter(bool(smp.get("param_clamp", True)))
-    log.info("param_clamp: %s", "ACTIVE" if pfilter else "DISABLED")
-    fclamp = open(meta_dir / f"clamp_shard{shard:02d}.jsonl", "a", buffering=1)
-    clamp_rule: Counter = Counter()
-    clamp_param: Counter = Counter()
-    clamp_shader: Counter = Counter()
-    n_draw_clamped = n_draw_total = 0
+    # ---- parameter clamp: ABANDONED PERMANENTLY (2026-07-24 ruling). NEVER runs. ----
+    # param_clamp.py stays on disk as a record. param_filter=None is the byte-identical path the
+    # 448-tuple audit validated.
+    assert not smp.get("param_clamp", False), "param clamping is abandoned; set param_clamp: false"
+    pfilter = None
+    log.info("param_clamp: ABANDONED (param_filter=None)")
+
+    # ---- degenerate-frame gate: additive, AND-composed DOWNSTREAM of the frozen gate ----
+    dcfg = cfg["dfg"]
+    dfg_on = bool(dcfg.get("enabled", False))
+    dfg_cfg = {k: dcfg.get(k) for k in ("theta_black", "theta_white", "theta_flat", "K",
+                                       "theta_sat", "sat_flat_mult")}
+    if CALIB.exists():
+        cal = json.loads(CALIB.read_text())
+        if dfg_on:
+            assert cal.get("ships"), "DFG enabled but DFG_CALIB.json says the escape triggered"
+            assert cal["chosen"] == dfg_cfg, f"config dfg {dfg_cfg} != calibrated {cal['chosen']}"
+        else:
+            assert not cal.get("ships"), "DFG_CALIB.json ships a detector but dfg.enabled is false"
+    log.info("DFG: %s %s", "ACTIVE" if dfg_on else "DISABLED (escape)", json.dumps(dfg_cfg))
+    fdfg = open(meta_dir / f"dfg_shard{shard:02d}.jsonl", "a", buffering=1)
+    dfg_seen: Counter = Counter()      # per shader: clips that reached the DFG (gate-passing)
+    dfg_rej: Counter = Counter()       # per shader: clips the DFG rejected
+    dfg_test: Counter = Counter()      # which test fired on rejected clips
+    n_dfg_reject = 0
 
     cache = rd2.ClipCache(REPO_ROOT / cfg["inputs"]["clips_dir"], d2["clip_cache"])
     gray = GrayCache()
@@ -183,11 +213,35 @@ def main() -> None:
         t_r = time.time()
         clip = sr.render_real(runner, bank, op, a_src, b_src, p)
         n_render += 1
-        m = score(clip, a_src, b_src, i0, j0,
-                  gray.get(pair["A"], a_src), gray.get(pair["B"], b_src))
+        ga, gb = gray.get(pair["A"], a_src), gray.get(pair["B"], b_src)
+        m, gf = score(clip, a_src, b_src, i0, j0, ga, gb)
         v = d2_metrics.verdict(m, tau, assert1_tol=gt["assert1_tol"],
                                seam_max=gt["seam_max"], m2_max=gt["m2_max_dq"])
-        return clip, m, v, time.time() - t_r
+        return clip, m, v, (gf, ga, gb), time.time() - t_r
+
+    def dfg_check(clip, grays, i0, j0, op, stem, role, tid, n_att):
+        """DFG on a clip that ALREADY passed the frozen gate. Returns (ok, payload)."""
+        nonlocal n_dfg_reject
+        gf, ga, gb = grays
+        dfg_seen[op.shader] += 1
+        # sat is computed even when the sat TEST is disabled: it costs ~1 resize/frame and makes
+        # every rejection log self-describing (a flat matte's hue is otherwise invisible).
+        ft = dfg.features(clip, i0, j0, gray=gf, gray_a=ga, gray_b=gb, need_sat=True)
+        res = dfg.evaluate(ft, dfg_cfg)
+        if not res["reject"]:
+            return True, {"n_flag": res["n_flag"], "n_window": res["n_window"],
+                          "by_test": res["by_test"]}
+        n_dfg_reject += 1
+        dfg_rej[op.shader] += 1
+        for k, v in res["by_test"].items():
+            if v:
+                dfg_test[k] += v
+        # every rejection logged with shader, params and the per-frame features of flagged frames
+        fdfg.write(json.dumps({
+            "tuple_id": tid, "attempt": n_att, "stem": stem, "role": role,
+            "shader": op.shader, "easing": op.easing, "flip": op.flip, "swap": op.swap,
+            "params": op.params, "dfg": dfg.compact(ft, res)}) + "\n")
+        return False, dfg.compact(ft, res)
 
     for n, tgt in enumerate(mine):
         ti = tgt["target_index"]
@@ -243,42 +297,50 @@ def main() -> None:
                                 "shader_swap": si, "timing_redraw": redraw,
                                 "gate2_exhausted": True, "accepted": False}) + "\n")
                             continue
-                        cev = list(getattr(op, "clamp_events", []) or [])
-                        n_draw_total += 1
-                        if cev:
-                            n_draw_clamped += 1
-                            for e in cev:
-                                clamp_rule[e["rule"]] += 1
-                                clamp_param[f"{e['shader']}.{e['param']}"] += 1
-                                clamp_shader[e["shader"]] += 1
-                            fclamp.write(json.dumps({"tuple_id": tid, "attempt": n_att,
-                                                     "shader": shader, "events": cev}) + "\n")
                         p = sr.progress_ramp(T, K, op.easing, timing["onset"], timing["release"])
-                        clip_t, m_t, v_t, s_t = render_and_score(op, p, i0, j0, tp, (a_t, b_t))
+                        clip_t, m_t, v_t, g_t, s_t = render_and_score(op, p, i0, j0, tp, (a_t, b_t))
                         row_t = clip_row(stem_t, "target", m_t, v_t, flag_thr)
                         rec = {"tuple_id": tid, "attempt": n_att, "shader": shader,
                                "shader_swap": si, "timing_redraw": redraw,
                                "easing": op.easing, "flip": op.flip, "swap": op.swap,
                                "gate2_tries": gtries, "target": row_t}
+
+                        def save_reject(rstem, cl, why):
+                            """Bounded sample of rejected clips for the viewer's audit section."""
+                            nonlocal n_rej_saved
+                            if n_rej_saved >= d2["reject_mp4_per_shard"]:
+                                return
+                            videoio.write_clip(rej_dir / f"{rstem}.mp4", cl, fps=inf["fps"])
+                            rd2.save_strip(rej_strip / f"{rstem}.jpg", cl, idx_strip,
+                                           d2["strip_frame_w"])
+                            (rej_dir / f"{rstem}.json").write_text(json.dumps(dict(
+                                rec, reject_stem=rstem, reject_reason=why, params=op.params,
+                                timing={k2: timing[k2] for k2 in
+                                        ("onset", "release", "duration", "u1", "u2")},
+                                A=tp["A"], B=tp["B"]), indent=1))
+                            n_rej_saved += 1
+
                         if not v_t["pass"]:
                             for leg in ("assert1", "assert2", "m1", "m2"):
                                 if not v_t[leg]:
                                     leg_fail[leg] += 1
                             rec["accepted"] = False
                             fatt.write(json.dumps(rec) + "\n")
-                            if n_rej_saved < d2["reject_mp4_per_shard"]:
-                                rstem = f"d2f_{tid:04d}_a{n_att}_tgt"
-                                videoio.write_clip(rej_dir / f"{rstem}.mp4", clip_t, fps=inf["fps"])
-                                rd2.save_strip(rej_strip / f"{rstem}.jpg", clip_t, idx_strip,
-                                               d2["strip_frame_w"])
-                                rec_r = dict(rec, reject_stem=rstem, params=op.params,
-                                             timing={k2: timing[k2] for k2 in
-                                                     ("onset", "release", "duration", "u1", "u2")},
-                                             A=tp["A"], B=tp["B"])
-                                (rej_dir / f"{rstem}.json").write_text(json.dumps(rec_r, indent=1))
-                                n_rej_saved += 1
+                            save_reject(f"d2f_{tid:04d}_a{n_att}_tgt", clip_t, "frozen_gate")
                             continue
-                        clip_r, m_r, v_r, s_r = render_and_score(op, p, i0, j0, rp, (a_r, b_r))
+                        # ---- DFG on the TARGET (downstream of the frozen gate) ----
+                        if dfg_on:
+                            ok_t, dp_t = dfg_check(clip_t, g_t, i0, j0, op, stem_t, "target",
+                                                   tid, n_att)
+                            rec["target"]["dfg"] = dp_t
+                            if not ok_t:
+                                leg_fail["dfg"] += 1
+                                rec["accepted"] = False
+                                rec["dfg_rejected"] = "target"
+                                fatt.write(json.dumps(rec) + "\n")
+                                save_reject(f"d2f_{tid:04d}_a{n_att}_tgt", clip_t, "dfg")
+                                continue
+                        clip_r, m_r, v_r, g_r, s_r = render_and_score(op, p, i0, j0, rp, (a_r, b_r))
                         row_r = clip_row(stem_r, "reference", m_r, v_r, flag_thr)
                         rec["reference"] = row_r
                         if not v_r["pass"]:
@@ -288,6 +350,18 @@ def main() -> None:
                             rec["accepted"] = False
                             fatt.write(json.dumps(rec) + "\n")
                             continue
+                        # ---- DFG on the REFERENCE ----
+                        if dfg_on:
+                            ok_r, dp_r = dfg_check(clip_r, g_r, i0, j0, op, stem_r, "reference",
+                                                   tid, n_att)
+                            rec["reference"]["dfg"] = dp_r
+                            if not ok_r:
+                                leg_fail["dfg"] += 1
+                                rec["accepted"] = False
+                                rec["dfg_rejected"] = "reference"
+                                fatt.write(json.dumps(rec) + "\n")
+                                save_reject(f"d2f_{tid:04d}_a{n_att}_ref", clip_r, "dfg")
+                                continue
                         rec["accepted"] = True
                         fatt.write(json.dumps(rec) + "\n")
                         accepted = {
@@ -310,7 +384,7 @@ def main() -> None:
                             "render_s": round(s_t + s_r, 2),
                             "clips": {"target": row_t, "reference": row_r},
                             "m1_min_flag": bool(row_t["m1_min_flag"] or row_r["m1_min_flag"]),
-                            "clamp_events": cev, "param_clamp": bool(pfilter),
+                            "param_clamp": False, "dfg_enabled": dfg_on, "dfg_config": dfg_cfg,
                             "engine_git_commit": commit, "tau": tau,
                         }
                         for stem, cl in ((stem_t, clip_t), (stem_r, clip_r)):
@@ -334,16 +408,33 @@ def main() -> None:
             attempts_hist[n_att] += 1
             n_accept += 1
 
+        od = n_render / max(2 * n_accept, 1)
         if (n + 1) % 2 == 0 or n == len(mine) - 1:
             el = time.time() - t_start
-            log.info("shard %d: %d/%d targets | %d accepted | %d renders (%.2fx) | %.1f min "
-                     "(%.2fs/render) | cache h/m=%d/%d", shard, n + 1, len(mine), n_accept,
-                     n_render, n_render / max(2 * n_accept, 1), el / 60,
+            log.info("shard %d: %d/%d targets | %d accepted | %d renders (%.2fx) | %d DFG-rej "
+                     "| %.1f min (%.2fs/render) | cache h/m=%d/%d", shard, n + 1, len(mine),
+                     n_accept, n_render, od, n_dfg_reject, el / 60,
                      el / max(n_render, 1), cache.hits, cache.misses)
+        # ---- BUDGET GUARD: overdraw ceiling 2.5x -> STOP AND REPORT (spec). The 64-accepted
+        # floor keeps the very first slots (where the ratio is dominated by 1-2 hard draws) from
+        # tripping it; 64 accepted clips = 128 denominators, enough for the ratio to be real.
+        if n_accept >= 64 and od > d2["overdraw_ceiling"]:
+            ftup.close()
+            fatt.close()
+            fdfg.close()
+            (meta_dir / f"OVERDRAW_BREACH_shard{shard:02d}.json").write_text(json.dumps({
+                "shard": shard, "n_accept": n_accept, "n_render": n_render,
+                "realized_overdraw": round(od, 4), "ceiling": d2["overdraw_ceiling"],
+                "n_dfg_reject": n_dfg_reject, "leg_failures": dict(leg_fail),
+                "dfg_reject_by_test": dict(dfg_test),
+                "dfg_per_shader": {s: {"seen": dfg_seen[s], "rejected": dfg_rej[s]}
+                                   for s in sorted(dfg_seen)}}, indent=2))
+            sys.exit(f"[render] OVERDRAW CEILING BREACHED on shard {shard}: {od:.3f}x > "
+                     f"{d2['overdraw_ceiling']}x after {n_accept} accepted tuples — STOPPING")
 
     ftup.close()
     fatt.close()
-    fclamp.close()
+    fdfg.close()
 
     # ---- per-shard manifest for the encode stage + per-shard stats ----
     rows = [json.loads(line) for line in tup_path.read_text().splitlines() if line.strip()]
@@ -358,12 +449,17 @@ def main() -> None:
         "n_gate2_exhausted_draws": n_gate2_exhaust,
         "attempts_hist_this_run": dict(sorted(attempts_hist.items())),
         "leg_failures_this_run": dict(leg_fail),
-        "param_clamp_active": bool(pfilter),
-        "clamp_draws_total_this_run": n_draw_total,
-        "clamp_draws_with_event_this_run": n_draw_clamped,
-        "clamp_events_by_rule_this_run": dict(clamp_rule.most_common()),
-        "clamp_events_by_param_top20_this_run": dict(clamp_param.most_common(20)),
-        "clamp_events_by_shader_top20_this_run": dict(clamp_shader.most_common(20)),
+        "param_clamp_active": False,
+        "dfg_enabled": dfg_on, "dfg_config": dfg_cfg,
+        "dfg_clips_seen_this_run": sum(dfg_seen.values()),
+        "dfg_clips_rejected_this_run": n_dfg_reject,
+        "dfg_reject_rate_this_run": round(n_dfg_reject / max(sum(dfg_seen.values()), 1), 4),
+        "dfg_reject_by_test_this_run": dict(dfg_test.most_common()),
+        "dfg_per_shader_this_run": {s: {"seen": dfg_seen[s], "rejected": dfg_rej[s],
+                                       "rate": round(dfg_rej[s] / dfg_seen[s], 4)}
+                                    for s in sorted(dfg_seen)},
+        "dfg_shaders_over_60pct_min20_this_run": sorted(
+            s for s in dfg_seen if dfg_seen[s] >= 20 and dfg_rej[s] / dfg_seen[s] > 0.60),
         "overdraw_this_run": round(n_render / max(2 * n_accept, 1), 4),
         "wall_min": round((time.time() - t_start) / 60, 2),
         "cache_hits": cache.hits, "cache_misses": cache.misses,

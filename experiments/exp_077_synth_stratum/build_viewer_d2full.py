@@ -81,8 +81,9 @@ def meta_block(t: dict, base: str, *, legs: bool = False) -> str:
         tags += f'<span class="tag">flip {t["flip"]}</span>'
     if t.get("swap"):
         tags += '<span class="tag">swap</span>'
-    if t.get("clamp_events"):
-        tags += f'<span class="tag">clamped x{len(t["clamp_events"])}</span>'
+    nf = (t["clips"]["target"].get("dfg") or {}).get("n_flag", 0)
+    if nf:
+        tags += f'<span class="tag">dfg {nf} flagged frame{"s" if nf > 1 else ""}</span>'
     if t.get("m1_min_flag"):
         tags += '<span class="tag">m1_min flag</span>'
     c = t["clips"]["target"]
@@ -130,18 +131,30 @@ def card_pair(t: dict, base: str) -> str:
 
 def card_reject(r: dict, base: str) -> str:
     st = r["reject_stem"]
-    c = r["target"]
+    # the saved clip is the reference only when the DFG rejected the reference leg
+    role = "reference" if st.endswith("_ref") and r.get("reference") else "target"
+    c = r[role]
     v = c["verdict"]
     legs = " ".join(f'<span class="{"ok" if v[k] else "bad"}">{n}{"OK" if v[k] else "X"}</span>'
                     for k, n in (("assert1", "identity "), ("assert2", "seam "),
                                  ("m1", "mush "), ("m2", "cut ")))
+    why = r.get("reject_reason", "frozen_gate")
+    d = c.get("dfg") or {}
+    if why == "dfg" and d:
+        bt = ", ".join(f"{k} {n}" for k, n in d.get("by_test", {}).items() if n)
+        w = d.get("worst", {})
+        legs += (f' <span class="bad">DFG X {d.get("n_flag")}/{d.get("n_window")} frames'
+                 f'{" (" + bt + ")" if bt else ""}</span>'
+                 f'<br><span class="bad">L {w.get("L_min")}&ndash;{w.get("L_max")} '
+                 f'&middot; S_min {w.get("S_min")} &middot; sat_max {w.get("sat_max")}</span>')
     p = " ".join(f"{k}={v2}" for k, v2 in (r.get("params") or {}).items()) or "no params"
     return (f'<div class="card"><video src="{base}/rejects/{st}.mp4" muted loop playsinline '
             f'preload="none"></video>'
             f'<img class="strip" src="{base}/rejects_filmstrips/{st}.jpg" loading="lazy">'
             f'<div class="meta"><div class="sh">{html.escape(r["shader"])}</div>'
             f'<div><span class="tag">{html.escape(r.get("easing", "?"))}</span>'
-            f'<span class="tag">REJECTED</span></div>'
+            f'<span class="tag">REJECTED: {html.escape(why)}</span>'
+            f'<span class="tag">{role}</span></div>'
             f'<div class="kv">{html.escape(p)[:150]}</div>'
             f'<div class="kv">seam {c["assert2"]["seam_max_ratio"]:.2f} &middot; '
             f'mush p10 {c["m1_p10"]:.2f} &middot; dq {c["m2_max_dq"]:.2f} &middot; '
@@ -173,7 +186,10 @@ def main() -> None:
         by_sh[t["shader"]].append(t)
     top_sh = sorted(by_sh.items(), key=lambda kv: -len(kv[1]))[:12]
     n_flag = sum(1 for t in tuples if t.get("m1_min_flag"))
-    n_clamped = sum(1 for t in tuples if t.get("clamp_events"))
+    n_dfg_flag = sum(1 for t in tuples
+                     if any((t["clips"][r].get("dfg") or {}).get("n_flag", 0)
+                            for r in ("target", "reference")))
+    dcfg = tuples[0].get("dfg_config") or {}
 
     S = []
     S.append('<h2>Same operator &rarr; different content <span class="tag">the positive pair</span></h2>'
@@ -193,10 +209,13 @@ def main() -> None:
                  + "".join(card_single(t, base) for t in items[:12]) + '</div>')
 
     if rejects:
-        S.append('<h2>Rejected by the gate <span class="tag">audit the filter</span></h2>'
-                 '<p class="sub">A bounded sample of clips the frozen gate threw out during '
-                 'rejection sampling. If these look fine the gate is too strict; if they are mush, '
-                 'near-cuts or broken identity it is doing its job. Failing legs are marked in red.'
+        S.append('<h2>Rejected by the gates <span class="tag">audit the filter</span></h2>'
+                 '<p class="sub">A bounded sample of clips thrown out during rejection sampling — '
+                 'by the frozen gate (<code>reject_reason: frozen_gate</code>) or by the '
+                 'degenerate-frame gate (<code>reject_reason: dfg</code>: sustained near-black, '
+                 'white-blowout or flat/near-zero-variance frames inside the transition window). '
+                 'If these look fine the gates are too strict; if they are mush, near-cuts, broken '
+                 'identity or dead mattes they are doing their job.'
                  '</p><div class="grid">'
                  + "".join(card_reject(r, base) for r in rejects[:36]) + '</div>')
 
@@ -204,7 +223,7 @@ def main() -> None:
         (len(tuples), "tuples"), (len({t["target_index"] for t in tuples}), "target pairs"),
         (len(by_sh), "shaders"), (2 * len(tuples), "clips"),
         (f"{gt['tau']}", "frozen &tau;"), ("0", "aux maps"), ("none", "extension policy"),
-        (n_clamped, "with a clamped param"), (n_flag, "m1_min flagged (non-gating)"),
+        (n_dfg_flag, "with any DFG-flagged frame"), (n_flag, "m1_min flagged (non-gating)"),
     ]
     stat_html = "".join(f'<div class="stat"><b>{v}</b><span>{k}</span></div>' for v, k in stats)
 
@@ -220,8 +239,11 @@ footage rather than fabricated frames. Per-clip <code>assert1</code> proves the 
 byte-identical to the source. Every tuple shown passed the frozen gate
 (&tau;={gt['tau']} mush &middot; max_pure&le;{gt['assert1_tol']} identity &middot;
 seam&le;{gt['seam_max']} &middot; &Delta;q&le;{gt['m2_max_dq']}) on <b>both</b> its clips, selected by
-per-slot rejection sampling. Shader parameters are clamped upstream of the gate
-(<code>param_clamp.py</code>). Aux-map wipes are absent entirely.</p>
+per-slot rejection sampling, <b>and</b> the calibrated <b>degenerate-frame gate</b>
+(<code>dfg.py</code>: fewer than K={dcfg.get('K')} frames in the transition window with mean
+luma&lt;{dcfg.get('theta_black')} / &gt;{dcfg.get('theta_white')} or luma
+std&lt;{dcfg.get('theta_flat')}). Parameter clamping was abandoned and never ran. Aux-map wipes are
+absent entirely.</p>
 <div class="stats">{stat_html}</div>
 <div class="toggle">
 <label><input type="checkbox" id="autoplay" checked> autoplay on scroll</label>
@@ -233,7 +255,7 @@ per-slot rejection sampling. Shader parameters are clamped upstream of the gate
     out.mkdir(parents=True, exist_ok=True)
     (out / "index.html").write_text(page)
     print(f"[viewer] tuples={len(tuples)} shaders={len(by_sh)} rejects={len(rejects)} "
-          f"sections={len(S)} clamped={n_clamped} m1_min_flag={n_flag}")
+          f"sections={len(S)} dfg_flagged_tuples={n_dfg_flag} m1_min_flag={n_flag}")
     print(f"[viewer] -> {(out / 'index.html').relative_to(REPO_ROOT)}  (base={base})")
 
 

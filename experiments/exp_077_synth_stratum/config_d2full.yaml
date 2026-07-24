@@ -34,9 +34,12 @@ sampling:
   endpoint_tol: 2.0          # gate-1: per-SHADER at defaults (bank admission)
   endpoint_tol_operator: 0.5 # gate-2: per-OPERATOR at sampled params, PRODUCTION resolution
   max_gate_tries: 20
-  param_clamp: true          # 2026-07-24 RULING: clamp unbounded shader params (param_clamp.py).
-                             # Sampler wrapper UPSTREAM of the frozen gate -> strictly narrows the
-                             # input distribution, so tau/gate/blacklist are UNCHANGED (no recal).
+  param_clamp: false         # ABANDONED PERMANENTLY (2026-07-24): the caps were the wrong sign for
+                             # EdgeTransition.edge_brightness (d=8.0) and ColourDistance.power
+                             # (d=5.0) — [0.5d,2d] & |v|<=3.0 is empty / a single point, so both
+                             # collapsed to the constant 3.0 (the destructive direction) on 100% of
+                             # draws. param_clamp.py stays on disk as a record and NEVER runs;
+                             # param_filter=None is the byte-identical validated path.
 
 gate:                        # FROZEN — no re-picking (D2_TAU.json / D2_POLICY_FINAL.json)
   tau: 0.2543
@@ -44,6 +47,25 @@ gate:                        # FROZEN — no re-picking (D2_TAU.json / D2_POLICY
   seam_max: 2.0
   m2_max_dq: 0.5
   m1_min_flag_threshold: -0.05   # NON-GATING metadata flag only
+
+dfg:                         # DEGENERATE-FRAME GATE — additive, AND-composed DOWNSTREAM of the
+                             # frozen gate. Values come from DFG_CALIB.json; the renderer asserts
+                             # they match, and asserts enabled==false iff the escape triggered.
+                             #
+                             # 2026-07-24 OUTCOME: **ESCAPE** — no config in the declared grid
+                             # (theta_flat {0.02,0.03,0.05} x theta_black {0.04,0.06,0.08} x
+                             # K {2,3,4,6}) met the pre-committed bar (baseline BAD >=5/7,
+                             # round-5 BAD 5/5, FP <=2/38 GOOD, StaticFade 5/5). Best reachable:
+                             # 4/7, 3/5, 3 FP, StaticFade 2/5. NO DETECTOR SHIPS; the render is
+                             # UNCLAMPED AT BASELINE (frozen gate only). See DFG_CALIB.json
+                             # ::escape_diagnosis — the failure is structural, not a grid artifact.
+  enabled: false
+  theta_black: null
+  theta_white: null
+  theta_flat: null
+  K: null
+  theta_sat: null
+  sat_flat_mult: null
 
 d2:
   n_target_pairs: 384        # distinct TARGET endpoint pairs (cross-clip A/B)

@@ -31,6 +31,9 @@ def main() -> None:
     ap.add_argument("--role", default="both", choices=["both", "target", "reference"])
     ap.add_argument("--limit", type=int, default=64)
     ap.add_argument("--out", default=None)
+    ap.add_argument("--blind", action="store_true",
+                    help="caption an INDEX only (no shader / params / metrics) and write the "
+                         "index->stem key to a separate JSON, so grading cannot be primed")
     args = ap.parse_args()
 
     cfg = yaml.safe_load((HERE / "config_d2full.yaml").read_text())
@@ -60,6 +63,13 @@ def main() -> None:
                          f"{'  [M1MIN-FLAG]' if c['m1_min_flag'] else ''}"),
             })
     rows = rows[: args.limit]
+    if args.blind:
+        key = [{"idx": i, "stem": r["cap"].split()[0], "shader": r["cap"].split()[2]}
+               for i, r in enumerate(rows)]
+        for i, r in enumerate(rows):
+            r["cap"], r["cap2"] = f"clip #{i:02d}", ""
+        (out / "blind_key.json").write_text(json.dumps(key, indent=1))
+        print(f"[sheet] BLIND: key -> {out / 'blind_key.json'}")
     print(f"[sheet] {len(rows)} filmstrips from {run.name}")
 
     n = args.per_sheet

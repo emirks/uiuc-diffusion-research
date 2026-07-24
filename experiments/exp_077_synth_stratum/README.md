@@ -175,3 +175,87 @@ step that reads or writes an mp4 must run inside a batch job.
   from the REPO ROOT so `/outputs/...` resolves: `python -m http.server 8017`
 
 **The training run is BLOCKED on the owner's OK on `owner_sheet.png`.**
+
+---
+
+# D2-FULL — the FINAL 3,072-tuple build (2026-07-24)
+
+## Structure (LOCKED)
+
+3,072 passing tuples = **384 target pairs × exactly 8 operators**, ≥6 distinct shaders per pair,
+768 ref pairs (content-disjoint from their target pair) each reused ~4×, 7 easings, **aux 0%**,
+40-shader blacklist applied at **sampling** time (72-shader bank), 8 holdout shaders held out,
+`extension: "none"`, fixed 121 frames, timing redrawn per attempt.
+
+## Two rulings that shaped this build
+
+### 1. Parameter clamping is ABANDONED PERMANENTLY
+
+`param_clamp.py` stays on disk as a record but **never runs** (`param_filter=None`, the
+byte-identical validated path; `sampling.param_clamp: false`, asserted by the renderer).
+
+Its rule 2 took `[0.5d, 2d] ∩ |v| ≤ 3.0`. That intersection is **EMPTY** for
+`EdgeTransition.edge_brightness` (d = 8.0) and a **single point** for `ColourDistance.power`
+(d = 5.0), so the absolute cap won on **100% of draws including the canonical default** and
+collapsed both parameters to the constant 3.0 — the *destructive* direction (dimmer edge map =
+near-black frames; lower power = white blowout). The pre-committed first-chunk check failed
+accordingly (25.0% BAD raw, 16.7% uniform-projected vs a 17.5% baseline) and array 9659414 was
+killed. Its clips are discarded. See `D2_FIRSTCHUNK_VISUAL.json`.
+
+### 2. A PIXEL-level gate instead — the degenerate-frame gate (DFG)
+
+Every observed failure mode — near-black frames, white blowout, flat mattes (brown / lavender /
+orange / olive), saturated washes, geometry blank-outs — is a **degenerate frame**: extreme mean
+luma or near-zero spatial variance. `dfg.py` detects it there.
+
+This also dodges the retired per-frame-floor failure: a zNCC floor could not separate
+decorrelation-by-NOISE (legitimate `StaticFade` grain) from decorrelation-by-FLATNESS (a junk
+matte). **Raw luma statistics separate them trivially — grain has high pixel variance, a matte has
+none.**
+
+Per frame in the **transition window only** (`ramp = range(i0+1, j0)`, identical to M1's ramp; the
+pure phases are byte-identical real frames and are never flagged), on the 96×72 grayscale M1
+already computes plus a 96×72 downsampled RGB:
+
+| test | condition | guard |
+|---|---|---|
+| near-black | `L(t) < θ_black` | only if `min(L_Asrc(t), L_Bsrc(t)) > 0.15` |
+| near-white | `L(t) > θ_white` | only if `max(L_Asrc(t), L_Bsrc(t)) < 0.85` |
+| flat | `S(t) < θ_flat` | **none** — real frames are never near-zero variance |
+| sat wash | `sat(t) > θ_sat` and `S(t) < m·θ_flat` | optional; added only if flatness misses it |
+
+A clip is REJECTED at **≥ K flagged frames** (a 1–2 frame stylistic flash is tolerated; sustained
+degeneracy is junk). **No shader exceptions** — a fade *through* a held solid counts as BAD.
+
+The DFG is an **additive** criterion evaluated only on clips that already passed the frozen gate,
+i.e. **AND-composed downstream** of it. The accepted set is therefore a strict SUBSET of the frozen
+gate's, so **τ = 0.2543, the frozen gate and the blacklist are UNTOUCHED — no recalibration**.
+
+## Files
+
+- `dfg.py` — the gate (features + decision), reused by the calibration and the renderer
+- `calibrate_dfg.py` — `PHASE=features` (batch: re-render every graded clip from its recorded
+  operator so the features are measured on RAW frames) / `PHASE=grid` (the pre-committed search)
+- `DFG_CALIB.json` — the calibration record: full grid table, chosen thresholds, per-clip features
+- `render_d2_full.py` — the mass render (frozen gate AND DFG, per-slot rejection sampling)
+- `config_d2full.yaml` — `sampling.param_clamp: false`, `dfg:` = the calibrated config
+- `contact_sheet.py --blind` — index-only captions + a separate `blind_key.json`, for blind grading
+
+## How to run
+
+```bash
+cd $LAB/diffusion-research/experiments/exp_077_synth_stratum
+sbatch job_dfg_calib.sbatch                    # CPU: DFG features on every graded clip
+PHASE=grid python calibrate_dfg.py             # the pre-committed grid + the bar
+python plan_d2_full.py                         # d2full_plan.json (384 x 8)
+sbatch --array=0-15%16 --export=ALL,NSHARDS=16 job_render_d2full.sbatch
+python contact_sheet.py --sub d2full --role target --limit 64 --blind --out <dir>
+python audit_d2full.py                         # -> D2_BUILD_AUDIT.json (stage2_render)
+sbatch --array=0-5%6 --export=ALL,NSHARDS=6 job_encode_d2full.sbatch     # L40S
+sbatch job_assemble_d2full.sbatch                                        # ONE combined root
+python make_d2_train_config.py                 # configs/d2_gen.yaml  (TRAIN IS HELD)
+python build_viewer_d2full.py
+```
+
+All rendering is **CPU-only** (`secondary`, never `--gres`); PyAV cannot allocate on login nodes,
+so any step touching an mp4 must run inside a batch job.

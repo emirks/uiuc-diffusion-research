@@ -316,6 +316,77 @@ def _projection(recs: dict, res: dict, keep_shaders: set, keep_easings: set) -> 
     }
 
 
+def _per_clip_table(recs: dict, graded: dict, cfg: dict) -> list[dict]:
+    """The calibration table: per graded clip, the L/S/sat features + flag decision + label."""
+    _, res = _score_config(recs, cfg)
+    return [{
+        "stem": s, "set": r["label"]["set"], "label": r["label"]["label"],
+        "grade": r["label"].get("grade", r["label"]["label"].upper()),
+        "shader": r["shader"], "easing": r["easing"],
+        "window": [r["features"]["i0"], r["features"]["j0"]],
+        "n_window": r["features"]["n_window"],
+        "L_min": res[s]["worst"]["L_min"], "L_max": res[s]["worst"]["L_max"],
+        "S_min": res[s]["worst"]["S_min"], "sat_max": res[s]["worst"]["sat_max"],
+        "m1_p10": r["m1_p10"], "m1_min": r["m1_min"],
+        "n_flag": res[s]["n_flag"], "by_test": res[s]["by_test"],
+        "flagged": res[s]["reject"], "note": (r["label"].get("note") or "")[:90],
+        "mp4_delta": r.get("mp4_delta"),
+    } for s, r in sorted(graded.items(), key=lambda kv: (kv[1]["label"]["set"],
+                                                        kv[1]["label"]["label"], kv[0]))]
+
+
+def _escape_diagnosis(recs: dict) -> dict:
+    """Is an infeasible grid an artifact of the DECLARED grid, or structural? Diagnostic only —
+    it changes nothing (the grid and the bar are locked); it just makes the record readable."""
+    g = {s: r for s, r in recs.items() if r["label"] is not None}
+
+    def grp(setn, lab):
+        return [s for s, r in g.items() if r["label"]["set"] == setn and r["label"]["label"] == lab]
+
+    def smin(s):
+        return round(min(g[s]["features"]["S"]), 4)
+
+    def lmin(s):
+        return round(min(g[s]["features"]["L"]), 4)
+
+    bb, bg, r5b, r5g = (grp("baseline", "bad"), grp("baseline", "good"),
+                        grp("round5", "bad"), grp("round5", "good"))
+    good = bg + r5g
+    good_min_S = min(smin(s) for s in good)
+    # a BAD clip is reachable by the FLAT test only if its S_min is below the lowest GOOD S_min
+    unreachable = {k: [{"stem": s, "shader": g[s]["shader"], "S_min": smin(s), "L_min": lmin(s),
+                        "sat_max": round(max(g[s]["features"]["sat"]), 4)}
+                       for s in sorted(v) if smin(s) > good_min_S]
+                   for k, v in (("baseline_bad", bb), ("round5_bad", r5b))}
+    return {
+        "S_min_by_group": {"baseline_bad": sorted(smin(s) for s in bb),
+                           "round5_bad": sorted(smin(s) for s in r5b),
+                           "round5_good_StaticFade": sorted(smin(s) for s in r5g),
+                           "baseline_good": sorted(smin(s) for s in bg)},
+        "lowest_S_min_over_all_38_GOOD": good_min_S,
+        "lowest_S_min_StaticFade": min(smin(s) for s in r5g),
+        "theta_flat_grid": list(GRID_FLAT),
+        "StaticFade_S_min_is_BELOW_every_grid_value": max(smin(s) for s in r5g) < min(GRID_FLAT),
+        "bad_clips_unreachable_by_any_flat_threshold_without_an_FP": unreachable,
+        "mechanism": (
+            "The design premise 'grain has HIGH pixel variance, a matte has NONE' is FALSE on the "
+            "96x72 INTER_AREA grayscale M1 already computes: area-averaging AVERAGES THE GRAIN "
+            "AWAY, so a full-frame StaticFade grain state collapses to a near-uniform gray. "
+            "StaticFade's downsampled S_min is 0.012-0.040 — only ~1 order of magnitude above the "
+            "true mattes (0.000-0.002) and BELOW every value in the declared theta_flat grid, so "
+            "every grid value flags StaticFade and breaks the 5/5 leg."),
+        "structural_not_grid_artifact": (
+            "Even with an unconstrained theta_flat the bar is unreachable: 3 of 7 baseline BAD "
+            "(rotate_scale_fade extreme zoom S_min 0.083, coord-from-in shredding 0.163, "
+            "Drop_Zone_Flicker chromatic glitch 0.114) and 2 of 5 round-5 BAD (dissolve saturated "
+            "flash 0.150, StereoViewer 0.186) are TEXTURE/GEOMETRY destruction with entirely "
+            "normal luma statistics. Catching any of them by flatness requires theta_flat above "
+            "the lowest GOOD S_min, which false-positives labeled-GOOD clips including all 5 "
+            "StaticFade. The baseline >=5/7 and round-5 5/5 legs are therefore unreachable by ANY "
+            "pixel-degeneracy test on this label set, not merely by this grid."),
+    }
+
+
 def phase_grid() -> None:
     cfg_y = load_config(CONFIG_PATH)
     root = REPO_ROOT / cfg_y["outputs"]["dir"]
@@ -366,6 +437,16 @@ def phase_grid() -> None:
         result["note"] = ("No grid config meets the declared bar. Per the pre-committed escape: "
                           "no detector ships; render UNCLAMPED at baseline and document the "
                           "residual.")
+        result["best_by_rank_infeasible"] = sorted(table, key=rank_key)[0]
+        result["escape_diagnosis"] = _escape_diagnosis(recs)
+        result["per_clip"] = _per_clip_table(recs, graded,
+                                             sorted(table, key=rank_key)[0]["config"])
+        dl = [c["mp4_delta"] for c in result["per_clip"] if c["mp4_delta"]]
+        result["raw_vs_mp4"] = {
+            "n": len(dl),
+            "recon_vs_mp4_mae_max": max(d["recon_vs_mp4_mae"] for d in dl),
+            "dL_max": max(d["dL_max"] for d in dl), "dS_max": max(d["dS_max"] for d in dl),
+            "dsat_max": max(d["dsat_max"] for d in dl)}
         (HERE / "DFG_CALIB.json").write_text(json.dumps(result, indent=1))
         log.error("ESCAPE: no feasible config")
         _print_table(result, recs, None)
@@ -408,19 +489,7 @@ def phase_grid() -> None:
     sc, res = _score_config(recs, chosen)
     result.update({"outcome": "SHIP", "ships": True, "chosen": chosen, "chosen_scores": sc,
                    "projection": _projection(recs, res, keep_shaders, keep_easings)})
-    result["per_clip"] = [{
-        "stem": s, "set": r["label"]["set"], "label": r["label"]["label"],
-        "grade": r["label"].get("grade", r["label"]["label"].upper()),
-        "shader": r["shader"], "easing": r["easing"],
-        "window": [r["features"]["i0"], r["features"]["j0"]], "n_window": r["features"]["n_window"],
-        "L_min": res[s]["worst"]["L_min"], "L_max": res[s]["worst"]["L_max"],
-        "S_min": res[s]["worst"]["S_min"], "sat_max": res[s]["worst"]["sat_max"],
-        "m1_p10": r["m1_p10"], "m1_min": r["m1_min"],
-        "n_flag": res[s]["n_flag"], "by_test": res[s]["by_test"],
-        "flagged": res[s]["reject"], "note": (r["label"].get("note") or "")[:90],
-        "mp4_delta": r.get("mp4_delta"),
-    } for s, r in sorted(graded.items(), key=lambda kv: (kv[1]["label"]["set"],
-                                                         kv[1]["label"]["label"], kv[0]))]
+    result["per_clip"] = _per_clip_table(recs, graded, chosen)
     dl = [c["mp4_delta"] for c in result["per_clip"] if c["mp4_delta"]]
     if dl:
         result["raw_vs_mp4"] = {
@@ -447,6 +516,18 @@ def _print_table(result: dict, recs: dict, res: dict | None) -> None:
               f"{'PASS' if s['meets_bar'] else '-'}")
     if not result.get("ships"):
         print("\nOUTCOME: ESCAPE — no detector ships.")
+        d = result["escape_diagnosis"]
+        print(f"\nS_min by group (96x72 luma std):\n"
+              f"  baseline BAD    {d['S_min_by_group']['baseline_bad']}\n"
+              f"  round5   BAD    {d['S_min_by_group']['round5_bad']}\n"
+              f"  StaticFade GOOD {d['S_min_by_group']['round5_good_StaticFade']}\n"
+              f"  lowest GOOD S_min {d['lowest_S_min_over_all_38_GOOD']} | theta_flat grid "
+              f"{d['theta_flat_grid']}")
+        print(f"\nmechanism: {d['mechanism']}\n\nstructural: {d['structural_not_grid_artifact']}")
+        print(f"\nraw_vs_mp4: {json.dumps(result.get('raw_vs_mp4'))}")
+        print("\n=== per-clip calibration table (at the best-ranked INFEASIBLE config "
+              f"{json.dumps(result['best_by_rank_infeasible']['config'])}) ===")
+        _print_per_clip(result)
         return
     print(f"\nCHOSEN: {json.dumps(result['chosen'])}")
     print(f"sat_decision: {result['sat_decision']}")
@@ -454,6 +535,10 @@ def _print_table(result: dict, recs: dict, res: dict | None) -> None:
     print(f"\nprojection: {json.dumps({k: v for k, v in result['projection'].items() if k != 'per_shader'}, indent=1)}")
     print(f"raw_vs_mp4: {json.dumps(result.get('raw_vs_mp4'))}")
     print("\n=== per-clip calibration table ===")
+    _print_per_clip(result)
+
+
+def _print_per_clip(result: dict) -> None:
     print(f"{'stem':<16}{'set':<11}{'lab':<5}{'shader':<20}{'win':<11}{'Lmin':>7}{'Lmax':>7}"
           f"{'Smin':>7}{'satmx':>7}{'m1min':>8}{'nflg':>5}  {'tests':<22}FLAG")
     for c in result["per_clip"]:

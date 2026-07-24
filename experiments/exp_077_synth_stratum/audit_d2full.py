@@ -47,9 +47,9 @@ def load(run: Path):
     attempts = [json.loads(l) for f in sorted((run / "meta").glob("attempts_shard*.jsonl"))
                 for l in f.read_text().splitlines() if l.strip()]
     stats = [json.loads(f.read_text()) for f in sorted((run / "meta").glob("stats_shard*.json"))]
-    clamps = [json.loads(l) for f in sorted((run / "meta").glob("clamp_shard*.jsonl"))
-              for l in f.read_text().splitlines() if l.strip()]
-    return tuples, attempts, stats, clamps
+    dfgs = [json.loads(l) for f in sorted((run / "meta").glob("dfg_shard*.jsonl"))
+            for l in f.read_text().splitlines() if l.strip()]
+    return tuples, attempts, stats, dfgs
 
 
 def main() -> None:
@@ -64,7 +64,7 @@ def main() -> None:
     plan = json.loads((HERE / "d2full_plan.json").read_text())
     d2, gt = cfg["d2"], cfg["gate"]
 
-    tuples, attempts, stats, clamps = load(run)
+    tuples, attempts, stats, dfg_rejects = load(run)
     if not tuples:
         sys.exit(f"[audit] no accepted tuples under {run}")
     n_expected = d2["n_target_pairs"] * d2["ops_per_target"]
@@ -126,19 +126,30 @@ def main() -> None:
                      for s in sorted(per_shader_att) if per_shader_att[s]}
     worst_rej = sorted(gate_rej_rate.items(), key=lambda kv: -kv[1])[:15]
 
-    # ---- clamp events over the delivered dataset ----
-    cl_rule, cl_param, cl_shader, cl_default = Counter(), Counter(), Counter(), Counter()
-    for row in clamps:
-        for e in row["events"]:
-            cl_rule[e["rule"]] += 1
-            cl_param[f"{e['shader']}.{e['param']}"] += 1
-            cl_shader[e["shader"]] += 1
-            if e.get("was_default"):
-                cl_default[f"{e['shader']}.{e['param']}"] += 1
-    acc_clamp = Counter()
-    for t in tuples:
-        for e in t.get("clamp_events", []) or []:
-            acc_clamp[f"{e['shader']}.{e['param']}"] += 1
+    # ---- DFG (degenerate-frame gate): only clips that PASSED the frozen gate reach it ----
+    dfg_seen, dfg_rej, dfg_test = Counter(), Counter(), Counter()
+    for a in attempts:
+        for role in ("target", "reference"):
+            c = a.get(role)
+            if not c or "dfg" not in c:
+                continue
+            dfg_seen[a["shader"]] += 1
+            if a.get("dfg_rejected") == role:
+                dfg_rej[a["shader"]] += 1
+    for row in dfg_rejects:
+        for k, v in row["dfg"]["by_test"].items():
+            if v:
+                dfg_test[k] += v
+    dfg_rate = {s: {"seen": dfg_seen[s], "rejected": dfg_rej[s],
+                    "rate": round(dfg_rej[s] / dfg_seen[s], 4)} for s in sorted(dfg_seen)}
+    n_dfg_seen, n_dfg_rej = sum(dfg_seen.values()), sum(dfg_rej.values())
+    dfg_cfgs = {json.dumps(t.get("dfg_config"), sort_keys=True) for t in tuples}
+    calib = HERE / "DFG_CALIB.json"
+    cal = json.loads(calib.read_text()) if calib.exists() else {}
+    # flag counts on the DELIVERED clips (all are sub-K by construction)
+    del_flags = [c.get("dfg", {}).get("n_flag", 0) for t in tuples
+                 for c in (t["clips"]["target"], t["clips"]["reference"])
+                 if "dfg" in c]
 
     u1 = [t["timing"]["u1"] for t in tuples]
     u2 = [t["timing"]["u2"] for t in tuples]
@@ -195,8 +206,27 @@ def main() -> None:
         "gate_pass_stats": {"n_clips_scored": n_scored, "n_pass": n_scored_pass,
                             "clip_pass_rate": round(n_scored_pass / n_scored, 4) if n_scored else None,
                             "leg_failures": dict(leg_fail)},
-        "per_shader_gate_rejection_rate": gate_rej_rate,
-        "worst_15_shaders_by_gate_rejection": [{"shader": s, "rej_rate": r} for s, r in worst_rej],
+        "per_shader_attempt_rejection_rate": gate_rej_rate,
+        "worst_15_shaders_by_attempt_rejection": [{"shader": s, "rej_rate": r} for s, r in worst_rej],
+        # ---- DFG ----
+        "dfg_enabled": all(t.get("dfg_enabled", False) for t in tuples),
+        "dfg_config": json.loads(next(iter(dfg_cfgs))) if len(dfg_cfgs) == 1 else sorted(dfg_cfgs),
+        "dfg_config_single_valued": len(dfg_cfgs) == 1,
+        "dfg_config_matches_calibration": (json.loads(next(iter(dfg_cfgs))) == cal.get("chosen")
+                                           if len(dfg_cfgs) == 1 else False),
+        "dfg_clips_reaching_gate": n_dfg_seen,
+        "dfg_clips_rejected": n_dfg_rej,
+        "dfg_reject_rate": round(n_dfg_rej / n_dfg_seen, 4) if n_dfg_seen else None,
+        "dfg_reject_by_test_frame_counts": dict(dfg_test.most_common()),
+        "dfg_per_shader": dfg_rate,
+        "dfg_shaders_over_60pct_min20_FOR_OWNER_SHEET": sorted(
+            s for s, v in dfg_rate.items() if v["seen"] >= 20 and v["rate"] > 0.60),
+        "dfg_shaders_over_60pct_any_n": sorted(s for s, v in dfg_rate.items() if v["rate"] > 0.60),
+        "dfg_note": ("per-shader rejection is LOGGED ONLY — no mid-render reweighting or "
+                     "blacklisting; any exclusion happens at assembly time from these logs"),
+        "delivered_clips_n_flag_dist": {"max": max(del_flags) if del_flags else None,
+                                        "p50": q(del_flags, .5), "p90": q(del_flags, .9),
+                                        "n_with_any_flag": sum(1 for x in del_flags if x)},
         "n_slots_exhausted": sum(s.get("n_slots_exhausted", 0) for s in rendered_stats),
         "n_timing_redraws": sum(s.get("n_timing_redraws", 0) for s in rendered_stats),
         "n_gate2_exhausted_draws": sum(s.get("n_gate2_exhausted_draws", 0) for s in rendered_stats),
@@ -208,16 +238,9 @@ def main() -> None:
                           round(max(t["timing"]["onset"] for t in tuples), 3)],
         "release_min_max": [round(min(t["timing"]["release"] for t in tuples), 3),
                             round(max(t["timing"]["release"] for t in tuples), 3)],
-        # clamp diagnostics
-        "param_clamp_active": all(t.get("param_clamp", False) for t in tuples),
-        "clamp_events_total_all_draws": sum(cl_rule.values()),
-        "clamp_events_by_rule": dict(cl_rule.most_common()),
-        "clamp_top20_params": dict(cl_param.most_common(20)),
-        "clamp_top15_shaders": dict(cl_shader.most_common(15)),
-        "clamp_events_moving_a_default": dict(cl_default.most_common(10)),
-        "clamp_events_on_ACCEPTED_operators_top15": dict(acc_clamp.most_common(15)),
-        "n_accepted_tuples_with_a_clamped_param": sum(
-            1 for t in tuples if t.get("clamp_events")),
+        # parameter clamping is ABANDONED PERMANENTLY (2026-07-24) — it must never have run
+        "param_clamp_active": any(t.get("param_clamp", False) for t in tuples),
+        "param_clamp_abandoned": not any(t.get("param_clamp", False) for t in tuples),
     }
     merge_audit({"stage2_render": section}, out_path)
     brief = {k: section[k] for k in (
@@ -225,8 +248,10 @@ def main() -> None:
         "all_pairs_have_exactly_8_ops", "distinct_shaders_per_pair_min",
         "per_shader_min_max", "per_easing_allocation", "max_pure_phase_MAX_abs_diff",
         "pure_phase_identity_exact", "n_clips_m1_min_flag", "realized_overdraw",
-        "gate_pass_stats", "n_slots_exhausted", "aux_kind_all_null", "extension_all_none",
-        "param_clamp_active", "clamp_events_by_rule")}
+        "within_overdraw_ceiling", "gate_pass_stats", "n_slots_exhausted", "aux_kind_all_null",
+        "extension_all_none", "param_clamp_abandoned", "dfg_enabled", "dfg_config",
+        "dfg_config_matches_calibration", "dfg_reject_rate", "dfg_reject_by_test_frame_counts",
+        "dfg_shaders_over_60pct_min20_FOR_OWNER_SHEET")}
     print(json.dumps(brief, indent=2))
     print(f"[audit] -> {out_path}")
 

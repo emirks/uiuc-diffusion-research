@@ -47,7 +47,7 @@ def main() -> None:
     tc.setdefault("wandb", {})
     tc["wandb"]["enabled"] = True
     tc["wandb"]["project"] = "exp077_synth_stratum"
-    tc["wandb"]["tags"] = ["ltx2", "exp077", "d2", "ic_gen", "synth_stratum", "param_clamp"]
+    tc["wandb"]["tags"] = ["ltx2", "exp077", "d2", "ic_gen", "synth_stratum", "dfg"]
 
     # PATH FIX (not a recipe change): the baseline config predates eval_ladder's promotion out of
     # experiments/ladder2/, so its validation conditioning paths point at a moved directory.
