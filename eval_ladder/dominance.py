@@ -29,6 +29,7 @@ from __future__ import annotations
 import argparse
 import collections
 import json
+import os
 import statistics as st
 import sys
 from pathlib import Path
@@ -47,10 +48,22 @@ from diffusion.transition_eval.m2_integrity import mid_mask  # noqa: E402
 from diffusion.transition_eval.morph import core_mask, morph_profile  # noqa: E402
 
 STD = REPO_ROOT / "data/processed/transitions_std121"
-GENS = REPO_ROOT / "outputs/videos/ladder2"
+# exp_078: env-driven so the premise test can target a side arm (b1/b1r) in a private video root.
+# Unset => ladder2 / ic_gen, byte-identical to prior behavior.
+GENS = Path(os.environ.get("LADDER_OUT_ROOT", REPO_ROOT / "outputs/videos/ladder2"))
+DOM_ARM = os.environ.get("DOM_ARM", "ic_gen")          # the treatment arm to score for C/T
+DOM_STEP = os.environ.get("LADDER_GEN_STEP")            # __ck<step> dir suffix for a diagnostic ckpt
+DOM_OUT = os.environ.get("DOM_OUT", str(HERE))          # where passB manifests/results are written
 CACHE = REPO_ROOT / "outputs/eval/cache"
 OUT = HERE / "dominance_passA.jsonl"
 N_PREFIX, N_SUFFIX = 9, 8
+
+
+def _gen_dir(arm: str) -> str:
+    """Directory an arm's videos live in, honoring the LADDER_GEN_STEP suffix for side arms."""
+    if DOM_STEP and arm not in ("base", "ic_gen"):
+        return f"{arm}__ck{DOM_STEP}"
+    return arm
 
 
 def feats_of(path: Path, ext: DinoExtractor) -> np.ndarray:
@@ -72,18 +85,25 @@ def plan_b() -> None:
         clips = sorted(p.stem for p in (STD / cls).glob("*.mp4"))
         return [c for c in clips if c not in banned][:8]
 
+    # exp_078: the arm whose C/T we are computing. For ic_gen it also scores the base twin (original
+    # amendment-1 behavior). For a side arm (b1/b1r) we score ONLY that arm's generations vs the
+    # recipient pool — the anchors (R_ref/R_ep/D_ref/D_ep) are arm-independent and reused from the
+    # existing dominance_passB.json, and the ic_gen comparator C is already recorded there.
     for r in rows:
-        if r["arm"] != "ic_gen" or r["cell"] not in CROSS:
+        if r["arm"] != DOM_ARM or r["cell"] not in CROSS:
             continue
         twin = base_by_key.get(r["input_key"])
         rec_cls = r["endpoint_class"]
         banned = {r["reference"], r["endpoint"]}
-        # (a) both arms' generations vs the RECIPIENT pool
-        for arm_row, arm in ((r, "ic_gen"), (twin, "base")):
+        # (a) generations vs the RECIPIENT pool — the treatment arm always; base twin only for ic_gen
+        arm_pairs = [(r, DOM_ARM)]
+        if DOM_ARM == "ic_gen" and twin is not None:
+            arm_pairs.append((twin, "base"))
+        for arm_row, arm in arm_pairs:
             if arm_row is None:
                 continue
             for seed in (42, 43):
-                g = GENS / arm_row["arm"] / f"{arm_row['item_id']}__s{seed}.mp4"
+                g = GENS / _gen_dir(arm_row["arm"]) / f"{arm_row['item_id']}__s{seed}.mp4"
                 if not g.exists():
                     continue
                 for ref_clip in pool(rec_cls, banned):
@@ -113,14 +133,14 @@ def plan_b() -> None:
                         "style": pool_cls, "arm": f"anchor_{pool_name}{role}",
                         "n_endpoints": 2 if r["sided"] == "two" else 1,
                         "notes": "Amendment-1 PassB anchor"})
-    d = HERE / "eval_recp"
+    d = Path(os.environ.get("DOM_EVAL_DIR", HERE / "eval_recp"))   # exp_078: private for b1/b1r
     d.mkdir(parents=True, exist_ok=True)
     for old in d.glob("eval_c*.json"):
         old.unlink()
     for i in range(6):
         (d / f"eval_c{i}.json").write_text(json.dumps(items[i::6], indent=1))
-    print(f"[planB] {len(items)} rows ({len(anchors_done)} input_keys anchored) -> 6 chunks in "
-          f"{d.relative_to(REPO_ROOT)}")
+    print(f"[planB] arm={DOM_ARM} {len(items)} rows ({len(anchors_done)} input_keys anchored) "
+          f"-> 6 chunks in {d}")
 
 
 def report_b() -> None:
@@ -147,15 +167,16 @@ def report_b() -> None:
                     acc[head].append(r["app_ref"])
         return {k: st.mean(v) for k, v in acc.items()}
 
-    RECP = REPO_ROOT / "outputs/eval/ladder2_recp"
-    DON = REPO_ROOT / "outputs/eval/ladder2"
+    # exp_078: env-overridable so the b1/b1r premise test reads its private recipient + donor scores.
+    RECP = Path(os.environ.get("DOM_RECP_SCORES", REPO_ROOT / "outputs/eval/ladder2_recp"))
+    DON = Path(os.environ.get("DOM_DON_SCORES", REPO_ROOT / "outputs/eval/ladder2"))
     recp = pooled([RECP], "RECP__")          # RECP__<arm>__<item_id>__s<seed>
     anch = pooled([RECP], "ANCH__")          # ANCH__<D|R>_<ref|ep>__<input_key>
     donor = pooled([DON], "")                # <item_id>__s<seed>
 
     rowsB, degen = [], 0
     for item_id, row in reg.items():
-        if row["arm"] != "ic_gen" or row["cell"] not in ("G-unseen-cross", "G-zs-cross"):
+        if row["arm"] != DOM_ARM or row["cell"] not in ("G-unseen-cross", "G-zs-cross"):
             continue
         k = row["input_key"]
         rec_cls, don_cls = row["endpoint_class"], row["donor_class"]
@@ -171,7 +192,10 @@ def report_b() -> None:
             continue
         twin = base_by_key.get(k)
         per_arm = {}
-        for arm, rid in (("ic_gen", item_id), ("base", twin["item_id"] if twin else None)):
+        arm_ids = [(DOM_ARM, item_id)]
+        if DOM_ARM == "ic_gen":
+            arm_ids.append(("base", twin["item_id"] if twin else None))
+        for arm, rid in arm_ids:
             if rid is None:
                 continue
             Ds = [donor.get(f"{rid}__s{s}") for s in (42, 43)]
@@ -187,11 +211,12 @@ def report_b() -> None:
                     "reference won" if T >= .5 else
                     "endpoint-prior won" if C >= .5 else "mush")
             per_arm[arm] = {"T": T, "C": C, "TI": min(T, C), "quad": quad}
-        if len(per_arm) == 2:
+        need = 2 if DOM_ARM == "ic_gen" else 1
+        if len(per_arm) == need:
             rowsB.append({"item_id": item_id, "cell": row["cell"], "donor": don_cls, **per_arm})
 
     if not rowsB:
-        sys.exit(f"[reportB] no complete (ic_gen, base) pairs yet ({degen} anchor_degenerate)")
+        sys.exit(f"[reportB] no complete {DOM_ARM} rows yet ({degen} anchor_degenerate)")
 
     print(f"\n=== AMENDMENT-1 PASS B — transfer index (n={len(rowsB)} paired items, "
           f"{degen} anchor_degenerate excluded) ===")
