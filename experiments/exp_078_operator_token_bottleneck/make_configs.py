@@ -117,6 +117,10 @@ CONFIGS = {
     # (steps, bottleneck, checkpoint interval)
     "equiv_mine": (150, False, 1000),
     "equiv_lineage": (150, False, 1000),
+    # lineage-vs-lineage self-consistency control: identical config and seed, unmodified
+    # trainer, separate output_dir. Establishes the run-to-run nondeterminism floor, without
+    # which an equiv_mine-vs-equiv_lineage divergence cannot be attributed to the diff.
+    "equiv_lineage2": (150, False, 1000),
     "b1_smoke": (20, True, 1000),
     "b1": (5000, True, 500),
 }
