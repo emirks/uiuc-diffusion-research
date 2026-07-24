@@ -45,8 +45,10 @@ REGISTRY = HERE / "registry.jsonl"
 # exp_078: a campaign that generates into a private video root (LADDER_OUT_ROOT, matching run_gen)
 # scores from there. Unset => the shared ladder2 tree, i.e. byte-identical to prior behavior.
 GENS = Path(os.environ.get("LADDER_OUT_ROOT", REPO_ROOT / "outputs/videos/ladder2"))
-EVAL_DIR = HERE / "eval"
-SCORES = REPO_ROOT / "outputs/eval/ladder2"
+# exp_078: private manifest/score dirs so a side campaign (b1) scores in isolation from ladder2.
+# Unset => the ladder2 locations, byte-identical to prior behavior.
+EVAL_DIR = Path(os.environ.get("LADDER_EVAL_DIR", HERE / "eval"))
+SCORES = Path(os.environ.get("LADDER_SCORES", REPO_ROOT / "outputs/eval/ladder2"))
 NPZ = (REPO_ROOT / ".claude/worktrees/eval-v4-cert/outputs/eval/certification"
        / "4.0.0-draft.1/analysis/distance_matrices.npz")
 MATRIX = "m1a_S3"          # the v4 appearance kernel (owner directive 2026-07-20: v4 is the lane)
@@ -94,13 +96,18 @@ def already_scored() -> set[str]:
     return seen
 
 
-def plan(seeds: list[int], chunks: int) -> None:
+def plan(seeds: list[int], chunks: int, arms: list[str] | None = None) -> None:
     rows = load_registry()
     by_key = {r["input_key"]: r for r in rows if r["arm"] == "base"}
     scored = already_scored()
 
+    # exp_078: scope planning to specific arms (e.g. --arms b1) so a campaign scores only its own
+    # generations into a private SCORE_OUT, without re-planning every already-scored ladder2 arm.
+    # The base-twin lookup above still scans ALL rows, so the keyed join is unaffected.
+    plan_rows = [r for r in rows if arms is None or r["arm"] in arms]
+
     items, missing_gen, missing_twin = [], [], []
-    for row in rows:
+    for row in plan_rows:
         for seed in seeds:
             path = gen_path(row, seed)
             if not path.exists():
@@ -278,9 +285,11 @@ def main() -> None:
     ap.add_argument("--mode", choices=["plan", "report"], required=True)
     ap.add_argument("--seeds", default="42,43")
     ap.add_argument("--chunks", type=int, default=8)
+    ap.add_argument("--arms", default=None, help="comma-separated arms to plan (default: all)")
     args = ap.parse_args()
     if args.mode == "plan":
-        plan([int(s) for s in args.seeds.split(",")], args.chunks)
+        arms = args.arms.split(",") if args.arms else None
+        plan([int(s) for s in args.seeds.split(",")], args.chunks, arms)
     else:
         report()
 
