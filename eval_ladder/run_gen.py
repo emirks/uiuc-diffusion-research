@@ -186,6 +186,7 @@ def main() -> None:
             num_heads=bspec.get("num_heads", 8),
             prefix_latent_frames=bspec.get("prefix_latent_frames", 2),
             suffix_latent_frames=bspec.get("suffix_latent_frames", 1),
+            skip_scale=bspec.get("skip_scale", 0.0),
         )
         raw = load_file(str(adapter))
         enc_sd = {k[len("operator_encoder."):]: v for k, v in raw.items() if k.startswith("operator_encoder.")}

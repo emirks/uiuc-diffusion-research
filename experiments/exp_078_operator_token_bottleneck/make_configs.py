@@ -102,19 +102,31 @@ BOTTLENECK = {
     "suffix_latent_frames": 1,
 }
 
+# Retry b1r (advisor amendment): three deltas vs B1, everything else frozen-identical.
+#  - skip_scale 1.68 (measured raw/pooled RMS) => tokens demo-dependent by construction.
+#  - encoder_lr 5e-4 separate optimizer group (LoRA stays 2e-4).
+#  - reference dropout 10% (probability 0.9) — the torch.rand draw happens regardless, so B1's and
+#    b1r's noise/sigma RNG streams stay aligned; only the threshold differs.
+BOTTLENECK_R = {**BOTTLENECK, "skip_scale": 1.68, "encoder_lr": 5e-4}
 
-def build(name: str, steps: int, bottleneck: bool, ckpt_interval: int) -> dict:
+
+def build(name: str, steps: int, bottleneck, ckpt_interval: int) -> dict:
+    """bottleneck: False (off) | True/"b1" (B1 encoder) | "r" (b1r pooled-skip retry)."""
     cfg = copy.deepcopy(BASE)
     cfg["optimization"]["steps"] = steps
     cfg["checkpoints"]["interval"] = ckpt_interval
     cfg["output_dir"] = str(TRAIN_OUT / name)
     if bottleneck:
-        cfg["training_strategy"]["video"]["conditions"][0]["bottleneck"] = copy.deepcopy(BOTTLENECK)
+        bn = copy.deepcopy(BOTTLENECK_R if bottleneck == "r" else BOTTLENECK)
+        cfg["training_strategy"]["video"]["conditions"][0]["bottleneck"] = bn
+        if bottleneck == "r":
+            cfg["training_strategy"]["video"]["conditions"][0]["probability"] = 0.9  # 10% ref-dropout
     return cfg
 
 
 CONFIGS = {
     # (steps, bottleneck, checkpoint interval)
+    "b1r": (5000, "r", 500),   # retry: pooled-demo skip + enc lr 5e-4 + 10% ref-dropout
     "equiv_mine": (150, False, 1000),
     "equiv_lineage": (150, False, 1000),
     # lineage-vs-lineage self-consistency control: identical config and seed, unmodified
