@@ -121,6 +121,9 @@ CONFIGS = {
     # trainer, separate output_dir. Establishes the run-to-run nondeterminism floor, without
     # which an equiv_mine-vs-equiv_lineage divergence cannot be attributed to the diff.
     "equiv_lineage2": (150, False, 1000),
+    # second same-code floor (mine-vs-mine), advisor ruling: use max(D_lineage-lineage2,
+    # D_mine-mine2) as the denominator, guarding against one unluckily-quiet floor sample.
+    "equiv_mine2": (150, False, 1000),
     "b1_smoke": (20, True, 1000),
     "b1": (5000, True, 500),
 }
