@@ -1,0 +1,853 @@
+{
+ "n": 139,
+ "n_classes": 26,
+ "n_heldout_clips": 0,
+ "heldout_classes": [
+  "cotton_cloud",
+  "display_transition",
+  "firelava",
+  "flying_cam_transition",
+  "live_concert",
+  "luminous_gaze",
+  "melt_transition",
+  "monstrosity",
+  "raven_transition",
+  "saint_glow"
+ ],
+ "clips": [
+  {
+   "clip": "action_run_setonfire_6",
+   "cls": "run_set_on_fire",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/run_set_on_fire/action_run_setonfire_6.pt"
+  },
+  {
+   "clip": "action_run_setonfire_7",
+   "cls": "run_set_on_fire",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/run_set_on_fire/action_run_setonfire_7.pt"
+  },
+  {
+   "clip": "air_bending_0",
+   "cls": "air_bending",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/air_bending/air_bending_0.pt"
+  },
+  {
+   "clip": "air_bending_2",
+   "cls": "air_bending",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/air_bending/air_bending_2.pt"
+  },
+  {
+   "clip": "air_bending_3",
+   "cls": "air_bending",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/air_bending/air_bending_3.pt"
+  },
+  {
+   "clip": "animalization_1",
+   "cls": "animalization",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/animalization/animalization_1.pt"
+  },
+  {
+   "clip": "animalization_3",
+   "cls": "animalization",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/animalization/animalization_3.pt"
+  },
+  {
+   "clip": "animalization_4",
+   "cls": "animalization",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/animalization/animalization_4.pt"
+  },
+  {
+   "clip": "animalization_5",
+   "cls": "animalization",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/animalization/animalization_5.pt"
+  },
+  {
+   "clip": "animalization_6",
+   "cls": "animalization",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/animalization/animalization_6.pt"
+  },
+  {
+   "clip": "animalization_7",
+   "cls": "animalization",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/animalization/animalization_7.pt"
+  },
+  {
+   "clip": "color_rain_1",
+   "cls": "color_rain",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/color_rain/color_rain_1.pt"
+  },
+  {
+   "clip": "color_rain_3",
+   "cls": "color_rain",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/color_rain/color_rain_3.pt"
+  },
+  {
+   "clip": "color_rain_5",
+   "cls": "color_rain",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/color_rain/color_rain_5.pt"
+  },
+  {
+   "clip": "color_rain_6",
+   "cls": "color_rain",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/color_rain/color_rain_6.pt"
+  },
+  {
+   "clip": "color_rain_7",
+   "cls": "color_rain",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/color_rain/color_rain_7.pt"
+  },
+  {
+   "clip": "color_rain_8",
+   "cls": "color_rain",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/color_rain/color_rain_8.pt"
+  },
+  {
+   "clip": "earth_element_0",
+   "cls": "earth_element",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/earth_element/earth_element_0.pt"
+  },
+  {
+   "clip": "earth_element_1",
+   "cls": "earth_element",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/earth_element/earth_element_1.pt"
+  },
+  {
+   "clip": "earth_element_2",
+   "cls": "earth_element",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/earth_element/earth_element_2.pt"
+  },
+  {
+   "clip": "earth_element_3",
+   "cls": "earth_element",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/earth_element/earth_element_3.pt"
+  },
+  {
+   "clip": "earth_wave_0",
+   "cls": "earth_wave",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/earth_wave/earth_wave_0.pt"
+  },
+  {
+   "clip": "earth_wave_1",
+   "cls": "earth_wave",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/earth_wave/earth_wave_1.pt"
+  },
+  {
+   "clip": "earth_wave_2",
+   "cls": "earth_wave",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/earth_wave/earth_wave_2.pt"
+  },
+  {
+   "clip": "earth_wave_4",
+   "cls": "earth_wave",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/earth_wave/earth_wave_4.pt"
+  },
+  {
+   "clip": "fire_element_0",
+   "cls": "fire_element",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/fire_element/fire_element_0.pt"
+  },
+  {
+   "clip": "fire_element_1",
+   "cls": "fire_element",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/fire_element/fire_element_1.pt"
+  },
+  {
+   "clip": "fire_element_4",
+   "cls": "fire_element",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/fire_element/fire_element_4.pt"
+  },
+  {
+   "clip": "flame_transition_0",
+   "cls": "flame",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/flame/flame_transition_0.pt"
+  },
+  {
+   "clip": "flame_transition_1",
+   "cls": "flame",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/flame/flame_transition_1.pt"
+  },
+  {
+   "clip": "gas_transformation_0",
+   "cls": "gas_transformation",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/gas_transformation/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/gas_transformation/gas_transformation_0.pt"
+  },
+  {
+   "clip": "gas_transformation_1",
+   "cls": "gas_transformation",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/gas_transformation/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/gas_transformation/gas_transformation_1.pt"
+  },
+  {
+   "clip": "gas_transformation_2",
+   "cls": "gas_transformation",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/gas_transformation/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/gas_transformation/gas_transformation_2.pt"
+  },
+  {
+   "clip": "gas_transformation_3",
+   "cls": "gas_transformation",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/gas_transformation/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/gas_transformation/gas_transformation_3.pt"
+  },
+  {
+   "clip": "gas_transformation_4",
+   "cls": "gas_transformation",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/gas_transformation/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/gas_transformation/gas_transformation_4.pt"
+  },
+  {
+   "clip": "gas_transformation_5",
+   "cls": "gas_transformation",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/gas_transformation/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/gas_transformation/gas_transformation_5.pt"
+  },
+  {
+   "clip": "gas_transformation_8",
+   "cls": "gas_transformation",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/gas_transformation/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/gas_transformation/gas_transformation_8.pt"
+  },
+  {
+   "clip": "gas_transformation_9",
+   "cls": "gas_transformation",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/gas_transformation/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/gas_transformation/gas_transformation_9.pt"
+  },
+  {
+   "clip": "giant_grab_0",
+   "cls": "giant_grab",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/giant_grab/giant_grab_0.pt"
+  },
+  {
+   "clip": "giant_grab_1",
+   "cls": "giant_grab",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/giant_grab/giant_grab_1.pt"
+  },
+  {
+   "clip": "giant_grab_2",
+   "cls": "giant_grab",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/giant_grab/giant_grab_2.pt"
+  },
+  {
+   "clip": "giant_grab_4",
+   "cls": "giant_grab",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/giant_grab/giant_grab_4.pt"
+  },
+  {
+   "clip": "hero_flight_0",
+   "cls": "hero_flight",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/hero_flight/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/hero_flight/hero_flight_0.pt"
+  },
+  {
+   "clip": "hero_flight_1",
+   "cls": "hero_flight",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/hero_flight/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/hero_flight/hero_flight_1.pt"
+  },
+  {
+   "clip": "hero_flight_2",
+   "cls": "hero_flight",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/hero_flight/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/hero_flight/hero_flight_2.pt"
+  },
+  {
+   "clip": "hero_flight_3",
+   "cls": "hero_flight",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/hero_flight/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/hero_flight/hero_flight_3.pt"
+  },
+  {
+   "clip": "hero_flight_4",
+   "cls": "hero_flight",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/hero_flight/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/hero_flight/hero_flight_4.pt"
+  },
+  {
+   "clip": "hero_flight_7",
+   "cls": "hero_flight",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/hero_flight/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/hero_flight/hero_flight_7.pt"
+  },
+  {
+   "clip": "hero_flight_8",
+   "cls": "hero_flight",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/hero_flight/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/hero_flight/hero_flight_8.pt"
+  },
+  {
+   "clip": "hero_flight_9",
+   "cls": "hero_flight",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/hero_flight/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/hero_flight/hero_flight_9.pt"
+  },
+  {
+   "clip": "illustration_scene_0",
+   "cls": "illustration_scene",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/illustration_scene/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/illustration_scene/illustration_scene_0.pt"
+  },
+  {
+   "clip": "illustration_scene_1",
+   "cls": "illustration_scene",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/illustration_scene/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/illustration_scene/illustration_scene_1.pt"
+  },
+  {
+   "clip": "illustration_scene_2",
+   "cls": "illustration_scene",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/illustration_scene/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/illustration_scene/illustration_scene_2.pt"
+  },
+  {
+   "clip": "illustration_scene_3",
+   "cls": "illustration_scene",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/illustration_scene/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/illustration_scene/illustration_scene_3.pt"
+  },
+  {
+   "clip": "illustration_scene_5",
+   "cls": "illustration_scene",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/illustration_scene/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/illustration_scene/illustration_scene_5.pt"
+  },
+  {
+   "clip": "illustration_scene_6",
+   "cls": "illustration_scene",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/illustration_scene/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/illustration_scene/illustration_scene_6.pt"
+  },
+  {
+   "clip": "illustration_scene_8",
+   "cls": "illustration_scene",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/illustration_scene/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/illustration_scene/illustration_scene_8.pt"
+  },
+  {
+   "clip": "illustration_scene_9",
+   "cls": "illustration_scene",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_062_ladder_r2r3_specialists/dataset/.precomputed/illustration_scene/latents/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/illustration_scene/illustration_scene_9.pt"
+  },
+  {
+   "clip": "money_rain_0",
+   "cls": "money_rain",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/money_rain/money_rain_0.pt"
+  },
+  {
+   "clip": "money_rain_2",
+   "cls": "money_rain",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/money_rain/money_rain_2.pt"
+  },
+  {
+   "clip": "money_rain_4",
+   "cls": "money_rain",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/money_rain/money_rain_4.pt"
+  },
+  {
+   "clip": "money_rain_6",
+   "cls": "money_rain",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/money_rain/money_rain_6.pt"
+  },
+  {
+   "clip": "money_rain_7",
+   "cls": "money_rain",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/money_rain/money_rain_7.pt"
+  },
+  {
+   "clip": "mystification_2",
+   "cls": "mystification",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/mystification/mystification_2.pt"
+  },
+  {
+   "clip": "mystification_3",
+   "cls": "mystification",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/mystification/mystification_3.pt"
+  },
+  {
+   "clip": "mystification_4",
+   "cls": "mystification",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/mystification/mystification_4.pt"
+  },
+  {
+   "clip": "mystification_5",
+   "cls": "mystification",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/mystification/mystification_5.pt"
+  },
+  {
+   "clip": "nature_bloom_0",
+   "cls": "nature_bloom",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/nature_bloom/nature_bloom_0.pt"
+  },
+  {
+   "clip": "nature_bloom_2",
+   "cls": "nature_bloom",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/nature_bloom/nature_bloom_2.pt"
+  },
+  {
+   "clip": "plasma_explosion_0",
+   "cls": "plasma_explosion",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/plasma_explosion/plasma_explosion_0.pt"
+  },
+  {
+   "clip": "plasma_explosion_1",
+   "cls": "plasma_explosion",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/plasma_explosion/plasma_explosion_1.pt"
+  },
+  {
+   "clip": "plasma_explosion_4",
+   "cls": "plasma_explosion",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/plasma_explosion/plasma_explosion_4.pt"
+  },
+  {
+   "clip": "polygon_0",
+   "cls": "polygon",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/polygon/polygon_0.pt"
+  },
+  {
+   "clip": "polygon_1",
+   "cls": "polygon",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/polygon/polygon_1.pt"
+  },
+  {
+   "clip": "polygon_2",
+   "cls": "polygon",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/polygon/polygon_2.pt"
+  },
+  {
+   "clip": "polygon_3",
+   "cls": "polygon",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/polygon/polygon_3.pt"
+  },
+  {
+   "clip": "polygon_5",
+   "cls": "polygon",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/polygon/polygon_5.pt"
+  },
+  {
+   "clip": "polygon_6",
+   "cls": "polygon",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/polygon/polygon_6.pt"
+  },
+  {
+   "clip": "polygon_7",
+   "cls": "polygon",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/polygon/polygon_7.pt"
+  },
+  {
+   "clip": "portal_0",
+   "cls": "portal",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/portal/portal_0.pt"
+  },
+  {
+   "clip": "portal_10",
+   "cls": "portal",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/portal/portal_10.pt"
+  },
+  {
+   "clip": "portal_11",
+   "cls": "portal",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/portal/portal_11.pt"
+  },
+  {
+   "clip": "portal_12",
+   "cls": "portal",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/portal/portal_12.pt"
+  },
+  {
+   "clip": "portal_13",
+   "cls": "portal",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/portal/portal_13.pt"
+  },
+  {
+   "clip": "portal_2",
+   "cls": "portal",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/portal/portal_2.pt"
+  },
+  {
+   "clip": "portal_5",
+   "cls": "portal",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/portal/portal_5.pt"
+  },
+  {
+   "clip": "portal_6",
+   "cls": "portal",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/portal/portal_6.pt"
+  },
+  {
+   "clip": "portal_7",
+   "cls": "portal",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/portal/portal_7.pt"
+  },
+  {
+   "clip": "portal_8",
+   "cls": "portal",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/portal/portal_8.pt"
+  },
+  {
+   "clip": "portal_9",
+   "cls": "portal",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/portal/portal_9.pt"
+  },
+  {
+   "clip": "sakura_petals_0",
+   "cls": "sakura_petals",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/sakura_petals/sakura_petals_0.pt"
+  },
+  {
+   "clip": "sakura_petals_2",
+   "cls": "sakura_petals",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/sakura_petals/sakura_petals_2.pt"
+  },
+  {
+   "clip": "shadow_0",
+   "cls": "shadow",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/shadow/shadow_0.pt"
+  },
+  {
+   "clip": "shadow_1",
+   "cls": "shadow",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow/shadow_1.pt"
+  },
+  {
+   "clip": "shadow_11",
+   "cls": "shadow",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow/shadow_11.pt"
+  },
+  {
+   "clip": "shadow_12",
+   "cls": "shadow",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow/shadow_12.pt"
+  },
+  {
+   "clip": "shadow_13",
+   "cls": "shadow",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/shadow/shadow_13.pt"
+  },
+  {
+   "clip": "shadow_14",
+   "cls": "shadow",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow/shadow_14.pt"
+  },
+  {
+   "clip": "shadow_2",
+   "cls": "shadow",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/shadow/shadow_2.pt"
+  },
+  {
+   "clip": "shadow_4",
+   "cls": "shadow",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow/shadow_4.pt"
+  },
+  {
+   "clip": "shadow_5",
+   "cls": "shadow",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow/shadow_5.pt"
+  },
+  {
+   "clip": "shadow_6",
+   "cls": "shadow",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow/shadow_6.pt"
+  },
+  {
+   "clip": "shadow_7",
+   "cls": "shadow",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow/shadow_7.pt"
+  },
+  {
+   "clip": "shadow_8",
+   "cls": "shadow",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow/shadow_8.pt"
+  },
+  {
+   "clip": "shadow_9",
+   "cls": "shadow",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow/shadow_9.pt"
+  },
+  {
+   "clip": "shadow_smoke_1",
+   "cls": "shadow_smoke",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/shadow_smoke/shadow_smoke_1.pt"
+  },
+  {
+   "clip": "shadow_smoke_2",
+   "cls": "shadow_smoke",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow_smoke/shadow_smoke_2.pt"
+  },
+  {
+   "clip": "shadow_smoke_3",
+   "cls": "shadow_smoke",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow_smoke/shadow_smoke_3.pt"
+  },
+  {
+   "clip": "shadow_smoke_4",
+   "cls": "shadow_smoke",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow_smoke/shadow_smoke_4.pt"
+  },
+  {
+   "clip": "shadow_smoke_5",
+   "cls": "shadow_smoke",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow_smoke/shadow_smoke_5.pt"
+  },
+  {
+   "clip": "shadow_smoke_6",
+   "cls": "shadow_smoke",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow_smoke/shadow_smoke_6.pt"
+  },
+  {
+   "clip": "shadow_smoke_8",
+   "cls": "shadow_smoke",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow_smoke/shadow_smoke_8.pt"
+  },
+  {
+   "clip": "shadow_smoke_9",
+   "cls": "shadow_smoke",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/shadow_smoke/shadow_smoke_9.pt"
+  },
+  {
+   "clip": "super_fast_run_1",
+   "cls": "super_fast_run",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/super_fast_run/super_fast_run_1.pt"
+  },
+  {
+   "clip": "super_fast_run_10",
+   "cls": "super_fast_run",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/super_fast_run/super_fast_run_10.pt"
+  },
+  {
+   "clip": "super_fast_run_12",
+   "cls": "super_fast_run",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/super_fast_run/super_fast_run_12.pt"
+  },
+  {
+   "clip": "super_fast_run_2",
+   "cls": "super_fast_run",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/super_fast_run/super_fast_run_2.pt"
+  },
+  {
+   "clip": "super_fast_run_4",
+   "cls": "super_fast_run",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/super_fast_run/super_fast_run_4.pt"
+  },
+  {
+   "clip": "super_fast_run_5",
+   "cls": "super_fast_run",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/super_fast_run/super_fast_run_5.pt"
+  },
+  {
+   "clip": "super_fast_run_6",
+   "cls": "super_fast_run",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/super_fast_run/super_fast_run_6.pt"
+  },
+  {
+   "clip": "super_fast_run_7",
+   "cls": "super_fast_run",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/super_fast_run/super_fast_run_7.pt"
+  },
+  {
+   "clip": "super_fast_run_8",
+   "cls": "super_fast_run",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/super_fast_run/super_fast_run_8.pt"
+  },
+  {
+   "clip": "super_fast_run_9",
+   "cls": "super_fast_run",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/super_fast_run/super_fast_run_9.pt"
+  },
+  {
+   "clip": "water_bending_0",
+   "cls": "water_bending",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/water_bending/water_bending_0.pt"
+  },
+  {
+   "clip": "water_bending_1",
+   "cls": "water_bending",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/water_bending/water_bending_1.pt"
+  },
+  {
+   "clip": "water_bending_2",
+   "cls": "water_bending",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/water_bending/water_bending_2.pt"
+  },
+  {
+   "clip": "water_element_0",
+   "cls": "water_element",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/water_element/water_element_0.pt"
+  },
+  {
+   "clip": "water_element_1",
+   "cls": "water_element",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/water_element/water_element_1.pt"
+  },
+  {
+   "clip": "water_element_2",
+   "cls": "water_element",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/water_element/water_element_2.pt"
+  },
+  {
+   "clip": "water_element_5",
+   "cls": "water_element",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/water_element/water_element_5.pt"
+  },
+  {
+   "clip": "wireframe_1",
+   "cls": "wireframe",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/wireframe/wireframe_1.pt"
+  },
+  {
+   "clip": "wireframe_2",
+   "cls": "wireframe",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/wireframe/wireframe_2.pt"
+  },
+  {
+   "clip": "wireframe_3",
+   "cls": "wireframe",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/wireframe/wireframe_3.pt"
+  },
+  {
+   "clip": "wireframe_4",
+   "cls": "wireframe",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/wireframe/wireframe_4.pt"
+  },
+  {
+   "clip": "wireframe_5",
+   "cls": "wireframe",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_064_ic3_aligned_retrain/dataset/.precomputed_clips/latents/wireframe/wireframe_5.pt"
+  },
+  {
+   "clip": "wireframe_6",
+   "cls": "wireframe",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/wireframe/wireframe_6.pt"
+  },
+  {
+   "clip": "wireframe_8",
+   "cls": "wireframe",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/wireframe/wireframe_8.pt"
+  },
+  {
+   "clip": "wonderland_0",
+   "cls": "wonderland",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/wonderland/wonderland_0.pt"
+  },
+  {
+   "clip": "wonderland_2",
+   "cls": "wonderland",
+   "heldout": false,
+   "latent": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_058_ic_lora_diverse_retrain/dataset/.precomputed_clips/latents/wonderland/wonderland_2.pt"
+  }
+ ]
+}
