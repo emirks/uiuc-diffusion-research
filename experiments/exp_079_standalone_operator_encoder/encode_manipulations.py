@@ -55,6 +55,8 @@ def main() -> None:
     print(f"[encode] {len(work)} clips -> {n_lat} manipulated latents "
           f"(train_manips={TRAIN_MANIPS}, heldout_manips={HELDOUT_MANIPS})")
 
+    gpu_name = torch.cuda.get_device_name(0) if torch.cuda.is_available() else "cpu"
+    print(f"[encode] gpu={gpu_name}")
     vae = ec.load_vae(str(MODEL), device=device)
     done = roundtrip = 0
     for i, (sp, clip, cls, mp4, manips) in enumerate(work):
@@ -69,7 +71,12 @@ def main() -> None:
             pm = manipulate(px, manip)                       # pixel-space manipulation
             lat = ec.encode(pm, vae, device, torch.bfloat16)[0].to(torch.bfloat16).cpu()  # [128,16,20,15]
             dst.parent.mkdir(parents=True, exist_ok=True)
-            torch.save({"latents": lat, "clip": clip, "cls": cls, "manip": manip, "split": sp}, dst)
+            # Record the producing GPU: if a preemption requeues this job onto different hardware,
+            # the mix is auditable rather than assumed. (Expected impact on metric 3 is negligible —
+            # one VAE forward pass drifts ~1e-2 relative between GPU types, while the manipulation
+            # signal is O(1) — but the probe battery should never rest on an unverified assumption.)
+            torch.save({"latents": lat, "clip": clip, "cls": cls, "manip": manip, "split": sp,
+                        "gpu": gpu_name}, dst)
             done += 1
 
             if roundtrip == 0 and manip == "reverse":
