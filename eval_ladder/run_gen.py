@@ -196,9 +196,15 @@ def main() -> None:
         th, tw, tf = vh // 32, vw // 32, (vf - 1) // 8 + 1
         dsf, tsf = th // h, (tf - 1) // (f - 1)
         assert th // h == tw // w, f"non-uniform spatial scale: {th}//{h} vs {tw}//{w}"
+        if not enc_sd:
+            raise RuntimeError(f"arm '{args.arm}' declares a bottleneck but the checkpoint "
+                               f"{adapter} has no operator_encoder.* tensors — refusing to generate "
+                               "raw-reference videos under a bottleneck arm name")
         runner.attach_operator_encoder(encoder, downscale_factor=dsf, temporal_scale_factor=tsf)
-        print(f"[gen] operator-token bottleneck: K={f*h*w} shape=({f},{h},{w}) "
-              f"scale=(spatial {dsf}, temporal {tsf}), {len(enc_sd)} encoder tensors")
+        # flush=True: Slurm block-buffers stdout, so without it this provenance line is invisible
+        # until process exit — and it is the record that proves the videos are bottleneck-generated.
+        print(f"[gen] operator-token bottleneck ATTACHED: K={f*h*w} shape=({f},{h},{w}) "
+              f"scale=(spatial {dsf}, temporal {tsf}), {len(enc_sd)} encoder tensors", flush=True)
 
     tmp = OUT_ROOT / "_runner" / f"{args.arm}_s{args.seed}_c{args.chunk}"
     saved = runner.run(transformer=transformer, step=0, output_dir=tmp, device=device,
