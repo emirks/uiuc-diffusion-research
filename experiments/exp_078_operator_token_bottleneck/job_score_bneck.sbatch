@@ -24,15 +24,20 @@ WT=$LAB/diffusion-research/.claude/worktrees/bottleneck-branch          # OUR ch
 CERT=$LAB/diffusion-research/.claude/worktrees/eval-v4-cert             # the certified instrument
 CHUNK="${SLURM_ARRAY_TASK_ID:-0}"
 MDIR="$WT/eval_ladder/eval_bneck"
-SOUT="$WT/outputs/eval/bneck"
-PASS="${SLURM_ARRAY_JOB_ID:-$SLURM_JOB_ID}"
+SOUT="$WT/outputs/eval/bneck"                 # = LADDER_SCORES for the report step
+PASS="${SLURM_ARRAY_JOB_ID:-$SLURM_JOB_ID}"   # unique per pass: never overwrite a prior pass's rows
 
-mkdir -p "$SOUT/c${CHUNK}_p${PASS}" "$LAB/diffusion-research/outputs/logs/slurm"
+mkdir -p "$SOUT" "$LAB/diffusion-research/outputs/logs/slurm"
 cd "$WT"
 echo "[score] host=$(hostname) chunk=$CHUNK manifest=$MDIR/eval_c${CHUNK}.json $(date)"
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader || true
 
+# Interface copied verbatim from eval_ladder/job_score.sbatch (the certified scorer's real CLI):
+# --corpus/--label/--out-root/--cache-dir, NOT --out. Cache is SHARED with ladder2 (warm features).
 PYTHONPATH="$CERT/src" "$PY_BIN" -m diffusion.transition_eval.score \
-    --manifest "$MDIR/eval_c${CHUNK}.json" \
-    --out "$SOUT/c${CHUNK}_p${PASS}/items.jsonl"
+    --manifest  "$MDIR/eval_c${CHUNK}.json" \
+    --corpus    "$WT/data/processed/transitions_std121/corpus_manifest.json" \
+    --label     "c${CHUNK}_p${PASS}" \
+    --out-root  "$SOUT" \
+    --cache-dir "$LAB/diffusion-research/outputs/eval/cache"
 echo "[score] done $(date)"
