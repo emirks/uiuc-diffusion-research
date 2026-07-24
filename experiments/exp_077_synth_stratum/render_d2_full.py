@@ -124,8 +124,12 @@ def main() -> None:
     man_dir = root / "dataset_manifests"
     for d in (vid_dir, strip_dir, meta_dir, rej_dir, rej_strip, man_dir):
         d.mkdir(parents=True, exist_ok=True)
-    tup_path = meta_dir / f"tuples_shard{shard:02d}.jsonl"
-    att_path = meta_dir / f"attempts_shard{shard:02d}.jsonl"
+    # SHARD_TAG only names the output files. It lets a GAP-FILL pass (a tiny plan re-running the
+    # few slots whose ladder exhausted, with a substituted reference pair) write into the SAME
+    # output tree without colliding with, or resuming from, a real shard's JSONL.
+    tag = os.environ.get("SHARD_TAG", f"{shard:02d}")
+    tup_path = meta_dir / f"tuples_shard{tag}.jsonl"
+    att_path = meta_dir / f"attempts_shard{tag}.jsonl"
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)-7s %(message)s",
                         datefmt="%H:%M:%S", stream=sys.stdout, force=True)
@@ -176,7 +180,7 @@ def main() -> None:
         else:
             assert not cal.get("ships"), "DFG_CALIB.json ships a detector but dfg.enabled is false"
     log.info("DFG: %s %s", "ACTIVE" if dfg_on else "DISABLED (escape)", json.dumps(dfg_cfg))
-    fdfg = open(meta_dir / f"dfg_shard{shard:02d}.jsonl", "a", buffering=1)
+    fdfg = open(meta_dir / f"dfg_shard{tag}.jsonl", "a", buffering=1)
     dfg_seen: Counter = Counter()      # per shader: clips that reached the DFG (gate-passing)
     dfg_rej: Counter = Counter()       # per shader: clips the DFG rejected
     dfg_test: Counter = Counter()      # which test fired on rejected clips
@@ -185,7 +189,8 @@ def main() -> None:
     cache = rd2.ClipCache(REPO_ROOT / cfg["inputs"]["clips_dir"], d2["clip_cache"])
     gray = GrayCache()
     mine = [t for t in plan["targets"] if t["target_index"] % nshards == shard]
-    log.info("shard %d: %d target pairs (%d slots)", shard, len(mine), len(mine) * 8)
+    n_slots_planned = sum(len(t["slots"]) for t in mine)
+    log.info("shard %s: %d target pairs (%d slots)", tag, len(mine), n_slots_planned)
 
     # ---- resume: accepted tuples already on disk ----
     done: dict[int, dict] = {}
@@ -251,7 +256,7 @@ def main() -> None:
         assert a_t.shape == (T, H, W, 3) and b_t.shape == (T, H, W, 3), f"{a_t.shape}/{b_t.shape}"
         # shaders already committed for this target pair (planned + whatever resume accepted)
         pair_shaders = {done[s["tuple_id"]]["shader"] if s["tuple_id"] in done else s["shader"]
-                        for s in tgt["slots"]}
+                        for s in tgt["slots"]} | set(tgt.get("exclude_shaders", []))
 
         for slot in tgt["slots"]:
             tid = slot["tuple_id"]
@@ -422,7 +427,7 @@ def main() -> None:
             ftup.close()
             fatt.close()
             fdfg.close()
-            (meta_dir / f"OVERDRAW_BREACH_shard{shard:02d}.json").write_text(json.dumps({
+            (meta_dir / f"OVERDRAW_BREACH_shard{tag}.json").write_text(json.dumps({
                 "shard": shard, "n_accept": n_accept, "n_render": n_render,
                 "realized_overdraw": round(od, 4), "ceiling": d2["overdraw_ceiling"],
                 "n_dfg_reject": n_dfg_reject, "leg_failures": dict(leg_fail),
@@ -439,7 +444,7 @@ def main() -> None:
     # ---- per-shard manifest for the encode stage + per-shard stats ----
     rows = [json.loads(line) for line in tup_path.read_text().splitlines() if line.strip()]
     stems = sorted({r[k] for r in rows for k in ("target_stem", "reference_stem")})
-    (man_dir / f"clips_shard{shard:02d}.json").write_text(json.dumps(
+    (man_dir / f"clips_shard{tag}.json").write_text(json.dumps(
         [{"stem": s, "video": f"{s}.mp4"} for s in stems], indent=1))
     stats = {
         "shard": shard, "nshards": nshards, "n_targets": len(mine),
@@ -463,13 +468,15 @@ def main() -> None:
         "overdraw_this_run": round(n_render / max(2 * n_accept, 1), 4),
         "wall_min": round((time.time() - t_start) / 60, 2),
         "cache_hits": cache.hits, "cache_misses": cache.misses,
-        "complete": len(rows) == len(mine) * 8,
+        "n_slots_planned": n_slots_planned,
+        "complete": len(rows) == n_slots_planned,
     }
-    (meta_dir / f"stats_shard{shard:02d}.json").write_text(json.dumps(stats, indent=2))
+    (meta_dir / f"stats_shard{tag}.json").write_text(json.dumps(stats, indent=2))
     log.info("shard %d DONE: %s", shard, json.dumps({k: v for k, v in stats.items()
                                                      if k != "attempts_hist_this_run"}))
     if not stats["complete"]:
-        sys.exit(f"[render] shard {shard} INCOMPLETE: {len(rows)} of {len(mine)*8} tuples")
+        sys.exit(f"[render] shard {shard} INCOMPLETE: {len(rows)} of "
+                 f"{n_slots_planned} tuples")
 
 
 if __name__ == "__main__":

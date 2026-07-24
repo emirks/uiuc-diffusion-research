@@ -259,3 +259,67 @@ python build_viewer_d2full.py
 
 All rendering is **CPU-only** (`secondary`, never `--gres`); PyAV cannot allocate on login nodes,
 so any step touching an mp4 must run inside a batch job.
+
+## Result 1 — the DFG calibration ESCAPED (`DFG_CALIB.json`)
+
+Features were measured on **RAW** frames by re-rendering all 960 already-rendered clips from
+their recorded operators (the mp4 codec moves the features by at most |ΔL| 0.007 / |ΔS| 0.002 /
+|Δsat| 0.015, so it is not a confound). **No config in the declared grid met the declared bar.**
+
+| leg | bar | best reachable |
+|---|---|---|
+| baseline BAD recall | ≥ 5/7 | **4/7** |
+| round-5 BAD recall | 5/5 | **3/5** |
+| false positives | ≤ 2/38 GOOD | 2 (at the configs that reach only 4/7 · 3/5) |
+| StaticFade passes | 5/5 | **2/5** (3/5 at θ_flat 0.02) |
+
+**The failure is structural, not a grid artifact:**
+
+1. The premise *"grain has HIGH pixel variance, a matte has NONE"* is **false at 96×72
+   INTER_AREA** — area-averaging averages the grain away. StaticFade's downsampled luma std is
+   **0.012–0.040**, only one order above the true mattes (**0.000–0.002**) and *below every
+   declared θ_flat* {0.02, 0.03, 0.05}, so every grid value flags StaticFade.
+2. 3 of 7 baseline BAD and 2 of 5 round-5 BAD are **texture/geometry destruction with entirely
+   normal luma statistics** (S_min 0.083–0.186: extreme zoom, coordinate shredding, chromatic
+   glitch, saturated flash, StereoViewer). Reaching them by flatness needs θ_flat above the
+   lowest labeled-GOOD S_min (0.012), which false-positives GOOD clips including all 5 StaticFade.
+
+Per the pre-committed escape: **no detector ships**; the render is **unclamped at baseline**
+(frozen gate only) and the residual is documented. The bar was not softened.
+
+## Result 2 — the first-chunk BLIND check PASSED (`D2_FIRSTCHUNK64_BLIND.json`)
+
+64 target clips = the first 64 tuple_ids = 8 target pairs × their 8 operators, **uniform
+allocation, no offender oversampling**, graded from index-only captioned filmstrips.
+
+**2 BAD (3.1%), 11 MARGINAL, 51 OK** — Wilson-95 [0.9%, **10.7%**], well under the 17.5%
+baseline and under the 5/64 bar ⇒ **PASS**, array ran to completion. The two BAD are
+`Overexposure` (white blowout) and `PuzzleRight` (solid black/white block matte); **neither is
+visible to `m1_min`** (+0.733 / +0.304). The drop from 17.5% is explained: 6 of the 7
+baseline-BAD clips came from shaders the 40-shader blacklist now excludes at sampling time.
+
+## Result 3 — the delivered build (`D2_BUILD_AUDIT.json::stage2_render`)
+
+**3,072 tuples / 6,144 clips**, 384 target pairs at **exactly 8** operators and **8 distinct
+shaders** each, all 72 shaders used (allocation 3–48; `swap` gets only 3 at a 98.6% gate-rejection
+rate), aux `null`, extension `none`, no blacklisted or holdout shader, easings within the kept 7.
+
+- **pure-phase identity EXACT: max abs diff 0.0000** over all 6,144 clips (anchor-9 MAE 0.0 too)
+- realized overdraw **1.5869×** (ceiling 2.5) over 9,750 renders; attempts/slot mean 1.79, max 22
+- timing law survives rejection sampling: u1 0.485±0.282, u2 0.494±0.293; onset [8.01, 28.79],
+  release [91.20, 112.00]
+- non-gating `m1_min_flag`: 18 clips / 14 tuples
+- DFG: 0 clips reached it (it never shipped), so its per-shader rejection log is empty **by
+  construction**
+
+### Gap-fill (`D2_GAPFILL.json`)
+
+4 of 3,072 slots exhausted the 25-attempt ladder, and re-running reproduced it exactly. The
+blocker is the slot's **reference pair**, which the ladder never redraws: 3 of the 4 share one
+reference whose clip has a **perfectly static pure phase**, so assert2's ratio denominator
+collapses to its 1e-3 floor (seam 1.8–1560 against a ≤2.0 gate) and the degenerate `q(t)` pins m2
+at ~0.64 against ≤0.5 — unpassable for any shader. Those slots were re-run with a **substituted
+content-disjoint reference pair** (least-used first, never a pair that already proved
+unpassable): this spends the slack the spec marks as *"reused ~4×"* to protect the invariant it
+states exactly, *"384 target pairs × **exactly 8** operators"*. Gate, τ, bank, easings, ladder and
+timing law are unchanged; all 4 passed on the first or second attempt.

@@ -2,8 +2,8 @@
  "render_full": "9660049",
  "nshards_render": 16,
  "audit_viewer": null,
- "encode": null,
- "assemble": null,
+ "encode": "9660541 (array 0-5)",
+ "assemble": "9660639",
  "nshards_encode": 6,
  "train": "HELD - not submitted (owner approval required)",
  "dfg_calib_features": "9659661",
@@ -12,5 +12,8 @@
   "9659414 (param clamp; killed by the pre-committed first-chunk check, 25.0% BAD)"
  ],
  "param_clamp": "ABANDONED PERMANENTLY (never runs; param_filter=None)",
- "dfg": "ESCAPE - no detector ships (DFG_CALIB.json); render is unclamped at baseline"
+ "dfg": "ESCAPE - no detector ships (DFG_CALIB.json); render is unclamped at baseline",
+ "render_gapfill": "9660590",
+ "render_requeued_shards": "9660421-9660424",
+ "encode_topup_for_gapfill": "9660638"
 }

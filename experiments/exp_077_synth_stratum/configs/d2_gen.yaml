@@ -153,4 +153,4 @@ wandb:
   - d2
   - ic_gen
   - synth_stratum
-  - param_clamp
+  - dfg

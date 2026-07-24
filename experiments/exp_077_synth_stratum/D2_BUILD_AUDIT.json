@@ -174,5 +174,387 @@
     "counts_equal": true,
     "dangling_symlinks": 0,
     "checked": "2026-07-24, before assembly (repair of 770 links confirmed holding)"
+  },
+  "stage2_render": {
+    "render_dir": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/exp_077_synth_stratum_d2/d2full",
+    "n_tuples": 3072,
+    "n_tuples_expected": 3072,
+    "complete": true,
+    "n_target_pairs": 384,
+    "n_clips": 6144,
+    "n_shards_reported": 17,
+    "ops_per_pair_hist": {
+      "8": 384
+    },
+    "all_pairs_have_exactly_8_ops": true,
+    "distinct_shaders_per_pair_hist": {
+      "8": 384
+    },
+    "distinct_shaders_per_pair_min": 8,
+    "distinct_shaders_min_ge_6": true,
+    "per_shader_allocation": {
+      "BookFlip": 42,
+      "BowTieWithParameter": 47,
+      "Box": 45,
+      "ButterflyWaveScrawler": 45,
+      "ColourDistance": 48,
+      "CrossZoom": 47,
+      "DefocusBlur": 42,
+      "Dreamy": 43,
+      "EdgeTransition": 43,
+      "FilmBurn": 45,
+      "GlitchDisplace": 42,
+      "GridFlip": 43,
+      "HSVfade": 44,
+      "HorizontalClose": 45,
+      "HorizontalOpen": 43,
+      "LinearBlur": 43,
+      "Overexposure": 41,
+      "PolkaDotsCurtain": 45,
+      "PuzzleRight": 42,
+      "SimpleZoom": 15,
+      "SimpleZoomOut": 40,
+      "Slides": 38,
+      "StarWipe": 41,
+      "StaticFade": 41,
+      "StripDatamoshGlitch": 40,
+      "TilesWave": 45,
+      "VerticalClose": 46,
+      "VerticalOpen": 44,
+      "WaterDrop": 45,
+      "ZoomRigthWipe": 46,
+      "burn": 44,
+      "burn0": 44,
+      "cannabisleaf": 43,
+      "chessboard": 44,
+      "circleopen": 43,
+      "colorphase": 47,
+      "crosshatch": 47,
+      "crosswarp": 46,
+      "directionalwarp": 43,
+      "directionalwipe": 44,
+      "dissolve": 43,
+      "fade": 45,
+      "fadecolor": 45,
+      "fadegrayscale": 43,
+      "flyeye": 41,
+      "fragment": 44,
+      "heart": 44,
+      "hexagonalize": 41,
+      "luminance_melt": 43,
+      "morph": 43,
+      "multiply_blend": 44,
+      "old_tv_lost_signal": 47,
+      "parametric_glitch": 45,
+      "perlin": 42,
+      "pinwheel": 44,
+      "pixelize": 44,
+      "polar_function": 45,
+      "randomNoisex": 46,
+      "randomsquares": 43,
+      "ripple": 44,
+      "scale-in": 42,
+      "splitSlideOutHorizontal": 33,
+      "squareswire": 45,
+      "squeeze": 43,
+      "swap": 3,
+      "wind": 42,
+      "windowblinds": 46,
+      "windowslice": 45,
+      "wipeDown": 44,
+      "wipeLeft": 44,
+      "wipeRight": 46,
+      "wipeUp": 42
+    },
+    "per_shader_min_max": [
+      3,
+      48
+    ],
+    "n_shaders_used": 72,
+    "per_easing_allocation": {
+      "in_cubic": 422,
+      "in_out_cubic": 455,
+      "in_out_sine": 456,
+      "linear": 408,
+      "mid_hold": 396,
+      "smootherstep": 482,
+      "smoothstep": 453
+    },
+    "per_flip_allocation": {
+      "h": 633,
+      "hv": 612,
+      "none": 1214,
+      "v": 613
+    },
+    "swap_fraction": 0.4951,
+    "n_slots_shader_swapped_by_rejection": 164,
+    "aux_kind_all_null": true,
+    "extension_all_none": true,
+    "easings_within_keep7": true,
+    "no_blacklisted_shader_used": true,
+    "no_holdout_shader_used": true,
+    "max_pure_phase_MAX_abs_diff": 0.0,
+    "max_pure_phase_MAE": 0.0,
+    "max_anchor9_MAE": 0.0,
+    "pure_phase_identity_exact": true,
+    "seam_max_ratio_dist": {
+      "p50": 1.2216,
+      "p90": 1.7579,
+      "max": 1.9999
+    },
+    "m1_p10_dist": {
+      "min": 0.2552,
+      "p10": 0.43027,
+      "p50": 0.68685
+    },
+    "m2_max_dq_dist": {
+      "p50": 0.06261,
+      "p90": 0.12503,
+      "max": 0.5
+    },
+    "tau_used": 0.2543,
+    "n_clips_m1_min_flag": 18,
+    "n_tuples_m1_min_flag": 14,
+    "m1_min_flag_threshold": -0.05,
+    "m1_min_flag_is_gating": false,
+    "attempts_per_slot": {
+      "mean": 1.792,
+      "p50": 1,
+      "p90": 4,
+      "max": 22
+    },
+    "attempts_hist": {
+      "1": 2054,
+      "2": 499,
+      "3": 206,
+      "4": 93,
+      "5": 56,
+      "6": 93,
+      "7": 30,
+      "8": 15,
+      "9": 9,
+      "10": 4,
+      "11": 3,
+      "12": 7,
+      "15": 1,
+      "19": 1,
+      "22": 1
+    },
+    "n_renders_total": 9750,
+    "realized_overdraw": 1.5869,
+    "overdraw_ceiling": 2.5,
+    "within_overdraw_ceiling": true,
+    "gate_pass_stats": {
+      "n_clips_scored": 9750,
+      "n_pass": 7131,
+      "clip_pass_rate": 0.7314,
+      "leg_failures": {
+        "assert2": 2053,
+        "m1": 660,
+        "m2": 187,
+        "assert1": 12
+      }
+    },
+    "per_shader_attempt_rejection_rate": {
+      "BookFlip": 0.4878,
+      "BowTieWithParameter": 0.2985,
+      "Box": 0.2105,
+      "ButterflyWaveScrawler": 0.4767,
+      "ColourDistance": 0.25,
+      "CrossZoom": 0.338,
+      "DefocusBlur": 0.2364,
+      "Dreamy": 0.2712,
+      "EdgeTransition": 0.4487,
+      "FilmBurn": 0.2857,
+      "GlitchDisplace": 0.4684,
+      "GridFlip": 0.5275,
+      "HSVfade": 0.4359,
+      "HorizontalClose": 0.3077,
+      "HorizontalOpen": 0.4819,
+      "LinearBlur": 0.3857,
+      "Overexposure": 0.5,
+      "PolkaDotsCurtain": 0.3478,
+      "PuzzleRight": 0.58,
+      "SimpleZoom": 0.9143,
+      "SimpleZoomOut": 0.5,
+      "Slides": 0.6311,
+      "StarWipe": 0.4875,
+      "StaticFade": 0.5543,
+      "StripDatamoshGlitch": 0.5833,
+      "TilesWave": 0.3182,
+      "VerticalClose": 0.4026,
+      "VerticalOpen": 0.4054,
+      "WaterDrop": 0.2857,
+      "ZoomRigthWipe": 0.5619,
+      "burn": 0.3231,
+      "burn0": 0.3529,
+      "cannabisleaf": 0.3857,
+      "chessboard": 0.3016,
+      "circleopen": 0.4881,
+      "colorphase": 0.3974,
+      "crosshatch": 0.4125,
+      "crosswarp": 0.2923,
+      "directionalwarp": 0.3485,
+      "directionalwipe": 0.4211,
+      "dissolve": 0.5426,
+      "fade": 0.2969,
+      "fadecolor": 0.2623,
+      "fadegrayscale": 0.4342,
+      "flyeye": 0.4225,
+      "fragment": 0.4133,
+      "heart": 0.443,
+      "hexagonalize": 0.4605,
+      "luminance_melt": 0.2712,
+      "morph": 0.3582,
+      "multiply_blend": 0.3529,
+      "old_tv_lost_signal": 0.4198,
+      "parametric_glitch": 0.4444,
+      "perlin": 0.2632,
+      "pinwheel": 0.443,
+      "pixelize": 0.4762,
+      "polar_function": 0.3836,
+      "randomNoisex": 0.5354,
+      "randomsquares": 0.3582,
+      "ripple": 0.3623,
+      "scale-in": 0.475,
+      "splitSlideOutHorizontal": 0.8012,
+      "squareswire": 0.2857,
+      "squeeze": 0.5567,
+      "swap": 0.9862,
+      "wind": 0.3438,
+      "windowblinds": 0.3235,
+      "windowslice": 0.2623,
+      "wipeDown": 0.4286,
+      "wipeLeft": 0.3231,
+      "wipeRight": 0.3235,
+      "wipeUp": 0.4247
+    },
+    "worst_15_shaders_by_attempt_rejection": [
+      {
+        "shader": "swap",
+        "rej_rate": 0.9862
+      },
+      {
+        "shader": "SimpleZoom",
+        "rej_rate": 0.9143
+      },
+      {
+        "shader": "splitSlideOutHorizontal",
+        "rej_rate": 0.8012
+      },
+      {
+        "shader": "Slides",
+        "rej_rate": 0.6311
+      },
+      {
+        "shader": "StripDatamoshGlitch",
+        "rej_rate": 0.5833
+      },
+      {
+        "shader": "PuzzleRight",
+        "rej_rate": 0.58
+      },
+      {
+        "shader": "ZoomRigthWipe",
+        "rej_rate": 0.5619
+      },
+      {
+        "shader": "squeeze",
+        "rej_rate": 0.5567
+      },
+      {
+        "shader": "StaticFade",
+        "rej_rate": 0.5543
+      },
+      {
+        "shader": "dissolve",
+        "rej_rate": 0.5426
+      },
+      {
+        "shader": "randomNoisex",
+        "rej_rate": 0.5354
+      },
+      {
+        "shader": "GridFlip",
+        "rej_rate": 0.5275
+      },
+      {
+        "shader": "Overexposure",
+        "rej_rate": 0.5
+      },
+      {
+        "shader": "SimpleZoomOut",
+        "rej_rate": 0.5
+      },
+      {
+        "shader": "circleopen",
+        "rej_rate": 0.4881
+      }
+    ],
+    "dfg_enabled": false,
+    "dfg_config": {
+      "K": null,
+      "sat_flat_mult": null,
+      "theta_black": null,
+      "theta_flat": null,
+      "theta_sat": null,
+      "theta_white": null
+    },
+    "dfg_config_single_valued": true,
+    "dfg_calibration_outcome": "ESCAPE",
+    "dfg_agrees_with_calibration": true,
+    "dfg_clips_reaching_gate": 0,
+    "dfg_clips_rejected": 0,
+    "dfg_reject_rate": null,
+    "dfg_reject_by_test_frame_counts": {},
+    "dfg_per_shader": {},
+    "dfg_shaders_over_60pct_min20_FOR_OWNER_SHEET": [],
+    "dfg_shaders_over_60pct_any_n": [],
+    "dfg_note": "per-shader rejection is LOGGED ONLY \u2014 no mid-render reweighting or blacklisting; any exclusion happens at assembly time from these logs",
+    "delivered_clips_n_flag_dist": {
+      "max": null,
+      "p50": null,
+      "p90": null,
+      "n_with_any_flag": 0
+    },
+    "n_slots_exhausted": 4,
+    "n_timing_redraws": 0,
+    "n_gate2_exhausted_draws": 9,
+    "render_wall_min_per_shard": {
+      "0": 0.41,
+      "1": 0.88,
+      "2": 15.92,
+      "3": 19.1,
+      "4": 16.02,
+      "5": 15.13,
+      "6": 17.83,
+      "7": 13.58,
+      "8": 0.82,
+      "9": 11.3,
+      "10": 11.15,
+      "11": 0.68,
+      "12": 12.29,
+      "13": 12.59,
+      "14": 11.88,
+      "15": 10.63
+    },
+    "timing_u1_mean_sd": [
+      0.4853,
+      0.2821
+    ],
+    "timing_u2_mean_sd": [
+      0.4941,
+      0.2927
+    ],
+    "onset_min_max": [
+      8.008,
+      28.79
+    ],
+    "release_min_max": [
+      91.201,
+      111.998
+    ],
+    "param_clamp_active": false,
+    "param_clamp_abandoned": true
   }
 }

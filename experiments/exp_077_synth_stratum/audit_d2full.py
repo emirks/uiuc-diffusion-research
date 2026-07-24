@@ -212,8 +212,10 @@ def main() -> None:
         "dfg_enabled": all(t.get("dfg_enabled", False) for t in tuples),
         "dfg_config": json.loads(next(iter(dfg_cfgs))) if len(dfg_cfgs) == 1 else sorted(dfg_cfgs),
         "dfg_config_single_valued": len(dfg_cfgs) == 1,
-        "dfg_config_matches_calibration": (json.loads(next(iter(dfg_cfgs))) == cal.get("chosen")
-                                           if len(dfg_cfgs) == 1 else False),
+        "dfg_calibration_outcome": cal.get("outcome"),
+        "dfg_agrees_with_calibration": (
+            (not any(t.get("dfg_enabled") for t in tuples)) if not cal.get("ships")
+            else (len(dfg_cfgs) == 1 and json.loads(next(iter(dfg_cfgs))) == cal.get("chosen"))),
         "dfg_clips_reaching_gate": n_dfg_seen,
         "dfg_clips_rejected": n_dfg_rej,
         "dfg_reject_rate": round(n_dfg_rej / n_dfg_seen, 4) if n_dfg_seen else None,
@@ -250,7 +252,7 @@ def main() -> None:
         "pure_phase_identity_exact", "n_clips_m1_min_flag", "realized_overdraw",
         "within_overdraw_ceiling", "gate_pass_stats", "n_slots_exhausted", "aux_kind_all_null",
         "extension_all_none", "param_clamp_abandoned", "dfg_enabled", "dfg_config",
-        "dfg_config_matches_calibration", "dfg_reject_rate", "dfg_reject_by_test_frame_counts",
+        "dfg_agrees_with_calibration", "dfg_calibration_outcome", "dfg_reject_rate", "dfg_reject_by_test_frame_counts",
         "dfg_shaders_over_60pct_min20_FOR_OWNER_SHEET")}
     print(json.dumps(brief, indent=2))
     print(f"[audit] -> {out_path}")
