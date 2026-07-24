@@ -23,8 +23,10 @@ PY_BIN="$LAB/envs/diffusion/bin/python"
 WT=$LAB/diffusion-research/.claude/worktrees/bottleneck-branch          # OUR checkout
 CERT=$LAB/diffusion-research/.claude/worktrees/eval-v4-cert             # the certified instrument
 CHUNK="${SLURM_ARRAY_TASK_ID:-0}"
-MDIR="$WT/eval_ladder/eval_bneck"
-SOUT="$WT/outputs/eval/bneck"                 # = LADDER_SCORES for the report step
+# MDIR/SOUT env-overridable so the same job scores the claim set (default) OR the noise floor
+# (MDIR=eval_nf, SOUT=eval/bneck_nf) OR the audit — one scorer, no forks.
+MDIR="${MDIR:-$WT/eval_ladder/eval_bneck}"
+SOUT="${SOUT:-$WT/outputs/eval/bneck}"        # = LADDER_SCORES for the report step
 PASS="${SLURM_ARRAY_JOB_ID:-$SLURM_JOB_ID}"   # unique per pass: never overwrite a prior pass's rows
 
 mkdir -p "$SOUT" "$LAB/diffusion-research/outputs/logs/slurm"
