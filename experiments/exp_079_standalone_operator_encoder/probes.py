@@ -308,8 +308,21 @@ def run_one(name: str, enc, head, cfg: dict, split: dict, latent_root: Path, dev
     out["m1_sensitivity"] = m1_sensitivity(tok_zs)
     if hi_recs:
         z_hi, _ = embed(enc, head, latent_root, hi_recs, device)
+        # As pre-registered. NOTE: heldout_instance holds exactly ONE clip per class, so
+        # leave-one-out nearest-centroid deletes the only member of the anchor's class and can
+        # never predict it — this is identically 0.000 for ANY encoder. Degenerate on this split;
+        # kept unchanged for the record, and it is report-only so no gate depends on it.
         out["m2_class_sep_acc"] = m2_class_separation(z_hi, [r["cls"] for r in hi_recs])
         out["m2_chance"] = 1.0 / len({r["cls"] for r in hi_recs})
+        out["m2_DEGENERATE"] = "heldout_instance has 1 clip/class -> LOO nearest-centroid is 0 by construction"
+    # Informative companion (added post-hoc, clearly labelled, NON-GATING): the same statistic on
+    # the held-out ZS CLASSES, which have 3-7 clips each so leave-one-out is well posed. Measures
+    # whether the code groups unseen-class clips by class. Discriminativeness only, NOT operator evidence.
+    zs_ident = [i for i, r in enumerate(zs_recs) if r["manip"] == "identity"]
+    if zs_ident:
+        out["m2b_zsclass_sep_acc"] = m2_class_separation(
+            z_zs[zs_ident], [zs_recs[i]["cls"] for i in zs_ident])
+        out["m2b_chance"] = 1.0 / len({zs_recs[i]["cls"] for i in zs_ident})
     out["m3"] = m3_temporal(z_zs, zs_recs, ho_m, train_m, cfg["data"].get("perm_manips", []))
     out["m4"] = m4_leak(z_zs, tok_zs, zs_recs, latent_root)
 
