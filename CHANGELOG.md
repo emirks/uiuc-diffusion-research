@@ -1,5 +1,25 @@
 ## 2026-07-25
 
+- **09:50** — one-way reference attention now ships as a **two-call split**, not a dense mask.
+  The benchmark rejected the dense path against its pre-registered ≤30% bar: fwd+bwd attention
+  at the real T=9600 measured 26.97 ms unmasked / 82.49 ms dense (**3.06x**) / 21.79 ms split
+  (**0.81x** — faster than the bidirectional baseline, since the reference-over-target block is
+  never computed). This is the campaign's first change to `ltx-core`, so jobs must now put
+  `ltx-core/src` on PYTHONPATH; `job_train.sbatch` does, with a guard asserting the bneck
+  `ltx_core` actually loaded — a silent fallback would train bidirectionally while logging
+  `one_way`. 19/19 gates pass, including split-vs-dense numerical equivalence in fp32 and bf16
+  across both sequence layouts.
+- **09:50** — S2 delivered by the parallel agent (8,410 clips / 809 exact ops, blind audit PASS
+  at 2 BAD of 64). **S3 dropped** by their pre-committed tree — 62% defective, and the defect is
+  inpaint plausibility, a semantic property no geometric statistic separated. Our mix becomes
+  S0+S2+S4.
+- **09:50** — S4 reinstated by owner and re-scoped to one-sided (`{S1}. sksz.`). Measured that
+  rewriting refVFX prompts yields leak-free S1 for 96.3% of rows but at p50 8 words against the
+  corpus's 34 — nearly disjoint, so caption length alone would flag the stratum. Switched to
+  frame-based captioning; 2,000 filmstrips extracted (0 failures), pilot scored 25/25 in range
+  with zero violations. Paused pending a Gemini key.
+
+
 - **02:38** — exp_081 scaffolded: the ctt_v2 masked retrain. Advisor round 6 ruled the mix is
   S0+S2+S3 (S4/refVFX **deferred**, not killed — it adds ~4% to the operator count while
   importing either a tempo-rewrite or an unvalidated mixed-length trainer path), S0 at 15% of
