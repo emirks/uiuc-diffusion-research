@@ -298,7 +298,7 @@ def main() -> None:
             print(f"  {i}/{len(work)}")
 
     OUT.write_text("".join(json.dumps(o) + "\n" for o in out))
-    print(f"[passA] wrote {len(out)} rows -> {OUT.relative_to(REPO_ROOT)} ({n_err} errors)")
+    print(f"[passA] wrote {len(out)} rows -> {OUT} ({n_err} errors)")
 
     agg = collections.defaultdict(lambda: collections.defaultdict(list))
     for o in out:

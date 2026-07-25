@@ -59,10 +59,11 @@ def raw_and_pct(pool, rows, ceil):
     return {k: st.mean(v) for k, v in raw.items()}, pct
 
 
-def near_copy_rate(scores_dir: Path, arm: str | None = None):
+def near_copy_rate(scores_dir: Path, keep_items: set[str] | None = None):
     """Fraction of scored (generation x pool-reference) rows flagged near_copy, deduped the same
-    way the pool means are."""
-    seen, n, flagged = set(), 0, 0
+    way the pool means are. `keep_items` restricts to a registry item-id set, so the incumbent's
+    rate is measured on the SAME 67 items rather than across all nine of its cells."""
+    seen, n, flagged, copy_max = set(), 0, 0, []
     for f in sorted(scores_dir.glob("*/items.jsonl")):
         for line in f.read_text().splitlines():
             if not line.strip():
@@ -71,11 +72,42 @@ def near_copy_rate(scores_dir: Path, arm: str | None = None):
             if r["item_id"] in seen:
                 continue
             seen.add(r["item_id"])
-            if arm is not None and r.get("arm") != arm:
-                continue
+            if keep_items is not None:
+                head, _, _ref = r["item_id"].rpartition("__ref_")
+                base_id, _, _seed = head.rpartition("__s")
+                if base_id not in keep_items:
+                    continue
             n += 1
             flagged += bool(r.get("near_copy"))
-    return {"n_rows": n, "n_near_copy": flagged, "rate": (flagged / n) if n else None}
+            if r.get("copy_max") is not None:
+                copy_max.append(r["copy_max"])
+    return {"n_rows": n, "n_near_copy": flagged, "rate": (flagged / n) if n else None,
+            "copy_max_mean": st.mean(copy_max) if copy_max else None,
+            "copy_max_p95": (sorted(copy_max)[int(0.95 * (len(copy_max) - 1))]
+                             if copy_max else None)}
+
+
+def pool_completeness(scores_dir: Path, keep_items: set[str]):
+    """How many of the planned (generation x pool-reference) rows actually carry a score under
+    the dedup-first rule. The two arms must be compared on comparably complete pools, so this
+    is reported rather than assumed."""
+    seen, present, usable = set(), 0, 0
+    for f in sorted(scores_dir.glob("*/items.jsonl")):
+        for line in f.read_text().splitlines():
+            if not line.strip():
+                continue
+            r = json.loads(line)
+            if r["item_id"] in seen:
+                continue
+            seen.add(r["item_id"])
+            head, _, _ref = r["item_id"].rpartition("__ref_")
+            base_id, _, _seed = head.rpartition("__s")
+            if base_id not in keep_items:
+                continue
+            present += 1
+            usable += r.get("app_ref") is not None
+    return {"rows_present": present, "rows_usable": usable,
+            "rows_dropped": present - usable}
 
 
 def dominance_rate(path: Path, arm: str):
@@ -189,9 +221,11 @@ def main() -> None:
     }
 
     # ---- guards ----------------------------------------------------------------------
+    d2_ids = {i for c in CELLS for i in expected[c]}
+    ic_ids = {i.replace("__d2_gen__", "__ic_gen__") for i in d2_ids}
     guards = {
-        "near_copy_d2": near_copy_rate(D2_SCORES),
-        "near_copy_incumbent_all_ladder2": near_copy_rate(IC_SCORES, arm="ic_gen"),
+        "near_copy_d2": near_copy_rate(D2_SCORES, d2_ids),
+        "near_copy_incumbent_same_items": near_copy_rate(IC_SCORES, ic_ids),
         "ref_dominated_passA_d2": dominance_rate(HERE / "dominance_passA_d2.jsonl", "d2_gen"),
         "ref_dominated_passA_incumbent": dominance_rate(HERE / "dominance_passA.jsonl", "ic_gen"),
     }
@@ -201,6 +235,14 @@ def main() -> None:
         same_ok[cell] = {"value": got, "floor": floor,
                          "holds": (got is not None and got >= floor)}
     guards["same_content_floors"] = same_ok
+    guards["pool_completeness"] = {
+        "d2": pool_completeness(D2_SCORES, d2_ids),
+        "incumbent": pool_completeness(IC_SCORES, ic_ids),
+        "note": "756 pool rows are planned per arm. The incumbent's first scoring pass left 3 "
+                "rows unusable; those 3 are baked into its published 72.9/72.8/88.7/90.8 and "
+                "were NOT re-run, because re-running them would change the number this "
+                "measurement is compared against.",
+    }
     result["guards"] = guards
 
     # ---- verdict ---------------------------------------------------------------------
@@ -247,15 +289,20 @@ def main() -> None:
     if donor_means:
         print("  per-donor Δpp: " + ", ".join(f"{k} {v * 100:+.1f}" for k, v in donor_means.items()))
     print("\nguards:")
-    for k in ("near_copy_d2", "near_copy_incumbent_all_ladder2"):
+    for k in ("near_copy_d2", "near_copy_incumbent_same_items"):
         g = guards[k]
         print(f"  {k:34s} {g['n_near_copy']}/{g['n_rows']} = "
               + (f"{g['rate']:.2%}" if g["rate"] is not None else "-")
+              + (f"  copy_max mean {g['copy_max_mean']:.3f} p95 {g['copy_max_p95']:.3f}"
+                 if g["copy_max_mean"] is not None else "")
               + f"   (bar <= {NEAR_COPY_MAX:.0%})")
     for k in ("ref_dominated_passA_d2", "ref_dominated_passA_incumbent"):
         g = guards[k]
         print(f"  {k:34s} " + (f"{g['ref_dominated_rate']:.1%} (n={g['n']})" if g else "not run")
               + f"   (bar <= {REF_DOMINATED_MAX:.0%})")
+    pcm = guards["pool_completeness"]
+    print(f"  {'pool rows usable (d2 / incumbent)':34s} "
+          f"{pcm['d2']['rows_usable']}/756  {pcm['incumbent']['rows_usable']}/756")
     for cell, g in same_ok.items():
         print(f"  {cell:34s} "
               + (f"{g['value']:.1%}" if g["value"] is not None else "-")
