@@ -1,0 +1,497 @@
+[
+ {
+  "item_id": "G-unseen-cross__b1__color_rain_0__ref_animalization_0",
+  "cell": "G-unseen-cross",
+  "donor": "animalization",
+  "b1": {
+   "T": 0.07223397875649444,
+   "C": 0.4939815250990368,
+   "TI": 0.07223397875649444,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__color_rain_2__ref_animalization_0",
+  "cell": "G-unseen-cross",
+  "donor": "animalization",
+  "b1": {
+   "T": 0.2376436176076965,
+   "C": 0.8344387909412029,
+   "TI": 0.2376436176076965,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__earth_element_4__ref_color_rain_0",
+  "cell": "G-unseen-cross",
+  "donor": "color_rain",
+  "b1": {
+   "T": 0.0,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__earth_element_6__ref_color_rain_0",
+  "cell": "G-unseen-cross",
+  "donor": "color_rain",
+  "b1": {
+   "T": 0.542525187576071,
+   "C": 0.9244039160675881,
+   "TI": 0.542525187576071,
+   "quad": "transfer"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__gas_transformation_6__ref_earth_element_4",
+  "cell": "G-unseen-cross",
+  "donor": "earth_element",
+  "b1": {
+   "T": 0.0,
+   "C": 0.43875884759673156,
+   "TI": 0.0,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__gas_transformation_7__ref_earth_element_4",
+  "cell": "G-unseen-cross",
+  "donor": "earth_element",
+  "b1": {
+   "T": 0.8366274298177563,
+   "C": 0.646112173358827,
+   "TI": 0.646112173358827,
+   "quad": "transfer"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__illustration_scene_7__ref_gas_transformation_6",
+  "cell": "G-unseen-cross",
+  "donor": "gas_transformation",
+  "b1": {
+   "T": 0.639046985999751,
+   "C": 0.5564226080257656,
+   "TI": 0.5564226080257656,
+   "quad": "transfer"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__live_concert_0__ref_gas_transformation_6",
+  "cell": "G-unseen-cross",
+  "donor": "gas_transformation",
+  "b1": {
+   "T": 0.674470786299782,
+   "C": 0.48913773913773917,
+   "TI": 0.48913773913773917,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__display_transition_1__ref_hero_flight_5",
+  "cell": "G-unseen-cross",
+  "donor": "hero_flight",
+  "b1": {
+   "T": 0.2300240993234405,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__earth_wave_3__ref_hero_flight_5",
+  "cell": "G-unseen-cross",
+  "donor": "hero_flight",
+  "b1": {
+   "T": 0.21460064726378872,
+   "C": 0.653250546310304,
+   "TI": 0.21460064726378872,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__monstrosity_0__ref_illustration_scene_4",
+  "cell": "G-unseen-cross",
+  "donor": "illustration_scene",
+  "b1": {
+   "T": 0.2623884427157333,
+   "C": 0.7519809404282023,
+   "TI": 0.2623884427157333,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__mystification_0__ref_illustration_scene_4",
+  "cell": "G-unseen-cross",
+  "donor": "illustration_scene",
+  "b1": {
+   "T": 0.4619597613461739,
+   "C": 0.5376084860173578,
+   "TI": 0.4619597613461739,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__polygon_4__ref_money_rain_1",
+  "cell": "G-unseen-cross",
+  "donor": "money_rain",
+  "b1": {
+   "T": 0.0,
+   "C": 0.33853634180555897,
+   "TI": 0.0,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__polygon_8__ref_money_rain_1",
+  "cell": "G-unseen-cross",
+  "donor": "money_rain",
+  "b1": {
+   "T": 0.1040471847639373,
+   "C": 1.0,
+   "TI": 0.1040471847639373,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__portal_4__ref_polygon_4",
+  "cell": "G-unseen-cross",
+  "donor": "polygon",
+  "b1": {
+   "T": 0.3308841702133147,
+   "C": 0.7263482084677209,
+   "TI": 0.3308841702133147,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__saint_glow_3__ref_polygon_4",
+  "cell": "G-unseen-cross",
+  "donor": "polygon",
+  "b1": {
+   "T": 0.3134283457239013,
+   "C": 0.4656010740592913,
+   "TI": 0.3134283457239013,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__shadow_3__ref_portal_1",
+  "cell": "G-unseen-cross",
+  "donor": "portal",
+  "b1": {
+   "T": 0.5051063949508116,
+   "C": 0.7880993540169229,
+   "TI": 0.5051063949508116,
+   "quad": "transfer"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__super_fast_run_0__ref_portal_1",
+  "cell": "G-unseen-cross",
+  "donor": "portal",
+  "b1": {
+   "T": 0.0,
+   "C": 0.8758013439406811,
+   "TI": 0.0,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__water_element_4__ref_shadow_10",
+  "cell": "G-unseen-cross",
+  "donor": "shadow",
+  "b1": {
+   "T": 0.0,
+   "C": 0.3673588201047933,
+   "TI": 0.0,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__wireframe_0__ref_shadow_10",
+  "cell": "G-unseen-cross",
+  "donor": "shadow",
+  "b1": {
+   "T": 0.30441903384562247,
+   "C": 0.3590457416885692,
+   "TI": 0.30441903384562247,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__raven_transition_2__ref_shadow_smoke_0",
+  "cell": "G-unseen-cross",
+  "donor": "shadow_smoke",
+  "b1": {
+   "T": 0.9361397765021213,
+   "C": 0.45804417546974946,
+   "TI": 0.45804417546974946,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__color_rain_2__ref_super_fast_run_0",
+  "cell": "G-unseen-cross",
+  "donor": "super_fast_run",
+  "b1": {
+   "T": 0.24642803137120245,
+   "C": 0.809424707365814,
+   "TI": 0.24642803137120245,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__cotton_cloud_0__ref_super_fast_run_0",
+  "cell": "G-unseen-cross",
+  "donor": "super_fast_run",
+  "b1": {
+   "T": 0.49624453296026527,
+   "C": 0.4427912695972949,
+   "TI": 0.4427912695972949,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__earth_element_6__ref_wireframe_0",
+  "cell": "G-unseen-cross",
+  "donor": "wireframe",
+  "b1": {
+   "T": 0.07839453058692021,
+   "C": 0.6697971825357178,
+   "TI": 0.07839453058692021,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-unseen-cross__b1__fire_element_2__ref_wireframe_0",
+  "cell": "G-unseen-cross",
+  "donor": "wireframe",
+  "b1": {
+   "T": 0.0,
+   "C": 0.9678221036087068,
+   "TI": 0.0,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__animalization_0__ref_cotton_cloud_1",
+  "cell": "G-zs-cross",
+  "donor": "cotton_cloud",
+  "b1": {
+   "T": 0.14926675590329894,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__animalization_2__ref_cotton_cloud_1",
+  "cell": "G-zs-cross",
+  "donor": "cotton_cloud",
+  "b1": {
+   "T": 0.13610324941046692,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__hero_flight_5__ref_display_transition_1",
+  "cell": "G-zs-cross",
+  "donor": "display_transition",
+  "b1": {
+   "T": 0.28154787931788383,
+   "C": 0.5491502597570382,
+   "TI": 0.28154787931788383,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__hero_flight_6__ref_display_transition_1",
+  "cell": "G-zs-cross",
+  "donor": "display_transition",
+  "b1": {
+   "T": 0.2799606261840004,
+   "C": 0.9512579039418811,
+   "TI": 0.2799606261840004,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__shadow_smoke_7__ref_firelava_0",
+  "cell": "G-zs-cross",
+  "donor": "firelava",
+  "b1": {
+   "T": 0.29868449100155303,
+   "C": 0.7929636220426503,
+   "TI": 0.29868449100155303,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__water_bending_3__ref_firelava_0",
+  "cell": "G-zs-cross",
+  "donor": "firelava",
+  "b1": {
+   "T": 0.0,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__earth_wave_3__ref_flying_cam_transition_1",
+  "cell": "G-zs-cross",
+  "donor": "flying_cam_transition",
+  "b1": {
+   "T": 0.0,
+   "C": 0.6540949537524882,
+   "TI": 0.0,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__giant_grab_3__ref_flying_cam_transition_1",
+  "cell": "G-zs-cross",
+  "donor": "flying_cam_transition",
+  "b1": {
+   "T": 1.0,
+   "C": 0.9068619140459442,
+   "TI": 0.9068619140459442,
+   "quad": "transfer"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__money_rain_3__ref_live_concert_1",
+  "cell": "G-zs-cross",
+  "donor": "live_concert",
+  "b1": {
+   "T": 0.0,
+   "C": 0.06457173388189529,
+   "TI": 0.0,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__mystification_0__ref_live_concert_1",
+  "cell": "G-zs-cross",
+  "donor": "live_concert",
+  "b1": {
+   "T": 0.13392476074045695,
+   "C": 0.0,
+   "TI": 0.0,
+   "quad": "mush"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__polygon_4__ref_luminous_gaze_0",
+  "cell": "G-zs-cross",
+  "donor": "luminous_gaze",
+  "b1": {
+   "T": 0.0,
+   "C": 0.7040264160823905,
+   "TI": 0.0,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__polygon_8__ref_luminous_gaze_0",
+  "cell": "G-zs-cross",
+  "donor": "luminous_gaze",
+  "b1": {
+   "T": 0.08822878483989254,
+   "C": 0.7886007097916027,
+   "TI": 0.08822878483989254,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__giant_grab_3__ref_melt_transition_1",
+  "cell": "G-zs-cross",
+  "donor": "melt_transition",
+  "b1": {
+   "T": 0.24648019523183792,
+   "C": 1.0,
+   "TI": 0.24648019523183792,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__hero_flight_5__ref_melt_transition_1",
+  "cell": "G-zs-cross",
+  "donor": "melt_transition",
+  "b1": {
+   "T": 0.7120166600228182,
+   "C": 0.5097793441368701,
+   "TI": 0.5097793441368701,
+   "quad": "transfer"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__super_fast_run_0__ref_monstrosity_0",
+  "cell": "G-zs-cross",
+  "donor": "monstrosity",
+  "b1": {
+   "T": 0.3330389699179582,
+   "C": 0.8396715744423512,
+   "TI": 0.3330389699179582,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__super_fast_run_3__ref_monstrosity_0",
+  "cell": "G-zs-cross",
+  "donor": "monstrosity",
+  "b1": {
+   "T": 0.4252856947213052,
+   "C": 0.691037696034573,
+   "TI": 0.4252856947213052,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__air_bending_1__ref_raven_transition_0",
+  "cell": "G-zs-cross",
+  "donor": "raven_transition",
+  "b1": {
+   "T": 0.5495807312317271,
+   "C": 0.9878380311918729,
+   "TI": 0.5495807312317271,
+   "quad": "transfer"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__earth_wave_3__ref_raven_transition_0",
+  "cell": "G-zs-cross",
+  "donor": "raven_transition",
+  "b1": {
+   "T": 0.012648533962725928,
+   "C": 0.5601758768711108,
+   "TI": 0.012648533962725928,
+   "quad": "endpoint-prior won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__animalization_2__ref_saint_glow_0",
+  "cell": "G-zs-cross",
+  "donor": "saint_glow",
+  "b1": {
+   "T": 0.7459870193412995,
+   "C": 0.19296932764470684,
+   "TI": 0.19296932764470684,
+   "quad": "reference won"
+  }
+ },
+ {
+  "item_id": "G-zs-cross__b1__color_rain_0__ref_saint_glow_0",
+  "cell": "G-zs-cross",
+  "donor": "saint_glow",
+  "b1": {
+   "T": 0.0,
+   "C": 0.002807849200289489,
+   "TI": 0.0,
+   "quad": "mush"
+  }
+ }
+]
