@@ -13,6 +13,7 @@ model:
 inputs:
   bank_tightened: "data/processed/synth_endpoints/bank_tightened.json"
   endpoint_split: "data/processed/ctt_v2_strata/ENDPOINT_SPLIT.json"
+  content_pool: "data/processed/ctt_v2_strata/CONTENT_POOL.json"   # shared with S2
   embeddings: "data/processed/synth_endpoints/embeddings.npy"
   embed_ids: "data/processed/synth_endpoints/embed_ids.json"
   s2_plan: "experiments/exp_081_s2_stratum/PLAN_S2.json"   # for the shared-pair preference

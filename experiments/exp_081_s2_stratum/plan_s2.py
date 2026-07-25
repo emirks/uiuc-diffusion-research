@@ -127,23 +127,36 @@ def main() -> None:
     T, K = cfg["inference"]["num_frames"], cfg["inference"]["anchor_frames"]
     rng = random.Random(cfg["runtime"]["seed"])
 
-    # ---- 1. content pool: the 207 TRAINING endpoints (advisor ruling 3) -------------------
-    split = json.loads((REPO_ROOT / cfg["inputs"]["endpoint_split"]).read_text())
-    train_ids = split["training"]
-    bank = json.loads((REPO_ROOT / cfg["inputs"]["bank_tightened"]).read_text())
-    mp4 = {c["clip_id"]: c["mp4"] for c in bank["clips"]}
-    assert set(train_ids) <= set(mp4), "split references a clip absent from the bank"
+    # ---- 1. content pool: the TRAINING endpoints (advisor ruling 3) -----------------------
+    # CONTENT_POOL.json resolves the round-1 bank and the (optional) expansion bank into one
+    # manifest with absolute mp4 paths and one aligned embedding matrix, and carries the
+    # participation-ratio check. Re-running build_content_pool.py --with-v2 and then this
+    # planner is the whole re-freeze after an expansion.
+    pool = json.loads((REPO_ROOT / cfg["inputs"]["content_pool"]).read_text())
+    train_ids = [e["clip_id"] for e in pool["training"]]
+    mp4 = {e["clip_id"]: e["mp4"] for e in pool["training"] + pool["reserved"]}
+    assert pool["participation_ratio_pass"], (
+        "content pool failed the bank-level gates: "
+        f"A {pool['gates']['after_trim']['gate_a_mean_cos']} "
+        f"(<= {pool['gates']['after_trim']['gate_a_bar']}), "
+        f"B {pool['gates']['after_trim']['gate_b_matched_pr']} "
+        f"(>= {pool['gates']['after_trim']['gate_b_bar']}) — do not plan against this pool")
+    d = pool.get("diagnostics_non_gating", {})
+    g = pool["gates"]["after_trim"]
     print(f"[plan] content pool: {len(train_ids)} training endpoints "
-          f"({split['n_reserved']} reserved held out)")
+          f"(v1 {d.get('n_training_v1','?')} + v2 {d.get('n_training_v2','?')}), "
+          f"{pool['n_reserved']} reserved held out | gate A {g['gate_a_mean_cos']} "
+          f"gate B {g['gate_b_matched_pr']} (n={g['gate_b_match_n']})")
 
-    E = np.load(REPO_ROOT / cfg["inputs"]["embeddings"]).astype(np.float64)
-    emb_ids = json.loads((REPO_ROOT / cfg["inputs"]["embed_ids"]).read_text())
-    erow = {c: i for i, c in enumerate(emb_ids)}
+    E = np.load(REPO_ROOT / "data/processed/ctt_v2_strata/content_pool_emb.npy").astype(np.float64)
+    erow = {c: i for i, c in enumerate(pool["ids"])}
     V = np.stack([E[erow[c]] for c in train_ids])
     V /= np.linalg.norm(V, axis=1, keepdims=True)
     S = V @ V.T
     idx = {c: i for i, c in enumerate(train_ids)}
-    banned = {frozenset(p[:2]) for p in split["near_dup_pairs_pinned_to_training"]}
+    banned = {frozenset(p[:2]) for p in pool["near_dup_pairs_pinned_to_training"]}
+    split = {"reserved_eval_only": [e["clip_id"] for e in pool["reserved"]],
+             "n_reserved": pool["n_reserved"]}
 
     pairs = build_pair_pool(train_ids, S, idx, n_pairs=s2["n_content_pairs"],
                             max_cos=s2["pair_max_cos"], banned=banned, rng=rng)
@@ -173,26 +186,35 @@ def main() -> None:
     assert sum(quota.values()) == n_ops
 
     # ---- 3. endpoint-frame cache (for cheap gate-2 pre-validation) -----------------------
+    # INCREMENTAL: the training pool changes between freezes (reserve re-cuts, the letterbox
+    # exclusion, the expansion), so the cache tops up rather than being all-or-nothing.
     cache_npz = REPO_ROOT / cfg["inputs"]["endpoint_frame_cache"]
+    fa_cache, fb_cache = {}, {}
     if cache_npz.exists():
         z = np.load(cache_npz)
-        fa_cache = {c: z[f"a_{c}"] for c in train_ids}
-        fb_cache = {c: z[f"b_{c}"] for c in train_ids}
-        print(f"[plan] endpoint-frame cache: loaded {len(fa_cache)} clips")
-    else:
-        clips_dir = REPO_ROOT / cfg["inputs"]["clips_dir"]
-        fa_cache, fb_cache, t0 = {}, {}, time.time()
-        for n, c in enumerate(train_ids, 1):
-            arr = videoio.read_clip(clips_dir / mp4[c])
+        have = {k[2:] for k in z.files if k.startswith("a_")}
+        for c in train_ids:
+            if c in have:
+                fa_cache[c], fb_cache[c] = z[f"a_{c}"], z[f"b_{c}"]
+        # keep entries for clips not currently in training too — a later freeze may want them
+        for c in have - set(train_ids):
+            fa_cache[c], fb_cache[c] = z[f"a_{c}"], z[f"b_{c}"]
+    missing = [c for c in train_ids if c not in fa_cache]
+    print(f"[plan] endpoint-frame cache: {len(train_ids) - len(missing)} hit, {len(missing)} to add")
+    if missing:
+        t0 = time.time()
+        for n, c in enumerate(missing, 1):
+            arr = videoio.read_clip(Path(mp4[c]))     # absolute path from the content pool
             assert arr.shape == (T, H, W, 3), f"{c}: unexpected shape {arr.shape}"
             fa_cache[c] = arr[K - 1].copy()      # last pure-A frame  (index 8)
             fb_cache[c] = arr[T - K].copy()      # first pure-B frame (index 112)
             if n % 50 == 0:
-                print(f"[plan]   cached {n}/{len(train_ids)} ({time.time() - t0:.0f}s)", flush=True)
+                print(f"[plan]   cached {n}/{len(missing)} ({time.time() - t0:.0f}s)", flush=True)
         cache_npz.parent.mkdir(parents=True, exist_ok=True)
         np.savez_compressed(cache_npz, **{f"a_{c}": v for c, v in fa_cache.items()},
                             **{f"b_{c}": v for c, v in fb_cache.items()})
-        print(f"[plan] endpoint-frame cache: built {len(fa_cache)} clips in {time.time()-t0:.0f}s")
+        print(f"[plan] endpoint-frame cache: added {len(missing)} in {time.time()-t0:.0f}s "
+              f"({len(fa_cache)} total on disk)")
 
     # ---- 4. operator roster, gate-2 pre-validated ----------------------------------------
     runner = GLRunner(W, H)

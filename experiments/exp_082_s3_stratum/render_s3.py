@@ -93,9 +93,9 @@ def main() -> None:
                         datefmt="%H:%M:%S", stream=sys.stdout, force=True)
     log.info("shard=%d/%d host=%s root=%s", shard, nshards, os.uname().nodename, root)
 
-    bank_path = REPO_ROOT / cfg["inputs"]["bank_tightened"]
-    clip_path = {e["clip_id"]: bank_path.parent / e["mp4"]
-                 for e in json.loads(bank_path.read_text())["clips"]}
+    pool = json.loads((REPO_ROOT / cfg["inputs"]["content_pool"]).read_text())
+    clip_path = {e["clip_id"]: Path(e["mp4"])          # absolute; spans both banks
+                 for e in pool["training"] + pool["reserved"]}
     cache_dir = REPO_ROOT / cfg["inputs"]["depth_cache"]
 
     renderer = MeshRenderer(inf["width"], inf["height"], step=inf["mesh_step"])

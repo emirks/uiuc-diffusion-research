@@ -85,11 +85,11 @@ def main() -> None:
                             format="%(asctime)s %(levelname)-7s %(message)s",
                             datefmt="%H:%M:%S", stream=sys.stdout, force=True)
 
-        split = json.loads((REPO_ROOT / cfg["inputs"]["endpoint_split"]).read_text())
-        train_ids = split["training"]
-        bank_path = REPO_ROOT / cfg["inputs"]["bank_tightened"]
-        entries = json.loads(bank_path.read_text())["clips"]
-        clip_path = {e["clip_id"]: bank_path.parent / e["mp4"] for e in entries}
+        pool = json.loads((REPO_ROOT / cfg["inputs"]["content_pool"]).read_text())
+        train_ids = [e["clip_id"] for e in pool["training"]]
+        clip_path = {e["clip_id"]: Path(e["mp4"])      # absolute; spans both banks
+                     for e in pool["training"] + pool["reserved"]}
+        split = {"n_reserved": pool["n_reserved"]}
         cache_dir = REPO_ROOT / cfg["inputs"]["depth_cache"]
         log.info("pilot contents: %d TRAINING bank endpoints (reserved %d held out)",
                  len(train_ids), split["n_reserved"])

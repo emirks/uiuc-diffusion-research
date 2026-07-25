@@ -99,19 +99,24 @@ def main() -> None:
     s3, tim = cfg["s3"], cfg["timing"]
     rng = random.Random(cfg["runtime"]["seed"] + 1)
 
-    split = json.loads((REPO_ROOT / cfg["inputs"]["endpoint_split"]).read_text())
-    train_ids = split["training"]
-    bank_path = REPO_ROOT / cfg["inputs"]["bank_tightened"]
-    mp4 = {c["clip_id"]: c["mp4"] for c in json.loads(bank_path.read_text())["clips"]}
+    # Same resolved content pool as S2 — one manifest, absolute mp4 paths, one embedding
+    # matrix, participation-ratio check carried with it (see exp_081/build_content_pool.py).
+    pool = json.loads((REPO_ROOT / cfg["inputs"]["content_pool"]).read_text())
+    train_ids = [e["clip_id"] for e in pool["training"]]
+    mp4 = {e["clip_id"]: e["mp4"] for e in pool["training"] + pool["reserved"]}
+    assert pool["participation_ratio_pass"], "content pool failed the bank-level gates"
+    d = pool.get("diagnostics_non_gating", {})
+    print(f"[plan] content pool: {len(train_ids)} training endpoints "
+          f"(v1 {d.get('n_training_v1','?')} + v2 {d.get('n_training_v2','?')})")
 
-    E = np.load(REPO_ROOT / cfg["inputs"]["embeddings"]).astype(np.float64)
-    emb_ids = json.loads((REPO_ROOT / cfg["inputs"]["embed_ids"]).read_text())
-    erow = {c: i for i, c in enumerate(emb_ids)}
+    E = np.load(REPO_ROOT / "data/processed/ctt_v2_strata/content_pool_emb.npy").astype(np.float64)
+    erow = {c: i for i, c in enumerate(pool["ids"])}
     V = np.stack([E[erow[c]] for c in train_ids])
     V /= np.linalg.norm(V, axis=1, keepdims=True)
     S = V @ V.T
     idx = {c: i for i, c in enumerate(train_ids)}
-    banned = {frozenset(p[:2]) for p in split["near_dup_pairs_pinned_to_training"]}
+    banned = {frozenset(p[:2]) for p in pool["near_dup_pairs_pinned_to_training"]}
+    split = {"reserved_eval_only": [e["clip_id"] for e in pool["reserved"]]}
 
     # S2's pairs, for the cross-modality preference (ruling 3)
     s2_path = REPO_ROOT / cfg["inputs"]["s2_plan"]

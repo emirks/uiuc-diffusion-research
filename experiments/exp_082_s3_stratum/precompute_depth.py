@@ -33,15 +33,15 @@ def main() -> None:
     NF = cfg["inference"]["num_frames"]
     dev = cfg["runtime"]["device"]
 
-    bank_path = REPO_ROOT / cfg["inputs"]["bank_tightened"]
-    entries = json.loads(bank_path.read_text())["clips"]
-    clip_path = {e["clip_id"]: bank_path.parent / e["mp4"] for e in entries}
-
-    # Cache EVERY clip in the bank — training pool and reserved alike. The reserved 20 are
+    # Cache EVERY clip in the pool — training and reserved alike. The reserved clips are
     # eval-only for the training grid, but held-out-op eval renders will need their depth too,
-    # and the marginal cost is ~4 s/clip.
-    split = json.loads((REPO_ROOT / cfg["inputs"]["endpoint_split"]).read_text())
-    ids = sorted(set(split["training"]) | set(split["reserved_eval_only"]))
+    # and the marginal cost is ~4 s/clip. Re-running after an expansion computes only the new
+    # clips (an existing .npy is never recomputed).
+    pool = json.loads((REPO_ROOT / cfg["inputs"]["content_pool"]).read_text())
+    clip_path = {e["clip_id"]: Path(e["mp4"]) for e in pool["training"] + pool["reserved"]}
+    split = {"training": [e["clip_id"] for e in pool["training"]],
+             "reserved_eval_only": [e["clip_id"] for e in pool["reserved"]]}
+    ids = sorted(clip_path)
 
     cache = REPO_ROOT / cfg["inputs"]["depth_cache"]
     cache.mkdir(parents=True, exist_ok=True)

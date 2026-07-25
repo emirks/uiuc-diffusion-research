@@ -17,6 +17,9 @@ inputs:
   bank_tightened: "data/processed/synth_endpoints/bank_tightened.json"
   clips_dir: "data/processed/synth_endpoints"
   endpoint_split: "data/processed/ctt_v2_strata/ENDPOINT_SPLIT.json"
+  # resolved pool (v1 bank + optional expansion) — absolute mp4 paths, one embedding matrix,
+  # carries the participation-ratio check. Rebuild with build_content_pool.py [--with-v2].
+  content_pool: "data/processed/ctt_v2_strata/CONTENT_POOL.json"
   embeddings: "data/processed/synth_endpoints/embeddings.npy"
   embed_ids: "data/processed/synth_endpoints/embed_ids.json"
   policy: "experiments/exp_077_synth_stratum/D2_POLICY_FINAL.json"
