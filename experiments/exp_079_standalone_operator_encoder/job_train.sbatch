@@ -44,6 +44,9 @@ echo "[e079-train] train manip latents: $N"
 if [ -n "${SLURM_ARRAY_TASK_ID:-}" ]; then
   IDX="$SLURM_ARRAY_TASK_ID"
   export ARM="${ARMS[$IDX]}" SEED="${SEEDS[$IDX]}"
+  if [ -f "$LAB/diffusion-research/outputs/exp_079/${ARM}_seed${SEED}/encoder.pt" ]; then
+    echo "[e079-train] array task $IDX: $ARM seed=$SEED already trained — nothing to do"; exit 0
+  fi
   echo "[e079-train] array task $IDX -> arm=$ARM seed=$SEED"
   "$PY_BIN" "$EXP/train.py"
 else
