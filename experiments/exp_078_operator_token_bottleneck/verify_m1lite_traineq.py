@@ -67,9 +67,15 @@ def main() -> None:
         print(f"[traineq] {clip:28s} shape={tuple(train_lat.shape)} rel_L2={rel:.5f}")
 
     print(f"\n[traineq] worst rel_L2 = {worst:.5f}")
-    print("[traineq] VERDICT: " + (
-        "train==inference (difference is float noise)" if worst < 0.02 else
-        "MISMATCH — the coarse reference at generation differs from what M1-lite trained on"))
+    ok = 0.0 < worst < 0.02 or worst == 0.0
+    if worst >= 0.02:
+        print("[traineq] VERDICT: MISMATCH — the coarse reference at generation differs from what "
+              "M1-lite trained on. Its read would be INVALID.")
+    else:
+        print("[traineq] VERDICT: train==inference (difference is float noise)")
+    # Exit non-zero on mismatch so this is a HARD GATE: the generation job is chained with
+    # --dependency=afterok, and therefore cannot run on a setup that failed this check.
+    raise SystemExit(0 if worst < 0.02 else 1)
 
 
 if __name__ == "__main__":
