@@ -55,6 +55,25 @@ COVER_WEAK = 0.25
 FILL_REACH_PX = 40.0
 
 
+def _saliency_sr(rgb: np.ndarray) -> np.ndarray:
+    """Spectral-residual saliency, normalised to [0,1] at the frame's own resolution.
+
+    Numpy formulation copied from the endpoint funnel's `detect.py::saliency_sr` (this OpenCV
+    build has no `cv2.saliency`). Computed on a 128x128 reduction and resized back, which is
+    what the original does and is ample for asking "is this hole somewhere the eye goes".
+    """
+    g = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+    small = cv2.resize(g, (128, 128)).astype(np.float32)
+    f = np.fft.fft2(small)
+    logamp = np.log(np.abs(f) + 1e-8)
+    phase = np.angle(f)
+    sr = logamp - cv2.blur(logamp, (3, 3))
+    recon = np.abs(np.fft.ifft2(np.exp(sr + 1j * phase))) ** 2
+    recon = cv2.GaussianBlur(recon, (0, 0), 3)
+    recon = (recon - recon.min()) / (np.ptp(recon) + 1e-8)
+    return cv2.resize(recon, (rgb.shape[1], rgb.shape[0]))
+
+
 @dataclasses.dataclass
 class Operator3D:
     path: str
@@ -530,8 +549,18 @@ def render_transition_stream(renderer, op: Operator3D, A: np.ndarray,
                 weak_m = (den < COVER_WEAK).astype(np.uint8)
                 rw = (float(cv2.distanceTransform(weak_m, cv2.DIST_L2, 5).max())
                       if weak_m.any() else 0.0)
+                # SALIENCE OVERLAP — the one permitted new statistic (advisor). Quantity of
+                # missing geometry failed as a discriminator; this tests LOCATION: the share of
+                # the frame's visual interest that sits on invented pixels. Spectral-residual
+                # saliency, the same family the endpoint funnel uses (cv2.saliency is not in
+                # this OpenCV build, so it is the numpy formulation from detect.py::saliency_sr).
+                sal = _saliency_sr(f_u8)
+                s_tot = float(sal.sum()) + 1e-6
                 coverage_out.append({
                     "t": int(t),
+                    "sal_hole": float((sal * hole).sum()) / s_tot,
+                    "sal_weak": float((sal * weak_m).sum()) / s_tot,
+                    "sal_peak": float(sal[hole.astype(bool)].max()) if hole.any() else 0.0,
                     "uncovered": float(hole.mean()),
                     "weak": float(weak_m.mean()),
                     "hole_radius": r,

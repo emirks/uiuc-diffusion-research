@@ -168,6 +168,9 @@ def main() -> None:
         training.pop(worst)
         new_ids.remove(drop["clip_id"])
         cur = evaluate(emb_matrix(training), MATCH_N, BAR_B)
+        print(f"[pool]   trim {len(trim_log):3d}: dropped {drop['clip_id']:<44} "
+              f"A {cur['gate_a_mean_cos']:.4f} B {cur['gate_b_matched_pr']:.2f} "
+              f"({len(new_ids)} expansion clips left)", flush=True)
     after = cur
     if trim_log:
         print(f"[pool] TRIM: removed {len(trim_log)} expansion clips to satisfy the gates")

@@ -1,0 +1,258 @@
+{
+ "pass": "A",
+ "shuffle_seed": 11117,
+ "key": [
+  {
+   "blind_id": 0,
+   "stem": "s3p_048_spiral_random_5c4dbfd5"
+  },
+  {
+   "blind_id": 1,
+   "stem": "s3p_059_truck_dissolve_fbm_615018cc"
+  },
+  {
+   "blind_id": 2,
+   "stem": "s3p_053_spiral_dollyzoom_6b754567"
+  },
+  {
+   "blind_id": 3,
+   "stem": "s3p_061_truck_fog_7f98da6a"
+  },
+  {
+   "blind_id": 4,
+   "stem": "s3p_004_crane_random_0ce58324"
+  },
+  {
+   "blind_id": 5,
+   "stem": "s3p_040_shear_random_b7172104"
+  },
+  {
+   "blind_id": 6,
+   "stem": "s3p_027_orbit_depthwipe_10ad46ef"
+  },
+  {
+   "blind_id": 7,
+   "stem": "s3p_038_shear_random_65833d28"
+  },
+  {
+   "blind_id": 8,
+   "stem": "s3p_012_dolly_random_18e4e451"
+  },
+  {
+   "blind_id": 9,
+   "stem": "s3p_030_roll_random_5050e55c"
+  },
+  {
+   "blind_id": 10,
+   "stem": "s3p_002_crane_random_d85687f5"
+  },
+  {
+   "blind_id": 11,
+   "stem": "s3p_050_spiral_dissolve_fbm_ed72a07f"
+  },
+  {
+   "blind_id": 12,
+   "stem": "s3p_035_roll_handheld_mblur_31bb97ad"
+  },
+  {
+   "blind_id": 13,
+   "stem": "s3p_003_crane_random_01466fd8"
+  },
+  {
+   "blind_id": 14,
+   "stem": "s3p_052_spiral_fog_a21bc18c"
+  },
+  {
+   "blind_id": 15,
+   "stem": "s3p_062_truck_handheld_mblur_25ca5e46"
+  },
+  {
+   "blind_id": 16,
+   "stem": "s3p_063_truck_depthwipe_a277b8dc"
+  },
+  {
+   "blind_id": 17,
+   "stem": "s3p_009_crane_depthwipe_f44ee419"
+  },
+  {
+   "blind_id": 18,
+   "stem": "s3p_016_dolly_fog_3a8ed6ae"
+  },
+  {
+   "blind_id": 19,
+   "stem": "s3p_014_dolly_dissolve_fbm_d585146f"
+  },
+  {
+   "blind_id": 20,
+   "stem": "s3p_013_dolly_random_05049ae3"
+  },
+  {
+   "blind_id": 21,
+   "stem": "s3p_026_orbit_handheld_mblur_9fb0295b"
+  },
+  {
+   "blind_id": 22,
+   "stem": "s3p_049_spiral_random_3eb4f550"
+  },
+  {
+   "blind_id": 23,
+   "stem": "s3p_019_orbit_random_5b1e69b8"
+  },
+  {
+   "blind_id": 24,
+   "stem": "s3p_044_shear_handheld_mblur_5bba7db0"
+  },
+  {
+   "blind_id": 25,
+   "stem": "s3p_017_dolly_dollyzoom_6d9f19c7"
+  },
+  {
+   "blind_id": 26,
+   "stem": "s3p_005_crane_dissolve_fbm_68446603"
+  },
+  {
+   "blind_id": 27,
+   "stem": "s3p_051_spiral_rackfocus_e73cb654"
+  },
+  {
+   "blind_id": 28,
+   "stem": "s3p_001_crane_random_4d55643b"
+  },
+  {
+   "blind_id": 29,
+   "stem": "s3p_021_orbit_random_d3c19364"
+  },
+  {
+   "blind_id": 30,
+   "stem": "s3p_039_shear_random_41d2e712"
+  },
+  {
+   "blind_id": 31,
+   "stem": "s3p_018_dolly_depthwipe_5404c669"
+  },
+  {
+   "blind_id": 32,
+   "stem": "s3p_046_spiral_random_7bb59baf"
+  },
+  {
+   "blind_id": 33,
+   "stem": "s3p_043_shear_fog_3d86babc"
+  },
+  {
+   "blind_id": 34,
+   "stem": "s3p_031_roll_random_fd4152fc"
+  },
+  {
+   "blind_id": 35,
+   "stem": "s3p_011_dolly_random_73f2ac56"
+  },
+  {
+   "blind_id": 36,
+   "stem": "s3p_022_orbit_random_2a985782"
+  },
+  {
+   "blind_id": 37,
+   "stem": "s3p_007_crane_fog_1e0563a3"
+  },
+  {
+   "blind_id": 38,
+   "stem": "s3p_057_truck_random_412c8646"
+  },
+  {
+   "blind_id": 39,
+   "stem": "s3p_025_orbit_fog_61ddfb04"
+  },
+  {
+   "blind_id": 40,
+   "stem": "s3p_024_orbit_rackfocus_a58ec5a9"
+  },
+  {
+   "blind_id": 41,
+   "stem": "s3p_054_spiral_depthwipe_431f8c45"
+  },
+  {
+   "blind_id": 42,
+   "stem": "s3p_032_roll_dissolve_fbm_7cf88ed4"
+  },
+  {
+   "blind_id": 43,
+   "stem": "s3p_036_roll_depthwipe_e0c84cc1"
+  },
+  {
+   "blind_id": 44,
+   "stem": "s3p_058_truck_random_dcb8bfc9"
+  },
+  {
+   "blind_id": 45,
+   "stem": "s3p_033_roll_rackfocus_97fe9a26"
+  },
+  {
+   "blind_id": 46,
+   "stem": "s3p_015_dolly_rackfocus_3c5eadf3"
+  },
+  {
+   "blind_id": 47,
+   "stem": "s3p_060_truck_rackfocus_cc662c8b"
+  },
+  {
+   "blind_id": 48,
+   "stem": "s3p_034_roll_fog_d02560f1"
+  },
+  {
+   "blind_id": 49,
+   "stem": "s3p_029_roll_random_d2f29807"
+  },
+  {
+   "blind_id": 50,
+   "stem": "s3p_037_shear_random_fe8b8cb1"
+  },
+  {
+   "blind_id": 51,
+   "stem": "s3p_047_spiral_random_f47ae5c4"
+  },
+  {
+   "blind_id": 52,
+   "stem": "s3p_042_shear_rackfocus_589ab819"
+  },
+  {
+   "blind_id": 53,
+   "stem": "s3p_056_truck_random_f1be7bb6"
+  },
+  {
+   "blind_id": 54,
+   "stem": "s3p_023_orbit_dissolve_fbm_65f43ba5"
+  },
+  {
+   "blind_id": 55,
+   "stem": "s3p_006_crane_rackfocus_a734b77d"
+  },
+  {
+   "blind_id": 56,
+   "stem": "s3p_041_shear_dissolve_fbm_d645d388"
+  },
+  {
+   "blind_id": 57,
+   "stem": "s3p_028_roll_random_f4f6e4af"
+  },
+  {
+   "blind_id": 58,
+   "stem": "s3p_055_truck_random_245fdb2d"
+  },
+  {
+   "blind_id": 59,
+   "stem": "s3p_020_orbit_random_0f05a9ac"
+  },
+  {
+   "blind_id": 60,
+   "stem": "s3p_010_dolly_random_7d5a24d8"
+  },
+  {
+   "blind_id": 61,
+   "stem": "s3p_008_crane_handheld_mblur_26d98408"
+  },
+  {
+   "blind_id": 62,
+   "stem": "s3p_045_shear_depthwipe_8aa2cc6a"
+  }
+ ]
+}
