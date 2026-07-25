@@ -1,0 +1,81 @@
+{
+ "created": "2026-07-25",
+ "stratum": "S3",
+ "status": "DROPPED FROM THIS DELIVERY",
+ "authority": "fable-advisor pre-committed decision tree (round 7). Branch FAIL was defined BEFORE the evidence arrived; no further consultation is required or permitted.",
+ "trigger": "no statistic met the operating point (>=87% recall at <=7.5% FP) on adjudicated labels",
+ "finding": "The S3 defect is INPAINT PLAUSIBILITY \u2014 a semantic property (can the surrounding content stand in for what the mesh lost?) \u2014 not a measurable geometric quantity. Both quantity-based and location-based statistics failed against labels of measured reliability.",
+ "mechanism_established": "composite() computes `den`, the total available alpha per pixel, and passes it to _fill_holes, a push-pull inpainter blurring at 9/31/81 px. Where the camera looks past the mesh edge den collapses: small holes inpaint plausibly, medium holes emerge as smear/melt, large holes stay black. One cause, two visual symptoms.",
+ "why_quantity_failed": "A clip judged GOOD typically has 12% of its ramp pixels uncovered and a largest unfillable hole of 76px radius (a quarter of frame width). The inpainter repairs enormous holes invisibly and sometimes botches smaller ones, so no threshold on hole SIZE separates them.",
+ "why_location_failed": "Weighting the hole mask by spectral-residual salience made it WORSE, not better: best sal_weak_max = 24/39 recall at AUC 0.811, against weak_max = 26/39 at AUC 0.873 for plain coverage. The location hypothesis is refuted, at least under this saliency model.",
+ "label_reliability_measured": {
+  "protocol": "three independent raters, two of them fully blind with independent shuffles",
+  "flag_rates": {
+   "operator": 0.36507936507936506,
+   "A": 0.5873015873015873,
+   "B": 0.6825396825396826
+  },
+  "pairwise": {
+   "A_vs_B": {
+    "agreement": 0.7777777777777778,
+    "kappa": 0.5252960172228203
+   },
+   "A_vs_operator": {
+    "agreement": 0.7142857142857143,
+    "kappa": 0.4542829643888355
+   },
+   "B_vs_operator": {
+    "agreement": 0.6507936507936508,
+    "kappa": 0.3642201834862386
+   }
+  },
+  "all_three_agree": "36/63",
+  "note": "cleaning the labels moved AUC 0.79 -> 0.87, so label noise was real and material \u2014 but the operating point still failed. The adjudicated defect rate is 62% (39/24), not the 36.5% the operator's first audit reported."
+ },
+ "attempts": [
+  {
+   "n": 1,
+   "statistic": "image-space patch resemblance to either source under local search",
+   "result": "ESCAPE 11/23 @1FP, AUC 0.753",
+   "file": "GATE_CALIB_attempt1_fraction.json"
+  },
+  {
+   "n": 2,
+   "statistic": "geometric coverage fraction (compositor alpha)",
+   "result": "ESCAPE 13/23 @3FP",
+   "file": "GATE_CALIB.json"
+  },
+  {
+   "n": 3,
+   "statistic": "largest unfillable hole (distance transform vs the 81px kernel)",
+   "result": "ESCAPE 11/23",
+   "file": "GATE_CALIB.json"
+  },
+  {
+   "n": 4,
+   "statistic": "hole-salience overlap (the one permitted new statistic)",
+   "result": "FAIL 24/39",
+   "file": "GATE_SALIENCE.json"
+  }
+ ],
+ "what_a_revival_would_need": [
+  "a learned or VLM-based defect detector trained on many more labelled clips \u2014 a research project, not a delivery task; or",
+  "an engine redesign that avoids holes BY CONSTRUCTION: camera paths frustum-constrained to the mesh so the view never leaves covered geometry. That is a different experiment, not a patch to this one."
+ ],
+ "preserved": [
+  "GATE_CALIB_attempt1_fraction.json",
+  "GATE_CALIB.json",
+  "GATE_SALIENCE.json",
+  "GATE_ADJUDICATED.json",
+  "PILOT_RESULT.json",
+  "PILOT_VISUAL_AUDIT.json",
+  "relabel_registry/ (both blind passes, keys, agreement, adjudication key)",
+  "PLAN_S3.json + HOLDOUT_S3.json (frozen grid, unrendered)",
+  "outputs/analysis/ctt_v2_s3_depth_cache (227 stacks, reusable)"
+ ],
+ "not_wasted": [
+  "the 227-clip depth cache and the letterbox audit both came out of this work and the letterbox exclusion improved S2",
+  "PLAN_S3.json is frozen and valid against the 291-endpoint pool, so a future engine can render it unchanged",
+  "the fabrication principle was sharpened to an enforceable form because of this evidence"
+ ]
+}

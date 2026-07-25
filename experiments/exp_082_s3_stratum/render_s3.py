@@ -62,6 +62,13 @@ def main() -> None:
     inf, s3, gate = cfg["inference"], cfg["s3"], cfg["gate"]
     NF, dev = inf["num_frames"], cfg["runtime"]["device"]
 
+    # ---- S3 WAS DROPPED FROM THIS DELIVERY (2026-07-25) ----------------------------------
+    if (HERE / "S3_DROPPED.json").exists():
+        d = json.loads((HERE / "S3_DROPPED.json").read_text())
+        sys.exit("[s3] STRATUM DROPPED: " + d["trigger"] + "\n     " + d["finding"] +
+                 "\n     See S3_DROPPED.json. Reviving S3 needs a learned defect detector or "
+                 "an engine redesign with frustum-constrained camera paths — not a re-run.")
+
     # ---- the pilot gate is a HARD precondition ------------------------------------------
     pilot_path = HERE / "PILOT_RESULT.json"
     if not pilot_path.exists():
