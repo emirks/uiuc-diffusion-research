@@ -129,11 +129,19 @@ def collect(latent_root: Path, split: dict, split_name: str, manips: list[str]) 
 # ---------------------------------------------------------------- metrics
 
 def m1_sensitivity(tokens: np.ndarray) -> float:
-    """Cross-demo token sensitivity — B1's metric verbatim."""
-    d = np.linalg.norm(tokens[:, None, :] - tokens[None, :, :], axis=-1)
-    n = tokens.shape[0]
+    """Cross-demo token sensitivity — B1's metric verbatim.
+
+    Computed via the ||a||^2 + ||b||^2 - 2a.b identity: materialising the [N,N,D] difference
+    tensor costs ~15 GB at N=450, D=9216 and OOMs. This keeps peak memory at the [N,N] gram.
+    """
+    t = np.asarray(tokens, dtype=np.float64)
+    sq = (t * t).sum(axis=1)
+    d2 = sq[:, None] + sq[None, :] - 2.0 * (t @ t.T)
+    np.maximum(d2, 0.0, out=d2)
+    d = np.sqrt(d2)
+    n = t.shape[0]
     mean_pair = d.sum() / max(n * n - n, 1)
-    return float(mean_pair / max(np.linalg.norm(tokens, axis=1).mean(), 1e-12))
+    return float(mean_pair / max(np.linalg.norm(t, axis=1).mean(), 1e-12))
 
 
 def m2_class_separation(z: np.ndarray, cls: list[str]) -> float:
