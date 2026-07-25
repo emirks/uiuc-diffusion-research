@@ -26,8 +26,32 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(REPO_ROOT / "src"))
 sys.path.insert(0, str(HERE))
 
+import cv2  # noqa: E402
+
 import coverage as cov  # noqa: E402
 from engine3d import videoio  # noqa: E402
+
+# The software GL rasteriser, PyAV and OpenCV each open worker pools; run concurrently on a
+# login node they trip the per-user thread limit and PyAV raises EAGAIN mid-decode. Keep this
+# process frugal and decode each SOURCE clip once (63 pilot clips share ~40 distinct sources).
+cv2.setNumThreads(2)
+_SRC: dict = {}
+
+
+def src_clip(path: str, n: int):
+    if path not in _SRC:
+        for attempt in range(4):
+            try:
+                _SRC[path] = videoio.read_clip(Path(path))
+                break
+            except Exception as e:                      # transient EAGAIN under thread pressure
+                if attempt == 3:
+                    raise
+                print(f"[cal] decode retry {attempt+1} for {Path(path).name}: {e}", flush=True)
+                time.sleep(2 + 3 * attempt)
+        while len(_SRC) > 40:
+            _SRC.pop(next(iter(_SRC)))
+    return _SRC[path][:n]
 
 MIN_RECALL = 20      # of 23 BAD
 MAX_FP = 3           # of 40 GOOD
@@ -50,8 +74,8 @@ def main() -> None:
     for n, a in enumerate(audit, 1):
         c = by_stem[a["stem"]]
         clip = videoio.read_clip(vid_dir / f"{a['stem']}.mp4")
-        A = videoio.read_clip(Path(bank[c["A"]]))[:len(clip)]
-        B = videoio.read_clip(Path(bank[c["B"]]))[:len(clip)]
+        A = src_clip(bank[c["A"]], len(clip))
+        B = src_clip(bank[c["B"]], len(clip))
         m = cov.coverage(clip, A, B, c["onset"], c["release"])
         rows.append({"stem": a["stem"], "bad": a["bad"], "family": a["family"],
                      "tag": a["tag"], **{k: v for k, v in m.items() if k != "per_frame"}})

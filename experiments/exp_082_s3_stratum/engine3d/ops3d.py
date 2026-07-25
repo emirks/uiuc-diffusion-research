@@ -44,6 +44,12 @@ EASINGS = {
 # cinematography — real cameras do not start or stop instantaneously.
 PATH_EASINGS = ("smootherstep", "in_out_cubic", "in_out_sine", "in_out_quart")
 
+# Coverage thresholds on the composite's total-alpha `den`. HARD is the inpainting trigger
+# (`_fill_holes` treats den <= 1e-3 as a hole); WEAK also counts badly stretched geometry, which
+# is inpainted from very little real signal and reads as smearing.
+COVER_HARD = 1e-3
+COVER_WEAK = 0.25
+
 
 @dataclasses.dataclass
 class Operator3D:
@@ -207,15 +213,25 @@ def _fill_holes(num: np.ndarray, den: np.ndarray) -> np.ndarray:
     return out
 
 
-def composite(rgba_a: np.ndarray, rgba_b: np.ndarray, w: np.ndarray) -> np.ndarray:
-    """Blend two rendered layers by weight `w` (0 = A, 1 = B), honouring alpha."""
+def composite(rgba_a: np.ndarray, rgba_b: np.ndarray, w: np.ndarray,
+              *, return_den: bool = False):
+    """Blend two rendered layers by weight `w` (0 = A, 1 = B), honouring alpha.
+
+    `den` — the total available alpha per pixel — is the exact COVERAGE signal, and it is the
+    single root cause behind both S3 defect classes found in the 63-clip pilot. Where den ~ 0
+    neither layer's mesh reaches the pixel, so `_fill_holes` invents the colour: small holes
+    inpaint plausibly, medium holes come out as the smear/melt that the blind audit scored as
+    "tearing", and large holes stay black. Returning it lets the renderer gate on the CAUSE
+    instead of chasing its two visual symptoms with image heuristics.
+    """
     a_rgb = rgba_a[..., :3].astype(np.float32)
     b_rgb = rgba_b[..., :3].astype(np.float32)
     a_a = (rgba_a[..., 3:4].astype(np.float32) / 255.0) * (1.0 - w)
     b_a = (rgba_b[..., 3:4].astype(np.float32) / 255.0) * w
     num = a_rgb * a_a + b_rgb * b_a
     den = a_a + b_a
-    return np.clip(_fill_holes(num, den), 0, 255).astype(np.uint8)
+    out = np.clip(_fill_holes(num, den), 0, 255).astype(np.uint8)
+    return (out, den[..., 0]) if return_den else out
 
 
 def world_positions(view_z: np.ndarray, fovy: float) -> np.ndarray:
@@ -420,10 +436,15 @@ def seam_error(clip: np.ndarray, n_start: int, n_middle: int
 
 def render_transition_stream(renderer, op: Operator3D, A: np.ndarray,
                              B: np.ndarray, da_stack: np.ndarray,
-                             db_stack: np.ndarray, onset: int, release: int
-                             ) -> np.ndarray:
+                             db_stack: np.ndarray, onset: int, release: int,
+                             *, coverage_out: list | None = None) -> np.ndarray:
     """out[0..onset] = A verbatim; out[release..] = B verbatim; the interior is
-    rendered from the CURRENT source frames of both playing streams."""
+    rendered from the CURRENT source frames of both playing streams.
+
+    If `coverage_out` is given, one dict per ramp frame is appended recording what fraction of
+    the frame no mesh actually covered — the S3 gate signal. Costs nothing: `den` is already
+    computed inside `composite`. Default None keeps the render path byte-identical.
+    """
     n = A.shape[0]
     n_mid = release - onset - 1
     path = cameras.PATHS[op.path]
@@ -488,7 +509,18 @@ def render_transition_stream(renderer, op: Operator3D, A: np.ndarray,
             jit = jitter[k] if jitter is not None else None
             ra = layer(A[t], za, da_stack[t], e * travel, e, eb, jit, True)
             rb = layer(B[t], zb, db_stack[t], (e - 1.0) * travel, e, eb, jit, False)
-            f = composite(ra, rb, blend_weight(op, eb, db_stack[t])).astype(np.float32)
+            if coverage_out is not None and j == 0:
+                f_u8, den = composite(ra, rb, blend_weight(op, eb, db_stack[t]),
+                                      return_den=True)
+                coverage_out.append({
+                    "t": int(t),
+                    "uncovered": float((den < COVER_HARD).mean()),
+                    "weak": float((den < COVER_WEAK).mean()),
+                    "den_p01": float(np.percentile(den, 1)),
+                })
+                f = f_u8.astype(np.float32)
+            else:
+                f = composite(ra, rb, blend_weight(op, eb, db_stack[t])).astype(np.float32)
             acc = f if acc is None else acc + f
         out[t] = (acc / mb).astype(np.uint8)
     return out

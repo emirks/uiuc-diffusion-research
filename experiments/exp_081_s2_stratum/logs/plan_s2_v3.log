@@ -1,2 +1,73 @@
 /projects/illinois/eng/cs/jrehg/users/emirkisa/envs/diffusion/lib/python3.10/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
   warnings.warn(
+[plan] content pool: 187 training endpoints (v1 187 + v2 0), 20 reserved held out | gate A 0.4805 gate B 43.97 (n=187)
+[plan] pair pool: 333 pairs | clip degree min/med/max = 3/3/5 | cos(A,B) max = 0.746
+[plan] shaders: keep 72 - holdout 10 = 62 trainable
+[plan] endpoint-frame cache: 171 hit, 16 to add
+[plan] endpoint-frame cache: added 16 in 18s (223 total on disk)
+[plan] GL: llvmpipe (LLVM 21.1.7, 256 bits) | 4.5 (Core Profile) Mesa 25.2.7
+[plan]   BookFlip                   13 ops
+[plan]   BowTieWithParameter        13 ops
+[plan]   Box                        13 ops
+[plan]   ButterflyWaveScrawler      13 ops
+[plan]   ColourDistance             13 ops
+[plan]   CrossZoom                  13 ops
+[plan]   Dreamy                     13 ops
+[plan]   EdgeTransition             13 ops
+[plan]   FilmBurn                   13 ops
+[plan]   GlitchDisplace             13 ops
+[plan]   GridFlip                   13 ops
+[plan]   HSVfade                    13 ops
+[plan]   HorizontalClose            13 ops
+[plan]   HorizontalOpen             13 ops
+[plan]   LinearBlur                 13 ops
+[plan]   Overexposure               13 ops
+[plan]   PolkaDotsCurtain           13 ops
+[plan]   PuzzleRight                13 ops
+[plan]   SimpleZoom                 13 ops
+[plan]   SimpleZoomOut              13 ops
+[plan]   Slides                     13 ops
+[plan]   StarWipe                   13 ops
+[plan]   StaticFade                 13 ops
+[plan]   StripDatamoshGlitch        13 ops
+[plan]   TilesWave                  13 ops
+[plan]   VerticalClose              13 ops
+[plan]   WaterDrop                  13 ops
+[plan]   ZoomRigthWipe              13 ops
+[plan]   burn                       13 ops
+[plan]   cannabisleaf               13 ops
+[plan]   chessboard                 13 ops
+[plan]   circleopen                 13 ops
+[plan]   colorphase                 13 ops
+[plan]   crosshatch                 13 ops
+[plan]   crosswarp                  13 ops
+[plan]   directionalwipe            13 ops
+[plan]   dissolve                   13 ops
+[plan]   fade                       13 ops
+[plan]   fadecolor                  13 ops
+[plan]   flyeye                     13 ops
+[plan]   fragment                   13 ops
+[plan]   heart                      13 ops
+[plan]   hexagonalize               13 ops
+[plan]   luminance_melt             13 ops
+[plan]   morph                      13 ops
+[plan]   multiply_blend             13 ops
+[plan]   old_tv_lost_signal         13 ops
+[plan]   perlin                     13 ops
+[plan]   pinwheel                   13 ops
+[plan]   pixelize                   13 ops
+[plan]   polar_function             13 ops
+[plan]   randomNoisex               13 ops
+[plan]   splitSlideOutHorizontal    13 ops
+[plan]   squareswire                13 ops
+[plan]   squeeze                    13 ops
+[plan]   swap                       13 ops
+[plan]   wind                       12 ops
+[plan]   windowblinds               12 ops
+[plan]   windowslice                12 ops
+[plan]   wipeDown                   12 ops
+[plan]   wipeLeft                   12 ops
+[plan]   wipeRight                  12 ops
+[plan] roster: 800 ops pre-validated | gate-2 rejected 152 of 952 draws (16.0%) | duplicate-id redraws 0
+[plan] grid: ops-per-pair min/median/max = 24/24/25 (target ~24)
+[plan] FROZEN -> PLAN_S2.json (800 ops x 10 = 8000 clips) in 91s

@@ -1,3 +1,17 @@
-[cal] 10/63  (14s)
-[cal] 20/63  (28s)
-[cal] 30/63  (42s)
+[cal] 10/63  (12s)
+[cal] 20/63  (24s)
+[cal] 30/63  (37s)
+[cal] 40/63  (48s)
+[cal] 50/63  (60s)
+[cal] 60/63  (72s)
+
+[cal] labels: 23 BAD / 40 GOOD
+
+[cal] unexplained_p95:  BAD median 0.199  GOOD median 0.112  BAD p10 0.065  GOOD p90 0.190
+
+[cal] unexplained_max:  BAD median 0.250  GOOD median 0.125  BAD p10 0.078  GOOD p90 0.233
+
+[cal] unexplained_mean:  BAD median 0.049  GOOD median 0.026  BAD p10 0.017  GOOD p90 0.059
+
+[cal] *** ESCAPE *** no config on the grid meets >=20/23 recall at <=3/40 FP. Best reachable: unexplained_max > 0.28 -> recall 11/23, FP 1/40
+[cal] -> /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_082_s3_stratum/COVERAGE_CALIB.json  (76s)
