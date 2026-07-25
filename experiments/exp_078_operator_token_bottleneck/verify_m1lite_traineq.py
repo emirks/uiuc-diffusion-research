@@ -33,8 +33,8 @@ N_CLIPS = 3
 
 
 def main() -> None:
+    from ltx_core.model.video_vae import TilingConfig  # noqa: PLC0415
     from ltx_trainer.validation_runner import ValidationRunner  # noqa: PLC0415
-    from ltx_trainer.tiling import TilingConfig  # noqa: PLC0415
 
     device = "cuda"
     vae = ec.load_vae(str(MODEL), device=device)
