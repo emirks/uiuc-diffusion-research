@@ -52,16 +52,27 @@ def main() -> None:
         dev = cfg["runtime"]["device"]
         rng = random.Random(cfg["runtime"]["seed"])
 
-        # ---- contents: full 121f train-class clips, paired across classes ----
-        clips_dir = REPO_ROOT / cfg["inputs"]["clips_dir"]
-        train_classes = {p.name for p in
-                         (REPO_ROOT / cfg["inputs"]["train_classes_from"]).iterdir()
-                         if p.is_dir()}
-        clip_paths = {p.stem: p for p in sorted(clips_dir.glob("*/*.mp4"))
-                      if p.parent.name in train_classes}
-        ids = sorted(clip_paths)
-        log.info("contents: %d train-class clips from %d classes",
-                 len(ids), len(train_classes))
+        # ---- contents ------------------------------------------------------
+        bank_json = cfg["inputs"].get("bank_json")
+        if bank_json:
+            # dsx endpoint bank, READ-ONLY: neutral footage, no class effects.
+            bank_path = REPO_ROOT / bank_json
+            entries = json.load(open(bank_path))["clips"]
+            clip_paths = {e["clip_id"]: bank_path.parent / e["mp4"] for e in entries}
+            clip_class = {e["clip_id"]: e.get("source", "bank") for e in entries}
+            ids = sorted(clip_paths)
+            log.info("contents: %d bank clips (%s)", len(ids), bank_path.name)
+        else:
+            clips_dir = REPO_ROOT / cfg["inputs"]["clips_dir"]
+            train_classes = {p.name for p in
+                             (REPO_ROOT / cfg["inputs"]["train_classes_from"]).iterdir()
+                             if p.is_dir()}
+            clip_paths = {p.stem: p for p in sorted(clips_dir.glob("*/*.mp4"))
+                          if p.parent.name in train_classes}
+            clip_class = {cid: p.parent.name for cid, p in clip_paths.items()}
+            ids = sorted(clip_paths)
+            log.info("contents: %d train-class clips from %d classes",
+                     len(ids), len(train_classes))
 
         renderer = MeshRenderer(inf["width"], inf["height"], step=inf["mesh_step"])
         log.info("GL context: %s", renderer.renderer_name())
@@ -103,7 +114,7 @@ def main() -> None:
         def draw_pair() -> dict:
             while True:
                 a, b = rng.sample(ids, 2)
-                if clip_paths[a].parent.name != clip_paths[b].parent.name:
+                if clip_class[a] != clip_class[b] or bank_json:
                     return {"pair_id": f"{a}__{b}", "from": a, "to": b}
 
         plan = [draw_pair() for _ in range(smp["n_pairs"])]

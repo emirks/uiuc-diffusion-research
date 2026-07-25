@@ -2,9 +2,14 @@ model:
   depth_model: "depth-anything/Depth-Anything-V2-Small-hf"   # Apache-2.0 checkpoint
 
 inputs:
-  # Full 121-frame source clips. Absolute path: the campaign worktree carries no
-  # LFS media, so this points at the main checkout. pathlib joins absolute paths
-  # transparently (REPO_ROOT / "/abs" == "/abs").
+  # CONTENTS = the dsx endpoint bank (owner-blessed READ-ONLY reuse, 2026-07-25):
+  # 227 tightened neutral clips (DAVIS 39 / vcbench 63 / OpenVid 125), 480x640,
+  # 24 fps, 121 frames — corpus clips are NOT used as contents because the class
+  # effect itself unfolds inside them (manner leaks into "content").
+  # Comment bank_json out to fall back to corpus-clip contents (run_0001 demo mode).
+  bank_json: "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/bank_tightened.json"
+  # Corpus fallback (demo mode). Absolute paths: the worktree carries no LFS media;
+  # pathlib joins absolute paths transparently (REPO_ROOT / "/abs" == "/abs").
   clips_dir: "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121"
   # Train-class fence: only classes present in the ic_gen training root are used
   # as contents (zs eval classes never touched).
