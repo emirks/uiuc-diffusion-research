@@ -1,0 +1,138 @@
+{
+ "created": "2026-07-25",
+ "stratum": "S2",
+ "planned": {
+  "n_ops": 800,
+  "contents_per_op": 10,
+  "n_clips": 8000
+ },
+ "realized": {
+  "n_clips": 2110,
+  "n_ops_complete": 211,
+  "n_ops_dropped": 11,
+  "n_ops_finalised": 222
+ },
+ "invariants": {
+  "pure_phase_max_abs_diff": 0.0,
+  "all_ops_exactly_m_clips": true,
+  "all_ops_endpoint_disjoint": true,
+  "no_orphan_manifest_rows": true,
+  "no_ghost_dropped_ops": true,
+  "op_ids_unique": true
+ },
+ "gates": {
+  "seam_max": 1.9984,
+  "m1_p10_min": 0.2554,
+  "m2_max_dq": 0.4961,
+  "m1_min_flag_count": 11
+ },
+ "overdraw": null,
+ "overdraw_bar": 2.5,
+ "overdraw_pass": null,
+ "attempts_to_fill": {
+  "min": 10,
+  "median": 12,
+  "max": 25
+ },
+ "per_shader": {
+  "BookFlip": {
+   "accepted": 130,
+   "rejected": 30
+  },
+  "BowTieWithParameter": {
+   "accepted": 130,
+   "rejected": 24
+  },
+  "Box": {
+   "accepted": 130,
+   "rejected": 23
+  },
+  "ButterflyWaveScrawler": {
+   "accepted": 130,
+   "rejected": 27
+  },
+  "ColourDistance": {
+   "accepted": 130,
+   "rejected": 16
+  },
+  "CrossZoom": {
+   "accepted": 130,
+   "rejected": 28
+  },
+  "Dreamy": {
+   "accepted": 130,
+   "rejected": 24
+  },
+  "EdgeTransition": {
+   "accepted": 120,
+   "rejected": 62
+  },
+  "FilmBurn": {
+   "accepted": 130,
+   "rejected": 20
+  },
+  "GlitchDisplace": {
+   "accepted": 130,
+   "rejected": 16
+  },
+  "GridFlip": {
+   "accepted": 130,
+   "rejected": 20
+  },
+  "HSVfade": {
+   "accepted": 120,
+   "rejected": 12
+  },
+  "HorizontalClose": {
+   "accepted": 110,
+   "rejected": 18
+  },
+  "HorizontalOpen": {
+   "accepted": 120,
+   "rejected": 14
+  },
+  "LinearBlur": {
+   "accepted": 70,
+   "rejected": 7
+  },
+  "Overexposure": {
+   "accepted": 80,
+   "rejected": 67
+  },
+  "PolkaDotsCurtain": {
+   "accepted": 50,
+   "rejected": 7
+  },
+  "PuzzleRight": {
+   "accepted": 20,
+   "rejected": 51
+  },
+  "SimpleZoom": {
+   "accepted": 20,
+   "rejected": 135
+  },
+  "SimpleZoomOut": {
+   "accepted": 30,
+   "rejected": 13
+  },
+  "Slides": {
+   "accepted": 20,
+   "rejected": 23
+  },
+  "StarWipe": {
+   "accepted": 30,
+   "rejected": 3
+  },
+  "StaticFade": {
+   "accepted": 20,
+   "rejected": 3
+  }
+ },
+ "shaders_over_50pct_rejection": [
+  "SimpleZoom",
+  "PuzzleRight",
+  "Slides"
+ ],
+ "failures": [],
+ "verdict": "PASS"
+}

@@ -68,7 +68,13 @@ s2:
   max_op_draws_factor: 50  # safety valve on operator pre-validation
   shader_blacklist_reject_rate: 0.50   # >50% clip rejection for a shader => blacklist it
   overdraw_ceiling: 2.5    # renders / accepted clips; monitored and reported
-  clip_cache: 230          # whole training pool stays hot -> one decode per clip per shard
+  clip_cache: 140          # A decoded 121x640x480x3 clip is 111 MB. The cache was sized to hold
+                           # the WHOLE training pool (227 clips) when the pool was 227 — but the
+                           # expansion took it to 291, so 230 x 111 MB = 25.5 GB blew the 24 GB
+                           # request and OOM-killed 10 of 20 shards. 140 x 111 MB = 15.5 GB plus
+                           # ~6 GB of interpreter/GL/numpy overhead fits inside 32 GB with room.
+                           # The hit rate was only ~29% anyway: the pair sampler deliberately
+                           # spreads content, so a fully-resident pool was never buying much.
   strip_frame_w: 240
 
 runtime:

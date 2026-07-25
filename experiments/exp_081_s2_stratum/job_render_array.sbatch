@@ -6,7 +6,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=24g
+#SBATCH --mem=32g
 #SBATCH --time=03:55:00
 #SBATCH --requeue
 #SBATCH --output=/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/experiments/exp_081_s2_stratum/logs/%x-%A_%a.out
@@ -22,6 +22,9 @@
 # whole stratum is ~13,600 renders — a few core-hours total. 20 shards is far more parallelism
 # than the job needs; it exists so each shard finishes well inside the 4 h secondary cap and a
 # preemption costs almost nothing.
+#
+# MEMORY: 32g, paired with clip_cache=140 in config_s2.yaml. The first launch used 24g with a
+# 230-clip cache and OOM-killed half the array — 111 MB per decoded clip x 230 = 25.5 GB.
 #
 # Resumability: each shard appends one JSONL row per accepted clip and one per FINALISED op,
 # and skips any op already finalised in its own ops_shard file. A requeue therefore resumes at
