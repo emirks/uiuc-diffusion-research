@@ -34,6 +34,9 @@ RAW = Path("/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/da
 IDX = RAW / "refvfx/_viewer_index"
 SHARD_DIR = {"code": RAW / "refvfx/data/code_based_edits", "lora": RAW / "refvfx/data/I2V_LoRA"}
 VFX_ROOT = RAW / "vfxmaster/extracted/data"
+# VFXMaster ships MPEG-4 Part 2, which browsers cannot decode; a transcode job writes an
+# H.264 twin tree. Serve it when present, fall back to the original otherwise.
+VFX_H264 = RAW / "vfxmaster/extracted_h264/data"
 MIME = {"mp4": "video/mp4", "png": "image/png"}
 
 DB: dict[str, list[dict]] = {}
@@ -178,7 +181,10 @@ class H(BaseHTTPRequestHandler):
             return
         r = DB[subset][i]
         if subset == "vfx":
-            f = open(VFX_ROOT / r["path"], "rb")
+            p = VFX_H264 / r["path"]
+            if not p.exists():
+                p = VFX_ROOT / r["path"]
+            f = open(p, "rb")
             f.seek(0, io.SEEK_END)
             size, base, mime = f.tell(), 0, "video/mp4"
         else:
