@@ -123,7 +123,8 @@ def main() -> None:
                 t = tokens.float().flatten(1)
                 d = torch.cdist(t, t)
                 sens = (d.sum() / (d.numel() - d.shape[0])) / t.norm(dim=1).mean().clamp_min(1e-9)
-            rec = {"step": step, "loss": round(float(loss), 4), "lr": round(sched.get_last_lr()[0], 6),
+            rec = {"step": step, "loss": round(loss.detach().item(), 4),
+                   "lr": round(sched.get_last_lr()[0], 6),
                    "token_sens": round(float(sens), 4), "sec": round(time.time() - t0, 1)}
             with log_path.open("a") as f:
                 f.write(json.dumps(rec) + "\n")
