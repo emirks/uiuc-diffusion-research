@@ -1,0 +1,45 @@
+model:
+  depth_model: "depth-anything/Depth-Anything-V2-Small-hf"   # Apache-2.0 checkpoint
+
+inputs:
+  # Full 121-frame source clips. Absolute path: the campaign worktree carries no
+  # LFS media, so this points at the main checkout. pathlib joins absolute paths
+  # transparently (REPO_ROOT / "/abs" == "/abs").
+  clips_dir: "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121"
+  # Train-class fence: only classes present in the ic_gen training root are used
+  # as contents (zs eval classes never touched).
+  train_classes_from: "eval_ladder/dataset/roots/ic_gen/latents"
+  depth_cache: "outputs/analysis/exp_080_depth_cache"
+
+inference:
+  height: 640
+  width: 480
+  num_frames: 121
+  fps: 24
+  mesh_step: 2
+
+timing:
+  # D2-style manifold: onset = w0 + u1*jitter_frac*(w1-w0), release = w1 - u2*...,
+  # u1,u2 ~ U[0,1] independent => duration >= (1-2*jitter_frac)*(w1-w0) ~ 62 frames.
+  window: [8, 112]
+  jitter_frac: 0.20
+  showcase_onset: 20        # fixed timing for the showcase blocks
+  showcase_release: 100
+
+sampling:
+  n_pairs: 8                # cross-clip content pairs (different classes)
+  n_counterfactual: 8       # one pair x N operators  (same content, diff op)
+  n_shared_operators: 2     # N operators x several pairs (same op, diff content)
+  n_pairs_per_shared_operator: 3
+  n_diverse_pairs: 4        # random ops x random pairs
+  family_showcase: true     # one clean operator per camera family
+  effect_showcase: true     # one optical effect at a time on a dolly base
+  amplitude_scale: 1.6      # the ramp is ~5x longer than exp_076's 15 frames;
+                            # a longer move can travel further — audit knob
+
+runtime:
+  seed: 800725
+  device: "cuda"            # depth model; renderer is EGL (GPU GL on an L40S node)
+
+outputs:
+  dir: "outputs/videos/exp_080_depth3d_realstream_121"
