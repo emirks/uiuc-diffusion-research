@@ -60,7 +60,7 @@ optimization:
 runtime:
   device: cuda
   dtype: bfloat16              # autocast; params fp32
-  num_workers: 4
+  num_workers: 2               # small host-RAM footprint: nodes with idle GPUs are memory-bound
 
 probes:                        # pre-registered bars (probes.py enforces)
   # REVISED 2026-07-24 pre-read, on the advisor's ruling, after the synthetic-control test showed
