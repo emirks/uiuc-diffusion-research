@@ -73,17 +73,22 @@ def load_corpse(train_dir: Path, cfg: dict, device: str):
     from ltx_trainer.operator_encoder import OperatorTokenEncoder  # noqa: PLC0415
     from safetensors.torch import load_file  # noqa: PLC0415
 
-    cks = sorted((train_dir / "checkpoints").glob("*"), key=lambda p: p.stat().st_mtime)
+    # Checkpoints are FILES: lora_weights_step_NNNNN.safetensors, with the operator_encoder.*
+    # tensors saved alongside the LoRA weights. Pick the highest STEP (deterministic, not mtime).
+    cks = sorted((train_dir / "checkpoints").glob("lora_weights_step_*.safetensors"),
+                 key=lambda p: int(p.stem.rsplit("_", 1)[-1]))
     if not cks:
         return None, None
-    tensors = {}
-    for f in list(cks[-1].rglob("*.safetensors")) + list(cks[-1].glob("*.safetensors")):
-        for k, v in load_file(str(f)).items():
-            if "operator_encoder" in k:
-                tensors[k.split("operator_encoder.", 1)[-1]] = v
+    tensors = {k.split("operator_encoder.", 1)[-1]: v
+               for k, v in load_file(str(cks[-1])).items() if "operator_encoder." in k}
     if not tensors:
         return None, None
-    tcfg = yaml.safe_load((train_dir / "training_config.yaml").read_text())
+    # The trainer serialises tuples with !!python/tuple, which safe_load rejects. Teach the safe
+    # loader that single tag rather than falling back to unsafe loading.
+    loader = yaml.SafeLoader
+    loader.add_constructor("tag:yaml.org,2002:python/tuple",
+                           lambda ld, node: tuple(ld.construct_sequence(node)))
+    tcfg = yaml.load((train_dir / "training_config.yaml").read_text(), Loader=loader)
     bn = tcfg["training_strategy"]["video"]["conditions"][0].get("bottleneck", {})
     enc = OperatorTokenEncoder(
         token_shape=tuple(bn.get("token_shape", [6, 4, 3])),
@@ -93,7 +98,8 @@ def load_corpse(train_dir: Path, cfg: dict, device: str):
         skip_scale=bn.get("skip_scale", 0.0))
     missing, unexpected = enc.load_state_dict(tensors, strict=False)
     enc.to(device).eval()
-    return enc, {"ckpt": str(cks[-1]), "missing": len(missing), "unexpected": len(unexpected)}
+    return enc, {"ckpt": cks[-1].name, "n_tensors": len(tensors),
+                 "missing": len(missing), "unexpected": len(unexpected)}
 
 
 @torch.no_grad()
