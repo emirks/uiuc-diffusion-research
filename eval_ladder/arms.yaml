@@ -67,5 +67,20 @@ arms:
     step: 5000
     note: IC-LoRA; the reference clip carries the transition. Trained on held-in classes only.
 
+  # ---- exp_077: the D2 generalist. ADDITIVE — ic_gen above is untouched, and this arm's rows
+  # live in registry_d2gen.jsonl (a field-for-field copy of ic_gen's four claim cells with only
+  # `arm` and `item_id` renamed), so registry.jsonl stays frozen.
+  # The RECIPE is identical to ic_gen (rank 32 / alpha 32 / dropout 0, attn_ffn, lr 2e-4, 5000
+  # steps, reference+mask+cond_clean, bf16, batch 1, seed 42) — verified against both
+  # training_config.yaml files. ONLY THE TRAINING DATA DIFFERS. `adapter` is an explicit path
+  # because this run lives outside outputs/training/ladder2/ (adapter_template's tree).
+  d2_gen:
+    kind: generalist
+    targets: attn_ffn
+    step: 5000
+    adapter: outputs/training/exp_077_synth_stratum/d2_gen/checkpoints/lora_weights_step_05000.safetensors
+    note: "IC-LoRA trained on the rebuilt 50/50 synthetic+real corpus (exp_077). Same
+      conditioning and inference settings as ic_gen; measured self-relative against it."
+
 # adapter path template for trained arms (filled by run_gen.py)
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors

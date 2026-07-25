@@ -72,8 +72,14 @@ def build_sample(row: dict) -> ValidationSample:
     return ValidationSample(prompt=row["prompt"], conditions=conds)
 
 
-def load_rows(arm: str, priority: str | None, cells: str | None = None) -> list[dict]:
-    rows = [json.loads(line) for line in REGISTRY.read_text().splitlines() if line.strip()]
+def load_rows(arm: str, priority: str | None, cells: str | None = None,
+              extra_registry: str | None = None) -> list[dict]:
+    text = REGISTRY.read_text()
+    if extra_registry:
+        # ADDITIVE side registries (exp_077's d2_gen): registry.jsonl is frozen, so a new arm's
+        # rows arrive in their own file and are appended, never merged into the frozen one.
+        text += Path(extra_registry).read_text()
+    rows = [json.loads(line) for line in text.splitlines() if line.strip()]
     rows = [r for r in rows if r["arm"] == arm]
     if priority:
         keep = set(priority.split(","))
@@ -92,6 +98,13 @@ def resolve_adapter(arm: str, arms_cfg: dict, step: int | None = None) -> tuple[
     spec = arms_cfg["arms"][arm]
     if spec.get("adapter", "unset") is None or spec["kind"] in ("base", "text_floor"):
         return None, []
+    if isinstance(spec.get("adapter"), str):
+        # explicit checkpoint path — for arms trained outside adapter_template's tree.
+        # Still PINNED in arms.yaml before any score is seen; --step may not override it.
+        assert step is None, f"{arm} pins an explicit adapter; --step cannot override it"
+        path = REPO_ROOT / spec["adapter"]
+        assert path.exists(), f"adapter missing for {arm}: {path}"
+        return path, arms_cfg["targets"][spec["targets"]]
     path = REPO_ROOT / arms_cfg["adapter_template"].format(arm=arm, step=step or spec["step"])
     assert path.exists(), f"adapter missing for {arm}: {path}"
     return path, arms_cfg["targets"][spec["targets"]]
@@ -109,11 +122,19 @@ def main() -> None:
     ap.add_argument("--num-chunks", type=int, default=1)
     ap.add_argument("--rank", type=int, default=32)
     ap.add_argument("--alpha", type=int, default=32)
+    ap.add_argument("--extra-registry", default=None,
+                    help="additional jsonl of registry rows, appended to the frozen registry")
+    ap.add_argument("--out-root", default=None,
+                    help="override outputs/videos/ladder2 (side lanes write their own tree)")
     args = ap.parse_args()
+
+    global OUT_ROOT
+    if args.out_root:
+        OUT_ROOT = Path(args.out_root)
 
     arms_cfg = yaml.safe_load(ARMS.read_text())
     assert args.seed in arms_cfg["seeds"], f"seed {args.seed} is not a registered seed"
-    rows = load_rows(args.arm, args.priority, args.cells)
+    rows = load_rows(args.arm, args.priority, args.cells, args.extra_registry)
 
     def out_path(r: dict) -> Path:
         # Baseline rows share one canonical video per (endpoint, sided) through
