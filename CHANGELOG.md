@@ -1,4 +1,24 @@
 ## 2026-07-25
+
+- **02:38** — exp_081 scaffolded: the ctt_v2 masked retrain. Advisor round 6 ruled the mix is
+  S0+S2+S3 (S4/refVFX **deferred**, not killed — it adds ~4% to the operator count while
+  importing either a tempo-rewrite or an unvalidated mixed-length trainer path), S0 at 15% of
+  the sampling stream, 10,000 steps, primary checkpoint pre-committed as the final one.
+- **02:38** — **D0 resolved as already satisfied.** All four headline cells are fully scored on
+  the v4 lane instrument (zero missing rows); "72.9 (proxy)" meant `%_proxy` (content-capped,
+  claim channel = Δpp), not uncertified. Frozen record in
+  `experiments/exp_081_ctt_v2_masked_retrain/D0_baselines_v4.txt`, and the previously
+  unrecorded **G-zs-cross = 72.8%** now has a baseline. Pass bars pre-registered.
+- **02:38** — one-way reference attention mask implemented in the private `$LAB/LTX-2-bneck`
+  trainer (local-only). Found the defect is on BOTH paths, not just inference, and found a
+  SECOND silent defect: `ValidationRunner._modality_from_latent_state` dropped
+  `state.attention_mask` entirely, which would have made T5's reference-strength sweep a
+  silent null. 13/13 trainer tests green, including a train==inference mask-equality gate
+  (the trainer lays the sequence out `[ref|noisy]`, inference `[noisy|ref]`).
+- **02:38** — measured: the 19B ic_gen training config **OOMs on a 44 GiB L40S in its
+  bidirectional baseline form**, so H100-class memory is required for the retrain; this is not
+  a cost of the mask.
+
 - `02:15` **exp_080 validated + S2/S3 hand-off spec written.** Fork of exp_076 to full 121-frame 3D transitions over two REAL playing streams (per-frame temporally-stabilised Depth-Anything, D2 timing contract, pure phases byte-identical, asserted). run_0001, 31 clips on one L40S: join ratio median 0.94 / p90 1.15 / max 1.86 (bar ≤2.0), parallax 3.31, ~11 s/clip. Owner verdict on samples: positive; ruled contents must come from the dsx endpoint bank (read-only, tightened 227) — corpus clips leak class manner into content. Generation itself moves elsewhere (owner call): S2 (800 ops × 10 contents = 8,000 clips) + S3 (300 × 6 = 1,800) spec'd in $LAB/misc/ctt_v2/DATA_PLAN_PROPOSAL.md.
 
 - `00:04` **ctt_v2: external-dataset downloads started** (owner call — go straight to the dataset/retraining branch). `scripts/ctt_v2/download_small.sbatch` pulls VFXMaster (8ruceLi/VFXMaster_datasets, 6.6 GB, 9,209 videos / 241 effect classes, Apache-2.0) and the refVFX I2V_LoRA shard (12.3 GB, 6,995 LoRA-generated pairs, CC-BY-4.0); `download_refvfx_code.sbatch` pulls the refVFX code_based_edits subset (16 shards, 374.7 GB, 2,736 code effect types x ~50 base videos — the same-operator × different-content diagonal), submitted as an afterany self-resume chain on the cluster-wide `secondary` CPU partition. Everything lands in `data/raw/{refvfx,vfxmaster}` (gitignored). refVFX neural_v2v (79 GB) deliberately skipped. Fixed a first-submit failure: `set -u` before sourcing `/etc/bashrc` (unbound BASHRCSOURCED) killed the jobs in 5 s; `-u` now enabled only after env activation.
