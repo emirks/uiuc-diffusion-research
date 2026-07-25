@@ -22,8 +22,12 @@ PY_BIN="$LAB/LTX-2-official/.venv/bin/python"
 WT=$LAB/diffusion-research/.claude/worktrees/bottleneck-branch
 EXP=$WT/experiments/exp_079_standalone_operator_encoder
 
-ARMS=(E1 E1 E1 ablation ablation ablation)
-SEEDS=(42 43 44 42 43 44)
+# INTERLEAVED by arm on purpose. Slurm tends to place array tasks in index order, so a contiguous
+# (E1,E1,E1,ablation,ablation,ablation) layout would correlate GPU model with arm when the pool is
+# heterogeneous — a confound in the very comparison this experiment exists to make. Alternating
+# arms means whatever hardware mix we get is spread evenly across both arms.
+ARMS=(E1 ablation E1 ablation E1 ablation)
+SEEDS=(42 42 43 43 44 44)
 
 mkdir -p "$LAB/diffusion-research/outputs/logs/slurm"
 cd "$WT"

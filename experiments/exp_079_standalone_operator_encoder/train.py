@@ -130,10 +130,14 @@ def main() -> None:
                 f.write(json.dumps(rec) + "\n")
             print(f"[e079/{arm}/s{seed}] {rec}", flush=True)
 
+    gpu = torch.cuda.get_device_name(0) if torch.cuda.is_available() else "cpu"
     torch.save({"encoder": enc.state_dict(), "head": head.state_dict(),
                 "arm": arm, "seed": seed, "label_mode": label_mode,
                 "encoder_cfg": cfg["encoder"], "projection_cfg": cfg["projection"],
-                "num_labels": ds.num_labels}, out_dir / "encoder.pt")
+                "num_labels": ds.num_labels,
+                # provenance: the pool is heterogeneous, so record which GPU trained this run and
+                # verify post-hoc that hardware is not confounded with arm.
+                "gpu": gpu, "train_seconds": round(time.time() - t0, 1)}, out_dir / "encoder.pt")
     (out_dir / "config_snapshot.yaml").write_text(yaml.safe_dump(cfg, sort_keys=True))
     print(f"[e079/{arm}/s{seed}] done in {time.time() - t0:.0f}s -> {out_dir}", flush=True)
 
