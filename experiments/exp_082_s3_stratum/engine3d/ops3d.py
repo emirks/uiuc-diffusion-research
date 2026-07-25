@@ -49,6 +49,10 @@ PATH_EASINGS = ("smootherstep", "in_out_cubic", "in_out_sine", "in_out_quart")
 # is inpainted from very little real signal and reads as smearing.
 COVER_HARD = 1e-3
 COVER_WEAK = 0.25
+# _fill_holes blurs at 9/31/81 px; a hole pixel more than ~half the widest kernel from any
+# valid pixel cannot be filled from real colour. This is a property of the inpainter, not a
+# fitted threshold.
+FILL_REACH_PX = 40.0
 
 
 @dataclasses.dataclass
@@ -512,10 +516,26 @@ def render_transition_stream(renderer, op: Operator3D, A: np.ndarray,
             if coverage_out is not None and j == 0:
                 f_u8, den = composite(ra, rb, blend_weight(op, eb, db_stack[t]),
                                       return_den=True)
+                # HOW MUCH uncovered area there is turns out not to be the signal: a
+                # healthy clip already averages ~12% uncovered ramp pixels and _fill_holes
+                # repairs them invisibly. What it CANNOT repair is a hole larger than its own
+                # reach — the push-pull cascade blurs at 9/31/81 px, so a hole pixel further
+                # than ~40 px from any valid pixel has no real colour to pull from and the
+                # inpainter emits either a smear or black. The distance transform inside the
+                # hole mask measures exactly that, and 40 px is not a tuned threshold but the
+                # half-width of the widest kernel in _fill_holes.
+                hole = (den < COVER_HARD).astype(np.uint8)
+                r = (float(cv2.distanceTransform(hole, cv2.DIST_L2, 5).max())
+                     if hole.any() else 0.0)
+                weak_m = (den < COVER_WEAK).astype(np.uint8)
+                rw = (float(cv2.distanceTransform(weak_m, cv2.DIST_L2, 5).max())
+                      if weak_m.any() else 0.0)
                 coverage_out.append({
                     "t": int(t),
-                    "uncovered": float((den < COVER_HARD).mean()),
-                    "weak": float((den < COVER_WEAK).mean()),
+                    "uncovered": float(hole.mean()),
+                    "weak": float(weak_m.mean()),
+                    "hole_radius": r,
+                    "weak_radius": rw,
                     "den_p01": float(np.percentile(den, 1)),
                 })
                 f = f_u8.astype(np.float32)

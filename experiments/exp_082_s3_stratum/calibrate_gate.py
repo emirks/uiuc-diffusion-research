@@ -99,6 +99,8 @@ def main() -> None:
             c["onset"], c["release"], coverage_out=cov)
         unc = np.array([x["uncovered"] for x in cov])
         weak = np.array([x["weak"] for x in cov])
+        hr = np.array([x["hole_radius"] for x in cov])
+        wr = np.array([x["weak_radius"] for x in cov])
         rows.append({
             "stem": a["stem"], "bad": a["bad"], "family": a["family"], "tag": a["tag"],
             "clean_contents": (c["A"] not in lb) and (c["B"] not in lb),
@@ -106,12 +108,15 @@ def main() -> None:
             "unc_mean": float(unc.mean()),
             "weak_max": float(weak.max()), "weak_p95": float(np.percentile(weak, 95)),
             "weak_mean": float(weak.mean()),
+            "hole_r_max": float(hr.max()), "hole_r_p95": float(np.percentile(hr, 95)),
+            "weak_r_max": float(wr.max()), "weak_r_p95": float(np.percentile(wr, 95)),
         })
         if n % 10 == 0:
             print(f"[gate] {n}/{len(audit)} ({time.time()-t0:.0f}s)", flush=True)
 
     bad = np.array([r["bad"] for r in rows], bool)
-    cands = ["unc_max", "unc_p95", "unc_mean", "weak_max", "weak_p95", "weak_mean"]
+    cands = ["unc_max", "unc_p95", "unc_mean", "weak_max", "weak_p95", "weak_mean",
+             "hole_r_max", "hole_r_p95", "weak_r_max", "weak_r_p95"]
 
     def sweep(v, mask=None):
         m = np.ones(len(v), bool) if mask is None else mask
