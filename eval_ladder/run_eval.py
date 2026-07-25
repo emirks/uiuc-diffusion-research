@@ -157,7 +157,7 @@ def plan(seeds: list[int], chunks: int, arms: set[str] | None = None) -> None:
         part = items[i::chunks]
         (EVAL_DIR / f"eval_c{i}.json").write_text(json.dumps(part, indent=1))
     print(f"[plan] {len(items)} NEW (generation x pool-reference) rows -> {chunks} chunks "
-          f"in {EVAL_DIR.relative_to(REPO_ROOT)}  ({len(scored)} already scored, skipped)")
+          f"in {EVAL_DIR}  ({len(scored)} already scored, skipped)")
     if missing_gen:
         print(f"[plan] {len(missing_gen)} generations not yet rendered (skipped): "
               f"{missing_gen[:4]}{' ...' if len(missing_gen) > 4 else ''}")
