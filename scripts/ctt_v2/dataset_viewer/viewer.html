@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ctt_v2 dataset viewer — refVFX + VFXMaster</title>
+<style>
+  :root { --bg:#0d1117; --panel:#161b22; --border:#30363d; --fg:#e6edf3; --dim:#8b949e;
+          --accent:#58a6ff; --chip:#21262d; --chip-hover:#30363d; --good:#3fb950; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font:14px/1.45 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  header { display:flex; align-items:center; gap:16px; padding:10px 16px;
+           border-bottom:1px solid var(--border); background:var(--panel);
+           position:sticky; top:0; z-index:10; flex-wrap:wrap; }
+  header h1 { font-size:15px; margin:0; font-weight:600; }
+  header h1 span { color:var(--dim); font-weight:400; }
+  .tabs, .axes { display:flex; gap:6px; flex-wrap:wrap; }
+  .tab, .axis { padding:5px 12px; border-radius:14px; background:var(--chip); cursor:pointer;
+                border:1px solid var(--border); user-select:none; white-space:nowrap; }
+  .tab:hover, .axis:hover { background:var(--chip-hover); }
+  .tab.active { background:var(--accent); color:#04162b; border-color:var(--accent); font-weight:600; }
+  .axis.active { border-color:var(--accent); color:var(--accent); font-weight:600; }
+  #layout { display:flex; height:calc(100vh - 53px); }
+  #sidebar { width:320px; min-width:220px; border-right:1px solid var(--border);
+             display:flex; flex-direction:column; background:var(--panel); }
+  #search { margin:10px; padding:7px 10px; border-radius:6px; border:1px solid var(--border);
+            background:var(--bg); color:var(--fg); outline:none; }
+  #search:focus { border-color:var(--accent); }
+  #groups { overflow-y:auto; flex:1; padding:0 6px 10px; }
+  .group { padding:6px 8px; border-radius:6px; cursor:pointer; display:flex; gap:8px;
+           justify-content:space-between; align-items:baseline; }
+  .group:hover { background:var(--chip-hover); }
+  .group.active { background:#0d2440; color:var(--accent); }
+  .group .name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .group .n { color:var(--dim); font-size:12px; flex-shrink:0; }
+  #main { flex:1; overflow-y:auto; padding:14px; }
+  #status { color:var(--dim); margin:2px 2px 10px; font-size:13px; }
+  #grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(430px,1fr)); gap:14px; }
+  .card { background:var(--panel); border:1px solid var(--border); border-radius:10px;
+          padding:10px; display:flex; flex-direction:column; gap:8px; }
+  .vids { display:flex; gap:6px; }
+  .pane { flex:1; min-width:0; position:relative; }
+  .pane video, .pane img { width:100%; border-radius:6px; background:#000; display:block;
+                           aspect-ratio:16/10; object-fit:contain; }
+  .pane .role { position:absolute; top:6px; left:6px; background:#000a; color:#fff;
+                font-size:11px; padding:1px 7px; border-radius:8px; pointer-events:none; }
+  .chips { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  .chip { background:var(--chip); border:1px solid var(--border); padding:2px 9px;
+          border-radius:11px; font-size:12px; cursor:pointer; max-width:100%;
+          overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .chip:hover { border-color:var(--accent); color:var(--accent); }
+  .chip.static { cursor:default; color:var(--dim); }
+  .chip.static:hover { border-color:var(--border); color:var(--dim); }
+  .prompt { color:var(--dim); font-size:12.5px; cursor:pointer;
+            display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .prompt.open { display:block; }
+  #pager { display:flex; gap:10px; align-items:center; justify-content:center; padding:18px 0 8px; }
+  #pager button { background:var(--chip); color:var(--fg); border:1px solid var(--border);
+                  border-radius:6px; padding:6px 14px; cursor:pointer; }
+  #pager button:disabled { opacity:.35; cursor:default; }
+  #pager button:not(:disabled):hover { border-color:var(--accent); }
+  .btn { background:var(--chip); color:var(--fg); border:1px solid var(--border);
+         border-radius:6px; padding:5px 12px; cursor:pointer; }
+  .btn:hover { border-color:var(--accent); }
+  .note { color:var(--dim); font-size:12px; padding:8px 12px; }
+  .maskable .m-toggle { position:absolute; top:6px; right:6px; background:#000a; color:#fff;
+      font-size:11px; padding:1px 7px; border-radius:8px; cursor:pointer; border:1px solid #fff3; }
+  .maskable .m-toggle.on { background:var(--accent); color:#04162b; }
+</style>
+</head>
+<body>
+<header>
+  <h1>ctt_v2 <span>dataset viewer</span></h1>
+  <div class="tabs" id="tabs"></div>
+  <div class="axes" id="axes"></div>
+  <button class="btn" id="shuffle" title="reshuffle browse order">🔀 shuffle</button>
+</header>
+<div id="layout">
+  <div id="sidebar">
+    <input id="search" placeholder="filter groups…">
+    <div id="groups"></div>
+  </div>
+  <div id="main">
+    <div id="status"></div>
+    <div id="grid"></div>
+    <div id="pager">
+      <button id="prev">‹ prev</button><span id="pageinfo"></span><button id="next">next ›</button>
+    </div>
+  </div>
+</div>
+<script>
+const TABS = {code:"refVFX · code", lora:"refVFX · LoRA", vfx:"VFXMaster"};
+const AXIS_NAMES = {effect:"By effect (same op × contents)", spatial:"By spatial family",
+                    temporal:"By temporal family", content:"By content (same content × ops)",
+                    class:"By class (same op × contents)", browse:"Browse all"};
+let META = null;
+let S = {subset:"code", axis:"effect", group:null, page:0, per:12, seed:1, q:""};
+
+const $ = id => document.getElementById(id);
+const esc = s => (s||"").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function shortLabel(axis, name){
+  if (axis === "content") return "content #" + name.slice(-8);
+  return name.replace(/^effect_/, "");
+}
+
+async function boot(){
+  META = await (await fetch("/api/meta")).json();
+  renderTabs(); selectAxis(S.axis, true);
+}
+function renderTabs(){
+  $("tabs").innerHTML = Object.entries(TABS).map(([k,v]) =>
+    `<div class="tab ${k===S.subset?'active':''}" data-k="${k}">${v} <span style="opacity:.6">${META[k].n.toLocaleString()}</span></div>`).join("");
+  document.querySelectorAll(".tab").forEach(el => el.onclick = () => {
+    S.subset = el.dataset.k;
+    S.axis = META[S.subset].axis_order[0];
+    S.group = null; S.page = 0; S.q = ""; $("search").value = "";
+    renderTabs(); selectAxis(S.axis, true);
+  });
+  $("axes").innerHTML = META[S.subset].axis_order.map(a =>
+    `<div class="axis ${a===S.axis?'active':''}" data-a="${a}">${AXIS_NAMES[a]||a}</div>`).join("");
+  document.querySelectorAll(".axis").forEach(el => el.onclick = () => selectAxis(el.dataset.a, true));
+}
+function selectAxis(axis, pickFirst){
+  S.axis = axis; S.page = 0;
+  renderTabs();
+  const groups = META[S.subset].axes[axis] || [];
+  if (axis === "browse"){ S.group = null; renderGroups([]); load(); return; }
+  renderGroups(groups);
+  if (pickFirst && groups.length && !groups.some(g => g[0]===S.group)) S.group = groups[0][0];
+  markActive(); load();
+}
+function renderGroups(groups){
+  const q = S.q.toLowerCase();
+  const vis = q ? groups.filter(g => g[0].toLowerCase().includes(q)) : groups;
+  $("groups").innerHTML = vis.slice(0, 2500).map(g =>
+    `<div class="group" data-g="${esc(g[0])}" title="${esc(g[0])}">
+       <span class="name">${esc(shortLabel(S.axis, g[0]))}</span><span class="n">${g[1]}</span></div>`).join("")
+    + (vis.length > 2500 ? `<div class="note">…${vis.length-2500} more — refine the filter</div>` : "")
+    + (!groups.length ? `<div class="note">${S.axis==="content" ? "no reused contents in this subset — this axis is degenerate here" : "no groups"}</div>` : "");
+  document.querySelectorAll(".group").forEach(el => el.onclick = () => {
+    S.group = el.dataset.g; S.page = 0; markActive(); load();
+  });
+  markActive();
+}
+function markActive(){
+  document.querySelectorAll(".group").forEach(el =>
+    el.classList.toggle("active", el.dataset.g === S.group));
+}
+$("search").oninput = e => { S.q = e.target.value; renderGroups(META[S.subset].axes[S.axis]||[]); };
+$("shuffle").onclick = () => { S.seed = (Math.random()*1e9)|0; S.page = 0; load(); };
+
+async function load(){
+  const p = new URLSearchParams({subset:S.subset, axis:S.axis, page:S.page, per:S.per});
+  if (S.axis === "browse"){ p.set("shuffle","1"); p.set("seed",S.seed); }
+  else p.set("group", S.group||"");
+  $("status").textContent = "loading…";
+  const d = await (await fetch("/api/samples?"+p)).json();
+  const pages = Math.max(1, Math.ceil(d.total/S.per));
+  $("status").innerHTML = `<b>${d.total.toLocaleString()}</b> samples` +
+    (S.group && S.axis!=="browse" ? ` in <b>${esc(shortLabel(S.axis,S.group))}</b>` : "") +
+    (S.axis==="effect"||S.axis==="class" ? " — every card is the same operator on a different content" :
+     S.axis==="content" ? " — every card is the same content under a different operator" : "");
+  $("pageinfo").textContent = `${S.page+1} / ${pages}`;
+  $("prev").disabled = S.page<=0; $("next").disabled = S.page>=pages-1;
+  $("grid").innerHTML = d.rows.map(card).join("");
+  wire();
+}
+$("prev").onclick = () => { S.page--; load(); };
+$("next").onclick = () => { S.page++; load(); };
+
+function card(r){
+  const panes = [];
+  if (r.media.in){
+    const isImg = (r.mime.in||"").startsWith("image");
+    panes.push(`<div class="pane">${isImg
+      ? `<img src="${r.media.in}" loading="lazy">`
+      : `<video src="${r.media.in}" preload="metadata" controls muted loop></video>`}
+      <span class="role">input</span></div>`);
+  }
+  const maskBtn = r.media.mask ? `<span class="m-toggle" data-out="${r.media.out}" data-mask="${r.media.mask}">mask</span>` : "";
+  panes.push(`<div class="pane maskable"><video src="${r.media.out}" preload="metadata" controls muted loop></video>
+      <span class="role">output</span>${maskBtn}</div>`);
+  const chips = [];
+  if (S.subset === "vfx"){
+    chips.push(`<span class="chip" data-ax="class" data-g="${esc(r.cls)}" title="all ${r.links.class} videos of this effect">${esc(r.cls)} · ${r.links.class}</span>`);
+  } else {
+    chips.push(`<span class="chip" data-ax="effect" data-g="${esc(r.et)}" title="${esc(r.et)} — ${r.links.effect} contents with this exact operator">op · ${r.links.effect}</span>`);
+    if (r.sfam) chips.push(`<span class="chip" data-ax="spatial" data-g="${esc(r.sfam)}">spatial: ${esc(r.sfam)}</span>`);
+    if (r.tfam) chips.push(`<span class="chip" data-ax="temporal" data-g="${esc(r.tfam)}">temporal: ${esc(r.tfam)}</span>`);
+    if (r.fp && r.links.content > 1)
+      chips.push(`<span class="chip" data-ax="content" data-g="${esc(r.fp)}" title="this exact content under ${r.links.content} operators">content · ${r.links.content} ops</span>`);
+    if (r.ori) chips.push(`<span class="chip static">${esc(r.ori)}</span>`);
+  }
+  return `<div class="card">
+    <div class="vids">${panes.join("")}</div>
+    <div class="chips">${chips.join("")}</div>
+    ${r.pr ? `<div class="prompt" onclick="this.classList.toggle('open')">${esc(r.pr)}</div>` : ""}
+  </div>`;
+}
+function wire(){
+  document.querySelectorAll(".chip[data-ax]").forEach(el => el.onclick = () => {
+    S.axis = el.dataset.ax; S.group = el.dataset.g; S.page = 0; S.q = ""; $("search").value = "";
+    renderTabs(); renderGroups(META[S.subset].axes[S.axis]||[]); load();
+  });
+  document.querySelectorAll(".m-toggle").forEach(el => el.onclick = () => {
+    const v = el.parentElement.querySelector("video");
+    const on = el.classList.toggle("on");
+    const t = v.currentTime;
+    v.src = on ? el.dataset.mask : el.dataset.out;
+    v.currentTime = t; v.play().catch(()=>{});
+    el.parentElement.querySelector(".role").textContent = on ? "mask" : "output";
+  });
+}
+boot();
+</script>
+</body>
+</html>
