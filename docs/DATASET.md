@@ -205,6 +205,42 @@ not copying. That run stands as the **no-coupling control arm** for the next one
 
 ---
 
+## 7b. Luma-matte operator family — revived, with conditions
+
+Settled 2026-07-27 by a 2×2 (`experiments/exp_084_luma_matte_viewer/`, viewer
+`/outputs/viewers/luma_matte/`). Blind-graded, 16 clips/arm, anonymised shuffled sheets, rubric
+pre-registered:
+
+| | hard `step()` | feathered |
+|---|---|---|
+| shipped maps | **88% BAD** | 56% BAD |
+| new arrival-time maps | **88% BAD** | **31% BAD** |
+
+**The compositor is the gate, the maps are second.** Better maps through the hard threshold buy
+*nothing* (14/16 BAD either way, Fisher p=1.00). Compositor alone 88→56% (p=0.11); both 88→31%
+(p=0.003). The 56% residual is not uniform: aperiodic shipped maps (`fbm`, `radial`, `linear`)
+go 6/8 → **1/8** BAD, while geometric ones (`stripes`, `checker`, `spiral`, `voronoi`) stay
+**8/8 → 8/8** (p=0.0014) — a feathered checkerboard is still a checkerboard. **Drop the four
+geometric maps from this family; keep the three aperiodic ones.** New maps are not separable from
+rescued-aperiodic (p=0.62) — their value is variety and content-awareness, not a higher ceiling.
+
+**Two engine bugs found, both real:**
+1. `step(progress, m)` returns 1 when `m == progress`, so **every** hard-compositor clip leaks 5–6
+   stale pixels of frame A into the final conditioning block. Any matte normalised to [0,1] has
+   max-valued pixels. **exp_075's MAE gate cannot see this**; `luma_soft` measures exactly 0.
+2. The `luma` sampler is read with a bare `texture2D(luma, uv)` while `getFromColor` flips y, so
+   **the matte is vertically flipped relative to the image**. Harmless for isotropic maps,
+   load-bearing for anything content-aware (`probe_orientation.py`).
+
+Caveats: single grader who also rendered the clips (mitigated by anonymised sheets + pre-registered
+rubric, not eliminated), n=16/arm, graded from 3 stills rather than motion, and glow was not
+separated from feather. Treat the ordering as the finding and the percentages as soft.
+
+Assets: only **CC0** David Revoy Krita brush alphas (`data/raw/cc0_brush_alphas/`, SHA-256 in
+`PROVENANCE.json`). Nothing from Pixabay/Pexels/ProductionCrate/ActionVFX/Shadertoy.
+
+---
+
 ## 8. Open items
 
 1. **S3 approved build** — not started. Needs the three fixes, then the 200-clip gate pilot.
