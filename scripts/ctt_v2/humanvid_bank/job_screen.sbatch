@@ -7,7 +7,7 @@
 #SBATCH --cpus-per-task=12
 #SBATCH --mem=48g
 #SBATCH --gres=gpu:L40S:1
-#SBATCH --time=24:00:00
+#SBATCH --time=04:00:00
 #SBATCH --output=/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/outputs/logs/slurm/%x-%j.out
 # Screen all downloaded HumanVid clips through the endpoint-bank QC cascade and build
 # the humanvid_bank (std121 contract). Idempotent: detect.py skips refs already done,
@@ -24,8 +24,11 @@ nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
 # EAST weights: copy once from the blessed bank's work dir (read-only source)
 cp -n "$LAB/diffusion-research/data/processed/synth_endpoints/_work/frozen_east_text_detection.pb" "$WORK/" 2>/dev/null || true
 cd "$SCRIPTS"
+# LIMIT: screen only a deterministic random subset — we need a few hundred endpoints,
+# not 19k. Raising LIMIT on a resubmit RESUMES (cached detections are skipped).
+LIMIT=${LIMIT:-3000}
 $LAB/envs/diffusion/bin/python collect.py
-$LAB/envs/diffusion/bin/python detect.py
+$LAB/envs/diffusion/bin/python detect.py --limit "$LIMIT"
 $LAB/envs/diffusion/bin/python build.py --dry
 $LAB/envs/diffusion/bin/python build.py --cap 1500
 echo "=== HVBANK COMPLETE exit=$? ==="

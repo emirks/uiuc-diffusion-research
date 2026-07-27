@@ -10,6 +10,7 @@ Detector stack identical to the blessed bank's detect.py (provenance in hv_commo
 """
 import json
 import os
+import sys
 import time
 
 import cv2
@@ -126,7 +127,12 @@ def clip_embed(model, proc, bgr):
 
 
 def main():
+    import random
+    limit = int(sys.argv[sys.argv.index("--limit") + 1]) if "--limit" in sys.argv else None
     cands = [json.loads(l) for l in open(CAND)]
+    random.Random(0).shuffle(cands)   # deterministic order -> raising --limit later RESUMES
+    if limit:
+        cands = cands[:limit]
     done = set()
     if os.path.exists(OUT):
         for l in open(OUT):
