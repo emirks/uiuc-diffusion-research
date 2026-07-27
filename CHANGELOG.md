@@ -1,5 +1,27 @@
 ## 2026-07-27
 
+- **11:55** — **S2 stratum viewer built** (`experiments/exp_081_s2_stratum/build_viewer_s2.py`
+  → `outputs/viewers/s2_dataset/`, served at
+  `http://localhost:8017/outputs/viewers/s2_dataset/index.html`). Two levels: an index of the
+  56 shaders (representative thumbnail, op/clip counts, gate reject rate, per-shader table,
+  dropped-op table, audit block) and 56 static per-shader pages where the atomic unit is the
+  **operator block** — one row of 10 clips under a single header carrying the parameters they
+  all share by construction (uniforms, easing, onset/release, flip, swap) plus the 20 distinct
+  endpoint stems and the op's rejected renders. Plus `retired.html` for the 420
+  blacklisted clips (42 complete op blocks, 6 shaders) framed as reinstatement candidates.
+  Stays fast on 7,990 clips: no video is preloaded, each tile is one frame CSS-cropped out of
+  the clip's lazy-loaded filmstrip, a global **phase slider** slides every tile to the same
+  frame at once (so a whole operator row steps through the transition in lockstep with no new
+  requests), and `<video>` elements are created on click / IntersectionObserver and torn down
+  on exit. Media is symlinked, never copied.
+  **Three metadata discrepancies found and surfaced on the page rather than smoothed over:**
+  (1) `S2_ACCEPTANCE.json` is stale — it still reports the pre-blacklist 7,550 clips / 755 ops
+  / 62 shaders, not the shipped 7,990 / 799 / 56; (2) the `summary_shard*.json` files were
+  rewritten by the backfill pass and describe only that pass (860 accepted, overdraw 1.93) —
+  the true build-wide overdraw recomputed from the append-only ops log is **1.2506×**;
+  (3) the n=64 blind audit was drawn from the pre-blacklist roster, so 6 of its 64 samples are
+  now retired, **including one of the two BAD clips** (`s2_0229_c06`, PuzzleRight) — against
+  the roster that actually shipped it reads 1 BAD / 58.
 - **11:50** — **HumanVid's REAL (non-synthetic) half: located, fully characterised, and
   ruled OUT on licence grounds.** It is not on HuggingFace — the HF tree holds only the two
   synthetic families. The real portion ships as **19,262 Pexels.com URLs** (11,411 landscape
