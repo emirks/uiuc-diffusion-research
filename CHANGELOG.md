@@ -1,5 +1,39 @@
 ## 2026-07-27
 
+- **11:50** — **HumanVid's REAL (non-synthetic) half: located, fully characterised, and
+  ruled OUT on licence grounds.** It is not on HuggingFace — the HF tree holds only the two
+  synthetic families. The real portion ships as **19,262 Pexels.com URLs** (11,411 landscape
+  + 7,851 portrait) plus 19,429 per-frame camera trajectories, in Google Drive folder
+  `1UGEkOKXYX9BGUFz0ao6lOGXkZjQGoJcZ` linked from the GitHub repo; the authors state plainly
+  "we cannot redistribute them". **The blocker is Pexels, not HumanVid:** the repo's
+  Apache-2.0/CC-BY-4.0 covers their code, cameras and UE renders but cannot relicense
+  third-party footage, and the Pexels ToS prohibit "data mining, extraction, scraping … for
+  all unauthorised purposes, *including without limitation for machine learning purposes*"
+  and "bulk, large-scale or systematic copying", while the API terms separately bar
+  collecting content "to train, fine-tune, *evaluate*, or develop ML/AI models *or
+  datasets*". That covers eval sets too, so **nothing was downloaded — not 19k, not 60**, and
+  nothing should be.
+  Characterised the whole corpus anyway at zero media cost: every Pexels URL encodes
+  `W_H_fps` and every camera file has exactly one line per frame, so
+  `scripts/analyze_humanvid_real.py` derives resolution/fps/frame-count/duration for all
+  ~19k clips from the manifest alone — **validated 10/10 against `ffprobe`** (resolution, fps
+  and frame count all matched). 90.2 h of footage, median clip 13.8 s, all 1080p+, but only
+  13 % is natively 24 fps (67 % is 25 fps). HEAD-only probe: **120/120 URLs live**, mean clip
+  8.9 MB, **~167 GB projected** for a full fetch (measured from `Content-Length`).
+  Fitness vs our 480×640·121f·24fps contract: resolution/length **pass** (~54k possible
+  endpoints), single-shot **passes** (HumanVid filtered out shot changes), letterboxing
+  **low risk**, but single-subject **partially fails** — their rule was "few people (n≤4)"
+  with a bbox floor of r>0.07, under half our 0.15 — and the portrait crop keeps only ~42 %
+  of a landscape frame. Honest verdict on diversity: our pool is already 85 % `person` and
+  this set is 100 % human-centric by construction, so it would add **volume, not diversity**.
+  Viewer at `outputs/viewers/humanvid_real/` (60 clips, 30V+30H) **streams straight from the
+  Pexels CDN so nothing is copied to disk**, with filmstrips rendered client-side into a
+  canvas from the already-streaming video. Two gotchas recorded in
+  `notes/dataset/humanvid_real.md`: the repo HTTP server sends no charset (so viewers need
+  `<meta charset="utf-8">` — the older `humanvid_sample` viewer mojibakes without it), and
+  Playwright's `chrome-headless-shell` lacks H.264, so headless screenshots show black tiles
+  even though the CDN serves 206s and every clip probes as h264.
+
 - **11:15** — **exp_083 D3/S3 PILOT rendered — 109 depth-parallax transitions, and the honest
   answer is "the idea works, the current renderer does not".** Built on exp_076's `engine3d/`
   (reused, not rewritten) with three additive changes: `subject_anchor()` finds the foreground

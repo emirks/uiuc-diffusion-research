@@ -1,0 +1,196 @@
+{
+  "source": {
+    "dataset": "HumanVid (NeurIPS D&B 2024), real/Internet portion",
+    "platform": "Pexels.com",
+    "manifest": "Google Drive folder 1UGEkOKXYX9BGUFz0ao6lOGXkZjQGoJcZ",
+    "media_redistributed": false,
+    "note": "authors: 'The pexels video data is collected from the Internet and we cannot redistribute them.'"
+  },
+  "endpoint_contract": {
+    "width": 480,
+    "height": 640,
+    "frames": 121,
+    "fps": 24,
+    "seconds": 5.0417
+  },
+  "overall": {
+    "n_clips": 19262,
+    "n_with_camera_annotation": 19173,
+    "orientation": {
+      "landscape": 11411,
+      "portrait": 7851
+    },
+    "fps": {
+      "25": 12973,
+      "30": 3732,
+      "24": 2538,
+      "60": 19
+    },
+    "tier": {
+      "hd": 19253,
+      "uhd": 9
+    },
+    "top_resolutions": {
+      "1920x1080": 8886,
+      "1080x1920": 5959,
+      "2048x1080": 2505,
+      "1080x2048": 1883,
+      "2560x1080": 7,
+      "1066x1920": 6,
+      "1440x1080": 5,
+      "1908x1080": 2,
+      "2732x1154": 2,
+      "1906x1080": 1,
+      "1920x880": 1,
+      "2048x988": 1
+    },
+    "duration_s": {
+      "min": 1.08,
+      "p10": 7.84,
+      "median": 13.84,
+      "p90": 29.53,
+      "max": 155.76,
+      "mean": 16.94,
+      "total_hours": 90.2
+    },
+    "endpoint_fitness": {
+      "portrait_crop_no_upscale": {
+        "n": 19262,
+        "pct": 100.0
+      },
+      "duration_ge_5.04s": {
+        "n": 18689,
+        "pct": 97.5
+      },
+      "both": {
+        "n": 18689,
+        "pct": 97.0
+      },
+      "max_121f_endpoints_if_segmented": 54276,
+      "crop_area_retained": {
+        "median": 0.422,
+        "mean": 0.548,
+        "note": "fraction of source frame area surviving the largest 0.75-AR portrait crop"
+      }
+    }
+  },
+  "per_split": {
+    "horizontal": {
+      "unparseable_urls": 0,
+      "camera_files_on_disk": 11525,
+      "urls_matched_to_camera": 11373,
+      "n_clips": 11411,
+      "n_with_camera_annotation": 11373,
+      "orientation": {
+        "landscape": 11411
+      },
+      "fps": {
+        "25": 8203,
+        "30": 2036,
+        "24": 1160,
+        "60": 12
+      },
+      "tier": {
+        "hd": 11402,
+        "uhd": 9
+      },
+      "top_resolutions": {
+        "1920x1080": 8886,
+        "2048x1080": 2505,
+        "2560x1080": 7,
+        "1440x1080": 5,
+        "1908x1080": 2,
+        "2732x1154": 2,
+        "1906x1080": 1,
+        "1920x880": 1,
+        "2048x988": 1,
+        "1834x1032": 1
+      },
+      "duration_s": {
+        "min": 1.08,
+        "p10": 7.88,
+        "median": 14.2,
+        "p90": 29.44,
+        "max": 120.47,
+        "mean": 17.1,
+        "total_hours": 54.0
+      },
+      "endpoint_fitness": {
+        "portrait_crop_no_upscale": {
+          "n": 11411,
+          "pct": 100.0
+        },
+        "duration_ge_5.04s": {
+          "n": 11144,
+          "pct": 98.0
+        },
+        "both": {
+          "n": 11144,
+          "pct": 97.7
+        },
+        "max_121f_endpoints_if_segmented": 32780,
+        "crop_area_retained": {
+          "median": 0.422,
+          "mean": 0.416,
+          "note": "fraction of source frame area surviving the largest 0.75-AR portrait crop"
+        }
+      }
+    },
+    "vertical": {
+      "unparseable_urls": 0,
+      "camera_files_on_disk": 7903,
+      "urls_matched_to_camera": 7800,
+      "n_clips": 7851,
+      "n_with_camera_annotation": 7800,
+      "orientation": {
+        "portrait": 7851
+      },
+      "fps": {
+        "25": 4770,
+        "30": 1696,
+        "24": 1378,
+        "60": 7
+      },
+      "tier": {
+        "hd": 7851
+      },
+      "top_resolutions": {
+        "1080x1920": 5959,
+        "1080x2048": 1883,
+        "1066x1920": 6,
+        "1080x1830": 1,
+        "1080x1872": 1,
+        "1080x1902": 1
+      },
+      "duration_s": {
+        "min": 1.16,
+        "p10": 7.79,
+        "median": 13.24,
+        "p90": 29.64,
+        "max": 155.76,
+        "mean": 16.7,
+        "total_hours": 36.2
+      },
+      "endpoint_fitness": {
+        "portrait_crop_no_upscale": {
+          "n": 7851,
+          "pct": 100.0
+        },
+        "duration_ge_5.04s": {
+          "n": 7545,
+          "pct": 96.7
+        },
+        "both": {
+          "n": 7545,
+          "pct": 96.1
+        },
+        "max_121f_endpoints_if_segmented": 21496,
+        "crop_area_retained": {
+          "median": 0.75,
+          "mean": 0.739,
+          "note": "fraction of source frame area surviving the largest 0.75-AR portrait crop"
+        }
+      }
+    }
+  }
+}
