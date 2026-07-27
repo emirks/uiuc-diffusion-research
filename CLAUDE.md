@@ -168,6 +168,15 @@ Hard rules: long runs go through `sbatch` (never park `srun ... bash`);
 `-high` queues require a `#cluster_high_priority` Slack announcement;
 `-secondary` queues are preemptible — only submit resumable runs there.
 
+## Secrets
+
+API keys live OUTSIDE the repo in `$LAB/secrets/` (chmod 600) — **never commit,
+print, or hardcode them**. Scripts read env vars; jobs `source` the file.
+
+- Gemini ("transition" key, project 436876568081):
+  `source $LAB/secrets/gemini_transition.env` → `GEMINI_API_KEY`, `GEMINI_PROJECT`.
+  Used for dataset captioning (ctt_v2).
+
 ### RunPod (legacy, pre-2026-07)
 
 The pod-based flow is preserved in the `runpod-pod-init` skill (marked
