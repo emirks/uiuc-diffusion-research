@@ -1,5 +1,28 @@
 ## 2026-07-27
 
+- **12:00** — **exp_084: the luma-matte family was killed by `step()`, not (only) by the maps.**
+  The aux-map operator family (a static greyscale matte + a threshold sweep, shipped at 0% for
+  looking fake) had two confounded defects. `experiments/exp_084_luma_matte_viewer/` runs the
+  2×2 that separates them over real playing footage: {7 shipped maps, 12 new arrival-time maps}
+  × {`luma.glsl` unmodified, a new `shaders/luma_soft.glsl` with a smoothstep feather, a rim
+  colour in the advancing band and an additive glow lobe}. 114 clips, both layers real frames
+  from the 227-clip endpoint bank, anchors verbatim. Blind audit (16/arm, anonymised shuffled
+  contact sheets, key joined afterwards): **88% BAD → 56% with the compositor fix alone, 88% →
+  88% with better maps alone (Fisher p = 1.00), 88% → 31% with both.** The compositor gates
+  everything. The 56% residual splits: the three *aperiodic* shipped maps (fbm/radial/linear)
+  go 6/8 → 1/8 BAD, the four *geometric* ones (stripes/checker/spiral/voronoi) stay 8/8 → 8/8
+  (p = 0.0014) — a feathered checkerboard is still a checkerboard. New maps (eikonal fronts
+  through ridged-multifractal speed, invasion percolation with morphological trapping, CC0
+  Krita brush-path stamping, and a content-aware Canny boundary draw) are the best cell but
+  are not separable from rescued-aperiodic-shipped (p = 0.62) — their value is variety and
+  content-awareness, not a higher ceiling. Two side findings: `step(progress, m)` returns 1 at
+  `m == progress`, so the shipped compositor leaks 5–6 stale pixels into the final
+  conditioning block of *every* clip (`luma_soft` is exactly 0), and the `luma` sampler is
+  vertically flipped w.r.t. the image (`probe_orientation.py`). Paired A/B viewer at
+  `http://localhost:8017/outputs/viewers/luma_matte/index.html`. Mechanics written up in
+  `notes/dataset/procedural_operators.md` §5b. Brush alphas are CC-0 (David Revoy 25.01);
+  no commercial or ML-restricted matte pack was downloaded — see `PROVENANCE.json`.
+
 - **11:55** — **S2 stratum viewer built** (`experiments/exp_081_s2_stratum/build_viewer_s2.py`
   → `outputs/viewers/s2_dataset/`, served at
   `http://localhost:8017/outputs/viewers/s2_dataset/index.html`). Two levels: an index of the
