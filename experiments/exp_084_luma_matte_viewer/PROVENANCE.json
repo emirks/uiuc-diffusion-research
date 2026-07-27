@@ -1,0 +1,43 @@
+{
+  "purpose": "External assets used by exp_084. Only training-safe licences.",
+  "checked": "2026-07-27",
+  "policy": "No commercial or ML-restricted matte pack was downloaded. Pixabay, Pexels, ProductionCrate and ActionVFX all prohibit ML training; Shadertoy defaults to CC BY-NC-SA. None were touched.",
+  "assets": [
+    {
+      "name": "David Revoy — Krita brushes 2025-01 bundle (brush tip alphas)",
+      "url_article": "https://www.davidrevoy.com/article1060/",
+      "url_download": "https://www.peppercarrot.com/extras/resources/deevad-bundle_25.01.zip",
+      "inner_file": "Deevad_25.01.bundle (zip) -> brushes/*.png",
+      "licence": "CC-0 / Public Domain",
+      "licence_quote": "These brushes are licensed under CC-0 Public domain. You are free to do commercial work with them, to reshare them, to fork them, to reuse them, to include them in your software.",
+      "note": "The article text and demo artwork are CC-BY David Revoy; the BRUSHES are CC-0. Only brush tip PNGs were extracted.",
+      "bytes_downloaded": 8509341,
+      "local_path": "data/raw/cc0_brush_alphas/  (gitignored — data/raw/ is local)",
+      "files": [
+        "deevad-painterly-brush-tip_2023C.png",
+        "chalk_sparse.png",
+        "bristles_circle_medium.png",
+        "flat-tip-dirty.png",
+        "splat_dots.png",
+        "chisel_streaks.png",
+        "bristle.png",
+        "square_rough_lightgrey.png",
+        "scribbles.png",
+        "chalk_round_hard.png"
+      ],
+      "used_for": "brush_wipe / brush_scribble / brush_splat / edge_draw / edge_draw_fine arrival-time mattes"
+    }
+  ],
+  "considered_not_downloaded": [
+    {"name": "JangaFX 15 free VDBs", "licence": "CC0",
+     "why_not": "a VDB density render needs a volume renderer this experiment does not have; the CC0 brush alphas already cover the 'hand-authored asset' arm at a fraction of the cost"},
+    {"name": "Netflix Vera-Layered-Video-Dataset (HF)", "licence": "Apache-2.0",
+     "why_not": "RGB+alpha layers of scene content, not transition mattes; would not answer the compositor question"},
+    {"name": "Kenney particle packs", "licence": "CC0",
+     "why_not": "sprite particles, not arrival-time fields"}
+  ],
+  "footage": {
+    "source": "data/processed/synth_endpoints (repo-internal curated bank, bank_tightened.json, 227 clips)",
+    "note": "both transition layers are real frames from this bank playing forward; anchors verbatim"
+  }
+}

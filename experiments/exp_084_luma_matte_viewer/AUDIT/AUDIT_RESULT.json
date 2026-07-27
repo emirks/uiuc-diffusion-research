@@ -1,0 +1,540 @@
+{
+ "n_graded": 64,
+ "rubric": "BAD = reads as a digital artefact",
+ "per_arm": {
+  "A1_current": {
+   "n": 16,
+   "bad": 14,
+   "bad_rate": 0.875
+  },
+  "A2_soft_same_map": {
+   "n": 16,
+   "bad": 9,
+   "bad_rate": 0.562
+  },
+  "A3_new_map_soft": {
+   "n": 16,
+   "bad": 5,
+   "bad_rate": 0.312
+  },
+  "A4_new_map_hard": {
+   "n": 16,
+   "bad": 14,
+   "bad_rate": 0.875
+  }
+ },
+ "per_clip": {
+  "c00": {
+   "stem": "A2_soft_same_map__spiral__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A2_soft_same_map",
+   "map": "spiral",
+   "compositor": "soft",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "BAD"
+  },
+  "c01": {
+   "stem": "A1_current__linear__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A1_current",
+   "map": "linear",
+   "compositor": "hard",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "OK"
+  },
+  "c02": {
+   "stem": "A1_current__spiral__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A1_current",
+   "map": "spiral",
+   "compositor": "hard",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "BAD"
+  },
+  "c03": {
+   "stem": "A1_current__voronoi__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A1_current",
+   "map": "voronoi",
+   "compositor": "hard",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "BAD"
+  },
+  "c04": {
+   "stem": "A3_new_map_soft__invasion_finger__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A3_new_map_soft",
+   "map": "invasion_finger",
+   "compositor": "soft",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "OK"
+  },
+  "c05": {
+   "stem": "A3_new_map_soft__eikonal_streak__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A3_new_map_soft",
+   "map": "eikonal_streak",
+   "compositor": "soft",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "OK"
+  },
+  "c06": {
+   "stem": "A4_new_map_hard__brush_wipe__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A4_new_map_hard",
+   "map": "brush_wipe",
+   "compositor": "hard",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "OK"
+  },
+  "c07": {
+   "stem": "A1_current__spiral__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A1_current",
+   "map": "spiral",
+   "compositor": "hard",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "BAD"
+  },
+  "c08": {
+   "stem": "A3_new_map_soft__eikonal_ink__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A3_new_map_soft",
+   "map": "eikonal_ink",
+   "compositor": "soft",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "OK"
+  },
+  "c09": {
+   "stem": "A3_new_map_soft__brush_splat__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A3_new_map_soft",
+   "map": "brush_splat",
+   "compositor": "soft",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "BAD"
+  },
+  "c10": {
+   "stem": "A1_current__linear__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A1_current",
+   "map": "linear",
+   "compositor": "hard",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "BAD"
+  },
+  "c11": {
+   "stem": "A1_current__linear__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A1_current",
+   "map": "linear",
+   "compositor": "hard",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "OK"
+  },
+  "c12": {
+   "stem": "A4_new_map_hard__eikonal_streak__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A4_new_map_hard",
+   "map": "eikonal_streak",
+   "compositor": "hard",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "BAD"
+  },
+  "c13": {
+   "stem": "A4_new_map_hard__brush_scribble__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A4_new_map_hard",
+   "map": "brush_scribble",
+   "compositor": "hard",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "BAD"
+  },
+  "c14": {
+   "stem": "A3_new_map_soft__brush_scribble__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A3_new_map_soft",
+   "map": "brush_scribble",
+   "compositor": "soft",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "OK"
+  },
+  "c15": {
+   "stem": "A4_new_map_hard__brush_splat__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A4_new_map_hard",
+   "map": "brush_splat",
+   "compositor": "hard",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "BAD"
+  },
+  "c16": {
+   "stem": "A4_new_map_hard__edge_draw_fine__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A4_new_map_hard",
+   "map": "edge_draw_fine",
+   "compositor": "hard",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "BAD"
+  },
+  "c17": {
+   "stem": "A3_new_map_soft__invasion_ink__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A3_new_map_soft",
+   "map": "invasion_ink",
+   "compositor": "soft",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "OK"
+  },
+  "c18": {
+   "stem": "A4_new_map_hard__brush_wipe__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A4_new_map_hard",
+   "map": "brush_wipe",
+   "compositor": "hard",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "BAD"
+  },
+  "c19": {
+   "stem": "A1_current__voronoi__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A1_current",
+   "map": "voronoi",
+   "compositor": "hard",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "BAD"
+  },
+  "c20": {
+   "stem": "A1_current__stripes__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A1_current",
+   "map": "stripes",
+   "compositor": "hard",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "BAD"
+  },
+  "c21": {
+   "stem": "A2_soft_same_map__linear__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A2_soft_same_map",
+   "map": "linear",
+   "compositor": "soft",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "BAD"
+  },
+  "c22": {
+   "stem": "A4_new_map_hard__edge_draw__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A4_new_map_hard",
+   "map": "edge_draw",
+   "compositor": "hard",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "BAD"
+  },
+  "c23": {
+   "stem": "A4_new_map_hard__invasion_frost__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A4_new_map_hard",
+   "map": "invasion_frost",
+   "compositor": "hard",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "BAD"
+  },
+  "c24": {
+   "stem": "A2_soft_same_map__fbm__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A2_soft_same_map",
+   "map": "fbm",
+   "compositor": "soft",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "OK"
+  },
+  "c25": {
+   "stem": "A3_new_map_soft__eikonal_ink__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A3_new_map_soft",
+   "map": "eikonal_ink",
+   "compositor": "soft",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "BAD"
+  },
+  "c26": {
+   "stem": "A1_current__checker__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A1_current",
+   "map": "checker",
+   "compositor": "hard",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "BAD"
+  },
+  "c27": {
+   "stem": "A2_soft_same_map__spiral__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A2_soft_same_map",
+   "map": "spiral",
+   "compositor": "soft",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "BAD"
+  },
+  "c28": {
+   "stem": "A1_current__fbm__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A1_current",
+   "map": "fbm",
+   "compositor": "hard",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "BAD"
+  },
+  "c29": {
+   "stem": "A2_soft_same_map__stripes__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A2_soft_same_map",
+   "map": "stripes",
+   "compositor": "soft",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "BAD"
+  },
+  "c30": {
+   "stem": "A3_new_map_soft__eikonal_burst__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A3_new_map_soft",
+   "map": "eikonal_burst",
+   "compositor": "soft",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "OK"
+  },
+  "c31": {
+   "stem": "A3_new_map_soft__invasion_ink__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A3_new_map_soft",
+   "map": "invasion_ink",
+   "compositor": "soft",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "OK"
+  },
+  "c32": {
+   "stem": "A3_new_map_soft__brush_wipe__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A3_new_map_soft",
+   "map": "brush_wipe",
+   "compositor": "soft",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "OK"
+  },
+  "c33": {
+   "stem": "A2_soft_same_map__voronoi__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A2_soft_same_map",
+   "map": "voronoi",
+   "compositor": "soft",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "BAD"
+  },
+  "c34": {
+   "stem": "A1_current__radial__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A1_current",
+   "map": "radial",
+   "compositor": "hard",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "BAD"
+  },
+  "c35": {
+   "stem": "A1_current__checker__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A1_current",
+   "map": "checker",
+   "compositor": "hard",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "BAD"
+  },
+  "c36": {
+   "stem": "A3_new_map_soft__invasion_frost__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A3_new_map_soft",
+   "map": "invasion_frost",
+   "compositor": "soft",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "BAD"
+  },
+  "c37": {
+   "stem": "A4_new_map_hard__eikonal_drip__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A4_new_map_hard",
+   "map": "eikonal_drip",
+   "compositor": "hard",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "BAD"
+  },
+  "c38": {
+   "stem": "A2_soft_same_map__linear__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A2_soft_same_map",
+   "map": "linear",
+   "compositor": "soft",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "OK"
+  },
+  "c39": {
+   "stem": "A2_soft_same_map__fbm__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A2_soft_same_map",
+   "map": "fbm",
+   "compositor": "soft",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "OK"
+  },
+  "c40": {
+   "stem": "A3_new_map_soft__edge_draw_fine__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A3_new_map_soft",
+   "map": "edge_draw_fine",
+   "compositor": "soft",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "OK"
+  },
+  "c41": {
+   "stem": "A2_soft_same_map__voronoi__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A2_soft_same_map",
+   "map": "voronoi",
+   "compositor": "soft",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "BAD"
+  },
+  "c42": {
+   "stem": "A4_new_map_hard__edge_draw_fine__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A4_new_map_hard",
+   "map": "edge_draw_fine",
+   "compositor": "hard",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "BAD"
+  },
+  "c43": {
+   "stem": "A2_soft_same_map__checker__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A2_soft_same_map",
+   "map": "checker",
+   "compositor": "soft",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "BAD"
+  },
+  "c44": {
+   "stem": "A3_new_map_soft__eikonal_ink__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A3_new_map_soft",
+   "map": "eikonal_ink",
+   "compositor": "soft",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "BAD"
+  },
+  "c45": {
+   "stem": "A4_new_map_hard__invasion_ink__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A4_new_map_hard",
+   "map": "invasion_ink",
+   "compositor": "hard",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "BAD"
+  },
+  "c46": {
+   "stem": "A4_new_map_hard__edge_draw__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A4_new_map_hard",
+   "map": "edge_draw",
+   "compositor": "hard",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "BAD"
+  },
+  "c47": {
+   "stem": "A1_current__fbm__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A1_current",
+   "map": "fbm",
+   "compositor": "hard",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "BAD"
+  },
+  "c48": {
+   "stem": "A2_soft_same_map__voronoi__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A2_soft_same_map",
+   "map": "voronoi",
+   "compositor": "soft",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "BAD"
+  },
+  "c49": {
+   "stem": "A2_soft_same_map__stripes__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A2_soft_same_map",
+   "map": "stripes",
+   "compositor": "soft",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "BAD"
+  },
+  "c50": {
+   "stem": "A3_new_map_soft__invasion_frost__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A3_new_map_soft",
+   "map": "invasion_frost",
+   "compositor": "soft",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "OK"
+  },
+  "c51": {
+   "stem": "A1_current__spiral__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A1_current",
+   "map": "spiral",
+   "compositor": "hard",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "BAD"
+  },
+  "c52": {
+   "stem": "A2_soft_same_map__radial__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A2_soft_same_map",
+   "map": "radial",
+   "compositor": "soft",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "OK"
+  },
+  "c53": {
+   "stem": "A4_new_map_hard__eikonal_streak__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A4_new_map_hard",
+   "map": "eikonal_streak",
+   "compositor": "hard",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "BAD"
+  },
+  "c54": {
+   "stem": "A4_new_map_hard__brush_wipe__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A4_new_map_hard",
+   "map": "brush_wipe",
+   "compositor": "hard",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "BAD"
+  },
+  "c55": {
+   "stem": "A1_current__fbm__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A1_current",
+   "map": "fbm",
+   "compositor": "hard",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "BAD"
+  },
+  "c56": {
+   "stem": "A3_new_map_soft__edge_draw__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A3_new_map_soft",
+   "map": "edge_draw",
+   "compositor": "soft",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "BAD"
+  },
+  "c57": {
+   "stem": "A4_new_map_hard__invasion_ink__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A4_new_map_hard",
+   "map": "invasion_ink",
+   "compositor": "hard",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "BAD"
+  },
+  "c58": {
+   "stem": "A2_soft_same_map__fbm__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A2_soft_same_map",
+   "map": "fbm",
+   "compositor": "soft",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "OK"
+  },
+  "c59": {
+   "stem": "A4_new_map_hard__edge_draw__vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "arm": "A4_new_map_hard",
+   "map": "edge_draw",
+   "compositor": "hard",
+   "pair": "vcbench_teacher_3252126_3840x2160__openvid_TAMTRf1piJo_404_0to119",
+   "grade": "OK"
+  },
+  "c60": {
+   "stem": "A1_current__radial__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A1_current",
+   "map": "radial",
+   "compositor": "hard",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "BAD"
+  },
+  "c61": {
+   "stem": "A2_soft_same_map__linear__vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "arm": "A2_soft_same_map",
+   "map": "linear",
+   "compositor": "soft",
+   "pair": "vcbench_turtle_17823784_2160x3840__davis_rhino",
+   "grade": "OK"
+  },
+  "c62": {
+   "stem": "A2_soft_same_map__radial__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A2_soft_same_map",
+   "map": "radial",
+   "compositor": "soft",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "OK"
+  },
+  "c63": {
+   "stem": "A3_new_map_soft__eikonal_streak__davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "arm": "A3_new_map_soft",
+   "map": "eikonal_streak",
+   "compositor": "soft",
+   "pair": "davis_color-run__openvid_URLAedhIKbk_2_0to415",
+   "grade": "OK"
+  }
+ }
+}
