@@ -607,14 +607,16 @@ plus two fully blind passes with independent shuffles — flagged
 <b>adjudicated</b> verdict (A/B agreement + operator adjudication of the contested ones); an amber
 <span class="pill contested">contested</span> pill marks the {len(b_contested)} where the raters
 disagreed, and each card's metadata line reports how many of the three flagged it.</p>
-<p class="key"><b>And the hole-radius gate does not save this group.</b> Median
-<code>hole_r_max</code> is {st.median(b_holes_bad):.0f}&nbsp;px on the BAD clips against
-{st.median(b_holes_good):.0f}&nbsp;px on the GOOD ones — overlapping, not separating. No statistic
-tried (coverage quantity, hole radius, salience-weighted location, patch resemblance) reached the
-pre-committed &ge;87% recall at &le;7.5% FP operating point, so <code>S3_DROPPED.json</code>
-concluded the defect is inpaint <i>plausibility</i>, a semantic property, and not a measurable
-geometric quantity. Sorting this group by hole radius is therefore instructive precisely because
-it <b>fails</b> to sort the red cards to the top.</p></div>"""
+<p class="key"><b>And no hole-radius gate saves this group.</b> Median <code>hole_r_max</code> is
+{st.median(b_holes_bad):.0f}&nbsp;px on the BAD clips against {st.median(b_holes_good):.0f}&nbsp;px
+on the GOOD ones — a real difference in the middle of the distribution, but the tails overlap so
+badly that no threshold reaches the pre-committed <b>&ge;87% recall at &le;7.5% FP</b> operating
+point. The best of everything tried (coverage quantity, hole radius, salience-weighted location,
+patch resemblance) was plain <code>weak_max</code> at 26/39 recall, AUC 0.873.
+<code>S3_DROPPED.json</code> concluded the defect is inpaint <i>plausibility</i> — a semantic
+property, whether the surrounding content can stand in for what the mesh lost — and not a
+measurable geometric quantity. Sorting this group by hole radius is instructive precisely because
+red and green stay interleaved.</p></div>"""
 
     head_C = f"""<div class="ghdr gC"><h2>C &middot; exp_083_d3_pilot / run_0001
 <span class="badge gC">SUPERSEDED MECHANISM</span></h2>
