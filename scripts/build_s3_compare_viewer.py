@@ -34,10 +34,17 @@ C_RUN = "outputs/videos/exp_083_d3_pilot/run_0001"
 B_EXP = "experiments/exp_082_s3_stratum"
 C_EXP = "experiments/exp_083_d3_pilot"
 OUT = "outputs/viewers/s3_dataset/index.html"
+# optional; produced by scripts/s3_novel_black_probe.py
+PROBE = "experiments/exp_082_s3_stratum/S3_NOVEL_BLACK_PROBE.json"
 
 # hole-radius gate from the exp_083 blind audit: every shippable clip sat below
 # 85 px, 13 of the 14 BAD clips above it.
 HOLE_OK, HOLE_WARN = 85.0, 120.0
+# one exp_082 clip (s3p_017_dolly_dollyzoom) flew the camera entirely off the mesh:
+# unc_max == 1.0 and the distance transform saturated to FLT_MAX. Render it as ∞
+# and sort it at the top rather than printing a 39-digit number.
+HOLE_SAT = 1e6
+HOLE_SAT_SORT = 999.0
 JOIN_OK, JOIN_BAR = 1.3, 2.0      # join/seam ratio: bar 2.0, median bar 1.3
 PI_BAR = 2.0                      # parallax index: 1.0 == flat, bar 2.0
 
@@ -270,17 +277,25 @@ def card_html(c: dict, idx: int) -> str:
     bits = []
     if c["join"] is not None:
         bits.append(f'{c["join_name"]} <span class="{cls_join(c["join"])}">{c["join"]:.2f}</span>')
-    if c["hole"] is not None:
-        bits.append(f'hole <span class="{cls_hole(c["hole"])}">{c["hole"]:.0f}px</span>')
-    else:
+    if c["hole"] is None:
         bits.append('hole <span class="mut">n/a</span>')
+    elif c["hole"] >= HOLE_SAT:
+        bits.append('hole <span class="bad">&infin; (no covered pixel)</span>')
+    else:
+        bits.append(f'hole <span class="{cls_hole(c["hole"])}">{c["hole"]:.0f}px</span>')
     if c["pi"] is not None:
         bits.append(f'PI <span class="{cls_pi(c["pi"])}">{c["pi"]:.2f}</span>')
     metrics = " &middot; ".join(bits)
 
     why = f'<div class="why">{esc(c["reason"])}</div>' if c.get("reason") else ""
-    extra = f'<div class="kv">{esc(c["extra"])}</div>' if c.get("extra") else ""
-    hole_attr = "" if c["hole"] is None else f"{c['hole']:.1f}"
+    extra = (f'<div class="kv">{esc(c["extra"])}{c.get("extra_html", "")}</div>'
+             if c.get("extra") else "")
+    if c["hole"] is None:
+        hole_attr = ""
+    elif c["hole"] >= HOLE_SAT:
+        hole_attr = f"{HOLE_SAT_SORT:.1f}"
+    else:
+        hole_attr = f"{c['hole']:.1f}"
     return f"""<div class="card v-{vd}" data-idx="{idx}" data-verdict="{vd}"
  data-hole="{hole_attr}" data-join="{'' if c['join'] is None else f'{c["join"]:.3f}'}"
  data-pi="{'' if c['pi'] is None else f'{c["pi"]:.3f}'}">
@@ -343,6 +358,16 @@ def op_tags(p: dict) -> list[str]:
 def main() -> None:
     root = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else ".").resolve()
     L = lambda p: json.load(open(root / p))  # noqa: E731
+    probe = L(PROBE) if (root / PROBE).exists() else None
+    pc = probe["per_clip"] if probe else {}
+
+    def nb(stem: str) -> str:
+        """the novel-black probe delta, as a card metadata fragment"""
+        if stem not in pc:
+            return ""
+        d = pc[stem]["delta"] * 100
+        k = "bad" if d > 3 else ("warn" if d > 1 else "ok")
+        return f' · novel black <span class="{k}">{d:+.1f}pp</span>'
 
     # ---------------------------------------------------------- group A ----
     a_man = L(f"{A_RUN}/manifest.json")
@@ -361,6 +386,7 @@ def main() -> None:
             "extra": (f'121f · onset {m["onset"]} release {m["release"]} · '
                       f'rho {m["parallax"]["rho"]:.2f} · flow {m["parallax"]["flow_px"]:.1f}px · '
                       f'{m["render_s"]:.1f}s'),
+            "extra_html": nb(m["stem"]),
             "tags": [tag(m["family"]), tag("121f"), tag(m["tag"])] + op_tags(p),
         })
     a_join = sorted(r["join"] for r in a_recs)
@@ -415,6 +441,7 @@ def main() -> None:
                       f'uncovered {100*cal.get("unc_max", 0):.0f}% max · '
                       f'raters flagged {flags}/3 · blind r1 '
                       f'{"BAD" if b_blind.get(s) else "good"} · {c["render_s"]:.1f}s'),
+            "extra_html": nb(s),
             "tags": [tag(c["family"]), tag("121f"), tag(c["tag"])] + op_tags(p),
         })
     b_bad = sum(1 for r in b_recs if r["verdict"] == "bad")
@@ -484,6 +511,45 @@ def main() -> None:
 
     # ------------------------------------------------------------- page ----
     total = len(a_recs) + len(b_recs) + len(c_recs)
+
+    probe_block = ""
+    if probe:
+        cal = probe["calibration_on_exp_082_adjudicated_labels"]
+        pa, pb, pg = probe["applied_to_exp_080_group_A"], cal["B_bad"], cal["B_good"]
+        probe_block = f"""<h3 style="margin-top:22px">Does group A have the defect too? An operator
+sanity probe, because no artifact answers this</h3>
+<p class="sub">Group&nbsp;A carries <b>no hole radius and no verdicts</b>, so nothing on disk says
+whether its 31 clips show the same disocclusion damage. This probe supplies one cheap answer and is
+honest about its limits. For each clip it measures the fraction of the frame taken by
+<b>near-black blobs that abut lit content</b> (a dark sky does not qualify; a void punched next to
+lit geometry does), over five frames spanning the transition ramp, and subtracts the same measure
+taken on that clip's <b>own pure phases</b> — which are byte-identical real source frames and contain
+no rendering at all. The subtraction is what makes it usable: A's stock-VFX sources are genuinely
+very dark, so its <b>un-rendered</b> pure phases already score {pa['median_raw_pure_pct']:.0f}%
+median hard-black against {pa['median_raw_ramp_pct']:.0f}% in the ramp — a raw reading would say
+nothing about rendering damage in either direction.</p>
+{table(["group", "clips", "median novel black", "clips over +3 pp"],
+       [["B — adjudicated BAD", pb["n"], f'{pb["median_delta_pp"]:+.2f} pp',
+         f'{pb["n_over_3pp"]} / {pb["n"]}  ({100*pb["frac_over_3pp"]:.0f}%)'],
+        ["B — adjudicated GOOD", pg["n"], f'{pg["median_delta_pp"]:+.2f} pp',
+         f'{pg["n_over_3pp"]} / {pg["n"]}  ({100*pg["frac_over_3pp"]:.0f}%)'],
+        ["A — no labels exist", pa["n"], f'{pa["median_delta_pp"]:+.2f} pp',
+         f'{pa["n_over_3pp"]} / {pa["n"]}  ({100*pa["frac_over_3pp"]:.0f}%)']])}
+<p class="sub">Calibrated against B's adjudicated labels the probe flags
+{100*pb['frac_over_3pp']:.0f}% of the BAD clips and {100*pg['frac_over_3pp']:.0f}% of the GOOD ones.
+Pointed at group&nbsp;A it flags {pa['n_over_3pp']} of {pa['n']}
+({100*pa['frac_over_3pp']:.0f}%) — <b>A sits with B's GOOD clips, not with its BAD ones</b>, and in
+{sum(1 for s in {r["stem"] for r in a_recs} if pc.get(s, {}).get("delta", 1) < 0)} of its 31 clips the
+ramp actually contains <i>less</i> hard black than the real footage on either side of it.
+Every A and B card shows its own <code>novel black</code> figure, so the two A clips that do flag are
+findable.</p>
+<p class="key"><b>What this probe is not.</b> It is an operator sanity check written for this page —
+not a certified metric, not a revival of the dropped S3 gate, and <b>one-sided</b>: it sees hard
+black voids and is blind to the flat-smear / melted-blob failure mode that
+<code>S3_DROPPED.json</code> identified as the semantically hard half of the defect. A low score is
+weak evidence of health; a high score is strong evidence of damage. Definition and calibration live
+in <code>scripts/s3_novel_black_probe.py</code> and
+<code>experiments/exp_082_s3_stratum/S3_NOVEL_BLACK_PROBE.json</code>.</p>"""
 
     head_A = f"""<div class="ghdr gA"><h2>A &middot; exp_080_depth3d_realstream_121 / run_0001
 <span class="badge gA">APPROVED MECHANISM</span></h2>
@@ -629,7 +695,7 @@ hole radius: <span class="ok">&lt; 85 px</span> <span class="warn">85&ndash;120<
 <span class="bad">&le; 1.0 (flat)</span> <span class="warn">&lt; 2.0</span>
 <span class="ok">&ge; 2.0</span>. A ratio near 1.0 means the join is as smooth as the content's own
 natural motion.</p>
-
+{probe_block}
 <div class="ctl">
 <label><input type="checkbox" id="autoplay" checked> autoplay on scroll</label>
 <label><input type="checkbox" id="showstrips"> filmstrips</label>
