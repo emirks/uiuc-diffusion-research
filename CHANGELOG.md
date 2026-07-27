@@ -1,3 +1,16 @@
+## 2026-07-27
+
+- **13:16** — ctt_v2 fresh-rebuild kickoff after owner rulings: dataset pipeline retired for
+  a clean redo (retire-commit; history kept), the retrain moves to the **baseline trainer
+  `LTX-2-cond-bleed-fix`** (bneck parked → this round is a pure dataset intervention), and
+  **HumanVid was owner-cleared** for use after the Pexels ToS flag. Built a fresh screening
+  pipeline `scripts/ctt_v2/humanvid_bank/` (same QC contract as the blessed endpoint bank;
+  center-window standardize, tightened+diversity-capped selection, dedup vs the 227 bank) —
+  18,702 candidates collected, screening job 9680692 on L40S. Measured: all refVFX I2V-LoRA
+  outputs are uniformly 832×464·16fps·33f (33 ≡ 1 mod 8 → zero-cut reshape possible; trainer
+  supports per-sample fps natively). Gemini key stored at `$LAB/secrets/` (CLAUDE.md Secrets
+  section); stale Gemma capbank job cancelled. Advisor round 7 (mix re-ratification) launched.
+
 ## 2026-07-25
 
 - **09:50** — one-way reference attention now ships as a **two-call split**, not a dense mask.
