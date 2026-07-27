@@ -1,3 +1,28 @@
+## 2026-07-27
+
+- **11:15** — **exp_083 D3/S3 PILOT rendered — 109 depth-parallax transitions, and the honest
+  answer is "the idea works, the current renderer does not".** Built on exp_076's `engine3d/`
+  (reused, not rewritten) with three additive changes: `subject_anchor()` finds the foreground
+  object as the saliency-weighted centroid of the nearest depth quartile, two new dissolve
+  families (`subject`, `subject_fbm`) centre the world-space field on that object, and
+  `render_transition(coverage_out=)` ports exp_082's disocclusion audit to the frozen-endpoint
+  driver. Endpoints are real consecutive frames sliced out of the 227-clip
+  `bank_tightened.json` bank (A = frames 112:121, B = frames 0:9); lengths vary over
+  n_middle in {7,15,23,31} -> totals 25/33/41/49, every one legal (F = 8k+1), nothing padded.
+  **Verbatim-endpoint property holds exactly: in-array max abs diff = 0 on all 109 clips**
+  (H.264 round-trip is a separate MAE 1.94, worst single pixel 65). Seam ratio median 0.25,
+  7/109 over the 2.0 bar — and 6 of those 7 are the 25-frame length, whose median seam is
+  1.02 against 0.02 at 49 frames, so a 7-frame middle is simply too short for this operator
+  family. **Blind BAD rate: 14 of 30 (47%)**, drawn from a fixed seed before anything was
+  viewed. 13 of the 14 are one defect: the world-space dissolve punches alpha holes in BOTH
+  layers at once, ~25% of the frame has no geometry at mid-transition, and push-pull (reach
+  ~40 px) leaves a hard black void or a flat smear. It is gateable for free —
+  `hole_radius_max < 85 px` catches 13/14 failures and rejects 0/16 of the shippable clips,
+  at the cost of 57% of this pilot's operator mix. Dissolve family, not camera amplitude, is
+  the driver (plane 154 px / sphere 159 / subject 150 median vs none 59). Viewer at
+  `outputs/videos/exp_083_d3_pilot/run_0001/viewer.html`; decision on the full stratum is the
+  owner's.
+
 ## 2026-07-24
 
 - **16:01** — exp_077 D2-FULL: the degenerate-frame gate (DFG) was calibrated against a
