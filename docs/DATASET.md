@@ -18,7 +18,7 @@ Last verified against disk: **2026-07-27**.
 |---|---|---|---|---|---|
 | **S0** | real corpus (anchor) | **BUILT** | `eval_ladder/dataset/roots/ic_gen/` | **385** unique, 26 donor classes | the real VFX corpus; never replaced, present in every mix |
 | **S1** | spec counterfactuals | **DEFERRED** | — | ~660 planned (11 manners × ~30 pairs) | exact same-op × diff-content in the real visual domain |
-| **S2** | 2D shader procedural | **BUILT** | `outputs/videos/ctt_v2_s2/full/` | **7,990** clips · 809 ops · 56 shaders | 121f · 480×640 · 24fps · 10 clips/op |
+| **S2** | 2D shader procedural | **BUILT** | `outputs/videos/ctt_v2_s2/full/` | **7,990** clips · **799** ops · 56 shaders | 121f · 480×640 · 24fps · 10 clips/op |
 | **S2r** | S2 retired/blacklisted | **PARTIAL** — awaiting blind audit | `outputs/videos/ctt_v2_s2/full/retired_blacklisted/` | **420** clips = 42 complete op blocks, 6 shaders | same spec; candidates for reinstatement |
 | **S3** | 3D depth-parallax | **PLANNED** — approved design **not built** | see §3 for the 203 pre-fix clips | **4,000** target (400 ops × 10 pairs) | 121f · 9f anchors · exp_080 + 3 structural fixes |
 | **S4** | refVFX I2V-LoRA | **PARTIAL** — raw on disk, not reshaped | `data/raw/refvfx/data/I2V_LoRA/` (12 GB, 1 shard) | ~2,000 target of 6,995 · 48 effect types | webdataset tars; external, counts toward the ≤50% cap |
@@ -27,13 +27,42 @@ Last verified against disk: **2026-07-27**.
 **Mix directive for the first retrain (owner, 2026-07-25):** **S0 + S2 + S3 + S4**. S1 and S5 deferred, not killed.
 **Advisor-ruled epoch sampling mix (2026-07-27):** **50% real / 25% S3 / 25% S2**, by sample.
 
+### S2 counting — read this before quoting a number
+`ops_shard*.jsonl` has **809 rows**, but 10 are `dropped:true / n_slots:0` (they exhausted the
+pair-swap budget and shipped nothing). The dataset is **799 operators × 10 clips = 7,990**.
+Quote 799, not 809.
+**Recomputed overdraw: 1.2506×** (9,992 renders → 7,990 accepted), from the append-only ops log.
+Two metadata files are **stale/non-authoritative** and must not be used:
+`S2_ACCEPTANCE.json` reports the pre-blacklist state (7,550 / 755 / 62 shaders), and
+`summary_shard*.json` were overwritten by the backfill pass (they describe only 86 backfill ops,
+giving a misleading 1.93 overdraw). `accept_s2.py` warns about the latter trap in a comment.
+
 ### Retired S2 shaders (the 420)
-`splitSlideOutHorizontal` (10 ops) · `PuzzleRight` (10) · `SimpleZoomOut` (9) ·
-`StripDatamoshGlitch` (9) · `swap` (2) · `SimpleZoom` (2). Each op block is complete (10 clips),
-so reinstatement requires **no regeneration**. **Zero overlap with `HOLDOUT_S2`** — verified.
+Each of the 42 op blocks is complete (10 clips), so reinstatement requires **no regeneration**.
+**Zero overlap with `HOLDOUT_S2`** — verified. The blacklist was **purely economic** — a 0.50
+reject-rate bar on *renders*, never a judgement on clip quality — and it splits into two clear tiers:
+
+| shader | render reject rate | complete op blocks | tier |
+|---|---|---|---|
+| `PuzzleRight` | 52.6% | 10 | marginal — just over the bar |
+| `splitSlideOutHorizontal` | 53.9% | 10 | marginal |
+| `StripDatamoshGlitch` | 54.5% | 9 | marginal |
+| `SimpleZoomOut` | 55.4% | 9 | marginal |
+| `SimpleZoom` | 92.8% | 2 | **pathological** (11 of 13 ops dropped) |
+| `swap` | 93.4% | 2 | **pathological** (11 of 13 ops dropped) |
+
+Reinstating all 42 blocks → 8,410 clips / 841 ops / 62 shaders at zero render cost (+3,780 ref-target
+pairs). Reinstating only the four marginal shaders → 38 blocks / 380 clips.
 Reinstatement bar: blind-rate all 420; a clip enters training iff rated GOOD; a shader re-enters
 the generator iff **≥60%** of its retired clips rate GOOD. Cap 2,000 new clips at 14 ops/shader
 (the measured S2 density — *not* the 5 the advisor initially assumed).
+
+### S2 audit caveat
+The n=64 blind two-rater audit **predates the blacklist**. Six of its 64 sampled stems are now in
+`retired_blacklisted/`, including `s2_0229_c06` (PuzzleRight) — one of the two adjudicated BADs.
+Against the roster that actually shipped it reads **1 BAD / 58**, which is better on its face but is
+**no longer a clean pre-registered 64-sample audit** of this dataset. The remaining in-roster BAD is
+`s2_0270_c08` (Slides). Treat S2 as needing a fresh n=64 audit before any claim rests on it.
 
 ---
 
@@ -67,8 +96,21 @@ The approved S3 design has **zero clips rendered**. Three earlier generations ex
 | group | location | clips | mechanism | measured |
 |---|---|---|---|---|
 | **A** | `outputs/videos/exp_080_depth3d_realstream_121/run_0001` | **31** | **approved**: 121f, both streams playing, per-frame stabilised depth | join median **0.94** / max 1.86 (bar 2.0) · parallax **3.31** · 11 s/clip |
-| **B** | `outputs/videos/ctt_v2_s3` | **63** | same as A, run as the gate pilot | **62% defective** (39 BAD / 24 GOOD) |
-| **C** | `outputs/videos/exp_083_d3_pilot/run_0001` | **109** | superseded: 25/33/41/49f, static depth, frozen endpoints | **47% BAD** (14/30) · seam monotone in length (25f 1.02 → 49f 0.02) |
+| **B** | `outputs/videos/ctt_v2_s3` | **63** | **same engine as A, byte-identical, same amplitude 1.6** | **62% defective** (39 BAD / 24 GOOD) |
+| **C** | `outputs/videos/exp_083_d3_pilot/run_0001` | **109** | superseded: 25/33/41/49f, static depth, frozen endpoints | **47% BAD** (14/30 sampled; 79 unlabelled) · seam monotone in length (25f 1.02 → 49f 0.02) |
+
+> **⚠ A's clean numbers are a CONTENT artifact, not a mechanism win.** A and B are the *same engine
+> at the same amplitude on the same 121f contract*. A covers only **4 content pairs / 8 source clips**,
+> all dark stock-VFX footage; B covers **63 pairs / 91 endpoints** of real DAVIS/VCBench/OpenVid and
+> came back 62% defective. **A does not establish that the mechanism survives real content — B is the
+> evidence on that question, and it is negative.** The defect is present in A too, just rare: its
+> highest-parallax clip (`shear_crossfade_sphere`, PI 8.63) carries a hard black polygon mid-ramp.
+> A calibrated novel-hard-black probe (`scripts/s3_novel_black_probe.py`, measured against each clip's
+> own byte-identical pure phases) flags 49% of B's BAD and 4% of B's GOOD, and flags **2 of 31 (6%)**
+> in A — i.e. A sits with B's GOOD clips. The probe is one-sided (it sees black voids, not the
+> smear/melt mode) so it is a **lower bound**.
+> **Operational consequence: the 200-clip gate pilot must run on B-difficulty real content**, never on
+> A's easy content, or it will produce another false positive.
 
 **The shared defect.** `composite()` computes total alpha `den` and hands it to `_fill_holes`,
 a push-pull inpainter with ~40px reach. Where the camera looks past the mesh edge `den` collapses:
