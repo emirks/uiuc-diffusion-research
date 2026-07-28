@@ -1,0 +1,293 @@
+{
+ "seed": 20260724,
+ "spec": {
+  "n_target_pairs": 384,
+  "ops_per_target": 8,
+  "n_ref_pairs": 768,
+  "ref_reuse": 4,
+  "min_distinct_shaders": 6,
+  "attempts_per_shader": 5,
+  "max_shader_swaps": 4,
+  "timing_redraws": 3,
+  "overdraw_ceiling": 2.5,
+  "clip_cache": 240,
+  "strip_frame_w": 240,
+  "reject_mp4_per_shard": 6,
+  "gapfill": true,
+  "note": "GAP-FILL: only the slots whose ladder exhausted, with a substituted content-disjoint reference pair. Gate/tau/bank/easings/ladder/timing law all unchanged."
+ },
+ "keep_shaders": [
+  "BookFlip",
+  "BowTieWithParameter",
+  "Box",
+  "ButterflyWaveScrawler",
+  "ColourDistance",
+  "CrossZoom",
+  "DefocusBlur",
+  "Dreamy",
+  "EdgeTransition",
+  "FilmBurn",
+  "GlitchDisplace",
+  "GridFlip",
+  "HSVfade",
+  "HorizontalClose",
+  "HorizontalOpen",
+  "LinearBlur",
+  "Overexposure",
+  "PolkaDotsCurtain",
+  "PuzzleRight",
+  "SimpleZoom",
+  "SimpleZoomOut",
+  "Slides",
+  "StarWipe",
+  "StaticFade",
+  "StripDatamoshGlitch",
+  "TilesWave",
+  "VerticalClose",
+  "VerticalOpen",
+  "WaterDrop",
+  "ZoomRigthWipe",
+  "burn",
+  "burn0",
+  "cannabisleaf",
+  "chessboard",
+  "circleopen",
+  "colorphase",
+  "crosshatch",
+  "crosswarp",
+  "directionalwarp",
+  "directionalwipe",
+  "dissolve",
+  "fade",
+  "fadecolor",
+  "fadegrayscale",
+  "flyeye",
+  "fragment",
+  "heart",
+  "hexagonalize",
+  "luminance_melt",
+  "morph",
+  "multiply_blend",
+  "old_tv_lost_signal",
+  "parametric_glitch",
+  "perlin",
+  "pinwheel",
+  "pixelize",
+  "polar_function",
+  "randomNoisex",
+  "randomsquares",
+  "ripple",
+  "scale-in",
+  "splitSlideOutHorizontal",
+  "squareswire",
+  "squeeze",
+  "swap",
+  "wind",
+  "windowblinds",
+  "windowslice",
+  "wipeDown",
+  "wipeLeft",
+  "wipeRight",
+  "wipeUp"
+ ],
+ "blacklist": [
+  "BlockDissolve",
+  "BowTieHorizontal",
+  "BowTieVertical",
+  "CircleCrop",
+  "CrazyParametricFun",
+  "Directional",
+  "DirectionalScaled",
+  "DoomScreenTransition",
+  "DreamyZoom",
+  "Drop_Zone_Flicker",
+  "Fold",
+  "LeftRight",
+  "Mosaic",
+  "Radial",
+  "Rectangle",
+  "RectangleCrop",
+  "Revolve_Left",
+  "Rolls",
+  "RotateScaleVanish",
+  "SimpleFlip",
+  "StereoViewer",
+  "TVStatic",
+  "TopBottom",
+  "ZoomLeftWipe",
+  "circle",
+  "coord-from-in",
+  "cube",
+  "doorway",
+  "kaleidoscope",
+  "powerKaleido",
+  "rotateTransition",
+  "rotate_scale_fade",
+  "splitSlideInHorizontal",
+  "splitSlideInOutHorizontal",
+  "splitSlideInOutVertical",
+  "splitSlideInVertical",
+  "static_wipe",
+  "undulatingBurnOut",
+  "x_axis_translation",
+  "zoomInOut"
+ ],
+ "keep_easings": [
+  "in_cubic",
+  "in_out_cubic",
+  "in_out_sine",
+  "linear",
+  "mid_hold",
+  "smootherstep",
+  "smoothstep"
+ ],
+ "drop_easings": [
+  "in_expo",
+  "out_cubic",
+  "out_expo"
+ ],
+ "holdout_shaders": [
+  "Bounce",
+  "GlitchMemories",
+  "Swirl",
+  "ZoomInCircles",
+  "angular",
+  "directional-easing",
+  "mosaic_transition",
+  "splitSlideOutVertical"
+ ],
+ "gate": {
+  "tau": 0.2543,
+  "assert1_tol": 0.5,
+  "seam_max": 2.0,
+  "m2_max_dq": 0.5,
+  "m1_min_flag_threshold": -0.05
+ },
+ "n_tuples": 4,
+ "targets": [
+  {
+   "target_index": 33,
+   "target_pair": {
+    "A": "openvid__uJLNGVICts_19_0to113",
+    "B": "openvid__nLdQ5vZP5c_6_0to148",
+    "A_mp4": "clips/openvid__uJLNGVICts_19_0to113.mp4",
+    "B_mp4": "clips/openvid__nLdQ5vZP5c_6_0to148.mp4"
+   },
+   "exclude_shaders": [
+    "BookFlip",
+    "Overexposure",
+    "WaterDrop",
+    "directionalwarp",
+    "morph",
+    "polar_function",
+    "windowslice"
+   ],
+   "slots": [
+    {
+     "tuple_id": 265,
+     "slot": 1,
+     "shader": "pinwheel",
+     "ref_pair": {
+      "A": "vcbench_lunch_8775226_2160x3840",
+      "B": "openvid_UT4hPMISonI_134_0to137",
+      "A_mp4": "clips/vcbench_lunch_8775226_2160x3840.mp4",
+      "B_mp4": "clips/openvid_UT4hPMISonI_134_0to137.mp4"
+     }
+    }
+   ]
+  },
+  {
+   "target_index": 171,
+   "target_pair": {
+    "A": "davis_bus",
+    "B": "vcbench_book_4034077_2160x4096",
+    "A_mp4": "clips/davis_bus.mp4",
+    "B_mp4": "clips/vcbench_book_4034077_2160x4096.mp4"
+   },
+   "exclude_shaders": [
+    "EdgeTransition",
+    "GlitchDisplace",
+    "HSVfade",
+    "StaticFade",
+    "WaterDrop",
+    "crosswarp",
+    "flyeye"
+   ],
+   "slots": [
+    {
+     "tuple_id": 1371,
+     "slot": 3,
+     "shader": "ZoomRigthWipe",
+     "ref_pair": {
+      "A": "vcbench_destination_33713788_3840x2160",
+      "B": "vcbench_meeting_3252919_3840x2160",
+      "A_mp4": "clips/vcbench_destination_33713788_3840x2160.mp4",
+      "B_mp4": "clips/vcbench_meeting_3252919_3840x2160.mp4"
+     }
+    }
+   ]
+  },
+  {
+   "target_index": 248,
+   "target_pair": {
+    "A": "openvid_SxtYrpF_IIc_52_0to164",
+    "B": "openvid_T5ZCFynSomc_29_0to139",
+    "A_mp4": "clips/openvid_SxtYrpF_IIc_52_0to164.mp4",
+    "B_mp4": "clips/openvid_T5ZCFynSomc_29_0to139.mp4"
+   },
+   "exclude_shaders": [
+    "BookFlip",
+    "crosswarp",
+    "directionalwarp",
+    "directionalwipe",
+    "fade",
+    "randomsquares",
+    "wind"
+   ],
+   "slots": [
+    {
+     "tuple_id": 1988,
+     "slot": 4,
+     "shader": "VerticalOpen",
+     "ref_pair": {
+      "A": "vcbench_school_5199623_3840x2160",
+      "B": "vcbench_meeting_3255226_3840x2160",
+      "A_mp4": "clips/vcbench_school_5199623_3840x2160.mp4",
+      "B_mp4": "clips/vcbench_meeting_3255226_3840x2160.mp4"
+     }
+    }
+   ]
+  },
+  {
+   "target_index": 320,
+   "target_pair": {
+    "A": "openvid_X3pL1dkTHIA_23_0to132",
+    "B": "davis_horsejump-low",
+    "A_mp4": "clips/openvid_X3pL1dkTHIA_23_0to132.mp4",
+    "B_mp4": "clips/davis_horsejump-low.mp4"
+   },
+   "exclude_shaders": [
+    "LinearBlur",
+    "PuzzleRight",
+    "dissolve",
+    "fadecolor",
+    "fragment",
+    "luminance_melt",
+    "windowblinds"
+   ],
+   "slots": [
+    {
+     "tuple_id": 2567,
+     "slot": 7,
+     "shader": "HSVfade",
+     "ref_pair": {
+      "A": "openvid__uJLNGVICts_19_0to113",
+      "B": "openvid_TGlDRBUxYco_44_0to215",
+      "A_mp4": "clips/openvid__uJLNGVICts_19_0to113.mp4",
+      "B_mp4": "clips/openvid_TGlDRBUxYco_44_0to215.mp4"
+     }
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,15 @@
+/projects/illinois/eng/cs/jrehg/users/emirkisa/envs/diffusion/lib/python3.10/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
+  warnings.warn(
+02:27:33 INFO    MODE=smoke shard=0/1 host=cc-login5.campuscluster.illinois.edu root=/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ctt_v2_s2/smoke
+02:27:34 INFO    GL: llvmpipe (LLVM 21.1.7, 256 bits) | 4.5 (Core Profile) Mesa 25.2.7
+02:27:37 INFO    plan: 800 ops x 10 contents = 8000 clips | this shard: 3 ops
+02:29:48 WARNING op 2 (BookFlip) DROPPED: only 8/10 slots filled in 25 attempts
+02:29:48 INFO    shard 0: 3/3 ops | 20 clips accepted | 46 rendered (overdraw 2.30x) | 1 dropped | 2.2 min | cache h/m=17/75
+02:29:48 INFO    shard 0 DONE: 20 clips, 46 rendered (overdraw 2.30x), 1 ops dropped, 2.2 min
+{"op_index": 0, "shader": "BookFlip", "n_slots": 10, "exact_op_identical_across_slots": true, "n_distinct_endpoint_clips": 20, "endpoint_disjoint": true, "max_pure_over_slots": 0.0, "max_seam_over_slots": 1.71, "min_m1_p10_over_slots": 0.485, "pass": true}
+{"op_index": 1, "shader": "BookFlip", "n_slots": 10, "exact_op_identical_across_slots": true, "n_distinct_endpoint_clips": 20, "endpoint_disjoint": true, "max_pure_over_slots": 0.0, "max_seam_over_slots": 1.622, "min_m1_p10_over_slots": 0.2838, "pass": true}
+{"op_index": 2, "shader": "BookFlip", "n_slots": 8, "exact_op_identical_across_slots": true, "n_distinct_endpoint_clips": 16, "endpoint_disjoint": true, "max_pure_over_slots": 0.0, "max_seam_over_slots": 1.995, "min_m1_p10_over_slots": 0.3506, "pass": false}
+{
+ "SMOKE": "FAIL",
+ "n_ops": 3
+}

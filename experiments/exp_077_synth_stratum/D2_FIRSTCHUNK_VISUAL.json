@@ -1,0 +1,95 @@
+{
+  "purpose": "Pre-committed clamp check (2026-07-24 ruling): visual bad rate on the first ~64 clamped outputs must fall CLEARLY below the 17.5% D1 baseline (expect single digits), else KILL the array and report the taxonomy without iterating clamps blind.",
+  "method": "32 accepted target clips + the 16 most offender-enriched accepted reference clips, judged from 16-frame filmstrips (t = 0,4,8,14,22,32,44,56,68,80,92,100,108,112,116,120) tiled into labelled contact sheets. Judgement by the operator (Claude) on the rendered frames; every clip listed had already PASSED the frozen gate (tau 0.2543 / max_pure<=0.5 / seam<=2.0 / dq<=0.5).",
+  "sheets": [
+    "outputs/videos/exp_077_synth_stratum_d2/d2full_firstchunk/sheets/sheet_00..03.jpg (targets)",
+    "outputs/videos/exp_077_synth_stratum_d2/d2full_firstchunk/sheets_ref/sheet_00..01.jpg (references)"
+  ],
+  "sample_design": {
+    "offender_shaders_oversampled": ["EdgeTransition", "fadecolor", "ColourDistance"],
+    "offender_slots": 13, "total_slots": 32, "offender_share": 0.406,
+    "offender_share_under_uniform_allocation": 0.0417,
+    "note": "deliberate oversample per the ruling, so the raw chunk rate is NOT directly comparable to the 17.5% baseline; the offender/non-offender split and the uniform projection below are."
+  },
+  "classes": {
+    "BAD": "a frame is destroyed: near-black/black edge-map, white blowout, blank frame, or a saturated flat colour dominating the frame",
+    "MARGINAL": "clearly tinted / washed but the scene stays legible, or an intentional light-leak style",
+    "OK": "transition reads as a transition on real footage"
+  },
+  "targets": {
+    "d2f_0000": ["BAD", "EdgeTransition", "near-black edge-map frames (edge_brightness clamped 8.0->3.0)"],
+    "d2f_0001": ["OK", "fadecolor", "yellow-olive wash, scene legible"],
+    "d2f_0002": ["OK", "ColourDistance", ""],
+    "d2f_0003": ["MARGINAL", "EdgeTransition", "dark, scene faintly legible"],
+    "d2f_0004": ["OK", "fadecolor", "dark green wash, legible"],
+    "d2f_0005": ["OK", "ColourDistance", ""],
+    "d2f_0006": ["OK", "directionalwipe", ""],
+    "d2f_0007": ["OK", "fadegrayscale", ""],
+    "d2f_0008": ["BAD", "EdgeTransition", "dark sketchy edge-map dominates ~3 frames"],
+    "d2f_0009": ["MARGINAL", "fadecolor", "green wash"],
+    "d2f_0010": ["OK", "ColourDistance", ""],
+    "d2f_0011": ["BAD", "EdgeTransition", "near-black frames"],
+    "d2f_0012": ["BAD", "fadecolor", "saturated green [0.048,0.919,0.127] dominates ~4 frames (luma 0.67 = LEGAL)"],
+    "d2f_0013": ["OK", "ColourDistance", ""],
+    "d2f_0014": ["OK", "LinearBlur", ""],
+    "d2f_0015": ["MARGINAL", "FilmBurn", "white/orange light-leak flash (by design)"],
+    "d2f_0016": ["BAD", "fadecolor", "saturated green [0.464,0.938,0.393] dominates (luma 0.79 = LEGAL)"],
+    "d2f_0017": ["OK", "wipeUp", ""],
+    "d2f_0018": ["MARGINAL", "burn0", "orange burn front covers much of frame"],
+    "d2f_0019": ["OK", "squareswire", ""],
+    "d2f_0020": ["OK", "VerticalOpen", ""],
+    "d2f_0021": ["OK", "StarWipe", "graphic star matte, by design"],
+    "d2f_0022": ["OK", "Slides", ""],
+    "d2f_0023": ["OK", "Dreamy", ""],
+    "d2f_0024": ["OK", "fragment", ""],
+    "d2f_0025": ["BAD", "dissolve", "red/magenta flash dominates; uPow=12.9992 and uSpreadClr=[2.61,0.23,0.96] BYPASSED the clamp (see clamp_gaps)"],
+    "d2f_0026": ["OK", "BookFlip", ""],
+    "d2f_0027": ["OK", "PolkaDotsCurtain", ""],
+    "d2f_0028": ["BAD", "TilesWave", "near-blank white frames mid-transition"],
+    "d2f_0029": ["OK", "StaticFade", "grain dissolve — policy-declared legitimate (m1_min -0.006)"],
+    "d2f_0030": ["BAD", "SimpleZoom", "white blowout; CAUGHT by the non-gating m1_min_flag (m1_min=-0.240, dq=0.434)"],
+    "d2f_0031": ["OK", "wipeDown", ""]
+  },
+  "references_examined": {
+    "d2f_0000_ref": ["BAD", "EdgeTransition", "near-black"],
+    "d2f_0001_ref": ["MARGINAL", "fadecolor", "yellow wash"],
+    "d2f_0002_ref": ["BAD", "ColourDistance", "white blowout ~3 frames (power clamped 5.0->3.0)"],
+    "d2f_0003_ref": ["BAD", "EdgeTransition", "near-black"],
+    "d2f_0004_ref": ["MARGINAL", "fadecolor", "dark green wash"],
+    "d2f_0005_ref": ["MARGINAL", "ColourDistance", "chromatic, legible"],
+    "d2f_0006_ref": ["OK", "directionalwipe", ""],
+    "d2f_0007_ref": ["OK", "fadegrayscale", ""],
+    "d2f_0008_ref": ["BAD", "EdgeTransition", "dark edge-map"],
+    "d2f_0009_ref": ["MARGINAL", "fadecolor", "green wash"],
+    "d2f_0010_ref": ["BAD", "ColourDistance", "white blowout ~4 frames"],
+    "d2f_0011_ref": ["BAD", "EdgeTransition", "dark edge-map"],
+    "d2f_0012_ref": ["BAD", "fadecolor", "saturated green domination"],
+    "d2f_0013_ref": ["OK", "ColourDistance", ""],
+    "d2f_0014_ref": ["OK", "LinearBlur", ""],
+    "d2f_0015_ref": ["MARGINAL", "FilmBurn", "light-leak flash"]
+  },
+  "rates": {
+    "baseline_to_beat": 0.175,
+    "targets_n": 32, "targets_BAD": 8, "targets_bad_rate": 0.250,
+    "targets_BAD_or_MARGINAL": 12, "targets_bad_or_marginal_rate": 0.375,
+    "refs_examined_n": 16, "refs_BAD": 7, "refs_bad_rate": 0.438,
+    "all_examined_n": 48, "all_BAD": 15, "all_bad_rate": 0.313,
+    "offender_targets_n": 13, "offender_targets_BAD": 5, "offender_bad_rate": 0.385,
+    "non_offender_targets_n": 19, "non_offender_targets_BAD": 3, "non_offender_bad_rate": 0.158,
+    "projected_uniform_allocation_bad_rate": 0.167,
+    "projection_formula": "0.0417 * 0.385 + 0.9583 * 0.158 = 0.167"
+  },
+  "verdict": "FAIL — pre-committed check not met. Raw chunk 25.0% BAD (targets) vs the 17.5% baseline; and critically the NON-OFFENDER subset alone is 15.8% and the uniform-allocation projection is 16.7% — i.e. essentially AT the baseline, not 'clearly below' and nowhere near single digits. The oversampling confound does NOT rescue it. Array 9659414 KILLED (with its dependent encode/assemble/audit chain) per the pre-committed rule.",
+  "diagnosis_the_clamp_caps_are_the_WRONG_SIGN_for_the_two_worst_offenders": {
+    "mechanism": "For a default d, rule 2 takes [0.5d, 2d] INTERSECT |v| <= 3.0. For EdgeTransition.edge_brightness (d = 8.0) that is [4,16] & <=3 = EMPTY, and for ColourDistance.power (d = 5.0) it is [2.5,10] & <=3 = {3.0}. The absolute cap therefore wins for 100% of draws INCLUDING the canonical default, collapsing both parameters to the constant 3.0 and DELETING their healthy range rather than trimming the tail.",
+    "EdgeTransition": "edge_brightness 8.0 -> 3.0 always. LOWER brightness = DIMMER edge map = the near-black frames. Observed 4/4 target draws and 4/4 reference draws BAD-or-MARGINAL. The clamp converted 'occasionally blown at 20.3' into 'consistently dark at 3.0'. Brightness needs a FLOOR, not a ceiling.",
+    "ColourDistance": "power 5.0 -> 3.0 always. LOWER power widens the colour-distance region = WHITE blowout (refs 0002, 0010). Same wrong direction.",
+    "measured_clamp_efficacy_note": "First-attempt gate pass was slightly HIGHER for clamped draws (0.885) than unclamped (0.836), so the clamp is not hurting the metric gate — the failures it leaves are exactly the ones M1/M2/seam cannot see."
+  },
+  "clamp_gaps_found": {
+    "abbreviated_names_bypass_the_classifier": "dissolve.uPow = 12.9992 was NOT clamped: 'uPow' does not contain 'power'. dissolve.uSpreadClr = [2.6137, 0.2273, 0.9565] and dissolve.uHotClr were NOT clamped: 'Clr' does not contain 'color'/'colour', and the fallback 'any 3-vector in [0,1]' rule cannot fire because 2.6137 > 1. Result: the single worst non-offender clip in the chunk.",
+    "luma_admits_saturated_colour": "luma = 0.2126R+0.7152G+0.0722B in [0.15,0.85] constrains BRIGHTNESS, not chroma. Pure green [0.048,0.919,0.127] has luma 0.67 and is admitted, then dominates 4 frames. The originally flagged fadecolor value [0.40,0.36,0.25] has luma 0.36 and was ALREADY legal, so rule 3 never addressed the reported example.",
+    "untouched_failure_class": "white blowout / blank frame from geometry-or-speed params (SimpleZoom.zoom_quickness, TilesWave.tileCount) is not a power/colour/relative-tail problem and no clamp rule addresses it. The non-gating m1_min_flag did catch SimpleZoom (m1_min = -0.240)."
+  },
+  "what_was_NOT_done": "No clamp iteration (explicitly forbidden without a ruling). param_clamp.py is unchanged from the ruled specification."
+}

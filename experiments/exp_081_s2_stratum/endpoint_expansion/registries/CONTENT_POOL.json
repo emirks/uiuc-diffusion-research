@@ -1,0 +1,2686 @@
+{
+ "created": "2026-07-25",
+ "with_v2": true,
+ "authority": "fable-advisor: 207/20 split (medoid revision) + Gates A/B + trim ruling",
+ "n_training": 291,
+ "n_reserved": 20,
+ "embeddings": "data/processed/ctt_v2_strata/content_pool_emb.npy (L2-normalised, row-aligned to `ids`; v1 and v2 share CLIP weights)",
+ "ids": [
+  "davis_bear",
+  "davis_blackswan",
+  "davis_breakdance",
+  "davis_breakdance-flare",
+  "davis_car-roundabout",
+  "davis_color-run",
+  "davis_dance-jump",
+  "davis_dancing",
+  "davis_dog",
+  "davis_dog-agility",
+  "davis_dogs-scale",
+  "davis_drift-straight",
+  "davis_drone",
+  "davis_elephant",
+  "davis_gold-fish",
+  "davis_hockey",
+  "davis_horsejump-high",
+  "davis_horsejump-low",
+  "davis_india",
+  "davis_judo",
+  "davis_lab-coat",
+  "davis_lady-running",
+  "davis_lindy-hop",
+  "davis_longboard",
+  "davis_mbike-trick",
+  "davis_motocross-bumps",
+  "davis_pigs",
+  "davis_rhino",
+  "davis_scooter-board",
+  "davis_scooter-gray",
+  "davis_snowboard",
+  "davis_tuk-tuk",
+  "davis_upside-down",
+  "davis_walking",
+  "openvid_RiIBIb3oOXE_0_0to132",
+  "openvid_RjQG9PQv9UM_10_41to241",
+  "openvid_Rk9t33GCIzc_44_210to435",
+  "openvid_RlN2dYjH4_E_3_0to160",
+  "openvid_Ro1AoyxWoPw_6_0to143",
+  "openvid_RquUFnOoNRk_17_0to110",
+  "openvid_RsC5X2XNAsA_5_0to140",
+  "openvid_RteVGSC8NM0_23_0to213",
+  "openvid_Rv5tq_kWjRE_23_0to288",
+  "openvid_Rw9WH5BKixs_4_0to143",
+  "openvid_Rwpt27yp6Kw_128_0to433",
+  "openvid_Ry-JeKr-i2M_56_33to175",
+  "openvid_RyIAB768Aps_19_0to312",
+  "openvid_RzR0x2J5sPA_7_1368to1499",
+  "openvid_S-40Fl6-sjM_21_26to326",
+  "openvid_S-eyEO9SmLs_3_0to210",
+  "openvid_S16RaKALjBU_6_0to138",
+  "openvid_S1UccL7QJ2M_12_99to481",
+  "openvid_S2-_gqfeNr0_10_0to149",
+  "openvid_S5NWrCQTqGQ_11_46to158",
+  "openvid_Sx1j62NLO90_62_0to161",
+  "openvid_SxtYrpF_IIc_52_0to164",
+  "openvid_SyGOidmxV_E_4_0to163",
+  "openvid_SzPp0ZStWmw_18_28to169",
+  "openvid_T1MiFx98l3g_0_50to156",
+  "openvid_T1abfWEVB4U_22_28to178",
+  "openvid_T28nWl-iFMs_8_0to112",
+  "openvid_T2SqbSwD9Gc_2_38to236",
+  "openvid_T2ibrpDJCVE_17_0to132",
+  "openvid_T3NNiOsFLEw_12_21to157",
+  "openvid_T4RelfB1P2A_14_45to200",
+  "openvid_T4xqFDJf7yM_2_76to186",
+  "openvid_T5TFAfYFYtY_8_0to280",
+  "openvid_T5ZCFynSomc_29_0to139",
+  "openvid_T5tpjPBh7i0_52_1036to1439",
+  "openvid_T6_3EpSQabI_3_0to105",
+  "openvid_T8ehDbQPv8w_4_0to163",
+  "openvid_TAdLodBHfic_8_86to296",
+  "openvid_TBdzmFv1FYA_23_24to263",
+  "openvid_TDJ2UHVvjs8_2_0to272",
+  "openvid_TFG-PvdqCjc_0_0to109",
+  "openvid_TFuu_fo666M_4_21to467",
+  "openvid_TGlDRBUxYco_44_0to215",
+  "openvid_TI78Alt9t5k_19_91to227",
+  "openvid_UAR9cccDKSI_16_0to208",
+  "openvid_UDnz0wssWS8_42_224to359",
+  "openvid_UF3wryUet1I_26_850to959",
+  "openvid_UFcwt85ItmU_14_24to225",
+  "openvid_UJAjbb0TxnE_15_0to101",
+  "openvid_UJXvTniMr30_74_0to194",
+  "openvid_UK2ZezePO3I_10_0to103",
+  "openvid_UNwic_uRJi4_35_0to454",
+  "openvid_UOSszsmjeX4_12_0to188",
+  "openvid_UPqDLG4xYHM_2_352to524",
+  "openvid_UQyA-uwH6ac_23_0to109",
+  "openvid_URLAedhIKbk_2_0to415",
+  "openvid_UT4hPMISonI_134_0to137",
+  "openvid_UUUWxvofLgU_13_19to453",
+  "openvid_X0MzqDj4FF4_7_0to151",
+  "openvid_X2WTwrFf2Q4_5_0to239",
+  "openvid_X2t4l_yMStE_4_0to207",
+  "openvid_X3APUuLOug4_20_126to270",
+  "openvid_X48k4yb63EM_15_0to111",
+  "openvid_X6Ec-hZaToA_65_96to232",
+  "openvid_XA2HBBrkUbU_109_0to173",
+  "openvid_XCeTSc6ZopA_48_0to174",
+  "openvid_XEPyFpamcfs_25_183to461",
+  "openvid_XFSw6t7SP00_79_0to109",
+  "openvid_XH0x7vyYmG4_16_0to124",
+  "openvid_XHZmNU-De3A_62_0to504",
+  "openvid_XK45bsIkpcU_16_0to206",
+  "openvid_XL0_8pw0lmI_30_0to122",
+  "openvid_XM9K4luhq4U_8_0to127",
+  "openvid_XMr5MkOHB5o_2_59to276",
+  "openvid__dfchD7LsY8_219_47to173",
+  "openvid__gXX8lnPIFc_1_16to205",
+  "openvid__hKvS8p3JCM_17_0to102",
+  "openvid__i1gxHY_Av0_28_40to294",
+  "openvid__iASX0-T3CU_13_0to122",
+  "openvid__iOqcqt0miE_0_85to379",
+  "openvid__jHeXEJseBk_1_22to131",
+  "openvid__kdeY0SSvEc_0_0to153",
+  "openvid__mXW7-0ebK0_14_0to281",
+  "openvid__nLdQ5vZP5c_6_0to148",
+  "openvid__nVSNv9UvCs_67_27to131",
+  "openvid__oJxPqTzmHM_33_0to162",
+  "openvid__oppseM4TZU_0_0to176",
+  "openvid__p707YmBNVY_22_77to201",
+  "openvid__pLynjCmxQ4_10_22to202",
+  "openvid__pWnn1ODmiY_6_0to270",
+  "openvid__qNWfoRp3Gg_30_552to717",
+  "openvid__sioC44NGRw_104_540to1020",
+  "openvid__t-96LgcizU_7_0to191",
+  "openvid__teMxcOcVyw_195_0to119",
+  "openvid__vGh-6Ms-io_26_19to219",
+  "openvid__wHxwgtdMsA_17_109to460",
+  "openvid__waJ6mAouN0_32_77to252",
+  "openvid__yaAkh4ICDk_44_0to119",
+  "vcbench_animal_3195531_3840x2160",
+  "vcbench_bus_2950082_3840x2160",
+  "vcbench_butterfly_2616637_1920x1080",
+  "vcbench_car_2878091_3840x2160",
+  "vcbench_car_3066451_4096x2160",
+  "vcbench_chicken_856986_1920x1080",
+  "vcbench_conversation_3206301_1920x1080",
+  "vcbench_conversation_4434067_3840x2160",
+  "vcbench_dancing_3044573_2160x3840",
+  "vcbench_dancing_3761544_3840x2160",
+  "vcbench_dancing_4540332_3840x2160",
+  "vcbench_destination_33713788_3840x2160",
+  "vcbench_education_3676988_4096x2160",
+  "vcbench_education_4498287_3840x2160",
+  "vcbench_education_4498914_3840x2160",
+  "vcbench_football_4612890_4096x2160",
+  "vcbench_holiday_3197574_1920x1080",
+  "vcbench_horse_3191807_3840x2160",
+  "vcbench_lunch_8775226_2160x3840",
+  "vcbench_meeting_3202040_1920x1080",
+  "vcbench_meeting_3251811_3840x2160",
+  "vcbench_meeting_3252919_3840x2160",
+  "vcbench_meeting_3254009_3840x2160",
+  "vcbench_meeting_3255226_3840x2160",
+  "vcbench_meeting_4428751_3840x2160",
+  "vcbench_meeting_4428753_3840x2160",
+  "vcbench_office_3191422_4096x2160",
+  "vcbench_office_3192306_3840x2160",
+  "vcbench_office_3196062_3840x2160",
+  "vcbench_office_3201691_1920x1080",
+  "vcbench_office_3255156_3840x2160",
+  "vcbench_painting_3795837_4096x2160",
+  "vcbench_reading_3959544_2160x4096",
+  "vcbench_reading_4034078_2160x4096",
+  "vcbench_reading_4058252_2160x4096",
+  "vcbench_reading_4626373_2160x4096",
+  "vcbench_robot_8501993_2160x3840",
+  "vcbench_salad_3760747_3840x2160",
+  "vcbench_school_5199623_3840x2160",
+  "vcbench_school_5199627_3840x2160",
+  "vcbench_school_5200358_3840x2160",
+  "vcbench_sculpture_33742628_2160x3840",
+  "vcbench_talk_4298771_3840x2160",
+  "vcbench_talk_4426529_3840x2160",
+  "vcbench_talk_4625286_1920x1080",
+  "vcbench_talk_4625294_1920x1080",
+  "vcbench_talk_4625322_1920x1080",
+  "vcbench_talk_4781559_4096x2160",
+  "vcbench_teacher_3252126_3840x2160",
+  "vcbench_teacher_6333712_4096x2160",
+  "vcbench_teacher_6334253_4096x2160",
+  "vcbench_teacher_8160567_2160x3840",
+  "vcbench_teenager_4100460_4096x2160",
+  "vcbench_turtle_17823784_2160x3840",
+  "vcbench_turtle_5259430_2160x4096",
+  "vcbench_teacher_5184440_1080x1920",
+  "vcbench_talk_3254197_3840x2160",
+  "vcbench_teacher_33674801_2160x3840",
+  "vcbench_animal_3191251_4096x2160",
+  "vcbench_boat_7318821_1080x1920",
+  "vcbench_painting_3960177_4096x2160",
+  "vcbench_chicken_4911805_4096x2160",
+  "vcbench_meeting_3256571_2160x3840",
+  "vcbench_school_8499667_1920x1080",
+  "vcbench_teacher_11025559_4096x2160",
+  "vcbench_phone_3044315_3840x2160",
+  "vcbench_butterfly_854867_3840x2160",
+  "vcbench_sculpture_3713530_2160x4096",
+  "vcbench_robot_8764794_2160x3840",
+  "vcbench_office_3249902_3840x2160",
+  "vcbench_turtle_5264397_2160x4096",
+  "vcbench_office_3254006_3840x2160",
+  "vcbench_action_5977023_3840x2160",
+  "vcbench_teenager_4297124_3840x2160",
+  "vcbench_lunch_6958036_2160x4096",
+  "vcbench_talk_3141320_3840x2160",
+  "vcbench_tulip_10536489_4096x2160",
+  "vcbench_talk_3044906_3840x2160",
+  "vcbench_mirror_4010342_4096x2160",
+  "vcbench_salad_7987310_2160x3840",
+  "vcbench_lunch_3256817_2160x3840",
+  "vcbench_action_5310858_3840x2160",
+  "vcbench_education_4498849_3840x2160",
+  "vcbench_animal_9116154_1080x1920",
+  "vcbench_photography_3894706_2160x4096",
+  "vcbench_teenager_4316825_3840x2160",
+  "vcbench_tulip_7268820_4096x2160",
+  "vcbench_talk_3255327_3840x2160",
+  "vcbench_meal_8164105_2160x4096",
+  "vcbench_tulip_7661799_4096x2160",
+  "vcbench_horse_7673265_2160x3840",
+  "vcbench_animal_2430774_3840x2160",
+  "vcbench_animal_2122952_1920x1080",
+  "vcbench_bicycle_4047863_1920x1080",
+  "vcbench_turtle_7722335_1920x1080",
+  "vcbench_conversation_3045059_3840x2160",
+  "vcbench_sculpture_3796264_4096x2160",
+  "vcbench_painting_3795656_2160x4096",
+  "vcbench_school_5184436_1080x1920",
+  "vcbench_vegetable_7781752_1920x1080",
+  "vcbench_teenager_2251680_3840x2160",
+  "vcbench_dancing_3713455_2160x4096",
+  "vcbench_education_4769586_1920x1080",
+  "vcbench_sculpture_3959723_4096x2160",
+  "vcbench_animal_855269_1280x720",
+  "vcbench_horse_8921164_1080x1920",
+  "vcbench_mirror_4155070_4096x2160",
+  "vcbench_photography_2795401_2160x3840",
+  "vcbench_book_4034130_2160x4096",
+  "vcbench_meal_3944327_2160x4096",
+  "vcbench_golf_6541965_2560x1440",
+  "vcbench_sculpture_3978822_1920x1080",
+  "vcbench_architecture_2828876_1080x1920",
+  "vcbench_bus_4012939_1080x1920",
+  "vcbench_animal_3263581_1080x1920",
+  "vcbench_conversation_4099020_4096x2160",
+  "vcbench_airplane_4241638_1920x1080",
+  "vcbench_meal_5607788_2160x3840",
+  "vcbench_talk_3256821_2160x3840",
+  "vcbench_conversation_4326529_3840x2160",
+  "vcbench_sculpture_7574279_1920x1080",
+  "vcbench_vegetable_8295310_2160x3840",
+  "vcbench_mirror_3181791_3840x2160",
+  "vcbench_painting_4460545_1080x1830",
+  "vcbench_butterfly_6222448_1080x1920",
+  "vcbench_phone_3115593_3840x2160",
+  "vcbench_painting_3805736_2160x4096",
+  "vcbench_coast_33754706_2160x3840",
+  "vcbench_football_10349005_4096x2160",
+  "vcbench_butterfly_854300_1920x1080",
+  "vcbench_robot_7651117_1920x1080",
+  "vcbench_chicken_4911812_4096x2160",
+  "vcbench_salad_4884030_1080x1920",
+  "vcbench_teacher_5182810_1920x1080",
+  "vcbench_dancing_2795737_3840x2160",
+  "vcbench_chicken_4911803_2160x4096",
+  "vcbench_library_8086641_2160x4096",
+  "vcbench_robot_8327799_3840x2160",
+  "vcbench_vegetable_3943416_2160x4096",
+  "vcbench_mirror_4154237_4096x2160",
+  "vcbench_conversation_3045082_3840x2160",
+  "vcbench_phone_3044805_3840x2160",
+  "vcbench_library_4860943_4096x2160",
+  "vcbench_photography_3917513_4096x2160",
+  "vcbench_meeting_3044910_3840x2160",
+  "vcbench_animal_2967998_1920x1080",
+  "vcbench_mirror_3181792_3840x2160",
+  "vcbench_mirror_3886383_4096x2160",
+  "vcbench_talk_3045075_3840x2160",
+  "vcbench_sunset_1686791_1080x1920",
+  "vcbench_bicycle_1149572_1920x1080",
+  "vcbench_reading_4153582_2160x4096",
+  "vcbench_action_2791956_2160x3840",
+  "vcbench_teacher_5184437_1080x1920",
+  "vcbench_horse_8064259_1920x1080",
+  "vcbench_phone_2402368_1920x1080",
+  "vcbench_music_4088836_1920x1080",
+  "vcbench_reading_853947_1920x1080",
+  "vcbench_phone_3692634_1920x1080",
+  "davis_bus",
+  "davis_cows",
+  "davis_dance-twirl",
+  "davis_swing",
+  "openvid_Rif_AG6RfMs_0_0to430",
+  "openvid_S3Q4wOtl2tY_7_0to251",
+  "openvid_UHnAVb0IjB4_1_0to108",
+  "openvid_URfe5yquyJw_10_0to248",
+  "openvid_UTxt7WlPTuY_10_17to319",
+  "openvid__pRREeqmqMs_5_0to286",
+  "openvid__sRboZAx_zk_41_0to136",
+  "openvid__uJLNGVICts_19_0to113",
+  "openvid__y0W5Nty9Z8_91_51to188",
+  "openvid__zDAVM7zEQ8_20_0to123",
+  "vcbench_conversation_3248276_3840x2160",
+  "vcbench_mirror_3197657_1080x1920",
+  "vcbench_salad_7572244_2160x3840",
+  "vcbench_teacher_8542217_2160x4096",
+  "vcbench_teenager_4100358_4096x2160",
+  "vcbench_vegetable_853790_1920x1080"
+ ],
+ "gates": {
+  "before_trim": {
+   "gate_a_mean_cos": 0.5085,
+   "gate_a_bar": 0.52,
+   "gate_a_pass": true,
+   "gate_b_matched_pr": 41.81,
+   "gate_b_bar": 42.82,
+   "gate_b_match_n": 187,
+   "gate_b_pass": false,
+   "pass": false,
+   "participation_ratio_raw": 45.84
+  },
+  "after_trim": {
+   "gate_a_mean_cos": 0.5008,
+   "gate_a_bar": 0.52,
+   "gate_a_pass": true,
+   "gate_b_matched_pr": 42.83,
+   "gate_b_bar": 42.82,
+   "gate_b_match_n": 187,
+   "gate_b_pass": true,
+   "pass": true,
+   "participation_ratio_raw": 46.63
+  },
+  "definition": {
+   "A": "mean pairwise CLIP cos over training <= 0.52",
+   "B": "mean PR over 300 random n=187 subsets >= 42.82 (= clean-pool PR - 1.15; size-matched => n-invariant)"
+  }
+ },
+ "letterbox_excluded": [
+  "davis_night-race",
+  "openvid_S2dYU99K53s_332_0to334",
+  "openvid_SywOj6EpkOc_131_0to116",
+  "openvid_T7mJstoEp1g_2_1005to1261",
+  "openvid_T9NZ4Sa-7qQ_11_0to720",
+  "openvid_TAMTRf1piJo_404_0to119",
+  "openvid_TBApWe8MIhI_86_35to141",
+  "openvid_TGDmTsO0888_3_0to163",
+  "openvid_X3pL1dkTHIA_23_0to132",
+  "openvid_X7kz4uMXFlE_9_0to114",
+  "openvid_XAJQzGmd5mg_26_881to1213",
+  "openvid_XAehIzy5FMg_41_0to132",
+  "openvid__j0oiJmEhys_6_0to370",
+  "openvid__jsLK0fmZwk_26_0to209",
+  "openvid__lRwXDpllT8_3_343to487",
+  "openvid__lzhshmH3os_25_0to198",
+  "openvid__qbsmhHO950_5_121to392",
+  "openvid__uhw0DC-moA_23_0to118",
+  "vcbench_book_4034077_2160x4096",
+  "vcbench_teenager_7269643_3840x2160"
+ ],
+ "trim_log": [
+  {
+   "clip_id": "vcbench_meeting_3252063_3840x2160",
+   "mean_cos_to_pool": 0.6167,
+   "gate_a": 0.5085,
+   "gate_b": 41.81
+  },
+  {
+   "clip_id": "vcbench_talk_3251897_3840x2160",
+   "mean_cos_to_pool": 0.6156,
+   "gate_a": 0.5077,
+   "gate_b": 41.81
+  },
+  {
+   "clip_id": "vcbench_phone_3252989_3840x2160",
+   "mean_cos_to_pool": 0.6082,
+   "gate_a": 0.507,
+   "gate_b": 41.85
+  },
+  {
+   "clip_id": "vcbench_conversation_3045052_3840x2160",
+   "mean_cos_to_pool": 0.6066,
+   "gate_a": 0.5063,
+   "gate_b": 41.87
+  },
+  {
+   "clip_id": "vcbench_teacher_6985519_3840x2160",
+   "mean_cos_to_pool": 0.6054,
+   "gate_a": 0.5057,
+   "gate_b": 42.02
+  },
+  {
+   "clip_id": "vcbench_meeting_3255273_3840x2160",
+   "mean_cos_to_pool": 0.6035,
+   "gate_a": 0.505,
+   "gate_b": 42.22
+  },
+  {
+   "clip_id": "vcbench_talk_4828608_4096x2160",
+   "mean_cos_to_pool": 0.5958,
+   "gate_a": 0.5043,
+   "gate_b": 42.2
+  },
+  {
+   "clip_id": "vcbench_office_853878_1920x1080",
+   "mean_cos_to_pool": 0.5891,
+   "gate_a": 0.5037,
+   "gate_b": 42.27
+  },
+  {
+   "clip_id": "vcbench_talk_4146196_3840x2160",
+   "mean_cos_to_pool": 0.5882,
+   "gate_a": 0.5031,
+   "gate_b": 42.3
+  },
+  {
+   "clip_id": "vcbench_school_4769542_4096x2160",
+   "mean_cos_to_pool": 0.5874,
+   "gate_a": 0.5025,
+   "gate_b": 42.39
+  },
+  {
+   "clip_id": "vcbench_library_4860895_4096x2160",
+   "mean_cos_to_pool": 0.5868,
+   "gate_a": 0.502,
+   "gate_b": 42.43
+  },
+  {
+   "clip_id": "vcbench_teacher_5200351_3840x2160",
+   "mean_cos_to_pool": 0.5857,
+   "gate_a": 0.5014,
+   "gate_b": 42.69
+  }
+ ],
+ "diagnostics_non_gating": {
+  "n_training_v1": 187,
+  "n_training_v2": 104,
+  "new_cohort_internal_mean_cos": 0.5655,
+  "vcbench63_internal_mean_cos_reference": 0.5869,
+  "training_per_source": {
+   "davis": 34,
+   "openvid": 98,
+   "vcbench": 55,
+   "vcbench_v2": 104
+  }
+ },
+ "near_dup_pairs_pinned_to_training": [
+  [
+   "davis_horsejump-high",
+   "davis_horsejump-low",
+   0.9105
+  ],
+  [
+   "vcbench_conversation_4434067_3840x2160",
+   "vcbench_meeting_4428753_3840x2160",
+   0.9076
+  ],
+  [
+   "vcbench_conversation_4434067_3840x2160",
+   "vcbench_office_3196062_3840x2160",
+   0.9005
+  ],
+  [
+   "vcbench_conversation_4434067_3840x2160",
+   "vcbench_talk_4426529_3840x2160",
+   0.9111
+  ],
+  [
+   "vcbench_meeting_3252919_3840x2160",
+   "vcbench_office_3192306_3840x2160",
+   0.9034
+  ],
+  [
+   "vcbench_meeting_3252919_3840x2160",
+   "vcbench_office_3196062_3840x2160",
+   0.9014
+  ],
+  [
+   "vcbench_meeting_4428751_3840x2160",
+   "vcbench_meeting_4428753_3840x2160",
+   0.9187
+  ],
+  [
+   "vcbench_talk_4625286_1920x1080",
+   "vcbench_talk_4625294_1920x1080",
+   0.9529
+  ],
+  [
+   "vcbench_teacher_6333712_4096x2160",
+   "vcbench_teacher_6334253_4096x2160",
+   0.9082
+  ]
+ ],
+ "participation_ratio_pass": true,
+ "training": [
+  {
+   "clip_id": "davis_bear",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_bear.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_blackswan",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_blackswan.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_breakdance",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_breakdance.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_breakdance-flare",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_breakdance-flare.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_car-roundabout",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_car-roundabout.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_color-run",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_color-run.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_dance-jump",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_dance-jump.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_dancing",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_dancing.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_dog",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_dog.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_dog-agility",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_dog-agility.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_dogs-scale",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_dogs-scale.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_drift-straight",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_drift-straight.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_drone",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_drone.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_elephant",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_elephant.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_gold-fish",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_gold-fish.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_hockey",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_hockey.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_horsejump-high",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_horsejump-high.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_horsejump-low",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_horsejump-low.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_india",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_india.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_judo",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_judo.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_lab-coat",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_lab-coat.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_lady-running",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_lady-running.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_lindy-hop",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_lindy-hop.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_longboard",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_longboard.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_mbike-trick",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_mbike-trick.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_motocross-bumps",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_motocross-bumps.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_pigs",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_pigs.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_rhino",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_rhino.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_scooter-board",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_scooter-board.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_scooter-gray",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_scooter-gray.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_snowboard",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_snowboard.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_tuk-tuk",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_tuk-tuk.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_upside-down",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_upside-down.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_walking",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_walking.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "openvid_RiIBIb3oOXE_0_0to132",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_RiIBIb3oOXE_0_0to132.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_RjQG9PQv9UM_10_41to241",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_RjQG9PQv9UM_10_41to241.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_Rk9t33GCIzc_44_210to435",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_Rk9t33GCIzc_44_210to435.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_RlN2dYjH4_E_3_0to160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_RlN2dYjH4_E_3_0to160.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_Ro1AoyxWoPw_6_0to143",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_Ro1AoyxWoPw_6_0to143.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_RquUFnOoNRk_17_0to110",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_RquUFnOoNRk_17_0to110.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_RsC5X2XNAsA_5_0to140",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_RsC5X2XNAsA_5_0to140.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_RteVGSC8NM0_23_0to213",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_RteVGSC8NM0_23_0to213.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_Rv5tq_kWjRE_23_0to288",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_Rv5tq_kWjRE_23_0to288.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_Rw9WH5BKixs_4_0to143",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_Rw9WH5BKixs_4_0to143.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_Rwpt27yp6Kw_128_0to433",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_Rwpt27yp6Kw_128_0to433.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_Ry-JeKr-i2M_56_33to175",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_Ry-JeKr-i2M_56_33to175.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_RyIAB768Aps_19_0to312",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_RyIAB768Aps_19_0to312.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_RzR0x2J5sPA_7_1368to1499",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_RzR0x2J5sPA_7_1368to1499.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_S-40Fl6-sjM_21_26to326",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_S-40Fl6-sjM_21_26to326.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_S-eyEO9SmLs_3_0to210",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_S-eyEO9SmLs_3_0to210.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_S16RaKALjBU_6_0to138",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_S16RaKALjBU_6_0to138.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_S1UccL7QJ2M_12_99to481",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_S1UccL7QJ2M_12_99to481.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_S2-_gqfeNr0_10_0to149",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_S2-_gqfeNr0_10_0to149.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_S5NWrCQTqGQ_11_46to158",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_S5NWrCQTqGQ_11_46to158.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_Sx1j62NLO90_62_0to161",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_Sx1j62NLO90_62_0to161.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_SxtYrpF_IIc_52_0to164",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_SxtYrpF_IIc_52_0to164.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_SyGOidmxV_E_4_0to163",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_SyGOidmxV_E_4_0to163.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_SzPp0ZStWmw_18_28to169",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_SzPp0ZStWmw_18_28to169.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_T1MiFx98l3g_0_50to156",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_T1MiFx98l3g_0_50to156.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_T1abfWEVB4U_22_28to178",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_T1abfWEVB4U_22_28to178.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_T28nWl-iFMs_8_0to112",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_T28nWl-iFMs_8_0to112.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_T2SqbSwD9Gc_2_38to236",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_T2SqbSwD9Gc_2_38to236.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_T2ibrpDJCVE_17_0to132",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_T2ibrpDJCVE_17_0to132.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_T3NNiOsFLEw_12_21to157",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_T3NNiOsFLEw_12_21to157.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_T4RelfB1P2A_14_45to200",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_T4RelfB1P2A_14_45to200.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_T4xqFDJf7yM_2_76to186",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_T4xqFDJf7yM_2_76to186.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_T5TFAfYFYtY_8_0to280",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_T5TFAfYFYtY_8_0to280.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_T5ZCFynSomc_29_0to139",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_T5ZCFynSomc_29_0to139.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_T5tpjPBh7i0_52_1036to1439",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_T5tpjPBh7i0_52_1036to1439.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_T6_3EpSQabI_3_0to105",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_T6_3EpSQabI_3_0to105.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_T8ehDbQPv8w_4_0to163",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_T8ehDbQPv8w_4_0to163.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_TAdLodBHfic_8_86to296",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_TAdLodBHfic_8_86to296.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_TBdzmFv1FYA_23_24to263",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_TBdzmFv1FYA_23_24to263.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_TDJ2UHVvjs8_2_0to272",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_TDJ2UHVvjs8_2_0to272.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_TFG-PvdqCjc_0_0to109",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_TFG-PvdqCjc_0_0to109.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_TFuu_fo666M_4_21to467",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_TFuu_fo666M_4_21to467.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_TGlDRBUxYco_44_0to215",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_TGlDRBUxYco_44_0to215.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_TI78Alt9t5k_19_91to227",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_TI78Alt9t5k_19_91to227.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_UAR9cccDKSI_16_0to208",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_UAR9cccDKSI_16_0to208.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_UDnz0wssWS8_42_224to359",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_UDnz0wssWS8_42_224to359.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_UF3wryUet1I_26_850to959",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_UF3wryUet1I_26_850to959.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_UFcwt85ItmU_14_24to225",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_UFcwt85ItmU_14_24to225.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_UJAjbb0TxnE_15_0to101",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_UJAjbb0TxnE_15_0to101.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_UJXvTniMr30_74_0to194",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_UJXvTniMr30_74_0to194.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_UK2ZezePO3I_10_0to103",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_UK2ZezePO3I_10_0to103.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_UNwic_uRJi4_35_0to454",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_UNwic_uRJi4_35_0to454.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_UOSszsmjeX4_12_0to188",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_UOSszsmjeX4_12_0to188.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_UPqDLG4xYHM_2_352to524",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_UPqDLG4xYHM_2_352to524.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_UQyA-uwH6ac_23_0to109",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_UQyA-uwH6ac_23_0to109.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_URLAedhIKbk_2_0to415",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_URLAedhIKbk_2_0to415.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_UT4hPMISonI_134_0to137",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_UT4hPMISonI_134_0to137.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_UUUWxvofLgU_13_19to453",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_UUUWxvofLgU_13_19to453.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_X0MzqDj4FF4_7_0to151",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_X0MzqDj4FF4_7_0to151.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_X2WTwrFf2Q4_5_0to239",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_X2WTwrFf2Q4_5_0to239.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_X2t4l_yMStE_4_0to207",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_X2t4l_yMStE_4_0to207.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_X3APUuLOug4_20_126to270",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_X3APUuLOug4_20_126to270.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_X48k4yb63EM_15_0to111",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_X48k4yb63EM_15_0to111.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_X6Ec-hZaToA_65_96to232",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_X6Ec-hZaToA_65_96to232.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_XA2HBBrkUbU_109_0to173",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_XA2HBBrkUbU_109_0to173.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_XCeTSc6ZopA_48_0to174",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_XCeTSc6ZopA_48_0to174.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_XEPyFpamcfs_25_183to461",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_XEPyFpamcfs_25_183to461.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_XFSw6t7SP00_79_0to109",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_XFSw6t7SP00_79_0to109.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_XH0x7vyYmG4_16_0to124",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_XH0x7vyYmG4_16_0to124.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_XHZmNU-De3A_62_0to504",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_XHZmNU-De3A_62_0to504.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_XK45bsIkpcU_16_0to206",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_XK45bsIkpcU_16_0to206.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_XL0_8pw0lmI_30_0to122",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_XL0_8pw0lmI_30_0to122.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_XM9K4luhq4U_8_0to127",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_XM9K4luhq4U_8_0to127.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_XMr5MkOHB5o_2_59to276",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_XMr5MkOHB5o_2_59to276.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__dfchD7LsY8_219_47to173",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__dfchD7LsY8_219_47to173.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__gXX8lnPIFc_1_16to205",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__gXX8lnPIFc_1_16to205.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__hKvS8p3JCM_17_0to102",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__hKvS8p3JCM_17_0to102.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__i1gxHY_Av0_28_40to294",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__i1gxHY_Av0_28_40to294.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__iASX0-T3CU_13_0to122",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__iASX0-T3CU_13_0to122.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__iOqcqt0miE_0_85to379",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__iOqcqt0miE_0_85to379.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__jHeXEJseBk_1_22to131",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__jHeXEJseBk_1_22to131.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__kdeY0SSvEc_0_0to153",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__kdeY0SSvEc_0_0to153.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__mXW7-0ebK0_14_0to281",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__mXW7-0ebK0_14_0to281.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__nLdQ5vZP5c_6_0to148",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__nLdQ5vZP5c_6_0to148.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__nVSNv9UvCs_67_27to131",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__nVSNv9UvCs_67_27to131.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__oJxPqTzmHM_33_0to162",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__oJxPqTzmHM_33_0to162.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__oppseM4TZU_0_0to176",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__oppseM4TZU_0_0to176.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__p707YmBNVY_22_77to201",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__p707YmBNVY_22_77to201.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__pLynjCmxQ4_10_22to202",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__pLynjCmxQ4_10_22to202.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__pWnn1ODmiY_6_0to270",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__pWnn1ODmiY_6_0to270.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__qNWfoRp3Gg_30_552to717",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__qNWfoRp3Gg_30_552to717.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__sioC44NGRw_104_540to1020",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__sioC44NGRw_104_540to1020.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__t-96LgcizU_7_0to191",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__t-96LgcizU_7_0to191.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__teMxcOcVyw_195_0to119",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__teMxcOcVyw_195_0to119.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__vGh-6Ms-io_26_19to219",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__vGh-6Ms-io_26_19to219.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__wHxwgtdMsA_17_109to460",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__wHxwgtdMsA_17_109to460.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__waJ6mAouN0_32_77to252",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__waJ6mAouN0_32_77to252.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__yaAkh4ICDk_44_0to119",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__yaAkh4ICDk_44_0to119.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "vcbench_animal_3195531_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_animal_3195531_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_bus_2950082_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_bus_2950082_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_butterfly_2616637_1920x1080",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_butterfly_2616637_1920x1080.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_car_2878091_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_car_2878091_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_car_3066451_4096x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_car_3066451_4096x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_chicken_856986_1920x1080",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_chicken_856986_1920x1080.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_conversation_3206301_1920x1080",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_conversation_3206301_1920x1080.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_conversation_4434067_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_conversation_4434067_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_dancing_3044573_2160x3840",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_dancing_3044573_2160x3840.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_dancing_3761544_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_dancing_3761544_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_dancing_4540332_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_dancing_4540332_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_destination_33713788_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_destination_33713788_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_education_3676988_4096x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_education_3676988_4096x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_education_4498287_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_education_4498287_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_education_4498914_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_education_4498914_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_football_4612890_4096x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_football_4612890_4096x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_holiday_3197574_1920x1080",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_holiday_3197574_1920x1080.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_horse_3191807_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_horse_3191807_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_lunch_8775226_2160x3840",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_lunch_8775226_2160x3840.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_meeting_3202040_1920x1080",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_meeting_3202040_1920x1080.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_meeting_3251811_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_meeting_3251811_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_meeting_3252919_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_meeting_3252919_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_meeting_3254009_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_meeting_3254009_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_meeting_3255226_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_meeting_3255226_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_meeting_4428751_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_meeting_4428751_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_meeting_4428753_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_meeting_4428753_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_office_3191422_4096x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_office_3191422_4096x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_office_3192306_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_office_3192306_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_office_3196062_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_office_3196062_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_office_3201691_1920x1080",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_office_3201691_1920x1080.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_office_3255156_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_office_3255156_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_painting_3795837_4096x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_painting_3795837_4096x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_reading_3959544_2160x4096",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_reading_3959544_2160x4096.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_reading_4034078_2160x4096",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_reading_4034078_2160x4096.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_reading_4058252_2160x4096",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_reading_4058252_2160x4096.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_reading_4626373_2160x4096",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_reading_4626373_2160x4096.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_robot_8501993_2160x3840",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_robot_8501993_2160x3840.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_salad_3760747_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_salad_3760747_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_school_5199623_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_school_5199623_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_school_5199627_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_school_5199627_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_school_5200358_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_school_5200358_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_sculpture_33742628_2160x3840",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_sculpture_33742628_2160x3840.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_talk_4298771_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_talk_4298771_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_talk_4426529_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_talk_4426529_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_talk_4625286_1920x1080",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_talk_4625286_1920x1080.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_talk_4625294_1920x1080",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_talk_4625294_1920x1080.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_talk_4625322_1920x1080",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_talk_4625322_1920x1080.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_talk_4781559_4096x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_talk_4781559_4096x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_teacher_3252126_3840x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_teacher_3252126_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_teacher_6333712_4096x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_teacher_6333712_4096x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_teacher_6334253_4096x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_teacher_6334253_4096x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_teacher_8160567_2160x3840",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_teacher_8160567_2160x3840.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_teenager_4100460_4096x2160",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_teenager_4100460_4096x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_turtle_17823784_2160x3840",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_turtle_17823784_2160x3840.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_turtle_5259430_2160x4096",
+   "role": "training",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_turtle_5259430_2160x4096.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_teacher_5184440_1080x1920",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_teacher_5184440_1080x1920.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_talk_3254197_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_talk_3254197_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_teacher_33674801_2160x3840",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_teacher_33674801_2160x3840.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_animal_3191251_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_animal_3191251_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_boat_7318821_1080x1920",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_boat_7318821_1080x1920.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_painting_3960177_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_painting_3960177_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_chicken_4911805_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_chicken_4911805_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_meeting_3256571_2160x3840",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_meeting_3256571_2160x3840.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_school_8499667_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_school_8499667_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_teacher_11025559_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_teacher_11025559_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_phone_3044315_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_phone_3044315_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_butterfly_854867_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_butterfly_854867_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_sculpture_3713530_2160x4096",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_sculpture_3713530_2160x4096.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_robot_8764794_2160x3840",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_robot_8764794_2160x3840.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_office_3249902_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_office_3249902_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_turtle_5264397_2160x4096",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_turtle_5264397_2160x4096.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_office_3254006_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_office_3254006_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_action_5977023_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_action_5977023_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_teenager_4297124_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_teenager_4297124_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_lunch_6958036_2160x4096",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_lunch_6958036_2160x4096.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_talk_3141320_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_talk_3141320_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_tulip_10536489_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_tulip_10536489_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_talk_3044906_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_talk_3044906_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_mirror_4010342_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_mirror_4010342_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_salad_7987310_2160x3840",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_salad_7987310_2160x3840.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_lunch_3256817_2160x3840",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_lunch_3256817_2160x3840.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_action_5310858_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_action_5310858_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_education_4498849_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_education_4498849_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_animal_9116154_1080x1920",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_animal_9116154_1080x1920.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_photography_3894706_2160x4096",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_photography_3894706_2160x4096.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_teenager_4316825_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_teenager_4316825_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_tulip_7268820_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_tulip_7268820_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_talk_3255327_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_talk_3255327_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_meal_8164105_2160x4096",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_meal_8164105_2160x4096.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_tulip_7661799_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_tulip_7661799_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_horse_7673265_2160x3840",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_horse_7673265_2160x3840.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_animal_2430774_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_animal_2430774_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_animal_2122952_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_animal_2122952_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_bicycle_4047863_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_bicycle_4047863_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_turtle_7722335_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_turtle_7722335_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_conversation_3045059_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_conversation_3045059_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_sculpture_3796264_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_sculpture_3796264_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_painting_3795656_2160x4096",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_painting_3795656_2160x4096.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_school_5184436_1080x1920",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_school_5184436_1080x1920.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_vegetable_7781752_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_vegetable_7781752_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_teenager_2251680_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_teenager_2251680_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_dancing_3713455_2160x4096",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_dancing_3713455_2160x4096.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_education_4769586_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_education_4769586_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_sculpture_3959723_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_sculpture_3959723_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_animal_855269_1280x720",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_animal_855269_1280x720.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_horse_8921164_1080x1920",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_horse_8921164_1080x1920.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_mirror_4155070_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_mirror_4155070_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_photography_2795401_2160x3840",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_photography_2795401_2160x3840.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_book_4034130_2160x4096",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_book_4034130_2160x4096.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_meal_3944327_2160x4096",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_meal_3944327_2160x4096.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_golf_6541965_2560x1440",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_golf_6541965_2560x1440.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_sculpture_3978822_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_sculpture_3978822_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_architecture_2828876_1080x1920",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_architecture_2828876_1080x1920.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_bus_4012939_1080x1920",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_bus_4012939_1080x1920.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_animal_3263581_1080x1920",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_animal_3263581_1080x1920.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_conversation_4099020_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_conversation_4099020_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_airplane_4241638_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_airplane_4241638_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_meal_5607788_2160x3840",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_meal_5607788_2160x3840.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_talk_3256821_2160x3840",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_talk_3256821_2160x3840.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_conversation_4326529_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_conversation_4326529_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_sculpture_7574279_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_sculpture_7574279_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_vegetable_8295310_2160x3840",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_vegetable_8295310_2160x3840.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_mirror_3181791_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_mirror_3181791_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_painting_4460545_1080x1830",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_painting_4460545_1080x1830.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_butterfly_6222448_1080x1920",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_butterfly_6222448_1080x1920.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_phone_3115593_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_phone_3115593_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_painting_3805736_2160x4096",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_painting_3805736_2160x4096.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_coast_33754706_2160x3840",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_coast_33754706_2160x3840.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_football_10349005_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_football_10349005_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_butterfly_854300_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_butterfly_854300_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_robot_7651117_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_robot_7651117_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_chicken_4911812_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_chicken_4911812_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_salad_4884030_1080x1920",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_salad_4884030_1080x1920.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_teacher_5182810_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_teacher_5182810_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_dancing_2795737_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_dancing_2795737_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_chicken_4911803_2160x4096",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_chicken_4911803_2160x4096.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_library_8086641_2160x4096",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_library_8086641_2160x4096.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_robot_8327799_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_robot_8327799_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_vegetable_3943416_2160x4096",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_vegetable_3943416_2160x4096.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_mirror_4154237_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_mirror_4154237_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_conversation_3045082_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_conversation_3045082_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_phone_3044805_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_phone_3044805_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_library_4860943_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_library_4860943_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_photography_3917513_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_photography_3917513_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_meeting_3044910_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_meeting_3044910_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_animal_2967998_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_animal_2967998_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_mirror_3181792_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_mirror_3181792_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_mirror_3886383_4096x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_mirror_3886383_4096x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_talk_3045075_3840x2160",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_talk_3045075_3840x2160.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_sunset_1686791_1080x1920",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_sunset_1686791_1080x1920.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_bicycle_1149572_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_bicycle_1149572_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_reading_4153582_2160x4096",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_reading_4153582_2160x4096.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_action_2791956_2160x3840",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_action_2791956_2160x3840.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_teacher_5184437_1080x1920",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_teacher_5184437_1080x1920.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_horse_8064259_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_horse_8064259_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_phone_2402368_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_phone_2402368_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_music_4088836_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_music_4088836_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_reading_853947_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_reading_853947_1920x1080.mp4",
+   "source": "vcbench_v2"
+  },
+  {
+   "clip_id": "vcbench_phone_3692634_1920x1080",
+   "role": "training",
+   "bank": "v2",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/endpoints_v2/clips/vcbench_phone_3692634_1920x1080.mp4",
+   "source": "vcbench_v2"
+  }
+ ],
+ "reserved": [
+  {
+   "clip_id": "davis_bus",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_bus.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_cows",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_cows.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_dance-twirl",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_dance-twirl.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "davis_swing",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/davis_swing.mp4",
+   "source": "davis"
+  },
+  {
+   "clip_id": "openvid_Rif_AG6RfMs_0_0to430",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_Rif_AG6RfMs_0_0to430.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_S3Q4wOtl2tY_7_0to251",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_S3Q4wOtl2tY_7_0to251.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_UHnAVb0IjB4_1_0to108",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_UHnAVb0IjB4_1_0to108.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_URfe5yquyJw_10_0to248",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_URfe5yquyJw_10_0to248.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid_UTxt7WlPTuY_10_17to319",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid_UTxt7WlPTuY_10_17to319.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__pRREeqmqMs_5_0to286",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__pRREeqmqMs_5_0to286.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__sRboZAx_zk_41_0to136",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__sRboZAx_zk_41_0to136.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__uJLNGVICts_19_0to113",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__uJLNGVICts_19_0to113.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__y0W5Nty9Z8_91_51to188",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__y0W5Nty9Z8_91_51to188.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "openvid__zDAVM7zEQ8_20_0to123",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/openvid__zDAVM7zEQ8_20_0to123.mp4",
+   "source": "openvid"
+  },
+  {
+   "clip_id": "vcbench_conversation_3248276_3840x2160",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_conversation_3248276_3840x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_mirror_3197657_1080x1920",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_mirror_3197657_1080x1920.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_salad_7572244_2160x3840",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_salad_7572244_2160x3840.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_teacher_8542217_2160x4096",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_teacher_8542217_2160x4096.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_teenager_4100358_4096x2160",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_teenager_4100358_4096x2160.mp4",
+   "source": "vcbench"
+  },
+  {
+   "clip_id": "vcbench_vegetable_853790_1920x1080",
+   "role": "reserved",
+   "bank": "v1",
+   "mp4": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/synth_endpoints/clips/vcbench_vegetable_853790_1920x1080.mp4",
+   "source": "vcbench"
+  }
+ ]
+}

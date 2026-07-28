@@ -252,7 +252,19 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--mode", choices=["passA", "planB", "reportB"], default="passA")
     ap.add_argument("--limit", type=int, default=0)
+    # ADDITIVE side-lane overrides (exp_077 d2_gen). Defaults reproduce the original ic_gen+base
+    # Pass A exactly; with --arm the base twin is skipped (a side arm has no baseline lane).
+    ap.add_argument("--arm", default=None, help="measure this arm alone instead of ic_gen+base")
+    ap.add_argument("--extra-registry", default=None)
+    ap.add_argument("--gens", default=None, help="override outputs/videos/ladder2")
+    ap.add_argument("--out", default=None, help="override dominance_passA.jsonl")
     args = ap.parse_args()
+
+    global GENS, OUT
+    if args.gens:
+        GENS = Path(args.gens)
+    if args.out:
+        OUT = Path(args.out)
 
     if args.mode == "planB":      # manifest-only; must not do Pass-A's globbing first
         plan_b()
@@ -261,16 +273,20 @@ def main() -> None:
         report_b()
         return
 
-    rows = [json.loads(x) for x in (HERE / "registry.jsonl").read_text().splitlines() if x.strip()]
+    text = (HERE / "registry.jsonl").read_text()
+    if args.extra_registry:
+        text += Path(args.extra_registry).read_text()
+    rows = [json.loads(x) for x in text.splitlines() if x.strip()]
     base_by_key = {r["input_key"]: r for r in rows if r["arm"] == "base"}
     # every reference-bearing row, BOTH arms (advisor: apply symmetrically, including to cells
     # whose result looked flattering — G-ref-control's +4.1pp came from the same mechanism)
+    want_arm = args.arm or "ic_gen"
     work = []
     for r in rows:
-        if r["arm"] != "ic_gen" or not r.get("reference"):
+        if r["arm"] != want_arm or not r.get("reference"):
             continue
-        twin = base_by_key.get(r["input_key"])
-        for arm_row, arm in ((r, "ic_gen"), (twin, "base")):
+        twin = None if args.arm else base_by_key.get(r["input_key"])
+        for arm_row, arm in ((r, want_arm), (twin, "base")):
             if arm_row is None:
                 continue
             for seed in (42, 43):
@@ -313,7 +329,7 @@ def main() -> None:
             print(f"  {i}/{len(work)}")
 
     OUT.write_text("".join(json.dumps(o) + "\n" for o in out))
-    print(f"[passA] wrote {len(out)} rows -> {OUT.relative_to(REPO_ROOT)} ({n_err} errors)")
+    print(f"[passA] wrote {len(out)} rows -> {OUT} ({n_err} errors)")
 
     agg = collections.defaultdict(lambda: collections.defaultdict(list))
     for o in out:

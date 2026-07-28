@@ -1,0 +1,35 @@
+model:
+  # No neural model. Two compositors, both plain GLSL:
+  #   hard  = the shipped gl-transitions luma.glsl, byte-for-byte unmodified
+  #   soft  = shaders/luma_soft.glsl in this experiment dir
+  luma_hard: "/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/gl-transitions/transitions/luma.glsl"
+  luma_soft: "experiments/exp_084_luma_matte_viewer/shaders/luma_soft.glsl"
+
+inputs:
+  # 227 curated 121-frame endpoint clips (480x640). Both transition layers are
+  # REAL frames from these clips, playing forward — nothing is synthesised.
+  bank_dir: "data/processed/synth_endpoints"
+  bank_filter: "data/processed/synth_endpoints/bank_tightened.json"
+  # CC0 Krita brush tips (David Revoy 25.01 bundle) — see PROVENANCE.json
+  brush_dir: "data/raw/cc0_brush_alphas"
+
+inference:
+  height: 640
+  width: 480
+  num_frames: 61           # (61 - 1) % 4 == 0
+  anchor_frames: 6         # frames pinned at progress 0 / 1 at each end
+  easing: "smoothstep"
+  fps: 24
+
+sampling:
+  n_pairs: 3               # content pairs per map (the A/B rows are paired on these)
+  arms: ["A1_current", "A2_soft_same_map", "A3_new_map_soft", "A4_new_map_hard"]
+  bad_rate_sample: 24      # random clips per arm graded for the BAD-rate estimate
+
+runtime:
+  seed: 20260727
+  device: "cpu"            # EGL / llvmpipe — no GPU
+
+outputs:
+  dir: "outputs/videos/exp_084_luma_matte_viewer"
+  viewer: "outputs/viewers/luma_matte"

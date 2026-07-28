@@ -1,0 +1,574 @@
+{
+  "seed": 20260724,
+  "spec": {
+    "n_target_pairs": 384,
+    "ops_per_target": 8,
+    "n_ref_pairs": 768,
+    "ref_reuse": 4,
+    "min_distinct_shaders": 6,
+    "attempts_per_shader": 5,
+    "max_shader_swaps": 4,
+    "timing_redraws": 3,
+    "overdraw_ceiling": 2.5,
+    "clip_cache": 240,
+    "strip_frame_w": 240,
+    "reject_mp4_per_shard": 6
+  },
+  "keep_shaders": [
+    "BookFlip",
+    "BowTieWithParameter",
+    "Box",
+    "ButterflyWaveScrawler",
+    "ColourDistance",
+    "CrossZoom",
+    "DefocusBlur",
+    "Dreamy",
+    "EdgeTransition",
+    "FilmBurn",
+    "GlitchDisplace",
+    "GridFlip",
+    "HSVfade",
+    "HorizontalClose",
+    "HorizontalOpen",
+    "LinearBlur",
+    "Overexposure",
+    "PolkaDotsCurtain",
+    "PuzzleRight",
+    "SimpleZoom",
+    "SimpleZoomOut",
+    "Slides",
+    "StarWipe",
+    "StaticFade",
+    "StripDatamoshGlitch",
+    "TilesWave",
+    "VerticalClose",
+    "VerticalOpen",
+    "WaterDrop",
+    "ZoomRigthWipe",
+    "burn",
+    "burn0",
+    "cannabisleaf",
+    "chessboard",
+    "circleopen",
+    "colorphase",
+    "crosshatch",
+    "crosswarp",
+    "directionalwarp",
+    "directionalwipe",
+    "dissolve",
+    "fade",
+    "fadecolor",
+    "fadegrayscale",
+    "flyeye",
+    "fragment",
+    "heart",
+    "hexagonalize",
+    "luminance_melt",
+    "morph",
+    "multiply_blend",
+    "old_tv_lost_signal",
+    "parametric_glitch",
+    "perlin",
+    "pinwheel",
+    "pixelize",
+    "polar_function",
+    "randomNoisex",
+    "randomsquares",
+    "ripple",
+    "scale-in",
+    "splitSlideOutHorizontal",
+    "squareswire",
+    "squeeze",
+    "swap",
+    "wind",
+    "windowblinds",
+    "windowslice",
+    "wipeDown",
+    "wipeLeft",
+    "wipeRight",
+    "wipeUp"
+  ],
+  "blacklist": [
+    "BlockDissolve",
+    "BowTieHorizontal",
+    "BowTieVertical",
+    "CircleCrop",
+    "CrazyParametricFun",
+    "Directional",
+    "DirectionalScaled",
+    "DoomScreenTransition",
+    "DreamyZoom",
+    "Drop_Zone_Flicker",
+    "Fold",
+    "LeftRight",
+    "Mosaic",
+    "Radial",
+    "Rectangle",
+    "RectangleCrop",
+    "Revolve_Left",
+    "Rolls",
+    "RotateScaleVanish",
+    "SimpleFlip",
+    "StereoViewer",
+    "TVStatic",
+    "TopBottom",
+    "ZoomLeftWipe",
+    "circle",
+    "coord-from-in",
+    "cube",
+    "doorway",
+    "kaleidoscope",
+    "powerKaleido",
+    "rotateTransition",
+    "rotate_scale_fade",
+    "splitSlideInHorizontal",
+    "splitSlideInOutHorizontal",
+    "splitSlideInOutVertical",
+    "splitSlideInVertical",
+    "static_wipe",
+    "undulatingBurnOut",
+    "x_axis_translation",
+    "zoomInOut"
+  ],
+  "keep_easings": [
+    "in_cubic",
+    "in_out_cubic",
+    "in_out_sine",
+    "linear",
+    "mid_hold",
+    "smootherstep",
+    "smoothstep"
+  ],
+  "drop_easings": [
+    "in_expo",
+    "out_cubic",
+    "out_expo"
+  ],
+  "holdout_shaders": [
+    "Bounce",
+    "GlitchMemories",
+    "Swirl",
+    "ZoomInCircles",
+    "angular",
+    "directional-easing",
+    "mosaic_transition",
+    "splitSlideOutVertical"
+  ],
+  "gate": {
+    "tau": 0.2543,
+    "assert1_tol": 0.5,
+    "seam_max": 2.0,
+    "m2_max_dq": 0.5,
+    "m1_min_flag_threshold": -0.05
+  },
+  "n_tuples": 32,
+  "targets": [
+    {
+      "target_index": 0,
+      "target_pair": {
+        "A": "openvid_RjQG9PQv9UM_10_41to241",
+        "B": "openvid_UOSszsmjeX4_12_0to188",
+        "A_mp4": "clips/openvid_RjQG9PQv9UM_10_41to241.mp4",
+        "B_mp4": "clips/openvid_UOSszsmjeX4_12_0to188.mp4"
+      },
+      "slots": [
+        {
+          "tuple_id": 0,
+          "slot": 0,
+          "shader": "EdgeTransition",
+          "ref_pair": {
+            "A": "openvid_XK45bsIkpcU_16_0to206",
+            "B": "vcbench_vegetable_853790_1920x1080",
+            "A_mp4": "clips/openvid_XK45bsIkpcU_16_0to206.mp4",
+            "B_mp4": "clips/vcbench_vegetable_853790_1920x1080.mp4"
+          }
+        },
+        {
+          "tuple_id": 1,
+          "slot": 1,
+          "shader": "fadecolor",
+          "ref_pair": {
+            "A": "openvid__qNWfoRp3Gg_30_552to717",
+            "B": "vcbench_painting_3795837_4096x2160",
+            "A_mp4": "clips/openvid__qNWfoRp3Gg_30_552to717.mp4",
+            "B_mp4": "clips/vcbench_painting_3795837_4096x2160.mp4"
+          }
+        },
+        {
+          "tuple_id": 2,
+          "slot": 2,
+          "shader": "ColourDistance",
+          "ref_pair": {
+            "A": "openvid_UNwic_uRJi4_35_0to454",
+            "B": "openvid_XAehIzy5FMg_41_0to132",
+            "A_mp4": "clips/openvid_UNwic_uRJi4_35_0to454.mp4",
+            "B_mp4": "clips/openvid_XAehIzy5FMg_41_0to132.mp4"
+          }
+        },
+        {
+          "tuple_id": 3,
+          "slot": 3,
+          "shader": "EdgeTransition",
+          "ref_pair": {
+            "A": "davis_scooter-gray",
+            "B": "vcbench_football_4612890_4096x2160",
+            "A_mp4": "clips/davis_scooter-gray.mp4",
+            "B_mp4": "clips/vcbench_football_4612890_4096x2160.mp4"
+          }
+        },
+        {
+          "tuple_id": 4,
+          "slot": 4,
+          "shader": "fadecolor",
+          "ref_pair": {
+            "A": "vcbench_reading_4034078_2160x4096",
+            "B": "openvid__wHxwgtdMsA_17_109to460",
+            "A_mp4": "clips/vcbench_reading_4034078_2160x4096.mp4",
+            "B_mp4": "clips/openvid__wHxwgtdMsA_17_109to460.mp4"
+          }
+        },
+        {
+          "tuple_id": 5,
+          "slot": 5,
+          "shader": "ColourDistance",
+          "ref_pair": {
+            "A": "vcbench_vegetable_853790_1920x1080",
+            "B": "openvid_T1abfWEVB4U_22_28to178",
+            "A_mp4": "clips/vcbench_vegetable_853790_1920x1080.mp4",
+            "B_mp4": "clips/openvid_T1abfWEVB4U_22_28to178.mp4"
+          }
+        },
+        {
+          "tuple_id": 6,
+          "slot": 6,
+          "shader": "directionalwipe",
+          "ref_pair": {
+            "A": "davis_judo",
+            "B": "openvid_UQyA-uwH6ac_23_0to109",
+            "A_mp4": "clips/davis_judo.mp4",
+            "B_mp4": "clips/openvid_UQyA-uwH6ac_23_0to109.mp4"
+          }
+        },
+        {
+          "tuple_id": 7,
+          "slot": 7,
+          "shader": "fadegrayscale",
+          "ref_pair": {
+            "A": "openvid__uhw0DC-moA_23_0to118",
+            "B": "openvid_TGDmTsO0888_3_0to163",
+            "A_mp4": "clips/openvid__uhw0DC-moA_23_0to118.mp4",
+            "B_mp4": "clips/openvid_TGDmTsO0888_3_0to163.mp4"
+          }
+        }
+      ]
+    },
+    {
+      "target_index": 1,
+      "target_pair": {
+        "A": "vcbench_car_2878091_3840x2160",
+        "B": "vcbench_mirror_3197657_1080x1920",
+        "A_mp4": "clips/vcbench_car_2878091_3840x2160.mp4",
+        "B_mp4": "clips/vcbench_mirror_3197657_1080x1920.mp4"
+      },
+      "slots": [
+        {
+          "tuple_id": 8,
+          "slot": 0,
+          "shader": "EdgeTransition",
+          "ref_pair": {
+            "A": "davis_hockey",
+            "B": "openvid__iASX0-T3CU_13_0to122",
+            "A_mp4": "clips/davis_hockey.mp4",
+            "B_mp4": "clips/openvid__iASX0-T3CU_13_0to122.mp4"
+          }
+        },
+        {
+          "tuple_id": 9,
+          "slot": 1,
+          "shader": "fadecolor",
+          "ref_pair": {
+            "A": "openvid_XEPyFpamcfs_25_183to461",
+            "B": "vcbench_football_4612890_4096x2160",
+            "A_mp4": "clips/openvid_XEPyFpamcfs_25_183to461.mp4",
+            "B_mp4": "clips/vcbench_football_4612890_4096x2160.mp4"
+          }
+        },
+        {
+          "tuple_id": 10,
+          "slot": 2,
+          "shader": "ColourDistance",
+          "ref_pair": {
+            "A": "openvid_XEPyFpamcfs_25_183to461",
+            "B": "openvid__gXX8lnPIFc_1_16to205",
+            "A_mp4": "clips/openvid_XEPyFpamcfs_25_183to461.mp4",
+            "B_mp4": "clips/openvid__gXX8lnPIFc_1_16to205.mp4"
+          }
+        },
+        {
+          "tuple_id": 11,
+          "slot": 3,
+          "shader": "EdgeTransition",
+          "ref_pair": {
+            "A": "openvid_Ro1AoyxWoPw_6_0to143",
+            "B": "openvid_SyGOidmxV_E_4_0to163",
+            "A_mp4": "clips/openvid_Ro1AoyxWoPw_6_0to143.mp4",
+            "B_mp4": "clips/openvid_SyGOidmxV_E_4_0to163.mp4"
+          }
+        },
+        {
+          "tuple_id": 12,
+          "slot": 4,
+          "shader": "fadecolor",
+          "ref_pair": {
+            "A": "davis_hockey",
+            "B": "vcbench_talk_4625322_1920x1080",
+            "A_mp4": "clips/davis_hockey.mp4",
+            "B_mp4": "clips/vcbench_talk_4625322_1920x1080.mp4"
+          }
+        },
+        {
+          "tuple_id": 13,
+          "slot": 5,
+          "shader": "ColourDistance",
+          "ref_pair": {
+            "A": "davis_horsejump-high",
+            "B": "openvid__t-96LgcizU_7_0to191",
+            "A_mp4": "clips/davis_horsejump-high.mp4",
+            "B_mp4": "clips/openvid__t-96LgcizU_7_0to191.mp4"
+          }
+        },
+        {
+          "tuple_id": 14,
+          "slot": 6,
+          "shader": "LinearBlur",
+          "ref_pair": {
+            "A": "davis_gold-fish",
+            "B": "vcbench_animal_3195531_3840x2160",
+            "A_mp4": "clips/davis_gold-fish.mp4",
+            "B_mp4": "clips/vcbench_animal_3195531_3840x2160.mp4"
+          }
+        },
+        {
+          "tuple_id": 15,
+          "slot": 7,
+          "shader": "FilmBurn",
+          "ref_pair": {
+            "A": "vcbench_conversation_3248276_3840x2160",
+            "B": "vcbench_education_4498914_3840x2160",
+            "A_mp4": "clips/vcbench_conversation_3248276_3840x2160.mp4",
+            "B_mp4": "clips/vcbench_education_4498914_3840x2160.mp4"
+          }
+        }
+      ]
+    },
+    {
+      "target_index": 2,
+      "target_pair": {
+        "A": "vcbench_teacher_8160567_2160x3840",
+        "B": "vcbench_meeting_4428751_3840x2160",
+        "A_mp4": "clips/vcbench_teacher_8160567_2160x3840.mp4",
+        "B_mp4": "clips/vcbench_meeting_4428751_3840x2160.mp4"
+      },
+      "slots": [
+        {
+          "tuple_id": 16,
+          "slot": 0,
+          "shader": "fadecolor",
+          "ref_pair": {
+            "A": "openvid_RquUFnOoNRk_17_0to110",
+            "B": "openvid__t-96LgcizU_7_0to191",
+            "A_mp4": "clips/openvid_RquUFnOoNRk_17_0to110.mp4",
+            "B_mp4": "clips/openvid__t-96LgcizU_7_0to191.mp4"
+          }
+        },
+        {
+          "tuple_id": 17,
+          "slot": 1,
+          "shader": "wipeUp",
+          "ref_pair": {
+            "A": "openvid_XFSw6t7SP00_79_0to109",
+            "B": "openvid_UUUWxvofLgU_13_19to453",
+            "A_mp4": "clips/openvid_XFSw6t7SP00_79_0to109.mp4",
+            "B_mp4": "clips/openvid_UUUWxvofLgU_13_19to453.mp4"
+          }
+        },
+        {
+          "tuple_id": 18,
+          "slot": 2,
+          "shader": "burn0",
+          "ref_pair": {
+            "A": "openvid_S1UccL7QJ2M_12_99to481",
+            "B": "davis_color-run",
+            "A_mp4": "clips/openvid_S1UccL7QJ2M_12_99to481.mp4",
+            "B_mp4": "clips/davis_color-run.mp4"
+          }
+        },
+        {
+          "tuple_id": 19,
+          "slot": 3,
+          "shader": "squareswire",
+          "ref_pair": {
+            "A": "vcbench_talk_4298771_3840x2160",
+            "B": "openvid__yaAkh4ICDk_44_0to119",
+            "A_mp4": "clips/vcbench_talk_4298771_3840x2160.mp4",
+            "B_mp4": "clips/openvid__yaAkh4ICDk_44_0to119.mp4"
+          }
+        },
+        {
+          "tuple_id": 20,
+          "slot": 4,
+          "shader": "VerticalOpen",
+          "ref_pair": {
+            "A": "openvid_SyGOidmxV_E_4_0to163",
+            "B": "openvid__i1gxHY_Av0_28_40to294",
+            "A_mp4": "clips/openvid_SyGOidmxV_E_4_0to163.mp4",
+            "B_mp4": "clips/openvid__i1gxHY_Av0_28_40to294.mp4"
+          }
+        },
+        {
+          "tuple_id": 21,
+          "slot": 5,
+          "shader": "StarWipe",
+          "ref_pair": {
+            "A": "vcbench_book_4034077_2160x4096",
+            "B": "openvid__qbsmhHO950_5_121to392",
+            "A_mp4": "clips/vcbench_book_4034077_2160x4096.mp4",
+            "B_mp4": "clips/openvid__qbsmhHO950_5_121to392.mp4"
+          }
+        },
+        {
+          "tuple_id": 22,
+          "slot": 6,
+          "shader": "Slides",
+          "ref_pair": {
+            "A": "openvid_T1abfWEVB4U_22_28to178",
+            "B": "openvid_T8ehDbQPv8w_4_0to163",
+            "A_mp4": "clips/openvid_T1abfWEVB4U_22_28to178.mp4",
+            "B_mp4": "clips/openvid_T8ehDbQPv8w_4_0to163.mp4"
+          }
+        },
+        {
+          "tuple_id": 23,
+          "slot": 7,
+          "shader": "Dreamy",
+          "ref_pair": {
+            "A": "vcbench_teacher_3252126_3840x2160",
+            "B": "openvid_T7mJstoEp1g_2_1005to1261",
+            "A_mp4": "clips/vcbench_teacher_3252126_3840x2160.mp4",
+            "B_mp4": "clips/openvid_T7mJstoEp1g_2_1005to1261.mp4"
+          }
+        }
+      ]
+    },
+    {
+      "target_index": 3,
+      "target_pair": {
+        "A": "vcbench_office_3201691_1920x1080",
+        "B": "openvid__oppseM4TZU_0_0to176",
+        "A_mp4": "clips/vcbench_office_3201691_1920x1080.mp4",
+        "B_mp4": "clips/openvid__oppseM4TZU_0_0to176.mp4"
+      },
+      "slots": [
+        {
+          "tuple_id": 24,
+          "slot": 0,
+          "shader": "fragment",
+          "ref_pair": {
+            "A": "openvid__lRwXDpllT8_3_343to487",
+            "B": "openvid_T5tpjPBh7i0_52_1036to1439",
+            "A_mp4": "clips/openvid__lRwXDpllT8_3_343to487.mp4",
+            "B_mp4": "clips/openvid_T5tpjPBh7i0_52_1036to1439.mp4"
+          }
+        },
+        {
+          "tuple_id": 25,
+          "slot": 1,
+          "shader": "dissolve",
+          "ref_pair": {
+            "A": "openvid_TGlDRBUxYco_44_0to215",
+            "B": "openvid_UAR9cccDKSI_16_0to208",
+            "A_mp4": "clips/openvid_TGlDRBUxYco_44_0to215.mp4",
+            "B_mp4": "clips/openvid_UAR9cccDKSI_16_0to208.mp4"
+          }
+        },
+        {
+          "tuple_id": 26,
+          "slot": 2,
+          "shader": "BookFlip",
+          "ref_pair": {
+            "A": "vcbench_book_4034077_2160x4096",
+            "B": "openvid_T4RelfB1P2A_14_45to200",
+            "A_mp4": "clips/vcbench_book_4034077_2160x4096.mp4",
+            "B_mp4": "clips/openvid_T4RelfB1P2A_14_45to200.mp4"
+          }
+        },
+        {
+          "tuple_id": 27,
+          "slot": 3,
+          "shader": "PolkaDotsCurtain",
+          "ref_pair": {
+            "A": "openvid_URfe5yquyJw_10_0to248",
+            "B": "vcbench_holiday_3197574_1920x1080",
+            "A_mp4": "clips/openvid_URfe5yquyJw_10_0to248.mp4",
+            "B_mp4": "clips/vcbench_holiday_3197574_1920x1080.mp4"
+          }
+        },
+        {
+          "tuple_id": 28,
+          "slot": 4,
+          "shader": "TilesWave",
+          "ref_pair": {
+            "A": "vcbench_reading_4034078_2160x4096",
+            "B": "davis_india",
+            "A_mp4": "clips/vcbench_reading_4034078_2160x4096.mp4",
+            "B_mp4": "clips/davis_india.mp4"
+          }
+        },
+        {
+          "tuple_id": 29,
+          "slot": 5,
+          "shader": "StaticFade",
+          "ref_pair": {
+            "A": "davis_blackswan",
+            "B": "openvid_T6_3EpSQabI_3_0to105",
+            "A_mp4": "clips/davis_blackswan.mp4",
+            "B_mp4": "clips/openvid_T6_3EpSQabI_3_0to105.mp4"
+          }
+        },
+        {
+          "tuple_id": 30,
+          "slot": 6,
+          "shader": "SimpleZoom",
+          "ref_pair": {
+            "A": "openvid_TFuu_fo666M_4_21to467",
+            "B": "openvid_XFSw6t7SP00_79_0to109",
+            "A_mp4": "clips/openvid_TFuu_fo666M_4_21to467.mp4",
+            "B_mp4": "clips/openvid_XFSw6t7SP00_79_0to109.mp4"
+          }
+        },
+        {
+          "tuple_id": 31,
+          "slot": 7,
+          "shader": "wipeDown",
+          "ref_pair": {
+            "A": "openvid__kdeY0SSvEc_0_0to153",
+            "B": "openvid__teMxcOcVyw_195_0to119",
+            "A_mp4": "clips/openvid__kdeY0SSvEc_0_0to153.mp4",
+            "B_mp4": "clips/openvid__teMxcOcVyw_195_0to119.mp4"
+          }
+        }
+      ]
+    }
+  ],
+  "firstchunk": {
+    "purpose": "pre-committed clamp check (baseline visual bad rate 17.5%)",
+    "oversampled_shaders": [
+      "EdgeTransition",
+      "fadecolor",
+      "ColourDistance"
+    ],
+    "offender_slots": 13,
+    "total_slots": 32,
+    "offender_share": 0.4062
+  }
+}

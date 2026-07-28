@@ -336,6 +336,57 @@ Applied as `(B, 1, T, T)` bias added to Q·K scores.
 
 ---
 
+## 5.4 Reference / in-context conditioning BLEEDS on the no-adapter model — and is never an eval baseline
+
+**The rule (load-bearing, applies to every experiment and every eval ladder):**
+
+> A baseline / comparator arm must be exactly one of two things: **(1) prompt only**, or **(2) prompt +
+> ENDPOINT conditioning (prefix/suffix), with NO reference.** A no-adapter model given an in-context
+> **reference** clip is NOT a baseline — it is a *copier*. Reference conditioning belongs to the
+> treatment arm (the IC-LoRA / generalist) alone. Owner ruling 2026-07-23.
+
+**Why — the mechanism.** An in-context reference (the "demo" clip in IC-LoRA) is appended as a *clean*
+conditioning group (`strength: 1.0`, denoise-mask ≈ 0, timestep 0) whose tokens sit on the **same RoPE
+grid as the output** (§5.1, §6) and which the **output tokens fully attend to** (§5.3: the `Output` row
+of the attention block is all-`1.0`, so output can read every conditioning group). On the **base model
+with no adapter**, that clean, fully-attendable, same-grid clip is treated as *content to continue*: the
+model reproduces the reference scene almost verbatim and **abandons the conditioned endpoint**. The
+reference "bleeds" wholesale into the generation. Only a *trained* adapter (the IC-LoRA) converts the
+reference from *content-to-continue* into *an instruction to imitate* — it is precisely the thing the
+adapter learns, and precisely the thing the base lacks.
+
+**The measurement (ladder2, byte-identical inputs, base vs the IC-LoRA on the same reference):**
+
+| quantity | base (no adapter) | IC-LoRA (`ic_gen`) |
+|---|---|---|
+| reference-dominated rate (mid-frames match the demo, not the endpoint) | **88–100 %** | 0–12 % |
+| `ref_align` (mid-frames ≈ the demo) | ~0.86 | ~0.19 |
+| `ep_align` (mid-frames ≈ the conditioned endpoint) | ~0.22 | ~0.78 |
+| `max_seam_z` (handoff snap at the conditioned prefix; high = cuts away from it) | **10–45** | −0.1 – 3.6 |
+
+The base does not perform a transition — it **cuts to a re-render of the demo**. (The prefix/suffix
+*endpoint* conditioning does NOT bleed like this: it is short, causally-clean, and the model was trained
+to honour it — see §5.1-b and the causal-VAE suffix note. The bleed is specific to a full **reference**
+clip on a model not trained to read it.)
+
+**Why this matters for evaluation — the input-parity fallacy.** It is tempting to give the base the
+*identical* input as the treatment ("byte-identical parity") so the margin isolates the adapter. That is
+the wrong invariant when the extra input is the reference: byte-identical parity here just hands the base
+the very clip it will copy, so the base scores **high** on any "does it resemble the donor class" metric
+for the wrong reason (it reproduced the demo), and the treatment — which correctly honours the endpoint —
+scores *lower*. A margin taken against that base is uninterpretable. The correct comparator holds the
+**endpoint + prompt** identical and simply denies the base the reference (arm `base_cond`): now both arms
+see the same endpoints, the content-cap cancels in the margin, and the difference measures exactly what
+the reference+adapter buys.
+
+**History.** This is the root cause of the ladder2 v2.0.0 "copy confound," which forced the Amendment-1
+*Transfer Index* workaround (`min(T, C)`) to salvage a readout from a reference-carrying base. The
+v2.1.0 baselines `base_prompt` and `base_cond` (see eval-ladder SPEC §3) fix it **at the source** — with
+a no-reference comparator the confound does not arise. Prefer fixing the baseline over instrumenting
+around a broken one.
+
+---
+
 ## 6. VideoConditionByKeyframeIndex: The Core Conditioning Operation
 
 **File:** `ltx_core/conditioning/types/keyframe_cond.py`

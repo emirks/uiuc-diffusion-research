@@ -1,0 +1,14 @@
+{
+  "method": "HEAD-only liveness + Content-Length probe (no media bytes transferred)",
+  "date": "2026-07-27",
+  "n_probed": 120,
+  "status_codes": {
+    "200": 120
+  },
+  "liveness_pct": 100.0,
+  "mean_clip_bytes": 8926957,
+  "mean_bitrate_mbps": 4.11,
+  "corpus_hours": 90.2,
+  "projected_full_fetch_gb": 167,
+  "projected_note": "NOT fetched - Pexels ToS forbids bulk/ML collection"
+}

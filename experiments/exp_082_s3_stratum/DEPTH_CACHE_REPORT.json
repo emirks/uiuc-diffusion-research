@@ -1,0 +1,1142 @@
+{
+ "created": "2026-07-25",
+ "n_cached": 227,
+ "cache_dir": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/analysis/ctt_v2_s3_depth_cache",
+ "clips": [
+  {
+   "clip_id": "davis_bear",
+   "flicker": 0.00549,
+   "seconds": 14.71
+  },
+  {
+   "clip_id": "davis_blackswan",
+   "flicker": 0.00489,
+   "seconds": 4.15
+  },
+  {
+   "clip_id": "davis_breakdance",
+   "flicker": 0.01983,
+   "seconds": 4.1
+  },
+  {
+   "clip_id": "davis_breakdance-flare",
+   "flicker": 0.01598,
+   "seconds": 4.18
+  },
+  {
+   "clip_id": "davis_bus",
+   "flicker": 0.01458,
+   "seconds": 4.03
+  },
+  {
+   "clip_id": "davis_car-roundabout",
+   "flicker": 0.00473,
+   "seconds": 3.99
+  },
+  {
+   "clip_id": "davis_color-run",
+   "flicker": 0.0368,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "davis_cows",
+   "flicker": 0.00758,
+   "seconds": 4.18
+  },
+  {
+   "clip_id": "davis_dance-jump",
+   "flicker": 0.00917,
+   "seconds": 3.95
+  },
+  {
+   "clip_id": "davis_dance-twirl",
+   "flicker": 0.01609,
+   "seconds": 4.1
+  },
+  {
+   "clip_id": "davis_dancing",
+   "flicker": 0.01068,
+   "seconds": 4.01
+  },
+  {
+   "clip_id": "davis_dog",
+   "flicker": 0.01151,
+   "seconds": 3.98
+  },
+  {
+   "clip_id": "davis_dog-agility",
+   "flicker": 0.01436,
+   "seconds": 3.87
+  },
+  {
+   "clip_id": "davis_dogs-scale",
+   "flicker": 0.02777,
+   "seconds": 4.06
+  },
+  {
+   "clip_id": "davis_drift-straight",
+   "flicker": 0.00456,
+   "seconds": 4.0
+  },
+  {
+   "clip_id": "davis_drone",
+   "flicker": 0.03075,
+   "seconds": 3.97
+  },
+  {
+   "clip_id": "davis_elephant",
+   "flicker": 0.00757,
+   "seconds": 4.02
+  },
+  {
+   "clip_id": "davis_gold-fish",
+   "flicker": 0.01554,
+   "seconds": 3.96
+  },
+  {
+   "clip_id": "davis_hockey",
+   "flicker": 0.00761,
+   "seconds": 3.97
+  },
+  {
+   "clip_id": "davis_horsejump-high",
+   "flicker": 0.01268,
+   "seconds": 4.01
+  },
+  {
+   "clip_id": "davis_horsejump-low",
+   "flicker": 0.01134,
+   "seconds": 4.03
+  },
+  {
+   "clip_id": "davis_india",
+   "flicker": 0.02001,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "davis_judo",
+   "flicker": 0.00501,
+   "seconds": 3.8
+  },
+  {
+   "clip_id": "davis_lab-coat",
+   "flicker": 0.01009,
+   "seconds": 3.92
+  },
+  {
+   "clip_id": "davis_lady-running",
+   "flicker": 0.01339,
+   "seconds": 3.85
+  },
+  {
+   "clip_id": "davis_lindy-hop",
+   "flicker": 0.01676,
+   "seconds": 3.91
+  },
+  {
+   "clip_id": "davis_longboard",
+   "flicker": 0.01269,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "davis_mbike-trick",
+   "flicker": 0.00597,
+   "seconds": 3.97
+  },
+  {
+   "clip_id": "davis_motocross-bumps",
+   "flicker": 0.01538,
+   "seconds": 4.03
+  },
+  {
+   "clip_id": "davis_night-race",
+   "flicker": 0.00562,
+   "seconds": 3.91
+  },
+  {
+   "clip_id": "davis_pigs",
+   "flicker": 0.00613,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "davis_rhino",
+   "flicker": 0.00571,
+   "seconds": 4.02
+  },
+  {
+   "clip_id": "davis_scooter-board",
+   "flicker": 0.03239,
+   "seconds": 3.95
+  },
+  {
+   "clip_id": "davis_scooter-gray",
+   "flicker": 0.01901,
+   "seconds": 3.96
+  },
+  {
+   "clip_id": "davis_snowboard",
+   "flicker": 0.02354,
+   "seconds": 4.0
+  },
+  {
+   "clip_id": "davis_swing",
+   "flicker": 0.02773,
+   "seconds": 3.95
+  },
+  {
+   "clip_id": "davis_tuk-tuk",
+   "flicker": 0.01392,
+   "seconds": 3.93
+  },
+  {
+   "clip_id": "davis_upside-down",
+   "flicker": 0.03114,
+   "seconds": 3.99
+  },
+  {
+   "clip_id": "davis_walking",
+   "flicker": 0.01548,
+   "seconds": 3.95
+  },
+  {
+   "clip_id": "openvid_RiIBIb3oOXE_0_0to132",
+   "flicker": 0.00607,
+   "seconds": 3.94
+  },
+  {
+   "clip_id": "openvid_Rif_AG6RfMs_0_0to430",
+   "flicker": 0.01338,
+   "seconds": 3.87
+  },
+  {
+   "clip_id": "openvid_RjQG9PQv9UM_10_41to241",
+   "flicker": 0.00966,
+   "seconds": 3.8
+  },
+  {
+   "clip_id": "openvid_Rk9t33GCIzc_44_210to435",
+   "flicker": 0.02397,
+   "seconds": 4.03
+  },
+  {
+   "clip_id": "openvid_RlN2dYjH4_E_3_0to160",
+   "flicker": 0.00338,
+   "seconds": 3.88
+  },
+  {
+   "clip_id": "openvid_Ro1AoyxWoPw_6_0to143",
+   "flicker": 0.00624,
+   "seconds": 3.85
+  },
+  {
+   "clip_id": "openvid_RquUFnOoNRk_17_0to110",
+   "flicker": 0.00377,
+   "seconds": 3.85
+  },
+  {
+   "clip_id": "openvid_RsC5X2XNAsA_5_0to140",
+   "flicker": 0.00373,
+   "seconds": 3.86
+  },
+  {
+   "clip_id": "openvid_RteVGSC8NM0_23_0to213",
+   "flicker": 0.01156,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "openvid_Rv5tq_kWjRE_23_0to288",
+   "flicker": 0.00902,
+   "seconds": 3.94
+  },
+  {
+   "clip_id": "openvid_Rw9WH5BKixs_4_0to143",
+   "flicker": 0.00698,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "openvid_Rwpt27yp6Kw_128_0to433",
+   "flicker": 0.01183,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "openvid_Ry-JeKr-i2M_56_33to175",
+   "flicker": 0.00341,
+   "seconds": 3.94
+  },
+  {
+   "clip_id": "openvid_RyIAB768Aps_19_0to312",
+   "flicker": 0.02009,
+   "seconds": 3.99
+  },
+  {
+   "clip_id": "openvid_RzR0x2J5sPA_7_1368to1499",
+   "flicker": 0.00555,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "openvid_S-40Fl6-sjM_21_26to326",
+   "flicker": 0.01466,
+   "seconds": 3.87
+  },
+  {
+   "clip_id": "openvid_S-eyEO9SmLs_3_0to210",
+   "flicker": 0.00977,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "openvid_S16RaKALjBU_6_0to138",
+   "flicker": 0.00805,
+   "seconds": 3.94
+  },
+  {
+   "clip_id": "openvid_S1UccL7QJ2M_12_99to481",
+   "flicker": 0.02881,
+   "seconds": 4.07
+  },
+  {
+   "clip_id": "openvid_S2-_gqfeNr0_10_0to149",
+   "flicker": 0.00442,
+   "seconds": 3.91
+  },
+  {
+   "clip_id": "openvid_S2dYU99K53s_332_0to334",
+   "flicker": 0.00625,
+   "seconds": 3.95
+  },
+  {
+   "clip_id": "openvid_S3Q4wOtl2tY_7_0to251",
+   "flicker": 0.0091,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "openvid_S5NWrCQTqGQ_11_46to158",
+   "flicker": 0.00884,
+   "seconds": 3.92
+  },
+  {
+   "clip_id": "openvid_Sx1j62NLO90_62_0to161",
+   "flicker": 0.01271,
+   "seconds": 3.87
+  },
+  {
+   "clip_id": "openvid_SxtYrpF_IIc_52_0to164",
+   "flicker": 0.00975,
+   "seconds": 3.92
+  },
+  {
+   "clip_id": "openvid_SyGOidmxV_E_4_0to163",
+   "flicker": 0.01197,
+   "seconds": 4.03
+  },
+  {
+   "clip_id": "openvid_SywOj6EpkOc_131_0to116",
+   "flicker": 0.00289,
+   "seconds": 3.73
+  },
+  {
+   "clip_id": "openvid_SzPp0ZStWmw_18_28to169",
+   "flicker": 0.00334,
+   "seconds": 3.88
+  },
+  {
+   "clip_id": "openvid_T1MiFx98l3g_0_50to156",
+   "flicker": 0.01088,
+   "seconds": 3.87
+  },
+  {
+   "clip_id": "openvid_T1abfWEVB4U_22_28to178",
+   "flicker": 0.0132,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "openvid_T28nWl-iFMs_8_0to112",
+   "flicker": 0.0032,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "openvid_T2SqbSwD9Gc_2_38to236",
+   "flicker": 0.00557,
+   "seconds": 3.86
+  },
+  {
+   "clip_id": "openvid_T2ibrpDJCVE_17_0to132",
+   "flicker": 0.01544,
+   "seconds": 3.95
+  },
+  {
+   "clip_id": "openvid_T3NNiOsFLEw_12_21to157",
+   "flicker": 0.00271,
+   "seconds": 3.88
+  },
+  {
+   "clip_id": "openvid_T4RelfB1P2A_14_45to200",
+   "flicker": 0.00396,
+   "seconds": 3.95
+  },
+  {
+   "clip_id": "openvid_T4xqFDJf7yM_2_76to186",
+   "flicker": 0.00454,
+   "seconds": 4.07
+  },
+  {
+   "clip_id": "openvid_T5TFAfYFYtY_8_0to280",
+   "flicker": 0.01753,
+   "seconds": 3.96
+  },
+  {
+   "clip_id": "openvid_T5ZCFynSomc_29_0to139",
+   "flicker": 0.01108,
+   "seconds": 4.26
+  },
+  {
+   "clip_id": "openvid_T5tpjPBh7i0_52_1036to1439",
+   "flicker": 0.01942,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "openvid_T6_3EpSQabI_3_0to105",
+   "flicker": 0.00762,
+   "seconds": 3.93
+  },
+  {
+   "clip_id": "openvid_T7mJstoEp1g_2_1005to1261",
+   "flicker": 0.00761,
+   "seconds": 3.95
+  },
+  {
+   "clip_id": "openvid_T8ehDbQPv8w_4_0to163",
+   "flicker": 0.01408,
+   "seconds": 3.91
+  },
+  {
+   "clip_id": "openvid_T9NZ4Sa-7qQ_11_0to720",
+   "flicker": 0.01715,
+   "seconds": 3.95
+  },
+  {
+   "clip_id": "openvid_TAMTRf1piJo_404_0to119",
+   "flicker": 0.00445,
+   "seconds": 3.91
+  },
+  {
+   "clip_id": "openvid_TAdLodBHfic_8_86to296",
+   "flicker": 0.00362,
+   "seconds": 3.97
+  },
+  {
+   "clip_id": "openvid_TBApWe8MIhI_86_35to141",
+   "flicker": 0.01372,
+   "seconds": 3.88
+  },
+  {
+   "clip_id": "openvid_TBdzmFv1FYA_23_24to263",
+   "flicker": 0.01221,
+   "seconds": 3.97
+  },
+  {
+   "clip_id": "openvid_TDJ2UHVvjs8_2_0to272",
+   "flicker": 0.00932,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "openvid_TFG-PvdqCjc_0_0to109",
+   "flicker": 0.01052,
+   "seconds": 3.86
+  },
+  {
+   "clip_id": "openvid_TFuu_fo666M_4_21to467",
+   "flicker": 0.0017,
+   "seconds": 3.82
+  },
+  {
+   "clip_id": "openvid_TGDmTsO0888_3_0to163",
+   "flicker": 0.00316,
+   "seconds": 3.81
+  },
+  {
+   "clip_id": "openvid_TGlDRBUxYco_44_0to215",
+   "flicker": 0.00743,
+   "seconds": 3.85
+  },
+  {
+   "clip_id": "openvid_TI78Alt9t5k_19_91to227",
+   "flicker": 0.00597,
+   "seconds": 3.83
+  },
+  {
+   "clip_id": "openvid_UAR9cccDKSI_16_0to208",
+   "flicker": 0.01031,
+   "seconds": 3.87
+  },
+  {
+   "clip_id": "openvid_UDnz0wssWS8_42_224to359",
+   "flicker": 0.00562,
+   "seconds": 3.85
+  },
+  {
+   "clip_id": "openvid_UF3wryUet1I_26_850to959",
+   "flicker": 0.00397,
+   "seconds": 3.84
+  },
+  {
+   "clip_id": "openvid_UFcwt85ItmU_14_24to225",
+   "flicker": 0.002,
+   "seconds": 3.86
+  },
+  {
+   "clip_id": "openvid_UHnAVb0IjB4_1_0to108",
+   "flicker": 0.00597,
+   "seconds": 3.82
+  },
+  {
+   "clip_id": "openvid_UJAjbb0TxnE_15_0to101",
+   "flicker": 0.00614,
+   "seconds": 4.0
+  },
+  {
+   "clip_id": "openvid_UJXvTniMr30_74_0to194",
+   "flicker": 0.00911,
+   "seconds": 3.91
+  },
+  {
+   "clip_id": "openvid_UK2ZezePO3I_10_0to103",
+   "flicker": 0.00322,
+   "seconds": 3.98
+  },
+  {
+   "clip_id": "openvid_UNwic_uRJi4_35_0to454",
+   "flicker": 0.02481,
+   "seconds": 3.91
+  },
+  {
+   "clip_id": "openvid_UOSszsmjeX4_12_0to188",
+   "flicker": 0.00974,
+   "seconds": 3.91
+  },
+  {
+   "clip_id": "openvid_UPqDLG4xYHM_2_352to524",
+   "flicker": 0.00686,
+   "seconds": 3.83
+  },
+  {
+   "clip_id": "openvid_UQyA-uwH6ac_23_0to109",
+   "flicker": 0.00367,
+   "seconds": 3.84
+  },
+  {
+   "clip_id": "openvid_URLAedhIKbk_2_0to415",
+   "flicker": 0.00452,
+   "seconds": 3.85
+  },
+  {
+   "clip_id": "openvid_URfe5yquyJw_10_0to248",
+   "flicker": 0.01325,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "openvid_UT4hPMISonI_134_0to137",
+   "flicker": 0.00495,
+   "seconds": 3.91
+  },
+  {
+   "clip_id": "openvid_UTxt7WlPTuY_10_17to319",
+   "flicker": 0.01586,
+   "seconds": 3.96
+  },
+  {
+   "clip_id": "openvid_UUUWxvofLgU_13_19to453",
+   "flicker": 0.00991,
+   "seconds": 4.06
+  },
+  {
+   "clip_id": "openvid_X0MzqDj4FF4_7_0to151",
+   "flicker": 0.00552,
+   "seconds": 3.96
+  },
+  {
+   "clip_id": "openvid_X2WTwrFf2Q4_5_0to239",
+   "flicker": 0.01549,
+   "seconds": 3.98
+  },
+  {
+   "clip_id": "openvid_X2t4l_yMStE_4_0to207",
+   "flicker": 0.00906,
+   "seconds": 3.87
+  },
+  {
+   "clip_id": "openvid_X3APUuLOug4_20_126to270",
+   "flicker": 0.00519,
+   "seconds": 3.94
+  },
+  {
+   "clip_id": "openvid_X3pL1dkTHIA_23_0to132",
+   "flicker": 0.00371,
+   "seconds": 3.86
+  },
+  {
+   "clip_id": "openvid_X48k4yb63EM_15_0to111",
+   "flicker": 0.00896,
+   "seconds": 3.88
+  },
+  {
+   "clip_id": "openvid_X6Ec-hZaToA_65_96to232",
+   "flicker": 0.00277,
+   "seconds": 3.86
+  },
+  {
+   "clip_id": "openvid_X7kz4uMXFlE_9_0to114",
+   "flicker": 0.00403,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "openvid_XA2HBBrkUbU_109_0to173",
+   "flicker": 0.00976,
+   "seconds": 3.92
+  },
+  {
+   "clip_id": "openvid_XAJQzGmd5mg_26_881to1213",
+   "flicker": 0.00795,
+   "seconds": 3.92
+  },
+  {
+   "clip_id": "openvid_XAehIzy5FMg_41_0to132",
+   "flicker": 0.00846,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "openvid_XCeTSc6ZopA_48_0to174",
+   "flicker": 0.01037,
+   "seconds": 3.92
+  },
+  {
+   "clip_id": "openvid_XEPyFpamcfs_25_183to461",
+   "flicker": 0.0073,
+   "seconds": 4.02
+  },
+  {
+   "clip_id": "openvid_XFSw6t7SP00_79_0to109",
+   "flicker": 0.01369,
+   "seconds": 3.87
+  },
+  {
+   "clip_id": "openvid_XH0x7vyYmG4_16_0to124",
+   "flicker": 0.00613,
+   "seconds": 3.95
+  },
+  {
+   "clip_id": "openvid_XHZmNU-De3A_62_0to504",
+   "flicker": 0.01054,
+   "seconds": 3.86
+  },
+  {
+   "clip_id": "openvid_XK45bsIkpcU_16_0to206",
+   "flicker": 0.0046,
+   "seconds": 4.01
+  },
+  {
+   "clip_id": "openvid_XL0_8pw0lmI_30_0to122",
+   "flicker": 0.01435,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "openvid_XM9K4luhq4U_8_0to127",
+   "flicker": 0.00367,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "openvid_XMr5MkOHB5o_2_59to276",
+   "flicker": 0.01269,
+   "seconds": 3.96
+  },
+  {
+   "clip_id": "openvid__dfchD7LsY8_219_47to173",
+   "flicker": 0.01138,
+   "seconds": 3.93
+  },
+  {
+   "clip_id": "openvid__gXX8lnPIFc_1_16to205",
+   "flicker": 0.00579,
+   "seconds": 3.79
+  },
+  {
+   "clip_id": "openvid__hKvS8p3JCM_17_0to102",
+   "flicker": 0.00463,
+   "seconds": 3.82
+  },
+  {
+   "clip_id": "openvid__i1gxHY_Av0_28_40to294",
+   "flicker": 0.01464,
+   "seconds": 3.94
+  },
+  {
+   "clip_id": "openvid__iASX0-T3CU_13_0to122",
+   "flicker": 0.00708,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "openvid__iOqcqt0miE_0_85to379",
+   "flicker": 0.00811,
+   "seconds": 3.85
+  },
+  {
+   "clip_id": "openvid__j0oiJmEhys_6_0to370",
+   "flicker": 0.02213,
+   "seconds": 3.94
+  },
+  {
+   "clip_id": "openvid__jHeXEJseBk_1_22to131",
+   "flicker": 0.00259,
+   "seconds": 3.82
+  },
+  {
+   "clip_id": "openvid__jsLK0fmZwk_26_0to209",
+   "flicker": 0.01005,
+   "seconds": 3.98
+  },
+  {
+   "clip_id": "openvid__kdeY0SSvEc_0_0to153",
+   "flicker": 0.00583,
+   "seconds": 3.88
+  },
+  {
+   "clip_id": "openvid__lRwXDpllT8_3_343to487",
+   "flicker": 0.00719,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "openvid__lzhshmH3os_25_0to198",
+   "flicker": 0.01292,
+   "seconds": 3.91
+  },
+  {
+   "clip_id": "openvid__mXW7-0ebK0_14_0to281",
+   "flicker": 0.01067,
+   "seconds": 3.87
+  },
+  {
+   "clip_id": "openvid__nLdQ5vZP5c_6_0to148",
+   "flicker": 0.00825,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "openvid__nVSNv9UvCs_67_27to131",
+   "flicker": 0.00459,
+   "seconds": 3.84
+  },
+  {
+   "clip_id": "openvid__oJxPqTzmHM_33_0to162",
+   "flicker": 0.00629,
+   "seconds": 3.93
+  },
+  {
+   "clip_id": "openvid__oppseM4TZU_0_0to176",
+   "flicker": 0.00518,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "openvid__p707YmBNVY_22_77to201",
+   "flicker": 0.00302,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "openvid__pLynjCmxQ4_10_22to202",
+   "flicker": 0.00838,
+   "seconds": 3.92
+  },
+  {
+   "clip_id": "openvid__pRREeqmqMs_5_0to286",
+   "flicker": 0.00781,
+   "seconds": 3.88
+  },
+  {
+   "clip_id": "openvid__pWnn1ODmiY_6_0to270",
+   "flicker": 0.00611,
+   "seconds": 3.84
+  },
+  {
+   "clip_id": "openvid__qNWfoRp3Gg_30_552to717",
+   "flicker": 0.01486,
+   "seconds": 4.0
+  },
+  {
+   "clip_id": "openvid__qbsmhHO950_5_121to392",
+   "flicker": 0.01125,
+   "seconds": 3.95
+  },
+  {
+   "clip_id": "openvid__sRboZAx_zk_41_0to136",
+   "flicker": 0.00621,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "openvid__sioC44NGRw_104_540to1020",
+   "flicker": 0.01968,
+   "seconds": 4.13
+  },
+  {
+   "clip_id": "openvid__t-96LgcizU_7_0to191",
+   "flicker": 0.00914,
+   "seconds": 3.92
+  },
+  {
+   "clip_id": "openvid__teMxcOcVyw_195_0to119",
+   "flicker": 0.00556,
+   "seconds": 3.99
+  },
+  {
+   "clip_id": "openvid__uJLNGVICts_19_0to113",
+   "flicker": 0.0033,
+   "seconds": 3.91
+  },
+  {
+   "clip_id": "openvid__uhw0DC-moA_23_0to118",
+   "flicker": 0.00383,
+   "seconds": 4.01
+  },
+  {
+   "clip_id": "openvid__vGh-6Ms-io_26_19to219",
+   "flicker": 0.00347,
+   "seconds": 3.81
+  },
+  {
+   "clip_id": "openvid__wHxwgtdMsA_17_109to460",
+   "flicker": 0.01272,
+   "seconds": 3.91
+  },
+  {
+   "clip_id": "openvid__waJ6mAouN0_32_77to252",
+   "flicker": 0.00326,
+   "seconds": 3.86
+  },
+  {
+   "clip_id": "openvid__y0W5Nty9Z8_91_51to188",
+   "flicker": 0.00726,
+   "seconds": 3.99
+  },
+  {
+   "clip_id": "openvid__yaAkh4ICDk_44_0to119",
+   "flicker": 0.00528,
+   "seconds": 3.86
+  },
+  {
+   "clip_id": "openvid__zDAVM7zEQ8_20_0to123",
+   "flicker": 0.00573,
+   "seconds": 3.91
+  },
+  {
+   "clip_id": "vcbench_animal_3195531_3840x2160",
+   "flicker": 0.00329,
+   "seconds": 3.88
+  },
+  {
+   "clip_id": "vcbench_book_4034077_2160x4096",
+   "flicker": 0.00557,
+   "seconds": 3.81
+  },
+  {
+   "clip_id": "vcbench_bus_2950082_3840x2160",
+   "flicker": 0.00514,
+   "seconds": 4.04
+  },
+  {
+   "clip_id": "vcbench_butterfly_2616637_1920x1080",
+   "flicker": 0.02188,
+   "seconds": 4.07
+  },
+  {
+   "clip_id": "vcbench_car_2878091_3840x2160",
+   "flicker": 0.00413,
+   "seconds": 4.11
+  },
+  {
+   "clip_id": "vcbench_car_3066451_4096x2160",
+   "flicker": 0.00155,
+   "seconds": 4.01
+  },
+  {
+   "clip_id": "vcbench_chicken_856986_1920x1080",
+   "flicker": 0.01513,
+   "seconds": 3.97
+  },
+  {
+   "clip_id": "vcbench_conversation_3206301_1920x1080",
+   "flicker": 0.01806,
+   "seconds": 3.87
+  },
+  {
+   "clip_id": "vcbench_conversation_3248276_3840x2160",
+   "flicker": 0.01085,
+   "seconds": 3.86
+  },
+  {
+   "clip_id": "vcbench_conversation_4434067_3840x2160",
+   "flicker": 0.00308,
+   "seconds": 3.85
+  },
+  {
+   "clip_id": "vcbench_dancing_3044573_2160x3840",
+   "flicker": 0.01962,
+   "seconds": 4.08
+  },
+  {
+   "clip_id": "vcbench_dancing_3761544_3840x2160",
+   "flicker": 0.02479,
+   "seconds": 3.91
+  },
+  {
+   "clip_id": "vcbench_dancing_4540332_3840x2160",
+   "flicker": 0.01258,
+   "seconds": 3.94
+  },
+  {
+   "clip_id": "vcbench_destination_33713788_3840x2160",
+   "flicker": 0.00226,
+   "seconds": 4.2
+  },
+  {
+   "clip_id": "vcbench_education_3676988_4096x2160",
+   "flicker": 0.01411,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "vcbench_education_4498287_3840x2160",
+   "flicker": 0.00702,
+   "seconds": 3.85
+  },
+  {
+   "clip_id": "vcbench_education_4498914_3840x2160",
+   "flicker": 0.00325,
+   "seconds": 3.84
+  },
+  {
+   "clip_id": "vcbench_football_4612890_4096x2160",
+   "flicker": 0.00414,
+   "seconds": 3.93
+  },
+  {
+   "clip_id": "vcbench_holiday_3197574_1920x1080",
+   "flicker": 0.00553,
+   "seconds": 3.93
+  },
+  {
+   "clip_id": "vcbench_horse_3191807_3840x2160",
+   "flicker": 0.02992,
+   "seconds": 3.92
+  },
+  {
+   "clip_id": "vcbench_lunch_8775226_2160x3840",
+   "flicker": 0.01164,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "vcbench_meeting_3202040_1920x1080",
+   "flicker": 0.00734,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "vcbench_meeting_3251811_3840x2160",
+   "flicker": 0.0094,
+   "seconds": 3.82
+  },
+  {
+   "clip_id": "vcbench_meeting_3252919_3840x2160",
+   "flicker": 0.01859,
+   "seconds": 3.86
+  },
+  {
+   "clip_id": "vcbench_meeting_3254009_3840x2160",
+   "flicker": 0.00506,
+   "seconds": 3.88
+  },
+  {
+   "clip_id": "vcbench_meeting_3255226_3840x2160",
+   "flicker": 0.01114,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "vcbench_meeting_4428751_3840x2160",
+   "flicker": 0.00874,
+   "seconds": 3.88
+  },
+  {
+   "clip_id": "vcbench_meeting_4428753_3840x2160",
+   "flicker": 0.01204,
+   "seconds": 3.83
+  },
+  {
+   "clip_id": "vcbench_mirror_3197657_1080x1920",
+   "flicker": 0.0111,
+   "seconds": 3.91
+  },
+  {
+   "clip_id": "vcbench_office_3191422_4096x2160",
+   "flicker": 0.01037,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "vcbench_office_3192306_3840x2160",
+   "flicker": 0.0018,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "vcbench_office_3196062_3840x2160",
+   "flicker": 0.00843,
+   "seconds": 3.85
+  },
+  {
+   "clip_id": "vcbench_office_3201691_1920x1080",
+   "flicker": 0.00497,
+   "seconds": 3.88
+  },
+  {
+   "clip_id": "vcbench_office_3255156_3840x2160",
+   "flicker": 0.00488,
+   "seconds": 3.88
+  },
+  {
+   "clip_id": "vcbench_painting_3795837_4096x2160",
+   "flicker": 0.0224,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "vcbench_reading_3959544_2160x4096",
+   "flicker": 0.00579,
+   "seconds": 3.88
+  },
+  {
+   "clip_id": "vcbench_reading_4034078_2160x4096",
+   "flicker": 0.00639,
+   "seconds": 3.87
+  },
+  {
+   "clip_id": "vcbench_reading_4058252_2160x4096",
+   "flicker": 0.00493,
+   "seconds": 3.85
+  },
+  {
+   "clip_id": "vcbench_reading_4626373_2160x4096",
+   "flicker": 0.00738,
+   "seconds": 3.85
+  },
+  {
+   "clip_id": "vcbench_robot_8501993_2160x3840",
+   "flicker": 0.0158,
+   "seconds": 3.96
+  },
+  {
+   "clip_id": "vcbench_salad_3760747_3840x2160",
+   "flicker": 0.01483,
+   "seconds": 3.92
+  },
+  {
+   "clip_id": "vcbench_salad_7572244_2160x3840",
+   "flicker": 0.00612,
+   "seconds": 3.92
+  },
+  {
+   "clip_id": "vcbench_school_5199623_3840x2160",
+   "flicker": 0.00318,
+   "seconds": 3.99
+  },
+  {
+   "clip_id": "vcbench_school_5199627_3840x2160",
+   "flicker": 0.00427,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "vcbench_school_5200358_3840x2160",
+   "flicker": 0.01546,
+   "seconds": 4.05
+  },
+  {
+   "clip_id": "vcbench_sculpture_33742628_2160x3840",
+   "flicker": 0.01692,
+   "seconds": 4.04
+  },
+  {
+   "clip_id": "vcbench_talk_4298771_3840x2160",
+   "flicker": 0.00738,
+   "seconds": 3.89
+  },
+  {
+   "clip_id": "vcbench_talk_4426529_3840x2160",
+   "flicker": 0.00798,
+   "seconds": 3.91
+  },
+  {
+   "clip_id": "vcbench_talk_4625286_1920x1080",
+   "flicker": 0.00747,
+   "seconds": 3.87
+  },
+  {
+   "clip_id": "vcbench_talk_4625294_1920x1080",
+   "flicker": 0.00875,
+   "seconds": 3.9
+  },
+  {
+   "clip_id": "vcbench_talk_4625322_1920x1080",
+   "flicker": 0.00429,
+   "seconds": 4.03
+  },
+  {
+   "clip_id": "vcbench_talk_4781559_4096x2160",
+   "flicker": 0.01708,
+   "seconds": 3.97
+  },
+  {
+   "clip_id": "vcbench_teacher_3252126_3840x2160",
+   "flicker": 0.00752,
+   "seconds": 3.94
+  },
+  {
+   "clip_id": "vcbench_teacher_6333712_4096x2160",
+   "flicker": 0.00993,
+   "seconds": 3.97
+  },
+  {
+   "clip_id": "vcbench_teacher_6334253_4096x2160",
+   "flicker": 0.00258,
+   "seconds": 3.92
+  },
+  {
+   "clip_id": "vcbench_teacher_8160567_2160x3840",
+   "flicker": 0.00622,
+   "seconds": 3.97
+  },
+  {
+   "clip_id": "vcbench_teacher_8542217_2160x4096",
+   "flicker": 0.01026,
+   "seconds": 4.0
+  },
+  {
+   "clip_id": "vcbench_teenager_4100358_4096x2160",
+   "flicker": 0.00823,
+   "seconds": 3.86
+  },
+  {
+   "clip_id": "vcbench_teenager_4100460_4096x2160",
+   "flicker": 0.01575,
+   "seconds": 3.84
+  },
+  {
+   "clip_id": "vcbench_teenager_7269643_3840x2160",
+   "flicker": 0.01558,
+   "seconds": 4.04
+  },
+  {
+   "clip_id": "vcbench_turtle_17823784_2160x3840",
+   "flicker": 0.00663,
+   "seconds": 4.28
+  },
+  {
+   "clip_id": "vcbench_turtle_5259430_2160x4096",
+   "flicker": 0.00362,
+   "seconds": 3.82
+  },
+  {
+   "clip_id": "vcbench_vegetable_853790_1920x1080",
+   "flicker": 0.01999,
+   "seconds": 3.83
+  }
+ ]
+}

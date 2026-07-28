@@ -15,4 +15,7 @@ LAB=/projects/illinois/eng/cs/jrehg/users/emirkisa
 PY_BIN="$LAB/envs/diffusion/bin/python"
 cd "$LAB/diffusion-research"
 nvidia-smi --query-gpu=name --format=csv,noheader || true
-"$PY_BIN" eval_ladder/dominance.py --mode passA
+# PASSA_ARGS lets a side lane (exp_077 d2_gen) reuse this script: e.g.
+#   --arm d2_gen --extra-registry .../registry_d2gen.jsonl --gens outputs/videos/d2gen_eval
+#   --out eval_ladder/dominance_passA_d2.jsonl
+"$PY_BIN" eval_ladder/dominance.py --mode passA ${PASSA_ARGS}

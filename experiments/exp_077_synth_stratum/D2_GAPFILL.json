@@ -1,0 +1,103 @@
+{
+ "why": "4 of 3,072 slots exhausted the 25-attempt ladder. The blocker is the slot's REFERENCE PAIR, which the ladder never redraws: 3 share one reference whose clip has a perfectly static pure phase, collapsing the assert2 ratio denominator to its 1e-3 floor (seam 1.8-1560 vs a <=2.0 gate) and pinning m2 at ~0.64 vs <=0.5.",
+ "action": "re-run ONLY those slots with a substituted content-disjoint reference pair, drawn least-used-first from the plan's own pool. Spends the 'reused ~4x' slack to protect the exact invariant '384 target pairs x exactly 8 operators'. Frozen gate, tau, 72-shader bank, easings, retry ladder and timing law are UNCHANGED; no recalibration.",
+ "n_slots": 4,
+ "slots": [
+  {
+   "tuple_id": 265,
+   "target_index": 33,
+   "slot": 1,
+   "planned_shader": "pinwheel",
+   "ref_pair_exhausted": [
+    "openvid_T1MiFx98l3g_0_50to156",
+    "openvid_S-40Fl6-sjM_21_26to326"
+   ],
+   "ref_pair_substituted": [
+    "vcbench_lunch_8775226_2160x3840",
+    "openvid_UT4hPMISonI_134_0to137"
+   ],
+   "substitute_prior_uses": 4,
+   "target_shaders_excluded_from_the_ladder": [
+    "BookFlip",
+    "Overexposure",
+    "WaterDrop",
+    "directionalwarp",
+    "morph",
+    "polar_function",
+    "windowslice"
+   ]
+  },
+  {
+   "tuple_id": 1371,
+   "target_index": 171,
+   "slot": 3,
+   "planned_shader": "ZoomRigthWipe",
+   "ref_pair_exhausted": [
+    "openvid_T1MiFx98l3g_0_50to156",
+    "openvid_S-40Fl6-sjM_21_26to326"
+   ],
+   "ref_pair_substituted": [
+    "vcbench_destination_33713788_3840x2160",
+    "vcbench_meeting_3252919_3840x2160"
+   ],
+   "substitute_prior_uses": 4,
+   "target_shaders_excluded_from_the_ladder": [
+    "EdgeTransition",
+    "GlitchDisplace",
+    "HSVfade",
+    "StaticFade",
+    "WaterDrop",
+    "crosswarp",
+    "flyeye"
+   ]
+  },
+  {
+   "tuple_id": 1988,
+   "target_index": 248,
+   "slot": 4,
+   "planned_shader": "VerticalOpen",
+   "ref_pair_exhausted": [
+    "openvid_T1MiFx98l3g_0_50to156",
+    "openvid_S-40Fl6-sjM_21_26to326"
+   ],
+   "ref_pair_substituted": [
+    "vcbench_school_5199623_3840x2160",
+    "vcbench_meeting_3255226_3840x2160"
+   ],
+   "substitute_prior_uses": 4,
+   "target_shaders_excluded_from_the_ladder": [
+    "BookFlip",
+    "crosswarp",
+    "directionalwarp",
+    "directionalwipe",
+    "fade",
+    "randomsquares",
+    "wind"
+   ]
+  },
+  {
+   "tuple_id": 2567,
+   "target_index": 320,
+   "slot": 7,
+   "planned_shader": "HSVfade",
+   "ref_pair_exhausted": [
+    "davis_night-race",
+    "davis_dancing"
+   ],
+   "ref_pair_substituted": [
+    "openvid__uJLNGVICts_19_0to113",
+    "openvid_TGlDRBUxYco_44_0to215"
+   ],
+   "substitute_prior_uses": 4,
+   "target_shaders_excluded_from_the_ladder": [
+    "LinearBlur",
+    "PuzzleRight",
+    "dissolve",
+    "fadecolor",
+    "fragment",
+    "luminance_melt",
+    "windowblinds"
+   ]
+  }
+ ]
+}

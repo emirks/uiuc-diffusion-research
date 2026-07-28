@@ -1,0 +1,30 @@
+{
+ "created": "2026-07-25",
+ "rule": "a 'static' call is upheld only if measured motion is below the motion floor of the existing clean training pool (1.365); applied uniformly to all four flagged clips, not case-by-case",
+ "adjudications": [
+  {
+   "clip_id": "vcbench_coast_33754706_2160x3840",
+   "was": "static",
+   "now": "accept",
+   "rationale": "overturn: motion 18.93 is near the pool MEDIAN; boats bob and the camera drifts left across the strip. Reviewer call was wrong."
+  },
+  {
+   "clip_id": "vcbench_sunset_1686791_1080x1920",
+   "was": "static",
+   "now": "accept",
+   "rationale": "overturn: motion 5.28, 3.9x the pool floor; the wing shifts against the horizon and the sun glow evolves."
+  },
+  {
+   "clip_id": "vcbench_teenager_4297124_3840x2160",
+   "was": "static",
+   "now": "accept",
+   "rationale": "overturn of MY OWN call: motion 4.36, 3.2x the pool floor; on a second look her head and arm clearly move. I was too harsh."
+  },
+  {
+   "clip_id": "vcbench_phone_2072695_1080x1618",
+   "was": "static",
+   "now": "static",
+   "rationale": "UPHELD: motion 0.975, below every clip in the existing pool; only faint water texture changes."
+  }
+ ]
+}

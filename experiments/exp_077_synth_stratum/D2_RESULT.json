@@ -1,0 +1,242 @@
+{
+ "experiment": "exp_077_synth_stratum",
+ "measurement": "D2 generalist (d2_gen) vs incumbent generalist (ic_gen), self-relative",
+ "adapter": "outputs/training/exp_077_synth_stratum/d2_gen/checkpoints/lora_weights_step_05000.safetensors",
+ "seeds": [
+  42,
+  43
+ ],
+ "instrument": {
+  "matrix": "m1a_S3",
+  "max_pool_refs": 8,
+  "npz": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/eval-v4-cert/outputs/eval/certification/4.0.0-draft.1/analysis/distance_matrices.npz"
+ },
+ "bars": {
+  "pooled_cross_delta_pp": 5.0,
+  "donors_positive": "15/23",
+  "same_content_floors": {
+   "G-unseen-same": 0.837,
+   "G-zs-same": 0.858
+  },
+  "near_copy_max": 0.05,
+  "ref_dominated_max": 0.1
+ },
+ "missing_items": {},
+ "n_missing": 0,
+ "headline": [
+  {
+   "cell": "G-unseen-cross",
+   "pct_type": "proxy",
+   "n": 26,
+   "n_expected": 26,
+   "d2_raw_app_ref": 0.6454272724069104,
+   "gt_ceiling_mean": 0.8735378199676234,
+   "d2_pool_pct": 0.7402518526852221,
+   "incumbent_pool_pct_published": 0.729,
+   "incumbent_pool_pct_reproduced": 0.7287981118464087,
+   "incumbent_raw_app_ref": 0.6302472450945301,
+   "n_paired": 26,
+   "delta_pp_paired": 1.1453740838813369,
+   "delta_pp_vs_published": 1.1251852685222108
+  },
+  {
+   "cell": "G-zs-cross",
+   "pct_type": "proxy",
+   "n": 20,
+   "n_expected": 20,
+   "d2_raw_app_ref": 0.6320152562064327,
+   "gt_ceiling_mean": 0.8721632058067036,
+   "d2_pool_pct": 0.7596378878557357,
+   "incumbent_pool_pct_published": 0.728,
+   "incumbent_pool_pct_reproduced": 0.7275817112076833,
+   "incumbent_raw_app_ref": 0.6086400370959195,
+   "n_paired": 20,
+   "delta_pp_paired": 3.2056176648052355,
+   "delta_pp_vs_published": 3.1637887855735736
+  },
+  {
+   "cell": "G-unseen-same",
+   "pct_type": "same",
+   "n": 13,
+   "n_expected": 13,
+   "d2_raw_app_ref": 0.7584871913209017,
+   "gt_ceiling_mean": 0.8735378199676234,
+   "d2_pool_pct": 0.8670995210281828,
+   "incumbent_pool_pct_published": 0.887,
+   "incumbent_pool_pct_reproduced": 0.8874298419660431,
+   "incumbent_raw_app_ref": 0.7710726955636458,
+   "n_paired": 13,
+   "delta_pp_paired": -2.033032093786027,
+   "delta_pp_vs_published": -1.9900478971817237
+  },
+  {
+   "cell": "G-zs-same",
+   "pct_type": "same",
+   "n": 8,
+   "n_expected": 8,
+   "d2_raw_app_ref": 0.7441015322449146,
+   "gt_ceiling_mean": 0.8635471373840208,
+   "d2_pool_pct": 0.8624879053165405,
+   "incumbent_pool_pct_published": 0.908,
+   "incumbent_pool_pct_reproduced": 0.9084209366503079,
+   "incumbent_raw_app_ref": 0.7523242275080511,
+   "n_paired": 8,
+   "delta_pp_paired": -4.593303133376739,
+   "delta_pp_vs_published": -4.551209468345951
+  }
+ ],
+ "incumbent_reproduces": {
+  "G-unseen-cross": {
+   "reproduced": 0.7287981118464087,
+   "published": 0.729,
+   "n": 26,
+   "agrees": true
+  },
+  "G-zs-cross": {
+   "reproduced": 0.7275817112076833,
+   "published": 0.728,
+   "n": 20,
+   "agrees": true
+  },
+  "G-unseen-same": {
+   "reproduced": 0.8874298419660431,
+   "published": 0.887,
+   "n": 13,
+   "agrees": true
+  },
+  "G-zs-same": {
+   "reproduced": 0.9084209366503079,
+   "published": 0.908,
+   "n": 8,
+   "agrees": true
+  }
+ },
+ "pooled_cross": {
+  "n_items": 46,
+  "n_items_expected": 46,
+  "mean_delta_pp": 2.041132162543901,
+  "donors_positive": 13,
+  "donors_total": 23,
+  "donors_registered": 23,
+  "donors_missing": [],
+  "per_donor_delta_pp": {
+   "animalization": 0.9966634242714989,
+   "color_rain": 10.942887443191784,
+   "cotton_cloud": -0.3087638783079161,
+   "display_transition": -10.280403930197025,
+   "earth_element": 9.072729450188877,
+   "firelava": 2.1192644210960787,
+   "flying_cam_transition": 13.97231785881361,
+   "gas_transformation": 11.655515191602728,
+   "hero_flight": -5.551192861074994,
+   "illustration_scene": -5.492349449130413,
+   "live_concert": -2.9605366077261444,
+   "luminous_gaze": 24.07808214786224,
+   "melt_transition": 1.4033514811121583,
+   "money_rain": 12.252500179765846,
+   "monstrosity": 7.596511615372292,
+   "polygon": -7.0142896873144736,
+   "portal": 1.836697848982477,
+   "raven_transition": 8.731685762239017,
+   "saint_glow": -12.295332222211957,
+   "shadow": -12.073082502748234,
+   "shadow_smoke": -1.7343004839400877,
+   "super_fast_run": 8.533505120487733,
+   "wireframe": -8.535420583825365
+  },
+  "d2_pool_pct": 0.7486805636289237
+ },
+ "guards": {
+  "near_copy_d2": {
+   "n_rows": 756,
+   "n_near_copy": 0,
+   "rate": 0.0,
+   "copy_max_mean": 0.2852994513959087,
+   "copy_max_p95": 0.5094117522239685
+  },
+  "near_copy_incumbent_same_items": {
+   "n_rows": 756,
+   "n_near_copy": 0,
+   "rate": 0.0,
+   "copy_max_mean": 0.27529114421462,
+   "copy_max_p95": 0.5072940587997437
+  },
+  "ref_dominated_passA_d2": {
+   "n": 134,
+   "ref_dominated_rate": 0.007462686567164179,
+   "ep_align": 0.7179974547740239,
+   "ref_align": 0.18306217606721528,
+   "G-unseen-cross": {
+    "n": 52,
+    "ref_dominated_rate": 0.0
+   },
+   "G-zs-cross": {
+    "n": 40,
+    "ref_dominated_rate": 0.0
+   },
+   "G-unseen-same": {
+    "n": 26,
+    "ref_dominated_rate": 0.0
+   },
+   "G-zs-same": {
+    "n": 16,
+    "ref_dominated_rate": 0.0625
+   }
+  },
+  "ref_dominated_passA_incumbent": {
+   "n": 134,
+   "ref_dominated_rate": 0.022388059701492536,
+   "ep_align": 0.7746033760816303,
+   "ref_align": 0.17958710417707466,
+   "G-unseen-cross": {
+    "n": 52,
+    "ref_dominated_rate": 0.019230769230769232
+   },
+   "G-zs-cross": {
+    "n": 40,
+    "ref_dominated_rate": 0.0
+   },
+   "G-unseen-same": {
+    "n": 26,
+    "ref_dominated_rate": 0.0
+   },
+   "G-zs-same": {
+    "n": 16,
+    "ref_dominated_rate": 0.125
+   }
+  },
+  "same_content_floors": {
+   "G-unseen-same": {
+    "value": 0.8670995210281828,
+    "floor": 0.837,
+    "holds": true
+   },
+   "G-zs-same": {
+    "value": 0.8624879053165405,
+    "floor": 0.858,
+    "holds": true
+   }
+  },
+  "pool_completeness": {
+   "d2": {
+    "rows_present": 756,
+    "rows_usable": 756,
+    "rows_dropped": 0
+   },
+   "incumbent": {
+    "rows_present": 756,
+    "rows_usable": 753,
+    "rows_dropped": 3
+   },
+   "note": "756 pool rows are planned per arm. The incumbent's first scoring pass left 3 rows unusable; those 3 are baked into its published 72.9/72.8/88.7/90.8 and were NOT re-run, because re-running them would change the number this measurement is compared against."
+  }
+ },
+ "verdict": {
+  "complete": true,
+  "pooled_cross_delta_pp": 2.041132162543901,
+  "bar_pooled_cross_met": false,
+  "bar_donors_met": false,
+  "donors_positive": "13/23",
+  "WIN": false
+ }
+}

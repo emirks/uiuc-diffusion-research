@@ -1,0 +1,13 @@
+{
+  "status": "PENDING",
+  "note": "Preliminary record written at submit time (robustness). Will be overwritten with final verdict when train completes.",
+  "run_dir": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/exp_077_synth_stratum/run_0001",
+  "render": {"jobid": 9649173, "state": "COMPLETED", "n_tuples": 20, "n_clips": 40, "determinism_all_byte_exact": true},
+  "chain": {
+    "build_jobid": 9649322,
+    "train_jobid": 9649323,
+    "train_dependency": "afterok:9649322",
+    "embed_effective_K_jobid": 9649327
+  },
+  "config_fix_applied": "make_train_config.py had baked a stale /tmp/.../dummy_run data root; regenerated against run_0001 before submit"
+}

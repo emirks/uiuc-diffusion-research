@@ -167,6 +167,68 @@ over `vt-vl-lab/3d-photo-inpainting` (vispy → the same headless EGL failures a
 
 ---
 
+## 5b. The luma-matte family: the compositor is the bottleneck, not the map (exp_084)
+
+The aux-map family (`luma.glsl` + a procedural greyscale field) was set to 0% in the
+shipped dataset for looking fake. exp_084 ran the 2×2 that separates map quality from
+compositor quality, blind-graded, and the answer is that **they are two independent
+defects and the compositor gates both**.
+
+**Mechanics worth knowing before touching this family:**
+
+- **A static matte *is* an arrival-time map.** One texture is uploaded per operator and
+  `progress` sweeps a threshold across a fixed scalar field, so the animated matte reduces
+  to `T(x) = normalised time at which x flips`. A generated matte bank only needs to emit a
+  scalar image per operator — **never a video**.
+- **`step()` breaks the endpoint identity.** `step(progress, m)` returns 1 when
+  `m == progress`, so at `progress = 1` every pixel at the matte's *maximum* keeps showing
+  the outgoing frame. Any matte normalised to [0,1] has such pixels — measured 5–6 stale
+  pixels per clip leaking into the final conditioning block. Only visible under a max-abs
+  check; the MAE gate in exp_075 passes it silently.
+- **The `luma` sampler is vertically flipped w.r.t. the image.** `getFromColor` samples at
+  `(uv.x, 1-uv.y)` but the aux sampler is read with a bare `texture2D(luma, uv)`, so matte
+  row 0 lands at the *bottom* of the output. Irrelevant for isotropic maps, load-bearing
+  for any content-aware matte. Probe: `exp_084/probe_orientation.py`.
+- **Fixing the compositor** = `smoothstep(p-f, p+f, m)` with per-operator width, a rim
+  colour in the advancing band, and an additive glow lobe ahead of the front. Remap the
+  threshold to `p = progress·(1+2f) − f` and gate rim/glow by a progress envelope, and the
+  endpoint identities become exact (measured 0 bad pixels).
+  Implementation: `exp_084/shaders/luma_soft.glsl`, styles in `exp_084/mattes/styles.py`.
+
+**Blind BAD-rate result** (16 clips/arm, anonymised shuffled contact sheets, single grader
+who also rendered — treat the ordering as the finding, the percentages as soft):
+
+| | hard `step()` | feathered |
+|---|---|---|
+| shipped maps | 88% BAD | 56% BAD |
+| new arrival-time maps | 88% BAD | **31% BAD** |
+
+- Better maps through the old compositor buy **nothing** (14/16 both, Fisher p = 1.00).
+- The 56% residual splits cleanly: the **aperiodic** shipped maps (`fbm, radial, linear`)
+  go 6/8 → 1/8 BAD, the **geometric** ones (`stripes, checker, spiral, voronoi`) stay
+  8/8 → 8/8 (p = 0.0014). A feathered checkerboard is still a checkerboard; no boundary
+  treatment fixes a periodic tiling. **Drop the four geometric kinds from this family.**
+- New maps + fixed compositor is the best cell but is *not* separable from
+  rescued-aperiodic-shipped (p = 0.62). Their value is variety and content-awareness,
+  not a higher ceiling.
+
+**Map families that beat fbm** (all emitted as arrival-time fields, `exp_084/mattes/newmaps.py`):
+eikonal fast marching through a **ridged** multifractal speed field (plain fbm has fat fast
+regions → round blobs; ridged fbm has thin fast channels → the front branches);
+invasion percolation with a grey **opening** to swallow the late sites stranded inside the
+cluster (without it the map reads as grain, not ink); CC0 Krita brush alphas stamped along
+parametric paths with the stamp index as arrival time; and a content-aware boundary draw
+that inks the Canny edges of the *incoming* frame then bleeds outward — the one behaviour
+a stock matte pack physically cannot have.
+
+**Licensing (checked 2026-07):** there is **no CC0/training-safe commercial matte pack**.
+Pixabay, Pexels, ProductionCrate and ActionVFX all prohibit ML training; Shadertoy defaults
+to CC BY-NC-SA. Safe sources: **David Revoy's Krita brush bundles (CC-0, brushes only — the
+article artwork is CC-BY)**, JangaFX's 15 free VDBs (CC0), Netflix `Vera-Layered-Video-Dataset`
+(Apache-2.0), Kenney particle packs (CC0).
+
+---
+
 ## 6. Endpoint-pair sources
 
 We use DAVIS (150 sequences — fine quality, far too small for endpoint diversity).

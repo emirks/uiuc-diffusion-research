@@ -1,0 +1,266 @@
+{
+ "created": "2026-07-25",
+ "stratum": "S2",
+ "planned": {
+  "n_ops": 800,
+  "contents_per_op": 10,
+  "n_clips": 8000
+ },
+ "realized": {
+  "n_clips": 7990,
+  "n_ops_complete": 799,
+  "n_ops_dropped": 10,
+  "n_ops_finalised": 809
+ },
+ "invariants": {
+  "pure_phase_max_abs_diff": 0.0,
+  "all_ops_exactly_m_clips": true,
+  "all_ops_endpoint_disjoint": true,
+  "no_orphan_manifest_rows": true,
+  "no_ghost_dropped_ops": true,
+  "op_ids_unique": true
+ },
+ "gates": {
+  "seam_max": 1.9984,
+  "m1_p10_min": 0.2547,
+  "m2_max_dq": 0.4916,
+  "m1_min_flag_count": 35
+ },
+ "overdraw": 1.2506,
+ "overdraw_bar": 2.5,
+ "overdraw_pass": true,
+ "attempts_to_fill": {
+  "min": 10,
+  "median": 12,
+  "max": 25
+ },
+ "per_shader": {
+  "BookFlip": {
+   "accepted": 140,
+   "rejected": 58
+  },
+  "BowTieWithParameter": {
+   "accepted": 150,
+   "rejected": 37
+  },
+  "Box": {
+   "accepted": 150,
+   "rejected": 42
+  },
+  "ButterflyWaveScrawler": {
+   "accepted": 150,
+   "rejected": 50
+  },
+  "ColourDistance": {
+   "accepted": 150,
+   "rejected": 31
+  },
+  "CrossZoom": {
+   "accepted": 150,
+   "rejected": 50
+  },
+  "Dreamy": {
+   "accepted": 150,
+   "rejected": 48
+  },
+  "EdgeTransition": {
+   "accepted": 150,
+   "rejected": 82
+  },
+  "FilmBurn": {
+   "accepted": 150,
+   "rejected": 26
+  },
+  "GlitchDisplace": {
+   "accepted": 150,
+   "rejected": 24
+  },
+  "GridFlip": {
+   "accepted": 150,
+   "rejected": 38
+  },
+  "HSVfade": {
+   "accepted": 150,
+   "rejected": 31
+  },
+  "HorizontalClose": {
+   "accepted": 150,
+   "rejected": 30
+  },
+  "HorizontalOpen": {
+   "accepted": 150,
+   "rejected": 32
+  },
+  "LinearBlur": {
+   "accepted": 150,
+   "rejected": 35
+  },
+  "Overexposure": {
+   "accepted": 150,
+   "rejected": 105
+  },
+  "PolkaDotsCurtain": {
+   "accepted": 140,
+   "rejected": 28
+  },
+  "Slides": {
+   "accepted": 140,
+   "rejected": 94
+  },
+  "StarWipe": {
+   "accepted": 140,
+   "rejected": 21
+  },
+  "StaticFade": {
+   "accepted": 140,
+   "rejected": 104
+  },
+  "TilesWave": {
+   "accepted": 140,
+   "rejected": 17
+  },
+  "VerticalClose": {
+   "accepted": 140,
+   "rejected": 20
+  },
+  "WaterDrop": {
+   "accepted": 140,
+   "rejected": 17
+  },
+  "ZoomRigthWipe": {
+   "accepted": 140,
+   "rejected": 74
+  },
+  "burn": {
+   "accepted": 140,
+   "rejected": 35
+  },
+  "cannabisleaf": {
+   "accepted": 140,
+   "rejected": 14
+  },
+  "chessboard": {
+   "accepted": 140,
+   "rejected": 26
+  },
+  "circleopen": {
+   "accepted": 140,
+   "rejected": 20
+  },
+  "colorphase": {
+   "accepted": 140,
+   "rejected": 60
+  },
+  "crosshatch": {
+   "accepted": 140,
+   "rejected": 19
+  },
+  "crosswarp": {
+   "accepted": 140,
+   "rejected": 31
+  },
+  "directionalwipe": {
+   "accepted": 140,
+   "rejected": 23
+  },
+  "dissolve": {
+   "accepted": 140,
+   "rejected": 48
+  },
+  "fade": {
+   "accepted": 140,
+   "rejected": 25
+  },
+  "fadecolor": {
+   "accepted": 140,
+   "rejected": 28
+  },
+  "flyeye": {
+   "accepted": 140,
+   "rejected": 32
+  },
+  "fragment": {
+   "accepted": 140,
+   "rejected": 21
+  },
+  "heart": {
+   "accepted": 140,
+   "rejected": 23
+  },
+  "hexagonalize": {
+   "accepted": 140,
+   "rejected": 25
+  },
+  "luminance_melt": {
+   "accepted": 140,
+   "rejected": 25
+  },
+  "morph": {
+   "accepted": 140,
+   "rejected": 34
+  },
+  "multiply_blend": {
+   "accepted": 140,
+   "rejected": 30
+  },
+  "old_tv_lost_signal": {
+   "accepted": 140,
+   "rejected": 21
+  },
+  "perlin": {
+   "accepted": 140,
+   "rejected": 23
+  },
+  "pinwheel": {
+   "accepted": 140,
+   "rejected": 22
+  },
+  "pixelize": {
+   "accepted": 140,
+   "rejected": 37
+  },
+  "polar_function": {
+   "accepted": 140,
+   "rejected": 23
+  },
+  "randomNoisex": {
+   "accepted": 140,
+   "rejected": 36
+  },
+  "squareswire": {
+   "accepted": 140,
+   "rejected": 17
+  },
+  "squeeze": {
+   "accepted": 140,
+   "rejected": 66
+  },
+  "wind": {
+   "accepted": 140,
+   "rejected": 21
+  },
+  "windowblinds": {
+   "accepted": 140,
+   "rejected": 25
+  },
+  "windowslice": {
+   "accepted": 140,
+   "rejected": 17
+  },
+  "wipeDown": {
+   "accepted": 140,
+   "rejected": 28
+  },
+  "wipeLeft": {
+   "accepted": 140,
+   "rejected": 21
+  },
+  "wipeRight": {
+   "accepted": 140,
+   "rejected": 32
+  }
+ },
+ "shaders_over_50pct_rejection": [],
+ "failures": [],
+ "verdict": "PASS"
+}

@@ -1,0 +1,42 @@
+model:
+  depth_model: "depth-anything/Depth-Anything-V2-Small-hf"   # Apache-2.0 checkpoint
+
+inputs:
+  # The curated endpoint bank (331 standardised 480x640x121 clips), filtered to the
+  # 227 that pass subject presence (bbox area >= 0.15, score >= 0.7, allowed labels).
+  bank_dir: "data/processed/synth_endpoints"
+  bank_filter: "data/processed/synth_endpoints/bank_tightened.json"
+  # Per-frame stabilised depth stacks for exactly these 227 clips, already computed
+  # by exp_082's precompute pass. We only need 2 frames per tuple out of them.
+  depth_stack_cache: "outputs/analysis/ctt_v2_s3_depth_cache"
+  # Fallback for any bank clip missing from the stack cache.
+  depth_cache: "outputs/analysis/exp_083_depth_cache"
+
+inference:
+  height: 640
+  width: 480
+  src_frames: 121          # length of a standardised bank clip
+  anchor_frames: 9         # the two given buckets, sliced verbatim from REAL frames
+  # VARYING CLIP LENGTHS. total = 9 + n_middle + 9, every one legal for the causal
+  # VAE (F = 8k+1): 25 = 8*3+1, 33 = 8*4+1, 41 = 8*5+1, 49 = 8*6+1.
+  n_middle_options: [7, 15, 23, 31]
+  fps: 24
+  mesh_step: 2             # depth-mesh vertex spacing in pixels
+
+sampling:
+  n_pool: 64               # distinct bank clips drawn for the pilot
+  n_family: 7              # one camera path each, bare move, one pair
+  n_axis_operator_pairs: 2 # same content x different operator
+  n_axis_content_ops: 4    # same operator x different content
+  n_axis_content_pairs: 6
+  n_length_ops: 4          # length sweep: N operators x 4 lengths, one pair
+  amp_sweep: [0.5, 0.9, 1.3, 1.7, 2.1]
+  amp_sweep_paths: ["dolly", "truck"]
+  n_diverse: 30
+
+runtime:
+  seed: 830727
+  device: "cpu"
+
+outputs:
+  dir: "outputs/videos/exp_083_d3_pilot"

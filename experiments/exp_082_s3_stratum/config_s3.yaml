@@ -1,0 +1,75 @@
+# ctt_v2 S3 — 3D camera transitions at 121 frames over two REAL PLAYING streams.
+#
+# Engine: forked verbatim from exp_080_depth3d_realstream_121 (worktree bottleneck-branch,
+# commits cecf231 / fc58617 / e47c7f1). engine3d/ is byte-identical to that fork; only the
+# planning + render driver is new, because S3 needs an EXACT-OP x CONTENT grid rather than
+# exp_080's showcase plan.
+#
+# Everything structural is set by fable-advisor ruling 4 (ctt_v2 S2/S3 campaign, round 1).
+
+model:
+  depth_model: "depth-anything/Depth-Anything-V2-Small-hf"   # Apache-2.0 checkpoint
+
+inputs:
+  bank_tightened: "data/processed/synth_endpoints/bank_tightened.json"
+  endpoint_split: "data/processed/ctt_v2_strata/ENDPOINT_SPLIT.json"
+  content_pool: "data/processed/ctt_v2_strata/CONTENT_POOL.json"   # shared with S2
+  embeddings: "data/processed/synth_endpoints/embeddings.npy"
+  embed_ids: "data/processed/synth_endpoints/embed_ids.json"
+  s2_plan: "experiments/exp_081_s2_stratum/PLAN_S2.json"   # for the shared-pair preference
+  depth_cache: "outputs/analysis/ctt_v2_s3_depth_cache"
+
+inference:
+  height: 640
+  width: 480
+  num_frames: 121
+  anchor_frames: 9
+  fps: 24
+  mesh_step: 2
+
+timing:
+  # Identical manifold to S2: onset = 8 + u1*0.20*104, release = 112 - u2*0.20*104,
+  # u1,u2 independent => duration >= ~62 frames. Timing is part of exact-op identity and is
+  # FROZEN across all 6 of an op's clips (advisor round-2 ruling 1).
+  window: [8, 112]
+  jitter_frac: 0.20
+
+s3:
+  # ---- the grid (advisor ruling 4) ----
+  n_ops: 300               # exact camera-ops, balanced over the 6 TRAINABLE families
+  contents_per_op: 6       # => 1,800 clips; 30 ordered (ref,target) combos per op
+  n_content_pairs: 300     # => ~6 ops per content pair
+  pair_max_cos: 0.85
+  candidates_per_op: 30    # 6 primary + 24 ordered spares for the pair-swap retry
+  max_pair_attempts: 15    # to fill 6 slots
+  drop_op_on_underfill: true
+  s2_pair_overlap_target: 0.5   # soft preference: ~half of S3's pairs also appear in the S2
+                                # grid, so identical content can be contrasted under a 2D
+                                # shader op and a 3D camera op (cross-modality diagnostic)
+  amplitude_scale: 1.6     # exp_080 run_0001 audit knob, validated at join median 0.94
+  # ---- held out (advisor ruling 5) ----
+  holdout_family: "spiral" # spiral IS dolly o orbit (cameras.py:80-83) and BOTH primitives stay
+                           # in training — so holding it out tests COMPOSITIONAL generalisation
+                           # of seen primitives, not removed capability.
+  holdout_n_ops: 30        # random exact ops from the 6 retained families, never trained
+  # ---- pilot (advisor ruling 4: MANDATORY hard gate before the full render) ----
+  pilot_n: 63
+  pilot_per_family: 9      # stratified across all 7 families incl. the heavy-optics tail
+  pilot_force_effects: ["dissolve", "focus", "fog", "dolly_zoom", "depth_wipe"]
+
+gate:
+  join_max: 2.0            # gating, BOTH joins
+  join_median_bar: 1.3     # pilot distribution bar
+  join_p90_bar: 1.8        # pilot distribution bar
+  parallax_median_bar: 2.0 # below ~2 px the "3D manner" is not visibly 3D and S3 loses its point
+  pilot_max_bad: 3         # of 63, blind visual audit
+  pilot_max_bad_per_family: 2   # >=3 of a family's 9 BAD => that family is dropped or repaired
+  final_audit_max_bad: 3   # of a blind n=64 on the full render
+
+runtime:
+  seed: 20260725
+  device: "cuda"           # depth model; renderer is EGL (hardware GL on an L40S node)
+
+outputs:
+  dir: "outputs/videos/ctt_v2_s3"
+  viewer_dir: "outputs/viewers/ctt_v2_s3"

@@ -1,0 +1,134 @@
+{
+ "stratum": "S2",
+ "created": "2026-07-25",
+ "authority": "fable-advisor ruling 5",
+ "principle": "every held-out shader keeps a same-genre cousin in training",
+ "holdout_shaders": {
+  "wipeUp": [
+   "wipeDown",
+   "wipeLeft",
+   "wipeRight"
+  ],
+  "VerticalOpen": [
+   "HorizontalOpen",
+   "VerticalClose"
+  ],
+  "fadegrayscale": [
+   "fade",
+   "fadecolor"
+  ],
+  "ripple": [
+   "WaterDrop",
+   "Dreamy"
+  ],
+  "scale-in": [
+   "SimpleZoom",
+   "CrossZoom"
+  ],
+  "randomsquares": [
+   "pixelize",
+   "squareswire"
+  ],
+  "burn0": [
+   "burn",
+   "FilmBurn"
+  ],
+  "directionalwarp": [
+   "crosswarp"
+  ],
+  "DefocusBlur": [
+   "LinearBlur"
+  ],
+  "parametric_glitch": [
+   "GlitchDisplace",
+   "StripDatamoshGlitch"
+  ]
+ },
+ "cross_engine_probe": "ffmpeg-xfade family (not in the gl-transitions bank)",
+ "trainable_shaders": [
+  "BookFlip",
+  "BowTieWithParameter",
+  "Box",
+  "ButterflyWaveScrawler",
+  "ColourDistance",
+  "CrossZoom",
+  "Dreamy",
+  "EdgeTransition",
+  "FilmBurn",
+  "GlitchDisplace",
+  "GridFlip",
+  "HSVfade",
+  "HorizontalClose",
+  "HorizontalOpen",
+  "LinearBlur",
+  "Overexposure",
+  "PolkaDotsCurtain",
+  "PuzzleRight",
+  "SimpleZoom",
+  "SimpleZoomOut",
+  "Slides",
+  "StarWipe",
+  "StaticFade",
+  "StripDatamoshGlitch",
+  "TilesWave",
+  "VerticalClose",
+  "WaterDrop",
+  "ZoomRigthWipe",
+  "burn",
+  "cannabisleaf",
+  "chessboard",
+  "circleopen",
+  "colorphase",
+  "crosshatch",
+  "crosswarp",
+  "directionalwipe",
+  "dissolve",
+  "fade",
+  "fadecolor",
+  "flyeye",
+  "fragment",
+  "heart",
+  "hexagonalize",
+  "luminance_melt",
+  "morph",
+  "multiply_blend",
+  "old_tv_lost_signal",
+  "perlin",
+  "pinwheel",
+  "pixelize",
+  "polar_function",
+  "randomNoisex",
+  "splitSlideOutHorizontal",
+  "squareswire",
+  "squeeze",
+  "swap",
+  "wind",
+  "windowblinds",
+  "windowslice",
+  "wipeDown",
+  "wipeLeft",
+  "wipeRight"
+ ],
+ "reserved_eval_only_endpoints": [
+  "davis_bus",
+  "davis_cows",
+  "davis_dance-twirl",
+  "davis_swing",
+  "openvid_Rif_AG6RfMs_0_0to430",
+  "openvid_S3Q4wOtl2tY_7_0to251",
+  "openvid_UHnAVb0IjB4_1_0to108",
+  "openvid_URfe5yquyJw_10_0to248",
+  "openvid_UTxt7WlPTuY_10_17to319",
+  "openvid__pRREeqmqMs_5_0to286",
+  "openvid__sRboZAx_zk_41_0to136",
+  "openvid__uJLNGVICts_19_0to113",
+  "openvid__y0W5Nty9Z8_91_51to188",
+  "openvid__zDAVM7zEQ8_20_0to123",
+  "vcbench_conversation_3248276_3840x2160",
+  "vcbench_mirror_3197657_1080x1920",
+  "vcbench_salad_7572244_2160x3840",
+  "vcbench_teacher_8542217_2160x4096",
+  "vcbench_teenager_4100358_4096x2160",
+  "vcbench_vegetable_853790_1920x1080"
+ ]
+}

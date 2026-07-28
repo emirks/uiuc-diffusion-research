@@ -40,8 +40,6 @@
   **Stopped before the mass run**: a second session is executing the same lane concurrently and has
   already generated and audited the whole store under the *fallback* auditor. Details, priced
   options and the recommendation are in `misc/ctt_v2_final/DOSSIER.md` §25.
-
-
 - **11:15** ctt_v2/captions: **K=10 PACKING PILOT RUN — PACKING IS REJECTED, twice over** (advisor
   A12 §3, steps 1–4; `scripts/ctt_v2/captions/pack_pilot.py`, `pack_analysis.py`,
   `pack_clip_check.py`; artifacts in `pilot_m3/packed_k10/`). 200 descriptions in 20 role- AND
@@ -85,7 +83,6 @@
   demonstration that the pre-fix expression scored **12 of the 14** unusable verdicts as clean
   passes. Auditor pin: `gemini-3.1-pro-preview`, temp 0, `thinkingLevel: "low"` (the pro tier
   rejects `"minimal"`), `max_output_tokens` 512 so the JSON verdict cannot truncate.
-
 - **11:05** ctt_v2/captions: `build_mass_pair_list.py` written and run — **the mass caption run
   needs 1,348 descriptions, not the ~5,600 the runbook assumed** (~4× less, ≈85 s at the measured
   16 desc/s including the 100% Layer-2 audit). It turns the pinned grids into the (clip, role)
@@ -100,7 +97,6 @@
   pinned grids never use that clip as an A endpoint (0 times A, 3 times B), so it is a no-op
   here and its legitimate B-role is present as required. The script says so out loud rather
   than reporting a reassuring "skipped 1". Blocked on the auditor before generation can run.
-
 - **10:55** ctt_v2/captions: **round 3 (prompt v3) run and scored — all 12 gates PASS, but v3's
   stated mechanism is FALSIFIED.** The Gemini generator (`gemini-3.6-flash`) came back, so
   `RESUME_ON_CREDITS.sh` steps 1–2 ran: 399 pairs (the role-scoped A-exclusion for
@@ -127,7 +123,6 @@
   Two archival defects fixed in `generate_descriptions.py`: `N_asked` recorded the
   pre-calibration draw for v3 (calibration is applied for v2 *and* v3), and `run_meta` named an
   auditor model even on `--no-audit` runs.
-
 - **10:45** ctt_v2: **group ids are now SLUGGED AT PATH CONSTRUCTION** (A11 item 3 — the
   slugging existed and was declared, but `assemble_root.py` still wrote raw ids into paths).
   `assemble_root.py` builds every relative path from `root_common.slug_group` — the *same*
@@ -144,7 +139,6 @@
   fresh fixture root (`_root_machinery_test/root_slug`): 33/33 asserts PASS, 810 of 2,458 rows
   carry a slugged group, no group dir contains an unsafe character, and the real 42 refVFX S4
   effect ids — **40 of which contain spaces today** — slug to 42 unique non-empty strings.
-
 - **10:40** ctt_v2/asserts: `A3b_prorata_multipliers_equal` is **proven to fire** — it was the
   one assert in the battery with no mutation (added by the A12 rewrite after the mutation set
   was written, so it had never failed). The new mutation moves five S2b samples into a second
@@ -153,7 +147,6 @@
   literal ×2 duplication would also (correctly) blow A3's ±0.5 pp tolerance and the run would
   not show A3b is sensitive to the multiplier itself. It fires **strictly**: A3b alone, with
   no external co-firing. Proof set 35 → 36 mutations.
-
 - **10:35** ctt_v2/smoke: the smoke gate's own checkers are now **proven to fire**, GPU-free,
   against the archived log of the passing run (`scripts/ctt_v2/smoke/prove_smoke_gate.py`,
   16 cases). Three defects found and fixed by the mutations. (1) A log that EXISTS but cannot
@@ -174,7 +167,6 @@
   Proven by setting the 1,820-token pin to A9 §3's superseded 1.120 and, separately, by
   repointing the S4 arm's tensors at 121f geometry: both come out as escalations, not as the
   auto-drop of a healthy stratum.
-
 - **04:36** ctt_v2/smoke: both smoke-gate "failures" in job 9688250 were in the CHECKERS,
   not the training — the trainer had in fact completed 30/30 steps over the mixed two-shape
   root with a finite loss. `check_train_log.py`: an empty match set is now its own hard error
@@ -188,9 +180,7 @@
   now reproduces and guards that instead of casting. A11 item 4 clause (b) now *observes* the
   shift the sampler was actually handed (`_ShiftRecorder`) instead of re-deriving it from
   `f*h*w`, which had made the assert unfailable.
-
 - **04:32** ctt_v2/S1: role-scoped (clip, role) exclusions now enforced at S1 grid-build time (mandatory `for_role` in `take()`), not merely detected by assert A13. Proven by mutation.
-
 - **04:45** — **The RULING-9 assert battery is now PROVEN TO FIRE, on a real two-shape root.**
   An assert that has never failed is not known to work, and this campaign has twice met the
   failure class where a gate prints PASS on a broken input. So: `scripts/ctt_v2/tests/
@@ -228,7 +218,6 @@
   effective disclosure (**S4's 10 % nominal is 3.04 % effective**, inside the ruled 2.8–3.0 %).
   All three pre-registered contingency branches verified numerically against A9 §4 by
   `--plan-only` assembly. **Nothing was stamped and no real root was assembled.**
-
 - **04:20** — **A12: the S2a:S2b split is now DERIVED pro-rata, not forced equal — 271,965 files
   instead of 5,030,200.** Advisor ruling `misc/ctt_v2_final/advisors/A12_prorata_s2_split_VERBATIM.md`
   (0.9+) read A9's full clause — *"S2 total 69, split **pro-rata to the assembled counts**, which are
@@ -262,7 +251,6 @@
   counts themselves, the derived targets/shares/multipliers/max_dev, and an amendment rule: any
   change to an exclusion means recomputing the split and logging it as a dossier amendment — the
   counts may move only via a logged amendment, never silently. DOSSIER §15, DATASET §11.1b.
-
 - **04:05** — **S4 credit-independent prep COMPLETE — captions are now S4's only pending item**
   (A9 §5; full record in `misc/ctt_v2_final/artefacts/S4_PREP_REPORT.md`). Zero Gemini calls; the
   trainer was not modified.
@@ -368,6 +356,39 @@
   spatially. It also means A9's "masks regenerated at (5,20,15)" is unachievable for S4:
   the real S4 latent grid is **(5,14,26)**. Masks are derived from the latent shape by
   `assemble_root.py:ensure_mask()`, so nothing downstream hardcodes it.
+- **10:35** — **Viewers register themselves now, and the dashboard leads with a latest-only bar.**
+  Adding a viewer no longer means editing anything: `hub` discovers pages under
+  `outputs/viewers/*/`, `outputs/videos/*/run_*/`, `outputs/eval/*/viewer/`, `outputs/reports/*/`
+  and `outputs/presentation/*/`, taking metadata from a `viewer.json` sidecar when present and
+  from the page's own `<title>` otherwise; `viewerctl new` writes that sidecar for you. Runs of
+  one experiment fold into a single card, newest first. The dashboard now opens with a sticky
+  bar of current viewers only — earlier builds and anything whose media stopped resolving fall
+  into one openable "Earlier versions & archive" block with the reason attached. Archiving is by
+  health, not by memory, so the top of the page cannot rot.
+- **10:25** — **The ctt_v2 corpora viewer is now static — the app server was working around a
+  one-line gap in ours.** `viewerctl httpd` (the viewer system's static server) answers byte
+  ranges; stock `python -m http.server` ignores `Range` and returns 200 with the whole file,
+  which is why reading one member out of a WebDataset tar had needed a process. It does not:
+  `scripts/viewers/build_ctt_v2_corpora.py` precomputes what `serve.py` did in memory — axis
+  grouping into `ids_<sub>_<axis>.bin`, slim rows into `rows_<sub>.jsonl` with a `rowoff` offset
+  table — and `scripts/viewers/ctt_v2_corpora.html` range-fetches the slice it needs, wrapping
+  tar members in blob URLs (VFXMaster is loose files and streams directly). Verified at parity
+  against the old server on 8799: identical sample counts (code 136,800 · LoRA 6,995 · VFX
+  9,963), identical axis-group counts, identical group membership and row fields. Port 8799 is
+  retired; the viewer lives at `outputs/viewers/ctt_v2_corpora/` on 8017 like everything else.
+  Range support also un-broke video *seeking* across every existing viewer.
+- **10:05** — **Viewer system: one dashboard, one port, a tracked registry.** ~40 HTML pages had
+  accumulated under three incompatible path conventions and roughly a third served black boxes.
+  `scripts/viewers/viewerctl.py` (`mount` · `check` · `hub` · `serve` · `new` · `httpd`) plus a
+  tracked `registry.json` replace the ad-hoc server habit; `docs/VIEWERS.md` is the reference.
+  The rule that fixes it: every path in a page is relative to the viewer's own directory, with
+  media arriving through a symlink there — the only convention that survives a server restart or
+  a repo move. Pages that must not be edited (certification records, the ladder2 REFERENCE, the
+  frozen 2AFC study) are wrapped in *mounts*, rebuilt from the registry on every run so they
+  cannot drift. The ladder results viewer, both eval_ladder pages and both certification records
+  were climbing out of the repo or resolving against the wrong root; all 18 current viewers now
+  resolve, 4 stale ones are archived with the reason. Dashboard:
+  `http://localhost:8017/outputs/viewers/index.html`.
 
 ## 2026-07-27
 
@@ -389,6 +410,109 @@
   outputs are uniformly 832×464·16fps·33f (33 ≡ 1 mod 8 → zero-cut reshape possible; trainer
   supports per-sample fps natively). Gemini key stored at `$LAB/secrets/` (CLAUDE.md Secrets
   section); stale Gemma capbank job cancelled. Advisor round 7 (mix re-ratification) launched.
+
+
+- **12:00** — **exp_084: the luma-matte family was killed by `step()`, not (only) by the maps.**
+  The aux-map operator family (a static greyscale matte + a threshold sweep, shipped at 0% for
+  looking fake) had two confounded defects. `experiments/exp_084_luma_matte_viewer/` runs the
+  2×2 that separates them over real playing footage: {7 shipped maps, 12 new arrival-time maps}
+  × {`luma.glsl` unmodified, a new `shaders/luma_soft.glsl` with a smoothstep feather, a rim
+  colour in the advancing band and an additive glow lobe}. 114 clips, both layers real frames
+  from the 227-clip endpoint bank, anchors verbatim. Blind audit (16/arm, anonymised shuffled
+  contact sheets, key joined afterwards): **88% BAD → 56% with the compositor fix alone, 88% →
+  88% with better maps alone (Fisher p = 1.00), 88% → 31% with both.** The compositor gates
+  everything. The 56% residual splits: the three *aperiodic* shipped maps (fbm/radial/linear)
+  go 6/8 → 1/8 BAD, the four *geometric* ones (stripes/checker/spiral/voronoi) stay 8/8 → 8/8
+  (p = 0.0014) — a feathered checkerboard is still a checkerboard. New maps (eikonal fronts
+  through ridged-multifractal speed, invasion percolation with morphological trapping, CC0
+  Krita brush-path stamping, and a content-aware Canny boundary draw) are the best cell but
+  are not separable from rescued-aperiodic-shipped (p = 0.62) — their value is variety and
+  content-awareness, not a higher ceiling. Two side findings: `step(progress, m)` returns 1 at
+  `m == progress`, so the shipped compositor leaks 5–6 stale pixels into the final
+  conditioning block of *every* clip (`luma_soft` is exactly 0), and the `luma` sampler is
+  vertically flipped w.r.t. the image (`probe_orientation.py`). Paired A/B viewer at
+  `http://localhost:8017/outputs/viewers/luma_matte/index.html`. Mechanics written up in
+  `notes/dataset/procedural_operators.md` §5b. Brush alphas are CC-0 (David Revoy 25.01);
+  no commercial or ML-restricted matte pack was downloaded — see `PROVENANCE.json`.
+
+- **11:55** — **S2 stratum viewer built** (`experiments/exp_081_s2_stratum/build_viewer_s2.py`
+  → `outputs/viewers/s2_dataset/`, served at
+  `http://localhost:8017/outputs/viewers/s2_dataset/index.html`). Two levels: an index of the
+  56 shaders (representative thumbnail, op/clip counts, gate reject rate, per-shader table,
+  dropped-op table, audit block) and 56 static per-shader pages where the atomic unit is the
+  **operator block** — one row of 10 clips under a single header carrying the parameters they
+  all share by construction (uniforms, easing, onset/release, flip, swap) plus the 20 distinct
+  endpoint stems and the op's rejected renders. Plus `retired.html` for the 420
+  blacklisted clips (42 complete op blocks, 6 shaders) framed as reinstatement candidates.
+  Stays fast on 7,990 clips: no video is preloaded, each tile is one frame CSS-cropped out of
+  the clip's lazy-loaded filmstrip, a global **phase slider** slides every tile to the same
+  frame at once (so a whole operator row steps through the transition in lockstep with no new
+  requests), and `<video>` elements are created on click / IntersectionObserver and torn down
+  on exit. Media is symlinked, never copied.
+  **Three metadata discrepancies found and surfaced on the page rather than smoothed over:**
+  (1) `S2_ACCEPTANCE.json` is stale — it still reports the pre-blacklist 7,550 clips / 755 ops
+  / 62 shaders, not the shipped 7,990 / 799 / 56; (2) the `summary_shard*.json` files were
+  rewritten by the backfill pass and describe only that pass (860 accepted, overdraw 1.93) —
+  the true build-wide overdraw recomputed from the append-only ops log is **1.2506×**;
+  (3) the n=64 blind audit was drawn from the pre-blacklist roster, so 6 of its 64 samples are
+  now retired, **including one of the two BAD clips** (`s2_0229_c06`, PuzzleRight) — against
+  the roster that actually shipped it reads 1 BAD / 58.
+- **11:50** — **HumanVid's REAL (non-synthetic) half: located, fully characterised, and
+  ruled OUT on licence grounds.** It is not on HuggingFace — the HF tree holds only the two
+  synthetic families. The real portion ships as **19,262 Pexels.com URLs** (11,411 landscape
+  + 7,851 portrait) plus 19,429 per-frame camera trajectories, in Google Drive folder
+  `1UGEkOKXYX9BGUFz0ao6lOGXkZjQGoJcZ` linked from the GitHub repo; the authors state plainly
+  "we cannot redistribute them". **The blocker is Pexels, not HumanVid:** the repo's
+  Apache-2.0/CC-BY-4.0 covers their code, cameras and UE renders but cannot relicense
+  third-party footage, and the Pexels ToS prohibit "data mining, extraction, scraping … for
+  all unauthorised purposes, *including without limitation for machine learning purposes*"
+  and "bulk, large-scale or systematic copying", while the API terms separately bar
+  collecting content "to train, fine-tune, *evaluate*, or develop ML/AI models *or
+  datasets*". That covers eval sets too, so **nothing was downloaded — not 19k, not 60**, and
+  nothing should be.
+  Characterised the whole corpus anyway at zero media cost: every Pexels URL encodes
+  `W_H_fps` and every camera file has exactly one line per frame, so
+  `scripts/analyze_humanvid_real.py` derives resolution/fps/frame-count/duration for all
+  ~19k clips from the manifest alone — **validated 10/10 against `ffprobe`** (resolution, fps
+  and frame count all matched). 90.2 h of footage, median clip 13.8 s, all 1080p+, but only
+  13 % is natively 24 fps (67 % is 25 fps). HEAD-only probe: **120/120 URLs live**, mean clip
+  8.9 MB, **~167 GB projected** for a full fetch (measured from `Content-Length`).
+  Fitness vs our 480×640·121f·24fps contract: resolution/length **pass** (~54k possible
+  endpoints), single-shot **passes** (HumanVid filtered out shot changes), letterboxing
+  **low risk**, but single-subject **partially fails** — their rule was "few people (n≤4)"
+  with a bbox floor of r>0.07, under half our 0.15 — and the portrait crop keeps only ~42 %
+  of a landscape frame. Honest verdict on diversity: our pool is already 85 % `person` and
+  this set is 100 % human-centric by construction, so it would add **volume, not diversity**.
+  Viewer at `outputs/viewers/humanvid_real/` (60 clips, 30V+30H) **streams straight from the
+  Pexels CDN so nothing is copied to disk**, with filmstrips rendered client-side into a
+  canvas from the already-streaming video. Two gotchas recorded in
+  `notes/dataset/humanvid_real.md`: the repo HTTP server sends no charset (so viewers need
+  `<meta charset="utf-8">` — the older `humanvid_sample` viewer mojibakes without it), and
+  Playwright's `chrome-headless-shell` lacks H.264, so headless screenshots show black tiles
+  even though the CDN serves 206s and every clip probes as h264.
+
+- **11:15** — **exp_083 D3/S3 PILOT rendered — 109 depth-parallax transitions, and the honest
+  answer is "the idea works, the current renderer does not".** Built on exp_076's `engine3d/`
+  (reused, not rewritten) with three additive changes: `subject_anchor()` finds the foreground
+  object as the saliency-weighted centroid of the nearest depth quartile, two new dissolve
+  families (`subject`, `subject_fbm`) centre the world-space field on that object, and
+  `render_transition(coverage_out=)` ports exp_082's disocclusion audit to the frozen-endpoint
+  driver. Endpoints are real consecutive frames sliced out of the 227-clip
+  `bank_tightened.json` bank (A = frames 112:121, B = frames 0:9); lengths vary over
+  n_middle in {7,15,23,31} -> totals 25/33/41/49, every one legal (F = 8k+1), nothing padded.
+  **Verbatim-endpoint property holds exactly: in-array max abs diff = 0 on all 109 clips**
+  (H.264 round-trip is a separate MAE 1.94, worst single pixel 65). Seam ratio median 0.25,
+  7/109 over the 2.0 bar — and 6 of those 7 are the 25-frame length, whose median seam is
+  1.02 against 0.02 at 49 frames, so a 7-frame middle is simply too short for this operator
+  family. **Blind BAD rate: 14 of 30 (47%)**, drawn from a fixed seed before anything was
+  viewed. 13 of the 14 are one defect: the world-space dissolve punches alpha holes in BOTH
+  layers at once, ~25% of the frame has no geometry at mid-transition, and push-pull (reach
+  ~40 px) leaves a hard black void or a flat smear. It is gateable for free —
+  `hole_radius_max < 85 px` catches 13/14 failures and rejects 0/16 of the shippable clips,
+  at the cost of 57% of this pilot's operator mix. Dissolve family, not camera amplitude, is
+  the driver (plane 154 px / sphere 159 / subject 150 median vs none 59). Viewer at
+  `outputs/videos/exp_083_d3_pilot/run_0001/viewer.html`; decision on the full stratum is the
+  owner's.
 
 ## 2026-07-25
 
@@ -434,6 +558,22 @@
 - `02:15` **exp_080 validated + S2/S3 hand-off spec written.** Fork of exp_076 to full 121-frame 3D transitions over two REAL playing streams (per-frame temporally-stabilised Depth-Anything, D2 timing contract, pure phases byte-identical, asserted). run_0001, 31 clips on one L40S: join ratio median 0.94 / p90 1.15 / max 1.86 (bar ≤2.0), parallax 3.31, ~11 s/clip. Owner verdict on samples: positive; ruled contents must come from the dsx endpoint bank (read-only, tightened 227) — corpus clips leak class manner into content. Generation itself moves elsewhere (owner call): S2 (800 ops × 10 contents = 8,000 clips) + S3 (300 × 6 = 1,800) spec'd in $LAB/misc/ctt_v2/DATA_PLAN_PROPOSAL.md.
 
 - `00:04` **ctt_v2: external-dataset downloads started** (owner call — go straight to the dataset/retraining branch). `scripts/ctt_v2/download_small.sbatch` pulls VFXMaster (8ruceLi/VFXMaster_datasets, 6.6 GB, 9,209 videos / 241 effect classes, Apache-2.0) and the refVFX I2V_LoRA shard (12.3 GB, 6,995 LoRA-generated pairs, CC-BY-4.0); `download_refvfx_code.sbatch` pulls the refVFX code_based_edits subset (16 shards, 374.7 GB, 2,736 code effect types x ~50 base videos — the same-operator × different-content diagonal), submitted as an afterany self-resume chain on the cluster-wide `secondary` CPU partition. Everything lands in `data/raw/{refvfx,vfxmaster}` (gitignored). refVFX neural_v2v (79 GB) deliberately skipped. Fixed a first-submit failure: `set -u` before sourcing `/etc/bashrc` (unbound BASHRCSOURCED) killed the jobs in 5 s; `-u` now enabled only after env activation.
+
+## 2026-07-24
+
+- **16:01** — exp_077 D2-FULL: the degenerate-frame gate (DFG) was calibrated against a
+  pre-committed bar and **escaped it**, so no detector shipped and the final dataset was rendered
+  unclamped at baseline. Parameter clamping is abandoned permanently (`param_clamp.py` stays on
+  disk but never runs). The escape is structural: the premise "grain has high pixel variance, a
+  matte has none" is false on the 96x72 area-downsampled grayscale — StaticFade's luma std
+  (0.012-0.040) sits below every declared threshold — and 5 of the 12 BAD positives are
+  texture/geometry destruction with entirely normal luma statistics. The first-chunk BLIND check
+  then passed at 2/64 BAD (Wilson-95 upper 10.7% vs a 17.5% baseline), and the build delivered
+  3,072 tuples / 6,144 clips with exact pure-phase identity (max abs diff 0.0000), 8 distinct
+  shaders on every one of the 384 target pairs, and 1.59x realized overdraw. Training remains HELD.
+
+- `14:30` exp_077 **D2 mass build: scaffold complete, render HALTED by its own pre-committed check.** Full chain written and validated end-to-end — `plan_d2_full.py` (3,072 slots = 384 target pairs × exactly 8 operators, **8** distinct shaders/pair, 768 ref pairs content-disjoint and reused exactly 4×, 42–43 slots per keep-shader), `render_d2_full.py` (per-slot rejection sampling against the frozen gate τ=0.2543, sharded by target pair, resumable), `param_clamp.py` (the 2026-07-24 clamp ruling as a wrapper — exp_075's engine untouched), `encode_d2full.py` / `assemble_d2full.py` / `audit_d2full.py` / `build_viewer_d2full.py` / `make_d2_train_config.py` + 5 sbatches. **Two real defects found by measurement, not guesswork.** (1) *Rejection-sampling economics*: freezing the timing draw per slot (my choice, to keep the onset/release law unbiased) pushed realized overdraw to **7.35× vs the spec's 2.5× ceiling** — attempts-per-accepted-slot clustered at {1:165, **26:33**, 51:6, 76:3}, where 26 = "5 shaders × 5 param redraws all failed, then ONE timing redraw passed on its first attempt". Slot difficulty is carried by the **timing** draw, not by params (only 4 slots were ever rescued by a shader swap); unbiased first-attempt clip pass is 0.843, matching the audit's 0.853. Timing is now redrawn per attempt (projected ~1.3×) and the 228 tuples built under the old procedure were discarded so the dataset comes from one procedure. (2) *The clamp does not fix the visual failures*: the pre-committed first-chunk check (64 clips, offenders oversampled to 40.6%) gives **25.0% BAD on targets vs the 17.5% baseline**, and the **non-offender subset alone is 15.8%** (uniform-allocation projection 16.7%) — so the oversampling confound does not rescue it. Array killed per the rule, no blind clamp iteration. Diagnosis: **rule 2's caps are the wrong sign for the two worst offenders** — `[0.5d, 2d] ∩ |v|≤3.0` is EMPTY for `EdgeTransition.edge_brightness` (d=8.0) and a single point for `ColourDistance.power` (d=5.0), so both collapse to the constant 3.0 for 100% of draws *including the canonical default*, and for both shaders *lower* is the destructive direction (dimmer edge map → near-black frames, 8/8 draws bad-or-marginal; lower power → white blowout). Plus a name-match gap: `dissolve.uPow=12.9992` and `uSpreadClr=[2.61,0.23,0.96]` bypass the classifier ("uPow" ⊅ "power", "Clr" ⊅ "color", and the 3-vector fallback needs all components in [0,1]). Records: `D2_FIRSTCHUNK_VISUAL.json` (per-clip taxonomy), `D2_CLAMP_CHECK.json` (21,600 draws, 0 invariant violations), `D2_BUILD_AUDIT.json`. Real ic_gen root re-verified: 385 files per source × 5 sources, **0 dangling**. Train config `configs/d2_gen.yaml` emitted and **NOT submitted** (held).
+
 
 ## 2026-07-23
 - `16:05` **ladder2 merged to main.** v3.0.0 TODO recorded in eval_ladder/README.md (owner directive): CTT tasks — (endpoints, target transition) as the atomic unit, every task generated on all four tiers (prompt / prompt+endpoints / specialist / generalist) from one shared roster; enumerate the full task space, then pre-register a budgeted subspace with balanced per-donor/per-cell n. Branch `ladder2` (63 commits) merged --no-ff into main and kept as the record.

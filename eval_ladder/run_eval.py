@@ -55,8 +55,16 @@ MATRIX = "m1a_S3"          # the v4 appearance kernel (owner directive 2026-07-2
 MAX_POOL_REFS = 8          # deterministic first-N by clip name
 
 
+#: ADDITIVE side registry (exp_077 d2_gen). registry.jsonl is frozen; a new arm's rows arrive in
+#: their own file and are APPENDED here, so base twins and ceilings resolve unchanged.
+EXTRA_REGISTRY: Path | None = None
+
+
 def load_registry() -> list[dict]:
-    return [json.loads(x) for x in REGISTRY.read_text().splitlines() if x.strip()]
+    text = REGISTRY.read_text()
+    if EXTRA_REGISTRY is not None:
+        text += EXTRA_REGISTRY.read_text()
+    return [json.loads(x) for x in text.splitlines() if x.strip()]
 
 
 # exp_078: a checkpoint-diagnostic run (a specific step, not the pinned one) writes into a
@@ -96,10 +104,14 @@ def already_scored() -> set[str]:
     return seen
 
 
-def plan(seeds: list[int], chunks: int, arms: list[str] | None = None) -> None:
+def plan(seeds: list[int], chunks: int, arms: set[str] | None = None) -> None:
     rows = load_registry()
     by_key = {r["input_key"]: r for r in rows if r["arm"] == "base"}
     scored = already_scored()
+    if arms:
+        # side lane: plan ONLY these arms. by_key is built from the full registry first, so the
+        # keyed-join seatbelt still fires even when the base arm itself is not being planned.
+        rows = [r for r in rows if r["arm"] in arms]
 
     # exp_078: scope planning to specific arms (e.g. --arms b1) so a campaign scores only its own
     # generations into a private SCORE_OUT, without re-planning every already-scored ladder2 arm.
@@ -165,7 +177,7 @@ def plan(seeds: list[int], chunks: int, arms: list[str] | None = None) -> None:
         part = items[i::chunks]
         (EVAL_DIR / f"eval_c{i}.json").write_text(json.dumps(part, indent=1))
     print(f"[plan] {len(items)} NEW (generation x pool-reference) rows -> {chunks} chunks "
-          f"in {EVAL_DIR.relative_to(REPO_ROOT)}  ({len(scored)} already scored, skipped)")
+          f"in {EVAL_DIR}  ({len(scored)} already scored, skipped)")
     if missing_gen:
         print(f"[plan] {len(missing_gen)} generations not yet rendered (skipped): "
               f"{missing_gen[:4]}{' ...' if len(missing_gen) > 4 else ''}")
@@ -190,18 +202,17 @@ def ceilings() -> dict[str, float]:
     return out
 
 
-def report() -> None:
-    rows = {r["item_id"]: r for r in load_registry()}
-    ceil = ceilings()
+def pool_means(scores_dir: Path) -> dict[tuple[str, int], list[float]]:
+    """(item_id, seed) -> the app_ref values against every GT-pool reference.
 
-    # (item_id, seed) -> pool mean over references
+    DEDUP (load-bearing): scoring ran as several incremental passes under distinct labels. A row
+    planned twice — a generation that landed between one pass's plan and its score — is written
+    to both passes' items.jsonl. Counting it twice silently reweights that generation's pool
+    mean. 798 of 12,500 written rows are such repeats.
+    """
     pool: dict[tuple[str, int], list[float]] = collections.defaultdict(list)
-    # DEDUP (load-bearing): scoring ran as several incremental passes under distinct labels. A row
-    # planned twice — a generation that landed between one pass's plan and its score — is written
-    # to both passes' items.jsonl. Counting it twice silently reweights that generation's pool
-    # mean. 798 of 12,500 written rows are such repeats.
     seen_eval_ids: set[str] = set()
-    for f in sorted(SCORES.glob("*/items.jsonl")):
+    for f in sorted(scores_dir.glob("*/items.jsonl")):
         for line in f.read_text().splitlines():
             r = json.loads(line)
             if r["item_id"] in seen_eval_ids:
@@ -212,18 +223,30 @@ def report() -> None:
             head, _, _ref = r["item_id"].rpartition("__ref_")
             base_id, _, seed = head.rpartition("__s")
             pool[(base_id, int(seed))].append(r["app_ref"])
-    if not pool:
-        sys.exit(f"[report] no scored rows under {SCORES} — run the scorer first")
+    return pool
 
-    # item -> pct of its GT ceiling (mean over seeds of the per-seed pool mean)
-    pct: dict[str, float] = {}
+
+def item_pct(pool: dict[tuple[str, int], list[float]], rows: dict[str, dict],
+             ceil: dict[str, float]) -> dict[str, float]:
+    """item -> pct of its GT ceiling (mean over seeds of the per-seed pool mean)."""
+    pct: dict[str, list[float]] = {}
     for (item_id, _seed), vals in pool.items():
         row = rows.get(item_id)
         if row is None or row["gt_pool_class"] not in ceil:
             continue
         pct.setdefault(item_id, [])
         pct[item_id].append(st.mean(vals) / ceil[row["gt_pool_class"]])
-    pct = {k: st.mean(v) for k, v in pct.items()}
+    return {k: st.mean(v) for k, v in pct.items()}
+
+
+def report() -> None:
+    rows = {r["item_id"]: r for r in load_registry()}
+    ceil = ceilings()
+
+    pool = pool_means(SCORES)
+    if not pool:
+        sys.exit(f"[report] no scored rows under {SCORES} — run the scorer first")
+    pct = item_pct(pool, rows, ceil)
 
     base_by_key = {r["input_key"]: r["item_id"] for r in rows.values() if r["arm"] == "base"}
 
@@ -285,11 +308,28 @@ def main() -> None:
     ap.add_argument("--mode", choices=["plan", "report"], required=True)
     ap.add_argument("--seeds", default="42,43")
     ap.add_argument("--chunks", type=int, default=8)
-    ap.add_argument("--arms", default=None, help="comma-separated arms to plan (default: all)")
+    # side-lane overrides — all default to the frozen ladder2 paths, so the incumbent's
+    # already-scored data is never read differently or written to.
+    ap.add_argument("--extra-registry", default=None)
+    ap.add_argument("--gens", default=None, help="override outputs/videos/ladder2")
+    ap.add_argument("--scores", default=None, help="override outputs/eval/ladder2")
+    ap.add_argument("--eval-dir", default=None, help="override eval_ladder/eval (manifests)")
+    ap.add_argument("--arms", default=None, help="plan only these arms (comma-separated)")
     args = ap.parse_args()
+
+    global EXTRA_REGISTRY, GENS, SCORES, EVAL_DIR
+    if args.extra_registry:
+        EXTRA_REGISTRY = Path(args.extra_registry)
+    if args.gens:
+        GENS = Path(args.gens)
+    if args.scores:
+        SCORES = Path(args.scores)
+    if args.eval_dir:
+        EVAL_DIR = Path(args.eval_dir)
+
     if args.mode == "plan":
-        arms = args.arms.split(",") if args.arms else None
-        plan([int(s) for s in args.seeds.split(",")], args.chunks, arms)
+        plan([int(s) for s in args.seeds.split(",")], args.chunks,
+             set(args.arms.split(",")) if args.arms else None)
     else:
         report()
 

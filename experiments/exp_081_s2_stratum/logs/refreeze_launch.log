@@ -1,0 +1,119 @@
+=== 1/5  content pool (v1 clean + expansion), Gates A/B, deterministic trim ===
+[pool] Gate B calibrated to the clean pool: match n=187, bar = 43.97 - 1.15 = 42.82
+[pool] expansion: +116 candidate training endpoints
+[pool] gates BEFORE trim: A mean_cos 0.5085 (<= 0.52) PASS | B matched-PR 41.81 (>= 42.82) FAIL
+[pool]   trim   1: dropped vcbench_meeting_3252063_3840x2160            A 0.5077 B 41.81 (115 expansion clips left)
+[pool]   trim   2: dropped vcbench_talk_3251897_3840x2160               A 0.5070 B 41.85 (114 expansion clips left)
+[pool]   trim   3: dropped vcbench_phone_3252989_3840x2160              A 0.5063 B 41.87 (113 expansion clips left)
+[pool]   trim   4: dropped vcbench_conversation_3045052_3840x2160       A 0.5057 B 42.02 (112 expansion clips left)
+[pool]   trim   5: dropped vcbench_teacher_6985519_3840x2160            A 0.5050 B 42.22 (111 expansion clips left)
+[pool]   trim   6: dropped vcbench_meeting_3255273_3840x2160            A 0.5043 B 42.20 (110 expansion clips left)
+[pool]   trim   7: dropped vcbench_talk_4828608_4096x2160               A 0.5037 B 42.27 (109 expansion clips left)
+[pool]   trim   8: dropped vcbench_office_853878_1920x1080              A 0.5031 B 42.30 (108 expansion clips left)
+[pool]   trim   9: dropped vcbench_talk_4146196_3840x2160               A 0.5025 B 42.39 (107 expansion clips left)
+[pool]   trim  10: dropped vcbench_school_4769542_4096x2160             A 0.5020 B 42.43 (106 expansion clips left)
+[pool]   trim  11: dropped vcbench_library_4860895_4096x2160            A 0.5014 B 42.69 (105 expansion clips left)
+[pool]   trim  12: dropped vcbench_teacher_5200351_3840x2160            A 0.5008 B 42.83 (104 expansion clips left)
+[pool] TRIM: removed 12 expansion clips to satisfy the gates
+[pool] training 291 (v1 187 + v2 104) | reserved 20
+[pool] gates AFTER  trim: A 0.5008 PASS | B 42.83 PASS  => LAUNCHABLE
+[pool] diagnostics: {"n_training_v1": 187, "n_training_v2": 104, "new_cohort_internal_mean_cos": 0.5655, "vcbench63_internal_mean_cos_reference": 0.5869, "training_per_source": {"davis": 34, "openvid": 98, "vcbench": 55, "vcbench_v2": 104}}
+[pool] -> /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/ctt_v2_strata/CONTENT_POOL.json
+
+=== 2/5  re-freeze the S2 grid against the expanded pool ===
+/projects/illinois/eng/cs/jrehg/users/emirkisa/envs/diffusion/lib/python3.10/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
+  warnings.warn(
+[plan] content pool: 291 training endpoints (v1 187 + v2 104), 20 reserved held out | gate A 0.5008 gate B 42.83 (n=187)
+[plan] pair pool: 333 pairs | clip degree min/med/max = 1/2/3 | cos(A,B) max = 0.827
+[plan] shaders: keep 72 - holdout 10 = 62 trainable
+[plan] endpoint-frame cache: 187 hit, 104 to add
+[plan]   cached 50/104 (24s)
+[plan]   cached 100/104 (47s)
+[plan] endpoint-frame cache: added 104 in 64s (327 total on disk)
+[plan] GL: llvmpipe (LLVM 21.1.7, 256 bits) | 4.5 (Core Profile) Mesa 25.2.7
+[plan]   BookFlip                   13 ops
+[plan]   BowTieWithParameter        13 ops
+[plan]   Box                        13 ops
+[plan]   ButterflyWaveScrawler      13 ops
+[plan]   ColourDistance             13 ops
+[plan]   CrossZoom                  13 ops
+[plan]   Dreamy                     13 ops
+[plan]   EdgeTransition             13 ops
+[plan]   FilmBurn                   13 ops
+[plan]   GlitchDisplace             13 ops
+[plan]   GridFlip                   13 ops
+[plan]   HSVfade                    13 ops
+[plan]   HorizontalClose            13 ops
+[plan]   HorizontalOpen             13 ops
+[plan]   LinearBlur                 13 ops
+[plan]   Overexposure               13 ops
+[plan]   PolkaDotsCurtain           13 ops
+[plan]   PuzzleRight                13 ops
+[plan]   SimpleZoom                 13 ops
+[plan]   SimpleZoomOut              13 ops
+[plan]   Slides                     13 ops
+[plan]   StarWipe                   13 ops
+[plan]   StaticFade                 13 ops
+[plan]   StripDatamoshGlitch        13 ops
+[plan]   TilesWave                  13 ops
+[plan]   VerticalClose              13 ops
+[plan]   WaterDrop                  13 ops
+[plan]   ZoomRigthWipe              13 ops
+[plan]   burn                       13 ops
+[plan]   cannabisleaf               13 ops
+[plan]   chessboard                 13 ops
+[plan]   circleopen                 13 ops
+[plan]   colorphase                 13 ops
+[plan]   crosshatch                 13 ops
+[plan]   crosswarp                  13 ops
+[plan]   directionalwipe            13 ops
+[plan]   dissolve                   13 ops
+[plan]   fade                       13 ops
+[plan]   fadecolor                  13 ops
+[plan]   flyeye                     13 ops
+[plan]   fragment                   13 ops
+[plan]   heart                      13 ops
+[plan]   hexagonalize               13 ops
+[plan]   luminance_melt             13 ops
+[plan]   morph                      13 ops
+[plan]   multiply_blend             13 ops
+[plan]   old_tv_lost_signal         13 ops
+[plan]   perlin                     13 ops
+[plan]   pinwheel                   13 ops
+[plan]   pixelize                   13 ops
+[plan]   polar_function             13 ops
+[plan]   randomNoisex               13 ops
+[plan]   splitSlideOutHorizontal    13 ops
+[plan]   squareswire                13 ops
+[plan]   squeeze                    13 ops
+[plan]   swap                       13 ops
+[plan]   wind                       12 ops
+[plan]   windowblinds               12 ops
+[plan]   windowslice                12 ops
+[plan]   wipeDown                   12 ops
+[plan]   wipeLeft                   12 ops
+[plan]   wipeRight                  12 ops
+[plan] roster: 800 ops pre-validated | gate-2 rejected 156 of 956 draws (16.3%) | duplicate-id redraws 0
+[plan] grid: ops-per-pair min/median/max = 24/24/25 (target ~24)
+[plan] FROZEN -> PLAN_S2.json (800 ops x 10 = 8000 clips) in 129s
+
+=== 3/5  re-freeze the S3 grid (same pool; keeps the cross-modality pair overlap) ===
+/projects/illinois/eng/cs/jrehg/users/emirkisa/envs/diffusion/lib/python3.10/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
+  warnings.warn(
+[plan] content pool: 291 training endpoints (v1 187 + v2 104)
+[plan] S2 grid found: 333 pairs available for cross-modality overlap
+[plan] pair pool: 300 pairs (150 shared with S2 = 50%) | clip degree min/med/max = 1/2/3
+[plan] families: 7 total - holdout 'spiral' => 6 trainable: ['crane', 'dolly', 'orbit', 'roll', 'shear', 'truck']
+[plan] roster: 330 unique exact ops = 300 training + 30 held out
+[plan] grid: ops-per-pair min/median/max = 5/6/7 (target ~6)
+[plan] FROZEN -> PLAN_S3.json (300 ops x 6 = 1800 clips) in 0s
+
+=== 4/5  verify every invariant before a single clip is rendered ===
+  S2: 800 ops x 10 = 8000 clips | 333 pairs | 291 contents | ops/pair 24/24/25
+  S3: 300 ops x 6 = 1800 clips | 300 pairs | 291 contents | ops/pair 5/6/7
+  pool: 291 training + 20 reserved | Gate A 0.5008 (<= 0.52) | Gate B 42.83 (>= 42.82) | trimmed 12
+  all invariants OK
+
+=== 5/5  launch the S2 mass render (CPU array, 20 shards) ===
+s2render array -> 9664439
+watchdog armed to track and resubmit the array

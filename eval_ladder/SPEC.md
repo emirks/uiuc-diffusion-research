@@ -87,17 +87,28 @@ Two gaps fall out of the grid and are the reason it is a grid:
 | `spec_<class>` ×11 | + the transition baked into weights | 77 |
 | `ic_gen` | + the transition supplied in-context as a demo clip | 152 |
 
-`base` is not a baseline in the loose sense — it is the **counterfactual**: the identical input
-with the adapter removed. `text_floor` is the leak-proof floor: if it sits near the pool floor,
-the prompt is not carrying the answer.
+> **BASELINE RULE (owner ruling 2026-07-23, load-bearing).** A baseline/comparator is exactly one of
+> **two** things: **(1) prompt only**, or **(2) prompt + ENDPOINT conditioning (prefix/suffix), NO
+> reference.** **A no-adapter model given a reference is NEVER a baseline — it is a copier:** on the base
+> model an in-context reference clip *bleeds wholesale* into the generation (it reproduces the demo and
+> abandons the conditioned endpoint — measured 88–100 % reference-dominated, `max_seam_z` 10–45). The
+> reference is the **treatment arm's** privilege alone. The margin is `treatment − base_cond` on
+> byte-identical *endpoint + prompt* (the content-cap cancels). Mechanism + measurements:
+> `notes/models/ltx2/conditioning.md §5.4`.
 
-**v2.1.0 adds the two CLEAN baselines** (owner call 2026-07-23: base *with* a reference is a
-copier — it reproduces the demo — so it is never a baseline):
+The **two valid baselines** (added v2.1.0):
 
 | arm | gets | rows |
 |---|---|---|
 | `base_prompt` | prompt only, on a treatment task's endpoint | 177 (one per task) |
 | `base_cond` | prompt + endpoint conditioning, **no reference** | 126 (only tasks without a clean no-ref `base` twin of the same donor) |
+
+`text_floor` is the leak-proof floor: if it sits near the pool floor, the prompt is not carrying the
+answer. The v2.0.0 `base` arm (row above) *did* carry the reference on reference-bearing cells "for
+input parity" — that was the **input-parity fallacy** (§5.4 of the conditioning note): it handed the
+base the very clip it copies. It is retained only as the historical v2.0.0 counterfactual; for any
+reference-bearing cell the valid comparator is **`base_cond`**, and the confound that Amendment-1's
+transfer index (§11) worked around does not arise against it.
 
 Baselines split the row unit from the video unit, deliberately: **scoring is per task**
 (`donor, endpoint, sided` — the pool-% must be taken against that task's donor pool), but the

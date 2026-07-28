@@ -1,0 +1,703 @@
+{
+ "created": "2026-07-27",
+ "what": "novel hard-black fraction added by the transition ramp over the clip's own pure phases; see scripts/s3_novel_black_probe.py for the definition",
+ "status": "OPERATOR SANITY PROBE \u2014 not a certified metric, not a gate, one-sided (sees hard black voids only, not flat-smear/melt)",
+ "params": {
+  "black_luma": 14,
+  "bright_luma": 110,
+  "min_blob_px": 400,
+  "rim_bright_frac": 0.25,
+  "ramp_frames": 5,
+  "pure_frames": 6
+ },
+ "calibration_on_exp_082_adjudicated_labels": {
+  "B_bad": {
+   "n": 39,
+   "median_delta_pp": 2.72,
+   "n_over_1pp": 24,
+   "n_over_3pp": 19,
+   "frac_over_3pp": 0.487,
+   "median_raw_ramp_pct": 8.57,
+   "median_raw_pure_pct": 1.03
+  },
+  "B_good": {
+   "n": 24,
+   "median_delta_pp": 0.0,
+   "n_over_1pp": 5,
+   "n_over_3pp": 1,
+   "frac_over_3pp": 0.042,
+   "median_raw_ramp_pct": 0.14,
+   "median_raw_pure_pct": 0.1
+  }
+ },
+ "applied_to_exp_080_group_A": {
+  "n": 31,
+  "median_delta_pp": -12.15,
+  "n_over_1pp": 2,
+  "n_over_3pp": 2,
+  "frac_over_3pp": 0.065,
+  "median_raw_ramp_pct": 3.36,
+  "median_raw_pure_pct": 14.9
+ },
+ "reading": "A behaves like B's GOOD clips on this probe, not like B's BAD ones. A's raw hard-black number is high purely because its source footage is dark; against its own pure phases the ramp mostly removes black.",
+ "per_clip": {
+  "family__shadow_smoke_7__portal_8__crane_crossfade__on020_re100__218153": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.08781,
+   "pure": 0.14901,
+   "delta": -0.0612
+  },
+  "family__shadow_smoke_7__portal_8__dolly_crossfade__on020_re100__823383": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.03361,
+   "pure": 0.14901,
+   "delta": -0.1154
+  },
+  "family__shadow_smoke_7__portal_8__orbit_crossfade__on020_re100__522529": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.03143,
+   "pure": 0.14901,
+   "delta": -0.11758
+  },
+  "family__shadow_smoke_7__portal_8__roll_crossfade__on020_re100__800328": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.00513,
+   "pure": 0.14901,
+   "delta": -0.14388
+  },
+  "family__shadow_smoke_7__portal_8__shear_crossfade__on020_re100__599987": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.0,
+   "pure": 0.14901,
+   "delta": -0.14901
+  },
+  "family__shadow_smoke_7__portal_8__spiral_crossfade__on020_re100__224503": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.02826,
+   "pure": 0.14901,
+   "delta": -0.12076
+  },
+  "family__shadow_smoke_7__portal_8__truck_crossfade__on020_re100__992172": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.02334,
+   "pure": 0.14901,
+   "delta": -0.12567
+  },
+  "effect_dollyzoom__shadow_smoke_7__portal_8__dolly_crossfade_dz__on020_re100__359805": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.03272,
+   "pure": 0.14901,
+   "delta": -0.11629
+  },
+  "effect_depthwipe__shadow_smoke_7__portal_8__dolly_depth_wipe__on020_re100__745521": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.02814,
+   "pure": 0.14901,
+   "delta": -0.12087
+  },
+  "effect_dissolve_fbm__shadow_smoke_7__portal_8__dolly_crossfade_fbm__on020_re100__864420": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.01796,
+   "pure": 0.14901,
+   "delta": -0.13105
+  },
+  "effect_fog__shadow_smoke_7__portal_8__dolly_crossfade_fog__on020_re100__146319": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.0186,
+   "pure": 0.14901,
+   "delta": -0.13041
+  },
+  "effect_rackfocus__shadow_smoke_7__portal_8__dolly_crossfade_focus__on020_re100__322930": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.01781,
+   "pure": 0.14901,
+   "delta": -0.1312
+  },
+  "effect_handheld_mblur__shadow_smoke_7__portal_8__orbit_crossfade__on020_re100__802486": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.00507,
+   "pure": 0.14901,
+   "delta": -0.14394
+  },
+  "counterfactual__gas_transformation_4__money_rain_0__crane_depth_wipe_plane__on027_re109__605393": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.51239,
+   "pure": 0.53846,
+   "delta": -0.02607
+  },
+  "counterfactual__gas_transformation_4__money_rain_0__shear_crossfade_sphere_fog__on010_re109__650876": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.05713,
+   "pure": 0.54037,
+   "delta": -0.48324
+  },
+  "counterfactual__gas_transformation_4__money_rain_0__spiral_crossfade_sphere_dz_fog__on027_re110__811723": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.13041,
+   "pure": 0.53925,
+   "delta": -0.40884
+  },
+  "counterfactual__gas_transformation_4__money_rain_0__orbit_crossfade_fbm_focus__on010_re101__068286": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.31739,
+   "pure": 0.53904,
+   "delta": -0.22165
+  },
+  "counterfactual__gas_transformation_4__money_rain_0__spiral_crossfade_worley_dz_focus__on011_re097__739090": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.0754,
+   "pure": 0.53157,
+   "delta": -0.45617
+  },
+  "counterfactual__gas_transformation_4__money_rain_0__shear_crossfade_sphere__on021_re106__587453": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.14961,
+   "pure": 0.54183,
+   "delta": -0.39222
+  },
+  "counterfactual__gas_transformation_4__money_rain_0__spiral_depth_wipe_plane_dz__on014_re098__941264": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.28248,
+   "pure": 0.52998,
+   "delta": -0.24751
+  },
+  "counterfactual__gas_transformation_4__money_rain_0__truck_depth_wipe_plane__on024_re112__835726": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.07113,
+   "pure": 0.53885,
+   "delta": -0.46773
+  },
+  "sharedop0__shadow_smoke_7__portal_8__shear_depth_wipe_plane__on018_re109__781112": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.02748,
+   "pure": 0.14901,
+   "delta": -0.12153
+  },
+  "sharedop0__gas_transformation_4__money_rain_0__shear_depth_wipe_plane__on018_re109__781112": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.51581,
+   "pure": 0.5386,
+   "delta": -0.02279
+  },
+  "sharedop0__action_run_setonfire_7__polygon_1__shear_depth_wipe_plane__on018_re109__781112": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.23254,
+   "pure": 0.05195,
+   "delta": 0.18058
+  },
+  "sharedop1__shadow_smoke_7__portal_8__roll_crossfade__on020_re109__665774": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.0,
+   "pure": 0.14901,
+   "delta": -0.14901
+  },
+  "sharedop1__gas_transformation_4__money_rain_0__roll_crossfade__on020_re109__665774": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.51266,
+   "pure": 0.53816,
+   "delta": -0.0255
+  },
+  "sharedop1__action_run_setonfire_7__polygon_1__roll_crossfade__on020_re109__665774": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.00159,
+   "pure": 0.05195,
+   "delta": -0.05036
+  },
+  "diverse__shadow_smoke_7__portal_8__crane_crossfade_plane_fog__on027_re101__475674": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.05206,
+   "pure": 0.14901,
+   "delta": -0.09695
+  },
+  "diverse__gas_transformation_4__money_rain_0__spiral_depth_wipe_worley_dz__on022_re104__155618": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.52439,
+   "pure": 0.54044,
+   "delta": -0.01605
+  },
+  "diverse__action_run_setonfire_7__polygon_1__dolly_depth_wipe__on027_re109__745379": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.08619,
+   "pure": 0.05195,
+   "delta": 0.03424
+  },
+  "diverse__action_run_setonfire_6__super_fast_run_0__crane_crossfade_fbm__on020_re110__431924": {
+   "group": "A",
+   "verdict": null,
+   "ramp": 0.03045,
+   "pure": 0.0295,
+   "delta": 0.00095
+  },
+  "s3p_001_crane_random_4d55643b": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.00137,
+   "pure": 0.0,
+   "delta": 0.00137
+  },
+  "s3p_002_crane_random_d85687f5": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.00132,
+   "pure": 0.00307,
+   "delta": -0.00174
+  },
+  "s3p_003_crane_random_01466fd8": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.01338,
+   "pure": 0.01028,
+   "delta": 0.0031
+  },
+  "s3p_004_crane_random_0ce58324": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.13639,
+   "pure": 0.00137,
+   "delta": 0.13502
+  },
+  "s3p_005_crane_dissolve_fbm_68446603": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.01807,
+   "pure": 0.00545,
+   "delta": 0.01262
+  },
+  "s3p_006_crane_rackfocus_a734b77d": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.04475,
+   "pure": 0.00403,
+   "delta": 0.04073
+  },
+  "s3p_007_crane_fog_1e0563a3": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.0,
+   "pure": 0.00192,
+   "delta": -0.00192
+  },
+  "s3p_008_crane_handheld_mblur_26d98408": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.20962,
+   "pure": 0.0,
+   "delta": 0.20962
+  },
+  "s3p_009_crane_depthwipe_f44ee419": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.02962,
+   "pure": 0.01176,
+   "delta": 0.01785
+  },
+  "s3p_010_dolly_random_7d5a24d8": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.02822,
+   "pure": 0.02866,
+   "delta": -0.00044
+  },
+  "s3p_011_dolly_random_73f2ac56": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.0,
+   "pure": 0.0,
+   "delta": 0.0
+  },
+  "s3p_012_dolly_random_18e4e451": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.0,
+   "pure": 0.00257,
+   "delta": -0.00257
+  },
+  "s3p_013_dolly_random_05049ae3": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.0,
+   "pure": 0.0,
+   "delta": 0.0
+  },
+  "s3p_014_dolly_dissolve_fbm_d585146f": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.30718,
+   "pure": 0.0,
+   "delta": 0.30718
+  },
+  "s3p_015_dolly_rackfocus_3c5eadf3": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.14941,
+   "pure": 0.01146,
+   "delta": 0.13795
+  },
+  "s3p_016_dolly_fog_3a8ed6ae": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.0,
+   "pure": 0.0062,
+   "delta": -0.0062
+  },
+  "s3p_017_dolly_dollyzoom_6d9f19c7": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.13336,
+   "pure": 0.15281,
+   "delta": -0.01946
+  },
+  "s3p_018_dolly_depthwipe_5404c669": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.12227,
+   "pure": 0.06545,
+   "delta": 0.05682
+  },
+  "s3p_019_orbit_random_5b1e69b8": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.01503,
+   "pure": 0.00891,
+   "delta": 0.00612
+  },
+  "s3p_020_orbit_random_0f05a9ac": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.07035,
+   "pure": 0.0,
+   "delta": 0.07035
+  },
+  "s3p_021_orbit_random_d3c19364": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.24751,
+   "pure": 0.00356,
+   "delta": 0.24395
+  },
+  "s3p_022_orbit_random_2a985782": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.02634,
+   "pure": 0.02411,
+   "delta": 0.00223
+  },
+  "s3p_023_orbit_dissolve_fbm_65f43ba5": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.00852,
+   "pure": 0.0,
+   "delta": 0.00852
+  },
+  "s3p_024_orbit_rackfocus_a58ec5a9": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.23475,
+   "pure": 0.00195,
+   "delta": 0.23279
+  },
+  "s3p_025_orbit_fog_61ddfb04": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.01106,
+   "pure": 0.0,
+   "delta": 0.01106
+  },
+  "s3p_026_orbit_handheld_mblur_9fb0295b": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.0058,
+   "pure": 0.0,
+   "delta": 0.0058
+  },
+  "s3p_027_orbit_depthwipe_10ad46ef": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.02793,
+   "pure": 0.00598,
+   "delta": 0.02196
+  },
+  "s3p_028_roll_random_f4f6e4af": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.0064,
+   "pure": 0.0,
+   "delta": 0.0064
+  },
+  "s3p_029_roll_random_d2f29807": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.02332,
+   "pure": 0.02076,
+   "delta": 0.00256
+  },
+  "s3p_030_roll_random_5050e55c": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.1006,
+   "pure": 0.10155,
+   "delta": -0.00095
+  },
+  "s3p_031_roll_random_fd4152fc": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.01354,
+   "pure": 0.0,
+   "delta": 0.01354
+  },
+  "s3p_032_roll_dissolve_fbm_7cf88ed4": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.01063,
+   "pure": 0.0,
+   "delta": 0.01063
+  },
+  "s3p_033_roll_rackfocus_97fe9a26": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.02135,
+   "pure": 0.01436,
+   "delta": 0.007
+  },
+  "s3p_034_roll_fog_d02560f1": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.0,
+   "pure": 0.0,
+   "delta": 0.0
+  },
+  "s3p_035_roll_handheld_mblur_31bb97ad": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.00492,
+   "pure": 0.00347,
+   "delta": 0.00145
+  },
+  "s3p_036_roll_depthwipe_e0c84cc1": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.0584,
+   "pure": 0.0614,
+   "delta": -0.003
+  },
+  "s3p_037_shear_random_fe8b8cb1": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.0,
+   "pure": 0.0,
+   "delta": 0.0
+  },
+  "s3p_038_shear_random_65833d28": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.0,
+   "pure": 0.0,
+   "delta": 0.0
+  },
+  "s3p_039_shear_random_41d2e712": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.0,
+   "pure": 0.00342,
+   "delta": -0.00342
+  },
+  "s3p_040_shear_random_b7172104": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.02455,
+   "pure": 0.02856,
+   "delta": -0.00401
+  },
+  "s3p_041_shear_dissolve_fbm_d645d388": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.0,
+   "pure": 0.0,
+   "delta": 0.0
+  },
+  "s3p_042_shear_rackfocus_589ab819": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.14592,
+   "pure": 0.15281,
+   "delta": -0.00689
+  },
+  "s3p_043_shear_fog_3d86babc": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.0,
+   "pure": 0.0,
+   "delta": 0.0
+  },
+  "s3p_044_shear_handheld_mblur_5bba7db0": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.0,
+   "pure": 0.01013,
+   "delta": -0.01013
+  },
+  "s3p_045_shear_depthwipe_8aa2cc6a": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.0,
+   "pure": 0.0,
+   "delta": 0.0
+  },
+  "s3p_046_spiral_random_7bb59baf": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.01819,
+   "pure": 0.0,
+   "delta": 0.01819
+  },
+  "s3p_047_spiral_random_f47ae5c4": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.01516,
+   "pure": 0.00229,
+   "delta": 0.01286
+  },
+  "s3p_048_spiral_random_5c4dbfd5": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.15543,
+   "pure": 0.0374,
+   "delta": 0.11803
+  },
+  "s3p_049_spiral_random_3eb4f550": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.26727,
+   "pure": 0.21802,
+   "delta": 0.04925
+  },
+  "s3p_050_spiral_dissolve_fbm_ed72a07f": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.03584,
+   "pure": 0.04329,
+   "delta": -0.00745
+  },
+  "s3p_051_spiral_rackfocus_e73cb654": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.58991,
+   "pure": 0.0,
+   "delta": 0.58991
+  },
+  "s3p_052_spiral_fog_a21bc18c": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.08571,
+   "pure": 0.0,
+   "delta": 0.08571
+  },
+  "s3p_053_spiral_dollyzoom_6b754567": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.02723,
+   "pure": 0.0,
+   "delta": 0.02723
+  },
+  "s3p_054_spiral_depthwipe_431f8c45": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.0877,
+   "pure": 0.0,
+   "delta": 0.0877
+  },
+  "s3p_055_truck_random_245fdb2d": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.52943,
+   "pure": 0.02076,
+   "delta": 0.50867
+  },
+  "s3p_056_truck_random_f1be7bb6": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.00153,
+   "pure": 0.0,
+   "delta": 0.00153
+  },
+  "s3p_057_truck_random_412c8646": {
+   "group": "B",
+   "verdict": "good",
+   "ramp": 0.05597,
+   "pure": 0.00274,
+   "delta": 0.05323
+  },
+  "s3p_058_truck_random_dcb8bfc9": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.34417,
+   "pure": 0.02451,
+   "delta": 0.31966
+  },
+  "s3p_059_truck_dissolve_fbm_615018cc": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.41685,
+   "pure": 0.2204,
+   "delta": 0.19645
+  },
+  "s3p_060_truck_rackfocus_cc662c8b": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.39644,
+   "pure": 0.21802,
+   "delta": 0.17841
+  },
+  "s3p_061_truck_fog_7f98da6a": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.02137,
+   "pure": 0.36249,
+   "delta": -0.34112
+  },
+  "s3p_062_truck_handheld_mblur_25ca5e46": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.25345,
+   "pure": 0.1365,
+   "delta": 0.11695
+  },
+  "s3p_063_truck_depthwipe_a277b8dc": {
+   "group": "B",
+   "verdict": "bad",
+   "ramp": 0.11981,
+   "pure": 0.12031,
+   "delta": -0.0005
+  }
+ }
+}

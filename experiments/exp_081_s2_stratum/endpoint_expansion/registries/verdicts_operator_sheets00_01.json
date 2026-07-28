@@ -1,0 +1,31 @@
+{
+ "reviewer": "operator (sheets 00 and 01 reviewed directly; 02-11 delegated to parallel reviewers under an identical rubric)",
+ "sheet_00": [
+  {"clip_id": "vcbench_teacher_5184440_1080x1920", "verdict": "accept"},
+  {"clip_id": "vcbench_talk_3254197_3840x2160", "verdict": "accept", "note": "high-key blown background but the subject is clean"},
+  {"clip_id": "vcbench_teacher_3367480_2160x3840", "verdict": "accept"},
+  {"clip_id": "vcbench_animal_3191251_4096x2160", "verdict": "accept", "note": "stylistic lens flare, present throughout, not a defect"},
+  {"clip_id": "vcbench_boat_7318821_1080x1920", "verdict": "accept", "note": "I first eye-flagged this as near-static; the motion measurement (9.00, well above the pool floor) overrode me — the water shimmers and the bow drifts"},
+  {"clip_id": "vcbench_phone_2072695_1080x1618", "verdict": "reject", "reason": "static", "note": "motion 0.97, the lowest of all 139 and below every clip in the existing pool"},
+  {"clip_id": "vcbench_painting_3960177_4096x2160", "verdict": "accept"},
+  {"clip_id": "vcbench_chicken_4911805_4096x2160", "verdict": "accept"},
+  {"clip_id": "vcbench_meeting_3256571_2160x3840", "verdict": "accept"},
+  {"clip_id": "vcbench_school_8499667_1920x1080", "verdict": "accept"},
+  {"clip_id": "vcbench_teacher_11025559_4096x2160", "verdict": "accept"},
+  {"clip_id": "vcbench_phone_3044445_3840x2160", "verdict": "accept"}
+ ],
+ "sheet_01": [
+  {"clip_id": "vcbench_butterfly_854867_3840x2160", "verdict": "accept"},
+  {"clip_id": "vcbench_sculpture_3713530_2160x4096", "verdict": "accept"},
+  {"clip_id": "vcbench_robot_8764794_2160x3840", "verdict": "accept", "note": "low motion (4.63) but the subject turns; above the pool floor"},
+  {"clip_id": "vcbench_office_3249902_3840x2160", "verdict": "accept"},
+  {"clip_id": "vcbench_turtle_5264397_2160x4096", "verdict": "accept"},
+  {"clip_id": "vcbench_office_3254006_3840x2160", "verdict": "accept"},
+  {"clip_id": "vcbench_action_5977023_3840x2160", "verdict": "accept", "note": "subject exits frame late but the tail is a legible dusty landscape, not featureless"},
+  {"clip_id": "vcbench_teenager_4297124_3840x2160", "verdict": "reject", "reason": "static", "note": "motion 4.36; frames essentially identical across the strip"},
+  {"clip_id": "vcbench_lunch_6958036_2160x4096", "verdict": "accept"},
+  {"clip_id": "vcbench_talk_3141320_3840x2160", "verdict": "accept"},
+  {"clip_id": "vcbench_building_3044455_3840x2160", "verdict": "reject", "reason": "degenerate", "note": "ends in a near-featureless pink smoke field; the endpoint block would carry no content"},
+  {"clip_id": "vcbench_tulip_10536489_4096x2160", "verdict": "accept"}
+ ]
+}
