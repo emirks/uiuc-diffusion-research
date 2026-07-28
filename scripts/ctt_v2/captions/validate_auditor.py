@@ -156,10 +156,14 @@ def archive(path: Path, recs: list) -> None:
 
 
 def pin_block() -> dict:
+    # Ruling citations carry the FILENAME, never the bare number: the advisor namespace
+    # collided FOUR times (A10, A11, A12, A13 each have two files), so "per A13" is
+    # ambiguous.  See advisors/LEDGER.md.
     return {"model": gd.AUDIT_MODEL, "temperature": gd.AUDIT_TEMPERATURE,
             "thinking_level": gd.AUDIT_THINKING_LEVEL,
             "max_output_tokens": gd.AUDIT_MAX_TOKENS,
-            "authority": "A13 Q1 pinned auditor config"}
+            "authority": ("advisors/A14_RECONCILIATION_VERBATIM.md Q2 -- auditor pin, "
+                          "conditional on the step-2 matched-side bars")}
 
 
 def cost_block(tok: dict) -> dict:
@@ -323,16 +327,169 @@ def cmd_calibration(a):
     return res
 
 
+def cmd_matched(a):
+    """A14 EXECUTION STEP 2 -- the keystone.  One run, three obligations.
+
+    Re-audit the round-2 IN-GRID descriptions (the ones A12 pre-registered for reuse)
+    under the candidate auditor, on the production audit path, against the CORRECT clip.
+
+    Why this one run is load-bearing three times over (A14 Q2):
+      (a) MATCHED-SIDE CONTROL.  The 220/220 mismatch certificate is ONE-SIDED: an auditor
+          that flags everything also scores 220/220.  `gemini-3-flash-preview` has no
+          measured matched-side false-positive rate (3.5-flash 5.75%, flash-lite 2.0%).
+          This measures it.  PRE-COMMITTED BARS, fixed before the run:
+          matched `inaccurate=YES` <= 10%, `errors == 0`.
+      (b) CROSS-AUDITOR CALIBRATION.  Agreement + flag-rate delta against the archived
+          3.5-flash verdicts -- the comparability bridge for reading a marginal
+          first-pass miss later (no trend may be claimed across an auditor change).
+      (c) AUDIT-PROVENANCE UNIFICATION, which is what legitimises reusing these rows
+          inside a store whose remainder is audited by the pinned auditor.
+
+    TWO ARMS, and they are kept strictly apart:
+      arm `accepted`  -- the reused descriptions.  THIS ARM CARRIES THE BARS.  Note the
+                        archived reference verdicts here are all NO *by construction*
+                        (a row was accepted only because 3.5-flash said NO), so its
+                        "agreement" is not independent evidence -- it IS the matched-side
+                        false-positive rate.  Reported honestly as such.
+      arm `flagged`   -- round-2 attempts 3.5-flash actually flagged.  REPORTED, NEVER
+                        BARRED: it is the only positive-side agreement available, and
+                        folding it into a pre-committed bar's denominator would move the
+                        bar after the fact.
+    """
+    out = Path(a.out)
+    grid = {tuple(x) for x in json.loads(Path(a.grid).read_text())}
+    recs2 = load_records(ROUND2)
+
+    accepted, flagged = [], []
+    for v in recs2.values():
+        if (v["clip_id"], v["role"]) not in grid:
+            continue
+        if v.get("description") and isinstance(v.get("audit"), dict) \
+                and v["audit"].get("leak") in ("YES", "NO"):
+            accepted.append(v)
+        for h in v.get("history", []):
+            old = h.get("audit")
+            if isinstance(old, dict) and h.get("description") and \
+                    (old.get("leak") == "YES" or old.get("inaccurate") == "YES"):
+                flagged.append({"clip_id": v["clip_id"], "role": v["role"],
+                                "description": h["description"], "audit": old})
+    if a.n:
+        accepted = accepted[:a.n]
+
+    print(f"[matched] grid={a.grid} ({len(grid)} pairs) | reused in-grid accepted="
+          f"{len(accepted)} | in-grid 3.5-flash-flagged attempts={len(flagged)} | "
+          f"auditor={gd.AUDIT_MODEL} thinking={gd.AUDIT_THINKING_LEVEL}")
+
+    def audit_arm(rows, label):
+        jobs = [(r, r["clip_id"], r["role"]) for r in rows]      # MATCHED = correct clip
+        return run_pool(jobs, a.workers, label) if jobs else []
+
+    rec_acc = audit_arm(accepted, "matched/accepted")
+    rec_flg = audit_arm(flagged, "matched/flagged")
+    archive(out / "raw_matched_accepted_responses.jsonl", rec_acc)
+    archive(out / "raw_matched_flagged_responses.jsonl", rec_flg)
+
+    def score(rows, refs, label):
+        ref_by = {f'{r["clip_id"]}|{r["role"]}': r["audit"] for r in refs}
+        ok = [r for r in rows if r.get("_verdict_ok")]
+        errs = [r["_audit_error"] for r in rows if r.get("_audit_error")]
+        n = len(ok)
+        agree = {"leak": 0, "inaccurate": 0}
+        new_f = {"leak": 0, "inaccurate": 0}
+        old_f = {"leak": 0, "inaccurate": 0}
+        disagreements = []
+        for r in ok:
+            key = f'{r["clip_id"]}|{r["role"]}'
+            old, new = ref_by.get(key) or {}, r["_verdict_ok"]
+            for f in ("leak", "inaccurate"):
+                if new.get(f) == "YES":
+                    new_f[f] += 1
+                if old.get(f) == "YES":
+                    old_f[f] += 1
+                if old.get(f) == new.get(f):
+                    agree[f] += 1
+                else:
+                    disagreements.append({
+                        "key": key, "field": f, "ref_3_5_flash": old.get(f),
+                        "new_auditor": new.get(f),
+                        "errors": (new.get("errors") or [])[:3],
+                        "description": (r.get("description") or "")[:130]})
+        pct = (lambda k: round(100 * k / n, 2) if n else None)
+        return {
+            "arm": label, "n_requested": len(rows), "n_usable_verdicts": n,
+            "n_errors": len(errs), "errors": errs[:10],
+            "new_flag_pct": {f: pct(new_f[f]) for f in new_f},
+            "ref_flag_pct": {f: pct(old_f[f]) for f in old_f},
+            "delta_pp": {f: (round(100 * (new_f[f] - old_f[f]) / n, 2) if n else None)
+                         for f in new_f},
+            "agreement_pct": {f: pct(agree[f]) for f in agree},
+            "n_disagreements": len(disagreements), "disagreements": disagreements[:60],
+            "model_version_echo": sorted({r.get("model_version_echo") for r in rows}),
+            "tokens": summarise_tokens(rows),
+        }
+
+    acc = score(rec_acc, accepted, "accepted_reused_in_grid")
+    flg = score(rec_flg, flagged, "attempts_flagged_by_3_5_flash")
+    acc["reference_note"] = (
+        "The 3.5-flash reference verdicts on this arm are NO for every field BY "
+        "CONSTRUCTION -- a row is in this arm only because 3.5-flash accepted it. "
+        "So `agreement_pct` here is 100 - new_flag_pct and is NOT independent evidence; "
+        "the informative quantity is new_flag_pct.inaccurate = the MATCHED-SIDE "
+        "FALSE-POSITIVE RATE, which is precisely the gap A14 Q2 says the one-sided "
+        "220/220 mismatch control leaves open.")
+    flg["reference_note"] = (
+        "REPORTED, NOT BARRED. The only positive-side agreement available: rows 3.5-flash "
+        "flagged and round 2 therefore regenerated. Folding these into the bar's "
+        "denominator would move a pre-committed bar after the fact.")
+
+    matched_flag = acc["new_flag_pct"]["inaccurate"]
+    bars = {"matched_inaccurate_yes_max_pct": 10.0, "errors_max": 0,
+            "pre_committed": ("A14 EXECUTION STEP 2, fixed before the run "
+                              "(advisors/A14_RECONCILIATION_VERBATIM.md Q2)"),
+            "on_fail": ("fall back to gemini-3.5-flash-lite and repeat this same "
+                        "re-audit -- pre-committed, no new consultation. If BOTH fail, "
+                        "STOP: no auditor has earned the certificate.")}
+    reasons = []
+    if acc["n_usable_verdicts"] == 0:
+        reasons.append("no usable verdicts -- nothing was measured")
+    if acc["n_errors"]:
+        reasons.append(f'{acc["n_errors"]} audit errors (bar: 0)')
+    if matched_flag is None or matched_flag > 10.0:
+        reasons.append(f"matched inaccurate=YES {matched_flag}% > 10% bar")
+    verdict = "PASS" if not reasons else "FAIL"
+
+    res = {"lane": "matched_side_control_and_calibration",
+           "authority": "A14 execution step 2 (advisors/A14_RECONCILIATION_VERBATIM.md)",
+           "discharges": ["matched-side false-positive control (the one-sided gap)",
+                          "cross-auditor calibration vs archived 3.5-flash verdicts",
+                          "audit-provenance unification of the reused in-grid rows"],
+           "auditor_pin": pin_block(), "grid": a.grid, "grid_pairs": len(grid),
+           "reference_auditor": "gemini-3.5-flash (round-2 archived verdicts)",
+           "bars": bars, "matched_inaccurate_pct": matched_flag,
+           "arms": {"accepted": acc, "flagged": flg},
+           "fail_reasons": reasons, "verdict": verdict}
+    (out / "AUDITOR_MATCHED_CONTROL.json").write_text(json.dumps(res, indent=1))
+    print(json.dumps({k: v for k, v in res.items() if k != "arms"}, indent=1))
+    for k, arm in res["arms"].items():
+        print(f'  [{k}] n={arm["n_usable_verdicts"]} errors={arm["n_errors"]} '
+              f'new_flag={arm["new_flag_pct"]} ref_flag={arm["ref_flag_pct"]} '
+              f'agree={arm["agreement_pct"]}')
+    return res
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=("meter", "mismatch", "calibration"))
+    ap.add_argument("cmd", choices=("meter", "mismatch", "calibration", "matched"))
     ap.add_argument("--out", required=True)
     ap.add_argument("--n", type=int, default=None)
     ap.add_argument("--workers", type=int, default=16)
     ap.add_argument("--store", choices=("round2", "round3"), default="round3")
+    ap.add_argument("--grid", default="outputs/ctt_v2/captions/mass_pairs.json",
+                    help="the pinned (clip, role) grid; `matched` restricts to it")
     a = ap.parse_args()
     Path(a.out).mkdir(parents=True, exist_ok=True)
-    {"meter": cmd_meter, "mismatch": cmd_mismatch, "calibration": cmd_calibration}[a.cmd](a)
+    {"meter": cmd_meter, "mismatch": cmd_mismatch, "calibration": cmd_calibration,
+     "matched": cmd_matched}[a.cmd](a)
 
 
 if __name__ == "__main__":
