@@ -1,9 +1,15 @@
 # CTT v2 training dataset — DATASET SPEC
 
 **Design version: `ctt-v2-dataset/0.9.0-DRAFT`**
-**Status: `NOT STAMPABLE` — the caption lane is blocked (Gemini prepayment credits depleted), so
-no `conditions/` tree exists, no root has been assembled, and no assert has been executed against a
-real root.** See §1.2 for the exact blocking set.
+**Status: `NOT STAMPABLE` — the blocker is now S1 MEDIA, not captions.** 35 of 390 S1 clips
+exist; S1 generation moved to DeltaAI by owner directive, so no `conditions/` tree exists and no
+root has been assembled. See §1.2 for the blocking set.
+
+> 🔴 **CAPTIONS ARE DONE. `data/CAPTIONS.md` IS THE SINGLE SOURCE OF TRUTH FOR THE CAPTION LANE.**
+> 1,403 / 1,403 locked, one prompt variant (`v2`), one auditor (`gemini-3.5-flash-lite`), content
+> hash `c8e2d95b…`, 12-gate battery on the **full** store with `hard_fail: []`, corpus-139 audit
+> 0/171 leaks. Every caption row in the tables below that still says *"blocked: Gemini credits"* is
+> **stale** — `CAPTIONS.md` and the disk win. S4 captions remain out of scope (owner-deferred).
 
 This file is authoritative for the dataset. Where a script, README, dossier paragraph or advisor
 ruling disagrees with this document, **this document wins and the other thing is a bug** — with one
@@ -54,13 +60,13 @@ judges existed (pre-registration), not yet exercised.
 | Mix weights **S0 15 / S1 6 / S2 total 69 / S4 10** (+ 3 contingency branches), S2a:S2b **derived pro-rata** | **PINNED (ruled), IN CODE**; the split's inputs **FROZEN** | A9 / A11 item 3 / **A12**; `root_common.STRATUM_WEIGHTS_PCT` + `PRORATA_GROUPS` + `ABSENT_BRANCH_WEIGHTS_PCT`, §11.1; `misc/ctt_v2_final/PREREG_mix_inputs.json` |
 | Pairing rule (ring offset, k=min(3,n−1)) | **PINNED** | `root_common.PAIRING_RULE` |
 | VAE latents + cond_clean for S1/S2a/S2b/S4 | **FROZEN** | **18,013 clips → 36,026 `.pt`, 42 G, `encode_strata.py verify` = ALL CHECKS PASS** (2026-07-28 04:50). Counts **set-equal to each frozen roster** (not merely equal cardinality), so the trainer's relative-path join has nothing it *could* silently drop; shape+fps asserted **inline on every clip** during encoding, not sampled. S2a 7,990 · S2b 7,990 · S1 33 · S4 2,000. `suffix_rel_l2` median-of-medians S2a 0.334 / S2b 0.317, consistent with exp_073's 0.280 and d2f's 0.314 — independent re-validation of the cond_clean correction on new data. §17 |
-| S1 full render (390 clips) | **PENDING** | 33 pilot clips exist; gate is credit-blocked |
-| S1 pilot batch gate (blind 11-way Gemini) | **PENDING (blocked: Gemini credits)** | |
-| Caption store (all strata) | **PENDING (blocked: Gemini credits)** | §6 |
-| Caption round 3 (be-verb defect fix) | **PENDING (blocked: Gemini credits)** | A8 ordered; staged in `RESUME_ON_CREDITS.sh` |
-| Corpus-139 Layer-2 leak audit | **PENDING (blocked: Gemini credits)** | anchors built; A4/A8 require it *before assembly* |
+| S1 full render (390 clips) | **PENDING — owner runs it on DeltaAI** | 35 clips exist; run book + grid + shas in `misc/ctt_v2_final/deltaai_s1_handoff/` |
+| S1 pilot batch gate (blind 11-way Gemini) | **PENDING — moved to DeltaAI with the generation** | `misc/ctt_v2_final/deltaai_s1_handoff/` |
+| Caption store (all strata) | ✅ **DONE — 1,403/1,403 LOCKED** | `data/CAPTIONS.md` (authority), `CAPTION_LOCK.json` |
+| Caption round 3 / `v3` be-verb fix | ⛔ **CLOSED — v3 is an archived negative result, enters no store** | mechanism falsified; delta ~1.2 SE of noise; no round 4. `CAPTIONS.md` §6 |
+| Corpus-139 Layer-2 leak audit | ✅ **DONE — 0/171 `leak=YES`** | 4/171 `inaccurate` ESCALATED, captions byte-identical. `CAPTIONS.md` §8 |
 | S4 blind-guess caption gate (seed 44, n=150) | **PENDING (blocked: Gemini credits)** | A9 |
-| `conditions/` (Gemma text embeds) | **PENDING (blocked: captions)** | ~2 GPU-h once captions land |
+| `conditions/` (Gemma text embeds) | **PENDING (blocked: S1 media)** | captions are done; ~2 GPU-h once S1 clips land |
 | The 8 pre-registered S2a inline-OOD ops | **FROZEN (pre-registered)** | `PREREG_inline_ood_ops_s2a.json`, advisor-ratified 2026-07-28, §11.4 |
 | Assembled root + `ROOT_MANIFEST.json` | **PENDING** | machinery built, never run against real inventories |
 | Assert battery A1–A10 executed | **PENDING** | §9 |

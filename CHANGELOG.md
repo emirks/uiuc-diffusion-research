@@ -1,5 +1,38 @@
 ## 2026-07-28
 
+- **13:05** — 🔴 **Real defect found at assembly-inventory time: 29 rendered S2a clips consume the
+  one role-excluded (clip, role) pair.** Of the 7,990 S2a records, **29 use
+  `openvid_T1MiFx98l3g_0_50to156` as their A endpoint** and so need the role-A description A10
+  deliberately withheld (blank-screen opening anchor). Verified first-hand: 0 B-endpoint users, its
+  B-role description is present, **S2b and S1 unaffected**. Changes **no count and no hash** —
+  1,403/1,403 and `c8e2d95b…` stand — because it is a *consumption*-side gap at assembly, not a
+  store gap. Same shape as the original S2a requirement defect: right about the requirement, wrong
+  about what was rendered. **No cross-role fallback invented** (it would caption a blank screen with
+  content it does not show). Recorded OPEN in `CAPTIONS.md` §4.2, `CAPTION_LOCK.json`
+  (`OPEN_CONSUMPTION_GAP`) and DOSSIER §27.6 with three priced owner options: drop the 29 (0.36 % of
+  S2a), overturn the A10 exclusion, or re-render. Found by the assembly rehearsal's first inventory
+  build before it was stopped.
+
+- **12:56** — **Caption lane finished: one source of truth, the battery gap closed, and the DeltaAI
+  S1 package built.** (1) `data/CAPTIONS.md` is now **the** authority for captions — rewritten lean
+  (store, keying, grammar, the three sources, the S2a defect, the auditor churn, v2-not-v3, the
+  corpus-139 audit, measured spend, the battery). `data/DATASET.md`'s six stale
+  *"blocked: Gemini credits"* caption rows were corrected and its status banner now names the real
+  blocker (**S1 media**, not captions). (2) **The §21.7 battery-scope gap is CLOSED**: the existing
+  12-gate battery re-ran on the **full 1,403-row store** (was a pooled 447-row subset) —
+  `hard_fail: []` holds, zero API spend, and the input is *proven* to be the locked store because
+  the pooled in-grid shards re-hash to `c8e2d95b…`. 8a **fell** 0.7099→0.6819 (away from its 0.73
+  drift-guard bar, so no stop condition fired); 8b **rose** 0.5787→0.5950 — still PASS at ≤0.60 but
+  headroom shrank to 0.0050 (~0.67 SE), so the load-bearing gate now passes narrowly and that is
+  recorded prominently. Gate 9's content-dominated ACCEPT is unchanged (33/40 features are content).
+  `CAPTION_LOCK.json`'s `SCOPE_CAVEAT` is replaced by the full-store result with the subset kept for
+  the record. (3) **`misc/ctt_v2_final/deltaai_s1_handoff/`** — self-contained run book for the
+  owner's GH200 run: the 390/390-prompted grid (sha `dea8ffe436998e99`), `MANIFEST.json` with
+  sha256 for all 11 adapters / 400 media / 33 control clips, `VERIFY_ON_ARRIVAL.sh` (tested; it
+  correctly flags `gemini-3.5-flash` HTTP 503 as a gate-only WARN), a `ghx4` sbatch template, and
+  `retarget_grid_paths.py` — **which fixes a real defect: the grid's 400 media paths are absolute
+  `/projects/...` and DeltaAI has no `/projects` mount**, so every row would have failed.
+
 - **12:25** — **CTT v2 captions LOCKED for S0/S1/S2 — 1,403 / 1,403 = 100%.** Found and fixed the
   real defect: `build_mass_pair_list.py` read only 2 of 3 sources, because **S2a's endpoints live
   only in its rendered metadata keyed `A`/`B`**, so a strict `endpoint_a` lookup returns an empty set
