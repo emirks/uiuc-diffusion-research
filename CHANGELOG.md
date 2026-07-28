@@ -174,6 +174,16 @@
   27 copies, matching the registry's `hero_flight`+`shadow_smoke` two-sided pair).
   Jobs 9687982 (L40S ×6) / 9687983 (scavenger ×6) / 9687984 (secondary H100 ×4) /
   9687985 (aux ×4).
+- **04:52** — ✅ **ENCODES COMPLETE, ALL CHECKS PASS.** 18,013 clips × 2 trees = **36,026
+  `.pt`**, 42 G, in **1h52m wall / ~11.3 GPU-h** on L40S. Per-stratum count asserts are
+  set-equal to the frozen rosters (S2a 7,990 · S2b 7,990 · S1 33 · S4 2,000), so there is
+  nothing for the trainer's path-join to silently drop. Bleed magnitude is stable across all
+  32 S2 shards: median-of-medians `suffix_rel_l2` **S2a 0.334** (0.325–0.345) / **S2b 0.317**
+  (0.312–0.325), consistent with exp_073's 0.280 and d2f's 0.314 — the suffix anchor really
+  was reaching backwards, and cond_clean really is correcting it. `secondary` was a dead lane
+  (zero starts in 90 min); re-bidding shards 12–15 onto `scavenger` (9687984 cancelled →
+  **9688318**) had all four running within 6 min. Remaining before root assembly: Gemma
+  text-encode (~2 GPU-h) once billing is restored; masks are built by `assemble_root.py`.
 - **02:47** — 🔴 **S4 cannot be encoded at literally-native resolution.** refVFX I2V_LoRA is
   832×464; 33f/16fps carry through fine, but **464 is not a multiple of the VAE spatial
   factor 32** and `process_videos.py:parse_resolution_buckets` rejects the bucket outright.
