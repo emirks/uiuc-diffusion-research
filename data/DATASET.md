@@ -1483,3 +1483,266 @@ instance of it.
   copier** (`VERIFY_base_passes_gate.md`), which is why the copy discriminator exists at all. That
   finding is the reason for this campaign, and it is recorded in `FBLOCK_DRAFT_F003.md` pending the
   owner-gated findings registry.
+
+---
+
+<!-- STAMP:BEGIN -->
+
+## STAMP
+
+**STAMPED: NO** — generated `2026-07-28T04:27:17-0500` by `scripts/ctt_v2/make_stamp.py` from artefacts on disk. RULING 9 defines the contents; every item this script cannot read from disk appears below as an explicit `<PENDING: …>`.
+
+Stamping is an owner act. This block being present is not a stamp; `STAMPED: YES` plus the sign-off row below is.
+
+> 🔴🔴 **THIS STAMP DESCRIBES THE MACHINERY-PROOF *FIXTURE* ROOT, NOT THE REAL DATASET.** Strata ['S1', 'S2a', 'S2b', 'S4'] resolve to inventories whose provenance is marked `FIXTURE` — **stub tensors, never trainable**. Every hash, count and percentage below is therefore a property of the fixture. It is here to show the stamp generator works end to end and that the numbers it emits are the right numbers; **it is not the dataset of record and must be regenerated against the real root before anything is signed.**
+
+### S.1 Root identity
+
+- **root** `/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/ctt_v2_final/_root_machinery_test/root_v2`
+- **assembled** `2026-07-28T04:22:42-0500`  ·  **seed** `42`
+- **ROOT_MANIFEST.json sha256** `ccdee9c83ada44639d5667daf073c94c7a3896d4f2a66dac393162134d59572b`
+- **root content hash** `5e13a9f702c7d6fd56240f61bfd3dc72969aeb80178566504c59ed4efa6a2e1a`
+  (sha256 over the sorted `(relative path, resolved target)` of all **12680** files in the 5 trees — this is what the trainer actually opens, not what the manifest claims)
+- **SAMPLES.jsonl sha256** `e997fdea9012a1211faa9b675b13c7f3d69c746517405d1f20e9e21df16bcc6b`
+- **CAPTIONS.json sha256** `41b518fde8674c549ec332c36fc0554c0129cd05eb80c6afa1e97cd80fc123ad`
+- **strata manifest** `/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/ctt_v2_final/_root_machinery_test/manifest_v2.json` sha256 `d0f60e5c1a4c2963ae904be592f0ba64b6f237cfa0543a4ca62d2358b55ab362`
+
+| stratum | inventory | sha256 | groups | clips |
+|---|---|---|---|---|
+| S0 | `S0.json` | `a1bc64901c9e258e…` | 26 | 139 |
+| S1 | `S1.json` | `f488877f321b9409…` | 2 | 26 |
+| S2a | `S2a.json` | `b408a5507c6c8457…` | 38 | 380 |
+| S2b | `S2b.json` | `52125fb0f1918667…` | 30 | 300 |
+| S4 | `S4.json` | `0b093d29420bbfa3…` | 2 | 86 |
+
+### S.2 Strata, exact counts, and the mix — intended AND counted
+
+| stratum | base pairs | replicas | realized samples | intended % | **counted %** | dev pp |
+|---|---|---|---|---|---|---|
+| S0 | 385 | 1 | 385 | 15.000 | **15.181** | +0.181 |
+| S1 | 78 | 2 | 156 | 6.000 | **6.151** | +0.151 |
+| S2a | 870 | 1 | 870 | 34.560 | **34.306** | -0.254 |
+| S2b | 867 | 1 | 867 | 34.440 | **34.188** | -0.253 |
+| S4 | 258 | 1 | 258 | 10.000 | **10.174** | +0.174 |
+| **total** | | | **2536** | 100.000 | 100.000 | |
+
+- **tolerance** ±0.5 pp — max realized deviation **0.254 pp**
+- **weight basis** as-declared; branch `None` (absent strata: none)
+- **S4 in mix** `True`
+- **files** 2536 samples × 5 dirs = 12680 · **distinct captions** 139
+- the counted column is COUNTED FROM THE ASSEMBLED ROOT by `assert_root.py:A3`, not computed from the plan (A3-F8.3)
+
+### S.2b Weights — NOMINAL (pre-registered) and EFFECTIVE (derived disclosure)
+
+| stratum | nominal % (sample count) | **effective % (loss-bearing tokens)** | loss-bearing tokens |
+|---|---|---|---|
+| S0 | 15.181 | **17.148** | 1,591,200 |
+| S1 | 6.151 | **6.809** | 631,800 |
+| S2a | 34.306 | **36.566** | 3,393,000 |
+| S2b | 34.188 | **36.440** | 3,381,300 |
+| S4 | 10.174 | **3.036** | 281,736 |
+
+- **per-sample loss-bearing tokens** `{"(5, 14, 26)|one": 1092, "(16, 20, 15)|one": 4200, "(16, 20, 15)|two": 3900}` — derived from the mask rule (`m[:2]=1` always, `m[-1]=1` iff two-sided; mask==1 ⇒ conditioned at timestep 0 and excluded from loss), never tabulated
+- total loss-bearing tokens **9,279,036** over 2,536 samples
+- **NOMINAL is the pre-registered quantity** — it is what the manifest pins and what the contingency branches operate on. **EFFECTIVE is a derived disclosure only** (A11 item 2): right for disclosure, wrong as a control variable, because pre-registering it would force the nominal weights to chase every geometry change.
+- S4 carries two compounding discounts: the lower training shift (§8.2.1) and a fixed 2-latent-frame anchor conditioning 40 % of its tokens against 12.5 % at 121f. Its 10 % nominal is ≈ 3 % effective.
+
+### S.3 Grid definitions — the TWO SHAPES, and the σ schedule they imply
+
+| shape (latent F,H,W) | px W×H×F | fps | tokens | shift | samples | strata |
+|---|---|---|---|---|---|---|
+| `[5, 14, 26]`  | 832×448×33 | 16.0 | 1820 | **1.235026** | 258 | S4 |
+| `[16, 20, 15]`  | 480×640×121 | 24.0 | 4800 | **2.302083** | 2278 | S0, S1, S2a, S2b |
+
+- tokens = the product of the latent dims; shift = `ShiftedLogitNormalTimestepSampler._get_shift_for_sequence_length` (`m = 1.1/3072`, `b = 0.5833`, **no clamp**) evaluated at that token count. Both are DERIVED here, never restated — A9's prose figures (1,500 tokens / 1.120) are wrong and would have failed the smoke gate (DOSSIER §13.2, A11 item 4).
+
+- **per-stratum σ distributions**: `/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/ctt_v2_final/artefacts/sigma/SIGMA_SCHEDULE.md` sha256 `369dfb74966b05561938bc038ae3e61c13c740a26d6692eaa7500585dd1c1aa1` — analytic (closed-form CDF, no sampling), MC-validated against the trainer's own sampler at sup|ΔF| = 0.00036. Reproduced in full in DATASET §8.2.1, with the binding invariant and the supersession note on A9's wrong constants.
+
+- **shift-law provenance**: `ltx_trainer/timestep_samplers.py:121-134`, `m = 1.1/3072`, `b = 0.58333…`, **no clamp**; sampler defaults `std = 1.0`, `eps = 1e-3`, `uniform_prob = 0.1`; `ic_gen.yaml: timestep_sampling_params: {}`. The IC-LoRA reference is concatenated AFTER the σ draw, so it does not enter the token count. The trainer was NOT modified.
+- **ratified**: the **832×448×33** bucket — a pure 16-row centre crop of the native 832×464 source, no resampling, the only VAE-legal bucket preserving native content (A11 item 4). A9's `(5,20,15)` / 1,500 tokens / shift 1.120 are **wrong constants**; see DATASET §8.2.1 for the derivation, recorded explicitly so nobody later 'repairs' the encodes toward 1.120.
+
+### S.4 Pairing rule and every seed
+
+- **pairing** `ring_offset_within_op__k=min(3,n-1)` — ring offset within the group, ref ≠ target, k = min(3, n−1), applied identically to S0 classes and S1/S2/S4 ops (RULING 4, A1b Q5)
+- **assembly seed** `42`
+- **group-id slugs** (A11 item 3, path-safe: lowercase, non-alphanumeric → `_`, runs collapsed): S0 26 unique · S1 2 unique · S2a 38 unique · S2b 30 unique · S4 2 unique — no collisions
+  Raw→slug mapping is recoverable from the inventories and asserted by `assert_root.py:A14`; nothing already written under raw strings is re-keyed.
+- **inline-OOD draw seed** `42` (`root_common.select_inline_ood_ops`, blind draw over the sorted op list)
+- **training seed** `42` (both arms, RULING 6) · **primary checkpoint** step 12,000
+- **S4 blind-guess gate seed** `44`, n=150 (A9 §2)
+- **pool-gate seed** `20260725`, 300 draws, match_n 187
+
+### S.5 Holdout and exclusion lists (enumerated, not described)
+
+- **10 HOLDOUT_S2 shader families** (10): `DefocusBlur`, `VerticalOpen`, `burn0`, `directionalwarp`, `fadegrayscale`, `parametric_glitch`, `randomsquares`, `ripple`, `scale-in`, `wipeUp`
+- **8 pre-registered S2a inline-OOD ops** (8): `BowTieWithParameter_d8b50f918c`, `EdgeTransition_1560f76ce8`, `FilmBurn_bce3e2cb2d`, `LinearBlur_be1e988437`, `Overexposure_ee3010899f`, `Slides_a8d71c73fe`, `morph_07a0c1cc6a`, `randomNoisex_a5f68f8fd2`
+- **reserved union-pool clips**: 120
+- **S0 zero-shot classes** (10): `cotton_cloud`, `display_transition`, `firelava`, `flying_cam_transition`, `live_concert`, `luminous_gaze`, `melt_transition`, `monstrosity`, `raven_transition`, `saint_glow`
+- **eval-endpoint universe** (eval ∪ zs-audited ∪ the 42 test clips): 92 ids, classes resolved via `eval_ladder/prompts.py:clip_class()`
+- **role-scoped (clip, role) exclusions** (A10): `{"openvid_T1MiFx98l3g_0_50to156": ["A"]}` — enforced on BOTH consumption channels (caption store A12, prefix conditioning A13)
+
+| stratum | groups dropped | clips dropped |
+|---|---|---|
+| S0 | 0 | 0 |
+| S1 | 0 | 0 |
+| S2a | 8 | 10 |
+| S2b | 0 | 11 |
+| S4 | 0 | 0 |
+
+Every drop carries its reason in `ROOT_MANIFEST.json:drops`.
+
+### S.6 Caption store — hash, model versions, raw archives, battery
+
+- **store** `/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/scripts/ctt_v2/captions/pilot_m3/round2/descriptions.json`  sha256 `466b758cf82fa12ff8abe906824222048646c09a0632ebc9274fb2450f04f641`
+- **raw generation responses** `/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/scripts/ctt_v2/captions/pilot_m3/round2/raw_generation_responses.jsonl`
+- **raw audit responses** `/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/scripts/ctt_v2/captions/pilot_m3/round2/raw_audit_responses.jsonl`
+- **records** `/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/scripts/ctt_v2/captions/pilot_m3/round2/records.json`
+- **api_calls** `862`
+- **audit_temperature** `0.0`
+- **auditor_model** `gemini-3.5-flash`
+- **auditor_substitution_note** `A4 Q3 specified gemini-3-pro-preview; the pro tier returns HTTP 429 on this key (DOSSIER §5.1). gemini-3.5-flash substituted; generator != auditor so independence is preserved.`
+- **gen_max_output_tokens** `120`
+- **gen_temperature** `0.7`
+- **generator_model** `gemini-3.6-flash`
+- **http429** `0`
+- **max_attempts** `2`
+- **n_pairs** `400`
+- **prompt_variant** `v2`
+- **retries** `0`
+- **seed** `42`
+- **thinking_level** `minimal`
+- **wall_seconds** `23.2`
+- **workers** `120`
+
+- **battery**: `/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/scripts/ctt_v2/captions/pilot_m3/round2/gate_report_repinned.json`  sha256 `ad29c486c7e5a6f6aab7a1dc2b7eb23bfc638bbe0015f69835620dfda9d5226a`
+- **hard failures**: `[]`
+
+| gate | value | bar | verdict |
+|---|---|---|---|
+| word-count p50 | 34.0 | p50 in [29, 36] | PASS |
+| word-count p10 / p90 | 24.0 / 40.0 | p10 in [16,26] and p90 in [34,44] | PASS |
+| opens with determiner (A / B) | 99.5% / 98.5% | >= 86.4% / >= 86.9% | PASS |
+| B-role lowercase-initial (and A-role uppercase-initial) | B 100.0% / A 100.0% | both 100% | PASS |
+| B-role participial-NP | 100.0% (-ing regex) | >= 80.6% (pinned regex form) | PASS |
+| audio words / Style: prefix / markdown / quotes | audio 0, markup 0 (visible-speech actions, not gated: 32) | 0 | PASS |
+| exact-duplicate rate within stratum | 0.0% (worst bank x role cell) | < 2% | PASS |
+| corpus-vs-new function-word probe (DRIFT GUARD) | 0.7066 | <= 0.73 (above this cannot be the known fingerprint => bug: mixed prompts / wrong store / contamination) | PASS |
+| stratum-internal blindness: humanvid vs synth_endpoints (LOAD-BEARING) | 0.5518 | <= 0.6 | PASS |
+| ORIGINAL absolute bar (superseded, recorded not replaced) | 0.7066 | <= 0.65  [SUPERSEDED by 8a/8b -- round-9 ruling] | FAIL (recorded; the bar was in an unreachable reference frame: it demanded a different model generation land within 0.008 of the corpus's own internal A-vs-B register distance 0.6419, while a prompt delta inside one model opens 0.7233) |
+| full-vocabulary classifier | 0.9192 | AUC >= 0.80 triggers feature investigation | INVESTIGATE |
+| colour-term density | 3.735 | in [1.579, 4.737] | PASS |
+| camera-phrase rate | 2.3% | within +/-10 pp | PASS |
+| near-duplicate rate (token Jaccard > 0.8) | 0 pairs (0.0% of pairs) | report only | REPORT |
+
+**Re-pinned bars in force** (A8): gate 8a ≤ 0.73 (corpus-vs-new drift guard), gate 8b ≤ 0.60 (stratum-internal). The superseded `gate8_bacc_max 0.65` is recorded in the artefact and is NOT the bar.
+⚠ The passing store is **round 2**. Round 3 (the copula fix) is an improvement, not a requirement — the re-pinned battery clears on round 2.
+
+### S.7 Gate results
+
+| gate | result |
+|---|---|
+| copy-gate Day-0 admissibility (RULING 1, training blocker) | **PASS** — /projects/illinois/eng/cs/jrehg/users/emirkisa/misc/ctt_v2_final/VERIFY_copy_ref_discriminator.md: verdict='PASS, decisi |
+| S1 pilot — mechanical | **PASS** — 1/33 = 3.0 % rejects (bar ≤10 %); prefix rel-L2 p50/p95/max 0.0838 / 0.1232 / 0.1242, all < τ 0.12790; by-bank reject differential 4.5 pp (flag >15 pp) |
+| S1 pilot — blind 11-way Gemini class-ID (top-1 ≥80 %, chance 9.09 %, with a 33-clip real-corpus control) | `<PENDING: blocked: Gemini credits>` |
+| S2a acceptance refresh | **PASS** |
+| S2b acceptance (`S2_ACCEPTANCE.json`) | **PASS** — pure-phase max abs diff 0.0, seam_max 2.0 (bar ≤2.0, no headroom), m1_p10_min 0.255, overdraw 1.1549 |
+| S2b blind audit (n=64, bar ≤3 BAD) | **PASS** — rater1 1 BAD (#055), rater2 0, **consensus 0**; archived at `outputs/videos/ctt_v2_s2_humanvid/full/AUDIT_RESULT.json` + `misc/ctt_v2_final/artefacts/s2b_audit/` |
+| union-pool gates (numbers of record, A10) | **PASS** — n=1,146, gate A 0.519971 (≤0.52), gate B 50.56 (≥42.82) |
+| S4 12-gate battery + blind-guess (seed 44, n=150) + 100 % Layer-2 tripwire | `<PENDING: blocked: Gemini credits>` |
+| mixed-format smoke gate (2 shapes, per-format consumed counts + finite comparable loss + shifts pinned at {1.2350, 2.3021}) | `<PENDING: needs a GPU>` |
+
+### S.8 Pre-launch HARD asserts — result, and the proof each one fires
+
+- `assert_root.py` on `/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/ctt_v2_final/_root_machinery_test/root_v2` at `2026-07-28T04:23:01-0500`: **33/33 passed** in 18.39s; failures `none`
+
+| check | verdict | detail |
+|---|---|---|
+| `A1_set_equality_5_dirs` | PASS | identical relative-path sets in all 5 dirs (2536 each) |
+| `A1b_root_nonempty` | PASS | 2536 samples |
+| `A2_inventory_integrity` | PASS | 5 inventories match their recorded sha256 |
+| `A2b_path_scheme` | PASS | every relative path is <stratum>_r<NN>/<group>/<target>__ref_<reference>.pt |
+| `A3_realized_mix` | PASS | all strata within +-0.5 pp \| S0 counted 385 = 15.181% (intended 15.000%, +0.181 pp) \| S1 counted 156 = 6.151% (intended 6.000%, +0.151 pp) \| S2a counted 870 = 34.306% (intended 34.560%, -0.254 pp) \| S2b counted 867 = 34. |
+| `A3b_prorata_multipliers_equal` | PASS | pro-rata groups exercised: ['S2'] \| S2: S2a x1 replicas, S2b x1 replicas |
+| `A2c_root_resolves_to_inventories` | PASS | every sample resolves to a verified inventory entry (2536 samples) |
+| `A4_captions` | PASS | 139 distinct captions: ' sksz.' exactly once, outcome marker absent, zero Tier-1 leak strings |
+| `A5_endpoint_disjointness` | PASS | S1/S2 endpoints n {eval, zs-audited, 42 test} = 0 (92 eval-side ids checked) |
+| `A6_inline_ood_ops_absent` | PASS | none of the 8 pre-registered inline-OOD ops is in the root |
+| `A7_holdout_shaders_absent` | PASS | none of the 10 HOLDOUT_S2 shader families is in the root |
+| `A8_reserved_pool_clips_absent` | PASS | none of the 120 reserved union-pool clips is in the root |
+| `A9_zs_classes_absent` | PASS | none of the 10 zero-shot classes is in the root |
+| `A0_absence_assert_positive_controls` | PASS | every absence assert compares in a live, shared namespace: eval universe 92 ids (overlapping 26 exempt-stratum endpoints) · 10 holdout shaders all resolving in 125 `.glsl` files · 120 reserved pool clips in the same id s |
+| `A14_group_ids_slug_safe` | PASS | every group id slugs to a unique, non-empty, path-safe string S0 26 ids \| S1 2 ids \| S2a 38 ids \| S2b 30 ids \| S4 2 ids |
+| `A15_effective_weights_recorded` | PASS | nominal (sample count) vs EFFECTIVE (loss-bearing tokens): S0 15.18% -> 17.15% \| S1 6.15% -> 6.81% \| S2a 34.31% -> 36.57% \| S2b 34.19% -> 36.44% \| S4 10.17% -> 3.04%  [S4 effective 3.04%]. Nominal is the pre-registered q |
+| `A10_copy_gate_admissibility_PASSED` | PASS | /projects/illinois/eng/cs/jrehg/users/emirkisa/misc/ctt_v2_final/VERIFY_copy_ref_discriminator.md: verdict='PASS, decisively, in both cross cells and on both variants.**' |
+| `A11a_shapes_are_ruled` | PASS | 2458 sample rows carry only ruled latent shapes |
+| `A11b_one_shape_per_stratum` | PASS | S0 [16, 20, 15] \| S1 [16, 20, 15] \| S2a [16, 20, 15] \| S2b [16, 20, 15] \| S4 [5, 14, 26] |
+| `A11c_declared_shapes_match_disk` | PASS | 2 distinct shape(s) on disk == declared |
+| `A11d_two_shapes_iff_s4` | PASS | s4_in_mix=True and the root holds 2 shape(s) [[5, 14, 26], [16, 20, 15]] — as ruled |
+| `A11e_mask_store_matches_shapes` | PASS | mask store carries exactly the 3 (shape, sidedness) combinations the samples use |
+| `A11f_declared_shape_is_the_disk_shape` | PASS | one tensor per stratum loaded; the declared shape is the shape on disk (5 strata spot-checked) |
+| `B0_five_dirs_exist` | PASS | all five trees present ({latents:2536, conditions:2536, cond_clean_latents:2536, masks:2536, reference_latents:2536}) |
+| `B2_per_sample_geometry_agreement` | PASS | all 2536 samples: latents == cond_clean == reference geometry, mask numel == F*H*W, fps matches the shape class |
+| `B1_per_shape_five_tree_set_equality` | PASS | five-tree set equality holds INSIDE every shape class: 33f=258, 121f=2278 |
+| `B3_shape_classes_expected` | PASS | 2 shape class(es), all expected; every stratum maps to exactly one |
+| `B4_counts_include_S4_6000` | PASS | per-stratum {'S0': 385, 'S1': 156, 'S2a': 870, 'S2b': 867, 'S4': 258} \| per-shape {'33f': 258, '121f': 2278} \| S4: no replica multiplier in ROOT_MANIFEST.json |
+| `B6_shift_matches_sigma_archive` | PASS | 33f: 1820 tok -> shift 1.235026; 121f: 4800 tok -> shift 2.302083 |
+| `B7_no_token_count_collision` | PASS | token counts [1820, 4800] each map to exactly one geometry — a cross-shape mask can only fail LOUDLY |
+| `B5_fast_index_N_of_N` | PASS | NOT APPLICABLE (no --train-log). The gate to run at launch is: 'Fast index: 2536 valid samples from 2536 total', 0 skipped |
+| `A12_role_scoped_caption_exclusion` | PASS | no assembled caption draws on an excluded (clip, role) description (1 role-scoped + 0 clip-level exclusions enforced from /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-bra |
+| `A13_role_scoped_prefix_condition` | PASS | no assembled sample's prefix-condition source (endpoint_a) is a role-excluded clip (1 standing (clip, role) exclusion(s): {'openvid_T1MiFx98l3g_0_50to156': ['A']}) |
+
+- `dryrun_epoch.py`: **0 skipped** over 2536 samples (12680 paths resolved, 2493 distinct tensors loaded, 16.65s). Zero skipped is a REQUIREMENT — any skip is promoted to a job failure.
+
+- **proof that the asserts fire** — `tests/prove_asserts.py`, strict=True, on `/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/ctt_v2_final/_root_machinery_test/root_2shape`: **35/35** deliberate one-invariant breakages produced exactly the intended failure(s). Problems: `none`.
+  An assert that has never failed is not known to work; this is the evidence that each one is sensitive to its own invariant and to nothing else.
+
+| broken invariant | checks that fired |
+|---|---|
+| `A1b_empty_root` | `A1b_root_nonempty` |
+| `A1_missing_from_one_dir` | `A1_set_equality_5_dirs`, `B1_per_shape_five_tree_set_equality` |
+| `A1_extra_in_one_dir` | `A1_set_equality_5_dirs`, `B1_per_shape_five_tree_set_equality` |
+| `A2_inventory_bytes_changed` | `A2_inventory_integrity`, `A2c_root_resolves_to_inventories` |
+| `A2b_path_scheme` | `A2b_path_scheme`, `B1_per_shape_five_tree_set_equality`, `B2_per_sample_geometry_agreement` |
+| `A2c_unknown_sample` | `A2c_root_resolves_to_inventories`, `B1_per_shape_five_tree_set_equality`, `B2_per_sample_geometry_agreement` |
+| `A3_realized_mix` | `A3_realized_mix` |
+| `A4_trigger_absent` | `A4_captions` |
+| `A4_trigger_twice` | `A4_captions` |
+| `A4_outcome_marker` | `A4_captions` |
+| `A4_tier1_leak` | `A4_captions` |
+| `A5_eval_endpoint` | `A5_endpoint_disjointness` |
+| `A6_ood_op_in_root` | `A6_inline_ood_ops_absent` |
+| `A6_exclusion_vacuous` | `A6_inline_ood_ops_absent` |
+| `A7_holdout_shader` | `A7_holdout_shaders_absent` |
+| `A8_reserved_pool_clip` | `A8_reserved_pool_clips_absent` |
+| `A9_zs_class` | `A9_zs_classes_absent` |
+| `A10_verdict_absent` | `A10_copy_gate_admissibility_PASSED` |
+| `A10_verdict_says_FAIL` | `A10_copy_gate_admissibility_PASSED` |
+| `A11c_declared_shapes` | `A11c_declared_shapes_match_disk`, `B3_shape_classes_expected` |
+| `A11b_two_shapes_in_one_stratum` | `A11b_one_shape_per_stratum` |
+| `A11a_unruled_shape` | `A11a_shapes_are_ruled`, `A11b_one_shape_per_stratum`, `A11c_declared_shapes_match_disk`, `A11d_two_shapes_iff_s4`, `A11e_mask_store_matches_shapes` |
+| `A11f_metadata_disagrees_with_disk` | `A11f_declared_shape_is_the_disk_shape`, `B2_per_sample_geometry_agreement`, `B3_shape_classes_expected` |
+| `A11x_external_module_mask_geometry` | `B2_per_sample_geometry_agreement` |
+| `A12_role_scoped_caption` | `A12_role_scoped_caption_exclusion` |
+| `A12_sidecar_absent` | `A12_role_scoped_caption_exclusion` |
+| `A13_prefix_condition` | `A12_role_scoped_caption_exclusion`, `A13_role_scoped_prefix_condition` |
+| `A13_exclusion_vacuous` | `A13_role_scoped_prefix_condition` |
+| `A0_absence_assert_namespace_drift` | `A0_absence_assert_positive_controls` |
+| `A14_slug_collision` | `A14_group_ids_slug_safe` |
+| `dryrun_dangling_symlink` | `DANGLING` |
+| `dryrun_orphan_in_non_primary_dir` | `ORPHAN` |
+| `dryrun_join_miss` | `JOIN-MISS` |
+| `dryrun_shape_disagreement` | `SHAPE-DISAGREE` |
+| `dryrun_bad_tensor_keys` | `BAD-KEYS` |
+
+### S.9 Sign-off
+
+| item | who | when |
+|---|---|---|
+| dataset design frozen at this spec | `<PENDING: owner>` | `<PENDING: date>` |
+| A9 reversal of A5 Ruling 2 (S4 IN; weights S0 15 / S1 6 / S2 total 69 / S4 10, S2a:S2b derived pro-rata per A12) countersigned | `<PENDING: owner>` | `<PENDING: date>` |
+| A9 pre-registered branches ratified | `<PENDING: owner>` | `<PENDING: date>` |
+| the 8 inline-OOD ops countersigned (advisor-ratified A11 item 1) | `<PENDING: owner>` | `<PENDING: date>` |
+| A10 role-scoped exclusion countersigned | `<PENDING: owner>` | `<PENDING: date>` |
+| copy-gate amendment-2 + gate-#8 re-pin | `<PENDING: owner>` | `<PENDING: date>` |
+
+<!-- STAMP:END -->

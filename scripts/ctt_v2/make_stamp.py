@@ -93,6 +93,23 @@ def block(root: Path, caption_store: Path, stamped: bool) -> str:
     L += ["", "Stamping is an owner act. This block being present is not a stamp; "
               "`STAMPED: YES` plus the sign-off row below is.", ""]
 
+    # A stamp that silently describes the TEST FIXTURE instead of the real dataset would be
+    # the single most damaging thing this file could contain, so the detection is structural:
+    # every fixture inventory carries `provenance.FIXTURE`, written by make_fixture.py.
+    fixture_strata = []
+    for s, m in sorted(((man or {}).get("inventories") or {}).items()):
+        inv = load(Path(m["path"]))
+        if inv and (inv.get("provenance") or {}).get("FIXTURE"):
+            fixture_strata.append(s)
+    if fixture_strata:
+        L += ["> 🔴🔴 **THIS STAMP DESCRIBES THE MACHINERY-PROOF *FIXTURE* ROOT, NOT THE REAL "
+              f"DATASET.** Strata {fixture_strata} resolve to inventories whose provenance is "
+              "marked `FIXTURE` — **stub tensors, never trainable**. Every hash, count and "
+              "percentage below is therefore a property of the fixture. It is here to show "
+              "the stamp generator works end to end and that the numbers it emits are the "
+              "right numbers; **it is not the dataset of record and must be regenerated "
+              "against the real root before anything is signed.**", ""]
+
     # ---- identity / content hash -------------------------------------------------------
     L += ["### S.1 Root identity", ""]
     if man is None:
@@ -337,8 +354,9 @@ def block(root: Path, caption_store: Path, stamped: bool) -> str:
               f"in {arep['elapsed_s']}s; failures `{arep['failed'] or 'none'}`", ""]
         L += ["| check | verdict | detail |", "|---|---|---|"]
         for r in arep["results"]:
-            L.append(f"| `{r['name']}` | {'PASS' if r['ok'] else '**FAIL**'} | "
-                     f"{r['detail'][:170]} |")
+            # detail strings use ' | ' as their own separator, which would shred the table
+            detail = r["detail"][:220].replace("|", "\\|")
+            L.append(f"| `{r['name']}` | {'PASS' if r['ok'] else '**FAIL**'} | {detail} |")
         L.append("")
     else:
         L += [f"- {pending('assert battery has not been run against this root')}", ""]
