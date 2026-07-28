@@ -1,5 +1,44 @@
 ## 2026-07-28
 
+- **14:05** — ✅ **A18 CLOSES the 29-clip disposition: "28 + 1" is the UNIQUE CORRECT OUTPUT, and the
+  gap is RESOLVED.** Authority, all three by filename (never the bare number — the advisor namespace
+  has four collisions): `A16_29_orphaned_s2a_clips_VERBATIM.md` (ruling of record) ·
+  `A17_29clip_affirmation_VERBATIM.md` (affirmation) · `A18_28plus1_and_ood_demo_VERBATIM.md`
+  (**recorded amendment**). "Exactly 29 in `dropped_clips`" was **never achievable by any correct
+  execution**: the group loop runs before the per-clip loop and `FilmBurn_bce3e2cb2d` — the op of the
+  29th stem — is one of the 8 pre-registered inline-OOD ops. **The spec was wrong, the execution was
+  right**; this is an amendment, not "satisfied by interpretation" and not failure (the escalation
+  clause fired exactly as designed and caught a spec bug in a pre-registration). The **A18 AMENDED
+  CLOSING EVIDENCE** (4 clauses, clause 4 = non-vacuity: census must reconcile to 7,990 and base pairs
+  to 22,731 @ inventory sha `1e2ba24c…`, which is what stops a degenerate "0 survivors" from passing)
+  is recorded **verbatim** in `data/CAPTIONS.md` §4.2, `CAPTION_LOCK.json`, and DOSSIER §25 — and
+  **recomputed, not transcribed**: `A18_EXEC/CLOSING_EVIDENCE_CHECK.json` re-runs the assembler's own
+  `apply_exclusions()` → 29 as A / 0 as B · 28 + 1 · 0 survivors / 0 target / 0 reference · 22,731
+  pairs · 791/799 groups · **7,577 kept + 333 clip-dropped (28 role-scoped + 305 standing-holdout) +
+  8 groups × 10 = 7,990** ⇒ ALL CLAUSES SATISFIED. Flipped to RESOLVED: `data/CAPTIONS.md` §4.2,
+  `CAPTION_LOCK.json:OPEN_CONSUMPTION_GAP`, DOSSIER §23.5/§23.8/§24.6/§27.6.
+  ⛔ **The acceptance annotation is A18's wording, and "the root consumes 7,961" is FORBIDDEN** — it
+  repeats the same spec error one level up (subtracts only the role-scoped drops, ignores the standing
+  holdout/OOD drops); no artifact will ever show it. `S2_ACCEPTANCE.json` **byte-unchanged**, not
+  re-run. No pp figure transcribed (neither 34.437/34.563 nor 35.8332/37.1668) — the manifest's
+  derived value is the record.
+  **The inline-OOD *demo* pool is 79, derived**: `s2_0818_c03` (frames 0–17 flat white) is excluded as
+  `clip_ids ∩ consumers of the excluded (clip, A) pair`, computed by the new
+  `scripts/ctt_v2/derive_ood_demo_pool.py` → `misc/ctt_v2_final/DERIVED_inline_ood_demo_pool.json`.
+  🔒 **The op set is UNTOUCHED and there is NO re-draw** — replacing an op over a measured pixel
+  property is the post-filtering `A11_seven_open_items_VERBATIM.md` item 1 forbids. It is not weight or
+  adjudication contamination (no gradient from a demo; inline scores never gate); the one live channel
+  is a **false kill** under `A2_training_eval_VERBATIM.md` Q3's constant-frames criterion. The two
+  fixed OOD demo pairings are drawn from the 79 and recorded **before training launch**.
+  **A16 action 1's residual is closed**: the excluded-hit-drops / missing-non-excluded-crashes controls
+  lived only in `A16_EXEC/logs/builder_controls.log` on this branch — *a one-off log is not a test* —
+  and are now a `BUILDER_MUTATIONS` family in `scripts/ctt_v2/tests/prove_asserts.py`, runnable without
+  an assembled root via the new `--builders-only` (**4/4 PROVEN**).
+  📌 Recorded as a pass condition for the **real** assembly: it must **NOT** emit
+  *"S2a/s2_0006_c00: inventory has no conditions source — the stratum is not assemblable yet"*. That
+  line is expected in today's plan-only rehearsal (no `conditions` encodes exist yet); its **absence**
+  is part of the real run's pass conditions.
+
 - **13:45** — **The 29-orphaned-S2a-clip ruling EXECUTED in code — and the closing count is 28 + 1,
   not 29, so the RESOLVED flip is HELD pending escalation.** Authority, both filenames:
   `advisors/A16_29_orphaned_s2a_clips_VERBATIM.md` (**ruling of record**) and
