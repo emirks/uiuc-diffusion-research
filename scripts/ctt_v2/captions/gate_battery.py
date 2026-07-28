@@ -329,8 +329,15 @@ def main():
     for r in accepted:
         groups.setdefault(f"{r['bank']}|ALL", []).append(r["description"])
     groups["NEW|ALL"] = [r["description"] for r in accepted]
-    groups["NEW|A"] = [r["description"] for r in accepted if r["role"] == "A"]
-    groups["NEW|B"] = [r["description"] for r in accepted if r["role"] == "B"]
+    # A ONE-SIDED stratum has no role-B description by construction (S4 conditions on frame 0
+    # alone, so there is no suffix anchor to describe).  An EMPTY role group is not created:
+    # `describe_set([])` has no statistics, and every downstream gate that reads a role stat
+    # would either crash or -- far worse -- compare against zeros and call it a pass.  Absent
+    # instead of empty means the role-B gates report NOT_APPLICABLE with a reason.
+    for role in ("A", "B"):
+        rows = [r["description"] for r in accepted if r["role"] == role]
+        if rows:
+            groups[f"NEW|{role}"] = rows
 
     report = {
         "bars": BARS, "corpus_pinned": CORPUS,
@@ -344,8 +351,8 @@ def main():
 
     # ---- HARD/REVIEW/FLAG verdicts on the pooled new set ------------------
     new_all = groups["NEW|ALL"]
-    new_A = groups["NEW|A"]
-    new_B = groups["NEW|B"]
+    new_A = groups.get("NEW|A", [])
+    new_B = groups.get("NEW|B", [])   # empty on a one-sided stratum -- see the group builder
     s = report["strata"]["NEW|ALL"]
     gates = []
 
@@ -362,29 +369,60 @@ def main():
                       bar=f"p10 in [{l10},{h10}] and p90 in [{l90},{h90}]",
                       verdict="PASS" if ok2 else "FAIL", type="HARD"))
 
-    dA = report["strata"]["NEW|A"]["determiner_pct"]
-    dB = report["strata"]["NEW|B"]["determiner_pct"]
-    ok3 = dA >= BARS["det_A_min"] and dB >= BARS["det_B_min"]
-    gates.append(dict(gate=3, name="opens with determiner (A / B)",
-                      value=f"{dA}% / {dB}%",
-                      corpus=f'{CORPUS["det_A_pct"]}% / {CORPUS["det_B_pct"]}%',
-                      bar=f'>= {BARS["det_A_min"]}% / >= {BARS["det_B_min"]}%',
-                      verdict="PASS" if ok3 else "FAIL", type="HARD"))
+    # A ONE-SIDED stratum has no role-B description by construction (S4: frame-0 conditioning
+    # only, so there is no suffix anchor to describe).  A B-role clause evaluated on an empty
+    # set must report NOT_APPLICABLE with the reason, never PASS -- a vacuous check reported as
+    # a pass is the failure mode this campaign has hit repeatedly.  The A-role clause of each
+    # gate is still evaluated as HARD.
+    def stat(group: str, field: str):
+        return (report["strata"].get(group) or {}).get(field)
 
-    lcB = report["strata"]["NEW|B"]["lowercase_initial_pct"]
-    ucA = report["strata"]["NEW|A"]["uppercase_initial_pct"]
-    gates.append(dict(gate=4, name="B-role lowercase-initial (and A-role uppercase-initial)",
-                      value=f"B {lcB}% / A {ucA}%", corpus="B 100% / A 100%",
-                      bar="both 100%",
-                      verdict="PASS" if (lcB == 100.0 and ucA == 100.0) else "FAIL",
-                      type="HARD"))
+    dA, dB = stat("NEW|A", "determiner_pct"), stat("NEW|B", "determiner_pct")
+    if dB is None:
+        gates.append(dict(gate=3, name="opens with determiner (A / B)",
+                          value=f"{dA}% / B: no rows",
+                          corpus=f'{CORPUS["det_A_pct"]}% / {CORPUS["det_B_pct"]}%',
+                          bar=f'>= {BARS["det_A_min"]}% (A only; B NOT APPLICABLE)',
+                          verdict="PASS" if dA >= BARS["det_A_min"] else "FAIL", type="HARD",
+                          not_applicable="role B absent -- one-sided stratum"))
+    else:
+        ok3 = dA >= BARS["det_A_min"] and dB >= BARS["det_B_min"]
+        gates.append(dict(gate=3, name="opens with determiner (A / B)",
+                          value=f"{dA}% / {dB}%",
+                          corpus=f'{CORPUS["det_A_pct"]}% / {CORPUS["det_B_pct"]}%',
+                          bar=f'>= {BARS["det_A_min"]}% / >= {BARS["det_B_min"]}%',
+                          verdict="PASS" if ok3 else "FAIL", type="HARD"))
 
-    ingB = report["strata"]["NEW|B"]["ing_participle_pct"]
-    g5 = dict(gate=5, name="B-role participial-NP", value=f"{ingB}% (-ing regex)",
-              corpus=f'{CORPUS["B_ing_pct"]}% (-ing regex)',
-              bar=f'>= {BARS["B_ing_min"]}% (pinned regex form)',
-              verdict="PASS" if ingB >= BARS["B_ing_min"] else "FAIL", type="HARD")
-    if a.llm_participial:
+    lcB, ucA = stat("NEW|B", "lowercase_initial_pct"), stat("NEW|A", "uppercase_initial_pct")
+    if lcB is None:
+        gates.append(dict(gate=4, name="B-role lowercase-initial (and A-role uppercase-initial)",
+                          value=f"B: no rows / A {ucA}%", corpus="B 100% / A 100%",
+                          bar="A 100% (B NOT APPLICABLE)",
+                          verdict="PASS" if ucA == 100.0 else "FAIL", type="HARD",
+                          not_applicable="role B absent -- one-sided stratum"))
+    else:
+        gates.append(dict(gate=4, name="B-role lowercase-initial (and A-role uppercase-initial)",
+                          value=f"B {lcB}% / A {ucA}%", corpus="B 100% / A 100%",
+                          bar="both 100%",
+                          verdict="PASS" if (lcB == 100.0 and ucA == 100.0) else "FAIL",
+                          type="HARD"))
+
+    ingB = stat("NEW|B", "ing_participle_pct")
+    if ingB is None:
+        # Gate 5 is ENTIRELY about role B, so on a one-sided stratum there is nothing to test.
+        g5 = dict(gate=5, name="B-role participial-NP", value="no role-B rows",
+                  corpus=f'{CORPUS["B_ing_pct"]}% (-ing regex)',
+                  bar=f'>= {BARS["B_ing_min"]}%',
+                  verdict="NOT_APPLICABLE", type="HARD",
+                  not_applicable="role B absent -- one-sided stratum; this gate tests only the "
+                                 "B-role noun-phrase form, so it is vacuous here and is "
+                                 "reported as such rather than as a pass")
+    else:
+        g5 = dict(gate=5, name="B-role participial-NP", value=f"{ingB}% (-ing regex)",
+                  corpus=f'{CORPUS["B_ing_pct"]}% (-ing regex)',
+                  bar=f'>= {BARS["B_ing_min"]}% (pinned regex form)',
+                  verdict="PASS" if ingB >= BARS["B_ing_min"] else "FAIL", type="HARD")
+    if ingB is not None and a.llm_participial:
         cal = llm_participial_rate(cB)
         new = llm_participial_rate(new_B)
         g5["llm_corpus_calibration"] = cal

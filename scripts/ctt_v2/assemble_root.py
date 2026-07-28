@@ -283,6 +283,42 @@ class ShapeCache:
             rc.write_json(self.path, self.data)
 
 
+def conditions_provenance(present, samples, invs) -> dict:
+    """Per stratum: where its text embeds come from, and how many DISTINCT ones to expect.
+
+    `n_distinct_expected` is DERIVED from the inventory — the number of distinct `conditions`
+    source paths the stratum's assembled samples actually reference — never from a tabulated
+    number that could stop matching.  A21 Q2's assert compares it for equality against the
+    realized distinct symlink-target count, which is what makes a shared placeholder visible:
+    a stub collapses many expected targets into one.
+
+    `real` is a claim about TEXT, not about file existence, so it is only true when the source
+    is not the known placeholder and every referenced path exists.
+    """
+    out: dict[str, dict] = {}
+    for s in present:
+        inv = invs[s]
+        srcs, missing = set(), 0
+        for smp in samples[s]:
+            p = (inv["clips"][smp["target"]] or {}).get("conditions")
+            if not p:
+                missing += 1
+                continue
+            srcs.add(os.path.realpath(p))
+        dirs = sorted({str(Path(p).parent) for p in srcs})
+        placeholderish = [d for d in dirs if "placeholder" in d.lower()]
+        out[s] = {
+            "n_samples": len(samples[s]),
+            "n_distinct_expected": len(srcs),
+            "source_dirs": dirs[:4],
+            "n_source_dirs": len(dirs),
+            "targets_missing_a_conditions_path": missing,
+            "real": bool(srcs) and not placeholderish and missing == 0,
+            "placeholder_dirs_seen": placeholderish,
+        }
+    return out
+
+
 def mask_store_path(root: Path, f: int, h: int, w: int, sided: str) -> Path:
     #: `p{prefix}` is in the NAME on purpose.  The prefix width became a shape property when
     #: S4 moved to frame-0 conditioning, so an f5 mask written under the old fixed-2 rule has
@@ -658,6 +694,12 @@ def main() -> None:
         "strata_present": present,
         "strata_absent": absent,
         "s4_in_mix": "S4" in present,
+        # §A19's requirement, in the manifest itself: a root whose manifest cannot tell a real
+        # text embed from a shared stub is not auditable.  It found 168,184 samples pointing at
+        # ONE `conditions_placeholder.pt` while every path-alignment assert passed, because a
+        # placeholder aligns perfectly.  `assert_root.py:A1c` reads this block and compares the
+        # ACTUAL distinct symlink-target count per stratum against `n_distinct_expected`.
+        "conditions_provenance": conditions_provenance(present, samples, invs),
         "pairing": {"rule": rc.PAIRING_RULE, "max_refs_per_target": max_refs},
         "weights": {
             "note": weight_note,

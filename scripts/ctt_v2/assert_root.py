@@ -53,6 +53,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from collections import Counter, defaultdict
@@ -172,6 +173,49 @@ def main() -> int:
         _finish(b, root, args, t0)
         return 1
     b.check("A1b_root_nonempty", True, f"{len(rels)} samples")
+
+    # ---- A1c conditions are REAL, not one shared placeholder ---------------------------
+    # §A19 found 168,184 of 192,184 samples pointing at a single `conditions_placeholder.pt`,
+    # and named why nothing caught it: a placeholder aligns PERFECTLY by relative path, so A1
+    # above passes on it by construction, as does every count-based clause.
+    #
+    # Advisor A21 Q2: the cheap check that would have caught it is per-stratum DISTINCT
+    # symlink-target count, compared for EQUALITY against the expected distinct-caption count.
+    # Equality, not `> 1`: `> 1` is satisfied by one placeholder plus one real embed, so it
+    # misses a partial placeholder mix, duplicate targets, and any silent collapse in between.
+    # It is a readlink over a listing we already have — no tensor is opened.
+    cp = man.get("conditions_provenance")
+    if not cp:
+        b.check("A1c_conditions_provenance_recorded", False,
+                "ROOT_MANIFEST.json carries no `conditions_provenance` block, so this root "
+                "cannot distinguish real text embeds from a shared stub. §A19 required this "
+                "before any root is trained on.")
+    else:
+        b.check("A1c_conditions_provenance_recorded", True,
+                f"per-stratum provenance recorded for {sorted(cp)}")
+        per_stratum: dict[str, set] = {}
+        for r in rels:
+            st, _ = rc.parse_replica(r)
+            p = root / "conditions" / r
+            per_stratum.setdefault(st, set()).add(os.path.realpath(p))
+        bad = []
+        for st, targets in sorted(per_stratum.items()):
+            want = (cp.get(st) or {}).get("n_distinct_expected")
+            if want is None:
+                bad.append(f"{st}: no n_distinct_expected in conditions_provenance")
+            elif len(targets) != int(want):
+                bad.append(f"{st}: {len(targets)} distinct conditions targets != "
+                           f"{want} expected distinct captions")
+        b.check("A1c_conditions_distinct_targets", not bad,
+                "distinct conditions targets == expected distinct captions per stratum "
+                + json.dumps({k: len(v) for k, v in sorted(per_stratum.items())})
+                if not bad else "; ".join(bad), bad)
+        # A single target serving a whole stratum is the placeholder signature itself.
+        shared = [f"{st}: only {len(t)} distinct target(s) for this stratum"
+                  for st, t in sorted(per_stratum.items()) if len(t) <= 1]
+        b.check("A1c_no_single_shared_conditions", not shared,
+                "no stratum is served by a single conditions file"
+                if not shared else "; ".join(shared), shared)
 
     # ---- A2 inventory integrity -------------------------------------------------------
     invs, bad = {}, []
