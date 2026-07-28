@@ -6,18 +6,25 @@ byte-pure anchor VIDEOS (never the full clip, never a transition frame), runs th
 A4 Layer-1 tiered lexical filter and the A4 Layer-2 independent-model semantic
 audit, and archives every raw API response.
 
-MODEL SUBSTITUTION (measured, DOSSIER §5.1): A4 specified `gemini-3-pro-preview`
-as the Layer-2 auditor.  Every `*-pro-*` model returns HTTP 429 on this key; the
-whole flash tier is unlimited.  The auditor is therefore `gemini-3.5-flash`
-against a `gemini-3.6-flash` generator -- different models, so generator/auditor
-independence is preserved, at flash rather than pro capability.
+AUDITOR PIN (advisor A13, 2026-07-28): the Layer-2 auditor is
+`gemini-3.1-pro-preview`.  A4 named a PRO-tier auditor and made
+generator/auditor INDEPENDENCE the binding requirement; the `gemini-3.5-flash`
+substitution was never a preference but a forced deviation recorded under a
+factual error -- DOSSIER §5.1 read the pro tier as rate-limited when
+`gemini-3-pro-preview` is in fact RETIRED (404), and `gemini-3.1-pro-preview` is
+live.  Promoting it therefore REMOVES a deviation and reverts toward the written
+spec, and it is strictly more independent than 3.5-flash (pro family, vs the
+3.6-flash generator's own family).  A13 also pins the no-switch-back rule: if
+3.5-flash returns, the auditor does NOT revert -- one recorded instrument change.
+First-pass rates either side of this change are NOT a like-for-like series.
 
 THINKING BUDGET (measured): with the default thinking level, gemini-3.x flash
 spends ~111 "thoughts" tokens before emitting text, so A4's
-`max_output_tokens=120` truncates the sentence mid-word.  Both calls therefore
-set `thinkingConfig.thinkingLevel = "minimal"`, which makes the 120-token budget
+`max_output_tokens=120` truncates the sentence mid-word.  The GENERATOR therefore
+sets `thinkingConfig.thinkingLevel = "minimal"`, which makes the 120-token budget
 apply to the visible text as A4 intended.  `thinkingBudget: 0` is rejected
-(HTTP 400) by these models.
+(HTTP 400) by these models.  The pro-tier AUDITOR **rejects `"minimal"`** and is
+pinned at `"low"` with a 512-token cap, so the JSON verdict can never truncate.
 
 Usage
 -----
@@ -62,11 +69,15 @@ from root_common import load_caption_store_exclusions  # noqa: E402
 # Pinned model identity
 # --------------------------------------------------------------------------
 GEN_MODEL = "gemini-3.6-flash"
-AUDIT_MODEL = "gemini-3.5-flash"          # A4 said gemini-3-pro-preview; pro tier 429s
 GEN_TEMPERATURE = 0.7
 GEN_MAX_TOKENS = 120
+GEN_THINKING_LEVEL = "minimal"
+
+# --- A13 pinned auditor config; change only by a recorded advisor ruling ---
+AUDIT_MODEL = "gemini-3.1-pro-preview"    # A4's pro tier, restored (A13 Q1)
 AUDIT_TEMPERATURE = 0.0
-AUDIT_MAX_TOKENS = 400
+AUDIT_MAX_TOKENS = 512                    # >= 512 so the JSON verdict cannot truncate
+AUDIT_THINKING_LEVEL = "low"              # the pro tier REJECTS "minimal"
 API_ROOT = "https://generativelanguage.googleapis.com/v1beta/models"
 
 # --------------------------------------------------------------------------
@@ -231,6 +242,60 @@ class HardStop(Exception):
     """HTTP 429 -- A4/operator directive: treat as a hard stop, do not grind."""
 
 
+class AuditError(Exception):
+    """The Layer-2 audit produced no usable verdict.  ALWAYS fatal, NEVER a pass.
+
+    DOSSIER §21 recorded the defect this class exists to kill: when the auditor was
+    down, `_post` returned `(None, err)`, `audit_one` left `verdict = None`, and the
+    caller did `v = arec.get("verdict") or {}`.  Neither `v.get("leak") == "YES"` nor
+    `v.get("inaccurate") == "YES"` then fired, so the description was **accepted as a
+    clean pass** and stored with an `audit` field of `{}`.  An auditor outage thus
+    minted records that LOOK audited and are not.
+
+    That is the §13.12 defect class verbatim -- a checker whose failure is
+    indistinguishable from a pass -- and it is the third time this campaign has been
+    bitten by it (the smoke-gate parser reporting "unreadable" as "training broken";
+    a gate whose bar bent to the logging interval).  A13 step 1 orders it fixed
+    before anything audits: non-200, unparseable, empty, or field-incomplete raises.
+
+    Proven to fire by `scripts/ctt_v2/tests/prove_audit_hard_error.py`.
+    """
+
+
+_VERDICT_FIELDS = ("leak", "inaccurate")
+_VERDICT_VALUES = frozenset({"YES", "NO"})
+
+
+def validate_audit_verdict(rec: dict) -> dict:
+    """Return the audit verdict, or raise `AuditError`.  NEVER returns a default.
+
+    A pure function of the ARCHIVED record, so the negative test drives every branch
+    without touching the network, and so the raw response is on disk before this can
+    abort the run.  There is deliberately no "lenient" mode and no default verdict:
+    the only way to get a verdict out of this function is for the auditor to have
+    actually answered, in the pinned schema, with both fields present and in-domain.
+    """
+    where = f"{rec.get('clip_id')}|{rec.get('role')}"
+    if rec.get("error"):
+        raise AuditError(f"{where}: audit call failed: {rec['error']}")
+    if rec.get("raw_response") is None:
+        raise AuditError(f"{where}: audit returned no response object")
+    if rec.get("parse_error") is not None:
+        raise AuditError(f"{where}: audit verdict is not JSON: {rec['parse_error']!r}")
+    v = rec.get("verdict")
+    if v is None:
+        raise AuditError(f"{where}: audit returned an EMPTY verdict (no text in response)")
+    if not isinstance(v, dict):
+        raise AuditError(f"{where}: audit verdict is {type(v).__name__}, not an object: {v!r}")
+    missing = [f for f in _VERDICT_FIELDS if f not in v]
+    if missing:
+        raise AuditError(f"{where}: audit verdict missing required field(s) {missing}: {v!r}")
+    bad = {f: v[f] for f in _VERDICT_FIELDS if v[f] not in _VERDICT_VALUES}
+    if bad:
+        raise AuditError(f"{where}: audit verdict field(s) outside {{YES,NO}}: {bad!r}")
+    return v
+
+
 _stop = threading.Event()
 _lock = threading.Lock()
 _counters = {"calls": 0, "retries": 0, "http429": 0}
@@ -330,7 +395,7 @@ def generate_one(clip_id, role, video_path, attempt, empirical, seed, variant="a
         "generationConfig": {
             "temperature": GEN_TEMPERATURE,
             "maxOutputTokens": GEN_MAX_TOKENS,
-            "thinkingConfig": {"thinkingLevel": "minimal"},
+            "thinkingConfig": {"thinkingLevel": GEN_THINKING_LEVEL},
         },
     }
     resp, err = _post(GEN_MODEL, body)
@@ -374,13 +439,18 @@ def audit_one(clip_id, role, description, video_path):
                 },
                 "required": ["leak", "inaccurate", "errors"],
             },
-            "thinkingConfig": {"thinkingLevel": "minimal"},
+            "thinkingConfig": {"thinkingLevel": AUDIT_THINKING_LEVEL},
         },
     }
     resp, err = _post(AUDIT_MODEL, body)
     rec = {
         "clip_id": clip_id, "role": role, "model": AUDIT_MODEL,
-        "temperature": AUDIT_TEMPERATURE, "error": err, "raw_response": resp,
+        "temperature": AUDIT_TEMPERATURE,
+        "max_output_tokens": AUDIT_MAX_TOKENS,
+        "thinking_level": AUDIT_THINKING_LEVEL,
+        # Standing rule: archive the model version string for every measurement.
+        "model_version_echo": (resp or {}).get("modelVersion"),
+        "error": err, "raw_response": resp,
     }
     txt = _extract_text(resp) if resp else None
     verdict = None
@@ -439,11 +509,16 @@ def run(pairs, outdir: Path, seed: int, workers: int, max_attempts: int,
                 continue
             if audit:
                 arec = audit_one(clip_id, role, desc, video)
+                # Archive BEFORE validating: a fatal verdict must still leave its raw
+                # response on disk, and flush so an abort cannot lose the buffer.
                 with arch_lock:
                     audit_archive.write(json.dumps(arec) + "\n")
-                v = arec.get("verdict") or {}
+                    audit_archive.flush()
+                # Raises AuditError on non-200 / empty / unparseable / incomplete.
+                # There is NO `or {}` here and there must never be one again: that
+                # expression is what scored an auditor outage as a clean pass (§21).
+                v = validate_audit_verdict(arec)
                 step["audit"] = v
-                step["audit_error"] = arec.get("error") or arec.get("parse_error")
                 if v.get("leak") == "YES" or v.get("inaccurate") == "YES":
                     step["fail"] = (["leak"] if v.get("leak") == "YES" else []) + \
                                    (["inaccurate"] if v.get("inaccurate") == "YES" else [])
@@ -464,22 +539,30 @@ def run(pairs, outdir: Path, seed: int, workers: int, max_attempts: int,
             "status": "MANUAL_REWRITE_QUEUE", "history": history,
         }
 
-    with ThreadPoolExecutor(max_workers=workers) as ex:
-        futs = {ex.submit(one_pair, p): p for p in pairs}
-        done = 0
-        for f, p in list(futs.items()):
-            try:
-                r = f.result()
-            except HardStop as e:
-                print(f"HARD STOP: {e}", file=sys.stderr)
-                raise
-            results[f"{p[0]}|{p[1]}"] = r
-            done += 1
-            if done % 50 == 0:
-                print(f"  {done}/{len(pairs)}  {time.time()-t0:.0f}s", flush=True)
-
-    gen_archive.close()
-    audit_archive.close()
+    try:
+        with ThreadPoolExecutor(max_workers=workers) as ex:
+            futs = {ex.submit(one_pair, p): p for p in pairs}
+            done = 0
+            for f, p in list(futs.items()):
+                try:
+                    r = f.result()
+                except HardStop as e:
+                    print(f"HARD STOP: {e}", file=sys.stderr)
+                    raise
+                except AuditError as e:
+                    # A13 step 1: an unusable audit verdict aborts the run.  It is NOT
+                    # downgraded to a skip, a retry or a manual-queue entry -- a store
+                    # that is partly unaudited must never be mistaken for an audited one.
+                    _stop.set()
+                    print(f"AUDIT HARD ERROR (run aborted): {e}", file=sys.stderr)
+                    raise
+                results[f"{p[0]}|{p[1]}"] = r
+                done += 1
+                if done % 50 == 0:
+                    print(f"  {done}/{len(pairs)}  {time.time()-t0:.0f}s", flush=True)
+    finally:
+        gen_archive.close()
+        audit_archive.close()
 
     # description store
     store = {}
@@ -496,16 +579,28 @@ def run(pairs, outdir: Path, seed: int, workers: int, max_attempts: int,
         # trusts run_meta would conclude the Layer-2 audit ran when it did not.
         "audit_enabled": bool(audit),
         "auditor_model": AUDIT_MODEL if audit else None,
+        "auditor_max_output_tokens": AUDIT_MAX_TOKENS if audit else None,
+        "auditor_thinking_level": AUDIT_THINKING_LEVEL if audit else None,
         "auditor_substitution_note": (
-            "A4 Q3 specified gemini-3-pro-preview; the pro tier returns HTTP 429 on this "
-            "key (DOSSIER §5.1). gemini-3.5-flash substituted; generator != auditor so "
-            "independence is preserved."
+            "A13 Q1 (2026-07-28): auditor pinned to gemini-3.1-pro-preview, temp 0, "
+            "thinkingLevel 'low' (the pro tier rejects 'minimal'), max_output_tokens 512. "
+            "A4 named a pro-tier auditor and made generator/auditor INDEPENDENCE binding; "
+            "the earlier gemini-3.5-flash substitution was a forced deviation recorded "
+            "under a factual error (DOSSIER §5.1 read the pro tier as rate-limited; "
+            "gemini-3-pro-preview is in fact RETIRED/404). This promotion REMOVES a "
+            "deviation. No-switch-back rule: the auditor does not revert if 3.5-flash "
+            "returns. First-pass rates across this change are NOT a like-for-like series."
         ) if audit else (
             "NO LAYER-2 AUDIT RAN (--no-audit). Records carry no `audit` field; leak= and "
             "inaccurate= were NOT measured, so first-pass rate covers only format+Tier-1 "
             "and is an UPPER BOUND. Not eligible to gate the >=97% / <=8% bars."
         ),
-        "thinking_level": "minimal", "prompt_variant": variant,
+        "empty_verdict_policy": (
+            "HARD ERROR (A13 step 1): a non-200, empty, unparseable or field-incomplete "
+            "audit response raises AuditError and aborts the run. It is NEVER scored as a "
+            "clean pass. Proven to fire by scripts/ctt_v2/tests/prove_audit_hard_error.py."
+        ),
+        "gen_thinking_level": GEN_THINKING_LEVEL, "prompt_variant": variant,
         "gen_temperature": GEN_TEMPERATURE, "gen_max_output_tokens": GEN_MAX_TOKENS,
         "audit_temperature": AUDIT_TEMPERATURE,
         "seed": seed, "workers": workers, "max_attempts": max_attempts,

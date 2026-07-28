@@ -1,5 +1,22 @@
 ## 2026-07-28
 
+- **11:13** ctt_v2/captions: **an empty/failed Layer-2 audit verdict is now a HARD ERROR, and the
+  auditor is re-pinned to `gemini-3.1-pro-preview`** (advisor A13, steps 1–2). §21 recorded that a
+  non-200, unparseable or empty audit response was scored as a **clean pass** — `_post` returned
+  `(None, err)`, `verdict` stayed `None`, and the caller's `v = arec.get("verdict") or {}` turned it
+  into `{}`, which fires neither `leak == "YES"` nor `inaccurate == "YES"`. An auditor outage
+  therefore minted descriptions that *look* audited and are not: the §13.12 defect class (a checker
+  whose failure is indistinguishable from a pass) for the third time this campaign. `AuditError` now
+  raises on non-200, no-response, unparseable, empty, field-incomplete and out-of-domain verdicts,
+  the raw response is archived and flushed *before* the raise, and the run aborts rather than
+  writing a partly-unaudited store. `scripts/ctt_v2/tests/prove_audit_hard_error.py` proves it:
+  **32/32 cases**, including 14 fatal shapes, 5 in-domain verdicts that must still be honoured, an
+  end-to-end run of the real driver over a scripted network boundary (abort on outage, archive
+  survives, no store written, happy path still stores, a genuine leak still regenerates), and a
+  demonstration that the pre-fix expression scored **12 of the 14** unusable verdicts as clean
+  passes. Auditor pin: `gemini-3.1-pro-preview`, temp 0, `thinkingLevel: "low"` (the pro tier
+  rejects `"minimal"`), `max_output_tokens` 512 so the JSON verdict cannot truncate.
+
 - **11:05** ctt_v2/captions: `build_mass_pair_list.py` written and run — **the mass caption run
   needs 1,348 descriptions, not the ~5,600 the runbook assumed** (~4× less, ≈85 s at the measured
   16 desc/s including the 100% Layer-2 audit). It turns the pinned grids into the (clip, role)
