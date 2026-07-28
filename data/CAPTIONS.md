@@ -101,7 +101,13 @@ Standing rule: **defects are dispositioned at the unit of consumption — (clip,
 storage.** The 1,404th pair is excluded by adjudication, not missing: **the store is not short
 against its requirement.**
 
-### 4.2 🔴 OPEN — 29 rendered S2a clips consume the excluded pair. Owner decision, not a caption bug.
+### 4.2 ✅ RESOLVED — the 29 rendered S2a clips that consume the excluded pair are DROPPED
+
+**Authority, all three by FILENAME** (the advisor namespace has four collisions, so a bare number is
+ambiguous — see `misc/ctt_v2_final/advisors/LEDGER.md`):
+`A16_29_orphaned_s2a_clips_VERBATIM.md` (**RULING OF RECORD**) ·
+`A17_29clip_affirmation_VERBATIM.md` (**INDEPENDENT AFFIRMATION**) ·
+`A18_28plus1_and_ood_demo_VERBATIM.md` (**RECORDED AMENDMENT** to A16 action 3 / A17 overturn (ii)).
 
 The store is complete *against the requirement*, but the requirement **excluded a pair that 29
 already-rendered S2a clips still reference**. Verified first-hand: of the 7,990 S2a rendered
@@ -111,20 +117,48 @@ B endpoint, and **S2b (0 pairs) and S1 (0 rows) are unaffected** — this is S2a
 
 This is the **same shape as the §4.1 defect**: correct at the requirement level, wrong against what
 was actually rendered. It changes **no count and no hash** — 1,403/1,403 stands, `c8e2d95b…` stands —
-because it is a *consumption-side* gap, not a store gap. What it means concretely is that at
-assembly those 29 clips have no A-role caption available.
+because it is a *consumption-side* gap, not a store gap.
 
-⚠ **There is no cross-role fallback and one must not be invented.** Substituting the B-role text, or
-any other clip's text, would caption a blank-screen anchor with content it does not show — the exact
-failure A10's exclusion exists to prevent. The options are the owner's:
+**Disposition: drop the 29 at consumption**, derived from `ROLE_EXCLUSIONS` at run time, never a
+hand-kept stem list. It is not a caption gap at all — it is **pixel contamination**: frames 0–17 of
+the affected clips are flat white (YMIN=YMAX=231, probed directly), so *no* caption repairs them,
+and even a truthful one ("a blank white screen") would train transitions-from-nothing.
+⚠ **There is no cross-role fallback and one must not be invented** — substituting the B-role text,
+or any other clip's text, would caption a blank-screen anchor with content it does not show, the
+exact failure A10's exclusion exists to prevent. The builder now hard-errors if a description ever
+*exists* for an excluded consumption.
 
-1. **Drop the 29 clips** from the S2a roster at assembly (29 / 7,990 = **0.36 %** of S2a) — cheapest,
-   costs nothing but 29 samples, and is consistent with A10.
-2. **Overturn A10's role-A exclusion** for this clip — note A10 denied a *whole-clip* drop precisely
-   because the A window is defective, so this reopens an adjudicated question.
-3. **Re-render the 29** against a different A endpoint — correct but costs render time.
+#### The closing evidence is **28 + 1**, and that is the UNIQUE CORRECT OUTPUT
 
-Recorded rather than papered over, and **not** decided here.
+A16/A17 specified "exactly 29 stems in `dropped_clips`". That number **was never achievable by any
+correct execution**: in `assemble_root.py` the **group** loop (`holdout_shader` / `inline_ood_op` /
+`zs_class`) runs *before* the per-clip loop, and `FilmBurn_bce3e2cb2d` — the op of the 29th stem,
+`s2_0818_c03` — is one of the 8 pre-registered inline-OOD ops. **The spec was wrong; the execution
+was right.** A18 records this as an **amendment** — *not* "satisfied by interpretation" (closing
+numbers are not negotiable after the fact) and *not* failure: the escalation clause fired, the
+operator escalated instead of self-adjudicating, and the machinery caught a spec bug in its own
+pre-registration.
+
+> **A18 AMENDED CLOSING EVIDENCE** (amends `A16_29_orphaned_s2a_clips_VERBATIM.md` action 3 and `A17_29clip_affirmation_VERBATIM.md` overturn condition (ii); authority for the amendment: the deterministic intersection of `ROLE_EXCLUSIONS` with `PREREG_inline_ood_ops_s2a.json`, both pre-dating execution).
+>
+> Let **X** = the stems in rendered S2a meta consuming the pair (`openvid_T1MiFx98l3g_0_50to156`, A), derived at assembly time by keyed join with declared universe (7,990 rows scanned; hits as A and as B both reported) and a positive control through the same join path (a known-present (clip, role) key returning non-empty). Let **G** = X ∩ `PREREG_inline_ood_ops_s2a.json:clip_ids`.
+>
+> The root manifest's drop record satisfies this ruling iff ALL of:
+> 1. |X| = 29, enumerated, with 29 hits as A and 0 as B;
+> 2. every stem in X∖G (= 28 under the current pre-registrations) appears in `drops.clips` bearing BOTH reasons `role_scoped_caption_exclusion` and `role_scoped_prefix_condition`; every stem in G (= exactly {`s2_0818_c03`}) is covered by a `drops.groups` entry with reason `inline_ood_op` whose group is one of the 8 pre-registered `op_ids`; no stem of X is accounted in both buckets or in neither;
+> 3. no member of X appears in any assembled sample as target or reference (`assert_root.py` A12/A13 pass, mutation-proven);
+> 4. **non-vacuity:** assembled S2a base pairs equal the derived contract count (22,731 with inventory sha256 `1e2ba24c…`), groups kept = 791/799, and the S2a census reconciles exactly — kept stems + clip-dropped + group-dropped stems = 7,990, every drop carrying a recorded reason (current census: 28 role-scoped + 305 standing-holdout clip drops + 8 groups × 10).
+>
+> Any deviation in any clause escalates. G is recomputed from the two source artifacts, never hand-edited.
+
+**Clause 4 is load-bearing** — it is what stops a degenerate assembler that dropped everything from
+passing on "0 survivors". Do not paraphrase it away.
+
+**Acceptance is annotated, not re-run; `S2_ACCEPTANCE.json` stays byte-untouched.** The exact
+annotation, and the figure that must **never** be written, are in `data/DATASET.md` §5.4 —
+🔴 **never "the root consumes 7,961"**: that repeats the same spec error one level up (it subtracts
+only the role-scoped drops and ignores the standing holdout/OOD drops), no artifact will ever show
+it, and writing it plants the next absence-read-as-success mine.
 
 ### 4.1 🔴 The S2a defect — recorded so nobody reintroduces it
 
