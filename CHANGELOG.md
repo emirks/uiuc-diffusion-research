@@ -1,5 +1,57 @@
 ## 2026-07-28
 
+- **04:05** — **S4 credit-independent prep COMPLETE — captions are now S4's only pending item**
+  (A9 §5; full record in `misc/ctt_v2_final/artefacts/S4_PREP_REPORT.md`). Zero Gemini calls; the
+  trainer was not modified.
+  **(1) The mandatory mixed-format smoke gate PASSES, both halves.** The per-format probe
+  (`scripts/ctt_v2/smoke/mixed_format_probe.py`, job 9688255, H100) replays
+  `trainer.py:_training_step` line-for-line using the certified trainer's own dataset/strategy/
+  model/loss — including accelerate's `autocast(bf16)` wrapper, without which the float32
+  intrinsic mask times bf16 clean latents promotes `noisy_latents` and `F.linear` raises. All 6
+  gates PASS over 130 loss measurements: **realized shifts exactly `{1.2350, 2.3021}` and nothing
+  else**; per-format native loss 121f **2.1769** vs 33f **2.3991** (max/min 1.102); and at
+  **matched σ** — the shift confound removed — the two formats sit within **1.7–24.6 %**
+  (ratios 1.031/1.017/1.032/1.091/1.246 at σ = 0.10/0.25/0.50/0.75/0.90). The real
+  `scripts/train.py` over the same mixed root completed **30/30 steps, exit 0, 1.4 min, loss
+  finite**, with the trainer's own `Fast index: 10 valid samples from 10 total`, 0 skipped.
+  **S4 does NOT auto-drop.**
+  **(2) 🔴 A9 §3's pre-written assert would have killed S4.** It orders "realized shifts ∈
+  {1.120, 2.302} exactly", but 1.120 needs S4 = (5,20,15) = 1,500 tokens, which cannot exist:
+  832×464 is not VAE-legal (464/32 = 14.5), the delivered bucket is 832×448×33 (a pure 16-row
+  centre crop, no resampling), so the grid is **(5,14,26) = 1,820 tokens ⇒ shift 1.2350**. On
+  healthy data that assert FAILS, and A9 §4 makes a gate failure an S4 auto-drop. The constants
+  were re-extracted from `timestep_samplers.py:121-134` (`m = 1.1/3072`, `b = 0.5833…`) and the
+  `seq_len = F·H·W` claim verified through the call chain — `sample_for` runs at flexible.py
+  Step 3, *before* the reference concat at Step 5, so the IC-LoRA reference does not double it.
+  **(3) Per-stratum σ archived analytically** (`scripts/ctt_v2/sigma/sigma_schedule.py` →
+  `artefacts/sigma/SIGMA_SCHEDULE.{json,txt,md}`, the `.md` paste-ready for DATASET.md): closed-form
+  CDF with the reflection branch and the σ=1 point mass modelled exactly, validated against the
+  trainer's own sampler at 4 M draws/stratum (worst sup|ΔF| = **0.00036**). E[σ] = 0.7614 (121f)
+  vs 0.6620 (S4), pooled 0.7515. The effectiveness discount A9 weighted S4 on is **12 % smaller**
+  than its premise implied.
+  **(4) Masks regenerated, never reused** (`scripts/ctt_v2/masks/regen_masks.py`): geometry
+  *discovered* from all 2,000 S4 latents (one geometry, one fps), 3 masks over 2 geometries, each
+  proven **bit-identical (sha256) to `assemble_root.ensure_mask()`** and asserted absent at A9's
+  impossible (5,20,15). Found: S4 conditions **40 %** of its tokens (2 of 5 latent frames) vs
+  12.5 % at 121f — a second, undocumented S4 discount.
+  **(5) S4 VAE encodes were already complete** (job 9687985): 2,000/2,000 latents + cond_clean,
+  all `(128,5,14,26)` fps 16.0, re-verified exhaustively tonight — **not coerced to 121f**. Nothing
+  resubmitted.
+  **(6) Two-shape root asserts** as a separate importable module (`scripts/ctt_v2/assert_root_shapes.py`;
+  `assert_root.py` untouched — another agent owns it), covering what A1's path-level set equality
+  cannot see: per-shape five-tree equality, per-sample geometry agreement across all five trees,
+  fps-vs-shape, S4's **6,000** (confirmed from `selection.json`: 42 effects × ring `k=3` = 6,000),
+  the `Fast index: N of N` gate over both shapes, and a token-count-collision check for the one
+  *silent* failure mode. **Proven to fire by 10 deliberately broken two-shape fixtures**, all
+  caught, clean one passing.
+  **(7) A gate bug worth propagating:** the trainer logs through `RichHandler`, so numbers arrive
+  wrapped in SGR/OSC-8 escapes (`Step \x1b[1;36m20\x1b[0m/…`). Regexing a raw capture matches
+  nothing and reports **spurious FAILs on a healthy run** — it did, on the first pass. Both log
+  gates now strip ANSI first and carry an explicit `T0_ansi_stripped` check.
+  **(8) 🔴 A9 §3 item 2 (post-hoc σ split by stratum) is NOT achievable** without editing the
+  pinned trainer: `SigmaBucketTracker` carries no sample or stratum identity, its only consumer
+  writes to wandb, and `batch["idx"]` is set by the dataset but never read. Options recorded for
+  the advisor. ~0.42 GPU-h used total.
 - **03:05** — **`data/DATASET.md` written — the CTT v2 dataset single source of truth**
   (`ctt-v2-dataset/0.9.0-DRAFT`, status **NOT STAMPABLE**). Modelled on `eval_ladder/SPEC.md`:
   version stamp + FROZEN/PENDING table, the sample contract (five root dirs, `{target}__ref_{ref}.pt`
