@@ -546,17 +546,241 @@ def load_caption_store_exclusions(path: Path | None = None) -> tuple[dict, set, 
     return role, clip, prov
 
 
+# --------------------------------------------------------------------------------------
+# THE A16 KEYED-JOIN RULE, IN CODE
+# (advisors/A16_29_orphaned_s2a_clips_VERBATIM.md §Q4 items 1 and 4; items 2-3 are
+#  dossier-review rules and live in the DOSSIER, not here.)
+#
+# Three separate incidents in this campaign share ONE mechanism: **an empty query result was
+# read as a validated zero.**
+#   1. `build_mass_pair_list.py` looked up `endpoint_a`/`endpoint_b` in S2a's rendered meta,
+#      whose keys are `A`/`B`.  The strict lookup matched 0 of 454 pairs, and that empty set
+#      read as the reassuring "S2a needs no descriptions" — 36 absent (clip, role) pairs.
+#   2. A10 verified "all 37 field B, zero field A" first-hand and was right — for S2b.  The
+#      universe was never enumerated, so S2a was never scanned: 29 rows consume field A.
+#   3. The operator queried `descriptions.get(clip)` against a `clip|role`-keyed store, got
+#      `None` for both roles, and briefly concluded the B-role description was missing too.
+#
+# So: an absent key is an EXCEPTION, never a `None`; a cross-source join that matches nothing
+# is a FAILURE, never information; and a lookup key's SHAPE is validated against the store's
+# own self-declaration BEFORE any result is interpreted.  `.get()` against a keyed store is
+# banned in this lane — every one of the three incidents is a `.get()`-shaped read.
+# --------------------------------------------------------------------------------------
+#: a key's SHAPE, with all content erased: `davis_breakdance|B` -> `*|*`,
+#: `air_bending/action_x.mp4` -> `*/*`, `s2_0000_c00` -> `*`.  Two keys with different
+#: signatures cannot be keys of the same store, which is exactly what the three incidents
+#: failed to notice.
+_KEY_FIELD = re.compile(r"[^|/]+")
+#: the first quoted token of a `keying` declaration is the key TEMPLATE (`'clip_id|role'`)
+_KEYING_QUOTED = re.compile(r"['\"`]([^'\"`]+)['\"`]")
+
+
+def key_shape_signature(key: str) -> str:
+    """The separator/field signature of a store key or of a key template."""
+    return _KEY_FIELD.sub("*", str(key))
+
+
+def declared_key_signature(keying: str) -> str:
+    """The signature a store's `keying` self-declaration promises.
+
+    The declaration is prose with the key template quoted inside it (CAPTION_STORE.json:
+    ``"'clip_id|role'. A-role describes frames 0-8, ..."``).  A declaration with no quoted
+    template cannot be validated against, and that is a hard error rather than a shrug:
+    an unvalidatable self-declaration is the same species of decoration as an exclusion no
+    code reads.
+    """
+    m = _KEYING_QUOTED.search(str(keying))
+    if not m:
+        raise AssertionError(
+            f"keyed store declares `keying` = {keying!r} but no key template is quoted in "
+            f"it, so no lookup key can be validated against it. Declare the template, e.g. "
+            f"\"'clip_id|role'. <prose>\".")
+    return key_shape_signature(m.group(1))
+
+
+def require_keying_declaration(obj: dict, where: str) -> str:
+    """`keying` is MANDATORY on a keyed store artifact (A16 item 4).  Returns it."""
+    if not isinstance(obj, dict) or not (obj.get("keying") or "").strip():
+        raise AssertionError(
+            f"{where}: keyed store artifacts must carry a non-empty `keying` field naming "
+            f"their key template (A16 item 4). Without it a lookup key's shape cannot be "
+            f"validated, and a wrong-shaped lookup returns an empty result that reads as "
+            f"'nothing needed' — the mechanism behind all three key-shape incidents.")
+    return obj["keying"]
+
+
+def assert_key_shape(keys, lookup_key: str, where: str, keying: str | None = None,
+                     sample: int = 200) -> dict:
+    """Validate a lookup key's SHAPE against the store, BEFORE any result is interpreted.
+
+    Two independent authorities, and both must agree with the lookup:
+      * the store's self-declaration (`keying`), when the artifact carries one — A16 item 4;
+      * a sample of the store's OWN keys, which is the ground truth the declaration claims
+        to describe (a stale declaration is itself a defect worth catching).
+
+    Returns the evidence record so a caller can archive it; raises on any mismatch.
+    """
+    keys = list(keys)
+    if not keys:
+        raise AssertionError(f"{where}: the keyed store is EMPTY — every lookup against it "
+                             f"would return 'absent', which is instrument failure, not data")
+    want = key_shape_signature(lookup_key)
+    seen = sorted({key_shape_signature(k) for k in keys[:sample]})
+    rec = {"where": where, "lookup_key": lookup_key, "lookup_signature": want,
+           "store_key_signatures_sampled": seen, "n_keys": len(keys),
+           "declared_keying": keying}
+    if want not in seen:
+        raise AssertionError(
+            f"{where}: KEY-SHAPE MISMATCH — the lookup key {lookup_key!r} has shape {want!r} "
+            f"but the store's own keys have shape(s) {seen} (sampled {min(sample, len(keys))} "
+            f"of {len(keys)}). Every lookup would return 'absent' and the empty result would "
+            f"read as 'nothing needed'. This is the A16 guard; fix the key shape, do not "
+            f"interpret the result.")
+    if keying is not None:
+        decl = declared_key_signature(keying)
+        rec["declared_signature"] = decl
+        if decl != want:
+            raise AssertionError(
+                f"{where}: the store DECLARES key template shape {decl!r} ({keying!r}) but "
+                f"the lookup key {lookup_key!r} has shape {want!r} — validate the key shape "
+                f"before interpreting any result (A16 item 4)")
+        if decl not in seen:
+            raise AssertionError(
+                f"{where}: the store's `keying` declaration ({decl!r}) disagrees with the "
+                f"store's own keys ({seen}) — a stale self-declaration is a defect: it would "
+                f"certify a wrong-shaped lookup as correct")
+    return rec
+
+
+def assert_join_nonvacuous(name: str, left, right, expect_min: int = 1,
+                           left_label: str = "left", right_label: str = "right") -> dict:
+    """A cross-source join that matches NOTHING is a FAILURE, never information (A16 item 1).
+
+    Reports the two sides' key SHAPES on failure, because a vacuous join between two
+    non-empty key sets is almost always a key-shape mismatch — incident 1, exactly.
+    """
+    L, R = set(left), set(right)
+    inter = L & R
+    rec = {"join": name, left_label: len(L), right_label: len(R),
+           "intersection": len(inter), "expect_min": expect_min}
+    if len(inter) < expect_min:
+        ls = sorted({key_shape_signature(k) for k in list(L)[:200]})
+        rs = sorted({key_shape_signature(k) for k in list(R)[:200]})
+        raise AssertionError(
+            f"[join {name}] VACUOUS JOIN: {len(L)} {left_label} keys x {len(R)} "
+            f"{right_label} keys intersect in {len(inter)} (need >= {expect_min}). An empty "
+            f"join result is a failure, never information (A16 item 1). {left_label} key "
+            f"shapes {ls}; {right_label} key shapes {rs}"
+            + ("  <-- the two sides are keyed DIFFERENTLY" if set(ls) != set(rs) else ""))
+    return rec
+
+
+class KeyedStore:
+    """A keyed artifact whose accessors RAISE on absent keys.  There is no `.get()`.
+
+    Wraps a `{key: value}` mapping and enforces, on the first lookup, that the lookup key's
+    shape matches the store's own keys and the store's `keying` self-declaration.  The only
+    sanctioned optional-presence query is `has()`, which validates key shape first — so a
+    wrong-shaped probe can never answer "absent".  `require()` raises `KeyError` with the
+    key shapes in the message; the caller decides whether that is a `SystemExit`.
+    """
+
+    __slots__ = ("_d", "name", "keying", "_checked")
+
+    def __init__(self, mapping: dict, name: str, keying: str | None = None):
+        if not isinstance(mapping, dict):
+            raise AssertionError(f"{name}: a keyed store must be a mapping, got "
+                                 f"{type(mapping).__name__}")
+        self._d = mapping
+        self.name = name
+        self.keying = keying
+        self._checked: set[str] = set()
+
+    def __len__(self) -> int:
+        return len(self._d)
+
+    def __contains__(self, key) -> bool:      # shape-checked; see has()
+        return self.has(key)
+
+    def keys(self):
+        return self._d.keys()
+
+    def _check(self, key: str) -> None:
+        sig = key_shape_signature(key)
+        if sig in self._checked:
+            return
+        assert_key_shape(list(self._d), key, where=self.name, keying=self.keying)
+        self._checked.add(sig)
+
+    def has(self, key: str) -> bool:
+        """Shape-validated presence test — the ONLY sanctioned optional-presence query."""
+        self._check(key)
+        return key in self._d
+
+    def require(self, key: str):
+        """The raising accessor.  An absent key is an exception, never a `None`."""
+        self._check(key)
+        if key not in self._d:
+            raise KeyError(
+                f"{self.name}: no entry for key {key!r} (shape {key_shape_signature(key)}; "
+                f"store holds {len(self._d)} keys of shape(s) "
+                f"{sorted({key_shape_signature(k) for k in list(self._d)[:200]})}). An "
+                f"absent key is an exception, never a fallback (A16 item 1).")
+        return self._d[key]
+
+    def __getitem__(self, key):
+        return self.require(key)
+
+    def join_nonvacuous(self, wanted, name: str | None = None, expect_min: int = 1) -> dict:
+        """Assert a batch of lookup keys actually intersects this store."""
+        return assert_join_nonvacuous(name or f"{self.name}", wanted, self._d.keys(),
+                                      expect_min=expect_min,
+                                      left_label="wanted", right_label="store")
+
+
+def load_keyed_store(path: str | Path, payload_key: str | None = None,
+                     name: str | None = None, keying: str | None = None) -> KeyedStore:
+    """Load a keyed store artifact.  `keying` is MANDATORY — declared or passed in.
+
+    `payload_key` names the sub-object holding the entries (`"descriptions"` for
+    `CAPTION_STORE.json`); omit it for a flat `{key: value}` file, which must then be
+    accompanied by an explicit `keying=` (a flat file has nowhere to declare it).
+    """
+    p = Path(path)
+    obj = read_json(p)
+    label = name or p.name
+    if payload_key is not None:
+        keying = keying or require_keying_declaration(obj, str(p))
+        payload = obj[payload_key]
+    else:
+        payload = obj
+        if isinstance(obj, dict) and obj.get("keying"):
+            keying = keying or obj["keying"]
+        if not keying:
+            raise AssertionError(
+                f"{p}: a flat keyed store carries no `keying` declaration, so one must be "
+                f"passed in (A16 item 4 — key shape is validated before interpretation)")
+    return KeyedStore(payload, name=label, keying=keying)
+
+
 #: A10 (2026-07-28) — the standing role-scoped exclusion, DERIVED from the sidecar so the
 #: two can never drift.  Authority: `data/processed/ctt_v2_strata/
 #: POOL_DROPS_M3_ADJUDICATION.json:role_scoped_exclusions` (verdict "ROLE-SCOPED EXCLUSION.
 #: Whole-clip drop DENIED as written. Confidence 0.93.").
 #:
 #: `openvid_T1MiFx98l3g_0_50to156` has a blank-white A-anchor (ffprobe YMIN=YMAX=YAVG=232)
-#: and a healthy B-anchor (Y 12-242); it is field B in 37/37 rendered S2b rows, byte-pure on
-#: every one, so the render contract makes the blank window structurally unreachable in the
-#: role it occupies.  The pool file and the endpoint frame cache stay BYTE-UNCHANGED — a
-#: completed render and the running encodes are keyed to them — which is exactly why the
-#: exclusion has to live in code that every consumer reads.
+#: and a healthy B-anchor (Y 12-242).  The pool file and the endpoint frame cache stay
+#: BYTE-UNCHANGED — a completed render and the running encodes are keyed to them — which is
+#: exactly why the exclusion has to live in code that every consumer reads.
+#:
+#: 🔴 A16 CORRECTION to A10's occupancy claim.  A10 recorded "field B in 37/37 rendered rows,
+#: byte-pure on every one, so the blank window is structurally unreachable in the role it
+#: occupies."  True — for S2b, the only stratum it scanned.  The enumerated universe (A16 §Q3,
+#: universal join run first-hand):  S2a 7,990 rows -> **29 field A**, 0 field B;
+#: S2b 7,990 rows -> 0 field A, 37 field B;  S1 390 rows -> 0.  So the clip IS consumed in
+#: its excluded role, and those 29 S2a rows are DROPPED at consumption (A16), derived from
+#: this constant at build time and recorded in the root manifest's drop record.  The
+#: exclusion itself stands unchanged; only the belief "it never appears in role A" was wrong.
 #:
 #: A10's standing rule, campaign-wide: **defects are dispositioned at the unit of
 #: CONSUMPTION — (clip, role) — not the unit of storage.**  Whole-clip drops are reserved
@@ -564,10 +788,35 @@ def load_caption_store_exclusions(path: Path | None = None) -> tuple[dict, set, 
 #: consumed anywhere.  `enforced_at` in the sidecar enumerates the consumption channels;
 #: a recorded exclusion that no code reads is a landmine.
 try:
-    ROLE_EXCLUSIONS: dict = {c: tuple(sorted(r))
-                             for c, r in load_caption_store_exclusions()[0].items()}
-except OSError:  # pragma: no cover — the sidecar is on /projects, not /tmp
+    _role_excl, _clip_excl, ROLE_EXCLUSIONS_PROVENANCE = load_caption_store_exclusions()
+    ROLE_EXCLUSIONS: dict = {c: tuple(sorted(r)) for c, r in _role_excl.items()}
+except OSError as _exc:  # pragma: no cover — the sidecar is on /projects, not /tmp
     ROLE_EXCLUSIONS = {}
+    ROLE_EXCLUSIONS_PROVENANCE = {"file": str(POOL_DROPS), "error": f"OSError: {_exc}"}
+
+
+def require_role_exclusions(where: str = "") -> dict:
+    """A VACUOUS standing exclusion is a failure, never "nothing to exclude" (A16 item 1).
+
+    `data/processed/` is gitignored, so the adjudication sidecar travels with the working
+    tree and not with the branch.  Found the hard way: on the freshly-consolidated `main`
+    checkout `POOL_DROPS_M3_ADJUDICATION.json` was simply ABSENT (it existed only in the
+    worktree), which made `ROLE_EXCLUSIONS` an empty dict — every `role_excluded()` call
+    answered False, the A10 exclusion was silently vacuous, and the A16 drop would have
+    dropped 0 of the 29 while every assert reported PASS.  That is precisely the
+    `INTENDED_WEIGHTS_PCT` landmine class, and precisely the failure direction A16 forbids:
+    an empty result read as information.  So any consumer of the exclusion calls this first.
+    """
+    prov = ROLE_EXCLUSIONS_PROVENANCE or {}
+    if prov.get("error") or not ROLE_EXCLUSIONS:
+        raise SystemExit(
+            f"[role-exclusions] {where or 'this consumer'} depends on the standing A10 "
+            f"role-scoped exclusion, and it is VACUOUS: {prov.get('error') or 'no entries'} "
+            f"({prov.get('file', POOL_DROPS)}). An empty exclusion is instrument failure, not "
+            f"'nothing to exclude' — every role_excluded() call would answer False and the "
+            f"A16 drop would silently drop nothing. `data/processed/` is gitignored, so check "
+            f"that the sidecar is present in THIS checkout.")
+    return prov
 
 
 def role_excluded(clip: str, role: str) -> bool:
@@ -589,10 +838,17 @@ def caption_lookup(store: dict, clip: str, role: str, key_fmt: str = "{clip}|{ro
             f"role-excluded by A10 ({POOL_DROPS.name}). A request for it means the clip "
             f"leaked into role {role} upstream — fix the caller, do not fall back.")
     key = key_fmt.format(clip=clip, role=role)
-    if key not in store:
-        raise SystemExit(f"[caption] caption store has no entry for key {key!r} "
-                         f"((clip, role) = ({clip!r}, {role!r})); no cross-role fallback exists")
-    return store[key]
+    # A16 item 4: the lookup key's SHAPE is validated against the store's own keys (and its
+    # `keying` declaration when it carries one) BEFORE the result is interpreted.  Incident 3
+    # was `descriptions.get(clip)` against a `clip|role`-keyed store: `None` for both roles,
+    # briefly read as "the B-role is missing too".  A shape check makes that impossible.
+    ks = store if isinstance(store, KeyedStore) else KeyedStore(
+        store, name=f"caption store (key template {key_fmt!r})", keying=f"'{key_fmt}'")
+    try:
+        return ks.require(key)
+    except KeyError as exc:
+        raise SystemExit(f"[caption] {exc.args[0]} ((clip, role) = ({clip!r}, {role!r})); "
+                         f"no cross-role fallback exists") from None
 
 
 def caption_sources(entry: dict, sided: str, kind: str) -> list[tuple[str, str]]:

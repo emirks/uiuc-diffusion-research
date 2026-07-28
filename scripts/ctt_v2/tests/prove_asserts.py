@@ -643,6 +643,169 @@ DRYRUN_MUTATIONS = {
 
 
 # ======================================================================================
+# builder mutations — A16's drop-and-record path must DISTINGUISH its two cases
+#
+# `build_inventories._attach` used to `SystemExit` on ANY consumption of a role-excluded
+# (clip, role).  A16 replaced that with **drop-and-record for hits carried by the standing
+# `ROLE_EXCLUSIONS`, crash for everything else**.  A one-sided test would be worthless here:
+# "it no longer crashes" is satisfied just as well by a builder that has stopped checking.
+# So both directions are proven, on real subprocess runs of the real builder:
+#
+#   excluded hit          -> exit 0, the clip is GONE, and the drop is RECORDED with both
+#                            role-scoped reasons;
+#   missing non-excluded  -> exit != 0 and NO inventory is written;
+#   both at once          -> still exit != 0, i.e. the drop path cannot mask the crash path;
+#   a fabricated fallback -> exit != 0 (a caption exists for an excluded consumption);
+#   wrong key shape       -> exit != 0 naming the SHAPE, not N "missing" entries (A16 item 4);
+#   vacuous exclusion     -> exit != 0 (an empty standing exclusion is instrument failure).
+# ======================================================================================
+BUILDER = HERE.parent / "build_inventories.py"
+
+
+def _excluded_a_clip() -> str:
+    clip = next((c for c, roles in rc.ROLE_EXCLUSIONS.items() if "A" in roles), None)
+    if clip is None:
+        raise SystemExit("root_common.ROLE_EXCLUSIONS carries no A-role exclusion to test")
+    return clip
+
+
+def _builder_fixture(tmp: Path, tag: str, *, n_ok: int = 3, excluded: int = 0,
+                     missing: int = 0, fabricate_fallback: bool = False,
+                     caption_keys_wrong_shape: bool = False) -> tuple[Path, Path]:
+    """Write a minimal `render_s2.py`-shaped meta shard + a per-clip caption file."""
+    d = tmp / f"builder_{tag}"
+    d.mkdir(parents=True, exist_ok=True)
+    ex = _excluded_a_clip()
+    rows, caps = [], {}
+    for i in range(n_ok):
+        stem = f"bfx_{i:02d}"
+        rows.append({"stem": stem, "op_id": "op_fixture", "shader": "FixtureShader",
+                     "A": f"fixture_a_{i}", "B": f"fixture_b_{i}"})
+        caps[stem] = f"a fixture A description {i}. sksz. a fixture B description {i}."
+    for i in range(excluded):
+        stem = f"bfx_excluded_{i:02d}"
+        rows.append({"stem": stem, "op_id": "op_fixture", "shader": "FixtureShader",
+                     "A": ex, "B": f"fixture_b_x{i}"})
+        if fabricate_fallback:
+            caps[stem] = "a FABRICATED caption for a blank-white anchor. sksz. text."
+    for i in range(missing):
+        stem = f"bfx_missing_{i:02d}"
+        rows.append({"stem": stem, "op_id": "op_fixture", "shader": "FixtureShader",
+                     "A": f"fixture_a_m{i}", "B": f"fixture_b_m{i}"})
+        # deliberately NO caption entry, and NOT carried by any standing exclusion
+    if caption_keys_wrong_shape:
+        caps = {f"{k}|A": v for k, v in caps.items()}
+    shard = d / "clips_shard00.jsonl"
+    shard.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    cp = d / "captions.json"
+    cp.write_text(json.dumps(caps, indent=1))
+    return shard, cp
+
+
+def _run_builder(tmp: Path, tag: str, **kw) -> tuple[int, str, Path]:
+    shard, caps = _builder_fixture(tmp, tag, **kw)
+    out = shard.parent / "INVENTORY.json"
+    proc = subprocess.run(
+        [PY, str(BUILDER), "s2meta", "--stratum", "S2a", "--meta-glob", str(shard),
+         "--captions", str(caps), "--caption-key", "{clip}", "--out", str(out),
+         "--no-require-sources"], capture_output=True, text=True)
+    return proc.returncode, (proc.stdout + proc.stderr), out
+
+
+def b_excluded_hit_is_dropped(tmp: Path) -> dict:
+    code, log, out = _run_builder(tmp, "drop", excluded=1)
+    ex = _excluded_a_clip()
+    inv = rc.read_json(out) if out.exists() else {}
+    bd = (inv.get("build_drops") or {})
+    dropped = bd.get("dropped_clips") or []
+    reasons = set(dropped[0]["reasons"]) if dropped else set()
+    want = {f"role_scoped_caption_exclusion:{ex}:A", f"role_scoped_prefix_condition:{ex}:A"}
+    gone = dropped and dropped[0]["clip"] not in (inv.get("clips") or {})
+    off_group = dropped and all(dropped[0]["clip"] not in g["clips"]
+                                for g in (inv.get("groups") or {}).values())
+    ok = (code == 0 and len(dropped) == 1 and reasons == want and gone and off_group
+          and (inv.get("counts") or {}).get("clips") == 3
+          and (inv.get("counts") or {}).get("dropped_at_build") == 1
+          and bd.get("n_dropped") == 1 and bd.get("excluded_pairs_hit") == {f"{ex}:A": 1})
+    return {"ok": ok, "broke": f"one row consumes the role-excluded ({ex}, A)",
+            "expected": "exit 0; clip dropped AND recorded with both role-scoped reasons",
+            "exit_code": code, "n_dropped": len(dropped),
+            "reasons": sorted(reasons), "reasons_expected": sorted(want),
+            "clips_kept": (inv.get("counts") or {}).get("clips"),
+            "removed_from_clips": bool(gone), "removed_from_group": bool(off_group),
+            "excluded_pairs_hit": bd.get("excluded_pairs_hit"),
+            "derivation": bd.get("derivation"), "log_tail": log.strip()[-300:]}
+
+
+def b_missing_nonexcluded_crashes(tmp: Path) -> dict:
+    code, log, out = _run_builder(tmp, "crash", missing=1)
+    ok = code != 0 and "missing sources" in log and "caption:bfx_missing_00" in log \
+        and not out.exists()
+    return {"ok": ok, "broke": "one row's caption key is absent and NOT carried by any "
+                               "standing exclusion",
+            "expected": "exit != 0, no inventory written — the converse defect must never "
+                        "degrade into a silent drop",
+            "exit_code": code, "inventory_written": out.exists(),
+            "log_tail": log.strip()[-300:]}
+
+
+def b_drop_does_not_mask_crash(tmp: Path) -> dict:
+    code, log, out = _run_builder(tmp, "both", excluded=1, missing=1)
+    ok = code != 0 and "missing sources" in log and not out.exists()
+    return {"ok": ok, "broke": "one excluded row AND one missing-caption row in the same build",
+            "expected": "exit != 0 — the new drop path must not swallow the crash path",
+            "exit_code": code, "inventory_written": out.exists(),
+            "log_tail": log.strip()[-300:]}
+
+
+def b_fabricated_fallback_crashes(tmp: Path) -> dict:
+    code, log, out = _run_builder(tmp, "fallback", excluded=1, fabricate_fallback=True)
+    ok = code != 0 and "fallback" in log.lower() and not out.exists()
+    return {"ok": ok, "broke": "a caption EXISTS for a row whose (clip, role) description is "
+                               "role-excluded — i.e. text was substituted upstream",
+            "expected": "exit != 0 — no cross-role fallback may be consumed",
+            "exit_code": code, "inventory_written": out.exists(),
+            "log_tail": log.strip()[-300:]}
+
+
+def b_wrong_key_shape_crashes(tmp: Path) -> dict:
+    code, log, out = _run_builder(tmp, "keyshape", caption_keys_wrong_shape=True)
+    ok = code != 0 and "KEY-SHAPE MISMATCH" in log and not out.exists()
+    return {"ok": ok, "broke": "the caption file is keyed `clip|role` while the lookup "
+                               "template is `{clip}` — the incident-1 shape",
+            "expected": "exit != 0 naming the SHAPE mismatch, not N 'missing' entries "
+                        "(A16 item 4)",
+            "exit_code": code, "inventory_written": out.exists(),
+            "log_tail": log.strip()[-300:]}
+
+
+def b_vacuous_exclusion_crashes(tmp: Path) -> dict:
+    """An empty standing ROLE_EXCLUSIONS must be a failure, not "nothing to exclude"."""
+    prog = ("import sys; sys.path.insert(0, %r)\n"
+            "import root_common as rc\n"
+            "rc.ROLE_EXCLUSIONS = {}\n"
+            "rc.ROLE_EXCLUSIONS_PROVENANCE = {'file': 'X', 'error': 'ABSENT (simulated)'}\n"
+            "rc.require_role_exclusions('prove_asserts')\n") % str(HERE.parent)
+    proc = subprocess.run([PY, "-c", prog], capture_output=True, text=True)
+    log = proc.stdout + proc.stderr
+    ok = proc.returncode != 0 and "VACUOUS" in log
+    return {"ok": ok, "broke": "ROLE_EXCLUSIONS emptied (the gitignored sidecar absent from "
+                               "this checkout — observed for real on `main`)",
+            "expected": "exit != 0 — a vacuous standing exclusion is instrument failure",
+            "exit_code": proc.returncode, "log_tail": log.strip()[-300:]}
+
+
+BUILDER_MUTATIONS = {
+    "builder_A16_excluded_hit_is_dropped_and_recorded": b_excluded_hit_is_dropped,
+    "builder_A16_missing_nonexcluded_still_crashes": b_missing_nonexcluded_crashes,
+    "builder_A16_drop_does_not_mask_crash": b_drop_does_not_mask_crash,
+    "builder_A16_fabricated_cross_role_fallback_crashes": b_fabricated_fallback_crashes,
+    "builder_A16_wrong_caption_key_shape_crashes": b_wrong_key_shape_crashes,
+    "builder_A16_vacuous_role_exclusion_crashes": b_vacuous_exclusion_crashes,
+}
+
+
+# ======================================================================================
 # runner
 # ======================================================================================
 def run_assert(root: Path, report: Path, extra: list[str]) -> tuple[int, dict]:
@@ -787,6 +950,20 @@ def main() -> int:
                   f"          skipped={rec['n_skipped']} tag={tag}")
             if not rec["ok"]:
                 failures.append(f"{name}: {rec.get('ERROR')}")
+
+    # ---- builder mutations (root-independent; A16's two paths) --------------------------
+    for name, fn in BUILDER_MUTATIONS.items():
+        if wanted and name not in wanted:
+            continue
+        rec = dict(kind="builder", mutation=name, **fn(tmp))
+        if not rec["ok"]:
+            rec["ERROR"] = (f"expected {rec['expected']}; got exit={rec['exit_code']} "
+                            f"({rec.get('log_tail', '')[-160:]})")
+        results.append(rec)
+        print(f"[{'PROVEN' if rec['ok'] else 'PROBLEM'}] {name}: {rec['broke']}\n"
+              f"          exit={rec['exit_code']}")
+        if not rec["ok"]:
+            failures.append(f"{name}: {rec.get('ERROR')}")
 
     # ---- the root must be exactly as we found it ----------------------------------------
     baseline("after")

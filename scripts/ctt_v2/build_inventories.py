@@ -59,28 +59,86 @@ def _fmt(tpl: str, **kw) -> str:
         raise SystemExit(f"template {tpl!r} uses unknown placeholder {exc}") from None
 
 
-def _attach(inv: dict, args, require: bool) -> None:
+def _attach(inv: dict, args, require: bool) -> dict:
     """Fill latents / cond_clean / conditions / caption from CLI templates.
 
     CAPTION LOOKUP IS (clip, role)-KEYED, HARD-FAILS ON MISSING, AND HAS NO CROSS-ROLE
-    FALLBACK (A10 `enforced_at[0]`).  Two guards, both hard:
+    FALLBACK (A10 `enforced_at[0]`).  A missing key is an error, never a fallback to the
+    other role or to a clip-level key.
 
-    * requesting a role-excluded (clip, role) description raises immediately — a request
-      for `openvid_T1MiFx98l3g_0_50to156`'s A-role description means the clip leaked into
-      A-role upstream, and that must crash rather than silently substitute the healthy
-      B-role text and describe the wrong nine frames;
-    * a missing key is an error, never a fallback to the other role or to a clip-level key.
+    **A16 — role-scoped consumption hits are DROPPED AND RECORDED, not a crash.**
+    This function used to `SystemExit` on any consumption of a role-excluded (clip, role)
+    with *"fix the grid or the render, do not degrade"*.  That crash was written when a
+    violation implied an upstream leak; A16 supplied the disposition its own message
+    demanded — **neither grid-fix nor re-render: drop.**  29 already-rendered, gate-accepted
+    S2a rows consume `openvid_T1MiFx98l3g_0_50to156` as their A endpoint, whose A-anchor is
+    verified flat white (frames 0-17, YMIN=YMAX=231), so no truthful caption exists for it.
+    They are dropped here, with the SAME reasons vocabulary the assembler uses
+    (`role_scoped_caption_exclusion` / `role_scoped_prefix_condition`), and the record is
+    propagated into `ROOT_MANIFEST.json`'s drop record by `assemble_root.py`.
+
+    What is still a HARD CRASH, deliberately:
+      * a missing caption key for a clip that is **not** carried by a standing exclusion —
+        that is the converse defect (a description that should exist and does not), and it
+        must never degrade into a silent drop;
+      * a role-excluded description that is actually PRESENT in the store — the only way a
+        cross-role fallback could ever succeed, so it is refused at the door;
+      * a vacuous caption join, and any lookup key whose SHAPE disagrees with the store
+        (A16 items 1 and 4).
+
+    The drop set is DERIVED as `ROLE_EXCLUSIONS ∩ (what this stratum actually consumes)`.
+    A hand-kept list of 29 stems would recreate the `INTENDED_WEIGHTS_PCT` landmine class:
+    a recorded constant that silently stops matching reality.
     """
+    # The drop set is derived from the standing exclusion, so a VACUOUS exclusion would
+    # silently drop nothing and certify the result (A16 item 1; see require_role_exclusions).
+    rc.require_role_exclusions("build_inventories._attach")
     caps = json.loads(Path(args.captions).read_text()) if args.captions else None
     if isinstance(caps, list):  # [{video, caption}] shape
         caps = {r["video"]: r["caption"] for r in caps}
-    missing, role_violations = [], []
+    store = None
+    if caps is not None:
+        # A16 item 4 — key shape is validated against the store's self-declaration (here the
+        # `--caption-key` template IS the declaration) and against the store's own keys,
+        # before any result is interpreted.  A wrong template used to produce N "missing"
+        # entries; now it names the shape mismatch.
+        store = rc.KeyedStore(caps, name=f"caption store {args.captions}",
+                              keying=f"'{args.caption_key}'")
+    missing, drops, present_excluded = [], [], []
+    wanted_keys = []
     for stem, c in inv["clips"].items():
         g = inv["groups"][c["group"]]
         eps = list(c["endpoints"])
         ctx = {"clip": stem, "group": c["group"], "class": g.get("class") or "",
                "shader": g.get("shader") or "",
                "A": (eps + ["", ""])[0], "B": (eps + ["", ""])[1]}
+        # the (clip, role) descriptions this clip's caption will consume — recorded on the
+        # entry so the root asserts do not have to re-derive them
+        srcs = rc.caption_sources(c, g.get("sided", "two"), inv.get("kind", "synthetic_op"))
+        c["caption_sources"] = [list(x) for x in srcs]
+
+        # ---- A16: the standing exclusion, intersected with what this clip consumes -------
+        reasons = []
+        hits = [f"{cl}:{role}" for cl, role in srcs if rc.role_excluded(cl, role)]
+        if hits:
+            reasons.append("role_scoped_caption_exclusion:" + ",".join(sorted(set(hits))))
+        if eps and rc.role_excluded(eps[0], "A"):
+            reasons.append(f"role_scoped_prefix_condition:{eps[0]}:A")
+        if reasons:
+            # NO CROSS-ROLE FALLBACK, and this is where a fabricated one would show up: if a
+            # caption EXISTS for a clip whose (clip, role) description is role-excluded, then
+            # something upstream substituted text — the B-role description, or another clip's
+            # — for nine frames of blank white.  That is the exact failure A10's exclusion
+            # exists to prevent, so it is a hard crash, never a quiet consumption.
+            if store is not None and store.has(_fmt(args.caption_key, **ctx)):
+                present_excluded.append(
+                    f"{stem}: consumes role-excluded {sorted(set(hits))} yet the store HAS a "
+                    f"caption under key {_fmt(args.caption_key, **ctx)!r}")
+            drops.append({"clip": stem, "group": c["group"], "stratum": inv["stratum"],
+                          "reasons": reasons, "dropped_at": "inventory_build",
+                          "authority": "A16 (drop) on A10 (role-scoped exclusion)"})
+            continue
+
         for key, tpl in (("latents", args.latents), ("cond_clean", args.cond_clean),
                          ("conditions", args.conditions)):
             if tpl:
@@ -90,40 +148,81 @@ def _attach(inv: dict, args, require: bool) -> None:
                 c[key] = str(p)
                 if require and not p.exists():
                     missing.append(f"{key}:{p}")
-        # the (clip, role) descriptions this clip's caption will consume — recorded on the
-        # entry so the root asserts do not have to re-derive them
-        srcs = rc.caption_sources(c, g.get("sided", "two"), inv.get("kind", "synthetic_op"))
-        c["caption_sources"] = [list(x) for x in srcs]
-        for clip_id, role in srcs:
-            if rc.role_excluded(clip_id, role):
-                role_violations.append(f"{stem}: needs the role-{role} description of "
-                                       f"{clip_id!r}, which is role-excluded by A10")
-        if caps is not None:
+        if store is not None:
             k = _fmt(args.caption_key, **ctx)
-            if k not in caps:
+            wanted_keys.append(k)
+            try:
+                c["caption"] = store.require(k)
+            except KeyError:
+                # NOT carried by a standing exclusion => the converse defect => CRASH
                 missing.append(f"caption:{k}")
-            else:
-                c["caption"] = caps[k]
-    if role_violations:
+    if present_excluded:
         raise SystemExit(
-            f"[inventory] {len(role_violations)} clips consume a ROLE-EXCLUDED (clip, role) "
-            f"description (A10; {rc.POOL_DROPS.name}). No cross-role fallback exists — fix "
-            f"the grid or the render, do not degrade:\n  " + "\n  ".join(role_violations[:10]))
+            f"[inventory] {len(present_excluded)} clip(s) consume a role-EXCLUDED "
+            f"(clip, role) description (A10; {rc.POOL_DROPS.name}) AND have a caption in the "
+            f"store — a cross-role fallback was invented upstream. Refusing to consume it; "
+            f"fix the composer, do not degrade:\n  " + "\n  ".join(present_excluded[:10]))
     if missing:
         raise SystemExit(f"[inventory] {len(missing)} missing sources, first 10:\n  "
                          + "\n  ".join(missing[:10]))
+    if store is not None:
+        # A16 item 1 — an empty join result is a failure, never information
+        store.join_nonvacuous(wanted_keys, name=f"{inv['stratum']} captions x store")
+
+    # ---- remove the dropped stems, and record the derivation -----------------------------
+    dropped_stems = {d["clip"] for d in drops}
+    for stem in dropped_stems:
+        inv["clips"].pop(stem, None)
+    for g in inv["groups"].values():
+        g["clips"] = [s for s in g["clips"] if s not in dropped_stems]
+    consumed = {(cl, role) for c in inv["clips"].values()
+                for cl, role in (c.get("caption_sources") or [])}
+    hit_pairs: dict[str, int] = {}
+    for d in drops:
+        for r in d["reasons"]:
+            if r.startswith("role_scoped_caption_exclusion:"):
+                for h in r.split(":", 1)[1].split(","):
+                    hit_pairs[h] = hit_pairs.get(h, 0) + 1
+    rec = {
+        "authority": "A16 §Q1 (drop the 29 at consumption, derived, recorded) on A10's "
+                     "consumption-unit rule; reasons vocabulary shared with assemble_root",
+        "derivation": "ROLE_EXCLUSIONS INTERSECT this stratum's consumed (clip, role) pairs, "
+                      "computed at build time — never a hand-kept stem list",
+        "role_exclusions_scanned": {c: list(r) for c, r in sorted(rc.ROLE_EXCLUSIONS.items())},
+        "n_dropped": len(drops),
+        "excluded_pairs_hit": dict(sorted(hit_pairs.items())),
+        "surviving_consumed_pairs": len(consumed),
+        "dropped_clips": sorted(drops, key=lambda d: d["clip"]),
+    }
+    inv["build_drops"] = rec
+    if drops:
+        print(f"[inventory] {inv['stratum']}: DROPPED {len(drops)} clip(s) at build time on "
+              f"the standing A10 role exclusion (A16 disposition): "
+              f"{rec['excluded_pairs_hit']}")
+        for d in sorted(drops, key=lambda d: d["clip"])[:5]:
+            print(f"        drop {d['clip']}: {'; '.join(d['reasons'])}")
+    return rec
 
 
 def _finish(inv: dict, out: Path) -> None:
     n_pairs = sum(len(rc.ring_pairs(sorted(g["clips"]))) for g in inv["groups"].values())
+    bd = inv.setdefault("build_drops", {"n_dropped": 0, "dropped_clips": [],
+                                        "excluded_pairs_hit": {},
+                                        "derivation": "no caption/role attachment step ran"})
     inv["counts"] = {
         "groups": len(inv["groups"]),
         "clips": len(inv["clips"]),
         "pairs_if_unfiltered": n_pairs,
+        # A16 — clips removed at BUILD time by the standing role-scoped exclusion.  Recorded
+        # here so `clips` is never read as "everything that was rendered".
+        "dropped_at_build": bd["n_dropped"],
+        "clips_before_build_drops": len(inv["clips"]) + bd["n_dropped"],
     }
     rc.write_json(out, inv)
     print(f"[inventory] {inv['stratum']}: {len(inv['groups'])} groups, {len(inv['clips'])} clips, "
-          f"{n_pairs} pairs (before exclusions) -> {out}")
+          f"{n_pairs} pairs (before exclusions) -> {out}"
+          + (f"  [{bd['n_dropped']} dropped at build on the A10 role exclusion]"
+             if bd["n_dropped"] else ""))
 
 
 # --------------------------------------------------------------------------------------

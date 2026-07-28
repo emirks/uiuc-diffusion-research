@@ -51,6 +51,27 @@ def check_store(store: dict, pool_drops: Path | None = None) -> list[dict]:
     role, clip_level, prov = rc.load_caption_store_exclusions(pool_drops)
     out: list[dict] = []
 
+    # A16 item 4 — validate the store's KEY SHAPE before interpreting any lookup against it.
+    # Every check below is an ABSENCE check, so a wrong-shaped store makes all of them pass
+    # vacuously: the excluded description "is not present" because NOTHING is findable.  This
+    # is the guard that turns that false PASS into a hard failure.
+    #: `{clip_id: {"A":…, "B":…}}` — key shape '*' (no separator), dict values
+    bad_shape = [k for k in list(store)[:200]
+                 if rc.key_shape_signature(k) != "*" or not isinstance(store[k], dict)]
+    if not store or bad_shape:
+        return [{"name": "S0_store_key_shape", "ok": False,
+                 "detail": (f"the store is EMPTY — every absence check below would pass "
+                            f"vacuously" if not store else
+                            f"expected `{{clip_id: {{'A':…,'B':…}}}}` (key shape '*', dict "
+                            f"values); got keys like {bad_shape[:5]}. A wrong-shaped store "
+                            f"makes every absence check pass on nothing (A16 item 4)"),
+                 "offenders": bad_shape[:20]}]
+    out.append({"name": "S0_store_key_shape", "ok": True,
+                "detail": f"{len(store)} clips, key shape '*' with per-role dict values — "
+                          f"the absence checks below are querying a store they can find "
+                          f"things in (A16 item 4)",
+                "offenders": []})
+
     if prov.get("error"):
         return [{"name": "S1_adjudication_present", "ok": False,
                  "detail": f"{prov['file']}: {prov['error']}", "offenders": []}]
@@ -64,7 +85,7 @@ def check_store(store: dict, pool_drops: Path | None = None) -> list[dict]:
     present = []
     for clip, roles in sorted(role.items()):
         for r in sorted(roles):
-            if r in (store.get(clip) or {}):
+            if clip in store and r in store[clip]:
                 present.append(f"{clip}:{r} — EXCLUDED description is present in the store")
     for clip in sorted(clip_level):
         if clip in store:

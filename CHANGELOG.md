@@ -1,5 +1,41 @@
 ## 2026-07-28
 
+- **13:45** — **A16 executed in code: the 29 S2a clips are DROPPED-AND-RECORDED at consumption, and the
+  Keyed-Join Rule is now enforceable machinery — plus a live vacuous-exclusion landmine found on `main`.**
+  🔴 **The finding first:** `data/processed/` is gitignored, so `POOL_DROPS_M3_ADJUDICATION.json` travels
+  with a *working tree*, not a branch — it was **absent from the consolidated `main` checkout**, which made
+  `root_common.ROLE_EXCLUSIONS` an empty dict. Every `role_excluded()` call answered `False`, A10's exclusion
+  was silently vacuous, and the A16 drop would have dropped **0 of 29** while every assert printed PASS —
+  the `INTENDED_WEIGHTS_PCT` landmine class again. Fixed by copying the three gitignored artefacts
+  (`POOL_DROPS_…json`, `CONTENT_POOL_union.json`, `s4_refvfx/selection.json`) into `main` *and* by a new hard
+  guard `rc.require_role_exclusions()` that `build_inventories` and `assemble_root` call first: a vacuous
+  standing exclusion is instrument failure, not "nothing to exclude". Any fresh clone of this public repo now
+  fails loudly instead of running vacuous.
+  **The ruling itself:** `build_inventories._attach` no longer `SystemExit`s on a role-scoped consumption
+  hit — it derives the drop set as `ROLE_EXCLUSIONS ∩ what the stratum consumes` (never a stem list), drops
+  it, and records each drop under `inventory["build_drops"]` with the assembler's own reasons vocabulary
+  (`role_scoped_caption_exclusion` + `role_scoped_prefix_condition`); `assemble_root` propagates that into
+  `ROOT_MANIFEST.json:drops` tagged `dropped_at`, so the manifest stays the complete account of every clip
+  rendered but not consumed. **The crash is kept** for a missing *non-excluded* caption key, for a caption
+  that exists for an excluded consumption (a fabricated cross-role fallback), for a vacuous join, and for a
+  wrong-shaped lookup key. Verified on the real data: S2a **7,990 → 7,961** clips / **23,883** base pairs,
+  29 stems over **29 distinct ops**, one reason-pair each; S2b **7,990** untouched.
+  **Keyed-Join Rule (A16 items 1 and 4), in `root_common.py`:** `KeyedStore` with raising accessors and no
+  `.get()`, `assert_key_shape` (validates a lookup key against the store's own keys *and* its `keying`
+  self-declaration before any result is interpreted), `assert_join_nonvacuous`, `require_keying_declaration`,
+  `load_keyed_store`. `.get()`-against-a-keyed-store converted in `s1/build_s1_grid.py`,
+  `captions/assert_caption_store.py` (new `S0_store_key_shape` check — every other check there is an absence
+  check, so a wrong-shaped store made them all pass on nothing), `captions/consolidate_store.py` (which now
+  proves at write time that `keying` describes the keys beside it) and `smoke/mixed_format_probe.py`.
+  **Stale comment fixed:** `assemble_root.py`'s *"occupies field B in all 10 rendered clips"* — false, and the
+  belief behind all three key-shape incidents — is replaced by A16's enumerated table (S2a 29 field-A / 0
+  field-B over 7,990 rows · S2b 0 / 37 over 7,990 · S1 0 over 390).
+  **Mutation-proven both directions:** `tests/prove_asserts.py` gains `BUILDER_MUTATIONS` (6 mutations,
+  real subprocess runs of the real builder) — excluded-hit ⇒ drop+record; missing-non-excluded ⇒ crash;
+  both-at-once ⇒ still crash; fabricated fallback ⇒ crash; wrong key shape ⇒ crash naming the shape; vacuous
+  exclusion ⇒ crash. **6/6 PROVEN, and the existing 33-check battery is GREEN before and after.**
+  `S2_ACCEPTANCE.json` is **not re-run and not edited** — annotated in `data/DATASET.md` per A16 §Q2.
+
 - **13:05** — 🔴 **Real defect found at assembly-inventory time: 29 rendered S2a clips consume the
   one role-excluded (clip, role) pair.** Of the 7,990 S2a records, **29 use
   `openvid_T1MiFx98l3g_0_50to156` as their A endpoint** and so need the role-A description A10

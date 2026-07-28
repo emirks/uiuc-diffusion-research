@@ -562,9 +562,10 @@ def run(root: Path, out: Path, model_path: Path, quick: bool) -> int:
 
     for i in range(len(ds)):
         rel = idx_rel[i]
-        meta = by_rel.get(rel)
-        if meta is None:
+        # A16 item 1: no `.get()` against a keyed store — an absent key is an exception.
+        if rel not in by_rel:
             raise SystemExit(f"dataset sample {rel!r} is not in the smoke manifest")
+        meta = by_rel[rel]
         raw = ds[i]
         batch = collate1(raw)
 

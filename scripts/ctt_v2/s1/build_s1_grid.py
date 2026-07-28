@@ -275,7 +275,7 @@ def build_grid(eligible: list[dict], sets: dict, store: dict) -> dict:
                 continue
             if rc.role_excluded(rec["clip_id"], for_role):
                 continue
-            if role is not None and not (store.get(rec["clip_id"], {}) or {}).get(role):
+            if role is not None and not store.has(f"{rec['clip_id']}|{role}"):
                 continue
             used.add(rec["clip_id"])
             return rec
@@ -318,8 +318,12 @@ def build_grid(eligible: list[dict], sets: dict, store: dict) -> dict:
         for j, e in enumerate(entries):
             a, b = e["a"], e["b"]
             key = a["clip_id"] if b is None else f"{a['clip_id']}__{b['clip_id']}"
-            a_desc = (store.get(a["clip_id"], {}) or {}).get("A")
-            b_desc = None if b is None else (store.get(b["clip_id"], {}) or {}).get("B")
+            ka = f"{a['clip_id']}|A"
+            a_desc = store.require(ka) if store.has(ka) else None
+            b_desc = None
+            if b is not None:
+                kb = f"{b['clip_id']}|B"
+                b_desc = store.require(kb) if store.has(kb) else None
             renderable = bool(a_desc) and (b is None or bool(b_desc))
             rows.append({
                 "row_id": f"S1__{arm}__{key}"[:200],
@@ -391,16 +395,42 @@ def main() -> None:
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
-    store: dict[str, dict] = {}
+    # A16 KEYED-JOIN RULE.  The description files are keyed `{clip: {"A":…, "B":…}}`; the
+    # LOOKUPS below are per-(clip, role).  Flattening to the `clip|role` key the rest of the
+    # lane uses, behind `rc.KeyedStore`, buys three guards this loop used to lack: the file's
+    # own key shape is checked before it is interpreted, `.has()` validates the lookup key's
+    # shape, and an empty store is a hard failure instead of "every row is pending_caption_
+    # store" — which is exactly how incident 1 read (an empty join as reassuring news).
+    flat: dict[str, str] = {}
+    loaded = []
     for rel in args.descriptions:
         path = REPO_ROOT / rel
         if not path.exists():
             print(f"[s1] description store missing, skipped: {rel}")
             continue
-        for clip, roles in json.loads(path.read_text()).items():
+        raw = json.loads(path.read_text())
+        bad = [k for k in list(raw)[:50] if rc.key_shape_signature(k) != "*"
+               or not isinstance(raw[k], dict)]
+        if bad:
+            raise SystemExit(
+                f"[s1] {path}: expected a `{{clip: {{'A':…, 'B':…}}}}` store (key shape '*', "
+                f"dict values) but got keys like {bad[:5]} — interpreting a differently-keyed "
+                f"file here would yield an EMPTY store and every row would read "
+                f"'pending_caption_store' (A16 item 4)")
+        for clip, roles in raw.items():
             for role in ("A", "B"):
                 if roles.get(role):
-                    store.setdefault(clip, {})[role] = roles[role]
+                    flat[f"{clip}|{role}"] = roles[role]
+        loaded.append(str(path))
+    if not flat:
+        raise SystemExit(
+            f"[s1] no (clip, role) description was loaded from {args.descriptions} — an empty "
+            f"description store is instrument failure, not 'nothing captioned yet': every "
+            f"grid row would silently render as pending_caption_store (A16 item 1)")
+    store = rc.KeyedStore(flat, name=f"S1 description store ({len(loaded)} file(s))",
+                          keying="'clip_id|role'")
+    print(f"[s1] description store: {len(flat)} (clip, role) descriptions from "
+          f"{len(loaded)} file(s)")
 
     sets = eval_sets()
     pool_training, near_dups = load_pool()

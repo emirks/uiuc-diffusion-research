@@ -37,8 +37,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import root_common as rc  # noqa: E402 -- the A16 keyed-store key-shape validators
 
 
 def sha256_bytes(b: bytes) -> str:
@@ -91,7 +95,21 @@ def main():
                 key = f"{clip}|{role}"
                 if key in provenance:
                     prev = provenance[key]
-                    prior_text = (descriptions.get(key) or orphans.get(key))
+                    # A16 item 1 — an absent key is an EXCEPTION, never a None. `provenance`
+                    # says this key was already written, so exactly one of the two stores must
+                    # hold its text; a `.get()`-shaped read would turn a bookkeeping bug into
+                    # `prior_text = None`, which then reports a spurious "CONFLICTING
+                    # duplicate" against a phantom prior.
+                    if key in descriptions:
+                        prior_text = descriptions[key]
+                    elif key in orphans:
+                        prior_text = orphans[key]
+                    else:
+                        raise SystemExit(
+                            f"{key}: recorded in provenance from shard {prev['shard']} but "
+                            f"absent from BOTH `descriptions` and `orphans` — the store's "
+                            f"bookkeeping disagrees with itself; refusing to interpret the "
+                            f"absence as a conflict (A16 keyed-join rule)")
                     if prior_text != text:
                         raise SystemExit(
                             f"{key}: CONFLICTING duplicate -- shard {prev['shard']} and "
@@ -200,6 +218,14 @@ def main():
         "tier2_queue": tier2,
         "provenance": provenance,
     }
+    # A16 item 4 — `keying` is MANDATORY on a keyed store artifact, and it must actually
+    # DESCRIBE the keys written next to it.  A declaration that drifts from the data is worse
+    # than none: it would certify a wrong-shaped lookup as correct.  Proven here, at write
+    # time, against the store's own keys.
+    rc.require_keying_declaration(out, a.out)
+    for probe in (list(descriptions)[:1] or list(orphans)[:1]):
+        rc.assert_key_shape(descriptions or orphans, probe,
+                            where=f"{a.out}:descriptions", keying=out["keying"])
     Path(a.out).write_text(json.dumps(out, indent=1, ensure_ascii=False))
 
     print(f"in-scope {len(descriptions)}/{len(required)}  orphans {len(orphans)}  "

@@ -146,12 +146,22 @@ def default_manifest() -> dict:
 
 # --------------------------------------------------------------------------------------
 def apply_exclusions(inv: dict, ex: rc.Exclusions) -> tuple[dict, dict]:
-    """Return (kept_groups, drop_record).  Groups/clips are removed, never silently."""
+    """Return (kept_groups, drop_record).  Groups/clips are removed, never silently.
+
+    The drop record OPENS with the drops the inventory builder already made and recorded
+    (`build_inventories._attach`, A16: role-scoped consumption hits are dropped-and-recorded
+    rather than crashing).  Carrying them here is what makes `ROOT_MANIFEST.json`'s drop
+    record the complete account of every clip that was rendered but not consumed — A16 named
+    that record the closing evidence for the 29-clip gap, and a record that silently started
+    at the inventory would show 0 of the 29.
+    """
     prompts = rc._prompts()
     stratum = inv["stratum"]
     kind = inv.get("kind", "synthetic_op")
     check_endpoints = bool(inv.get("endpoint_disjointness", True))
-    dropped_groups, dropped_clips = [], []
+    dropped_groups = []
+    dropped_clips = [dict(d, stratum=d.get("stratum", stratum))
+                     for d in (inv.get("build_drops") or {}).get("dropped_clips", [])]
     kept: dict[str, dict] = {}
 
     for gid, g in inv["groups"].items():
@@ -175,11 +185,33 @@ def apply_exclusions(inv: dict, ex: rc.Exclusions) -> tuple[dict, dict]:
             hit_reserved = sorted(set(eps) & ex.reserved_pool_clips)
             if hit_reserved:
                 creasons.append("reserved_pool_clip:" + ",".join(hit_reserved))
-            # M3 adjudication: a (clip, role) description may be excluded without the clip
-            # being dropped.  `openvid_T1MiFx98l3g_0_50to156` has a blank A-anchor and a
-            # healthy B-anchor, and occupies field B in all 10 rendered clips, so role-A is
-            # excluded and the clip itself is KEPT — a whole-clip drop would discard 10 good
-            # rendered clips to fix a defect that cannot manifest in the role it occupies.
+            # M3 adjudication (A10): a (clip, role) description may be excluded without the
+            # CLIP being dropped from the pool — defects are dispositioned at the unit of
+            # CONSUMPTION, (clip, role), not the unit of storage.
+            # `openvid_T1MiFx98l3g_0_50to156` has a blank-white A-anchor (frames 0-17 flat,
+            # YMIN=YMAX=231) and a healthy B-anchor, so role A is excluded and the clip stays
+            # in the pool for B-role use.
+            #
+            # 🔴 THE PREVIOUS VERSION OF THIS COMMENT SAID THE CLIP "occupies field B in all
+            # 10 rendered clips".  THAT IS FALSE, and believing it caused all three key-shape
+            # incidents (DOSSIER §22).  A10 checked S2b only and never enumerated the
+            # universe.  The verified per-stratum table, A16 §Q3 (universal join, run
+            # first-hand against the store's 1,403 keys):
+            #
+            #     stratum   rows scanned   field A   field B
+            #     S2a           7,990        29         0     <- 29 rows consume it as A
+            #     S2b           7,990         0        37
+            #     S1              390         0         0
+            #
+            # So this clip IS consumed in the excluded role, by 29 S2a rows, and per A16 those
+            # rows are DROPPED (at inventory build; see `build_inventories._attach`, whose
+            # record is merged into `drops` below).  The two channels of the exclusion are
+            # both still checked here, per-clip, because a clip can reach this function from
+            # an inventory built by any path.
+            #
+            # Absence claims in this lane must declare their universe, enumerated (A16 item 3):
+            # a per-universe table like the one above, so a missing cell shows up as a blank
+            # instead of an implicit zero.
             hit_caps = ex.caption_store_hits(
                 rc.caption_sources(entry, g.get("sided", "two"), kind))
             if hit_caps:
@@ -202,7 +234,7 @@ def apply_exclusions(inv: dict, ex: rc.Exclusions) -> tuple[dict, dict]:
                         creasons.append(f"zs_class_endpoint:{ep}({cls})")
             if creasons:
                 dropped_clips.append({"clip": clip, "group": gid, "stratum": stratum,
-                                      "reasons": creasons})
+                                      "reasons": creasons, "dropped_at": "assembly"})
                 continue
             clips.append(clip)
 
@@ -389,6 +421,8 @@ def main() -> None:
         invs[s] = inv
 
     # ---- exclusions -------------------------------------------------------------------
+    # A vacuous standing role exclusion is a failure, never "nothing to exclude" (A16 item 1).
+    rc.require_role_exclusions("assemble_root")
     ex = rc.load_exclusions(args.prereg_inline_ood)
     prereg_path = Path(args.prereg_inline_ood) if args.prereg_inline_ood else rc.PREREG_INLINE_OOD
     if not ex.inline_ood_ops:
@@ -681,8 +715,21 @@ def main() -> None:
                             for s, t in sorted(slug_tables.items())},
         },
         "exclusions": ex.as_record(),
+        # Every clip that was rendered but is NOT consumed, with its reason.  `dropped_at`
+        # separates the two stages: "inventory_build" drops are the standing A10 role-scoped
+        # exclusion applied at build time (A16); "assembly" drops are the holdout/reserved/
+        # eval-endpoint exclusions applied here.
         "drops": {s: {"n_groups": len(drops[s]["dropped_groups"]),
                       "n_clips": len(drops[s]["dropped_clips"]),
+                      "n_clips_at_inventory_build":
+                          sum(1 for d in drops[s]["dropped_clips"]
+                              if d.get("dropped_at") == "inventory_build"),
+                      "n_clips_at_assembly":
+                          sum(1 for d in drops[s]["dropped_clips"]
+                              if d.get("dropped_at") == "assembly"),
+                      "inventory_build_record":
+                          {k: v for k, v in (invs[s].get("build_drops") or {}).items()
+                           if k != "dropped_clips"},
                       "groups": drops[s]["dropped_groups"],
                       "clips": drops[s]["dropped_clips"]} for s in present},
         "filesystem": fs,
