@@ -1,0 +1,958 @@
+{
+ "note": "exp_079 SupCon-T PRIMARY split (advisor-locked). zs clips are probe-only, never trained.",
+ "train_manips": [
+  "identity",
+  "reverse",
+  "ease_in_g2",
+  "ease_out_g05"
+ ],
+ "heldout_manips": [
+  "warp_g3",
+  "warp_g033",
+  "warp_g15",
+  "warp_g067"
+ ],
+ "n_train_clips": 113,
+ "n_heldout_instance_clips": 26,
+ "n_heldout_class_clips": 45,
+ "n_train_classes": 26,
+ "n_heldout_classes": 10,
+ "heldout_classes": [
+  "cotton_cloud",
+  "display_transition",
+  "firelava",
+  "flying_cam_transition",
+  "live_concert",
+  "luminous_gaze",
+  "melt_transition",
+  "monstrosity",
+  "raven_transition",
+  "saint_glow"
+ ],
+ "train": [
+  {
+   "clip": "air_bending_0",
+   "cls": "air_bending",
+   "mp4": "data/processed/transitions_std121/air_bending/air_bending_0.mp4"
+  },
+  {
+   "clip": "air_bending_2",
+   "cls": "air_bending",
+   "mp4": "data/processed/transitions_std121/air_bending/air_bending_2.mp4"
+  },
+  {
+   "clip": "animalization_1",
+   "cls": "animalization",
+   "mp4": "data/processed/transitions_std121/animalization/animalization_1.mp4"
+  },
+  {
+   "clip": "animalization_3",
+   "cls": "animalization",
+   "mp4": "data/processed/transitions_std121/animalization/animalization_3.mp4"
+  },
+  {
+   "clip": "animalization_4",
+   "cls": "animalization",
+   "mp4": "data/processed/transitions_std121/animalization/animalization_4.mp4"
+  },
+  {
+   "clip": "animalization_5",
+   "cls": "animalization",
+   "mp4": "data/processed/transitions_std121/animalization/animalization_5.mp4"
+  },
+  {
+   "clip": "animalization_6",
+   "cls": "animalization",
+   "mp4": "data/processed/transitions_std121/animalization/animalization_6.mp4"
+  },
+  {
+   "clip": "color_rain_1",
+   "cls": "color_rain",
+   "mp4": "data/processed/transitions_std121/color_rain/color_rain_1.mp4"
+  },
+  {
+   "clip": "color_rain_3",
+   "cls": "color_rain",
+   "mp4": "data/processed/transitions_std121/color_rain/color_rain_3.mp4"
+  },
+  {
+   "clip": "color_rain_5",
+   "cls": "color_rain",
+   "mp4": "data/processed/transitions_std121/color_rain/color_rain_5.mp4"
+  },
+  {
+   "clip": "color_rain_6",
+   "cls": "color_rain",
+   "mp4": "data/processed/transitions_std121/color_rain/color_rain_6.mp4"
+  },
+  {
+   "clip": "color_rain_7",
+   "cls": "color_rain",
+   "mp4": "data/processed/transitions_std121/color_rain/color_rain_7.mp4"
+  },
+  {
+   "clip": "earth_element_0",
+   "cls": "earth_element",
+   "mp4": "data/processed/transitions_std121/earth_element/earth_element_0.mp4"
+  },
+  {
+   "clip": "earth_element_1",
+   "cls": "earth_element",
+   "mp4": "data/processed/transitions_std121/earth_element/earth_element_1.mp4"
+  },
+  {
+   "clip": "earth_element_2",
+   "cls": "earth_element",
+   "mp4": "data/processed/transitions_std121/earth_element/earth_element_2.mp4"
+  },
+  {
+   "clip": "earth_wave_0",
+   "cls": "earth_wave",
+   "mp4": "data/processed/transitions_std121/earth_wave/earth_wave_0.mp4"
+  },
+  {
+   "clip": "earth_wave_1",
+   "cls": "earth_wave",
+   "mp4": "data/processed/transitions_std121/earth_wave/earth_wave_1.mp4"
+  },
+  {
+   "clip": "earth_wave_2",
+   "cls": "earth_wave",
+   "mp4": "data/processed/transitions_std121/earth_wave/earth_wave_2.mp4"
+  },
+  {
+   "clip": "fire_element_0",
+   "cls": "fire_element",
+   "mp4": "data/processed/transitions_std121/fire_element/fire_element_0.mp4"
+  },
+  {
+   "clip": "fire_element_1",
+   "cls": "fire_element",
+   "mp4": "data/processed/transitions_std121/fire_element/fire_element_1.mp4"
+  },
+  {
+   "clip": "flame_transition_0",
+   "cls": "flame",
+   "mp4": "data/processed/transitions_std121/flame/flame_transition_0.mp4"
+  },
+  {
+   "clip": "gas_transformation_0",
+   "cls": "gas_transformation",
+   "mp4": "data/processed/transitions_std121/gas_transformation/gas_transformation_0.mp4"
+  },
+  {
+   "clip": "gas_transformation_1",
+   "cls": "gas_transformation",
+   "mp4": "data/processed/transitions_std121/gas_transformation/gas_transformation_1.mp4"
+  },
+  {
+   "clip": "gas_transformation_2",
+   "cls": "gas_transformation",
+   "mp4": "data/processed/transitions_std121/gas_transformation/gas_transformation_2.mp4"
+  },
+  {
+   "clip": "gas_transformation_3",
+   "cls": "gas_transformation",
+   "mp4": "data/processed/transitions_std121/gas_transformation/gas_transformation_3.mp4"
+  },
+  {
+   "clip": "gas_transformation_4",
+   "cls": "gas_transformation",
+   "mp4": "data/processed/transitions_std121/gas_transformation/gas_transformation_4.mp4"
+  },
+  {
+   "clip": "gas_transformation_5",
+   "cls": "gas_transformation",
+   "mp4": "data/processed/transitions_std121/gas_transformation/gas_transformation_5.mp4"
+  },
+  {
+   "clip": "gas_transformation_8",
+   "cls": "gas_transformation",
+   "mp4": "data/processed/transitions_std121/gas_transformation/gas_transformation_8.mp4"
+  },
+  {
+   "clip": "giant_grab_0",
+   "cls": "giant_grab",
+   "mp4": "data/processed/transitions_std121/giant_grab/giant_grab_0.mp4"
+  },
+  {
+   "clip": "giant_grab_1",
+   "cls": "giant_grab",
+   "mp4": "data/processed/transitions_std121/giant_grab/giant_grab_1.mp4"
+  },
+  {
+   "clip": "giant_grab_2",
+   "cls": "giant_grab",
+   "mp4": "data/processed/transitions_std121/giant_grab/giant_grab_2.mp4"
+  },
+  {
+   "clip": "hero_flight_0",
+   "cls": "hero_flight",
+   "mp4": "data/processed/transitions_std121/hero_flight/hero_flight_0.mp4"
+  },
+  {
+   "clip": "hero_flight_1",
+   "cls": "hero_flight",
+   "mp4": "data/processed/transitions_std121/hero_flight/hero_flight_1.mp4"
+  },
+  {
+   "clip": "hero_flight_2",
+   "cls": "hero_flight",
+   "mp4": "data/processed/transitions_std121/hero_flight/hero_flight_2.mp4"
+  },
+  {
+   "clip": "hero_flight_3",
+   "cls": "hero_flight",
+   "mp4": "data/processed/transitions_std121/hero_flight/hero_flight_3.mp4"
+  },
+  {
+   "clip": "hero_flight_4",
+   "cls": "hero_flight",
+   "mp4": "data/processed/transitions_std121/hero_flight/hero_flight_4.mp4"
+  },
+  {
+   "clip": "hero_flight_7",
+   "cls": "hero_flight",
+   "mp4": "data/processed/transitions_std121/hero_flight/hero_flight_7.mp4"
+  },
+  {
+   "clip": "hero_flight_8",
+   "cls": "hero_flight",
+   "mp4": "data/processed/transitions_std121/hero_flight/hero_flight_8.mp4"
+  },
+  {
+   "clip": "illustration_scene_0",
+   "cls": "illustration_scene",
+   "mp4": "data/processed/transitions_std121/illustration_scene/illustration_scene_0.mp4"
+  },
+  {
+   "clip": "illustration_scene_1",
+   "cls": "illustration_scene",
+   "mp4": "data/processed/transitions_std121/illustration_scene/illustration_scene_1.mp4"
+  },
+  {
+   "clip": "illustration_scene_2",
+   "cls": "illustration_scene",
+   "mp4": "data/processed/transitions_std121/illustration_scene/illustration_scene_2.mp4"
+  },
+  {
+   "clip": "illustration_scene_3",
+   "cls": "illustration_scene",
+   "mp4": "data/processed/transitions_std121/illustration_scene/illustration_scene_3.mp4"
+  },
+  {
+   "clip": "illustration_scene_5",
+   "cls": "illustration_scene",
+   "mp4": "data/processed/transitions_std121/illustration_scene/illustration_scene_5.mp4"
+  },
+  {
+   "clip": "illustration_scene_6",
+   "cls": "illustration_scene",
+   "mp4": "data/processed/transitions_std121/illustration_scene/illustration_scene_6.mp4"
+  },
+  {
+   "clip": "illustration_scene_8",
+   "cls": "illustration_scene",
+   "mp4": "data/processed/transitions_std121/illustration_scene/illustration_scene_8.mp4"
+  },
+  {
+   "clip": "money_rain_0",
+   "cls": "money_rain",
+   "mp4": "data/processed/transitions_std121/money_rain/money_rain_0.mp4"
+  },
+  {
+   "clip": "money_rain_2",
+   "cls": "money_rain",
+   "mp4": "data/processed/transitions_std121/money_rain/money_rain_2.mp4"
+  },
+  {
+   "clip": "money_rain_4",
+   "cls": "money_rain",
+   "mp4": "data/processed/transitions_std121/money_rain/money_rain_4.mp4"
+  },
+  {
+   "clip": "money_rain_6",
+   "cls": "money_rain",
+   "mp4": "data/processed/transitions_std121/money_rain/money_rain_6.mp4"
+  },
+  {
+   "clip": "mystification_2",
+   "cls": "mystification",
+   "mp4": "data/processed/transitions_std121/mystification/mystification_2.mp4"
+  },
+  {
+   "clip": "mystification_3",
+   "cls": "mystification",
+   "mp4": "data/processed/transitions_std121/mystification/mystification_3.mp4"
+  },
+  {
+   "clip": "mystification_4",
+   "cls": "mystification",
+   "mp4": "data/processed/transitions_std121/mystification/mystification_4.mp4"
+  },
+  {
+   "clip": "nature_bloom_0",
+   "cls": "nature_bloom",
+   "mp4": "data/processed/transitions_std121/nature_bloom/nature_bloom_0.mp4"
+  },
+  {
+   "clip": "plasma_explosion_0",
+   "cls": "plasma_explosion",
+   "mp4": "data/processed/transitions_std121/plasma_explosion/plasma_explosion_0.mp4"
+  },
+  {
+   "clip": "plasma_explosion_1",
+   "cls": "plasma_explosion",
+   "mp4": "data/processed/transitions_std121/plasma_explosion/plasma_explosion_1.mp4"
+  },
+  {
+   "clip": "polygon_0",
+   "cls": "polygon",
+   "mp4": "data/processed/transitions_std121/polygon/polygon_0.mp4"
+  },
+  {
+   "clip": "polygon_1",
+   "cls": "polygon",
+   "mp4": "data/processed/transitions_std121/polygon/polygon_1.mp4"
+  },
+  {
+   "clip": "polygon_2",
+   "cls": "polygon",
+   "mp4": "data/processed/transitions_std121/polygon/polygon_2.mp4"
+  },
+  {
+   "clip": "polygon_3",
+   "cls": "polygon",
+   "mp4": "data/processed/transitions_std121/polygon/polygon_3.mp4"
+  },
+  {
+   "clip": "polygon_5",
+   "cls": "polygon",
+   "mp4": "data/processed/transitions_std121/polygon/polygon_5.mp4"
+  },
+  {
+   "clip": "polygon_6",
+   "cls": "polygon",
+   "mp4": "data/processed/transitions_std121/polygon/polygon_6.mp4"
+  },
+  {
+   "clip": "portal_0",
+   "cls": "portal",
+   "mp4": "data/processed/transitions_std121/portal/portal_0.mp4"
+  },
+  {
+   "clip": "portal_10",
+   "cls": "portal",
+   "mp4": "data/processed/transitions_std121/portal/portal_10.mp4"
+  },
+  {
+   "clip": "portal_11",
+   "cls": "portal",
+   "mp4": "data/processed/transitions_std121/portal/portal_11.mp4"
+  },
+  {
+   "clip": "portal_12",
+   "cls": "portal",
+   "mp4": "data/processed/transitions_std121/portal/portal_12.mp4"
+  },
+  {
+   "clip": "portal_13",
+   "cls": "portal",
+   "mp4": "data/processed/transitions_std121/portal/portal_13.mp4"
+  },
+  {
+   "clip": "portal_2",
+   "cls": "portal",
+   "mp4": "data/processed/transitions_std121/portal/portal_2.mp4"
+  },
+  {
+   "clip": "portal_5",
+   "cls": "portal",
+   "mp4": "data/processed/transitions_std121/portal/portal_5.mp4"
+  },
+  {
+   "clip": "portal_6",
+   "cls": "portal",
+   "mp4": "data/processed/transitions_std121/portal/portal_6.mp4"
+  },
+  {
+   "clip": "portal_7",
+   "cls": "portal",
+   "mp4": "data/processed/transitions_std121/portal/portal_7.mp4"
+  },
+  {
+   "clip": "portal_8",
+   "cls": "portal",
+   "mp4": "data/processed/transitions_std121/portal/portal_8.mp4"
+  },
+  {
+   "clip": "action_run_setonfire_6",
+   "cls": "run_set_on_fire",
+   "mp4": "data/processed/transitions_std121/run_set_on_fire/action_run_setonfire_6.mp4"
+  },
+  {
+   "clip": "sakura_petals_0",
+   "cls": "sakura_petals",
+   "mp4": "data/processed/transitions_std121/sakura_petals/sakura_petals_0.mp4"
+  },
+  {
+   "clip": "shadow_0",
+   "cls": "shadow",
+   "mp4": "data/processed/transitions_std121/shadow/shadow_0.mp4"
+  },
+  {
+   "clip": "shadow_1",
+   "cls": "shadow",
+   "mp4": "data/processed/transitions_std121/shadow/shadow_1.mp4"
+  },
+  {
+   "clip": "shadow_11",
+   "cls": "shadow",
+   "mp4": "data/processed/transitions_std121/shadow/shadow_11.mp4"
+  },
+  {
+   "clip": "shadow_12",
+   "cls": "shadow",
+   "mp4": "data/processed/transitions_std121/shadow/shadow_12.mp4"
+  },
+  {
+   "clip": "shadow_13",
+   "cls": "shadow",
+   "mp4": "data/processed/transitions_std121/shadow/shadow_13.mp4"
+  },
+  {
+   "clip": "shadow_14",
+   "cls": "shadow",
+   "mp4": "data/processed/transitions_std121/shadow/shadow_14.mp4"
+  },
+  {
+   "clip": "shadow_2",
+   "cls": "shadow",
+   "mp4": "data/processed/transitions_std121/shadow/shadow_2.mp4"
+  },
+  {
+   "clip": "shadow_4",
+   "cls": "shadow",
+   "mp4": "data/processed/transitions_std121/shadow/shadow_4.mp4"
+  },
+  {
+   "clip": "shadow_5",
+   "cls": "shadow",
+   "mp4": "data/processed/transitions_std121/shadow/shadow_5.mp4"
+  },
+  {
+   "clip": "shadow_6",
+   "cls": "shadow",
+   "mp4": "data/processed/transitions_std121/shadow/shadow_6.mp4"
+  },
+  {
+   "clip": "shadow_7",
+   "cls": "shadow",
+   "mp4": "data/processed/transitions_std121/shadow/shadow_7.mp4"
+  },
+  {
+   "clip": "shadow_8",
+   "cls": "shadow",
+   "mp4": "data/processed/transitions_std121/shadow/shadow_8.mp4"
+  },
+  {
+   "clip": "shadow_smoke_1",
+   "cls": "shadow_smoke",
+   "mp4": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_1.mp4"
+  },
+  {
+   "clip": "shadow_smoke_2",
+   "cls": "shadow_smoke",
+   "mp4": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_2.mp4"
+  },
+  {
+   "clip": "shadow_smoke_3",
+   "cls": "shadow_smoke",
+   "mp4": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_3.mp4"
+  },
+  {
+   "clip": "shadow_smoke_4",
+   "cls": "shadow_smoke",
+   "mp4": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_4.mp4"
+  },
+  {
+   "clip": "shadow_smoke_5",
+   "cls": "shadow_smoke",
+   "mp4": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_5.mp4"
+  },
+  {
+   "clip": "shadow_smoke_6",
+   "cls": "shadow_smoke",
+   "mp4": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_6.mp4"
+  },
+  {
+   "clip": "shadow_smoke_8",
+   "cls": "shadow_smoke",
+   "mp4": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_8.mp4"
+  },
+  {
+   "clip": "super_fast_run_1",
+   "cls": "super_fast_run",
+   "mp4": "data/processed/transitions_std121/super_fast_run/super_fast_run_1.mp4"
+  },
+  {
+   "clip": "super_fast_run_10",
+   "cls": "super_fast_run",
+   "mp4": "data/processed/transitions_std121/super_fast_run/super_fast_run_10.mp4"
+  },
+  {
+   "clip": "super_fast_run_12",
+   "cls": "super_fast_run",
+   "mp4": "data/processed/transitions_std121/super_fast_run/super_fast_run_12.mp4"
+  },
+  {
+   "clip": "super_fast_run_2",
+   "cls": "super_fast_run",
+   "mp4": "data/processed/transitions_std121/super_fast_run/super_fast_run_2.mp4"
+  },
+  {
+   "clip": "super_fast_run_4",
+   "cls": "super_fast_run",
+   "mp4": "data/processed/transitions_std121/super_fast_run/super_fast_run_4.mp4"
+  },
+  {
+   "clip": "super_fast_run_5",
+   "cls": "super_fast_run",
+   "mp4": "data/processed/transitions_std121/super_fast_run/super_fast_run_5.mp4"
+  },
+  {
+   "clip": "super_fast_run_6",
+   "cls": "super_fast_run",
+   "mp4": "data/processed/transitions_std121/super_fast_run/super_fast_run_6.mp4"
+  },
+  {
+   "clip": "super_fast_run_7",
+   "cls": "super_fast_run",
+   "mp4": "data/processed/transitions_std121/super_fast_run/super_fast_run_7.mp4"
+  },
+  {
+   "clip": "super_fast_run_8",
+   "cls": "super_fast_run",
+   "mp4": "data/processed/transitions_std121/super_fast_run/super_fast_run_8.mp4"
+  },
+  {
+   "clip": "water_bending_0",
+   "cls": "water_bending",
+   "mp4": "data/processed/transitions_std121/water_bending/water_bending_0.mp4"
+  },
+  {
+   "clip": "water_bending_1",
+   "cls": "water_bending",
+   "mp4": "data/processed/transitions_std121/water_bending/water_bending_1.mp4"
+  },
+  {
+   "clip": "water_element_0",
+   "cls": "water_element",
+   "mp4": "data/processed/transitions_std121/water_element/water_element_0.mp4"
+  },
+  {
+   "clip": "water_element_1",
+   "cls": "water_element",
+   "mp4": "data/processed/transitions_std121/water_element/water_element_1.mp4"
+  },
+  {
+   "clip": "water_element_2",
+   "cls": "water_element",
+   "mp4": "data/processed/transitions_std121/water_element/water_element_2.mp4"
+  },
+  {
+   "clip": "wireframe_1",
+   "cls": "wireframe",
+   "mp4": "data/processed/transitions_std121/wireframe/wireframe_1.mp4"
+  },
+  {
+   "clip": "wireframe_2",
+   "cls": "wireframe",
+   "mp4": "data/processed/transitions_std121/wireframe/wireframe_2.mp4"
+  },
+  {
+   "clip": "wireframe_3",
+   "cls": "wireframe",
+   "mp4": "data/processed/transitions_std121/wireframe/wireframe_3.mp4"
+  },
+  {
+   "clip": "wireframe_4",
+   "cls": "wireframe",
+   "mp4": "data/processed/transitions_std121/wireframe/wireframe_4.mp4"
+  },
+  {
+   "clip": "wireframe_5",
+   "cls": "wireframe",
+   "mp4": "data/processed/transitions_std121/wireframe/wireframe_5.mp4"
+  },
+  {
+   "clip": "wireframe_6",
+   "cls": "wireframe",
+   "mp4": "data/processed/transitions_std121/wireframe/wireframe_6.mp4"
+  },
+  {
+   "clip": "wonderland_0",
+   "cls": "wonderland",
+   "mp4": "data/processed/transitions_std121/wonderland/wonderland_0.mp4"
+  }
+ ],
+ "heldout_instance": [
+  {
+   "clip": "air_bending_3",
+   "cls": "air_bending",
+   "mp4": "data/processed/transitions_std121/air_bending/air_bending_3.mp4"
+  },
+  {
+   "clip": "animalization_7",
+   "cls": "animalization",
+   "mp4": "data/processed/transitions_std121/animalization/animalization_7.mp4"
+  },
+  {
+   "clip": "color_rain_8",
+   "cls": "color_rain",
+   "mp4": "data/processed/transitions_std121/color_rain/color_rain_8.mp4"
+  },
+  {
+   "clip": "earth_element_3",
+   "cls": "earth_element",
+   "mp4": "data/processed/transitions_std121/earth_element/earth_element_3.mp4"
+  },
+  {
+   "clip": "earth_wave_4",
+   "cls": "earth_wave",
+   "mp4": "data/processed/transitions_std121/earth_wave/earth_wave_4.mp4"
+  },
+  {
+   "clip": "fire_element_4",
+   "cls": "fire_element",
+   "mp4": "data/processed/transitions_std121/fire_element/fire_element_4.mp4"
+  },
+  {
+   "clip": "flame_transition_1",
+   "cls": "flame",
+   "mp4": "data/processed/transitions_std121/flame/flame_transition_1.mp4"
+  },
+  {
+   "clip": "gas_transformation_9",
+   "cls": "gas_transformation",
+   "mp4": "data/processed/transitions_std121/gas_transformation/gas_transformation_9.mp4"
+  },
+  {
+   "clip": "giant_grab_4",
+   "cls": "giant_grab",
+   "mp4": "data/processed/transitions_std121/giant_grab/giant_grab_4.mp4"
+  },
+  {
+   "clip": "hero_flight_9",
+   "cls": "hero_flight",
+   "mp4": "data/processed/transitions_std121/hero_flight/hero_flight_9.mp4"
+  },
+  {
+   "clip": "illustration_scene_9",
+   "cls": "illustration_scene",
+   "mp4": "data/processed/transitions_std121/illustration_scene/illustration_scene_9.mp4"
+  },
+  {
+   "clip": "money_rain_7",
+   "cls": "money_rain",
+   "mp4": "data/processed/transitions_std121/money_rain/money_rain_7.mp4"
+  },
+  {
+   "clip": "mystification_5",
+   "cls": "mystification",
+   "mp4": "data/processed/transitions_std121/mystification/mystification_5.mp4"
+  },
+  {
+   "clip": "nature_bloom_2",
+   "cls": "nature_bloom",
+   "mp4": "data/processed/transitions_std121/nature_bloom/nature_bloom_2.mp4"
+  },
+  {
+   "clip": "plasma_explosion_4",
+   "cls": "plasma_explosion",
+   "mp4": "data/processed/transitions_std121/plasma_explosion/plasma_explosion_4.mp4"
+  },
+  {
+   "clip": "polygon_7",
+   "cls": "polygon",
+   "mp4": "data/processed/transitions_std121/polygon/polygon_7.mp4"
+  },
+  {
+   "clip": "portal_9",
+   "cls": "portal",
+   "mp4": "data/processed/transitions_std121/portal/portal_9.mp4"
+  },
+  {
+   "clip": "action_run_setonfire_7",
+   "cls": "run_set_on_fire",
+   "mp4": "data/processed/transitions_std121/run_set_on_fire/action_run_setonfire_7.mp4"
+  },
+  {
+   "clip": "sakura_petals_2",
+   "cls": "sakura_petals",
+   "mp4": "data/processed/transitions_std121/sakura_petals/sakura_petals_2.mp4"
+  },
+  {
+   "clip": "shadow_9",
+   "cls": "shadow",
+   "mp4": "data/processed/transitions_std121/shadow/shadow_9.mp4"
+  },
+  {
+   "clip": "shadow_smoke_9",
+   "cls": "shadow_smoke",
+   "mp4": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_9.mp4"
+  },
+  {
+   "clip": "super_fast_run_9",
+   "cls": "super_fast_run",
+   "mp4": "data/processed/transitions_std121/super_fast_run/super_fast_run_9.mp4"
+  },
+  {
+   "clip": "water_bending_2",
+   "cls": "water_bending",
+   "mp4": "data/processed/transitions_std121/water_bending/water_bending_2.mp4"
+  },
+  {
+   "clip": "water_element_5",
+   "cls": "water_element",
+   "mp4": "data/processed/transitions_std121/water_element/water_element_5.mp4"
+  },
+  {
+   "clip": "wireframe_8",
+   "cls": "wireframe",
+   "mp4": "data/processed/transitions_std121/wireframe/wireframe_8.mp4"
+  },
+  {
+   "clip": "wonderland_2",
+   "cls": "wonderland",
+   "mp4": "data/processed/transitions_std121/wonderland/wonderland_2.mp4"
+  }
+ ],
+ "heldout_class": [
+  {
+   "clip": "cotton_cloud_0",
+   "cls": "cotton_cloud",
+   "mp4": "data/processed/transitions_std121/cotton_cloud/cotton_cloud_0.mp4"
+  },
+  {
+   "clip": "cotton_cloud_1",
+   "cls": "cotton_cloud",
+   "mp4": "data/processed/transitions_std121/cotton_cloud/cotton_cloud_1.mp4"
+  },
+  {
+   "clip": "cotton_cloud_2",
+   "cls": "cotton_cloud",
+   "mp4": "data/processed/transitions_std121/cotton_cloud/cotton_cloud_2.mp4"
+  },
+  {
+   "clip": "cotton_cloud_4",
+   "cls": "cotton_cloud",
+   "mp4": "data/processed/transitions_std121/cotton_cloud/cotton_cloud_4.mp4"
+  },
+  {
+   "clip": "cotton_cloud_6",
+   "cls": "cotton_cloud",
+   "mp4": "data/processed/transitions_std121/cotton_cloud/cotton_cloud_6.mp4"
+  },
+  {
+   "clip": "cotton_cloud_8",
+   "cls": "cotton_cloud",
+   "mp4": "data/processed/transitions_std121/cotton_cloud/cotton_cloud_8.mp4"
+  },
+  {
+   "clip": "display_transition_1",
+   "cls": "display_transition",
+   "mp4": "data/processed/transitions_std121/display_transition/display_transition_1.mp4"
+  },
+  {
+   "clip": "display_transition_2",
+   "cls": "display_transition",
+   "mp4": "data/processed/transitions_std121/display_transition/display_transition_2.mp4"
+  },
+  {
+   "clip": "display_transition_3",
+   "cls": "display_transition",
+   "mp4": "data/processed/transitions_std121/display_transition/display_transition_3.mp4"
+  },
+  {
+   "clip": "firelava_0",
+   "cls": "firelava",
+   "mp4": "data/processed/transitions_std121/firelava/firelava_0.mp4"
+  },
+  {
+   "clip": "firelava_1",
+   "cls": "firelava",
+   "mp4": "data/processed/transitions_std121/firelava/firelava_1.mp4"
+  },
+  {
+   "clip": "firelava_2",
+   "cls": "firelava",
+   "mp4": "data/processed/transitions_std121/firelava/firelava_2.mp4"
+  },
+  {
+   "clip": "firelava_3",
+   "cls": "firelava",
+   "mp4": "data/processed/transitions_std121/firelava/firelava_3.mp4"
+  },
+  {
+   "clip": "firelava_4",
+   "cls": "firelava",
+   "mp4": "data/processed/transitions_std121/firelava/firelava_4.mp4"
+  },
+  {
+   "clip": "firelava_5",
+   "cls": "firelava",
+   "mp4": "data/processed/transitions_std121/firelava/firelava_5.mp4"
+  },
+  {
+   "clip": "flying_cam_transition_1",
+   "cls": "flying_cam_transition",
+   "mp4": "data/processed/transitions_std121/flying_cam_transition/flying_cam_transition_1.mp4"
+  },
+  {
+   "clip": "flying_cam_transition_2",
+   "cls": "flying_cam_transition",
+   "mp4": "data/processed/transitions_std121/flying_cam_transition/flying_cam_transition_2.mp4"
+  },
+  {
+   "clip": "flying_cam_transition_3",
+   "cls": "flying_cam_transition",
+   "mp4": "data/processed/transitions_std121/flying_cam_transition/flying_cam_transition_3.mp4"
+  },
+  {
+   "clip": "flying_cam_transition_4",
+   "cls": "flying_cam_transition",
+   "mp4": "data/processed/transitions_std121/flying_cam_transition/flying_cam_transition_4.mp4"
+  },
+  {
+   "clip": "live_concert_0",
+   "cls": "live_concert",
+   "mp4": "data/processed/transitions_std121/live_concert/live_concert_0.mp4"
+  },
+  {
+   "clip": "live_concert_1",
+   "cls": "live_concert",
+   "mp4": "data/processed/transitions_std121/live_concert/live_concert_1.mp4"
+  },
+  {
+   "clip": "live_concert_3",
+   "cls": "live_concert",
+   "mp4": "data/processed/transitions_std121/live_concert/live_concert_3.mp4"
+  },
+  {
+   "clip": "live_concert_4",
+   "cls": "live_concert",
+   "mp4": "data/processed/transitions_std121/live_concert/live_concert_4.mp4"
+  },
+  {
+   "clip": "live_concert_5",
+   "cls": "live_concert",
+   "mp4": "data/processed/transitions_std121/live_concert/live_concert_5.mp4"
+  },
+  {
+   "clip": "live_concert_6",
+   "cls": "live_concert",
+   "mp4": "data/processed/transitions_std121/live_concert/live_concert_6.mp4"
+  },
+  {
+   "clip": "live_concert_7",
+   "cls": "live_concert",
+   "mp4": "data/processed/transitions_std121/live_concert/live_concert_7.mp4"
+  },
+  {
+   "clip": "luminous_gaze_0",
+   "cls": "luminous_gaze",
+   "mp4": "data/processed/transitions_std121/luminous_gaze/luminous_gaze_0.mp4"
+  },
+  {
+   "clip": "luminous_gaze_1",
+   "cls": "luminous_gaze",
+   "mp4": "data/processed/transitions_std121/luminous_gaze/luminous_gaze_1.mp4"
+  },
+  {
+   "clip": "luminous_gaze_2",
+   "cls": "luminous_gaze",
+   "mp4": "data/processed/transitions_std121/luminous_gaze/luminous_gaze_2.mp4"
+  },
+  {
+   "clip": "luminous_gaze_3",
+   "cls": "luminous_gaze",
+   "mp4": "data/processed/transitions_std121/luminous_gaze/luminous_gaze_3.mp4"
+  },
+  {
+   "clip": "melt_transition_1",
+   "cls": "melt_transition",
+   "mp4": "data/processed/transitions_std121/melt_transition/melt_transition_1.mp4"
+  },
+  {
+   "clip": "melt_transition_2",
+   "cls": "melt_transition",
+   "mp4": "data/processed/transitions_std121/melt_transition/melt_transition_2.mp4"
+  },
+  {
+   "clip": "melt_transition_3",
+   "cls": "melt_transition",
+   "mp4": "data/processed/transitions_std121/melt_transition/melt_transition_3.mp4"
+  },
+  {
+   "clip": "melt_transition_4",
+   "cls": "melt_transition",
+   "mp4": "data/processed/transitions_std121/melt_transition/melt_transition_4.mp4"
+  },
+  {
+   "clip": "monstrosity_0",
+   "cls": "monstrosity",
+   "mp4": "data/processed/transitions_std121/monstrosity/monstrosity_0.mp4"
+  },
+  {
+   "clip": "monstrosity_1",
+   "cls": "monstrosity",
+   "mp4": "data/processed/transitions_std121/monstrosity/monstrosity_1.mp4"
+  },
+  {
+   "clip": "monstrosity_2",
+   "cls": "monstrosity",
+   "mp4": "data/processed/transitions_std121/monstrosity/monstrosity_2.mp4"
+  },
+  {
+   "clip": "raven_transition_0",
+   "cls": "raven_transition",
+   "mp4": "data/processed/transitions_std121/raven_transition/raven_transition_0.mp4"
+  },
+  {
+   "clip": "raven_transition_1",
+   "cls": "raven_transition",
+   "mp4": "data/processed/transitions_std121/raven_transition/raven_transition_1.mp4"
+  },
+  {
+   "clip": "raven_transition_2",
+   "cls": "raven_transition",
+   "mp4": "data/processed/transitions_std121/raven_transition/raven_transition_2.mp4"
+  },
+  {
+   "clip": "raven_transition_3",
+   "cls": "raven_transition",
+   "mp4": "data/processed/transitions_std121/raven_transition/raven_transition_3.mp4"
+  },
+  {
+   "clip": "saint_glow_0",
+   "cls": "saint_glow",
+   "mp4": "data/processed/transitions_std121/saint_glow/saint_glow_0.mp4"
+  },
+  {
+   "clip": "saint_glow_1",
+   "cls": "saint_glow",
+   "mp4": "data/processed/transitions_std121/saint_glow/saint_glow_1.mp4"
+  },
+  {
+   "clip": "saint_glow_2",
+   "cls": "saint_glow",
+   "mp4": "data/processed/transitions_std121/saint_glow/saint_glow_2.mp4"
+  },
+  {
+   "clip": "saint_glow_3",
+   "cls": "saint_glow",
+   "mp4": "data/processed/transitions_std121/saint_glow/saint_glow_3.mp4"
+  }
+ ]
+}

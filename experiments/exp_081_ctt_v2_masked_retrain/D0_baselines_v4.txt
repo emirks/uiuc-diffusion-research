@@ -1,0 +1,20 @@
+
+cell               n  %type   level %  Δpp vs base  donors +  verdict
+------------------------------------------------------------------------------
+G-fit             13   same     86.3%       -12.0     4/13    weak
+G-memo-probe      13   same     83.1%       -15.3     1/13    weak
+G-ref-control     13   same     69.0%        +4.1    10/13    weak
+G-unseen-cross    26  proxy (  72.9%)       -27.2     0/13    weak
+G-unseen-foreign  26  proxy (  56.8%)       -42.1     0/13    weak
+G-unseen-same     13   same     88.7%       -11.2     2/13    weak
+G-zs-cross        20  proxy (  72.8%)       -30.3     0/10    weak
+G-zs-foreign      20  proxy (  44.3%)       -55.2     0/10    weak
+G-zs-same          8   same     90.8%       -14.1     1/8     weak
+SP-cross          22  proxy (  94.9%)       +39.2    11/11    positive
+SP-fit            11   same    100.4%       +39.5    11/11    positive
+SP-foreign        22  proxy (  63.1%)       +18.9     8/11    weak
+SP-same           22   same     99.7%       +40.0    11/11    positive
+text_floor        12   same     67.4%        +nan     0/0     —
+
+%_same = fair, cross-class comparable, headline-eligible.
+(%_proxy) = content-capped level, ranking only — the CLAIM for those cells is Δpp.

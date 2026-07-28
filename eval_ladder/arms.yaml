@@ -5,7 +5,10 @@
 # (fixed-ckpt selection, pre-registered — no post-hoc best-checkpoint picking).
 
 token: sksz            # transition-slot token; probe-gated (fallback qvtr). Set by train/token_verdict.py.
-seeds: [42, 43]        # >=2 seeds per eval item
+seeds: [42, 43, 44, 45]   # >=2 seeds per eval item. 44/45 added by exp_078 for the
+                          # advisor-specified NOISE FLOOR: two independent proxy evals of
+                          # ic_gen@5000 ({42,43} vs {44,45}) give the per-cell SD that the
+                          # promote bar must be >=2x. Claim-bearing runs still use 42/43.
 resolution: [480, 640, 121]
 inference: {steps: 30, guidance_scale: 4.0, stg_scale: 1.0, stg_blocks: [29], stg_mode: stg_v}
 
@@ -68,4 +71,32 @@ arms:
     note: IC-LoRA; the reference clip carries the transition. Trained on held-in classes only.
 
 # adapter path template for trained arms (filled by run_gen.py)
+  # ---- exp_078 operator-token bottleneck (campaign `bneck`). Trains outside the ladder2 tree,
+  # so it carries its own adapter_template. `bottleneck` tells run_gen to rebuild the encoder
+  # from the same checkpoint file and route the demo through it.
+  b1:
+    kind: generalist
+    adapter: bneck
+    targets: attn_ffn
+    step: 5000
+    adapter_template: outputs/training/bneck/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck: {token_shape: [6, 4, 3], width: 512, depth: 2, num_heads: 8,
+                 prefix_latent_frames: 2, suffix_latent_frames: 1}
+
+  b1r:
+    kind: generalist
+    adapter: bneck
+    targets: attn_ffn
+    step: 5000
+    adapter_template: outputs/training/bneck/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck: {token_shape: [6, 4, 3], width: 512, depth: 2, num_heads: 8,
+                 prefix_latent_frames: 2, suffix_latent_frames: 1, skip_scale: 1.68}
+  m1lite:
+    kind: generalist
+    adapter: bneck
+    targets: attn_ffn
+    step: 5000
+    ref_downscale: 5
+    adapter_template: outputs/training/bneck/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
+

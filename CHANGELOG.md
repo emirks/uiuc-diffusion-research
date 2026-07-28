@@ -1,3 +1,69 @@
+## 2026-07-27
+
+- **20:05** — HumanVid endpoint screening COMPLETE (job 9680734, 1h19m): 3,000 candidates →
+  85% loose pass → **1,499 accepted** std121 clips (769 horizontal / 730 vertical; 0 cut
+  rejects, 1 dup vs the 227 bank) at `data/processed/humanvid_bank/`. The 19k-clip screen was
+  owner-vetoed as oversized; the capped rerun uses a deterministic-shuffle `--limit` that
+  resumes from cached detections if raised. Mix re-ratification advisor round relaunched (the
+  first round's output was lost to a session restart) with updated premises: baseline
+  `cond-bleed-fix` trainer (no mask), HumanVid cleared + measured yields.
+
+- **13:16** — ctt_v2 fresh-rebuild kickoff after owner rulings: dataset pipeline retired for
+  a clean redo (retire-commit; history kept), the retrain moves to the **baseline trainer
+  `LTX-2-cond-bleed-fix`** (bneck parked → this round is a pure dataset intervention), and
+  **HumanVid was owner-cleared** for use after the Pexels ToS flag. Built a fresh screening
+  pipeline `scripts/ctt_v2/humanvid_bank/` (same QC contract as the blessed endpoint bank;
+  center-window standardize, tightened+diversity-capped selection, dedup vs the 227 bank) —
+  18,702 candidates collected, screening job 9680692 on L40S. Measured: all refVFX I2V-LoRA
+  outputs are uniformly 832×464·16fps·33f (33 ≡ 1 mod 8 → zero-cut reshape possible; trainer
+  supports per-sample fps natively). Gemini key stored at `$LAB/secrets/` (CLAUDE.md Secrets
+  section); stale Gemma capbank job cancelled. Advisor round 7 (mix re-ratification) launched.
+
+## 2026-07-25
+
+- **09:50** — one-way reference attention now ships as a **two-call split**, not a dense mask.
+  The benchmark rejected the dense path against its pre-registered ≤30% bar: fwd+bwd attention
+  at the real T=9600 measured 26.97 ms unmasked / 82.49 ms dense (**3.06x**) / 21.79 ms split
+  (**0.81x** — faster than the bidirectional baseline, since the reference-over-target block is
+  never computed). This is the campaign's first change to `ltx-core`, so jobs must now put
+  `ltx-core/src` on PYTHONPATH; `job_train.sbatch` does, with a guard asserting the bneck
+  `ltx_core` actually loaded — a silent fallback would train bidirectionally while logging
+  `one_way`. 19/19 gates pass, including split-vs-dense numerical equivalence in fp32 and bf16
+  across both sequence layouts.
+- **09:50** — S2 delivered by the parallel agent (8,410 clips / 809 exact ops, blind audit PASS
+  at 2 BAD of 64). **S3 dropped** by their pre-committed tree — 62% defective, and the defect is
+  inpaint plausibility, a semantic property no geometric statistic separated. Our mix becomes
+  S0+S2+S4.
+- **09:50** — S4 reinstated by owner and re-scoped to one-sided (`{S1}. sksz.`). Measured that
+  rewriting refVFX prompts yields leak-free S1 for 96.3% of rows but at p50 8 words against the
+  corpus's 34 — nearly disjoint, so caption length alone would flag the stratum. Switched to
+  frame-based captioning; 2,000 filmstrips extracted (0 failures), pilot scored 25/25 in range
+  with zero violations. Paused pending a Gemini key.
+
+
+- **02:38** — exp_081 scaffolded: the ctt_v2 masked retrain. Advisor round 6 ruled the mix is
+  S0+S2+S3 (S4/refVFX **deferred**, not killed — it adds ~4% to the operator count while
+  importing either a tempo-rewrite or an unvalidated mixed-length trainer path), S0 at 15% of
+  the sampling stream, 10,000 steps, primary checkpoint pre-committed as the final one.
+- **02:38** — **D0 resolved as already satisfied.** All four headline cells are fully scored on
+  the v4 lane instrument (zero missing rows); "72.9 (proxy)" meant `%_proxy` (content-capped,
+  claim channel = Δpp), not uncertified. Frozen record in
+  `experiments/exp_081_ctt_v2_masked_retrain/D0_baselines_v4.txt`, and the previously
+  unrecorded **G-zs-cross = 72.8%** now has a baseline. Pass bars pre-registered.
+- **02:38** — one-way reference attention mask implemented in the private `$LAB/LTX-2-bneck`
+  trainer (local-only). Found the defect is on BOTH paths, not just inference, and found a
+  SECOND silent defect: `ValidationRunner._modality_from_latent_state` dropped
+  `state.attention_mask` entirely, which would have made T5's reference-strength sweep a
+  silent null. 13/13 trainer tests green, including a train==inference mask-equality gate
+  (the trainer lays the sequence out `[ref|noisy]`, inference `[noisy|ref]`).
+- **02:38** — measured: the 19B ic_gen training config **OOMs on a 44 GiB L40S in its
+  bidirectional baseline form**, so H100-class memory is required for the retrain; this is not
+  a cost of the mask.
+
+- `02:15` **exp_080 validated + S2/S3 hand-off spec written.** Fork of exp_076 to full 121-frame 3D transitions over two REAL playing streams (per-frame temporally-stabilised Depth-Anything, D2 timing contract, pure phases byte-identical, asserted). run_0001, 31 clips on one L40S: join ratio median 0.94 / p90 1.15 / max 1.86 (bar ≤2.0), parallax 3.31, ~11 s/clip. Owner verdict on samples: positive; ruled contents must come from the dsx endpoint bank (read-only, tightened 227) — corpus clips leak class manner into content. Generation itself moves elsewhere (owner call): S2 (800 ops × 10 contents = 8,000 clips) + S3 (300 × 6 = 1,800) spec'd in $LAB/misc/ctt_v2/DATA_PLAN_PROPOSAL.md.
+
+- `00:04` **ctt_v2: external-dataset downloads started** (owner call — go straight to the dataset/retraining branch). `scripts/ctt_v2/download_small.sbatch` pulls VFXMaster (8ruceLi/VFXMaster_datasets, 6.6 GB, 9,209 videos / 241 effect classes, Apache-2.0) and the refVFX I2V_LoRA shard (12.3 GB, 6,995 LoRA-generated pairs, CC-BY-4.0); `download_refvfx_code.sbatch` pulls the refVFX code_based_edits subset (16 shards, 374.7 GB, 2,736 code effect types x ~50 base videos — the same-operator × different-content diagonal), submitted as an afterany self-resume chain on the cluster-wide `secondary` CPU partition. Everything lands in `data/raw/{refvfx,vfxmaster}` (gitignored). refVFX neural_v2v (79 GB) deliberately skipped. Fixed a first-submit failure: `set -u` before sourcing `/etc/bashrc` (unbound BASHRCSOURCED) killed the jobs in 5 s; `-u` now enabled only after env activation.
+
 ## 2026-07-23
 - `16:05` **ladder2 merged to main.** v3.0.0 TODO recorded in eval_ladder/README.md (owner directive): CTT tasks — (endpoints, target transition) as the atomic unit, every task generated on all four tiers (prompt / prompt+endpoints / specialist / generalist) from one shared roster; enumerate the full task space, then pre-register a budgeted subspace with balanced per-donor/per-cell n. Branch `ladder2` (63 commits) merged --no-ff into main and kept as the record.
 - `15:55` **eval_ladder infra complete: 3×3 viewer + VERSIONING.md.** All queued jobs stopped (owner call). Viewer rebuilt to the owner's ontology — SEEN/UNSEEN/ZERO-SHOT × SAME/CROSS/FOREIGN with specialists mapped in by endpoint novelty (SP-fit→seen, other SP-*→unseen), multi-select cells/rows/columns, stats+headline live-update, collapsible+sortable metric tables, one horizontal row per card, conditioning bar + reference ribbon per output, IC demos moved into the INPUTS band, per-tier tints, synced-restart, autoplay. 140 unscored-but-rendered videos now visible with a badge. `VERSIONING.md`: design semver bumps only with SPEC; run records append-only, **newest VALID record = current result**; frozen per-run viewers via `build.py --freeze` (v2.0.0-R1 frozen), stable latest at outputs/reports/ladder_viewer/index.html. Suitability stated honestly in README: 39/177 tasks carry both specialist and generalist on one endpoint (independent rosters); next design needs one shared endpoint roster + the 194-video clean-baseline lane (stopped today before completion).

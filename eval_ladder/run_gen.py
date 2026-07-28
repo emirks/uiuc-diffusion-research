@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -51,10 +52,14 @@ GEMMA = LAB / "cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
 STD = REPO_ROOT / "data/processed/transitions_std121"
 REGISTRY = HERE / "registry.jsonl"
 ARMS = HERE / "arms.yaml"
-OUT_ROOT = REPO_ROOT / "outputs/videos/ladder2"
+# exp_078: campaign-private output root. The default writes into the SHARED ladder2 video
+# tree, which the parallel dataset-expansion campaign reads; the bottleneck campaign points
+# this elsewhere so it can never add files under paths another campaign is scoring.
+OUT_ROOT = Path(os.environ.get("LADDER_OUT_ROOT", REPO_ROOT / "outputs/videos/ladder2"))
 
 
 def build_sample(row: dict) -> ValidationSample:
+    # ref_downscale set per-arm in main() (m1lite uses 5 for the coarse 128x96 reference)
     """Conditioning is a pure function of the row — the same rule the mask uses at eval."""
     conds = []
     if row.get("conditioning") != "none" and row["endpoint"] is not None:
@@ -67,7 +72,8 @@ def build_sample(row: dict) -> ValidationSample:
         # authoritative clip -> class (clip names do NOT reliably encode the class)
         ref_path = STD / prompts.clip_class(row["reference"]) / f"{row['reference']}.mp4"
         assert ref_path.exists(), f"reference clip not found: {ref_path}"
-        conds.append(ReferenceConditionConfig(video=str(ref_path), downscale_factor=1,
+        conds.append(ReferenceConditionConfig(video=str(ref_path),
+                                              downscale_factor=build_sample.ref_downscale,
                                               temporal_scale_factor=1, include_in_output=False))
     return ValidationSample(prompt=row["prompt"], conditions=conds)
 
@@ -92,7 +98,8 @@ def resolve_adapter(arm: str, arms_cfg: dict, step: int | None = None) -> tuple[
     spec = arms_cfg["arms"][arm]
     if spec.get("adapter", "unset") is None or spec["kind"] in ("base", "text_floor"):
         return None, []
-    path = REPO_ROOT / arms_cfg["adapter_template"].format(arm=arm, step=step or spec["step"])
+    template = spec.get("adapter_template", arms_cfg["adapter_template"])
+    path = REPO_ROOT / template.format(arm=arm, step=step or spec["step"])
     assert path.exists(), f"adapter missing for {arm}: {path}"
     return path, arms_cfg["targets"][spec["targets"]]
 
@@ -113,6 +120,7 @@ def main() -> None:
 
     arms_cfg = yaml.safe_load(ARMS.read_text())
     assert args.seed in arms_cfg["seeds"], f"seed {args.seed} is not a registered seed"
+    build_sample.ref_downscale = arms_cfg['arms'][args.arm].get('ref_downscale', 1)
     rows = load_rows(args.arm, args.priority, args.cells)
 
     def out_path(r: dict) -> Path:
@@ -168,6 +176,39 @@ def main() -> None:
     else:
         print(f"[gen] {args.arm}: no adapter (base weights)")
     transformer = transformer.to(device).eval()
+
+    # exp_078: if this arm is a bottleneck arm, reconstruct the operator-token encoder from the
+    # SAME checkpoint file (saved under its own prefix) and attach it, so inference mirrors
+    # training: the demo is compressed to K tokens before it ever enters the sequence.
+    bspec = arms_cfg["arms"][args.arm].get("bottleneck")
+    if bspec is not None:
+        from ltx_trainer.operator_encoder import OperatorTokenEncoder
+        f, h, w = bspec["token_shape"]
+        encoder = OperatorTokenEncoder(
+            token_shape=(f, h, w), width=bspec.get("width", 512), depth=bspec.get("depth", 2),
+            num_heads=bspec.get("num_heads", 8),
+            prefix_latent_frames=bspec.get("prefix_latent_frames", 2),
+            suffix_latent_frames=bspec.get("suffix_latent_frames", 1),
+            skip_scale=bspec.get("skip_scale", 0.0),
+        )
+        raw = load_file(str(adapter))
+        enc_sd = {k[len("operator_encoder."):]: v for k, v in raw.items() if k.startswith("operator_encoder.")}
+        missing, unexpected = encoder.load_state_dict(enc_sd, strict=True), None
+        encoder = encoder.to(device=device, dtype=torch.bfloat16).eval()
+        # Scale factors MUST match what training derived from the token shape, or the K tokens
+        # land on the wrong positional grid (silently — nothing raises).
+        th, tw, tf = vh // 32, vw // 32, (vf - 1) // 8 + 1
+        dsf, tsf = th // h, (tf - 1) // (f - 1)
+        assert th // h == tw // w, f"non-uniform spatial scale: {th}//{h} vs {tw}//{w}"
+        if not enc_sd:
+            raise RuntimeError(f"arm '{args.arm}' declares a bottleneck but the checkpoint "
+                               f"{adapter} has no operator_encoder.* tensors — refusing to generate "
+                               "raw-reference videos under a bottleneck arm name")
+        runner.attach_operator_encoder(encoder, downscale_factor=dsf, temporal_scale_factor=tsf)
+        # flush=True: Slurm block-buffers stdout, so without it this provenance line is invisible
+        # until process exit — and it is the record that proves the videos are bottleneck-generated.
+        print(f"[gen] operator-token bottleneck ATTACHED: K={f*h*w} shape=({f},{h},{w}) "
+              f"scale=(spatial {dsf}, temporal {tsf}), {len(enc_sd)} encoder tensors", flush=True)
 
     tmp = OUT_ROOT / "_runner" / f"{args.arm}_s{args.seed}_c{args.chunk}"
     saved = runner.run(transformer=transformer, step=0, output_dir=tmp, device=device,
