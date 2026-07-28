@@ -112,10 +112,15 @@ def collect(strict: bool = False) -> list[Path]:
         found |= {Path(x) for x in glob.glob(str(LAB / g), recursive=True)}
     if strict:
         # (a) any raw_*.jsonl in either tree that we did NOT match -- would be silently uncounted
-        everywhere = {Path(x) for x in glob.glob(
-            str(REPO_ROOT / "scripts/ctt_v2/**/raw_*.jsonl"), recursive=True)}
-        everywhere |= {Path(x) for x in glob.glob(
-            str(LAB / "misc/ctt_v2_final/**/*.jsonl"), recursive=True)}
+        #: bounded on purpose. A `**` recursive glob over misc/ctt_v2_final took >90 s (it walks
+        #: the verification lanes' media), which made --strict unusable and therefore useless.
+        #: Depth-limited patterns cover every layout the campaign actually uses and run instantly.
+        everywhere: set[Path] = set()
+        for pat in ("scripts/ctt_v2/*/raw_*.jsonl", "scripts/ctt_v2/*/*/raw_*.jsonl",
+                    "scripts/ctt_v2/*/*/*/raw_*.jsonl"):
+            everywhere |= {Path(x) for x in glob.glob(str(REPO_ROOT / pat))}
+        for pat in ("misc/ctt_v2_final/*/*.jsonl", "misc/ctt_v2_final/*/*/*.jsonl"):
+            everywhere |= {Path(x) for x in glob.glob(str(LAB / pat))}
         missed = everywhere - found
         if missed:
             raise SystemExit("[ledger] STRICT: archives on disk matched by no glob "
