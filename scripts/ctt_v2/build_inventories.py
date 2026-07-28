@@ -319,12 +319,20 @@ def build_spec(args) -> dict:
                     "sided": g.get("sided", args.sided), "clips": sorted(g["clips"])}
               for gid, g in spec["groups"].items()}
     endpoints = spec.get("endpoints", {})
+    #: An explicit per-clip `caption_sources` overrides the derivation in
+    #: `root_common.caption_sources`. S1's s0cf layer needs it: its endpoint is a certified S0
+    #: corpus clip, so it draws on the certified 139 and NOT on the per-(clip, role) store —
+    #: the same `[]` that `kind == "corpus"` returns for S0 itself. Without this passthrough the
+    #: derivation would name a (clip, role) key that the store legitimately does not contain.
+    spec_cap_srcs = spec.get("caption_sources") or {}
     entries = {}
     for gid, g in groups.items():
         for clip in g["clips"]:
             entries[clip] = {"group": gid, "latents": None, "cond_clean": None,
                              "conditions": None, "caption": None,
                              "endpoints": list(endpoints.get(clip, []))}
+            if clip in spec_cap_srcs:
+                entries[clip]["caption_sources"] = [list(x) for x in spec_cap_srcs[clip]]
     inv = {
         "schema": rc.INVENTORY_SCHEMA,
         "stratum": spec.get("stratum", args.stratum),

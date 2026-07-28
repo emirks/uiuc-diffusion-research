@@ -52,8 +52,15 @@ def assembled_for(stratum: str, locked: dict, s4: dict) -> dict[str, str]:
     store = s4 if stratum == "S4" else locked
     out: dict[str, str] = {}
     for stem, entry in inv["clips"].items():
+        # The inventory's own `caption` is AUTHORITATIVE when present: it is the exact string
+        # assembly will symlink a conditions embed for, so encoding anything else would encode
+        # text the trainer never sees. This covers S0 (certified caption) and S1's s0cf layer,
+        # whose `caption_sources` is legitimately [] because it draws on the certified 139
+        # rather than on the per-(clip, role) store.
+        if entry.get("caption"):
+            out[stem] = entry["caption"]
+            continue
         if kind == "corpus":
-            # S0's caption is the certified text itself and already carries the trigger.
             out[stem] = entry["caption"]
             continue
         g = inv["groups"][entry["group"]]
