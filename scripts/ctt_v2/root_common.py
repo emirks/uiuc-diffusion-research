@@ -37,6 +37,55 @@ DOSSIER_DIR = LAB / "misc/ctt_v2_final"
 MAIN_REPO = LAB / "diffusion-research"
 
 
+#: `.claude/worktrees/<name>/` — an ephemeral checkout.  A recorded SOURCE path must never
+#: contain one: `REPO_ROOT` is `Path(__file__).resolve().parents[1]`, so an inventory built
+#: from a worktree bakes that worktree into every source path it records, and the paths break
+#: the moment the worktree is removed.  The data itself is fine (the worktree's files are
+#: symlinks into the main checkout) — it is the RECORD that rots, silently, later.
+_WORKTREE_RE = re.compile(r"/\.claude/worktrees/[^/]+/")
+
+
+def canonical_source(p: str | Path) -> str:
+    """Strip any ephemeral-worktree component from a source path, and prove the result exists.
+
+    Deliberately NOT `os.path.realpath`: that resolves through the storage mount and yields a
+    different prefix (`/taiga/...`) than the `$LAB` convention every other path in this repo
+    uses, which would trade one portability problem for another.  Collapsing the worktree
+    component keeps the standard prefix and is exactly reversible by inspection.
+    """
+    s = str(p)
+    out = _WORKTREE_RE.sub("/", s)
+    if out != s and not Path(out).exists():
+        raise SystemExit(
+            f"[canonical_source] stripping the worktree component from\n  {s}\ngives\n  {out}\n"
+            f"which does NOT exist. Refusing to record either: the worktree-prefixed path "
+            f"would rot when the worktree is removed, and the stripped one is wrong now.")
+    return out
+
+
+def assert_no_worktree_paths(obj, where: str) -> None:
+    """HARD: no recorded source path may reference an ephemeral worktree."""
+    hits = []
+
+    def walk(o, trail):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                walk(v, f"{trail}.{k}")
+        elif isinstance(o, list):
+            for i, v in enumerate(o):
+                walk(v, f"{trail}[{i}]")
+        elif isinstance(o, str) and _WORKTREE_RE.search(o):
+            hits.append(f"{trail}: {o}")
+
+    walk(obj, where)
+    if hits:
+        raise SystemExit(
+            f"[worktree-path] {len(hits)} recorded path(s) point into an ephemeral "
+            f"`.claude/worktrees/` checkout and would break when it is removed. "
+            f"Run the builder from the MAIN checkout, or route the path through "
+            f"`canonical_source()`. First 5:\n  " + "\n  ".join(hits[:5]))
+
+
 def resolve_repo_rel(rel: str | Path) -> Path:
     """A repo-relative path, resolved against the worktree first, then the main checkout.
 

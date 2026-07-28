@@ -145,7 +145,9 @@ def _attach(inv: dict, args, require: bool) -> dict:
                 p = Path(_fmt(tpl, **ctx))
                 if not p.is_absolute():
                     p = REPO / p
-                c[key] = str(p)
+                # REPO is `parents[1]` of this file, so building from a worktree would bake
+                # that ephemeral checkout into every recorded source path.
+                c[key] = rc.canonical_source(p) if p.exists() else str(p)
                 if require and not p.exists():
                     missing.append(f"{key}:{p}")
         if store is not None:
@@ -218,6 +220,8 @@ def _finish(inv: dict, out: Path) -> None:
         "dropped_at_build": bd["n_dropped"],
         "clips_before_build_drops": len(inv["clips"]) + bd["n_dropped"],
     }
+    # An inventory is READ AGAIN at assembly time, possibly after the worktree is gone.
+    rc.assert_no_worktree_paths(inv, f"{inv['stratum']} inventory")
     rc.write_json(out, inv)
     print(f"[inventory] {inv['stratum']}: {len(inv['groups'])} groups, {len(inv['clips'])} clips, "
           f"{n_pairs} pairs (before exclusions) -> {out}"
@@ -243,9 +247,9 @@ def build_s0(args) -> dict:
         lat = rc.resolve_repo_rel(inv_src["latents"][clip])
         entries[clip] = {
             "group": cls,
-            "latents": str(lat),
-            "cond_clean": str(S0_COND_CLEAN / cls / f"{clip}.pt"),
-            "conditions": str(S0_CONDITIONS / cls / f"{clip}.pt"),
+            "latents": rc.canonical_source(lat),
+            "cond_clean": rc.canonical_source(S0_COND_CLEAN / cls / f"{clip}.pt"),
+            "conditions": rc.canonical_source(S0_CONDITIONS / cls / f"{clip}.pt"),
             "caption": caps[f"{cls}/{clip}.mp4"],
             "endpoints": [clip],
         }
