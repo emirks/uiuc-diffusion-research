@@ -52,6 +52,9 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "eval_ladder"))
 import prompts  # noqa: E402  -- the AUTHORITY on clip -> class
 
+sys.path.insert(0, str(REPO_ROOT / "scripts/ctt_v2"))
+import root_common as rc  # noqa: E402  -- the AUTHORITY on (clip, role) exclusions
+
 POOL = REPO_ROOT / "data/processed/ctt_v2_strata/CONTENT_POOL_union.json"
 REGISTRY = REPO_ROOT / "eval_ladder/registry.jsonl"
 ARMS = REPO_ROOT / "eval_ladder/arms.yaml"
@@ -252,13 +255,25 @@ def build_grid(eligible: list[dict], sets: dict, store: dict) -> dict:
     cursor = {"synth": 0, "humanvid": 0}
     used: set[str] = set()
 
-    def take(bank: str, role: str | None = None) -> dict:
+    def take(bank: str, role: str | None = None, *, for_role: str) -> dict:
         """Next clip of `bank` in the seed-42 order; if `role` is given, next one that already
-        has that role's description (see the probe-set note in main())."""
+        has that role's description (see the probe-set note in main()).
+
+        `for_role` is the role this clip will actually OCCUPY in the grid, and is mandatory:
+        it drives the (clip, role) exclusion check.  A10's standing rule is that defects are
+        dispositioned at the unit of CONSUMPTION, so the filter has to be applied where a clip
+        is bound to a role -- not where it is stored.  Enforcing it here PREVENTS the hazard;
+        assert A13 only DETECTS it after the fact.  Concretely: without this,
+        `openvid_T1MiFx98l3g_0_50to156` (blank A-anchor, healthy B-anchor) could be drawn as
+        endpoint_a, putting a blank white prefix into conditioning and silently corrupting the
+        S1 mechanical gate, which measures rel-L2 against that same start9 window.
+        """
         while True:
             rec = pools[bank][cursor[bank]]
             cursor[bank] += 1
             if rec["clip_id"] in used:
+                continue
+            if rc.role_excluded(rec["clip_id"], for_role):
                 continue
             if role is not None and not (store.get(rec["clip_id"], {}) or {}).get(role):
                 continue
@@ -272,10 +287,11 @@ def build_grid(eligible: list[dict], sets: dict, store: dict) -> dict:
     #    out of prepayment credits on 2026-07-28, so no new description can be generated).
     #    The restriction is applied to the probe set only; it is not a quality filter -- the
     #    described subset is itself a seed-42 per-(bank x role) sample from the M3 pilot.
-    probe = [take("synth" if i % 2 == 0 else "humanvid", role="A") for i in range(N_PROBE)]
+    probe = [take("synth" if i % 2 == 0 else "humanvid", role="A", for_role="A")
+             for i in range(N_PROBE)]
     #: B-side partner for each probe endpoint, opposite bank (Q1c), FIXED across both
     #: two-sided specialists so the two-sided diagonal is a same-pair x different-manner test
-    probe_partner = [take("humanvid" if p["bank"] == "synth" else "synth", role="B")
+    probe_partner = [take("humanvid" if p["bank"] == "synth" else "synth", role="B", for_role="B")
                      for p in probe]
 
     rows, per_spec = [], {}
@@ -291,10 +307,12 @@ def build_grid(eligible: list[dict], sets: dict, store: dict) -> dict:
             if sided == "one":
                 # alternate banks so each specialist lands ~50/50 and is never bank-pure
                 bank = "synth" if len([e for e in entries if e["a"]["bank"] == "synth"]) * 2 < len(entries) else "humanvid"
-                entries.append({"a": take(bank), "b": None, "probe_index": None})
+                entries.append({"a": take(bank, for_role="A"), "b": None, "probe_index": None})
             else:
-                a = take("synth" if len(entries) % 2 == 0 else "humanvid")
-                entries.append({"a": a, "b": take("humanvid" if a["bank"] == "synth" else "synth"),
+                a = take("synth" if len(entries) % 2 == 0 else "humanvid", for_role="A")
+                entries.append({"a": a,
+                                "b": take("humanvid" if a["bank"] == "synth" else "synth",
+                                          for_role="B"),
                                 "probe_index": None})
 
         for j, e in enumerate(entries):
