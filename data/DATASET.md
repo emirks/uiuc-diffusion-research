@@ -53,7 +53,7 @@ judges existed (pre-registration), not yet exercised.
 | Copy-gate admissibility + bars | **PINNED** | `VERIFY_copy_ref_discriminator.md` verdict PASS; A7 amendment-2 |
 | Mix weights **S0 15 / S1 6 / S2 total 69 / S4 10** (+ 3 contingency branches), S2a:S2b **derived pro-rata** | **PINNED (ruled), IN CODE**; the split's inputs **FROZEN** | A9 / A11 item 3 / **A12**; `root_common.STRATUM_WEIGHTS_PCT` + `PRORATA_GROUPS` + `ABSENT_BRANCH_WEIGHTS_PCT`, §11.1; `misc/ctt_v2_final/PREREG_mix_inputs.json` |
 | Pairing rule (ring offset, k=min(3,n−1)) | **PINNED** | `root_common.PAIRING_RULE` |
-| VAE latents + cond_clean for S1/S2a/S2b/S4 | **IN FLIGHT** | jobs 9687982–9687985 running, §5 per-stratum |
+| VAE latents + cond_clean for S1/S2a/S2b/S4 | **FROZEN** | **18,013 clips → 36,026 `.pt`, 42 G, `encode_strata.py verify` = ALL CHECKS PASS** (2026-07-28 04:50). Counts **set-equal to each frozen roster** (not merely equal cardinality), so the trainer's relative-path join has nothing it *could* silently drop; shape+fps asserted **inline on every clip** during encoding, not sampled. S2a 7,990 · S2b 7,990 · S1 33 · S4 2,000. `suffix_rel_l2` median-of-medians S2a 0.334 / S2b 0.317, consistent with exp_073's 0.280 and d2f's 0.314 — independent re-validation of the cond_clean correction on new data. §17 |
 | S1 full render (390 clips) | **PENDING** | 33 pilot clips exist; gate is credit-blocked |
 | S1 pilot batch gate (blind 11-way Gemini) | **PENDING (blocked: Gemini credits)** | |
 | Caption store (all strata) | **PENDING (blocked: Gemini credits)** | §6 |
