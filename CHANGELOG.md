@@ -1,5 +1,35 @@
 ## 2026-07-28
 
+- **16:14** — **S4 captioned and wired in: 2,000 first-frame descriptions at zero API cost, conditioning
+  narrowed to video frame 0, and a latent mask-reuse trap caught by making the prefix width derived.**
+  Owner directive was to condition S4 on the first frame only (not frames 0–8) and to caption accordingly.
+  The refVFX source captions could **not** be adapted: it ships one trigger phrase per *effect* (42 over
+  2,000 clips), which is a class label and a Tier-1 leak string, so descriptions were generated from pixels
+  by **25 fan-out Sonnet captioners × 80 clips**, batches round-robined over an effect-sorted roster so a
+  captioner's style could not track an effect. Result: **2,000 / 2,000, 0 Tier-1 leaks, 0 format violations,
+  0 key collisions with the locked store, `hard_fail: []`**, store hash `fcd46f33…`, **0 ₺** (frame
+  extraction was 14 s for all 2,000). Kept as a **separate** store: its prompt is `v2` role-A verbatim but
+  for *"9-frame snippet"* → *"single still frame"*, and merging would falsify the locked store's
+  `single_prompt_variant` assert for no gain.
+  🔴 **The mask change found a live trap.** `m[:2]=1` was a literal repeated at six call sites; S4 needed
+  `m[:1]`. Making it a shape property (`root_common.prefix_latents`) and putting it in the mask **filename**
+  meant `regen_masks.py` reported *"exists but is WRONG and --force was not given → would have been
+  REUSED: interior m[1:-1] is not all 0"* — under the old flat name the stale 2-frame S4 mask had the same
+  `(f,h,w,sided)` and would have been trusted. Separately, that module's *"bit-identical to
+  `ensure_mask`"* check was comparing **file** bytes, and `torch.save`'s zip container records an mtime —
+  two saves of an identical tensor hash differently, so the check was passing only when both writes landed
+  in the same mtime bucket, and its OK log printed "bit-identical" even on failure. Now compares tensors,
+  records a reproducible `content_sha256`, and the manifest's verdict is the real result.
+  **Effective-weight consequence:** S4's loss-bearing tokens go **1,092 → 1,456** (60 % → 80 % of each
+  sample) since conditioning drops 40 % → 20 %; the 121f values are unchanged. The nominal mix is
+  pre-registered and untouched — the owner still picks S4's nominal share. New: `build_s4_batches.py`,
+  `merge_s4_captions.py`, `assemble_s4_captions.py`, `s4/build_s4_spec.py`; S4 inventory is **42 groups /
+  2,000 clips / 6,000 pairs**, matching the `EXPECTED_BASE_PAIRS` assert. `build_s4_spec.py` also fixes the
+  rehearsal spec's empty `endpoints: {}`, which would have made `caption_sources()` return `[]` and drop
+  every S4 description sentence silently. Alignment — the one defect no length or lexeme check catches, and
+  two captioners self-reported catching an indexing drift mid-draft — was spot-checked directly:
+  **10 (stem, caption) pairs across 8 batches, frames re-read, 10 / 10 exact.**
+
 - **13:45** — **A16 executed in code: the 29 S2a clips are DROPPED-AND-RECORDED at consumption, and the
   Keyed-Join Rule is now enforceable machinery — plus a live vacuous-exclusion landmine found on `main`.**
   🔴 **The finding first:** `data/processed/` is gitignored, so `POOL_DROPS_M3_ADJUDICATION.json` travels

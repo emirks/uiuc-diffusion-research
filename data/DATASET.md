@@ -9,7 +9,9 @@ root has been assembled. See §1.2 for the blocking set.
 > 1,403 / 1,403 locked, one prompt variant (`v2`), one auditor (`gemini-3.5-flash-lite`), content
 > hash `c8e2d95b…`, 12-gate battery on the **full** store with `hard_fail: []`, corpus-139 audit
 > 0/171 leaks. Every caption row in the tables below that still says *"blocked: Gemini credits"* is
-> **stale** — `CAPTIONS.md` and the disk win. S4 captions remain out of scope (owner-deferred).
+> **stale** — `CAPTIONS.md` and the disk win. **S4 captions are now DONE too** (2,000 / 2,000
+> first-frame descriptions, separate store, hash `fcd46f33…`, 0 leaks, 0 ₺ — `CAPTIONS.md` §12), and
+> S4's conditioning is now **video frame 0 alone** per the owner's 2026-07-28 decision.
 
 This file is authoritative for the dataset. Where a script, README, dossier paragraph or advisor
 ruling disagrees with this document, **this document wins and the other thing is a bug** — with one
@@ -209,7 +211,13 @@ It drives **three coupled things at once**:
 | # | thing | one-sided | two-sided |
 |---|---|---|---|
 | 1 | caption form | `{S1}. sksz.` | `{S1}. sksz. {S2}.` |
-| 2 | **mask** (`assemble_root.py:161-174`) | `m[:2]=1` | `m[:2]=1` **and** `m[-1]=1` |
+| 2 | **mask** (`assemble_root.py:ensure_mask`) | `m[:P]=1` | `m[:P]=1` **and** `m[-1]=1` |
+
+`P = root_common.prefix_latents(shape)` — **2** at 121f, **1 for S4**. It is a *shape property*, not
+a constant: the owner's 2026-07-28 decision conditions S4 on **video frame 0 alone** (= latent frame
+0). The prefix width is in the mask filename (`f5_h14_w26_p1_onesided.pt`) so a mask written under
+the old fixed-2 rule cannot be silently reused for the same `(f,h,w,sided)` — `regen_masks.py`
+caught exactly that and refused it.
 | 3 | **cond_clean** (`encode_conditioning.py:129-158`) | **bitwise copy** | last latent frame replaced by a standalone encode of the trailing 9 pixel frames |
 
 `mask = 1` ⇒ the token is conditioned (clean latent, timestep 0, excluded from loss).
@@ -693,9 +701,12 @@ S4 carries **two independent effectiveness discounts**, and they compound:
 1. **σ**: its 1,820-token samples train at shift 1.2350 against 2.3021 for every 121-frame stratum, so
    its draws concentrate at lower noise (E[σ] 0.6620 vs 0.7614), attenuating its structural anti-copy
    signal. Upstream by design, unmodified, disclosed.
-2. **conditioning fraction**: the prefix anchor is a **fixed 2 latent frames**, which is 2/5 = **40 %**
-   of S4's tokens against 2/16 = **12.5 %** at 121f. Conditioned tokens sit at timestep 0 and are
-   excluded from loss, so a far smaller share of an S4 sample carries gradient.
+2. **conditioning fraction** — ⚠ **LARGELY REMOVED 2026-07-28.** This discount was real while the
+   prefix anchor was a fixed 2 latent frames: 2/5 = **40 %** of S4's tokens against 2/16 = **12.5 %**
+   at 121f. The owner's frame-0 decision drops S4's prefix to **1** latent frame, so the fraction is
+   now 1/5 = **20 %**, and S4's loss-bearing tokens rise **1,092 → 1,456** (60 % → 80 % of each
+   sample). The residual geometric discount is 20 % vs 12.5 %, i.e. small; discount 1 (σ) is now the
+   dominant one. The numbers move because they are derived from `prefix_latents`, never tabulated.
 
 ⇒ **Nominal and effective weights differ, and both are stamped.** Nominal (sample-count) weights
 remain the **pre-registered** quantity — they are what the manifest pins and what the contingency
@@ -1163,6 +1174,20 @@ $PY scripts/ctt_v2/build_inventories.py s2meta --stratum S2b --sided two --no-re
     --meta-glob 'outputs/videos/ctt_v2_s2_humanvid/full/meta/clips_shard*.jsonl' \
     --out outputs/ctt_v2/inventories/S2b.json          # 799 groups / 7,990 clips / 23,970 pairs
 # S1 groups are the 11 ARMS (A11 item 6), not the endpoints; S4 groups are the 42 triggers.
+# S4: one-sided, SELF-conditioned (endpoints[c] == [c]).  The spec builder is what populates those
+# endpoints -- with the empty `endpoints: {}` the rehearsal spec carried, caption_sources() returns
+# [] and every S4 caption silently loses its description sentence.
+$PY scripts/ctt_v2/captions/merge_s4_captions.py --write     # 25 fan-out batches -> the store
+$PY scripts/ctt_v2/captions/assemble_s4_captions.py \
+    --out outputs/ctt_v2/captions/S4_CAPTIONS_ASSEMBLED.json  # "{desc}. sksz.", RULING 9 checked
+$PY scripts/ctt_v2/s4/build_s4_spec.py --out outputs/ctt_v2/inventories/S4_spec.json
+$PY scripts/ctt_v2/build_inventories.py spec --spec outputs/ctt_v2/inventories/S4_spec.json \
+    --sided one --no-require-sources \
+    --latents    'outputs/ctt_v2/encodes/S4/latents/{clip}.pt' \
+    --cond-clean 'outputs/ctt_v2/encodes/S4/cond_clean/{clip}.pt' \
+    --captions   outputs/ctt_v2/captions/S4_CAPTIONS_ASSEMBLED.json --caption-key '{clip}' \
+    --out outputs/ctt_v2/inventories/S4.json      # 42 groups / 2,000 clips / 6,000 pairs
+$PY scripts/ctt_v2/masks/regen_masks.py --strata S1,S2a,S2b,S4   # p1 for S4, p2 at 121f
 $PY scripts/ctt_v2/assemble_root.py --init-manifest outputs/ctt_v2/strata_manifest.json
 # FREEZE the A12 mix inputs BEFORE assembling — the derived S2a:S2b split is pre-registered by
 # freezing its inputs, so this must run (and be logged) before any training step.
@@ -1548,7 +1573,7 @@ Stamping is an owner act. This block being present is not a stamp; `STAMPED: YES
 | S2b | 34.188 | **36.440** | 3,381,300 |
 | S4 | 10.174 | **3.036** | 281,736 |
 
-- **per-sample loss-bearing tokens** `{"(5, 14, 26)|one": 1092, "(16, 20, 15)|one": 4200, "(16, 20, 15)|two": 3900}` — derived from the mask rule (`m[:2]=1` always, `m[-1]=1` iff two-sided; mask==1 ⇒ conditioned at timestep 0 and excluded from loss), never tabulated
+- **per-sample loss-bearing tokens** `{"(5, 14, 26)|one": 1456, "(16, 20, 15)|one": 4200, "(16, 20, 15)|two": 3900}` — derived from the mask rule (`m[:P]=1` where `P=prefix_latents(shape)`: 2 at 121f, **1 for S4**; `m[-1]=1` iff two-sided; mask==1 ⇒ conditioned at timestep 0 and excluded from loss), never tabulated. **S4 was 1,092 before the 2026-07-28 frame-0 decision.**
 - total loss-bearing tokens **9,279,036** over 2,536 samples
 - **NOMINAL is the pre-registered quantity** — it is what the manifest pins and what the contingency branches operate on. **EFFECTIVE is a derived disclosure only** (A11 item 2): right for disclosure, wrong as a control variable, because pre-registering it would force the nominal weights to chase every geometry change.
 - S4 carries two compounding discounts: the lower training shift (§8.2.1) and a fixed 2-latent-frame anchor conditioning 40 % of its tokens against 12.5 % at 121f. Its 10 % nominal is ≈ 3 % effective.

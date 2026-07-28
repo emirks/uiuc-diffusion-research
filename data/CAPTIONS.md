@@ -1,7 +1,8 @@
 # CTT v2 captions — the single source of truth
 
 **S0 / S1 / S2 captions are DONE and LOCKED: 1,403 / 1,403. One prompt variant, one auditor,
-one hash. S4 is out of scope (zero S4 descriptions exist).**
+one hash. S4 is now DONE too: 2,000 / 2,000 first-frame descriptions in a SEPARATE store —
+see §12.**
 
 This file is the authority for the caption lane. Where it disagrees with the disk, the disk wins.
 `misc/ctt_v2_final/DOSSIER.md` §9 and §20–§26 are the *reasoning record*, not the state — read them
@@ -18,7 +19,7 @@ for **why**, read this for **what**.
 | unresolved `inaccurate` | **0** |
 | distributional battery | **full 1,403-row store, `hard_fail: []`** |
 | S1 *generation* | deferred to DeltaAI → `misc/ctt_v2_final/deltaai_s1_handoff/` |
-| S4 | **OUT** — deferred by owner |
+| S4 | **DONE, separate store** — 2,000 / 2,000, `S4_CAPTION_STORE.json`, hash `sha256:fcd46f3308f9f52f…` (§12) |
 
 ## 1. Files — one master set, everything else is archive
 
@@ -308,5 +309,90 @@ preflight: **`misc/ctt_v2_final/deltaai_s1_handoff/`** (`S1_GRID_deltaai.json`, 
 embedded, sha `dea8ffe436998e99…`). 🔑 If that gate **fails, S1 drops** and the mix renormalises —
 a legitimate pre-registered outcome (A5 Ruling 3), **not** a failure of the caption work.
 
-**S4: out of scope, deferred by owner. Zero S4 descriptions exist.** Nothing here changes if S4 is
-later authorized — it is an additive lane keyed the same way.
+**S4 is DONE — see §12.** It is a separate store on purpose: the locked store's homogeneity assert
+is *one prompt variant*, and S4's differs in one clause (§12.2). Merging them would break that
+assert for no gain, since assembly reads per-stratum inventories anyway.
+
+---
+
+## 12. S4 — 2,000 first-frame descriptions
+
+| | |
+|---|---|
+| store | `outputs/ctt_v2/captions/S4_CAPTION_STORE.json` |
+| content hash | `sha256:fcd46f3308f9f52f…` |
+| assembled training captions | `outputs/ctt_v2/captions/S4_CAPTIONS_ASSEMBLED.json` (`sha256:1e9ecd0350d89ad7…`) |
+| coverage | **2,000 / 2,000 = 100 %** |
+| keying | **`<stem>\|A`** — role A only |
+| prompt variant | **`v2-s4f0`** (§12.2) |
+| generator | Claude Sonnet vision, 25 fan-out batches × 80 clips |
+| spec | `outputs/ctt_v2/captions/S4_CAPTION_SPEC.md` |
+| Tier-1 leaks | **0** · format violations **0** · key collisions with the locked store **0** |
+| Tier-2 review flags | 185 (9.25 %) — review-only, same policy as the locked store's 111 |
+| cost | **0 ₺** — no Gemini calls |
+
+### 12.1 One description per clip, not two — because only frame 0 is conditioned
+
+S4 is **one-sided**. The owner's 2026-07-28 decision is to condition on **video frame 0 alone**,
+which is **latent frame 0 alone** (`prefix_latents((5,14,26)) == 1`). So:
+
+- there is no B endpoint and no suffix sentence: the assembled caption is `{description}. sksz.`
+- every clip is **its own A endpoint** (`endpoints[c] == [c]`), unlike S2 where the endpoints are
+  two *other* pool clips spliced into a render
+- the description covers **exactly** the conditioned pixels. Under the earlier fixed 2-latent
+  prefix it would have described 9 frames of a 33-frame transition — a third of the clip, most of
+  which the model is supposed to invent
+
+That last point is why the prefix width is now a **shape property** (`root_common.prefix_latents`)
+rather than a literal `m[:2]` repeated at six call sites.
+
+### 12.2 The prompt delta, and why the stores stay separate
+
+`v2-s4f0` is prompt `v2` role-A **verbatim**, with one clause changed: *"a 9-frame snippet"* →
+*"a single still frame"*. That is forced by §12.1 — asking for a 9-frame description of a 1-frame
+conditioning would be asking for text about pixels the model never sees.
+
+The locked store asserts `single_prompt_variant`. Adding `v2-s4f0` to it would flip that assert to
+false, so S4 gets its own store and its own hash. Assembly reads per-stratum inventories, so
+nothing downstream needs them merged.
+
+### 12.3 The source dataset's captions could not be edited
+
+refVFX ships **one trigger phrase per effect** — 42 phrases over 2,000 clips
+(`0rb4it 360 degree orbit`, `3xp105ion huge explosion`, …). That is a class label, not a per-clip
+description, and every one of them is a **Tier-1 leak string**: naming the effect in the caption
+hands the model the transition it is supposed to invent. So the descriptions are generated from
+pixels. The effect label is withheld from the captioner and stored only under
+`effect_of_clip_NOT_FOR_CAPTIONING`.
+
+### 12.4 Measured register gap vs the corpus — disclosed, not gated
+
+| statistic | S4 (n=2,000) | locked store role-A (n=750) | Δ |
+|---|---|---|---|
+| words p50 | 30 | 34.5 | **−4.5** |
+| words p10 / p90 | 27 / 34 | 26 / 41 | narrower |
+| commas / description | 2.111 | 2.288 | −0.18 |
+| colour terms / description | 3.103 | 3.997 | **−0.89** |
+
+The word and colour deltas are close in size to the round-1 failure that lost gate #8 (§9). They
+are **reported, not gated**, for a reason: gate #8 asks whether a discriminator can separate corpus
+captions from new ones, which is diagnostic only when both describe **the same footage domain**. S4
+is AI-generated single-subject VFX footage — overwhelmingly close-ups on plain or bokeh backgrounds
+— against DAVIS/HumanVid street and park scenes. A studio headshot genuinely contains fewer
+distinct coloured objects than a city street, so part of that −0.89 is content, and closing it
+would mean instructing the captioner to invent colour that is not in the frame. That is a worse
+defect than the gap.
+
+What *would* have been a real confound was checked and is absent: **per-effect word p50 spans only
+28 – 33.5** across all 42 effects. Batches were round-robined over an effect-sorted roster
+precisely so a captioner's style could not track an effect.
+
+### 12.5 Alignment was the real risk, and it was spot-checked
+
+Two of the 25 captioners self-reported catching a stem↔image indexing drift mid-draft (writing
+captions from memory after reading a whole block) and both re-read every frame in small groups
+before writing. A drift like that survives every length, comma and lexeme check — the captions are
+individually well-formed and simply describe the wrong clip.
+
+So it was checked directly: **10 (stem, caption) pairs across 8 batches, frames re-read and
+compared. 10 / 10 exact**, including a wall shadow, an orange-dyed fringe and a dusk horizon band.
