@@ -1,5 +1,19 @@
 ## 2026-07-28
 
+- **04:36** ctt_v2/smoke: both smoke-gate "failures" in job 9688250 were in the CHECKERS,
+  not the training — the trainer had in fact completed 30/30 steps over the mixed two-shape
+  root with a finite loss. `check_train_log.py`: an empty match set is now its own hard error
+  (`T0_parser_sane` → verdict `PARSER_FAIL`), and every check that reads the extraction goes
+  UNEVALUABLE rather than FAIL, so "I can't read this log" can no longer surface as "your
+  training is broken". T3 now also takes step evidence from the trainer's checkpoint lines
+  (a 30-step run logs only one loss line, at step 20). A `--self-test` runs on every
+  invocation against the sha-pinned job-9688250_1 capture plus three negative cases.
+  `mixed_format_probe.py`: the float32-vs-bf16 crash was the intrinsic-mask promotion in
+  `flexible.py:542`, which the real trainer absorbs via accelerate's bf16 autocast — the probe
+  now reproduces and guards that instead of casting. A11 item 4 clause (b) now *observes* the
+  shift the sampler was actually handed (`_ShiftRecorder`) instead of re-deriving it from
+  `f*h*w`, which had made the assert unfailable.
+
 - **04:32** ctt_v2/S1: role-scoped (clip, role) exclusions now enforced at S1 grid-build time (mandatory `for_role` in `take()`), not merely detected by assert A13. Proven by mutation.
 
 - **04:45** — **The RULING-9 assert battery is now PROVEN TO FIRE, on a real two-shape root.**
