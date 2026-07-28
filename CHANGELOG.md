@@ -1,5 +1,29 @@
 ## 2026-07-28
 
+- **12:25** — **CTT v2 captions LOCKED for S0/S1/S2 — 1,403 / 1,403 = 100%.** Found and fixed the
+  real defect: `build_mass_pair_list.py` read only 2 of 3 sources, because **S2a's endpoints live
+  only in its rendered metadata keyed `A`/`B`**, so a strict `endpoint_a` lookup returns an empty set
+  and the bug reads as the reassuring *"S2a needs no descriptions."* The true requirement is **1,404**
+  (S2a 454 ∪ S2b 1,217 ∪ S1 400), not 1,348 — 36 (clip, role) pairs were absent and 26 were at risk
+  of never being generated. The builder now requires all three schemas, asserts positive presence per
+  record, recomputes the derived constant 454 with **SPEC-CONSTANT-MISMATCH** escalation (never a
+  fallback branch), and records the vacuous `endpoint_a` lookup as a trap witness. Adding S2a also
+  made the `openvid_T1MiFx98l3g_0_50to156|A` role-scoped exclusion **live** (it was a genuine no-op
+  under two sources), so 1,404 − 1 = **1,403 generatable** and nothing is short. Generated the 213
+  missing descriptions and resolved the residual 3 via `manual_rewrite.py` — a deliberately separate,
+  re-audited operator path, so a hand-written string can never enter the store on a path mistakable
+  for a generated one; **unresolved `inaccurate` = 0**. Ran the **S0 corpus-139 Layer-2 audit** for
+  the first time: **0 / 171 `leak=YES`** (no endpoint description leaks the transition effect) and
+  4 / 171 `inaccurate=YES` — certified captions kept byte-identical, all four escalated to the owner,
+  the script read-only by construction. Consolidated 10 scattered shards into one hashed canonical
+  store (`sha256:c8e2d95b…`, single prompt variant `v2`, single auditor `gemini-3.5-flash-lite`) with
+  everything else moved to `archive/`. Docs: `data/CAPTIONS.md` is now the caption authority and
+  DOSSIER §26 supersedes the caption trajectory for state. **Two deviations reported, not buried:**
+  the directive's v3 prompt was not used (it would mix prompts into a v2 store, trip the bug class
+  gate 8a detects, and cost ~290 TRY to chase a ~1.2 SE noise delta), and its `gemini-3.5-flash`
+  auditor is HTTP 503 / unavailable. **One gap named:** the 12-gate battery stands on a 447-row
+  subset (`hard_fail: []`, 8a 0.7099 ≤ 0.73, 8b 0.5787 ≤ 0.60), not the full 1,403 — no new gates
+  were run per owner direction. Session spend measured at 609 calls / 185,089 tokens ≈ 58.6 TRY.
 - **12:10** — Executed reconciliation ruling A14 for the CTT v2 caption lane. The keystone
   matched-side auditor control **PASSES**: `gemini-3-flash-preview` flags only **1/192 = 0.52 %** of
   correctly-matched descriptions (bar ≤10 %) with **0 errors** over 213 calls, closing the one-sided
