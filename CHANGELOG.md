@@ -1,3 +1,32 @@
+## 2026-07-28
+
+- **02:47** — ctt_v2 **VAE-encode pipeline built and launched** for all new strata
+  (`scripts/ctt_v2/encode/`). Writes only the two prompt-agnostic root trees —
+  `latents/` + `cond_clean/` — so it is fully independent of the Gemini caption blocker;
+  `masks/` stay shape-derived and `conditions/` stay blocked. 18,013 clips staged
+  (S2a 7,990 / S2b 7,990 / S1 33 / S4 2,000) under `outputs/ctt_v2/encodes/<stratum>/`;
+  latents come from the trainer's own `process_videos.py` so the payload schema is
+  byte-identical to ic_gen's, and `cond_clean` goes through
+  `encode_conditioning.write_cond_clean()` unchanged. Shard counts are hardcoded in the
+  module (never derived from `SLURM_ARRAY_TASK_COUNT`) and each stratum's roster is frozen
+  to `ROSTER.json`, so a partial resubmit cannot re-partition; every write is `.tmp` +
+  `os.replace`, so a preempted requeue can never leave a truncated `.pt`.
+  Smoke-verified on GPU: S2a/S2b/S1 → `(128,16,20,15)` bf16 `fps=24.0`, S4 →
+  `(128,5,14,26)` bf16 `fps=16.0`; cond_clean corrects exactly the last latent frame on
+  two-sided clips and is bitwise-identical on one-sided ones (S1 came out 6 corrected /
+  27 copies, matching the registry's `hero_flight`+`shadow_smoke` two-sided pair).
+  Jobs 9687982 (L40S ×6) / 9687983 (scavenger ×6) / 9687984 (secondary H100 ×4) /
+  9687985 (aux ×4).
+- **02:47** — 🔴 **S4 cannot be encoded at literally-native resolution.** refVFX I2V_LoRA is
+  832×464; 33f/16fps carry through fine, but **464 is not a multiple of the VAE spatial
+  factor 32** and `process_videos.py:parse_resolution_buckets` rejects the bucket outright.
+  S4 is therefore encoded at `832x448x33`, which for a 832×464 source is a **pure 16-row
+  centre crop with no resampling** (the width scale is exactly 1.0). This corrects the
+  2026-07-27 13:16 note that S4 needed "zero-cut reshape" — zero-cut holds temporally, not
+  spatially. It also means A9's "masks regenerated at (5,20,15)" is unachievable for S4:
+  the real S4 latent grid is **(5,14,26)**. Masks are derived from the latent shape by
+  `assemble_root.py:ensure_mask()`, so nothing downstream hardcodes it.
+
 ## 2026-07-27
 
 - **20:05** — HumanVid endpoint screening COMPLETE (job 9680734, 1h19m): 3,000 candidates →
