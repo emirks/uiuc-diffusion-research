@@ -1,5 +1,32 @@
 ## 2026-07-28
 
+- **11:15** ctt_v2/captions: **K=10 PACKING PILOT RUN — PACKING IS REJECTED, twice over** (advisor
+  A12 §3, steps 1–4; `scripts/ctt_v2/captions/pack_pilot.py`, `pack_analysis.py`,
+  `pack_clip_check.py`; artifacts in `pilot_m3/packed_k10/`). 200 descriptions in 20 role- AND
+  bank-homogeneous packs, the pinned round-2 prompt embedded byte-identically exactly once
+  (assert proven to fire on tampering, double-embedding, absence, wrong role and any `v3` text).
+  **Generation packing fails gate 8a at 0.7544 vs the ≤0.73 drift guard**; **audit packing fails
+  independently** — the within-pack derangement control flags only 96.0% (bar ≥99%) with exact
+  positional attribution in 17/20 packs. Cost measured, not estimated: `c_desc` = **378.9 tok**
+  (packed gen 175.9 + unpacked audit 203.0) against the 682 unpacked baseline, and packed audits
+  save only 7% because the description text itself never amortises — A12's correction confirmed
+  and then some. Passing conditions: 3b matched flag rate 2.0% (≤10%), 3c ID echo intact 200/200,
+  5 first-pass 100% on the prompt-controllable scope, 4 lexical-overlap ratio 1.035 (≤1.15).
+  **Diagnosis of the 8a failure:** packing silently compresses descriptions by **−4.61 words on
+  the same clips** (−7.0 SE, p50 28 vs 34, corpus 33) because `calibrate_ask`'s length fit was
+  fitted on *unpacked* generation and does not transfer to K=10; removing length/punctuation
+  features drops 8a to 0.7408, still over the bar, so the residual is genuine register drift.
+- **11:15** ctt_v2/captions: 🔑 **the echoed item ID is a WORSE attribution key than array
+  position** — the opposite of what the packing spec assumed. One pack in 20 returned all ten ids
+  intact but with two ADJACENT items transposed; CLIP text-image adjudication (`clip_diagonal.json`)
+  says the pixels support **array position** (mean sim 0.3151) over the echoed id (0.2880), with the
+  two transposed items at sim 0.348/0.291 by position vs 0.133/0.236 by id. So the model emitted the
+  descriptions in the right order and mislabelled two of them. Keying by id — which the spec
+  mandates — therefore *introduced* the only two real mispairings in the store, and the diagonal
+  argmax would have been 199/200 rather than 197/200 under position-keying. Neither key is safe at
+  K=10: 5% of packs carried an attribution defect under either. Recorded because any future packing
+  or multi-item-response design will hit this, and an ID echo that is 100% "intact" is *not*
+  evidence of correct attribution.
 - **11:13** ctt_v2/captions: **an empty/failed Layer-2 audit verdict is now a HARD ERROR, and the
   auditor is re-pinned to `gemini-3.1-pro-preview`** (advisor A13, steps 1–2). §21 recorded that a
   non-200, unparseable or empty audit response was scored as a **clean pass** — `_post` returned

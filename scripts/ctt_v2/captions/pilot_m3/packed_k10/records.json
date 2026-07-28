@@ -1,0 +1,3637 @@
+{
+ "davis_bear|B": {
+  "N_target": 29,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "davis_bear",
+  "description": "a large brown bear with thick fur, stepping across gray rocks in an outdoor enclosure near a stone wall under bright sunlight",
+  "pack_id": "P15",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 22
+ },
+ "davis_blackswan|B": {
+  "N_target": 36,
+  "accepted_on_attempt": null,
+  "arm": "fresh",
+  "audit": {
+   "errors": [
+    "The water is described as both clear and murky, but visually it is just murky/green."
+   ],
+   "inaccurate": "YES",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "davis_blackswan",
+  "description": null,
+  "pack_id": "P18",
+  "role": "B",
+  "status": "REJECTED_FIRST_PASS",
+  "tier2": [
+   "class_word:water"
+  ],
+  "words": 27
+ },
+ "davis_cows|A": {
+  "N_target": 25,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "davis_cows",
+  "description": "A brown-and-white spotted cow walks slowly across a dirt path beside a green grassy field under bright natural daylight",
+  "pack_id": "P06",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 19
+ },
+ "davis_dance-jump|B": {
+  "N_target": 35,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "davis_dance-jump",
+  "description": "a young woman in a white top and a pink tulle skirt, dancing barefoot on a paved stone plaza in front of a stone fountain with lion statues under natural daylight",
+  "pack_id": "P16",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 31
+ },
+ "davis_dance-twirl|B": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "davis_dance-twirl",
+  "description": "a female dancer with brown hair in a blue and white patterned costume, extending her arm upward while performing on an outdoor street surrounded by seated spectators under daylight",
+  "pack_id": "P18",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 29
+ },
+ "davis_dancing|A": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "davis_dancing",
+  "description": "A barefoot man with a black cap, wearing a white t-shirt and dark shorts, dances on a paved street surrounded by people in casual clothing during a nighttime outdoor event",
+  "pack_id": "P07",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "davis_dogs-scale|A": {
+  "N_target": 30,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "davis_dogs-scale",
+  "description": "A small black and brown puppy sniffs a pink mechanical scale on a dark wooden table while another puppy watches in a brightly lit room",
+  "pack_id": "P05",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 25
+ },
+ "davis_elephant|A": {
+  "N_target": 38,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "davis_elephant",
+  "description": "A large grey elephant with dusty skin stands in a dirt enclosure, surrounded by rocks and green trees, while a thin mist of water sprays from a foreground sprinkler in bright natural daylight",
+  "pack_id": "P09",
+  "role": "A",
+  "status": null,
+  "tier2": [
+   "class_word:water"
+  ],
+  "words": 33
+ },
+ "davis_horsejump-high|B": {
+  "N_target": 29,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "davis_horsejump-high",
+  "description": "a horseback rider in a white top, black vest, and helmet, riding a brown horse around an obstacle course on a sandy arena under bright daylight",
+  "pack_id": "P15",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 26
+ },
+ "davis_horsejump-low|B": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "davis_horsejump-low",
+  "description": "a white horse with a light mane, galloping across a sandy riding arena past green and white jumping hurdles under bright outdoor daylight",
+  "pack_id": "P18",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 23
+ },
+ "davis_judo|A": {
+  "N_target": 30,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "davis_judo",
+  "description": "A barefoot man with a dark beard, wearing a white martial arts gi with a blue belt, practices a throw with another man on a green mat in a gym",
+  "pack_id": "P05",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "davis_judo|B": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "davis_judo",
+  "description": "two men with dark hair in white judo uniforms with belts, practicing martial arts grappling moves on a green padded mat inside a brightly lit indoor gym",
+  "pack_id": "P17",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 27
+ },
+ "humanvid_10349048|B": {
+  "N_target": 42,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_10349048",
+  "description": "a man in a sage green sweatshirt and white shorts, crouching over a white soccer ball among scattered soccer balls on a dark grey floor against a black studio backdrop",
+  "pack_id": "P12",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "humanvid_12331340|A": {
+  "N_target": 40,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_12331340",
+  "description": "A middle-aged man with short grey hair, wearing large black headphones and a grey t-shirt over a dark long-sleeve shirt, looks down at paper sheets inside a recording booth lined with dark red acoustic foam panels",
+  "pack_id": "P03",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 36
+ },
+ "humanvid_4058810|B": {
+  "N_target": 15,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_4058810",
+  "description": "a young woman with short dark hair in a black robe, holding a smartphone beside an open refrigerator illuminated by colorful interior lights",
+  "pack_id": "P13",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 23
+ },
+ "humanvid_4110016|A": {
+  "N_target": 40,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_4110016",
+  "description": "A man with short brown hair, wearing a red crew-neck t-shirt and grey athletic shorts, performs lat pulldowns on a cable machine inside a brightly lit gym with red exercise equipment and dark flooring",
+  "pack_id": "P03",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 34
+ },
+ "humanvid_4446866|A": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_4446866",
+  "description": "A man with short dark hair, wearing a brown cap, a colourful neck gaiter, a dark green long-sleeved shirt, dark pants, and black shoes, sits cross-legged on a rocky shore while looking at a smartphone",
+  "pack_id": "P00",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 35
+ },
+ "humanvid_4491305|A": {
+  "N_target": 21,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_4491305",
+  "description": "A woman in a grey turtleneck and blue jeans talks to a nurse wearing grey scrubs, holding a tablet in a bright white room",
+  "pack_id": "P02",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 24
+ },
+ "humanvid_4651102|B": {
+  "N_target": 15,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_4651102",
+  "description": "a young woman with long strawberry blond hair in an oversized grey pinstripe blazer, looking forward against a plain olive wall",
+  "pack_id": "P13",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 21
+ },
+ "humanvid_4723042|A": {
+  "N_target": 40,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_4723042",
+  "description": "A barefoot young woman with long black hair, wearing an oversized blue denim jacket, a white high-neck top, and black jeans, sits on a brown floor leaning against a plain brown wall, holding a single green fern frond near her face in soft studio lighting",
+  "pack_id": "P03",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 45
+ },
+ "humanvid_4723042|B": {
+  "N_target": 42,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_4723042",
+  "description": "a young woman with long straight black hair in a light blue denim jacket and a white high-neck top, sitting on a terracotta floor while holding a green fern leaf against a matching terracotta wall",
+  "pack_id": "P12",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 35
+ },
+ "humanvid_4838256|A": {
+  "N_target": 31,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_4838256",
+  "description": "A fair-skinned woman with short brown hair, wearing a black tank top, drinks from a black water bottle while holding a white smartphone in a brightly lit room with white walls",
+  "pack_id": "P04",
+  "role": "A",
+  "status": null,
+  "tier2": [
+   "class_word:water"
+  ],
+  "words": 31
+ },
+ "humanvid_5054318|A": {
+  "N_target": 21,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_5054318",
+  "description": "A man with short dark hair, wearing a grey denim shirt and grey t-shirt, looks down at his phone in a dim indoor setting with natural window light",
+  "pack_id": "P02",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 28
+ },
+ "humanvid_5054318|B": {
+  "N_target": 15,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_5054318",
+  "description": "a young man in a blue denim shirt, pointing at his phone screen while sitting at a table with beer glasses",
+  "pack_id": "P13",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 21
+ },
+ "humanvid_5271439|A": {
+  "N_target": 33,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_5271439",
+  "description": "An elderly woman with short white hair and round black glasses, wearing a white button-down shirt under a brown houndstooth vest, types on a grey laptop in front of a plain white wall under soft white light",
+  "pack_id": "P01",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 37
+ },
+ "humanvid_5271439|B": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_5271439",
+  "description": "an older woman with short white hair and round black glasses in a brown houndstooth vest over a white shirt, holding an open silver laptop against a white studio backdrop",
+  "pack_id": "P10",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "humanvid_5337101|B": {
+  "N_target": 17,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_5337101",
+  "description": "a woman with curly blonde-tipped hair in a leopard-print top, smiling against a pink and purple illuminated backdrop",
+  "pack_id": "P14",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 18
+ },
+ "humanvid_5378938|B": {
+  "N_target": 15,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_5378938",
+  "description": "a man in a dark navy uniform and a smiling woman in a tan coat, standing inside a wooden-paneled elevator",
+  "pack_id": "P13",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 20
+ },
+ "humanvid_5636773|B": {
+  "N_target": 17,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_5636773",
+  "description": "a man with dark hair in a dark grey coat, white shirt, and black tie, standing outdoors near stone steps",
+  "pack_id": "P14",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 20
+ },
+ "humanvid_5916780|A": {
+  "N_target": 33,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_5916780",
+  "description": "A man in a black t-shirt and grey pants climbs an indoor artificial rock wall with colorful yellow, blue, and orange holds, illuminated by bright overhead indoor lighting",
+  "pack_id": "P01",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 28
+ },
+ "humanvid_5916780|B": {
+  "N_target": 42,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_5916780",
+  "description": "a muscular man in a dark grey t-shirt and grey shorts, scaling an indoor climbing wall by gripping yellow and blue handholds in soft neutral overhead lighting",
+  "pack_id": "P12",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 27
+ },
+ "humanvid_6263402|B": {
+  "N_target": 17,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6263402",
+  "description": "a black-and-white low-angle portrait of a man in a white martial arts uniform with a black belt, looking down",
+  "pack_id": "P14",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 19
+ },
+ "humanvid_6297115|B": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6297115",
+  "description": "a man with dark curly hair in a gray t-shirt and black pants, sitting on a blue mat on a wooden floor near a brick wall while stretching his legs and gesturing with his hand",
+  "pack_id": "P10",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 35
+ },
+ "humanvid_6323274|A": {
+  "N_target": 40,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6323274",
+  "description": "A young man with short dreadlocks, wearing a plain white hoodie and matching white sweatpants, stands next to a man in a black hoodie against a seamless white background illuminated by soft studio lights",
+  "pack_id": "P03",
+  "role": "A",
+  "status": null,
+  "tier2": [
+   "class_word:seamless"
+  ],
+  "words": 34
+ },
+ "humanvid_6455087|B": {
+  "N_target": 27,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6455087",
+  "description": "a smiling woman with curly hair in a blue jacket and gray shorts, wearing pink boxing gloves while training with a partner in a brightly lit gym",
+  "pack_id": "P11",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 27
+ },
+ "humanvid_6517433|A": {
+  "N_target": 33,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6517433",
+  "description": "A young man with brown hair and glasses, wearing a blue and grey long-sleeved shirt, speaks on a blue mobile phone while looking down at a laptop in an indoor room under bright daylight",
+  "pack_id": "P01",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 34
+ },
+ "humanvid_6529534|A": {
+  "N_target": 21,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6529534",
+  "description": "A young boy with short brown hair, wearing a light blue t-shirt, sits at a checkered table next to a red bowl in a brightly lit room",
+  "pack_id": "P02",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 27
+ },
+ "humanvid_6607407|B": {
+  "N_target": 15,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6607407",
+  "description": "a young woman with dark hair in a cream turtleneck sweater, holding a palette and paintbrush while painting on a canvas",
+  "pack_id": "P13",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 21
+ },
+ "humanvid_6617460|B": {
+  "N_target": 17,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6617460",
+  "description": "a man in a black t-shirt and blue jeans, gesturing with his hand while holding a black microphone indoors",
+  "pack_id": "P14",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 19
+ },
+ "humanvid_6625516|A": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6625516",
+  "description": "A middle-aged man with short grey hair and a stubble beard, wearing large blue-framed sunglasses, a beige turtleneck sweater, and brown pants, sits cross-legged against a solid purple backdrop in bright studio lighting",
+  "pack_id": "P00",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 33
+ },
+ "humanvid_6708593|B": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6708593",
+  "description": "a woman with shoulder-length black hair and red lipstick in a bright blue sweater, holding a pink heart-shaped cookie up with one hand against a solid red studio background",
+  "pack_id": "P10",
+  "role": "B",
+  "status": null,
+  "tier2": [
+   "shader_escape:heart"
+  ],
+  "words": 29
+ },
+ "humanvid_6724988|A": {
+  "N_target": 33,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6724988",
+  "description": "A boy and girl with short brown and long red hair, wearing matching tan corduroy suits and white socks, perform a synchronized dance pose in a grey studio under cool even light",
+  "pack_id": "P01",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 32
+ },
+ "humanvid_6724988|B": {
+  "N_target": 42,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6724988",
+  "description": "a young boy and girl with long red hair wearing matching beige corduroy suits and white socks, executing synchronized dance poses on a plain light gray studio floor in bright even light",
+  "pack_id": "P12",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 32
+ },
+ "humanvid_6785683|B": {
+  "N_target": 42,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6785683",
+  "description": "a mature woman with short cropped silver hair in a brown cardigan and a patterned white collared shirt, sitting outdoors while typing on a laptop beside large green monstera tropical leaves in soft natural daylight",
+  "pack_id": "P12",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 35
+ },
+ "humanvid_6790437|B": {
+  "N_target": 42,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6790437",
+  "description": "a young man and woman in plaid shirts and protective gear, standing together behind a wooden workbench while sketching plans on paper inside a bright rustic workshop setting",
+  "pack_id": "P12",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 28
+ },
+ "humanvid_6873329|A": {
+  "N_target": 40,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6873329",
+  "description": "A person with a goggle on their head wipes down the roof of a shiny black car using a grey microfiber cloth inside a dimly lit garage with bright white overhead fluorescent tube lights",
+  "pack_id": "P03",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 34
+ },
+ "humanvid_6873329|B": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6873329",
+  "description": "a young woman with short pink hair in a black long-sleeved shirt, wiping the wet glass windshield of a black car with a gray microfiber cloth in a dimly lit garage setting",
+  "pack_id": "P10",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 32
+ },
+ "humanvid_6892550|A": {
+  "N_target": 21,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6892550",
+  "description": "A middle-aged man with short grey hair, wearing a red long-sleeved shirt, walks on a treadmill under bright white gym lights",
+  "pack_id": "P02",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 21
+ },
+ "humanvid_6892729|A": {
+  "N_target": 31,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6892729",
+  "description": "A young man with glasses and headphones, wearing a light blue sweatshirt, speaks into a black microphone in a cozy dimly lit studio framed by wooden architectural elements",
+  "pack_id": "P04",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 28
+ },
+ "humanvid_6898098|A": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6898098",
+  "description": "A young woman with long dark braided hair, wearing a white long-sleeved shirt and blue pants, sits on a grey couch while opening stacked brown cardboard gift boxes in a brightly lit indoor room",
+  "pack_id": "P00",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 34
+ },
+ "humanvid_6944304|B": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6944304",
+  "description": "a woman with long brown hair in a black long-sleeved shirt and white pants, sitting beside a black studio microphone on an adjustable boom arm and smiling gently in a softly lit room",
+  "pack_id": "P10",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 33
+ },
+ "humanvid_6988779|A": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6988779",
+  "description": "A young woman with long black hair, wearing a white short-sleeved top, cuffed blue jeans, and black sneakers, crouches down in front of a crinkled pink backdrop illuminated by bright, soft indoor lighting",
+  "pack_id": "P00",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 33
+ },
+ "humanvid_6997942|A": {
+  "N_target": 31,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6997942",
+  "description": "A blonde woman, wearing a short-sleeved white medical tunic, walks forward through a bright medical clinic hallway past a man in a white t-shirt under bright white overhead lighting",
+  "pack_id": "P04",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 29
+ },
+ "humanvid_6997942|B": {
+  "N_target": 27,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_6997942",
+  "description": "a young woman with brown hair in a white medical coat, walking down a bright white hallway with clinical lighting",
+  "pack_id": "P11",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 20
+ },
+ "humanvid_7092087|B": {
+  "N_target": 27,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7092087",
+  "description": "a man with glasses in a blue shirt and dark vest, gesturing toward a whiteboard with writing in a bright classroom setting",
+  "pack_id": "P11",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 22
+ },
+ "humanvid_7148139|A": {
+  "N_target": 21,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7148139",
+  "description": "A man with dreadlocks, wearing a black shirt, stands behind a woman with curly hair, wearing a black top, in front of a dark curtain",
+  "pack_id": "P02",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 25
+ },
+ "humanvid_7148139|B": {
+  "N_target": 17,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7148139",
+  "description": "a black-and-white portrait of a man in a black shirt placing his hands on a woman with curly hair against a grey backdrop",
+  "pack_id": "P14",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 23
+ },
+ "humanvid_7150191|B": {
+  "N_target": 15,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7150191",
+  "description": "a young girl with dark hair, holding a chocolate cupcake topped with a gold number four candle near her face",
+  "pack_id": "P13",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 20
+ },
+ "humanvid_7187085|A": {
+  "N_target": 33,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7187085",
+  "description": "A young man with short dark hair, wearing a long-sleeved red athletic shirt, performs push-ups on green turf in an outdoor field lit by bright natural sunlight",
+  "pack_id": "P01",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 27
+ },
+ "humanvid_7234854|A": {
+  "N_target": 40,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7234854",
+  "description": "An older woman with long white hair and dark sunglasses, draped in a red plaid blanket and wearing a black leather jacket, drinks from a white cup beside a woven picnic basket under overcast outdoor daylight",
+  "pack_id": "P03",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 36
+ },
+ "humanvid_7530560|A": {
+  "N_target": 31,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7530560",
+  "description": "A mature woman with blonde hair, wearing a pink turban wrap and a grey sweatshirt, holds a blue rolled yoga mat in a brightly lit room with soft neutral light",
+  "pack_id": "P04",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "humanvid_7530560|B": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7530560",
+  "description": "a fair-skinned woman with blonde hair wrapped in a pink towel wearing a gray sweater, holding a rolled blue yoga mat and smiling thoughtfully against a plain light gray background",
+  "pack_id": "P10",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "humanvid_7550840|A": {
+  "N_target": 33,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7550840",
+  "description": "A woman with light brown hair in a ponytail, wearing a brown long-sleeved crop top and matching leggings, sits in a meditative pose holding incense with eyes closed in a room illuminated by soft natural light",
+  "pack_id": "P01",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 36
+ },
+ "humanvid_7564887|B": {
+  "N_target": 17,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7564887",
+  "description": "a man in a black vest standing beside a large yellow truck, holding a tool inside a dimly lit garage",
+  "pack_id": "P14",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 20
+ },
+ "humanvid_7569631|A": {
+  "N_target": 31,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7569631",
+  "description": "A young man with short slicked hair, wearing a dark sculpted corset piece and striped pants, gestures with his hand in a dimly lit studio bathed in dark blue light",
+  "pack_id": "P04",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "humanvid_7603782|B": {
+  "N_target": 27,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7603782",
+  "description": "a young girl with braided hair in a light beige outfit, holding a brass trumpet while sitting opposite another girl in a bright white room",
+  "pack_id": "P11",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 25
+ },
+ "humanvid_7628755|B": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7628755",
+  "description": "a woman with dark hair tied back in a green hoodie, crouching on a patch of grass in a park and hugging a small fluffy shepherd dog in front of bare trees",
+  "pack_id": "P10",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 32
+ },
+ "humanvid_7648961|B": {
+  "N_target": 17,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7648961",
+  "description": "a red-haired woman in a white polo sitting on a wooden stool beside a man holding a tennis racket in a studio",
+  "pack_id": "P14",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 22
+ },
+ "humanvid_7648962|B": {
+  "N_target": 15,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7648962",
+  "description": "a man in a white polo shirt and black athletic shorts, standing with one hand on his hip against a brown backdrop",
+  "pack_id": "P13",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 22
+ },
+ "humanvid_7659135|A": {
+  "N_target": 21,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7659135",
+  "description": "A female doctor in grey scrubs holds out a pink ribbon against a bright pink background",
+  "pack_id": "P02",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 16
+ },
+ "humanvid_7659135|B": {
+  "N_target": 42,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7659135",
+  "description": "a female healthcare worker in blue scrubs, holding out a folded pink awareness ribbon toward the camera against a plain bright pink background",
+  "pack_id": "P12",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 23
+ },
+ "humanvid_7664823|B": {
+  "N_target": 27,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7664823",
+  "description": "a young woman with dark wavy hair in a green jacket, smirking toward the camera in dim moody blue and pink lighting",
+  "pack_id": "P11",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 22
+ },
+ "humanvid_7682587|A": {
+  "N_target": 21,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7682587",
+  "description": "A young man wearing a tan button-down shirt and a headset smiles while sitting at a desk with a laptop in a bright office",
+  "pack_id": "P02",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 24
+ },
+ "humanvid_7729987|A": {
+  "N_target": 40,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7729987",
+  "description": "A young woman with straight black hair and blue eye makeup, wearing a ribbed white crop top and beige pants, holds a pink flower while a man in a white jacket stands beside her in a bright white studio setting",
+  "pack_id": "P03",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 40
+ },
+ "humanvid_7969936|A": {
+  "N_target": 33,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7969936",
+  "description": "A young man with neck tattoos, wearing a bright yellow jacket and matching yellow pants, dances in a sunlit hallway surrounded by three female dancers in colorful athletic wear",
+  "pack_id": "P01",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 29
+ },
+ "humanvid_7975461|B": {
+  "N_target": 15,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7975461",
+  "description": "a man in a white thobe and red patterned keffiyeh, typing on a white laptop at a wooden table in a brightly lit room",
+  "pack_id": "P13",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 24
+ },
+ "humanvid_7985893|A": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_7985893",
+  "description": "A young man with short dark hair, wearing a plain white t-shirt, holds a yellow sponge microphone up with both hands while looking forward against a textured dark grey studio backdrop with soft light",
+  "pack_id": "P00",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 34
+ },
+ "humanvid_8036712|A": {
+  "N_target": 40,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8036712",
+  "description": "A man with short brown hair, a trim beard, and round glasses, wearing an open green button-up shirt over a black t-shirt, sorts through white papers on a wooden desk inside a dark library filled with tall bookshelves under soft indoor lighting",
+  "pack_id": "P03",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 42
+ },
+ "humanvid_8036712|B": {
+  "N_target": 27,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8036712",
+  "description": "a man with glasses and a beard in a green button-down shirt over a black t-shirt, turning pages of a book before bookshelves in warm indoor lighting",
+  "pack_id": "P11",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 27
+ },
+ "humanvid_8047701|B": {
+  "N_target": 42,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8047701",
+  "description": "a young man with short black hair wearing large black headphones and a white short-sleeved shirt with horizontal black stripes, smiling and bobbing his head against a bright orange wall with soft ambient lighting",
+  "pack_id": "P12",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 34
+ },
+ "humanvid_8058398|B": {
+  "N_target": 42,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8058398",
+  "description": "a person with short platinum blonde hair in a black leather jacket wearing dark visor glasses, resting a hand on their chin near neon lights against a dark industrial background",
+  "pack_id": "P12",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "humanvid_8090682|A": {
+  "N_target": 31,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8090682",
+  "description": "A young woman with long dark hair, wearing a white hoodie and a white skirt, walks down a white wooden staircase in a brightly lit indoor home setting",
+  "pack_id": "P04",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 28
+ },
+ "humanvid_8165568|A": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8165568",
+  "description": "A bearded man with a white prayer cap, wearing a white high-neck shirt and a grey suit jacket, stands looking downward in an indoor space with warm ambient lighting and decorative archways",
+  "pack_id": "P00",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 32
+ },
+ "humanvid_8189502|A": {
+  "N_target": 31,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8189502",
+  "description": "A woman with long dark braided hair, wearing a white shirt and black overalls, plays an acoustic guitar while sitting on a patterned bed in soft natural lighting",
+  "pack_id": "P04",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 28
+ },
+ "humanvid_8284329|A": {
+  "N_target": 31,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8284329",
+  "description": "A young woman with long reddish-brown hair, wearing a black graduation cap and gown, holds up a white certificate in front of a stone building in bright natural daylight",
+  "pack_id": "P04",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 29
+ },
+ "humanvid_8293312|B": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8293312",
+  "description": "a woman with dark shoulder-length hair in a patterned black blouse holding a clipboard, pointing her hand toward the left while talking to a young man in a bright empty room",
+  "pack_id": "P10",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 31
+ },
+ "humanvid_8344810|B": {
+  "N_target": 42,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8344810",
+  "description": "a bearded man with a prosthetic leg wearing a black t-shirt and black shorts, running along an outdoor track in bright natural daylight",
+  "pack_id": "P12",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 23
+ },
+ "humanvid_8369877|A": {
+  "N_target": 40,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8369877",
+  "description": "A young man with blonde hair, wearing a dark blue suit, white dress shirt, and black tie, points at photos and maps pinned to a large corkboard inside a brightly lit office space",
+  "pack_id": "P03",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 33
+ },
+ "humanvid_8376542|A": {
+  "N_target": 33,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8376542",
+  "description": "A young man with short dark hair, wearing bright yellow pajamas and yellow socks, walks across a white studio floor strewn with blue, pink, and green pillows under bright white light",
+  "pack_id": "P01",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 31
+ },
+ "humanvid_8377703|B": {
+  "N_target": 15,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8377703",
+  "description": "a young woman with long curly black hair in a white ribbed tank top, looking directly forward against a beige wall",
+  "pack_id": "P13",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 21
+ },
+ "humanvid_8419407|B": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8419407",
+  "description": "a girl with long wavy brown hair in a green polka-dot crop top and blue jeans, standing near a large tall window inside a sunlit classroom and looking toward the side",
+  "pack_id": "P10",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 31
+ },
+ "humanvid_8512828|A": {
+  "N_target": 21,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8512828",
+  "description": "A young woman with long blonde hair, wearing a black coat, looks forward outdoors during a golden sunset",
+  "pack_id": "P02",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 18
+ },
+ "humanvid_8519351|B": {
+  "N_target": 17,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8519351",
+  "description": "a woman with dark hair in a black dress, looking down at a wooden clipboard while standing in an office",
+  "pack_id": "P14",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 20
+ },
+ "humanvid_8546635|A": {
+  "N_target": 21,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8546635",
+  "description": "A woman in a light blue suit and white shoes stretches at her desk in a bright office with white shelves",
+  "pack_id": "P02",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 21
+ },
+ "humanvid_8724423|A": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8724423",
+  "description": "An older woman with short blonde hair, wearing a light pink crewneck t-shirt, gestures with her hands while looking directly forward against a solid dark grey background illuminated by soft studio lighting",
+  "pack_id": "P00",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 32
+ },
+ "humanvid_8724423|B": {
+  "N_target": 17,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8724423",
+  "description": "a close-up of a person in a light pink t-shirt, raising clenched fists in front of a dark backdrop",
+  "pack_id": "P14",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 19
+ },
+ "humanvid_8762603|A": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8762603",
+  "description": "A young man with spiked frosted-blonde hair, wearing a white collar and a clear plastic jacket, looks downward against a purple studio backdrop illuminated by soft cool lighting and subtle pink highlights",
+  "pack_id": "P00",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 32
+ },
+ "humanvid_8762603|B": {
+  "N_target": 27,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8762603",
+  "description": "a young man with frosted spiky hair in a clear jacket and white shirt, looking directly into the camera under soft purple studio lighting",
+  "pack_id": "P11",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 24
+ },
+ "humanvid_8774686|A": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8774686",
+  "description": "Three friends, including a man in a red t-shirt, a man in a purple polo shirt and sunglasses, and a woman in an orange crop top, pose together on a boat deck under bright sunlight",
+  "pack_id": "P00",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 35
+ },
+ "humanvid_8859334|A": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8859334",
+  "description": "A shirtless man with dark hair and tattoos, wearing colorful pink and blue tie-dye shorts, holds his hands on his waist while standing against a plain beige background illuminated by bright studio lighting",
+  "pack_id": "P00",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 33
+ },
+ "humanvid_8873231|B": {
+  "N_target": 27,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8873231",
+  "description": "a woman with long brown hair in a light purple suit, holding a black microphone and speaking at a wooden podium against a plain white wall in bright indoor lighting",
+  "pack_id": "P11",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "humanvid_8964793|A": {
+  "N_target": 33,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8964793",
+  "description": "A female construction worker in a white hard hat and yellow safety vest, standing beside a male worker in a yellow hard hat and blue shirt, speaks while holding a tablet outdoors in bright daylight",
+  "pack_id": "P01",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 35
+ },
+ "humanvid_8965270|A": {
+  "N_target": 31,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_8965270",
+  "description": "A woman with dark hair, wearing a plaid flannel shirt and grey work pants, holds a tablet and looks upward alongside a man in a dark t-shirt in a wooden room",
+  "pack_id": "P04",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 31
+ },
+ "humanvid_9005815|A": {
+  "N_target": 21,
+  "accepted_on_attempt": null,
+  "arm": "fresh",
+  "audit": {
+   "errors": [
+    "The lights are red and orange, not green and orange."
+   ],
+   "inaccurate": "YES",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_9005815",
+  "description": null,
+  "pack_id": "P02",
+  "role": "A",
+  "status": "REJECTED_FIRST_PASS",
+  "tier2": [],
+  "words": 23
+ },
+ "humanvid_9005815|B": {
+  "N_target": 27,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_9005815",
+  "description": "a man with a black beret and leather jacket, playing a white electric guitar near a vintage microphone in dim moody blue lighting",
+  "pack_id": "P11",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 23
+ },
+ "humanvid_9005890|B": {
+  "N_target": 27,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_9005890",
+  "description": "a group of people in dark purple and white clothing, singing together around a silver vintage microphone under vibrant pink and blue studio lighting",
+  "pack_id": "P11",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 24
+ },
+ "humanvid_9006364|B": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_9006364",
+  "description": "a man with dark skin in a white shirt, black suspenders, and a hat, holding a vintage silver microphone with both hands while singing under soft colorful indoor lights",
+  "pack_id": "P10",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 29
+ },
+ "humanvid_9218284|A": {
+  "N_target": 33,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_9218284",
+  "description": "A young woman wearing a black hijab, tortoise-shell sunglasses, and a brown buttoned cardigan over a black shirt, leans against a grey stone ledge outdoors in front of tall city buildings illuminated by daylight",
+  "pack_id": "P01",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 34
+ },
+ "humanvid_9218284|B": {
+  "N_target": 17,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_9218284",
+  "description": "a woman with a black hijab and sunglasses in a brown button-up shirt, standing outdoors in front of city buildings",
+  "pack_id": "P14",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 20
+ },
+ "humanvid_9564077|A": {
+  "N_target": 31,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_9564077",
+  "description": "A woman with short dark curly hair, wearing a black V-neck top, sits at a dark bar counter talking next to a grey-haired man in a warm dimly lit interior",
+  "pack_id": "P04",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "humanvid_9955062|A": {
+  "N_target": 40,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_9955062",
+  "description": "A shirtless man with short dark hair, wearing a white cape with gold chain accents, holds a bright pink flower against a deep blue backdrop in dramatic studio lighting",
+  "pack_id": "P03",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 29
+ },
+ "humanvid_9955062|B": {
+  "N_target": 15,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "humanvid",
+  "clip_id": "humanvid_9955062",
+  "description": "a dark-skinned man in a white jacket and white hat, holding a bright pink flower against a solid blue background",
+  "pack_id": "P13",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 20
+ },
+ "openvid_RjQG9PQv9UM_10_41to241|B": {
+  "N_target": 29,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_RjQG9PQv9UM_10_41to241",
+  "description": "a man with a black baseball cap in a black graphic t-shirt, gesturing with his hand while speaking in a room with light blue walls and soft indoor lighting",
+  "pack_id": "P15",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 29
+ },
+ "openvid_RquUFnOoNRk_17_0to110|B": {
+  "N_target": 35,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_RquUFnOoNRk_17_0to110",
+  "description": "a man with side-parted blonde hair wearing a green apron and black gloves, assembling a colorful craft toy on a light blue table in a brightly lit room with colorful shelves",
+  "pack_id": "P16",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 31
+ },
+ "openvid_RsC5X2XNAsA_5_0to140|B": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_RsC5X2XNAsA_5_0to140",
+  "description": "a man with short dark hair in a black long-sleeved shirt sitting at a classroom table, watching a presentation on a bright blue screen beside other seated participants under soft indoor fluorescent lighting",
+  "pack_id": "P18",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 33
+ },
+ "openvid_Rv5tq_kWjRE_23_0to288|B": {
+  "N_target": 35,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_Rv5tq_kWjRE_23_0to288",
+  "description": "a fair-skinned man with a ginger beard wearing aviator glasses, a gray tweed flat cap, and a bright orange polo shirt, talking directly to the camera in front of a wooden window frame with stained glass",
+  "pack_id": "P16",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 36
+ },
+ "openvid_Ry-JeKr-i2M_56_33to175|A": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_Ry-JeKr-i2M_56_33to175",
+  "description": "A woman with long wavy brown hair, wearing a white straw hat, sunglasses, and a yellow shirt, stands outdoors against green trees in bright natural sunlight",
+  "pack_id": "P08",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 26
+ },
+ "openvid_RzR0x2J5sPA_7_1368to1499|A": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_RzR0x2J5sPA_7_1368to1499",
+  "description": "A young woman with reddish hair and glasses, wearing a brown maid dress with bat ears, holds a black microphone outdoors with people gathered around in daylight",
+  "pack_id": "P07",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 27
+ },
+ "openvid_S-eyEO9SmLs_3_0to210|A": {
+  "N_target": 38,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_S-eyEO9SmLs_3_0to210",
+  "description": "A middle-aged woman with shoulder-length blonde hair, wearing a dark brown long-sleeved shirt and silver necklace, speaks in an indoor setting illuminated by warm neutral light",
+  "pack_id": "P09",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 26
+ },
+ "openvid_T3NNiOsFLEw_12_21to157|A": {
+  "N_target": 30,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_T3NNiOsFLEw_12_21to157",
+  "description": "A dark-skinned man in a dark grey suit jacket, white shirt, and blue patterned bow tie looks down while seated in a studio setting",
+  "pack_id": "P05",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 24
+ },
+ "openvid_T4RelfB1P2A_14_45to200|A": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_T4RelfB1P2A_14_45to200",
+  "description": "A dark-haired man in a grey short-sleeved shirt holds a tool while standing beside an orange and black motorcycle indoors under bright white lights",
+  "pack_id": "P08",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 24
+ },
+ "openvid_T4xqFDJf7yM_2_76to186|B": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_T4xqFDJf7yM_2_76to186",
+  "description": "a young person with a black bandana over their face, a backwards cap, and a patterned tank top, standing outdoors with arms folded near a fountain under bright daylight",
+  "pack_id": "P18",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 29
+ },
+ "openvid_T5ZCFynSomc_29_0to139|B": {
+  "N_target": 29,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_T5ZCFynSomc_29_0to139",
+  "description": "a senior black man in a black suit, white shirt, and glasses, standing and looking forward in a bright indoor room alongside other guests",
+  "pack_id": "P15",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 24
+ },
+ "openvid_TFG-PvdqCjc_0_0to109|B": {
+  "N_target": 37,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_TFG-PvdqCjc_0_0to109",
+  "description": "a young Asian woman with long wavy black hair in a gray ruffled sleeveless blouse, speaking directly forward in front of a white tiled kitchen wall in bright indoor lighting",
+  "pack_id": "P19",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "openvid_TI78Alt9t5k_19_91to227|A": {
+  "N_target": 25,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_TI78Alt9t5k_19_91to227",
+  "description": "A man with short dark hair, wearing a white lab coat over a grey shirt and black tie, smiles near a bright window inside a room",
+  "pack_id": "P06",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 26
+ },
+ "openvid_URLAedhIKbk_2_0to415|A": {
+  "N_target": 30,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_URLAedhIKbk_2_0to415",
+  "description": "A man wearing sunglasses and a navy blue jacket drives a sports car with a tan leather interior down a road in natural daylight",
+  "pack_id": "P05",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 24
+ },
+ "openvid_URLAedhIKbk_2_0to415|B": {
+  "N_target": 29,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_URLAedhIKbk_2_0to415",
+  "description": "a man with short brown hair and sunglasses in a blue jacket and black t-shirt, holding the steering wheel while driving inside a brown leather car interior under bright daylight",
+  "pack_id": "P15",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "openvid_UUUWxvofLgU_13_19to453|A": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_UUUWxvofLgU_13_19to453",
+  "description": "A woman with curly brown hair, wearing a blue sleeveless lace dress, sits beside a blue water bottle and white machine box in a bright white studio setting",
+  "pack_id": "P07",
+  "role": "A",
+  "status": null,
+  "tier2": [
+   "class_word:water",
+   "shader_escape:box"
+  ],
+  "words": 28
+ },
+ "openvid_UUUWxvofLgU_13_19to453|B": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_UUUWxvofLgU_13_19to453",
+  "description": "a light-skinned woman with long curly brown hair in a blue lace dress, assembling a metallic water ionizer attachment with colorful tubes, sitting near a blue bottle under bright studio light",
+  "pack_id": "P17",
+  "role": "B",
+  "status": null,
+  "tier2": [
+   "class_word:water"
+  ],
+  "words": 31
+ },
+ "openvid_X2t4l_yMStE_4_0to207|B": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_X2t4l_yMStE_4_0to207",
+  "description": "a man with short light brown hair in a dark suit jacket and light blue collared shirt, speaking with an open mouth inside a brightly lit studio with white overhead lighting",
+  "pack_id": "P18",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 31
+ },
+ "openvid_XA2HBBrkUbU_109_0to173|A": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_XA2HBBrkUbU_109_0to173",
+  "description": "A woman with short dark hair, wearing a white shirt, uses both hands to place food in her mouth inside a room with soft daylight",
+  "pack_id": "P08",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 25
+ },
+ "openvid_XA2HBBrkUbU_109_0to173|B": {
+  "N_target": 35,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_XA2HBBrkUbU_109_0to173",
+  "description": "a woman with dark shoulder-length hair and red lipstick wearing a light gray top, looking down and opening a small container in a brightly lit room with a white wall",
+  "pack_id": "P16",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "openvid_XEPyFpamcfs_25_183to461|B": {
+  "N_target": 35,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_XEPyFpamcfs_25_183to461",
+  "description": "a black supercar with its rear engine compartment open, displaying intricate mechanical components and wide rear tires while parked on a cobbled gray stone street in natural daylight",
+  "pack_id": "P16",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 28
+ },
+ "openvid_XHZmNU-De3A_62_0to504|B": {
+  "N_target": 37,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_XHZmNU-De3A_62_0to504",
+  "description": "a short-haired man in a black fleece jacket over a yellow shirt, standing outdoors and talking with his hands clasped together under an overcast sky",
+  "pack_id": "P19",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 25
+ },
+ "openvid_XM9K4luhq4U_8_0to127|B": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid_XM9K4luhq4U_8_0to127",
+  "description": "a fair-skinned woman with short blonde bangs and braided hair in a white zippered jacket, standing amid a crowd outdoors under overcast sky, listening attentively while black microphones are held up in front of her",
+  "pack_id": "P17",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 35
+ },
+ "openvid__hKvS8p3JCM_17_0to102|A": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid__hKvS8p3JCM_17_0to102",
+  "description": "A colorful bird with red chest, white tail feathers, and green wings flies through a blurry outdoor forest setting under natural light",
+  "pack_id": "P07",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 22
+ },
+ "openvid__nLdQ5vZP5c_6_0to148|B": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid__nLdQ5vZP5c_6_0to148",
+  "description": "a man with facial hair in a dark flat cap and blue padded coat over a red shirt, gesturing with his hand while talking outdoors near a glass building in natural light",
+  "pack_id": "P17",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 32
+ },
+ "openvid__oJxPqTzmHM_33_0to162|A": {
+  "N_target": 38,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid__oJxPqTzmHM_33_0to162",
+  "description": "A bald man with glasses and a beard, wearing a blue t-shirt and black apron, holds a metal spatula and touches a black skillet on a portable burner in a brightly lit kitchen setting",
+  "pack_id": "P09",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 34
+ },
+ "openvid__pWnn1ODmiY_6_0to270|A": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid__pWnn1ODmiY_6_0to270",
+  "description": "A male soccer player with short dark hair, wearing a red jersey and green socks, kicks a soccer ball on a green field under stadium lights",
+  "pack_id": "P08",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 26
+ },
+ "openvid__sRboZAx_zk_41_0to136|A": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid__sRboZAx_zk_41_0to136",
+  "description": "A young girl with wavy brown hair, wearing a pink long-sleeved pajama shirt with a sloth print, sits indoors in front of a white louvered door under soft indoor light",
+  "pack_id": "P07",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "openvid__t-96LgcizU_7_0to191|B": {
+  "N_target": 29,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid__t-96LgcizU_7_0to191",
+  "description": "a man with dark hair, a short beard, and sunglasses in a gray t-shirt, speaking in profile against a blurred green store background in bright indoor light",
+  "pack_id": "P15",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 27
+ },
+ "openvid__y0W5Nty9Z8_91_51to188|B": {
+  "N_target": 37,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "openvid__y0W5Nty9Z8_91_51to188",
+  "description": "a fair-skinned man with messy blonde hair and a full brown beard in black-framed glasses and a black t-shirt, looking directly ahead with wide blue eyes inside a dimly lit indoor space",
+  "pack_id": "P19",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 32
+ },
+ "vcbench_action_2791956_2160x3840|A": {
+  "N_target": 25,
+  "accepted_on_attempt": null,
+  "arm": "fresh",
+  "audit": {
+   "errors": [
+    "The person in the video is a skateboarder, not a runner.",
+    "The clothing described (blue and white athletic leggings) does not match the person's white shirt and light pants.",
+    "The setting is an indoor warehouse or industrial space, not a wet asphalt street."
+   ],
+   "inaccurate": "YES",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_action_2791956_2160x3840",
+  "description": null,
+  "pack_id": "P06",
+  "role": "A",
+  "status": "REJECTED_FIRST_PASS",
+  "tier2": [],
+  "words": 27
+ },
+ "vcbench_action_5310858_3840x2160|A": {
+  "N_target": 25,
+  "accepted_on_attempt": null,
+  "arm": "paired",
+  "audit": {
+   "errors": [
+    "The person shown is a runner viewed from behind, not a man with short dark hair in a white shirt and grey pants.",
+    "The person is not riding a skateboard.",
+    "The setting is an outdoor street or plaza, not a dim warehouse with grid windows."
+   ],
+   "inaccurate": "YES",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_action_5310858_3840x2160",
+  "description": null,
+  "pack_id": "P06",
+  "role": "A",
+  "status": "REJECTED_FIRST_PASS",
+  "tier2": [],
+  "words": 30
+ },
+ "vcbench_animal_2122952_1920x1080|A": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_animal_2122952_1920x1080",
+  "description": "A brown horse with a white mark on its face, wearing a black harness, trots along a dirt track beside a white fence under natural daylight",
+  "pack_id": "P08",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 26
+ },
+ "vcbench_animal_2430774_3840x2160|A": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_animal_2430774_3840x2160",
+  "description": "A grey spotted seagull, with brown and white feathers, pecks at wet sand along a shallow tide line in overcast natural daylight",
+  "pack_id": "P08",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 22
+ },
+ "vcbench_animal_2430774_3840x2160|B": {
+  "N_target": 37,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_animal_2430774_3840x2160",
+  "description": "a spotted gray and brown juvenile seagull with dark beak, standing still on wet beige sand near the edge of water in soft natural daylight",
+  "pack_id": "P19",
+  "role": "B",
+  "status": null,
+  "tier2": [
+   "class_word:water"
+  ],
+  "words": 25
+ },
+ "vcbench_animal_3191251_4096x2160|A": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_animal_3191251_4096x2160",
+  "description": "A golden retriever dog wags its tail while standing next to a person in a plaid shirt and blue jeans in a sunlit green park",
+  "pack_id": "P08",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 25
+ },
+ "vcbench_animal_3195531_3840x2160|A": {
+  "N_target": 38,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_animal_3195531_3840x2160",
+  "description": "A brown elk with large antlers stands on a snowy ground near a forest of birch trees in bright daylight, turning its head toward the side",
+  "pack_id": "P09",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 26
+ },
+ "vcbench_architecture_2828876_1080x1920|A": {
+  "N_target": 25,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_architecture_2828876_1080x1920",
+  "description": "A large stone statue atop a green mountain peak stands above a hazy coastal city under soft daylight, as seen from an aerial camera viewpoint",
+  "pack_id": "P06",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 25
+ },
+ "vcbench_book_4034130_2160x4096|B": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_book_4034130_2160x4096",
+  "description": "a person with light skin in a dark jacket, running a hand across open pages of a book with white paper, under warm orange indoor light beside wooden furniture",
+  "pack_id": "P17",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 29
+ },
+ "vcbench_butterfly_854867_3840x2160|A": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_butterfly_854867_3840x2160",
+  "description": "A black and white striped butterfly with slender wings rests on a red brush flower surrounded by green leaves under natural daylight",
+  "pack_id": "P07",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 22
+ },
+ "vcbench_coast_33754706_2160x3840|A": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_coast_33754706_2160x3840",
+  "description": "A blue fishing boat loaded with bright orange buoy fenders floats in a harbour near green cliffs and other small white and blue vessels under natural daylight",
+  "pack_id": "P07",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 27
+ },
+ "vcbench_conversation_3045059_3840x2160|B": {
+  "N_target": 37,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_conversation_3045059_3840x2160",
+  "description": "a woman with straight black hair in a red plaid blazer suit, holding a black coffee cup with a lid while standing in a bright white modern atrium building",
+  "pack_id": "P19",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 29
+ },
+ "vcbench_conversation_3206301_1920x1080|A": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_conversation_3206301_1920x1080",
+  "description": "A bald man with short dark beard, wearing a tan coat over a black shirt, looks down at a black smartphone in his hands outdoors in front of a grey stone building under daylight",
+  "pack_id": "P07",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 34
+ },
+ "vcbench_conversation_3206301_1920x1080|B": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_conversation_3206301_1920x1080",
+  "description": "a smiling man with short dark hair in a beige coat over a black shirt, holding a black mobile phone to his ear while standing outdoors near a stone wall in bright daylight",
+  "pack_id": "P17",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 33
+ },
+ "vcbench_conversation_3248276_3840x2160|B": {
+  "N_target": 35,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_conversation_3248276_3840x2160",
+  "description": "a light-skinned man with short light brown hair and a beard wearing a plain beige sweatshirt, smiling and standing beside a person holding a notebook inside a brightly lit indoor room with exposed brick",
+  "pack_id": "P16",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 34
+ },
+ "vcbench_conversation_4326529_3840x2160|A": {
+  "N_target": 38,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_conversation_4326529_3840x2160",
+  "description": "A young woman with long dark hair, wearing a red and white checkered shirt, holds a beige smartphone and looks down with a smile against a dark green wooden wall in dim lighting",
+  "pack_id": "P09",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 33
+ },
+ "vcbench_dancing_2795737_3840x2160|B": {
+  "N_target": 35,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_dancing_2795737_3840x2160",
+  "description": "a tall white tiled wall adorned with a green abstract mural, reflecting bright sunlight against a pale exterior backdrop in daylight",
+  "pack_id": "P16",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 21
+ },
+ "vcbench_dancing_3761544_3840x2160|B": {
+  "N_target": 29,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_dancing_3761544_3840x2160",
+  "description": "a young woman with brown hair in a light yellow t-shirt and white wireless earbuds, tossing her hair with her hands against a plain light blue background",
+  "pack_id": "P15",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 27
+ },
+ "vcbench_dancing_4540332_3840x2160|A": {
+  "N_target": 38,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_dancing_4540332_3840x2160",
+  "description": "A young person with short brown hair and glasses, wearing a black sweater, dark grey trousers, and black sneakers, dances on a grey sidewalk beside a red brick building under overcast daylight",
+  "pack_id": "P09",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 32
+ },
+ "vcbench_destination_33713788_3840x2160|A": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_destination_33713788_3840x2160",
+  "description": "An overhead view shows a dense coastal city with small houses, paved streets, green trees, and a blue ocean stretching to the horizon under bright daylight",
+  "pack_id": "P07",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 26
+ },
+ "vcbench_destination_33713788_3840x2160|B": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_destination_33713788_3840x2160",
+  "description": "an overhead view of a densely populated coastal city with light-colored houses and green trees, stretching toward a blue ocean under a clear bright blue sky in natural sunlight",
+  "pack_id": "P17",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 29
+ },
+ "vcbench_football_10349005_4096x2160|B": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_football_10349005_4096x2160",
+  "description": "a young man in a light blue sweatshirt and gray shorts, juggling a white and patterned soccer ball with his feet, indoors against a dark black background",
+  "pack_id": "P17",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 27
+ },
+ "vcbench_library_4860943_4096x2160|B": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_library_4860943_4096x2160",
+  "description": "a woman with a short dark bob and glasses in an olive green top, holding open a white book beside a tall black bookshelf filled with colorful volumes under soft natural window light",
+  "pack_id": "P18",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 33
+ },
+ "vcbench_library_8086641_2160x4096|B": {
+  "N_target": 37,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_library_8086641_2160x4096",
+  "description": "a tall wooden bookshelf filled with colorful books, standing beside a blurry doorway in a quiet indoor room under soft overhead ambient lighting",
+  "pack_id": "P19",
+  "role": "B",
+  "status": null,
+  "tier2": [
+   "shader_escape:doorway"
+  ],
+  "words": 23
+ },
+ "vcbench_meeting_3251811_3840x2160|A": {
+  "N_target": 38,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_meeting_3251811_3840x2160",
+  "description": "A young man with dark skin, wearing a tan blazer and green t-shirt, sits at a wooden desk holding a pencil while looking at a laptop in a brightly lit office setting",
+  "pack_id": "P09",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 32
+ },
+ "vcbench_meeting_3252919_3840x2160|A": {
+  "N_target": 25,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_meeting_3252919_3840x2160",
+  "description": "A woman with short curly dark hair and round glasses, wearing a beige blazer over a grey turtleneck, sits at a wooden office desk surrounded by ceramic mugs and laptops under soft indoor lighting",
+  "pack_id": "P06",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 34
+ },
+ "vcbench_meeting_3255226_3840x2160|B": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_meeting_3255226_3840x2160",
+  "description": "a bald man with black glasses in a crisp white button-down shirt, gesturing with his hand while looking at documents on a wooden desk, in a bright modern office with green plants and soft daylight",
+  "pack_id": "P17",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 35
+ },
+ "vcbench_meeting_3256571_2160x3840|A": {
+  "N_target": 38,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_meeting_3256571_2160x3840",
+  "description": "A young man with short dark hair, wearing a tan blazer and beige t-shirt, leans over a desk to look at a laptop screen in a brightly lit office with wooden shelving",
+  "pack_id": "P09",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 32
+ },
+ "vcbench_meeting_4428751_3840x2160|B": {
+  "N_target": 29,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_meeting_4428751_3840x2160",
+  "description": "a middle-aged man with graying hair and beard wearing glasses and a black blazer, smiling in profile inside a warm dimly lit restaurant with brown furniture",
+  "pack_id": "P15",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 26
+ },
+ "vcbench_mirror_4155070_4096x2160|A": {
+  "N_target": 30,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_mirror_4155070_4096x2160",
+  "description": "A woman with volumetric curly blonde hair, wearing a black robe, sits on a wooden windowsill while applying eyebrow makeup with a small brush and holding a round black mirror in soft daylight",
+  "pack_id": "P05",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 33
+ },
+ "vcbench_music_4088836_1920x1080|A": {
+  "N_target": 25,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_music_4088836_1920x1080",
+  "description": "A musician's hand plucks the steel strings of a dark wooden bass guitar in close-up under warm low lighting",
+  "pack_id": "P06",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 19
+ },
+ "vcbench_painting_3805736_2160x4096|B": {
+  "N_target": 29,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_painting_3805736_2160x4096",
+  "description": "a middle-aged man with short gray hair in a black button-down shirt, holding a paintbrush and looking down intently in a studio with large grid windows",
+  "pack_id": "P15",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 26
+ },
+ "vcbench_phone_3044315_3840x2160|A": {
+  "N_target": 25,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_phone_3044315_3840x2160",
+  "description": "A woman with dark hair pulled into a top knot, wearing a grey turtleneck sweater and a black-and-grey plaid blazer, looks down at her black smartphone while holding a white coffee cup outdoors in daylight",
+  "pack_id": "P06",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 35
+ },
+ "vcbench_phone_3115593_3840x2160|A": {
+  "N_target": 30,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_phone_3115593_3840x2160",
+  "description": "A blonde woman in a beige trench coat holds a black mobile phone to her ear while speaking outdoors in soft diffused daylight",
+  "pack_id": "P05",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 23
+ },
+ "vcbench_phone_3115593_3840x2160|B": {
+  "N_target": 37,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_phone_3115593_3840x2160",
+  "description": "a fair-skinned woman with straight blonde shoulder-length hair in a beige trench coat and white collared shirt, holding a black smartphone to her ear and smiling outdoors in soft natural daylight",
+  "pack_id": "P19",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 31
+ },
+ "vcbench_photography_2795401_2160x3840|B": {
+  "N_target": 37,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_photography_2795401_2160x3840",
+  "description": "a smiling woman with wavy light brown hair in a red beanie and bright yellow jacket, holding a vintage camera in front of a tall window frame in outdoor daylight",
+  "pack_id": "P19",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "vcbench_photography_3894706_2160x4096|A": {
+  "N_target": 30,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_photography_3894706_2160x4096",
+  "description": "A woman with blonde hair, wearing a black oversized hoodie, dances dynamically against a solid black background lit by cool side lighting",
+  "pack_id": "P05",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 22
+ },
+ "vcbench_photography_3894706_2160x4096|B": {
+  "N_target": 37,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_photography_3894706_2160x4096",
+  "description": "a fair-skinned woman with long blonde hair wearing a black hooded sweater over her head, staring forward with a neutral expression against a dark background in stark studio lighting",
+  "pack_id": "P19",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 29
+ },
+ "vcbench_photography_3917513_4096x2160|A": {
+  "N_target": 30,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_photography_3917513_4096x2160",
+  "description": "A man in a black and white striped shirt gestures toward a blonde woman in a grey suit in a dark studio lit by a bright spotlight",
+  "pack_id": "P05",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 27
+ },
+ "vcbench_reading_4153582_2160x4096|A": {
+  "N_target": 25,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_reading_4153582_2160x4096",
+  "description": "A young woman wrapped in a white bath towel, wearing a white bathrobe, sits cross-legged on a bed with white linens and reads a magazine inside a bright bedroom",
+  "pack_id": "P06",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 29
+ },
+ "vcbench_reading_853947_1920x1080|A": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_reading_853947_1920x1080",
+  "description": "A young man with short dark hair, wearing a white dotted shirt, reads a comic book inside a train carriage under bright white overhead lights",
+  "pack_id": "P08",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 25
+ },
+ "vcbench_robot_7651117_1920x1080|B": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_robot_7651117_1920x1080",
+  "description": "a woman in a beige swimsuit with a black leather harness, holding her arms up surrounded by loose black wires hanging down around her body against a bright white background",
+  "pack_id": "P18",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "vcbench_robot_8764794_2160x3840|A": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_robot_8764794_2160x3840",
+  "description": "A man with short blonde hair, wearing a white long-sleeved shirt and black virtual reality headset, stands near a woman in a white coat and headset in a studio illuminated by neon pink and purple lights",
+  "pack_id": "P07",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 36
+ },
+ "vcbench_school_5184436_1080x1920|A": {
+  "N_target": 30,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_school_5184436_1080x1920",
+  "description": "A young man in a grey t-shirt sits at a white desk, writing on a grid notebook with a wooden pencil beside open textbooks and a glass of water under bright daylight",
+  "pack_id": "P05",
+  "role": "A",
+  "status": null,
+  "tier2": [
+   "class_word:water"
+  ],
+  "words": 32
+ },
+ "vcbench_sculpture_3713530_2160x4096|A": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_sculpture_3713530_2160x4096",
+  "description": "A young man with short dark hair, wearing an open black jacket, holds a white classical bust statue in a softly lit room with warm indoor lighting",
+  "pack_id": "P08",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 27
+ },
+ "vcbench_sculpture_3959723_4096x2160|A": {
+  "N_target": 30,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_sculpture_3959723_4096x2160",
+  "description": "A white plaster statue head of a bearded man with curly hair tilts upward against a solid orange background illuminated by soft studio lighting",
+  "pack_id": "P05",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 24
+ },
+ "vcbench_sunset_1686791_1080x1920|B": {
+  "N_target": 35,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_sunset_1686791_1080x1920",
+  "description": "a dark airplane wing silhouetted against a vibrant orange and yellow twilight horizon, hovering above a dark layer of clouds in a clear sky during sunset",
+  "pack_id": "P16",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 26
+ },
+ "vcbench_talk_3255327_3840x2160|B": {
+  "N_target": 35,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_talk_3255327_3840x2160",
+  "description": "a young woman with brown curly hair tied back wearing a black jacket over a white t-shirt, smiling broadly while standing in a brightly lit indoor room",
+  "pack_id": "P16",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 27
+ },
+ "vcbench_teacher_11025559_4096x2160|A": {
+  "N_target": 32,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_teacher_11025559_4096x2160",
+  "description": "A young boy with short black hair, wearing a grey checkered shirt, writes on paper with a blue pen inside a wooden desk room with natural light",
+  "pack_id": "P08",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 27
+ },
+ "vcbench_teacher_6333712_4096x2160|A": {
+  "N_target": 38,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_teacher_6333712_4096x2160",
+  "description": "A young woman with voluminous curly brown hair, wearing a yellow turtleneck sweater, sits at a desk with open books in a brightly lit library setting with blurred bookshelves behind her",
+  "pack_id": "P09",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 31
+ },
+ "vcbench_teacher_6333712_4096x2160|B": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_teacher_6333712_4096x2160",
+  "description": "a young woman with voluminous curly brown hair in a mustard yellow turtleneck sweater, writing in a notebook while reading books at a table inside a brightly lit library setting",
+  "pack_id": "P18",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "vcbench_teacher_6334253_4096x2160|B": {
+  "N_target": 29,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_teacher_6334253_4096x2160",
+  "description": "a young man with long light brown hair and glasses in a gray button-up shirt, smiling while looking down at open books in a bright library filled with bookshelves",
+  "pack_id": "P15",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 29
+ },
+ "vcbench_teenager_4100460_4096x2160|B": {
+  "N_target": 35,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_teenager_4100460_4096x2160",
+  "description": "a young man with pale skin and light eyes wearing a dark black hooded sweatshirt, looking directly into the camera with a neutral expression in soft indoor lighting",
+  "pack_id": "P16",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 28
+ },
+ "vcbench_tulip_7268820_4096x2160|A": {
+  "N_target": 38,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_tulip_7268820_4096x2160",
+  "description": "A person with fair skin, wearing a white sheer pleated long-sleeve blouse, reaches toward light pink flowers and delicate green stems against a bright white background illuminated by soft lighting",
+  "pack_id": "P09",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 30
+ },
+ "vcbench_tulip_7661799_4096x2160|B": {
+  "N_target": 34,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_tulip_7661799_4096x2160",
+  "description": "a woman with fair skin in a sleeveless pleated cream silk dress, holding a fresh red strawberry and green grapes in her hands over her lap, resting in soft natural indoor light against a plain gray wall",
+  "pack_id": "P17",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 37
+ },
+ "vcbench_turtle_17823784_2160x3840|B": {
+  "N_target": 36,
+  "accepted_on_attempt": 1,
+  "arm": "fresh",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_turtle_17823784_2160x3840",
+  "description": "an overhead view of a dark sea turtle, swimming through clear turquoise pool water with bright shimmering light patterns reflected across the surface",
+  "pack_id": "P18",
+  "role": "B",
+  "status": null,
+  "tier2": [
+   "class_word:water"
+  ],
+  "words": 23
+ },
+ "vcbench_turtle_5259430_2160x4096|A": {
+  "N_target": 25,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_turtle_5259430_2160x4096",
+  "description": "A child with dark hair, wearing a white patterned top, reaches out a hand to touch the shell of a green-and-yellow turtle sitting under bright indoor light",
+  "pack_id": "P06",
+  "role": "A",
+  "status": null,
+  "tier2": [],
+  "words": 27
+ },
+ "vcbench_vegetable_853790_1920x1080|B": {
+  "N_target": 37,
+  "accepted_on_attempt": 1,
+  "arm": "paired",
+  "audit": {
+   "errors": [],
+   "inaccurate": "NO",
+   "leak": "NO"
+  },
+  "bank": "synth_endpoints",
+  "clip_id": "vcbench_vegetable_853790_1920x1080",
+  "description": "a wooden crate filled with green produce and dark fruits, sitting on a table at an outdoor market stall under bright daylight",
+  "pack_id": "P19",
+  "role": "B",
+  "status": null,
+  "tier2": [],
+  "words": 22
+ }
+}

@@ -1,0 +1,195 @@
+{
+ "model": "/projects/illinois/eng/cs/jrehg/users/emirkisa/cache/clip_vitb32_merged",
+ "bar": "diagonal argmax >= 98% (ADVISORY)",
+ "n_items": 200,
+ "diagonal_hits": 197,
+ "diagonal_pct": 98.5,
+ "verdict": "PASS",
+ "transposition_adjudication": {
+  "pack_id": "P06",
+  "mean_sim_key_by_echoed_id": 0.288,
+  "mean_sim_key_by_array_position": 0.3151,
+  "winner": "array_position",
+  "transposed_items": [
+   {
+    "array_pos": 2,
+    "requested_code": "XRZCN",
+    "echoed_code": "MKKTR",
+    "sim_to_echoed_id_clip": 0.1325,
+    "sim_to_position_clip": 0.348
+   },
+   {
+    "array_pos": 3,
+    "requested_code": "MKKTR",
+    "echoed_code": "XRZCN",
+    "sim_to_echoed_id_clip": 0.2361,
+    "sim_to_position_clip": 0.2912
+   }
+  ]
+ },
+ "per_pack": [
+  {
+   "pack_id": "P00",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P01",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P02",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P03",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P04",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P05",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P06",
+   "k": 10,
+   "diagonal_hits": 8,
+   "pct": 80.0,
+   "misattributed": [
+    {
+     "code": "XRZCN",
+     "clip": "vcbench_action_2791956_2160x3840",
+     "best_match_clip": "vcbench_action_5310858_3840x2160",
+     "sim_self": 0.2379,
+     "sim_best": 0.2905
+    },
+    {
+     "code": "MKKTR",
+     "clip": "vcbench_action_5310858_3840x2160",
+     "best_match_clip": "vcbench_action_2791956_2160x3840",
+     "sim_self": 0.1339,
+     "sim_best": 0.3554
+    }
+   ]
+  },
+  {
+   "pack_id": "P07",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P08",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P09",
+   "k": 10,
+   "diagonal_hits": 9,
+   "pct": 90.0,
+   "misattributed": [
+    {
+     "code": "NQBSX",
+     "clip": "vcbench_meeting_3256571_2160x3840",
+     "best_match_clip": "vcbench_meeting_3251811_3840x2160",
+     "sim_self": 0.2368,
+     "sim_best": 0.2555
+    }
+   ]
+  },
+  {
+   "pack_id": "P10",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P11",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P12",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P13",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P14",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P15",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P16",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P17",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P18",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  },
+  {
+   "pack_id": "P19",
+   "k": 10,
+   "diagonal_hits": 10,
+   "pct": 100.0,
+   "misattributed": []
+  }
+ ]
+}
