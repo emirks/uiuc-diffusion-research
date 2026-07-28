@@ -1,45 +1,6 @@
 ## 2026-07-28
 
-- **20:05** — HumanVid endpoint screening COMPLETE (job 9680734, 1h19m): 3,000 candidates →
-  85% loose pass → **1,499 accepted** std121 clips (769 horizontal / 730 vertical; 0 cut
-  rejects, 1 dup vs the 227 bank) at `data/processed/humanvid_bank/`. The 19k-clip screen was
-  owner-vetoed as oversized; the capped rerun uses a deterministic-shuffle `--limit` that
-  resumes from cached detections if raised. Mix re-ratification advisor round relaunched (the
-  first round's output was lost to a session restart) with updated premises: baseline
-  `cond-bleed-fix` trainer (no mask), HumanVid cleared + measured yields.
-
-- **13:16** — ctt_v2 fresh-rebuild kickoff after owner rulings: dataset pipeline retired for
-  a clean redo (retire-commit; history kept), the retrain moves to the **baseline trainer
-  `LTX-2-cond-bleed-fix`** (bneck parked → this round is a pure dataset intervention), and
-  **HumanVid was owner-cleared** for use after the Pexels ToS flag. Built a fresh screening
-  pipeline `scripts/ctt_v2/humanvid_bank/` (same QC contract as the blessed endpoint bank;
-  center-window standardize, tightened+diversity-capped selection, dedup vs the 227 bank) —
-  18,702 candidates collected, screening job 9680692 on L40S. Measured: all refVFX I2V-LoRA
-  outputs are uniformly 832×464·16fps·33f (33 ≡ 1 mod 8 → zero-cut reshape possible; trainer
-  supports per-sample fps natively). Gemini key stored at `$LAB/secrets/` (CLAUDE.md Secrets
-  section); stale Gemma capbank job cancelled. Advisor round 7 (mix re-ratification) launched.
-
-## 2026-07-25
-
-- **09:50** — one-way reference attention now ships as a **two-call split**, not a dense mask.
-  The benchmark rejected the dense path against its pre-registered ≤30% bar: fwd+bwd attention
-  at the real T=9600 measured 26.97 ms unmasked / 82.49 ms dense (**3.06x**) / 21.79 ms split
-  (**0.81x** — faster than the bidirectional baseline, since the reference-over-target block is
-  never computed). This is the campaign's first change to `ltx-core`, so jobs must now put
-  `ltx-core/src` on PYTHONPATH; `job_train.sbatch` does, with a guard asserting the bneck
-  `ltx_core` actually loaded — a silent fallback would train bidirectionally while logging
-  `one_way`. 19/19 gates pass, including split-vs-dense numerical equivalence in fp32 and bf16
-  across both sequence layouts.
-- **09:50** — S2 delivered by the parallel agent (8,410 clips / 809 exact ops, blind audit PASS
-  at 2 BAD of 64). **S3 dropped** by their pre-committed tree — 62% defective, and the defect is
-  inpaint plausibility, a semantic property no geometric statistic separated. Our mix becomes
-  S0+S2+S4.
-- **09:50** — S4 reinstated by owner and re-scoped to one-sided (`{S1}. sksz.`). Measured that
-  rewriting refVFX prompts yields leak-free S1 for 96.3% of rows but at p50 8 words against the
-  corpus's 34 — nearly disjoint, so caption length alone would flag the stratum. Switched to
-  frame-based captioning; 2,000 filmstrips extracted (0 failures), pilot scored 25/25 in range
-  with zero violations. Paused pending a Gemini key.
-
+- **04:32** ctt_v2/S1: role-scoped (clip, role) exclusions now enforced at S1 grid-build time (mandatory `for_role` in `take()`), not merely detected by assert A13. Proven by mutation.
 
 - **04:45** — **The RULING-9 assert battery is now PROVEN TO FIRE, on a real two-shape root.**
   An assert that has never failed is not known to work, and this campaign has twice met the
@@ -210,6 +171,47 @@
   `assemble_root.py:ensure_mask()`, so nothing downstream hardcodes it.
 
 ## 2026-07-27
+
+- **20:05** — HumanVid endpoint screening COMPLETE (job 9680734, 1h19m): 3,000 candidates →
+  85% loose pass → **1,499 accepted** std121 clips (769 horizontal / 730 vertical; 0 cut
+  rejects, 1 dup vs the 227 bank) at `data/processed/humanvid_bank/`. The 19k-clip screen was
+  owner-vetoed as oversized; the capped rerun uses a deterministic-shuffle `--limit` that
+  resumes from cached detections if raised. Mix re-ratification advisor round relaunched (the
+  first round's output was lost to a session restart) with updated premises: baseline
+  `cond-bleed-fix` trainer (no mask), HumanVid cleared + measured yields.
+
+- **13:16** — ctt_v2 fresh-rebuild kickoff after owner rulings: dataset pipeline retired for
+  a clean redo (retire-commit; history kept), the retrain moves to the **baseline trainer
+  `LTX-2-cond-bleed-fix`** (bneck parked → this round is a pure dataset intervention), and
+  **HumanVid was owner-cleared** for use after the Pexels ToS flag. Built a fresh screening
+  pipeline `scripts/ctt_v2/humanvid_bank/` (same QC contract as the blessed endpoint bank;
+  center-window standardize, tightened+diversity-capped selection, dedup vs the 227 bank) —
+  18,702 candidates collected, screening job 9680692 on L40S. Measured: all refVFX I2V-LoRA
+  outputs are uniformly 832×464·16fps·33f (33 ≡ 1 mod 8 → zero-cut reshape possible; trainer
+  supports per-sample fps natively). Gemini key stored at `$LAB/secrets/` (CLAUDE.md Secrets
+  section); stale Gemma capbank job cancelled. Advisor round 7 (mix re-ratification) launched.
+
+## 2026-07-25
+
+- **09:50** — one-way reference attention now ships as a **two-call split**, not a dense mask.
+  The benchmark rejected the dense path against its pre-registered ≤30% bar: fwd+bwd attention
+  at the real T=9600 measured 26.97 ms unmasked / 82.49 ms dense (**3.06x**) / 21.79 ms split
+  (**0.81x** — faster than the bidirectional baseline, since the reference-over-target block is
+  never computed). This is the campaign's first change to `ltx-core`, so jobs must now put
+  `ltx-core/src` on PYTHONPATH; `job_train.sbatch` does, with a guard asserting the bneck
+  `ltx_core` actually loaded — a silent fallback would train bidirectionally while logging
+  `one_way`. 19/19 gates pass, including split-vs-dense numerical equivalence in fp32 and bf16
+  across both sequence layouts.
+- **09:50** — S2 delivered by the parallel agent (8,410 clips / 809 exact ops, blind audit PASS
+  at 2 BAD of 64). **S3 dropped** by their pre-committed tree — 62% defective, and the defect is
+  inpaint plausibility, a semantic property no geometric statistic separated. Our mix becomes
+  S0+S2+S4.
+- **09:50** — S4 reinstated by owner and re-scoped to one-sided (`{S1}. sksz.`). Measured that
+  rewriting refVFX prompts yields leak-free S1 for 96.3% of rows but at p50 8 words against the
+  corpus's 34 — nearly disjoint, so caption length alone would flag the stratum. Switched to
+  frame-based captioning; 2,000 filmstrips extracted (0 failures), pilot scored 25/25 in range
+  with zero violations. Paused pending a Gemini key.
+
 
 - **02:38** — exp_081 scaffolded: the ctt_v2 masked retrain. Advisor round 6 ruled the mix is
   S0+S2+S3 (S4/refVFX **deferred**, not killed — it adds ~4% to the operator count while
