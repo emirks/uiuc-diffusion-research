@@ -200,13 +200,43 @@ def run_gemini(items: list[dict], classes: list[str], workers: int) -> list[dict
 
 
 def summarise(rows: list[dict], label: str) -> dict:
+    """Summarise one arm, with an `errors == 0` PRECONDITION.
+
+    VACUITY GUARD -- A14 execution step 3 (advisors/A14_RECONCILIATION_VERBATIM.md),
+    the campaign's FOURTH instance of one defect class: *a checker whose failure is
+    indistinguishable from a pass*.  The three prior instances were the smoke-gate log
+    parser, the round-3 near-miss, and `generate_descriptions.audit_one`'s empty verdict
+    (`v = arec.get("verdict") or {}`, killed in 1ad1907 and proven dead 32/32).
+
+    The defect here: errored judge calls were dropped from the denominator with NO bar on
+    the error count, so a judge outage SHRANK n instead of failing.  In the limit every
+    call errors, `scored` is 0, `top1` is None, every branch of the verdict chain is
+    skipped, and the gate writes a clean artefact reporting "UNDETERMINED" -- an outage
+    scored as "nothing to see".  That is the same shape as the audit bug exactly.
+
+    A14 orders the CLASS fixed, not the instance, so this does not merely count errors:
+    it marks the arm NOT GATEABLE, and `main()` refuses to emit any verdict other than
+    INSTRUMENT_FAILURE while any arm is un-gateable.  There is deliberately no lenient
+    mode and no threshold -- the bar is zero, because a judge that could not answer is
+    not evidence about the thing being judged.
+    """
     scored = [r for r in rows if not r.get("error")]
     correct = sum(1 for r in scored if r["correct"])
     unparsed = sum(1 for r in scored if r["predicted"] is None)
+    errors = len(rows) - len(scored)
+    reasons = []
+    if errors:
+        reasons.append(f"{errors}/{len(rows)} judge calls errored (bar: errors == 0); "
+                       "a judge outage must FAIL the gate, never shrink n")
+    if not scored:
+        reasons.append("no usable judge responses -- nothing was measured")
     return {"arm_label": label, "n": len(rows), "scored": len(scored),
-            "errors": len(rows) - len(scored), "unparsed": unparsed,
+            "errors": errors, "unparsed": unparsed,
             "top1": (correct / len(scored)) if scored else None,
-            "correct": correct}
+            "correct": correct,
+            "errors_bar": 0,
+            "gateable": not reasons,
+            "instrument_failure_reasons": reasons}
 
 
 # --------------------------------------------------------------------- main
@@ -305,17 +335,47 @@ def main() -> None:
         print(f"[gate] generated top-1 = {g['top1']} ({g['correct']}/{g['scored']}), "
               f"bar {gate['bar_top1']}, chance {gate['chance']:.3f}")
         print(f"[gate] control   top-1 = {c['top1']} ({c['correct']}/{c['scored']})")
-        if c["top1"] is not None and c["top1"] < gate["bar_top1"]:
+        print(f"[gate] judge errors: generated {g['errors']}, control {c['errors']} "
+              "(bar: 0 on BOTH arms)")
+
+        # --- VACUITY GUARD, checked BEFORE any verdict can be formed (A14 step 3) -------
+        # Order matters: an un-gateable arm must short-circuit the whole chain.  Before
+        # this guard existed, an all-errors run left every branch below unentered, so the
+        # gate wrote a clean artefact saying "UNDETERMINED" and exited 0 -- an outage
+        # indistinguishable from a pass.  A judge that could not answer is not evidence.
+        blockers = [f"{arm['arm_label']}: {r}"
+                    for arm in (g, c) for r in arm["instrument_failure_reasons"]]
+        if blockers:
+            report["VERDICT"] = "INSTRUMENT_FAILURE"
+            report["instrument_failure"] = {
+                "bar": "errors == 0 on every arm, and every arm must have usable responses",
+                "blockers": blockers,
+                "authority": ("A14 execution step 3 "
+                              "(advisors/A14_RECONCILIATION_VERBATIM.md) -- 4th instance "
+                              "of the vacuity class; the CLASS is what is being fixed"),
+                "consequence": "NOTHING is adjudicated; the S1 batch gate has not run.",
+            }
+            for b in blockers:
+                print(f"[gate] INSTRUMENT FAILURE -- {b}", file=sys.stderr)
+        elif c["top1"] is not None and c["top1"] < gate["bar_top1"]:
             report["VERDICT"] = "INSTRUMENT_INVALID"
         elif g["top1"] is not None and g["top1"] >= gate["bar_top1"]:
             report["VERDICT"] = "PASS_pending_mechanical"
         elif g["top1"] is not None:
             report["VERDICT"] = "FAIL_S1_DROPS"
+        else:
+            # Unreachable while the guard above stands, and kept so it can never again
+            # become reachable silently: no measurement => no verdict, and that is fatal.
+            report["VERDICT"] = "INSTRUMENT_FAILURE"
         print(f"[gate] VERDICT (gemini stage) = {report.get('VERDICT', 'UNDETERMINED')}")
 
     dest = outdir / f"gate_{args.stage}.json"
     dest.write_text(json.dumps(report, indent=1))
     print(f"[gate] -> {dest.relative_to(REPO_ROOT)}")
+    # The artefact is written FIRST (evidence survives), then the failure is made
+    # unmissable to any caller: a vacuous gate must not exit 0.
+    if report.get("VERDICT") == "INSTRUMENT_FAILURE":
+        raise SystemExit(2)
 
 
 if __name__ == "__main__":

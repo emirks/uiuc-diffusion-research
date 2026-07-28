@@ -93,6 +93,18 @@ def _numeric_features(texts):
     return np.asarray(rows, dtype=float)
 
 
+def _pm_se(probe: dict) -> str:
+    """`mean +/- SE-of-mean (fold-std s)` -- the A14 Q4 reporting form, one string.
+
+    Exists so every consumer prints the SAME thing: the mean with the yardstick that
+    actually applies to a MOVEMENT in it, and the fold-level std kept visible beside it
+    so nobody can quietly swap one for the other again.
+    """
+    se = probe.get("se_of_mean_balanced_accuracy")
+    return (f'{probe["mean_balanced_accuracy"]:.4f} +/- {se:.4f} SE'
+            f' (fold-std {probe["std_balanced_accuracy"]:.4f}, n_fits {probe["n_fits"]})')
+
+
 def classifier_probe(corpus_texts, new_texts, analyzer, seeds=(0, 1, 2, 3, 4),
                      n_folds=5, use_numeric=True, report_features=False):
     from sklearn.feature_extraction.text import TfidfVectorizer
@@ -139,11 +151,37 @@ def classifier_probe(corpus_texts, new_texts, analyzer, seeds=(0, 1, 2, 3, 4),
                 for nm, w in zip(names, clf.coef_[0]):
                     feat_weight[nm] += w / (len(seeds) * n_folds)
 
+    # A14 Q4 (advisors/A14_RECONCILIATION_VERBATIM.md), carried from
+    # A13_auditor_and_v3_VERBATIM.md Q2(b): the DECISION STATISTIC is the MEAN over the
+    # 5 seeds x 5 folds, so its uncertainty is the SE-OF-MEAN (std / sqrt(n_fits)), NOT
+    # the fold-level fit std.  Conflating the two is exactly what made round 3's
+    # 0.7066 -> 0.6929 move (0.0137 = 1.2 SE at SE ~= 0.0568/sqrt(25) ~= 0.0114) look
+    # meaningful when it is noise.  Both numbers are reported side by side, always.
+    #
+    # HONEST CAVEAT, recorded so no reader over-reads it: the 25 fits are NOT
+    # independent -- the 5 folds within a seed partition one resample, and the seeds
+    # resample the same pool.  std/sqrt(25) is therefore a NOMINAL SE that, if anything,
+    # UNDERSTATES the true uncertainty of the mean.  It is pinned by A14 as the yardstick
+    # precisely because it is the *smaller*, more conservative-against-us denominator:
+    # a movement that is noise against this SE is noise against any honest one.
+    n_fits = len(baccs)
+    std_bacc = float(np.std(baccs))
     out = {
         "mean_balanced_accuracy": float(np.mean(baccs)),
-        "std_balanced_accuracy": float(np.std(baccs)),
+        "std_balanced_accuracy": std_bacc,
+        "se_of_mean_balanced_accuracy": (std_bacc / np.sqrt(n_fits)) if n_fits else None,
         "mean_auc": float(np.mean(aucs)) if aucs else None,
-        "n_per_class": n, "n_fits": len(baccs),
+        "std_auc": float(np.std(aucs)) if aucs else None,
+        "se_of_mean_auc": (float(np.std(aucs)) / np.sqrt(len(aucs))) if aucs else None,
+        "n_per_class": n, "n_fits": n_fits,
+        "dispersion_note": (
+            "std_* is the FOLD-LEVEL fit std across the n_fits fits; se_of_mean_* is "
+            "std/sqrt(n_fits) and is the yardstick for reading a MOVEMENT in the mean "
+            "(A14 Q4). PRE-REGISTERED (A14 Q4, from A13_auditor_and_v3_VERBATIM.md): "
+            "gate 8a/8b movement may NEVER be cited as evidence an intervention worked "
+            "-- they are pass/fail drift guards only. The 25 fits are not independent, "
+            "so this SE is nominal and if anything understates the true uncertainty."
+        ),
     }
     if report_features:
         top_new = sorted(feat_weight.items(), key=lambda kv: -kv[1])[:20]
@@ -355,6 +393,8 @@ def main():
     b8 = g8["mean_balanced_accuracy"]
     gates.append(dict(gate="8a", name="corpus-vs-new function-word probe (DRIFT GUARD)",
                       value=round(b8, 4), corpus="0.50 = chance",
+                      mean_pm_se=_pm_se(g8), fold_std=round(g8["std_balanced_accuracy"], 4),
+                      se_of_mean=round(g8["se_of_mean_balanced_accuracy"], 4),
                       bar=f'<= {BARS["gate8a_max"]} (above this cannot be the known '
                           "fingerprint => bug: mixed prompts / wrong store / contamination)",
                       verdict="PASS" if b8 <= BARS["gate8a_max"] else "FAIL",
@@ -372,6 +412,9 @@ def main():
         gates.append(dict(gate="8b", name=f"stratum-internal blindness: "
                                          f"{banks[0]} vs {banks[1]} (LOAD-BEARING)",
                           value=round(b8b, 4), corpus="0.506 = measured NULL",
+                          mean_pm_se=_pm_se(g8b),
+                          fold_std=round(g8b["std_balanced_accuracy"], 4),
+                          se_of_mean=round(g8b["se_of_mean_balanced_accuracy"], 4),
                           bar=f'<= {BARS["gate8b_max"]}',
                           verdict="PASS" if b8b <= BARS["gate8b_max"] else "FAIL",
                           type="HARD", detail=g8b))
@@ -421,8 +464,19 @@ def main():
         "hard_fail": [g["gate"] for g in gates
                       if g["type"] == "HARD" and str(g["verdict"]).startswith("FAIL")],
         "gate8a_corpus_vs_new": round(b8, 4),
+        "gate8a_se_of_mean": round(g8["se_of_mean_balanced_accuracy"], 4),
+        "gate8a_fold_std": round(g8["std_balanced_accuracy"], 4),
+        "gate8a_mean_pm_se": _pm_se(g8),
         "gate8b_stratum_internal": next((g["value"] for g in gates if g["gate"] == "8b"), None),
+        "gate8b_se_of_mean": next((g.get("se_of_mean") for g in gates if g["gate"] == "8b"), None),
+        "gate8b_mean_pm_se": next((g.get("mean_pm_se") for g in gates if g["gate"] == "8b"), None),
         "gate9_auc": round(g9["mean_auc"], 4) if g9["mean_auc"] else None,
+        "movement_reading_rule": (
+            "PRE-REGISTERED (A14 Q4, verbatim from A13_auditor_and_v3_VERBATIM.md Q2(b)): "
+            "gates 8a/8b are pass/fail DRIFT GUARDS and their movement may NEVER be cited "
+            "as evidence that an intervention worked. Any movement must be read against "
+            "se_of_mean, not fold_std -- v3's 0.7066 -> 0.6929 is 0.0137 = ~1.2 SE."
+        ),
     }
     Path(a.out).write_text(json.dumps(report, indent=1))
 
@@ -432,12 +486,14 @@ def main():
         print(f'{gt["gate"]:<3}{gt["name"][:50]:<52}{str(gt["corpus"])[:16]:<18}'
               f'{str(gt["value"])[:24]:<26}{str(gt["bar"])[:42]:<44}{gt["verdict"]}')
     print()
-    print("GATE 8a corpus-vs-new  :", round(b8, 4),
-          "+/-", round(g8["std_balanced_accuracy"], 4),
-          f'({g8["n_fits"]} fits, {g8["n_per_class"]} per class)   bar <= {BARS["gate8a_max"]}')
+    print("GATE 8a corpus-vs-new   :", _pm_se(g8),
+          f'({g8["n_per_class"]} per class)   bar <= {BARS["gate8a_max"]}')
+    b8b_row = next((g for g in gates if g["gate"] == "8b"), None)
     print("GATE 8b stratum-internal:",
-          next((g["value"] for g in gates if g["gate"] == "8b"), None),
+          (b8b_row or {}).get("mean_pm_se") or (b8b_row or {}).get("value"),
           f'  bar <= {BARS["gate8b_max"]}  (LOAD-BEARING)')
+    print("  ^ read any MOVEMENT against the SE-of-mean, never the fold-std (A14 Q4);")
+    print("    8a/8b are drift guards -- movement is NEVER evidence an intervention worked.")
     print("HARD FAILURES:", report["summary"]["hard_fail"] or "none")
 
 
