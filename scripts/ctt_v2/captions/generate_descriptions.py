@@ -48,6 +48,7 @@ from pathlib import Path
 import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from caption_common import (  # noqa: E402
     STRIPS_INDEX,
     LeakFilter,
@@ -55,6 +56,7 @@ from caption_common import (  # noqa: E402
     load_length_empirical,
     word_count,
 )
+from root_common import load_caption_store_exclusions  # noqa: E402
 
 # --------------------------------------------------------------------------
 # Pinned model identity
@@ -179,16 +181,46 @@ AUDIT_QUESTION = (
 )
 
 
+# --------------------------------------------------------------------------
+# Prompt variant "v3" -- ROUND 3, ruled by the round-9 advisor.  NOT A4's text.
+#
+# v3 = v2 plus ONE change, A-ROLE ONLY.  A4's prompt mandates "simple-present or
+# present-progressive verbs" and thereby forces be-verbs to 0.0% against a corpus
+# that uses them 8.8% of the time -- a categorical, prompt-manufactured tell.  By
+# A4's own core principle ("captioning is instrument matching") that is a spec
+# bug: the frozen eval prompts contain copular constructions at 8.8%.
+#
+# Scoped as an instrument-matching defect fix, NOT gate-chasing.  Nothing here
+# targets `while` or any other gate-#8 coefficient -- doing so would be mimicry
+# and would destroy the probe's evidentiary value.  The B-role prompt is
+# UNTOUCHED (participial NP is the corpus's own B register).
+#
+# Pre-committed expectation: v3 does NOT need to reach 0.65 and will not.  It must
+# pass the re-pinned bars (8a <= 0.73, 8b <= 0.60) plus all other 11 gates.
+# This consumes A4's third and last permitted regeneration round.
+# --------------------------------------------------------------------------
+_A4_VERB_CLAUSE = (
+    "then the subject's action using simple-present or present-progressive verbs"
+)
+_V3_VERB_CLAUSE = (
+    "then the subject's action in present tense (plain 'is/are' constructions are fine)"
+)
+
+
 def build_system_prompt(role: str, n: int, variant: str = "a4") -> str:
     """A4 Q1 prompts.  `variant="a4"` is A4's verbatim text (the default).
-    `variant="v2"` is the operator diagnostic described above."""
+    `variant="v2"` is the round-2 operator diagnostic; `variant="v3"` is v2 plus
+    the round-3 be-verb fix (A-role only).  All three stay reproducible."""
     tmpl = _PROMPT_A_TEMPLATE if role == "A" else _PROMPT_B_TEMPLATE
-    if variant == "v2":
+    if variant in ("v2", "v3"):
         style = _V2_STYLE_A if role == "A" else _V2_STYLE_B
         n = calibrate_ask(n)
         # insert the structural guidance just before the length instruction
         marker = " Aim for about {N} words"
         tmpl = tmpl.replace(marker, style + marker)
+    if variant == "v3" and role == "A":
+        assert _A4_VERB_CLAUSE in tmpl, "A4 verb-form clause not found; prompt drifted"
+        tmpl = tmpl.replace(_A4_VERB_CLAUSE, _V3_VERB_CLAUSE)
     return tmpl.format(N=n, NLO=n - 6, NHI=n + 8)
 
 
@@ -475,6 +507,36 @@ def run(pairs, outdir: Path, seed: int, workers: int, max_attempts: int,
     return results
 
 
+def apply_role_scoped_exclusions(pairs):
+    """A11 item 5 — drop the (clip, role) descriptions the M3 adjudication excluded.
+
+    DERIVED from `POOL_DROPS_M3_ADJUDICATION.json`, never a hand-kept list: the pool file
+    itself is deliberately byte-unchanged (nothing may desynchronise from the S2b render),
+    so the adjudication is the only carrier of the instruction.  `openvid_T1MiFx98l3g_0_50to156`
+    has a blank-white A-anchor (grayscale std 0.79) but a healthy B-anchor (std 74.05) and
+    occupies the B field in 10/10 rendered S2b clips, so ONLY role A is skipped — the
+    B-role description is legitimate and must still be generated.
+
+    An ABSENT adjudication file is a hard stop, not an empty exclusion: silently generating
+    the excluded description is exactly the failure mode the machine check exists to catch.
+    `assert_root.py`'s caption-store check re-verifies the same derived list after the fact.
+    """
+    role, clip_level, prov = load_caption_store_exclusions()
+    if prov.get("error"):
+        raise SystemExit(f"[exclusions] {prov['file']}: {prov['error']}")
+    kept, skipped = [], []
+    for clip_id, r in pairs:
+        if clip_id in clip_level or r in role.get(clip_id, ()):
+            skipped.append((clip_id, r))
+        else:
+            kept.append((clip_id, r))
+    print(f"[exclusions] {prov['file']} sha {prov['sha256'][:12]}: "
+          f"{sum(len(v) for v in role.values())} role-scoped + {len(clip_level)} clip-level "
+          f"exclusions on record; skipped {len(skipped)} of {len(pairs)} requested pairs"
+          + (f" -> {sorted(skipped)}" if skipped else ""))
+    return kept
+
+
 def deterministic_sample(n_per_cell: int, seed: int):
     """N clips per bank (deterministic, sorted clip list, seeded), BOTH roles each.
 
@@ -508,9 +570,10 @@ def main():
     ap.add_argument("--max-attempts", type=int, default=2,
                     help="A4 Q3: one regeneration on failure, then manual queue")
     ap.add_argument("--no-audit", action="store_true")
-    ap.add_argument("--prompt-variant", choices=("a4", "v2"), default="a4",
-                    help='"a4" = A4 Q1 verbatim (default); "v2" = operator diagnostic '
-                         "fix for the gate-#8 failure (see module docstring)")
+    ap.add_argument("--prompt-variant", choices=("a4", "v2", "v3"), default="a4",
+                    help='"a4" = A4 Q1 verbatim (default); "v2" = round-2 operator '
+                         'diagnostic; "v3" = v2 + the round-3 be-verb fix '
+                         "(see module docstring)")
     a = ap.parse_args()
 
     if a.pairs:
@@ -519,6 +582,8 @@ def main():
         pairs = deterministic_sample(a.sample_per_cell, a.seed)
     else:
         ap.error("need --pairs or --sample-per-cell")
+
+    pairs = apply_role_scoped_exclusions(pairs)
 
     print(f"{len(pairs)} (clip, role) pairs; generator={GEN_MODEL} auditor={AUDIT_MODEL} "
           f"prompt_variant={a.prompt_variant}")
