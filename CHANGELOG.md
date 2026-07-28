@@ -1,5 +1,13 @@
 ## 2026-07-27
 
+- **20:05** — HumanVid endpoint screening COMPLETE (job 9680734, 1h19m): 3,000 candidates →
+  85% loose pass → **1,499 accepted** std121 clips (769 horizontal / 730 vertical; 0 cut
+  rejects, 1 dup vs the 227 bank) at `data/processed/humanvid_bank/`. The 19k-clip screen was
+  owner-vetoed as oversized; the capped rerun uses a deterministic-shuffle `--limit` that
+  resumes from cached detections if raised. Mix re-ratification advisor round relaunched (the
+  first round's output was lost to a session restart) with updated premises: baseline
+  `cond-bleed-fix` trainer (no mask), HumanVid cleared + measured yields.
+
 - **13:16** — ctt_v2 fresh-rebuild kickoff after owner rulings: dataset pipeline retired for
   a clean redo (retire-commit; history kept), the retrain moves to the **baseline trainer
   `LTX-2-cond-bleed-fix`** (bneck parked → this round is a pure dataset intervention), and
