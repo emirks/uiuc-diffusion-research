@@ -1,0 +1,97 @@
+scontrol_print_job error: Invalid job id specified
+ERROR running scontrol -o show job 9685394_[4-7%4]: Command '['scontrol', '-o', 'show', 'job', '9685394_[4-7%4]']' returned non-zero exit status 1.
+/projects/illinois/eng/cs/jrehg/users/emirkisa/envs/diffusion/lib/python3.10/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
+  warnings.warn(
+[plan] content pool: 1146 training endpoints (synth 291 + humanvid 855), 120 reserved held out | gate A 0.52 gate B 50.56 (n=187)
+[plan] bank quota target: synth-synth 200 / cross 400 / humanvid-humanvid 200 (of 800)
+[plan] pair pool: 800 pairs | clip degree min/med/max = 0/1/4 | cos(A,B) max = 0.838
+[plan] bank quota realised: synth_synth 200 (25.0%) | cross 400 (50.0%) | humanvid_humanvid 200 (25.0%)
+[plan]   synth     291 clips | pair degree min/mean/max = 2/2.75/4 | 0 unused
+[plan]   humanvid  855 clips | pair degree min/mean/max = 0/0.94/2 | 227 unused
+[plan] shaders: keep 66 - holdout 10 = 56 trainable
+[plan] endpoint-frame cache: 0 hit, 1146 to add
+[plan]   cached 50/1146 (23s)
+[plan]   cached 100/1146 (42s)
+[plan]   cached 150/1146 (62s)
+[plan]   cached 200/1146 (83s)
+[plan]   cached 250/1146 (105s)
+[plan]   cached 300/1146 (126s)
+[plan]   cached 350/1146 (145s)
+[plan]   cached 400/1146 (163s)
+[plan]   cached 450/1146 (180s)
+[plan]   cached 500/1146 (197s)
+[plan]   cached 550/1146 (214s)
+[plan]   cached 600/1146 (232s)
+[plan]   cached 650/1146 (249s)
+[plan]   cached 700/1146 (267s)
+[plan]   cached 750/1146 (289s)
+[plan]   cached 800/1146 (311s)
+[plan]   cached 850/1146 (329s)
+[plan]   cached 900/1146 (348s)
+[plan]   cached 950/1146 (367s)
+[plan]   cached 1000/1146 (384s)
+[plan]   cached 1050/1146 (402s)
+[plan]   cached 1100/1146 (420s)
+[plan] endpoint-frame cache: added 1146 in 510s (1146 total on disk)
+[plan] GL: llvmpipe (LLVM 21.1.7, 256 bits) | 4.5 (Core Profile) Mesa 25.2.7
+[plan]   BookFlip                   15 ops
+[plan]   BowTieWithParameter        15 ops
+[plan]   Box                        15 ops
+[plan]   ButterflyWaveScrawler      15 ops
+[plan]   ColourDistance             15 ops
+[plan]   CrossZoom                  15 ops
+[plan]   Dreamy                     15 ops
+[plan]   EdgeTransition             15 ops
+[plan]   FilmBurn                   15 ops
+[plan]   GlitchDisplace             15 ops
+[plan]   GridFlip                   15 ops
+[plan]   HSVfade                    15 ops
+[plan]   HorizontalClose            15 ops
+[plan]   HorizontalOpen             15 ops
+[plan]   LinearBlur                 15 ops
+[plan]   Overexposure               15 ops
+[plan]   PolkaDotsCurtain           14 ops
+[plan]   Slides                     14 ops
+[plan]   StarWipe                   14 ops
+[plan]   StaticFade                 14 ops
+[plan]   TilesWave                  14 ops
+[plan]   VerticalClose              14 ops
+[plan]   WaterDrop                  14 ops
+[plan]   ZoomRigthWipe              14 ops
+[plan]   burn                       14 ops
+[plan]   cannabisleaf               14 ops
+[plan]   chessboard                 14 ops
+[plan]   circleopen                 14 ops
+[plan]   colorphase                 14 ops
+[plan]   crosshatch                 14 ops
+[plan]   crosswarp                  14 ops
+[plan]   directionalwipe            14 ops
+[plan]   dissolve                   14 ops
+[plan]   fade                       14 ops
+[plan]   fadecolor                  14 ops
+[plan]   flyeye                     14 ops
+[plan]   fragment                   14 ops
+[plan]   heart                      14 ops
+[plan]   hexagonalize               14 ops
+[plan]   luminance_melt             14 ops
+[plan]   morph                      14 ops
+[plan]   multiply_blend             14 ops
+[plan]   old_tv_lost_signal         14 ops
+[plan]   perlin                     14 ops
+[plan]   pinwheel                   14 ops
+[plan]   pixelize                   14 ops
+[plan]   polar_function             14 ops
+[plan]   randomNoisex               14 ops
+[plan]   squareswire                14 ops
+[plan]   squeeze                    14 ops
+[plan]   wind                       14 ops
+[plan]   windowblinds               14 ops
+[plan]   windowslice                14 ops
+[plan]   wipeDown                   14 ops
+[plan]   wipeLeft                   14 ops
+[plan]   wipeRight                  14 ops
+[plan] roster: 800 ops pre-validated | gate-2 rejected 151 of 951 draws (15.9%) | duplicate-id redraws 0
+[plan] grid: ops-per-pair min/median/max = 10/10/10 (target ~10)
+[plan] per-op bank mix over 20 endpoint clips: minority-bank count min/median/max = 2/8/10 | synth-clips-per-op min/mean/max = 2/10.0/16 | bank-pure ops = 0 ✓
+[plan] FROZEN -> PLAN_S2_UNION.json (800 ops x 10 = 8000 clips) in 578s
+=== plan EXIT 0 ===

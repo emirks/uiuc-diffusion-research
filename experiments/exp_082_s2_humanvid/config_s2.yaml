@@ -1,0 +1,141 @@
+# ctt_v2 S2b (UNION bank) — 2D shader transitions over two REAL PLAYING streams.
+#
+# exp_082 = exp_081_s2_stratum re-pointed at the MERGED UNION of both endpoint banks:
+# the 311 synth clips already resolved in CONTENT_POOL.json + the 1,499 person-only HumanVid
+# Pexels clips (both 480x640x121 @ 24 fps). Advisor ruling S2b: contents are drawn from the
+# union with bank mixing enforced INSIDE every op (~25% synth-synth / 50% cross-bank / 25%
+# humanvid-humanvid, plus a planner assert that no op's 20 endpoint clips come from a single
+# bank). The quota + assert are the PLANNER's job and are not implemented here.
+#
+# Everything below is byte-identical to exp_081/config_s2.yaml except: inputs.* (both banks +
+# the union pool + local policy), outputs.* (new dirs), runtime.seed (new), and, under s2:,
+# n_content_pairs (333 -> 800) plus the new bank_quota block. Every GATE and every hard
+# invariant (gate.*, sampling.*, contents_per_op, the overdraw ceiling) is unchanged.
+#
+# Everything here is either (a) copied unchanged from the FROZEN exp_077 D2 policy
+# (D2_POLICY_FINAL.json / D2_TAU.json) or (b) set by fable-advisor ruling for this campaign.
+# Nothing is tunable at render time.
+#
+# The one structural change vs exp_077 D2 is the INCIDENCE: D2 rendered 2,728 exact ops each
+# seen on ~2 content pairs (target + a dedicated reference render). S2 renders 800 exact ops
+# each seen on 10 content pairs, with NO dedicated reference render — reference and target are
+# drawn from the same op's 10 clips at train time. Same clip budget, 45x more (ref,target)
+# combinations per operator, which is the axis that makes manner separable from content.
+
+model:
+  shader_bank: "/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/gl-transitions/transitions"
+
+inputs:
+  # NOTE: both banks live in the MAIN tree and are READ-ONLY for this experiment.
+  # build_content_pool_union.py resolves them by absolute path and writes ABSOLUTE mp4 paths
+  # into the pool, so the per-bank keys below are documentation — plan_s2.py / render_s2.py
+  # read every clip through the pool's absolute paths.
+  #
+  # ---- bank A: synth endpoints (v1 bank_tightened + the v2 expansion, already resolved
+  #      and gate-trimmed by exp_081_s2_stratum/build_content_pool.py) ----
+  synth_content_pool: "data/processed/ctt_v2_strata/CONTENT_POOL.json"
+  synth_clips_dir: "data/processed/synth_endpoints"
+  # ---- bank B: humanvid (1,499 person-only Pexels clips, 480x640x121 @ 24 fps) ----
+  humanvid_manifest: "data/processed/humanvid_bank/manifest.jsonl"   # JSONL, one rec per clip
+  humanvid_embeddings: "data/processed/humanvid_bank/embeddings.npy"
+  humanvid_embed_ids: "data/processed/humanvid_bank/embed_ids.json"
+  humanvid_clips_dir: "data/processed/humanvid_bank"
+  # ClipCache root only; every mp4 path in the pool is ABSOLUTE, so this is never prefixed
+  # onto anything in practice.
+  clips_dir: "data/processed"
+  # reference calibration for Gate B's match size and bar (mixed-content 187-clip clean pool).
+  # Read only by build_content_pool_union.py, which falls back to the main tree's copy.
+  endpoint_split: "data/processed/ctt_v2_strata/ENDPOINT_SPLIT.json"
+  # THE pool plan/render consume: union of both banks, absolute mp4 paths, one embedding
+  # matrix, a `bank` field on every record, and the bank-level gates.
+  # Rebuild with build_content_pool_union.py.
+  content_pool: "data/processed/ctt_v2_strata/CONTENT_POOL_union.json"
+  # SHADER policy: the post-S2 retirement version (66 keep shaders, 6 retired on measured
+  # rejection rate) — a local, self-contained copy, not a pointer into exp_081.
+  policy: "experiments/exp_082_s2_humanvid/D2_POLICY_V2.json"
+  # D2_POLICY_V2 is shader-only and carries NO `keep_easings`; the easing set therefore still
+  # comes from the frozen v1 policy (local copy of exp_077/D2_POLICY_FINAL.json). plan_s2.py /
+  # render_s2.py fall back to this key only when `policy` has no keep_easings.
+  policy_easings: "experiments/exp_082_s2_humanvid/D2_POLICY_FINAL.json"
+  endpoint_frame_cache: "data/processed/ctt_v2_strata/endpoint_frames_s2_union.npz"
+
+inference:
+  height: 640
+  width: 480
+  num_frames: 121          # full standardised clip length; both layers ARE the source clips
+  anchor_frames: 9         # pinned endpoint block -> transition window [8, 112]
+  fps: 24
+
+sampling:                  # FROZEN — identical to the validated exp_077 D2 path
+  extension: "none"        # REAL frames only; the fabrication code path is never called
+  aux_kind: null           # ZERO aux maps
+  timing_frac: 0.20        # onset in [8, 28.8], release in [91.2, 112] => duration >= 62.4
+  p_flip: 0.6
+  p_swap: 0.5
+  p_vary: 0.85
+  endpoint_tol: 2.0          # gate-1: per-SHADER at defaults (bank admission)
+  endpoint_tol_operator: 0.5 # gate-2: per-OPERATOR at sampled params, PRODUCTION resolution
+
+gate:                      # FROZEN (D2_TAU.json / D2_POLICY_FINAL.json). tau is RE-CALIBRATED
+                           # on our own audit per the hand-off spec, then frozen; until that
+                           # audit runs, the inherited value stands and is recorded as inherited.
+  tau: 0.2543
+  tau_provenance: "inherited from exp_077 D2_TAU.json; re-calibrated on our own audit before the
+                   mass render is accepted (hand-off spec: 'tau recalibrated on OUR audit')"
+  assert1_tol: 0.5         # MAX condition over the pure phase, never the mean (dsx failure #2)
+  seam_max: 2.0
+  m2_max_dq: 0.5
+  m1_min_flag_threshold: -0.05   # NON-GATING metadata flag only (the floor gate ESCAPED)
+
+s2:
+  # ---- the sparse bipartite grid (advisor ruling 1; sizes SET by SYNTHESIS RULING 4) ----
+  n_ops: 800               # 800 NEW exact operators under policy v2, balanced over the 56
+                           # trainable shaders (66 keep - 10 HOLDOUT_S2 families) => 14-15 each.
+                           # These are NEW draws under a NEW seed — not a re-run of S2a's 799.
+  contents_per_op: 10      # => 8,000 clips; 90 ordered (ref,target) combos per op at train time
+  n_content_pairs: 800     # SYNTHESIS RULING 4: scaled to ~800 over the 1,146-clip union pool
+                           # => 8,000/800 = 10 ops per content pair (S2a ran ~24 on 333 pairs).
+  pair_max_cos: 0.85       # reject content pairs whose two endpoints are too similar
+  # ---- 🔑 BANK QUOTA (SYNTHESIS RULING 4 / A1b Q2) — S2b ONLY -------------------------------
+  # The union pool merges two provenances (`synth`, `humanvid`). Without a quota the pair
+  # sampler would draw ~57% humanvid-humanvid / 38% cross / 5% synth-synth purely from the
+  # 291/855 bank sizes, and the stratum would silently become a HumanVid stratum. The planner
+  # therefore builds the pair pool to a GLOBAL quota, keeping cos <= pair_max_cos and the
+  # near-dup ban set, and hard-asserts that no op's 20 endpoint clips come from one bank.
+  # Measured feasibility (DOSSIER §6): eligible pairs at cos <= 0.85 are synth-synth 42,131
+  # (need 200, 211x headroom), cross 248,798 (need 400, 622x), humanvid-humanvid 365,085
+  # (need 200, 1,825x). Starvation here is a planner bug, never a data limitation.
+  bank_quota:
+    synth_synth: 0.25
+    cross: 0.50
+    humanvid_humanvid: 0.25
+  candidates_per_op: 40    # 10 primary + 30 ordered spares for the pair-swap retry
+  # ---- retry policy (advisor rider): SWAP THE CONTENT PAIR, never redraw timing ----
+  max_pair_attempts: 25    # to fill 10 slots. Negative-binomial mean ~17 at p=0.59, sd ~3.4,
+                           # so 25 ~ mean + 2.4sd => only ~1-2% of healthy ops hit the drop path.
+  drop_op_on_underfill: true   # incidence integrity is a GATE: exactly 10 or the op is dropped
+  max_op_resamples: 3      # ruling 1c: an op that cannot fill 10 slots is discarded WHOLE and a
+                           # REPLACEMENT is drawn from the same shader (fresh uniforms/easing/
+                           # flip/swap/timing). The first build omitted this and shipped 755 ops
+                           # instead of 800. Bounded at 3 so a pathological shader cannot spin.
+  probe_pairs: 3           # gate-2 pre-validation probes per candidate operator at plan time
+  max_op_draws_factor: 50  # safety valve on operator pre-validation
+  shader_blacklist_reject_rate: 0.50   # >50% clip rejection for a shader => blacklist it
+  overdraw_ceiling: 2.5    # renders / accepted clips; monitored and reported
+  clip_cache: 140          # A decoded 121x640x480x3 clip is 111 MB. The cache was sized to hold
+                           # the WHOLE training pool (227 clips) when the pool was 227 — but the
+                           # expansion took it to 291, so 230 x 111 MB = 25.5 GB blew the 24 GB
+                           # request and OOM-killed 10 of 20 shards. 140 x 111 MB = 15.5 GB plus
+                           # ~6 GB of interpreter/GL/numpy overhead fits inside 32 GB with room.
+                           # The hit rate was only ~29% anyway: the pair sampler deliberately
+                           # spreads content, so a fully-resident pool was never buying much.
+  strip_frame_w: 240
+
+runtime:
+  seed: 20260727           # NEW for exp_082 — must differ from exp_081's 20260725 so the two
+                           # strata do not draw the same operator roster
+  device: "cpu"            # EGL/llvmpipe software GL — never a GPU
+
+outputs:
+  dir: "outputs/videos/ctt_v2_s2_humanvid"
+  viewer_dir: "outputs/viewers/ctt_v2_s2_humanvid"

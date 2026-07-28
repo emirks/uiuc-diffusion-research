@@ -1,0 +1,19 @@
+scontrol_print_job error: Invalid job id specified
+ERROR running scontrol -o show job 9685394_[4-7%4]: Command '['scontrol', '-o', 'show', 'job', '9685394_[4-7%4]']' returned non-zero exit status 1.
+/projects/illinois/eng/cs/jrehg/users/emirkisa/envs/diffusion/lib/python3.10/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
+  warnings.warn(
+00:10:45 INFO    MODE=smoke shard=0/1 host=ccc0370.campuscluster.illinois.edu root=/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/outputs/videos/ctt_v2_s2_humanvid/smoke
+00:10:46 INFO    GL: llvmpipe (LLVM 21.1.7, 256 bits) | 4.5 (Core Profile) Mesa 25.2.7
+00:10:59 INFO    plan: 800 ops x 10 contents = 8000 clips | this shard: 3 ops
+00:12:13 INFO    shard 0: 3/3 ops | 30 clips accepted | 30 rendered (overdraw 1.00x) | 0 dropped | 1.2 min | cache h/m=4/56
+00:12:13 INFO    shard 0 DONE: 30 clips, 30 rendered (overdraw 1.00x), 0 ops dropped, 1.2 min
+{"op_index": 0, "shader": "BookFlip", "n_slots": 10, "exact_op_identical_across_slots": true, "n_distinct_endpoint_clips": 20, "endpoint_disjoint": true, "max_pure_over_slots": 0.0, "max_seam_over_slots": 1.574, "min_m1_p10_over_slots": 0.255, "pass": true}
+{"op_index": 1, "shader": "BookFlip", "n_slots": 10, "exact_op_identical_across_slots": true, "n_distinct_endpoint_clips": 20, "endpoint_disjoint": true, "max_pure_over_slots": 0.0, "max_seam_over_slots": 1.756, "min_m1_p10_over_slots": 0.3671, "pass": true}
+{"op_index": 2, "shader": "BookFlip", "n_slots": 10, "exact_op_identical_across_slots": true, "n_distinct_endpoint_clips": 20, "endpoint_disjoint": true, "max_pure_over_slots": 0.0, "max_seam_over_slots": 1.81, "min_m1_p10_over_slots": 0.2624, "pass": true}
+{"dropped_ops": 0, "orphan_manifest_rows": [], "orphan_media_files": [], "drop_clean": true}
+{
+ "SMOKE": "PASS",
+ "n_complete_ops": 3,
+ "n_dropped_ops": 0
+}
+=== smoke EXIT 0 ===
