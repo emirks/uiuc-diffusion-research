@@ -365,27 +365,51 @@ hands the model the transition it is supposed to invent. So the descriptions are
 pixels. The effect label is withheld from the captioner and stored only under
 `effect_of_clip_NOT_FOR_CAPTIONING`.
 
-### 12.4 Measured register gap vs the corpus — disclosed, not gated
+### 12.4 🔴 The pre-registered gates were RUN and 8a FAILS — S4 ships anyway, by owner decision
 
-| statistic | S4 (n=2,000) | locked store role-A (n=750) | Δ |
+An earlier version of this section recorded gate #8 as *"disclosed, not gated"* on the argument
+that the register gap was content-driven. **That was wrong twice over and is retracted here.**
+It was written *after* seeing the numbers, which is not how a pre-registered bar works; and the
+content argument is void because gate 8a runs `analyzer=function_word_tokens` — function words
+only, content stripped — so it cannot see "headshots have fewer coloured objects than street
+scenes" at all. The gates §5.6 pins were then actually run:
+
+| gate | S4 (n=2,000) | bar | verdict |
 |---|---|---|---|
-| words p50 | 30 | 34.5 | **−4.5** |
-| words p10 / p90 | 27 / 34 | 26 / 41 | narrower |
+| **8a** corpus-vs-new function-word probe | **0.8849** ± 0.0065 SE | ≤ 0.73 | **FAIL** — ~24 SE over |
+| **2** word-count p10 / p90 | 27.0 / 34.0 | p10 ∈ [16,26], p90 ∈ [34,44] | **FAIL** |
+| 9 full-vocabulary classifier | 0.9934 AUC | ≥0.80 → investigate | INVESTIGATE |
+| 8b stratum-internal blindness | — | ≤ 0.60 | SKIPPED — one bank, no contrast |
+| 1, 3, 4, 6, 7, 10, 11 | — | — | PASS |
+| 5 B-role participial | — | — | N/A — S4 is one-sided |
+
+The locked store's 8a is **0.6819**, so S4's captions are markedly more separable by style.
+
+**Cause of gate 2, measured not guessed.** `generate_descriptions.sample_length` draws N **per
+item** via `rng.choice(empirical)` over the 171 corpus word counts — that per-item draw is what
+reproduces the corpus's *width*. The S4 spec gave every captioner **one fixed target** ("about 34
+words"), and a fixed request cannot produce a spread: p10/p90 collapsed to 27/34 against the
+corpus's 21/39.
+
+**🔑 OWNER DECISION 2026-07-28 — S4 SHIPS AS IS.** The operator proposed A9 Q4's pre-registered
+remedy (fix the length sampler, regenerate, max 3 rounds). **The owner declined and directed that
+these captions be used unchanged.** No regeneration round was consumed and no caption was ever
+regenerated. This is an **explicit accepted deviation from a pre-registered bar**, recorded as
+such — not a passed gate, and not a waiver dressed up as an argument. Any report that cites S4
+must carry this fact, because §5.6's "S4 rides for free or not at all" schedule ruling would
+otherwise have removed S4 from the mix at assembly time.
+
+Measurements, snapshots and the full battery JSON:
+`outputs/ctt_v2/captions/archive/s4_gate_measurements/`.
+
+One confound *was* designed out and verified absent: **per-effect word p50 spans only 28 – 33.5**
+across all 42 effects, so captioner style does not track effect. Batches were round-robined over
+an effect-sorted roster precisely for that.
+
+| other statistic | S4 | locked role-A | Δ |
+|---|---|---|---|
 | commas / description | 2.111 | 2.288 | −0.18 |
-| colour terms / description | 3.103 | 3.997 | **−0.89** |
-
-The word and colour deltas are close in size to the round-1 failure that lost gate #8 (§9). They
-are **reported, not gated**, for a reason: gate #8 asks whether a discriminator can separate corpus
-captions from new ones, which is diagnostic only when both describe **the same footage domain**. S4
-is AI-generated single-subject VFX footage — overwhelmingly close-ups on plain or bokeh backgrounds
-— against DAVIS/HumanVid street and park scenes. A studio headshot genuinely contains fewer
-distinct coloured objects than a city street, so part of that −0.89 is content, and closing it
-would mean instructing the captioner to invent colour that is not in the frame. That is a worse
-defect than the gap.
-
-What *would* have been a real confound was checked and is absent: **per-effect word p50 spans only
-28 – 33.5** across all 42 effects. Batches were round-robined over an effect-sorted roster
-precisely so a captioner's style could not track an effect.
+| colour terms / description | 3.103 | 3.997 | −0.89 |
 
 ### 12.5 Alignment was the real risk, and it was spot-checked
 

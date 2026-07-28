@@ -72,6 +72,10 @@ def describe(vals: list[str], label: str) -> dict:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--write", action="store_true")
+    ap.add_argument("--from-gemini", action="store_true",
+                    help="source descriptions from outputs/ctt_v2/captions/s4_gemini/ "
+                         "(gemini-3.6-flash, prompt v2, per-item length draw) instead of the "
+                         "Sonnet fan-out batches")
     args = ap.parse_args()
 
     stems = json.loads(ROSTER.read_text())["stems"]
@@ -80,13 +84,19 @@ def main() -> None:
     raw: dict[str, str] = {}
     origin: dict[str, str] = {}
     dupes: list[str] = []
-    files = sorted(BATCHES.glob("out_*.json"))
-    for f in files:
-        for k, v in json.loads(f.read_text()).items():
-            if k in raw:
-                dupes.append(f"{k} ({origin[k]} vs {f.name})")
-            raw[k] = v
-            origin[k] = f.name
+    if args.from_gemini:
+        src = REPO / "outputs/ctt_v2/captions/s4_gemini/descriptions.json"
+        raw = json.loads(src.read_text())
+        origin = {k: src.name for k in raw}
+        files = [src]
+    else:
+        files = sorted(BATCHES.glob("out_*.json"))
+        for f in files:
+            for k, v in json.loads(f.read_text()).items():
+                if k in raw:
+                    dupes.append(f"{k} ({origin[k]} vs {f.name})")
+                raw[k] = v
+                origin[k] = f.name
 
     desc = {k: store_form(v) for k, v in raw.items()}
 
@@ -166,8 +176,14 @@ def main() -> None:
                       "A-role description covers exactly the conditioned pixels.",
             "sided_authority": "owner decision 2026-07-28 (frame 0, not frames 0-8); "
                                "S4_spec.json sided='one'",
-            "generator": "claude-sonnet vision fan-out, 25 batches x 80 clips, "
-                         "effect-stratified so captioner style cannot track effect",
+            "generator": ("gemini-3.6-flash, prompt v2 role-A, per-item length draw over the "
+                          "171 corpus word counts (the SAME instrument and rule as the locked "
+                          "store) -- adopted after a controlled comparison showed captioner "
+                          "identity is NOT what gate 8a measures: Sonnet 0.8849 vs Gemini "
+                          "0.8913, a 0.006 difference at SE 0.006. See CAPTIONS.md 12.4."
+                          if args.from_gemini else
+                          "claude-sonnet vision fan-out, 25 batches x 80 clips, "
+                          "effect-stratified so captioner style cannot track effect"),
             "prompt_variant": "v2-s4f0",
             "prompt_variant_delta": "prompt v2 role-A verbatim EXCEPT '9-frame snippet' -> "
                                     "'single still frame', because only frame 0 is conditioned. "

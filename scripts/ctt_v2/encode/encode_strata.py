@@ -96,7 +96,7 @@ ENC = MAIN / "outputs/ctt_v2/encodes"
 # --------------------------------------------------------------------------------------
 # HARDCODED shard counts.  NEVER derive these from SLURM_ARRAY_TASK_COUNT.
 # --------------------------------------------------------------------------------------
-NSHARDS = {"S2a": 16, "S2b": 16, "S1": 1, "S4": 4}
+NSHARDS = {"S2a": 16, "S2b": 16, "S1": 8, "S4": 4}   # S1: 1 -> 8, roster grew 33 -> 1,417
 GROUPS = {"s2": ["S2a", "S2b"], "aux": ["S1", "S4"]}
 
 #: (width, height, frames) exactly as `process_videos.py --resolution-buckets WxHxF`
@@ -108,8 +108,13 @@ STRATA = {
             "src": MAIN / "outputs/videos/ctt_v2_s2/full/videos", "mode": "flat"},
     "S2b": {"bucket": STD_BUCKET, "fps": 24.0, "sided": "two",
             "src": MAIN / "outputs/videos/ctt_v2_s2_humanvid/full/videos", "mode": "flat"},
+    # S1 landed as TWO layers (owner, 2026-07-28): `ctt_v2_s1` = 390 clips on FOREIGN
+    # endpoints, `ctt_v2_s1_s0cf` = 1,027 S0-endpoint counterfactuals. Both are S1 material
+    # and both must be encoded, so `src` is a LIST. Verified 0 stem collisions between them
+    # (390 + 1,027 = 1,417 distinct), which is what makes a flat union safe.
     "S1":  {"bucket": STD_BUCKET, "fps": 24.0, "sided": "registry",
-            "src": MAIN / "outputs/videos/ctt_v2_s1", "mode": "spec"},
+            "src": [MAIN / "outputs/videos/ctt_v2_s1",
+                    MAIN / "outputs/videos/ctt_v2_s1_s0cf"], "mode": "spec"},
     "S4":  {"bucket": S4_BUCKET, "fps": 16.0, "sided": "one",
             "src": REPO_ROOT / "data/processed/s4_refvfx/selection.json", "mode": "tar"},
 }
@@ -166,7 +171,13 @@ def _discover(stratum: str) -> list[tuple[str, Path | dict]]:
     if cfg["mode"] == "flat":
         return sorted((p.stem, p) for p in Path(cfg["src"]).glob("*.mp4"))
     if cfg["mode"] == "spec":
-        return sorted((p.stem, p) for p in Path(cfg["src"]).glob("spec_*/*.mp4"))
+        # `src` may be a single dir or a LIST of dirs (S1's two layers). Stems are asserted
+        # unique by `stage()`, so a flat union across layers cannot silently overwrite.
+        srcs = cfg["src"] if isinstance(cfg["src"], (list, tuple)) else [cfg["src"]]
+        out = []
+        for d in srcs:
+            out.extend((p.stem, p) for p in Path(d).glob("spec_*/*.mp4"))
+        return sorted(out)
     if cfg["mode"] == "tar":
         sel = json.loads(Path(cfg["src"]).read_text())
         return sorted((r["k"], r) for r in sel["samples"])
@@ -194,7 +205,9 @@ def stage(strata: list[str], force: bool = False) -> None:
                     f"roster; re-run with --force only if you intend to re-partition.")
         else:
             roster = {"stratum": stratum, "n": len(stems), "stems": stems,
-                      "source": str(STRATA[stratum]["src"]),
+                      "source": ([str(x) for x in STRATA[stratum]["src"]]
+                                 if isinstance(STRATA[stratum]["src"], (list, tuple))
+                                 else str(STRATA[stratum]["src"])),
                       "bucket_whf": list(STRATA[stratum]["bucket"]),
                       "fps": STRATA[stratum]["fps"],
                       "nshards": NSHARDS[stratum],
