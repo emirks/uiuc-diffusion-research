@@ -25,25 +25,23 @@
     }
   ],
 
-  "servers": [
-    {
-      "_comment": "Viewers that are an application, not a file. The static server cannot host these; viewerctl serve starts them on their own port alongside it.",
-      "slug": "ctt_v2_dataset_viewer",
-      "title": "ctt_v2 dataset viewer — refVFX + VFXMaster",
-      "blurb": "Browse both external corpora along their counterfactual axes, streaming video straight out of the WebDataset tar shards (nothing is extracted — the index stores byte offsets). refVFX code 136,800 · refVFX I2V_LoRA 6,995 · VFXMaster ~9.9k.",
-      "group": "datasets",
-      "featured": true,
-      "date": "2026-07-25",
-      "port": 8799,
-      "cwd": ".claude/worktrees/bottleneck-branch",
-      "cmd": ["python3", "scripts/ctt_v2/dataset_viewer/serve.py", "--port", "8799", "--bind", "127.0.0.1"],
-      "start_hint": "viewerctl serve  (or: python3 scripts/ctt_v2/dataset_viewer/serve.py --port 8799)",
-      "source_branch": "ctt-v2",
-      "notes": "Lives on branch ctt-v2 (worktree .claude/worktrees/bottleneck-branch), 4 files under scripts/ctt_v2/dataset_viewer. Its data paths are absolute into the main tree's data/raw, so it runs correctly from the worktree. Index files: data/raw/refvfx/_viewer_index/{code,lora,vfx}.jsonl.gz, rebuilt by build_index.py."
-    }
-  ],
+  "servers": [],
 
   "viewers": [
+    {
+      "slug": "ctt_v2_corpora",
+      "title": "ctt_v2 corpora — refVFX + VFXMaster",
+      "blurb": "Both external corpora along their counterfactual axes — same operator × many contents, same content × many operators. 153,758 samples, video read straight out of the WebDataset tars by byte range; nothing is extracted or copied.",
+      "group": "datasets",
+      "featured": true,
+      "latest_of": "external corpora",
+      "date": "2026-07-28",
+      "path": "outputs/viewers/ctt_v2_corpora/index.html",
+      "generator": "scripts/viewers/build_ctt_v2_corpora.py",
+      "notes": "Static port of the app-server viewer on branch ctt-v2 (scripts/ctt_v2/dataset_viewer/, port 8799), verified at parity: identical sample counts, axis groups, group membership and row fields. The grouping serve.py did in memory is precomputed into range-addressable files; media URLs are range fetches into the shards. Page source is scripts/viewers/ctt_v2_corpora.html, linked in as index.html. Rebuild after data changes: python3 scripts/viewers/build_ctt_v2_corpora.py",
+      "check_files": ["meta.json", "rows_code.jsonl", "rowoff_code.bin", "ids_code_effect.bin",
+                      "rows_lora.jsonl", "rows_vfx.jsonl", "shards_code", "shards_lora", "vfx_h264"]
+    },
     {
       "slug": "s2_dataset",
       "title": "S2 — procedural transition operators",

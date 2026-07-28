@@ -47,7 +47,9 @@ through mounts (below) that compensate, but new pages must use rule 2.
 diffusion-research/
 ├── scripts/viewers/
 │   ├── viewerctl.py          the tool: mount · check · hub · serve · new   [tracked]
-│   └── registry.json         every viewer, its blurb, group, media wiring  [tracked]
+│   ├── registry.json         every viewer, its blurb, group, media wiring  [tracked]
+│   ├── build_ctt_v2_corpora.py  builds the corpora viewer's data files     [tracked]
+│   └── ctt_v2_corpora.html      that viewer's page source                  [tracked]
 ├── scripts/build_*_viewer.py generators, one per viewer family             [tracked]
 ├── outputs/viewers/
 │   ├── index.html            the dashboard — generated, never hand-edited
@@ -118,11 +120,20 @@ force an application server. A static page can fetch
 `[offset, offset+size)` from the shard and hand the bytes to `<video>` as a blob
 URL, with the offsets coming from a `_viewer_index/*.jsonl.gz`.
 
+That is not theoretical: the ctt_v2 corpora viewer (153,758 samples across
+361 GB of tars) **was** an application on port 8799 and is now a static page on
+8017. `build_ctt_v2_corpora.py` precomputes what its server did in memory —
+axis grouping into `ids_<sub>_<axis>.bin`, rows into `rows_<sub>.jsonl` with a
+`rowoff_<sub>.bin` offset table — and the page range-fetches the slice it needs.
+Verified at parity against the old server: identical counts, axis groups, group
+membership and row fields.
+
 ### Server-backed viewers — for pages that are an application
 
-A viewer needs its own server only when it must compute per request — not merely
-because its media lives in tars. Those run on their own port and are registered
-under `"servers"` rather than `"viewers"`:
+**Currently none.** The class is still supported, for a viewer that must
+genuinely compute per request. Media living inside tars is *not* such a case.
+These run on their own port and are registered under `"servers"` rather than
+`"viewers"`:
 
 ```json
 {"slug": "ctt_v2_dataset_viewer", "port": 8799,
@@ -134,12 +145,9 @@ under `"servers"` rather than `"viewers"`:
 already up) and the dashboard cards them with a running / not-running pill.
 `--static-only` skips them.
 
-The one current entry, the ctt_v2 refVFX + VFXMaster viewer, predates range
-support and could be ported to a static page: its `/api/meta` and `/api/samples`
-become client-side grouping over the gzipped index (461 KB for LoRA, 7.1 MB for
-code — `DecompressionStream('gzip')` in the browser), and its media URLs become
-range fetches into the shards. VFXMaster is already loose files. Until someone
-does that, it stays an application and keeps port 8799.
+A page that fetches its media in JS has no `src` attributes to scrape, so it
+declares what it needs with `"check_files"` and `viewerctl check` verifies those
+instead.
 
 ---
 
@@ -162,7 +170,7 @@ are what the dashboard shows.
 
 ## Current inventory
 
-18 current viewers (17 static, all resolving; 1 server-backed); 4 archived.
+18 current viewers, all static, all resolving; 4 archived.
 Generated view: `outputs/viewers/index.html`.
 
 ### Dataset strata & sources
@@ -173,7 +181,7 @@ Generated view: `outputs/viewers/index.html`.
 | **Luma-matte transitions** | 114 clips isolating matte source vs `step()` thresholding |
 | **D2 — final synthetic dataset** | exp_077, 252 ref/target pairs with filmstrips (supersedes D1) |
 | **HumanVid REAL (Pexels)** | 60-clip real-footage sample, streamed from Pexels (needs internet) |
-| **ctt_v2 dataset viewer — refVFX + VFXMaster** ★ ⚙ | the external corpora along their counterfactual axes, streamed from tar shards: refVFX code 136,800 · I2V_LoRA 6,995 · VFXMaster ~9.9k. Own server on **:8799**; source lives on branch `ctt-v2` (`scripts/ctt_v2/dataset_viewer/`), index at `data/raw/refvfx/_viewer_index/` |
+| **ctt_v2 corpora — refVFX + VFXMaster** ★ | the external corpora along their counterfactual axes: refVFX code 136,800 · I2V_LoRA 6,995 · VFXMaster 9,963. Video read out of the tars by byte range — nothing extracted. Rebuild: `build_ctt_v2_corpora.py` |
 
 ### Eval instrument & ladder
 | Viewer | What it shows |
@@ -199,7 +207,7 @@ Generated view: `outputs/viewers/index.html`.
 | **Blind 2AFC study** | frozen forced-choice instrument, 93 clips, mounted read-only from `misc/` |
 | **Transition-hardness playground** | interactive scatter over hardness signals (Plotly CDN) |
 
-★ = current campaign work.  ⚙ = server-backed (own port).
+★ = current campaign work.
 
 ### Archived
 | Viewer | Why |

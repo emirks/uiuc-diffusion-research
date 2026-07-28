@@ -1,3 +1,31 @@
+## 2026-07-28
+
+- **10:25** — **The ctt_v2 corpora viewer is now static — the app server was working around a
+  one-line gap in ours.** `viewerctl httpd` (the viewer system's static server) answers byte
+  ranges; stock `python -m http.server` ignores `Range` and returns 200 with the whole file,
+  which is why reading one member out of a WebDataset tar had needed a process. It does not:
+  `scripts/viewers/build_ctt_v2_corpora.py` precomputes what `serve.py` did in memory — axis
+  grouping into `ids_<sub>_<axis>.bin`, slim rows into `rows_<sub>.jsonl` with a `rowoff` offset
+  table — and `scripts/viewers/ctt_v2_corpora.html` range-fetches the slice it needs, wrapping
+  tar members in blob URLs (VFXMaster is loose files and streams directly). Verified at parity
+  against the old server on 8799: identical sample counts (code 136,800 · LoRA 6,995 · VFX
+  9,963), identical axis-group counts, identical group membership and row fields. Port 8799 is
+  retired; the viewer lives at `outputs/viewers/ctt_v2_corpora/` on 8017 like everything else.
+  Range support also un-broke video *seeking* across every existing viewer.
+
+- **10:05** — **Viewer system: one dashboard, one port, a tracked registry.** ~40 HTML pages had
+  accumulated under three incompatible path conventions and roughly a third served black boxes.
+  `scripts/viewers/viewerctl.py` (`mount` · `check` · `hub` · `serve` · `new` · `httpd`) plus a
+  tracked `registry.json` replace the ad-hoc server habit; `docs/VIEWERS.md` is the reference.
+  The rule that fixes it: every path in a page is relative to the viewer's own directory, with
+  media arriving through a symlink there — the only convention that survives a server restart or
+  a repo move. Pages that must not be edited (certification records, the ladder2 REFERENCE, the
+  frozen 2AFC study) are wrapped in *mounts*, rebuilt from the registry on every run so they
+  cannot drift. The ladder results viewer, both eval_ladder pages and both certification records
+  were climbing out of the repo or resolving against the wrong root; all 18 current viewers now
+  resolve, 4 stale ones are archived with the reason. Dashboard:
+  `http://localhost:8017/outputs/viewers/index.html`.
+
 ## 2026-07-27
 
 - **12:00** — **exp_084: the luma-matte family was killed by `step()`, not (only) by the maps.**

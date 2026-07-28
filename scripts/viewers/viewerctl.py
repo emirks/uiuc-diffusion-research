@@ -176,6 +176,17 @@ def health(v: dict, sample_n: int = SAMPLE_N) -> dict:
     out = {"status": "missing", "ok": 0, "sampled": 0, "refs": 0, "external": 0, "examples": []}
     if not p.exists():
         return out
+    # A page that fetches its media in JS has nothing to scrape, so it declares
+    # the data files it needs instead.
+    declared = v.get("check_files")
+    if declared:
+        out["refs"] = out["sampled"] = len(declared)
+        bad = [r for r in declared if not (p.parent / r).exists()]
+        out["ok"] = len(declared) - len(bad)
+        out["examples"] = bad[:3]
+        out["status"] = "live" if not bad else ("partial" if out["ok"] else "broken")
+        return out
+
     text = p.read_text(encoding="utf-8", errors="replace")
     seen, refs, external = set(), [], 0
     for m in MEDIA_RE.finditer(text):

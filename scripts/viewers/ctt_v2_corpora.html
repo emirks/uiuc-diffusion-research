@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ctt_v2 dataset viewer — refVFX + VFXMaster</title>
+<style>
+  :root { --bg:#0d1117; --panel:#161b22; --border:#30363d; --fg:#e6edf3; --dim:#8b949e;
+          --accent:#58a6ff; --chip:#21262d; --chip-hover:#30363d; --good:#3fb950; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font:14px/1.45 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  header { display:flex; align-items:center; gap:16px; padding:10px 16px;
+           border-bottom:1px solid var(--border); background:var(--panel);
+           position:sticky; top:0; z-index:10; flex-wrap:wrap; }
+  header h1 { font-size:15px; margin:0; font-weight:600; }
+  header h1 span { color:var(--dim); font-weight:400; }
+  .tabs, .axes { display:flex; gap:6px; flex-wrap:wrap; }
+  .tab, .axis { padding:5px 12px; border-radius:14px; background:var(--chip); cursor:pointer;
+                border:1px solid var(--border); user-select:none; white-space:nowrap; }
+  .tab:hover, .axis:hover { background:var(--chip-hover); }
+  .tab.active { background:var(--accent); color:#04162b; border-color:var(--accent); font-weight:600; }
+  .axis.active { border-color:var(--accent); color:var(--accent); font-weight:600; }
+  #layout { display:flex; height:calc(100vh - 53px); }
+  #sidebar { width:320px; min-width:220px; border-right:1px solid var(--border);
+             display:flex; flex-direction:column; background:var(--panel); }
+  #search { margin:10px; padding:7px 10px; border-radius:6px; border:1px solid var(--border);
+            background:var(--bg); color:var(--fg); outline:none; }
+  #search:focus { border-color:var(--accent); }
+  #groups { overflow-y:auto; flex:1; padding:0 6px 10px; }
+  .group { padding:6px 8px; border-radius:6px; cursor:pointer; display:flex; gap:8px;
+           justify-content:space-between; align-items:baseline; }
+  .group:hover { background:var(--chip-hover); }
+  .group.active { background:#0d2440; color:var(--accent); }
+  .group .name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .group .n { color:var(--dim); font-size:12px; flex-shrink:0; }
+  #main { flex:1; overflow-y:auto; padding:14px; }
+  #status { color:var(--dim); margin:2px 2px 10px; font-size:13px; }
+  #grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(430px,1fr)); gap:14px; }
+  .card { background:var(--panel); border:1px solid var(--border); border-radius:10px;
+          padding:10px; display:flex; flex-direction:column; gap:8px; }
+  .vids { display:flex; gap:6px; }
+  .pane { flex:1; min-width:0; position:relative; }
+  .pane video, .pane img { width:100%; border-radius:6px; background:#000; display:block;
+                           aspect-ratio:16/10; object-fit:contain; }
+  .pane .role { position:absolute; top:6px; left:6px; background:#000a; color:#fff;
+                font-size:11px; padding:1px 7px; border-radius:8px; pointer-events:none; }
+  .pane .loading { position:absolute; inset:0; display:flex; align-items:center;
+                   justify-content:center; color:var(--dim); font-size:12px; pointer-events:none; }
+  .chips { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  .chip { background:var(--chip); border:1px solid var(--border); padding:2px 9px;
+          border-radius:11px; font-size:12px; cursor:pointer; max-width:100%;
+          overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .chip:hover { border-color:var(--accent); color:var(--accent); }
+  .chip.static { cursor:default; color:var(--dim); }
+  .chip.static:hover { border-color:var(--border); color:var(--dim); }
+  .prompt { color:var(--dim); font-size:12.5px; cursor:pointer;
+            display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .prompt.open { display:block; }
+  #pager { display:flex; gap:10px; align-items:center; justify-content:center; padding:18px 0 8px; }
+  #pager button { background:var(--chip); color:var(--fg); border:1px solid var(--border);
+                  border-radius:6px; padding:6px 14px; cursor:pointer; }
+  #pager button:disabled { opacity:.35; cursor:default; }
+  #pager button:not(:disabled):hover { border-color:var(--accent); }
+  .btn { background:var(--chip); color:var(--fg); border:1px solid var(--border);
+         border-radius:6px; padding:5px 12px; cursor:pointer; }
+  .btn:hover { border-color:var(--accent); }
+  .note { color:var(--dim); font-size:12px; padding:8px 12px; }
+  .maskable .m-toggle { position:absolute; top:6px; right:6px; background:#000a; color:#fff;
+      font-size:11px; padding:1px 7px; border-radius:8px; cursor:pointer; border:1px solid #fff3; }
+  .maskable .m-toggle.on { background:var(--accent); color:#04162b; }
+  .err { color:#f85149; font-size:12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>ctt_v2 <span>dataset viewer</span></h1>
+  <div class="tabs" id="tabs"></div>
+  <div class="axes" id="axes"></div>
+  <button class="btn" id="shuffle" title="reshuffle browse order">🔀 shuffle</button>
+</header>
+<div id="layout">
+  <div id="sidebar">
+    <input id="search" placeholder="filter groups…">
+    <div id="groups"></div>
+  </div>
+  <div id="main">
+    <div id="status"></div>
+    <div id="grid"></div>
+    <div id="pager">
+      <button id="prev">‹ prev</button><span id="pageinfo"></span><button id="next">next ›</button>
+    </div>
+  </div>
+</div>
+<script>
+// Static build. Where the old viewer called its own server, this reads bytes:
+//   /api/meta     -> meta.json
+//   /api/samples  -> range slice of ids_<sub>_<axis>.bin, then of rows_<sub>.jsonl
+//   /media/...    -> range slice of the WebDataset tar, wrapped in a blob URL
+// Every fetch below asks for exactly the bytes it needs; nothing is extracted.
+const TABS = {code:"refVFX · code", lora:"refVFX · LoRA", vfx:"VFXMaster"};
+const AXIS_NAMES = {effect:"By effect (same op × contents)", spatial:"By spatial family",
+                    temporal:"By temporal family", content:"By content (same content × ops)",
+                    class:"By class (same op × contents)", browse:"Browse all"};
+const MIME = {mp4:"video/mp4", png:"image/png", jpg:"image/jpeg"};
+
+let META = null;
+const ROWOFF = {};        // subset -> Uint32Array(n+1) byte offsets into rows_<sub>.jsonl
+const COUNTS = {};        // subset -> axis -> Map(label -> count), for the cross-link chips
+const IDCACHE = new Map();
+let BLOBS = [];           // object URLs alive on the current page
+let S = {subset:"code", axis:"effect", group:null, page:0, per:12, seed:1, q:""};
+
+const $ = id => document.getElementById(id);
+const esc = s => (s||"").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+async function bytes(url, start, end){
+  const r = await fetch(url, {headers:{Range:`bytes=${start}-${end}`}});
+  if (r.status !== 206 && r.status !== 200) throw new Error(`${url} → HTTP ${r.status}`);
+  return r.arrayBuffer();
+}
+
+function shortLabel(axis, name){
+  if (axis === "content") return "content #" + name.slice(-8);
+  return name.replace(/^effect_/, "");
+}
+
+// deterministic shuffle so "browse" is stable until you press shuffle
+function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+async function subsetLoaded(sub){
+  if (ROWOFF[sub]) return;
+  const buf = await (await fetch(`rowoff_${sub}.bin`)).arrayBuffer();
+  ROWOFF[sub] = new Uint32Array(buf);
+  COUNTS[sub] = {};
+  for (const [axis, entries] of Object.entries(META[sub].axes))
+    COUNTS[sub][axis] = new Map(entries.map(e => [e[0], e[1]]));
+}
+
+async function idsFor(){
+  if (S.axis === "browse"){
+    const ids = new Uint32Array(META[S.subset].n);
+    for (let i = 0; i < ids.length; i++) ids[i] = i;
+    const rnd = mulberry32(S.seed);
+    for (let i = ids.length - 1; i > 0; i--){
+      const j = Math.floor(rnd() * (i + 1));
+      [ids[i], ids[j]] = [ids[j], ids[i]];
+    }
+    return ids;
+  }
+  const entry = (META[S.subset].axes[S.axis] || []).find(e => e[0] === S.group);
+  if (!entry) return new Uint32Array(0);
+  const [, count, start] = entry;
+  const key = `${S.subset}/${S.axis}/${start}`;
+  if (!IDCACHE.has(key)){
+    const buf = await bytes(`ids_${S.subset}_${S.axis}.bin`, start * 4, (start + count) * 4 - 1);
+    IDCACHE.set(key, new Uint32Array(buf));
+  }
+  return IDCACHE.get(key);
+}
+
+async function rowsFor(ids){
+  const off = ROWOFF[S.subset], url = `rows_${S.subset}.jsonl`;
+  return Promise.all([...ids].map(async i => {
+    const buf = await bytes(url, off[i], off[i+1] - 1);
+    const r = JSON.parse(new TextDecoder().decode(buf));
+    r._id = i;
+    return r;
+  }));
+}
+
+async function boot(){
+  try {
+    META = await (await fetch("meta.json")).json();
+  } catch (e) {
+    $("status").innerHTML = `<span class="err">meta.json missing — run
+      <code>python3 scripts/viewers/build_ctt_v2_corpora.py</code></span>`;
+    return;
+  }
+  await subsetLoaded(S.subset);
+  renderTabs(); selectAxis(S.axis, true);
+}
+function renderTabs(){
+  $("tabs").innerHTML = Object.entries(TABS).map(([k,v]) =>
+    `<div class="tab ${k===S.subset?'active':''}" data-k="${k}">${v} <span style="opacity:.6">${META[k].n.toLocaleString()}</span></div>`).join("");
+  document.querySelectorAll(".tab").forEach(el => el.onclick = async () => {
+    S.subset = el.dataset.k;
+    await subsetLoaded(S.subset);
+    S.axis = META[S.subset].axis_order[0];
+    S.group = null; S.page = 0; S.q = ""; $("search").value = "";
+    renderTabs(); selectAxis(S.axis, true);
+  });
+  $("axes").innerHTML = META[S.subset].axis_order.map(a =>
+    `<div class="axis ${a===S.axis?'active':''}" data-a="${a}">${AXIS_NAMES[a]||a}</div>`).join("");
+  document.querySelectorAll(".axis").forEach(el => el.onclick = () => selectAxis(el.dataset.a, true));
+}
+function selectAxis(axis, pickFirst){
+  S.axis = axis; S.page = 0;
+  renderTabs();
+  const groups = META[S.subset].axes[axis] || [];
+  if (axis === "browse"){ S.group = null; renderGroups([]); load(); return; }
+  renderGroups(groups);
+  if (pickFirst && groups.length && !groups.some(g => g[0]===S.group)) S.group = groups[0][0];
+  markActive(); load();
+}
+function renderGroups(groups){
+  const q = S.q.toLowerCase();
+  const vis = q ? groups.filter(g => g[0].toLowerCase().includes(q)) : groups;
+  $("groups").innerHTML = vis.slice(0, 2500).map(g =>
+    `<div class="group" data-g="${esc(g[0])}" title="${esc(g[0])}">
+       <span class="name">${esc(shortLabel(S.axis, g[0]))}</span><span class="n">${g[1]}</span></div>`).join("")
+    + (vis.length > 2500 ? `<div class="note">…${vis.length-2500} more — refine the filter</div>` : "")
+    + (!groups.length ? `<div class="note">${S.axis==="content" ? "no reused contents in this subset — this axis is degenerate here" : "no groups"}</div>` : "");
+  document.querySelectorAll(".group").forEach(el => el.onclick = () => {
+    S.group = el.dataset.g; S.page = 0; markActive(); load();
+  });
+  markActive();
+}
+function markActive(){
+  document.querySelectorAll(".group").forEach(el =>
+    el.classList.toggle("active", el.dataset.g === S.group));
+}
+$("search").oninput = e => { S.q = e.target.value; renderGroups(META[S.subset].axes[S.axis]||[]); };
+$("shuffle").onclick = () => { S.seed = (Math.random()*1e9)|0; S.page = 0; load(); };
+
+async function load(){
+  $("status").textContent = "loading…";
+  BLOBS.forEach(URL.revokeObjectURL); BLOBS = [];
+  let ids, rows;
+  try {
+    ids = await idsFor();
+    const slice = ids.slice(S.page * S.per, (S.page + 1) * S.per);
+    rows = await rowsFor(slice);
+  } catch (e) {
+    $("status").innerHTML = `<span class="err">${esc(e.message)}</span>`;
+    return;
+  }
+  const total = ids.length;
+  const pages = Math.max(1, Math.ceil(total / S.per));
+  $("status").innerHTML = `<b>${total.toLocaleString()}</b> samples` +
+    (S.group && S.axis!=="browse" ? ` in <b>${esc(shortLabel(S.axis,S.group))}</b>` : "") +
+    (S.axis==="effect"||S.axis==="class" ? " — every card is the same operator on a different content" :
+     S.axis==="content" ? " — every card is the same content under a different operator" : "");
+  $("pageinfo").textContent = `${S.page+1} / ${pages}`;
+  $("prev").disabled = S.page<=0; $("next").disabled = S.page>=pages-1;
+  $("grid").innerHTML = rows.map(card).join("");
+  wire(rows);
+}
+$("prev").onclick = () => { S.page--; load(); };
+$("next").onclick = () => { S.page++; load(); };
+
+function count(axis, label){ return (COUNTS[S.subset][axis] || new Map()).get(label) || 1; }
+
+function card(r){
+  const panes = [];
+  if (S.subset !== "vfx" && r.m.in){
+    const isImg = (r.m.in[2] || "") === "png";
+    panes.push(`<div class="pane" data-role="in" data-id="${r._id}">${isImg
+      ? `<img>` : `<video preload="metadata" controls muted loop></video>`}
+      <span class="role">input</span><span class="loading">…</span></div>`);
+  }
+  const maskBtn = (S.subset !== "vfx" && r.m.mask) ? `<span class="m-toggle">mask</span>` : "";
+  panes.push(`<div class="pane maskable" data-role="out" data-id="${r._id}">
+      <video preload="metadata" controls muted loop></video>
+      <span class="role">output</span>${maskBtn}<span class="loading">…</span></div>`);
+  const chips = [];
+  if (S.subset === "vfx"){
+    const n = count("class", r.cls);
+    chips.push(`<span class="chip" data-ax="class" data-g="${esc(r.cls)}" title="all ${n} videos of this effect">${esc(r.cls)} · ${n}</span>`);
+  } else {
+    const ne = count("effect", r.et), nc = count("content", r.fp);
+    chips.push(`<span class="chip" data-ax="effect" data-g="${esc(r.et)}" title="${esc(r.et)} — ${ne} contents with this exact operator">op · ${ne}</span>`);
+    if (r.sfam) chips.push(`<span class="chip" data-ax="spatial" data-g="${esc(r.sfam)}">spatial: ${esc(r.sfam)}</span>`);
+    if (r.tfam) chips.push(`<span class="chip" data-ax="temporal" data-g="${esc(r.tfam)}">temporal: ${esc(r.tfam)}</span>`);
+    if (r.fp && nc > 1)
+      chips.push(`<span class="chip" data-ax="content" data-g="${esc(r.fp)}" title="this exact content under ${nc} operators">content · ${nc} ops</span>`);
+    if (r.ori) chips.push(`<span class="chip static">${esc(r.ori)}</span>`);
+  }
+  return `<div class="card">
+    <div class="vids">${panes.join("")}</div>
+    <div class="chips">${chips.join("")}</div>
+    ${r.pr ? `<div class="prompt" onclick="this.classList.toggle('open')">${esc(r.pr)}</div>` : ""}
+  </div>`;
+}
+
+// One member out of a shard, as a blob URL. VFXMaster is loose files — the static
+// server streams those directly (and answers Range, so seeking works).
+async function mediaURL(r, role){
+  if (S.subset === "vfx") return `${r.r === 0 ? "vfx_h264" : "vfx_orig"}/${r.p}`;
+  const spec = r.m[role];
+  if (!spec) return null;
+  const [off, len, ext] = spec;
+  const shard = META[S.subset].shards[r.sh];
+  const buf = await bytes(`shards_${S.subset}/${shard}`, off, off + len - 1);
+  const url = URL.createObjectURL(new Blob([buf], {type: MIME[ext] || "video/mp4"}));
+  BLOBS.push(url);
+  return url;
+}
+
+function wire(rows){
+  const byId = new Map(rows.map(r => [String(r._id), r]));
+  // Fetch a card's bytes only once it is on screen — the old server got this free
+  // from preload="metadata"; here the whole member comes down, so wait for intent.
+  const io = new IntersectionObserver((entries, obs) => {
+    entries.filter(e => e.isIntersecting).forEach(async e => {
+      obs.unobserve(e.target);
+      const pane = e.target, r = byId.get(pane.dataset.id);
+      const el = pane.querySelector("video, img");
+      try {
+        const url = await mediaURL(r, pane.dataset.role);
+        if (url) el.src = url;
+        pane.querySelector(".loading").remove();
+      } catch (err) {
+        pane.querySelector(".loading").outerHTML = `<span class="loading err">${esc(err.message)}</span>`;
+      }
+    });
+  }, {rootMargin: "300px"});
+  document.querySelectorAll(".pane[data-id]").forEach(p => io.observe(p));
+
+  document.querySelectorAll(".chip[data-ax]").forEach(el => el.onclick = () => {
+    S.axis = el.dataset.ax; S.group = el.dataset.g; S.page = 0; S.q = ""; $("search").value = "";
+    renderTabs(); renderGroups(META[S.subset].axes[S.axis]||[]); load();
+  });
+  document.querySelectorAll(".m-toggle").forEach(el => el.onclick = async () => {
+    const pane = el.parentElement, v = pane.querySelector("video");
+    const r = byId.get(pane.dataset.id);
+    const on = el.classList.toggle("on");
+    if (on && !pane.dataset.maskUrl) pane.dataset.maskUrl = await mediaURL(r, "mask");
+    if (!pane.dataset.outUrl) pane.dataset.outUrl = v.src;
+    const t = v.currentTime;
+    v.src = on ? pane.dataset.maskUrl : pane.dataset.outUrl;
+    v.currentTime = t; v.play().catch(()=>{});
+    pane.querySelector(".role").textContent = on ? "mask" : "output";
+  });
+}
+boot();
+</script>
+</body>
+</html>
