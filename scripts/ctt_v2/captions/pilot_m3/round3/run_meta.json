@@ -1,0 +1,24 @@
+{
+ "generator_model": "gemini-3.6-flash",
+ "auditor_model": null,
+ "auditor_substitution_note": "NO LAYER-2 AUDIT RAN. gemini-3.5-flash (the round-1/2 auditor) returned HTTP 503 on 0/18 probes at concurrency 1 and 8 on 2026-07-28 (see pilot_m3/MODEL_AVAILABILITY_20260728.json). Run made with --no-audit rather than against a 503 auditor, which would have produced records carrying an empty `audit` verdict indistinguishable from a clean pass.",
+ "thinking_level": "minimal",
+ "prompt_variant": "v3",
+ "gen_temperature": 0.7,
+ "gen_max_output_tokens": 120,
+ "audit_temperature": 0.0,
+ "seed": 42,
+ "workers": 120,
+ "max_attempts": 2,
+ "n_pairs": 399,
+ "wall_seconds": 9.4,
+ "api_calls": 402,
+ "retries": 0,
+ "http429": 0,
+ "audit_enabled": false,
+ "deviations_from_runbook_step1": [
+  "--no-audit added to the RESUME_ON_CREDITS STEP 1 command (auditor down).",
+  "N_asked in raw_generation_responses.jsonl / records.json was written as the PRE-calibration draw for this run: generate_descriptions.py recorded calibrate_ask() only for variant v2, while build_system_prompt() applies it for v2 AND v3. The prompts actually sent used calibrate_ask(N_target); the field is deterministically recomputable as calibrate_ask(N_target). Fixed in generate_descriptions.py after this run."
+ ],
+ "first_pass_rate_eligibility": "NOT eligible to gate the >=97% first-pass or <=8% inaccurate bars: the leak/inaccurate components were not measured. Gate-battery (style/distributional) results ARE valid \u2014 they read descriptions only."
+}

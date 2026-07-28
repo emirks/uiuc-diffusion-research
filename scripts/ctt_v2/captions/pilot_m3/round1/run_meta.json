@@ -1,0 +1,17 @@
+{
+ "generator_model": "gemini-3.6-flash",
+ "auditor_model": "gemini-3.5-flash",
+ "auditor_substitution_note": "A4 Q3 specified gemini-3-pro-preview; the pro tier returns HTTP 429 on this key (DOSSIER \u00a75.1). gemini-3.5-flash substituted; generator != auditor so independence is preserved.",
+ "thinking_level": "minimal",
+ "gen_temperature": 0.7,
+ "gen_max_output_tokens": 120,
+ "audit_temperature": 0.0,
+ "seed": 42,
+ "workers": 120,
+ "max_attempts": 2,
+ "n_pairs": 400,
+ "wall_seconds": 25.1,
+ "api_calls": 850,
+ "retries": 0,
+ "http429": 0
+}

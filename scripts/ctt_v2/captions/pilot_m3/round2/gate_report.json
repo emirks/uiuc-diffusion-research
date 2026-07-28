@@ -1,0 +1,825 @@
+{
+ "bars": {
+  "p50_range": [
+   29,
+   36
+  ],
+  "p10_range": [
+   16,
+   26
+  ],
+  "p90_range": [
+   34,
+   44
+  ],
+  "det_A_min": 86.4,
+  "det_B_min": 86.9,
+  "B_lowercase_min": 100.0,
+  "B_ing_min": 80.6,
+  "B_participial_llm_delta_pp": 10.0,
+  "audio_max": 0,
+  "dup_rate_max_pct": 2.0,
+  "gate8_bacc_max": 0.65,
+  "gate9_auc_investigate": 0.8,
+  "colour_band": [
+   1.579,
+   4.737
+  ],
+  "camera_corpus_pct": 3.51,
+  "camera_delta_pp": 10.0
+ },
+ "corpus_pinned": {
+  "p10": 21,
+  "p25": 29,
+  "p50": 33,
+  "p75": 36,
+  "p90": 39,
+  "det_A_pct": 96.4,
+  "det_B_pct": 96.9,
+  "B_lowercase_pct": 100.0,
+  "B_ing_pct": 90.6,
+  "colour_mean_pinned": 3.158,
+  "camera_pct": 3.51,
+  "audio": 0,
+  "dups": 0
+ },
+ "corpus_measured": {
+  "ALL": {
+   "n": 171,
+   "words_p10": 21.0,
+   "words_p25": 29.0,
+   "words_p50": 33.0,
+   "words_p75": 36.0,
+   "words_p90": 39.0,
+   "words_min": 13,
+   "words_max": 47,
+   "words_mean": 31.87,
+   "determiner_pct": 96.5,
+   "uppercase_initial_pct": 81.3,
+   "lowercase_initial_pct": 18.7,
+   "ing_participle_pct": 88.9,
+   "colour_mean": 3.199,
+   "colour_ge1_pct": 92.4,
+   "camera_pct": 3.51,
+   "audio_hits": 0,
+   "speech_action_hits": 0,
+   "markup_hits": 7,
+   "exact_dup_count": 0,
+   "exact_dup_pct": 0.0,
+   "near_dup_pairs_jaccard_gt_0.8": 1,
+   "near_dup_pair_pct": 0.007
+  },
+  "A": {
+   "n": 139,
+   "words_p10": 20.4,
+   "words_p25": 29.5,
+   "words_p50": 34.0,
+   "words_p75": 37.0,
+   "words_p90": 40.0,
+   "words_min": 13,
+   "words_max": 47,
+   "words_mean": 32.24,
+   "determiner_pct": 96.4,
+   "uppercase_initial_pct": 100.0,
+   "lowercase_initial_pct": 0.0,
+   "ing_participle_pct": 88.5,
+   "colour_mean": 3.432,
+   "colour_ge1_pct": 94.2,
+   "camera_pct": 2.16,
+   "audio_hits": 0,
+   "speech_action_hits": 0,
+   "markup_hits": 7,
+   "exact_dup_count": 0,
+   "exact_dup_pct": 0.0,
+   "near_dup_pairs_jaccard_gt_0.8": 1,
+   "near_dup_pair_pct": 0.01
+  },
+  "B": {
+   "n": 32,
+   "words_p10": 22.2,
+   "words_p25": 27.8,
+   "words_p50": 32.0,
+   "words_p75": 34.2,
+   "words_p90": 35.0,
+   "words_min": 14,
+   "words_max": 41,
+   "words_mean": 30.25,
+   "determiner_pct": 96.9,
+   "uppercase_initial_pct": 0.0,
+   "lowercase_initial_pct": 100.0,
+   "ing_participle_pct": 90.6,
+   "colour_mean": 2.188,
+   "colour_ge1_pct": 84.4,
+   "camera_pct": 9.38,
+   "audio_hits": 0,
+   "speech_action_hits": 0,
+   "markup_hits": 0,
+   "exact_dup_count": 0,
+   "exact_dup_pct": 0.0,
+   "near_dup_pairs_jaccard_gt_0.8": 0,
+   "near_dup_pair_pct": 0.0
+  }
+ },
+ "strata": {
+  "NEW|A": {
+   "n": 194,
+   "words_p10": 27.0,
+   "words_p25": 31.0,
+   "words_p50": 34.0,
+   "words_p75": 37.0,
+   "words_p90": 40.7,
+   "words_min": 15,
+   "words_max": 55,
+   "words_mean": 33.84,
+   "determiner_pct": 99.5,
+   "uppercase_initial_pct": 100.0,
+   "lowercase_initial_pct": 0.0,
+   "ing_participle_pct": 93.3,
+   "colour_mean": 3.995,
+   "colour_ge1_pct": 99.5,
+   "camera_pct": 1.55,
+   "audio_hits": 0,
+   "speech_action_hits": 10,
+   "markup_hits": 0,
+   "exact_dup_count": 0,
+   "exact_dup_pct": 0.0,
+   "near_dup_pairs_jaccard_gt_0.8": 0,
+   "near_dup_pair_pct": 0.0
+  },
+  "NEW|ALL": {
+   "n": 392,
+   "words_p10": 24.0,
+   "words_p25": 29.0,
+   "words_p50": 34.0,
+   "words_p75": 37.0,
+   "words_p90": 40.0,
+   "words_min": 15,
+   "words_max": 55,
+   "words_mean": 32.94,
+   "determiner_pct": 99.0,
+   "uppercase_initial_pct": 49.5,
+   "lowercase_initial_pct": 50.5,
+   "ing_participle_pct": 96.7,
+   "colour_mean": 3.735,
+   "colour_ge1_pct": 99.2,
+   "camera_pct": 2.3,
+   "audio_hits": 0,
+   "speech_action_hits": 32,
+   "markup_hits": 0,
+   "exact_dup_count": 0,
+   "exact_dup_pct": 0.0,
+   "near_dup_pairs_jaccard_gt_0.8": 0,
+   "near_dup_pair_pct": 0.0
+  },
+  "NEW|B": {
+   "n": 198,
+   "words_p10": 23.0,
+   "words_p25": 28.0,
+   "words_p50": 33.0,
+   "words_p75": 36.0,
+   "words_p90": 39.3,
+   "words_min": 16,
+   "words_max": 51,
+   "words_mean": 32.07,
+   "determiner_pct": 98.5,
+   "uppercase_initial_pct": 0.0,
+   "lowercase_initial_pct": 100.0,
+   "ing_participle_pct": 100.0,
+   "colour_mean": 3.48,
+   "colour_ge1_pct": 99.0,
+   "camera_pct": 3.03,
+   "audio_hits": 0,
+   "speech_action_hits": 22,
+   "markup_hits": 0,
+   "exact_dup_count": 0,
+   "exact_dup_pct": 0.0,
+   "near_dup_pairs_jaccard_gt_0.8": 0,
+   "near_dup_pair_pct": 0.0
+  },
+  "humanvid|A": {
+   "n": 98,
+   "words_p10": 27.7,
+   "words_p25": 31.0,
+   "words_p50": 34.0,
+   "words_p75": 38.0,
+   "words_p90": 41.0,
+   "words_min": 18,
+   "words_max": 55,
+   "words_mean": 34.44,
+   "determiner_pct": 100.0,
+   "uppercase_initial_pct": 100.0,
+   "lowercase_initial_pct": 0.0,
+   "ing_participle_pct": 98.0,
+   "colour_mean": 4.071,
+   "colour_ge1_pct": 100.0,
+   "camera_pct": 0.0,
+   "audio_hits": 0,
+   "speech_action_hits": 1,
+   "markup_hits": 0,
+   "exact_dup_count": 0,
+   "exact_dup_pct": 0.0,
+   "near_dup_pairs_jaccard_gt_0.8": 0,
+   "near_dup_pair_pct": 0.0
+  },
+  "humanvid|ALL": {
+   "n": 197,
+   "words_p10": 25.0,
+   "words_p25": 29.0,
+   "words_p50": 34.0,
+   "words_p75": 37.0,
+   "words_p90": 39.4,
+   "words_min": 16,
+   "words_max": 55,
+   "words_mean": 33.1,
+   "determiner_pct": 99.5,
+   "uppercase_initial_pct": 49.7,
+   "lowercase_initial_pct": 50.3,
+   "ing_participle_pct": 99.0,
+   "colour_mean": 3.741,
+   "colour_ge1_pct": 100.0,
+   "camera_pct": 0.0,
+   "audio_hits": 0,
+   "speech_action_hits": 4,
+   "markup_hits": 0,
+   "exact_dup_count": 0,
+   "exact_dup_pct": 0.0,
+   "near_dup_pairs_jaccard_gt_0.8": 0,
+   "near_dup_pair_pct": 0.0
+  },
+  "humanvid|B": {
+   "n": 99,
+   "words_p10": 24.0,
+   "words_p25": 27.0,
+   "words_p50": 33.0,
+   "words_p75": 36.5,
+   "words_p90": 37.2,
+   "words_min": 16,
+   "words_max": 43,
+   "words_mean": 31.78,
+   "determiner_pct": 99.0,
+   "uppercase_initial_pct": 0.0,
+   "lowercase_initial_pct": 100.0,
+   "ing_participle_pct": 100.0,
+   "colour_mean": 3.414,
+   "colour_ge1_pct": 100.0,
+   "camera_pct": 0.0,
+   "audio_hits": 0,
+   "speech_action_hits": 3,
+   "markup_hits": 0,
+   "exact_dup_count": 0,
+   "exact_dup_pct": 0.0,
+   "near_dup_pairs_jaccard_gt_0.8": 0,
+   "near_dup_pair_pct": 0.0
+  },
+  "synth_endpoints|A": {
+   "n": 96,
+   "words_p10": 27.0,
+   "words_p25": 30.0,
+   "words_p50": 33.0,
+   "words_p75": 37.0,
+   "words_p90": 40.0,
+   "words_min": 15,
+   "words_max": 43,
+   "words_mean": 33.23,
+   "determiner_pct": 99.0,
+   "uppercase_initial_pct": 100.0,
+   "lowercase_initial_pct": 0.0,
+   "ing_participle_pct": 88.5,
+   "colour_mean": 3.917,
+   "colour_ge1_pct": 99.0,
+   "camera_pct": 3.12,
+   "audio_hits": 0,
+   "speech_action_hits": 9,
+   "markup_hits": 0,
+   "exact_dup_count": 0,
+   "exact_dup_pct": 0.0,
+   "near_dup_pairs_jaccard_gt_0.8": 0,
+   "near_dup_pair_pct": 0.0
+  },
+  "synth_endpoints|ALL": {
+   "n": 195,
+   "words_p10": 23.0,
+   "words_p25": 29.0,
+   "words_p50": 33.0,
+   "words_p75": 37.0,
+   "words_p90": 41.0,
+   "words_min": 15,
+   "words_max": 51,
+   "words_mean": 32.78,
+   "determiner_pct": 98.5,
+   "uppercase_initial_pct": 49.2,
+   "lowercase_initial_pct": 50.8,
+   "ing_participle_pct": 94.4,
+   "colour_mean": 3.728,
+   "colour_ge1_pct": 98.5,
+   "camera_pct": 4.62,
+   "audio_hits": 0,
+   "speech_action_hits": 28,
+   "markup_hits": 0,
+   "exact_dup_count": 0,
+   "exact_dup_pct": 0.0,
+   "near_dup_pairs_jaccard_gt_0.8": 0,
+   "near_dup_pair_pct": 0.0
+  },
+  "synth_endpoints|B": {
+   "n": 99,
+   "words_p10": 20.0,
+   "words_p25": 28.0,
+   "words_p50": 33.0,
+   "words_p75": 36.0,
+   "words_p90": 42.0,
+   "words_min": 16,
+   "words_max": 51,
+   "words_mean": 32.35,
+   "determiner_pct": 98.0,
+   "uppercase_initial_pct": 0.0,
+   "lowercase_initial_pct": 100.0,
+   "ing_participle_pct": 100.0,
+   "colour_mean": 3.545,
+   "colour_ge1_pct": 98.0,
+   "camera_pct": 6.06,
+   "audio_hits": 0,
+   "speech_action_hits": 19,
+   "markup_hits": 0,
+   "exact_dup_count": 0,
+   "exact_dup_pct": 0.0,
+   "near_dup_pairs_jaccard_gt_0.8": 0,
+   "near_dup_pair_pct": 0.0
+  }
+ },
+ "gates": [
+  {
+   "gate": 1,
+   "name": "word-count p50",
+   "value": 34.0,
+   "corpus": 33,
+   "bar": "p50 in [29, 36]",
+   "verdict": "PASS",
+   "type": "HARD"
+  },
+  {
+   "gate": 2,
+   "name": "word-count p10 / p90",
+   "value": "24.0 / 40.0",
+   "corpus": "21 / 39",
+   "bar": "p10 in [16,26] and p90 in [34,44]",
+   "verdict": "PASS",
+   "type": "HARD"
+  },
+  {
+   "gate": 3,
+   "name": "opens with determiner (A / B)",
+   "value": "99.5% / 98.5%",
+   "corpus": "96.4% / 96.9%",
+   "bar": ">= 86.4% / >= 86.9%",
+   "verdict": "PASS",
+   "type": "HARD"
+  },
+  {
+   "gate": 4,
+   "name": "B-role lowercase-initial (and A-role uppercase-initial)",
+   "value": "B 100.0% / A 100.0%",
+   "corpus": "B 100% / A 100%",
+   "bar": "both 100%",
+   "verdict": "PASS",
+   "type": "HARD"
+  },
+  {
+   "gate": 5,
+   "name": "B-role participial-NP",
+   "value": "100.0% (-ing regex)",
+   "corpus": "90.6% (-ing regex)",
+   "bar": ">= 80.6% (pinned regex form)",
+   "verdict": "PASS",
+   "type": "HARD",
+   "llm_corpus_calibration": {
+    "yes": 24,
+    "n_classified": 32,
+    "n": 32,
+    "rate_pct": 75.0,
+    "errors": 0
+   },
+   "llm_new": {
+    "yes": 198,
+    "n_classified": 198,
+    "n": 198,
+    "rate_pct": 100.0,
+    "errors": 0
+   },
+   "llm_bar_pct": 65.0,
+   "llm_verdict": "PASS"
+  },
+  {
+   "gate": 6,
+   "name": "audio words / Style: prefix / markdown / quotes",
+   "value": "audio 0, markup 0 (visible-speech actions, not gated: 32)",
+   "corpus": "0 / 0",
+   "bar": "0",
+   "verdict": "PASS",
+   "type": "HARD"
+  },
+  {
+   "gate": 7,
+   "name": "exact-duplicate rate within stratum",
+   "value": "0.0% (worst bank x role cell)",
+   "corpus": "0%",
+   "bar": "< 2%",
+   "verdict": "PASS",
+   "type": "HARD"
+  },
+  {
+   "gate": 8,
+   "name": "FUNCTION-WORD classifier probe (load-bearing)",
+   "value": 0.7066,
+   "corpus": "0.50 = chance",
+   "bar": "mean balanced accuracy <= 0.65",
+   "verdict": "FAIL",
+   "type": "HARD",
+   "detail": {
+    "mean_balanced_accuracy": 0.7066218487394959,
+    "std_balanced_accuracy": 0.05030733593489726,
+    "mean_auc": 0.7727998022738508,
+    "n_per_class": 171,
+    "n_fits": 25,
+    "top_features_toward_NEW": [
+     [
+      "with",
+      2.2235
+     ],
+     [
+      "in",
+      1.1181
+     ],
+     [
+      "t",
+      1.0755
+     ],
+     [
+      "by",
+      1.05
+     ],
+     [
+      "while",
+      0.9988
+     ],
+     [
+      "near",
+      0.9393
+     ],
+     [
+      "against",
+      0.6622
+     ],
+     [
+      "another",
+      0.4225
+     ],
+     [
+      "up",
+      0.4102
+     ],
+     [
+      "even",
+      0.3803
+     ],
+     [
+      "during",
+      0.3519
+     ],
+     [
+      "across",
+      0.3238
+     ],
+     [
+      "n_words",
+      0.3091
+     ],
+     [
+      "both",
+      0.2943
+     ],
+     [
+      "towards",
+      0.2818
+     ],
+     [
+      "toward",
+      0.2534
+     ],
+     [
+      "three",
+      0.2394
+     ],
+     [
+      "among",
+      0.2249
+     ],
+     [
+      "off",
+      0.2153
+     ],
+     [
+      "into",
+      0.2041
+     ]
+    ],
+    "top_features_toward_CORPUS": [
+     [
+      "is",
+      -1.4744
+     ],
+     [
+      "under",
+      -1.4135
+     ],
+     [
+      "the",
+      -1.3065
+     ],
+     [
+      "on",
+      -1.1263
+     ],
+     [
+      "at",
+      -0.8959
+     ],
+     [
+      "between",
+      -0.8723
+     ],
+     [
+      "of",
+      -0.8379
+     ],
+     [
+      "that",
+      -0.6485
+     ],
+     [
+      "above",
+      -0.5524
+     ],
+     [
+      "behind",
+      -0.5188
+     ],
+     [
+      "him",
+      -0.4459
+     ],
+     [
+      "beneath",
+      -0.4385
+     ],
+     [
+      "her",
+      -0.4325
+     ],
+     [
+      "his",
+      -0.4317
+     ],
+     [
+      "before",
+      -0.3707
+     ],
+     [
+      "PUNCT[.]",
+      -0.3634
+     ],
+     [
+      "as",
+      -0.3573
+     ],
+     [
+      "over",
+      -0.3394
+     ],
+     [
+      "PUNCT[']",
+      -0.3021
+     ],
+     [
+      "to",
+      -0.258
+     ]
+    ]
+   }
+  },
+  {
+   "gate": 9,
+   "name": "full-vocabulary classifier",
+   "value": 0.9192,
+   "corpus": "0.50 = chance",
+   "bar": "AUC >= 0.80 triggers feature investigation",
+   "verdict": "INVESTIGATE",
+   "type": "REVIEW",
+   "detail": {
+    "mean_balanced_accuracy": 0.8495126050420168,
+    "std_balanced_accuracy": 0.04787802570770517,
+    "mean_auc": 0.9192417202174988,
+    "n_per_class": 171,
+    "n_fits": 25,
+    "top_features_toward_NEW": [
+     [
+      "short",
+      1.4126
+     ],
+     [
+      "daylight",
+      1.1197
+     ],
+     [
+      "gray",
+      1.0346
+     ],
+     [
+      "light",
+      1.0263
+     ],
+     [
+      "lit",
+      0.9669
+     ],
+     [
+      "hair",
+      0.948
+     ],
+     [
+      "room",
+      0.9272
+     ],
+     [
+      "indoor",
+      0.8967
+     ],
+     [
+      "soft",
+      0.8785
+     ],
+     [
+      "brown",
+      0.8702
+     ],
+     [
+      "dark",
+      0.8669
+     ],
+     [
+      "with",
+      0.835
+     ],
+     [
+      "shirt",
+      0.8036
+     ],
+     [
+      "skinned",
+      0.7727
+     ],
+     [
+      "brightly",
+      0.7409
+     ],
+     [
+      "fair",
+      0.6997
+     ],
+     [
+      "wooden",
+      0.6351
+     ],
+     [
+      "white",
+      0.6186
+     ],
+     [
+      "sleeved",
+      0.6098
+     ],
+     [
+      "looking",
+      0.6066
+     ]
+    ],
+    "top_features_toward_CORPUS": [
+     [
+      "sky",
+      -1.1512
+     ],
+     [
+      "stands",
+      -1.0996
+     ],
+     [
+      "sunglasses",
+      -0.9163
+     ],
+     [
+      "the",
+      -0.7802
+     ],
+     [
+      "on",
+      -0.7459
+     ],
+     [
+      "under",
+      -0.7442
+     ],
+     [
+      "young",
+      -0.7014
+     ],
+     [
+      "is",
+      -0.6714
+     ],
+     [
+      "trousers",
+      -0.6411
+     ],
+     [
+      "sunlight",
+      -0.6334
+     ],
+     [
+      "warm",
+      -0.5753
+     ],
+     [
+      "night",
+      -0.5728
+     ],
+     [
+      "city",
+      -0.5519
+     ],
+     [
+      "red",
+      -0.5327
+     ],
+     [
+      "at",
+      -0.5269
+     ],
+     [
+      "golden",
+      -0.5267
+     ],
+     [
+      "field",
+      -0.525
+     ],
+     [
+      "concrete",
+      -0.5161
+     ],
+     [
+      "sign",
+      -0.4462
+     ],
+     [
+      "slicked",
+      -0.4342
+     ]
+    ]
+   }
+  },
+  {
+   "gate": 10,
+   "name": "colour-term density",
+   "value": 3.735,
+   "corpus": 3.158,
+   "bar": "in [1.579, 4.737]",
+   "verdict": "PASS",
+   "type": "REVIEW"
+  },
+  {
+   "gate": 11,
+   "name": "camera-phrase rate",
+   "value": "2.3%",
+   "corpus": "3.51%",
+   "bar": "within +/-10 pp",
+   "verdict": "PASS",
+   "type": "FLAG"
+  },
+  {
+   "gate": 12,
+   "name": "near-duplicate rate (token Jaccard > 0.8)",
+   "value": "0 pairs (0.0% of pairs)",
+   "corpus": "1 pairs",
+   "bar": "report only",
+   "verdict": "REPORT",
+   "type": "FLAG"
+  }
+ ],
+ "summary": {
+  "hard_fail": [
+   8
+  ],
+  "gate8_balanced_accuracy": 0.7066,
+  "gate9_auc": 0.9192
+ }
+}

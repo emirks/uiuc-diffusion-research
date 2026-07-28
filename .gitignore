@@ -57,6 +57,8 @@ src/LTX-2_OLD/
 # slurm job logs written next to the experiment
 experiments/**/*_[0-9]*.out
 experiments/**/*_[0-9]*.err
+scripts/**/logs/*_[0-9]*.out
+scripts/**/logs/*_[0-9]*.err
 
 # ladder2 bulk artefacts (regenerable): conditioning window cuts + assembled training roots
 eval_ladder/conds/

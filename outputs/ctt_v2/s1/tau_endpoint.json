@@ -1,0 +1,1666 @@
+{
+ "measured": "2026-07-28",
+ "authority": "A5 SYNTHESIS RULING 3(ii) / A1b Q1(e)(ii)",
+ "definition": "pixel-space rel-L2 between the generated clip's frames 0..8 and the 9-frame prefix conditioning mp4; RGB uint8 -> float [0,1]; rel_l2 = ||gen-cond|| / ||cond||",
+ "space": "pixel (NOT latent, NOT DINOv2 -- Ruling 3(i) bans harness substrate in selection)",
+ "source": "outputs/training/ladder2/spec_*/samples/step_*_{1,2}.mp4 (inline validation)",
+ "TAU_ENDPOINT": 0.12790240049362184,
+ "tau_basis": "p95 over ALL prefix-conditioned inline-validation clips (all checkpoints)",
+ "all_checkpoints": {
+  "n": 198,
+  "min": 0.044268522411584854,
+  "p50": 0.05255834013223648,
+  "p90": 0.09967024326324463,
+  "p95": 0.12790240049362184,
+  "p99": 0.1391698107123375,
+  "max": 0.13965338468551636,
+  "mean": 0.06555071002756706,
+  "sd": 0.024809703419446175
+ },
+ "final_checkpoint_step2000": {
+  "n": 22,
+  "min": 0.044330909848213196,
+  "p50": 0.05258030630648136,
+  "p90": 0.09559959098696713,
+  "p95": 0.1259627994149923,
+  "p99": 0.1362760566174984,
+  "max": 0.13862131536006927,
+  "mean": 0.06538682600313966,
+  "sd": 0.025194817147747444
+ },
+ "by_sample_own_class_anchor": {
+  "n": 99,
+  "min": 0.044268522411584854,
+  "p50": 0.07448623329401016,
+  "p90": 0.1279042273759842,
+  "p95": 0.1388443723320961,
+  "p99": 0.13918274015188217,
+  "max": 0.13965338468551636,
+  "mean": 0.07920511311503371,
+  "sd": 0.029315374046528984
+ },
+ "by_sample_ood_anchor": {
+  "n": 99,
+  "min": 0.049316078424453735,
+  "p50": 0.05236171558499336,
+  "p90": 0.05260033383965492,
+  "p95": 0.05269245095551014,
+  "p99": 0.052791939452290534,
+  "max": 0.052827414125204086,
+  "mean": 0.05189630694010041,
+  "sd": 0.0011144691947141715
+ },
+ "by_arm": {
+  "spec_animalization": {
+   "n": 18,
+   "min": 0.051343418657779694,
+   "p50": 0.05206115357577801,
+   "p90": 0.052587006613612174,
+   "p95": 0.05259099584072828,
+   "p99": 0.05259492989629507,
+   "max": 0.05259591341018677,
+   "mean": 0.05202811232043637,
+   "sd": 0.0005204972357080677
+  },
+  "spec_color_rain": {
+   "n": 18,
+   "min": 0.05241085961461067,
+   "p50": 0.05712048150599003,
+   "p90": 0.06158677227795124,
+   "p95": 0.06163479313254357,
+   "p99": 0.06167337879538536,
+   "max": 0.06168302521109581,
+   "mean": 0.057108848873111934,
+   "sd": 0.004566959835284035
+  },
+  "spec_gas_transformation": {
+   "n": 18,
+   "min": 0.05219901353120804,
+   "p50": 0.05631515011191368,
+   "p90": 0.06030194237828255,
+   "p95": 0.06032336987555027,
+   "p99": 0.060379155948758124,
+   "max": 0.06039310246706009,
+   "mean": 0.0563052079329888,
+   "sd": 0.004056899489591435
+  },
+  "spec_hero_flight": {
+   "n": 18,
+   "min": 0.049517445266246796,
+   "p50": 0.062077997252345085,
+   "p90": 0.07471942380070687,
+   "p95": 0.07479711472988129,
+   "p99": 0.07488826930522918,
+   "max": 0.07491105794906616,
+   "mean": 0.06211699752344026,
+   "sd": 0.012827864160580288
+  },
+  "spec_illustration_scene": {
+   "n": 18,
+   "min": 0.05213301256299019,
+   "p50": 0.07509970664978027,
+   "p90": 0.09967024326324463,
+   "p95": 0.09973380677402019,
+   "p99": 0.0999817206710577,
+   "max": 0.10004369914531708,
+   "mean": 0.07552972477343348,
+   "sd": 0.02389761873557504
+  },
+  "spec_polygon": {
+   "n": 18,
+   "min": 0.051954906433820724,
+   "p50": 0.06414278224110603,
+   "p90": 0.07676885426044464,
+   "p95": 0.07773067094385623,
+   "p99": 0.07980640836060046,
+   "max": 0.08032534271478653,
+   "mean": 0.06445980423854457,
+   "sd": 0.012643711527034848
+  },
+  "spec_portal": {
+   "n": 18,
+   "min": 0.052367258816957474,
+   "p50": 0.0649587232619524,
+   "p90": 0.07763326987624168,
+   "p95": 0.0777213905006647,
+   "p99": 0.07782161898911,
+   "max": 0.07784667611122131,
+   "mean": 0.06499814511173302,
+   "sd": 0.01282931707142271
+  },
+  "spec_shadow": {
+   "n": 18,
+   "min": 0.05228399112820625,
+   "p50": 0.05567885376513004,
+   "p90": 0.05943230055272579,
+   "p95": 0.059749928489327434,
+   "p99": 0.05980991967022419,
+   "max": 0.05982491746544838,
+   "mean": 0.05582390849788984,
+   "sd": 0.0034635265297675148
+  },
+  "spec_shadow_smoke": {
+   "n": 18,
+   "min": 0.044268522411584854,
+   "p50": 0.04723804630339146,
+   "p90": 0.049533605203032495,
+   "p95": 0.04960372243076563,
+   "p99": 0.04982851583510637,
+   "max": 0.04988471418619156,
+   "mean": 0.04709331091079447,
+   "sd": 0.0024806689563547243
+  },
+  "spec_super_fast_run": {
+   "n": 18,
+   "min": 0.05210376903414726,
+   "p50": 0.0898401141166687,
+   "p90": 0.12775617688894272,
+   "p95": 0.12790240049362184,
+   "p99": 0.12792724609375,
+   "max": 0.12793345749378204,
+   "mean": 0.08992359973490238,
+   "sd": 0.03872535350801468
+  },
+  "spec_wireframe": {
+   "n": 18,
+   "min": 0.05217062309384346,
+   "p50": 0.0955551341176033,
+   "p90": 0.13917073607444763,
+   "p95": 0.1392451725900173,
+   "p99": 0.13957174226641655,
+   "max": 0.13965338468551636,
+   "mean": 0.09567015038596259,
+   "sd": 0.04458484175999761
+  }
+ },
+ "by_step": {
+  "0": {
+   "n": 22,
+   "min": 0.04489448294043541,
+   "p50": 0.05237388610839844,
+   "p90": 0.09743889719247822,
+   "p95": 0.12648602984845636,
+   "p99": 0.1371845270693302,
+   "max": 0.13965338468551636,
+   "mean": 0.06565669957887042,
+   "sd": 0.025473764677777518
+  },
+  "250": {
+   "n": 22,
+   "min": 0.044859882444143295,
+   "p50": 0.05255763605237007,
+   "p90": 0.09704685062170032,
+   "p95": 0.12625630535185334,
+   "p99": 0.136631391197443,
+   "max": 0.13900665938854218,
+   "mean": 0.06579715843227776,
+   "sd": 0.025419470683241907
+  },
+  "500": {
+   "n": 22,
+   "min": 0.04516001418232918,
+   "p50": 0.0525322575122118,
+   "p90": 0.09782399684190755,
+   "p95": 0.12598085105419157,
+   "p99": 0.13636634901165962,
+   "max": 0.1387641727924347,
+   "mean": 0.06559362635016441,
+   "sd": 0.025360239912995616
+  },
+  "750": {
+   "n": 22,
+   "min": 0.04502161964774132,
+   "p50": 0.05263843201100826,
+   "p90": 0.0971978142857552,
+   "p95": 0.12591357268393039,
+   "p99": 0.13640809834003448,
+   "max": 0.13882634043693542,
+   "mean": 0.06557250513949177,
+   "sd": 0.025295870321206525
+  },
+  "1000": {
+   "n": 22,
+   "min": 0.044645585119724274,
+   "p50": 0.05257068760693073,
+   "p90": 0.09744601398706441,
+   "p95": 0.1265201065689325,
+   "p99": 0.13676577404141424,
+   "max": 0.13911360502243042,
+   "mean": 0.0656366827474399,
+   "sd": 0.025461158468771547
+  },
+  "1250": {
+   "n": 22,
+   "min": 0.04465364292263985,
+   "p50": 0.05259515717625618,
+   "p90": 0.09583449214696889,
+   "p95": 0.126029534637928,
+   "p99": 0.1367243266105652,
+   "max": 0.13917313516139984,
+   "mean": 0.06546392240984873,
+   "sd": 0.025277378765701023
+  },
+  "1500": {
+   "n": 22,
+   "min": 0.04441261291503906,
+   "p50": 0.052521130070090294,
+   "p90": 0.09566865041852002,
+   "p95": 0.12593860253691672,
+   "p99": 0.13629737719893453,
+   "max": 0.13865584135055542,
+   "mean": 0.06543080373243852,
+   "sd": 0.025197811752198648
+  },
+  "1750": {
+   "n": 22,
+   "min": 0.044268522411584854,
+   "p50": 0.0525243915617466,
+   "p90": 0.09578955397009854,
+   "p95": 0.12596399299800393,
+   "p99": 0.1367072808742523,
+   "max": 0.13916970789432526,
+   "mean": 0.06541816585443237,
+   "sd": 0.025278681363139266
+  },
+  "2000": {
+   "n": 22,
+   "min": 0.044330909848213196,
+   "p50": 0.05258030630648136,
+   "p90": 0.09559959098696713,
+   "p95": 0.1259627994149923,
+   "p99": 0.1362760566174984,
+   "max": 0.13862131536006927,
+   "mean": 0.06538682600313966,
+   "sd": 0.025194817147747444
+  }
+ },
+ "decode_errors": [],
+ "rows": [
+  {
+   "arm": "spec_animalization",
+   "sample": 1,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_000000_1.mp4",
+   "rel_l2": 0.05170859396457672
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 1,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_000250_1.mp4",
+   "rel_l2": 0.05175504833459854
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 1,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_000500_1.mp4",
+   "rel_l2": 0.05151550844311714
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 1,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_000750_1.mp4",
+   "rel_l2": 0.05154075846076012
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 1,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_001000_1.mp4",
+   "rel_l2": 0.05150298401713371
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 1,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_001250_1.mp4",
+   "rel_l2": 0.051451269537210464
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 1,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_001500_1.mp4",
+   "rel_l2": 0.051530174911022186
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 1,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_001750_1.mp4",
+   "rel_l2": 0.05144314840435982
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 1,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_002000_1.mp4",
+   "rel_l2": 0.051343418657779694
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 2,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_000000_2.mp4",
+   "rel_l2": 0.052367258816957474
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 2,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_000250_2.mp4",
+   "rel_l2": 0.05257073789834976
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 2,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_000500_2.mp4",
+   "rel_l2": 0.05259591341018677
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 2,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_000750_2.mp4",
+   "rel_l2": 0.052585668861866
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 2,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_001000_2.mp4",
+   "rel_l2": 0.052520815283060074
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 2,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_001250_2.mp4",
+   "rel_l2": 0.052590128034353256
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 2,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_001500_2.mp4",
+   "rel_l2": 0.05246197059750557
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 2,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_001750_2.mp4",
+   "rel_l2": 0.05246293544769287
+  },
+  {
+   "arm": "spec_animalization",
+   "sample": 2,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_animalization/samples/step_002000_2.mp4",
+   "rel_l2": 0.052559688687324524
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 1,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_000000_1.mp4",
+   "rel_l2": 0.06143573299050331
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 1,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_000250_1.mp4",
+   "rel_l2": 0.06154884397983551
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 1,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_000500_1.mp4",
+   "rel_l2": 0.06156164035201073
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 1,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_000750_1.mp4",
+   "rel_l2": 0.06141354888677597
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 1,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_001000_1.mp4",
+   "rel_l2": 0.06156983971595764
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 1,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_001250_1.mp4",
+   "rel_l2": 0.061529964208602905
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 1,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_001500_1.mp4",
+   "rel_l2": 0.06168302521109581
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 1,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_001750_1.mp4",
+   "rel_l2": 0.06162628158926964
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 1,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_002000_1.mp4",
+   "rel_l2": 0.06154344975948334
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 2,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_000000_2.mp4",
+   "rel_l2": 0.05241085961461067
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 2,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_000250_2.mp4",
+   "rel_l2": 0.052614305168390274
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 2,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_000500_2.mp4",
+   "rel_l2": 0.052500199526548386
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 2,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_000750_2.mp4",
+   "rel_l2": 0.05279121547937393
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 2,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_001000_2.mp4",
+   "rel_l2": 0.052685681730508804
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 2,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_001250_2.mp4",
+   "rel_l2": 0.05274637043476105
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 2,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_001500_2.mp4",
+   "rel_l2": 0.052827414125204086
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 2,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_001750_2.mp4",
+   "rel_l2": 0.05270375311374664
+  },
+  {
+   "arm": "spec_color_rain",
+   "sample": 2,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_color_rain/samples/step_002000_2.mp4",
+   "rel_l2": 0.052767153829336166
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 1,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_000000_1.mp4",
+   "rel_l2": 0.06029803305864334
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 1,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_000250_1.mp4",
+   "rel_l2": 0.06039310246706009
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 1,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_000500_1.mp4",
+   "rel_l2": 0.060296330600976944
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 1,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_000750_1.mp4",
+   "rel_l2": 0.060203667730093
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 1,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_001000_1.mp4",
+   "rel_l2": 0.06024513766169548
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 1,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_001250_1.mp4",
+   "rel_l2": 0.06031106412410736
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 1,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_001500_1.mp4",
+   "rel_l2": 0.06021498516201973
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 1,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_001750_1.mp4",
+   "rel_l2": 0.06015709042549133
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 1,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_002000_1.mp4",
+   "rel_l2": 0.06010300666093826
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 2,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_000000_2.mp4",
+   "rel_l2": 0.0523732490837574
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 2,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_000250_2.mp4",
+   "rel_l2": 0.0525272935628891
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 2,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_000500_2.mp4",
+   "rel_l2": 0.05219901353120804
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 2,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_000750_2.mp4",
+   "rel_l2": 0.05233057215809822
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 2,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_001000_2.mp4",
+   "rel_l2": 0.05240857973694801
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 2,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_001250_2.mp4",
+   "rel_l2": 0.052332162857055664
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 2,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_001500_2.mp4",
+   "rel_l2": 0.05236803740262985
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 2,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_001750_2.mp4",
+   "rel_l2": 0.052326347678899765
+  },
+  {
+   "arm": "spec_gas_transformation",
+   "sample": 2,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_gas_transformation/samples/step_002000_2.mp4",
+   "rel_l2": 0.05240606889128685
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 1,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_000000_1.mp4",
+   "rel_l2": 0.07477700710296631
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 1,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_000250_1.mp4",
+   "rel_l2": 0.07491105794906616
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 1,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_000500_1.mp4",
+   "rel_l2": 0.07469474524259567
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 1,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_000750_1.mp4",
+   "rel_l2": 0.07438040524721146
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 1,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_001000_1.mp4",
+   "rel_l2": 0.07464071363210678
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 1,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_001250_1.mp4",
+   "rel_l2": 0.07441834360361099
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 1,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_001500_1.mp4",
+   "rel_l2": 0.07445741444826126
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 1,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_001750_1.mp4",
+   "rel_l2": 0.07447845488786697
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 1,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_002000_1.mp4",
+   "rel_l2": 0.07448623329401016
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 2,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_000000_2.mp4",
+   "rel_l2": 0.049775589257478714
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 2,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_000250_2.mp4",
+   "rel_l2": 0.04976838454604149
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 2,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_000500_2.mp4",
+   "rel_l2": 0.04971618577837944
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 2,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_000750_2.mp4",
+   "rel_l2": 0.049605682492256165
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 2,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_001000_2.mp4",
+   "rel_l2": 0.049646563827991486
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 2,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_001250_2.mp4",
+   "rel_l2": 0.04966609179973602
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 2,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_001500_2.mp4",
+   "rel_l2": 0.049596019089221954
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 2,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_001750_2.mp4",
+   "rel_l2": 0.049569617956876755
+  },
+  {
+   "arm": "spec_hero_flight",
+   "sample": 2,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_hero_flight/samples/step_002000_2.mp4",
+   "rel_l2": 0.049517445266246796
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 1,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_000000_1.mp4",
+   "rel_l2": 0.0996791198849678
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 1,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_000250_1.mp4",
+   "rel_l2": 0.0989047959446907
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 1,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_000500_1.mp4",
+   "rel_l2": 0.10004369914531708
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 1,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_000750_1.mp4",
+   "rel_l2": 0.09936431795358658
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 1,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_001000_1.mp4",
+   "rel_l2": 0.09966643899679184
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 1,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_001250_1.mp4",
+   "rel_l2": 0.09785999357700348
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 1,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_001500_1.mp4",
+   "rel_l2": 0.09769591689109802
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 1,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_001750_1.mp4",
+   "rel_l2": 0.09784642606973648
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 1,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_002000_1.mp4",
+   "rel_l2": 0.09764107316732407
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 2,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_000000_2.mp4",
+   "rel_l2": 0.052367258816957474
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 2,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_000250_2.mp4",
+   "rel_l2": 0.05234594643115997
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 2,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_000500_2.mp4",
+   "rel_l2": 0.05213301256299019
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 2,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_000750_2.mp4",
+   "rel_l2": 0.05255834013223648
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 2,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_001000_2.mp4",
+   "rel_l2": 0.05229924991726875
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 2,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_001250_2.mp4",
+   "rel_l2": 0.052153658121824265
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 2,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_001500_2.mp4",
+   "rel_l2": 0.052337970584630966
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 2,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_001750_2.mp4",
+   "rel_l2": 0.052289146929979324
+  },
+  {
+   "arm": "spec_illustration_scene",
+   "sample": 2,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_illustration_scene/samples/step_002000_2.mp4",
+   "rel_l2": 0.052348680794239044
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 1,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_000000_1.mp4",
+   "rel_l2": 0.0759885236620903
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 1,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_000250_1.mp4",
+   "rel_l2": 0.08032534271478653
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 1,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_000500_1.mp4",
+   "rel_l2": 0.07655288279056549
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 1,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_000750_1.mp4",
+   "rel_l2": 0.07652552425861359
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 1,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_001000_1.mp4",
+   "rel_l2": 0.07727278769016266
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 1,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_001250_1.mp4",
+   "rel_l2": 0.07582778483629227
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 1,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_001500_1.mp4",
+   "rel_l2": 0.0761713832616806
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 1,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_001750_1.mp4",
+   "rel_l2": 0.07574103027582169
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 1,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_002000_1.mp4",
+   "rel_l2": 0.07597925513982773
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 2,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_000000_2.mp4",
+   "rel_l2": 0.052374523133039474
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 2,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_000250_2.mp4",
+   "rel_l2": 0.05254453420639038
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 2,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_000500_2.mp4",
+   "rel_l2": 0.05211888626217842
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 2,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_000750_2.mp4",
+   "rel_l2": 0.051954906433820724
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 2,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_001000_2.mp4",
+   "rel_l2": 0.05213860422372818
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 2,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_001250_2.mp4",
+   "rel_l2": 0.0522586964070797
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 2,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_001500_2.mp4",
+   "rel_l2": 0.0521257221698761
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 2,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_001750_2.mp4",
+   "rel_l2": 0.05218164250254631
+  },
+  {
+   "arm": "spec_polygon",
+   "sample": 2,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_polygon/samples/step_002000_2.mp4",
+   "rel_l2": 0.052194446325302124
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 1,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_000000_1.mp4",
+   "rel_l2": 0.07727689296007156
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 1,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_000250_1.mp4",
+   "rel_l2": 0.07736766338348389
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 1,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_000500_1.mp4",
+   "rel_l2": 0.07784667611122131
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 1,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_000750_1.mp4",
+   "rel_l2": 0.07769928127527237
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 1,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_001000_1.mp4",
+   "rel_l2": 0.07746218889951706
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 1,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_001250_1.mp4",
+   "rel_l2": 0.0776049792766571
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 1,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_001500_1.mp4",
+   "rel_l2": 0.07742325216531754
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 1,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_001750_1.mp4",
+   "rel_l2": 0.07727770507335663
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 1,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_002000_1.mp4",
+   "rel_l2": 0.07722625136375427
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 2,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_000000_2.mp4",
+   "rel_l2": 0.052367258816957474
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 2,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_000250_2.mp4",
+   "rel_l2": 0.05236794054508209
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 2,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_000500_2.mp4",
+   "rel_l2": 0.05255834013223648
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 2,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_000750_2.mp4",
+   "rel_l2": 0.05269119516015053
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 2,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_001000_2.mp4",
+   "rel_l2": 0.05262055993080139
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 2,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_001250_2.mp4",
+   "rel_l2": 0.0526001863181591
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 2,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_001500_2.mp4",
+   "rel_l2": 0.05255885049700737
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 2,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_001750_2.mp4",
+   "rel_l2": 0.052532684057950974
+  },
+  {
+   "arm": "spec_portal",
+   "sample": 2,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_portal/samples/step_002000_2.mp4",
+   "rel_l2": 0.05248470604419708
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 1,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_000000_1.mp4",
+   "rel_l2": 0.05982491746544838
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 1,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_000250_1.mp4",
+   "rel_l2": 0.059736695140600204
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 1,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_000500_1.mp4",
+   "rel_l2": 0.05918968841433525
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 1,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_000750_1.mp4",
+   "rel_l2": 0.059301845729351044
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 1,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_001000_1.mp4",
+   "rel_l2": 0.05912638455629349
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 1,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_001250_1.mp4",
+   "rel_l2": 0.05893990024924278
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 1,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_001500_1.mp4",
+   "rel_l2": 0.05887947976589203
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 1,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_001750_1.mp4",
+   "rel_l2": 0.05886027216911316
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 1,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_002000_1.mp4",
+   "rel_l2": 0.05875678360462189
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 2,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_000000_2.mp4",
+   "rel_l2": 0.05236171558499336
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 2,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_000250_2.mp4",
+   "rel_l2": 0.05228399112820625
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 2,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_000500_2.mp4",
+   "rel_l2": 0.05250617489218712
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 2,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_000750_2.mp4",
+   "rel_l2": 0.052503980696201324
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 2,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_001000_2.mp4",
+   "rel_l2": 0.052430082112550735
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 2,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_001250_2.mp4",
+   "rel_l2": 0.052528008818626404
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 2,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_001500_2.mp4",
+   "rel_l2": 0.05248340964317322
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 2,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_001750_2.mp4",
+   "rel_l2": 0.05251609906554222
+  },
+  {
+   "arm": "spec_shadow",
+   "sample": 2,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_shadow/samples/step_002000_2.mp4",
+   "rel_l2": 0.0526009239256382
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 1,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_000000_1.mp4",
+   "rel_l2": 0.04489448294043541
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 1,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_000250_1.mp4",
+   "rel_l2": 0.044859882444143295
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 1,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_000500_1.mp4",
+   "rel_l2": 0.04516001418232918
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 1,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_000750_1.mp4",
+   "rel_l2": 0.04502161964774132
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 1,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_001000_1.mp4",
+   "rel_l2": 0.044645585119724274
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 1,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_001250_1.mp4",
+   "rel_l2": 0.04465364292263985
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 1,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_001500_1.mp4",
+   "rel_l2": 0.04441261291503906
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 1,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_001750_1.mp4",
+   "rel_l2": 0.044268522411584854
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 1,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_002000_1.mp4",
+   "rel_l2": 0.044330909848213196
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 2,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_000000_2.mp4",
+   "rel_l2": 0.04988471418619156
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 2,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_000250_2.mp4",
+   "rel_l2": 0.0493677593767643
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 2,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_000500_2.mp4",
+   "rel_l2": 0.04942655563354492
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 2,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_000750_2.mp4",
+   "rel_l2": 0.049316078424453735
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 2,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_001000_2.mp4",
+   "rel_l2": 0.049485038965940475
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 2,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_001250_2.mp4",
+   "rel_l2": 0.04955413565039635
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 2,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_001500_2.mp4",
+   "rel_l2": 0.04941772669553757
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 2,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_001750_2.mp4",
+   "rel_l2": 0.049524806439876556
+  },
+  {
+   "arm": "spec_shadow_smoke",
+   "sample": 2,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_shadow_smoke/samples/step_002000_2.mp4",
+   "rel_l2": 0.04945550858974457
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 1,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_000000_1.mp4",
+   "rel_l2": 0.12789691984653473
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 1,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_000250_1.mp4",
+   "rel_l2": 0.12769585847854614
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 1,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_000500_1.mp4",
+   "rel_l2": 0.1273459643125534
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 1,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_000750_1.mp4",
+   "rel_l2": 0.12731090188026428
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 1,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_001000_1.mp4",
+   "rel_l2": 0.12793345749378204
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 1,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_001250_1.mp4",
+   "rel_l2": 0.1275121420621872
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 1,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_001500_1.mp4",
+   "rel_l2": 0.12742505967617035
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 1,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_001750_1.mp4",
+   "rel_l2": 0.12744386494159698
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 1,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_002000_1.mp4",
+   "rel_l2": 0.12745341658592224
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 2,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_000000_2.mp4",
+   "rel_l2": 0.05236409604549408
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 2,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_000250_2.mp4",
+   "rel_l2": 0.05228842422366142
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 2,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_000500_2.mp4",
+   "rel_l2": 0.05216355249285698
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 2,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_000750_2.mp4",
+   "rel_l2": 0.05234662443399429
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 2,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_001000_2.mp4",
+   "rel_l2": 0.05210376903414726
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 2,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_001250_2.mp4",
+   "rel_l2": 0.052258238196372986
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 2,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_001500_2.mp4",
+   "rel_l2": 0.05236932635307312
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 2,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_001750_2.mp4",
+   "rel_l2": 0.052359528839588165
+  },
+  {
+   "arm": "spec_super_fast_run",
+   "sample": 2,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_super_fast_run/samples/step_002000_2.mp4",
+   "rel_l2": 0.05235365033149719
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 1,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_000000_1.mp4",
+   "rel_l2": 0.13965338468551636
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 1,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_000250_1.mp4",
+   "rel_l2": 0.13900665938854218
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 1,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_000500_1.mp4",
+   "rel_l2": 0.1387641727924347
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 1,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_000750_1.mp4",
+   "rel_l2": 0.13882634043693542
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 1,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_001000_1.mp4",
+   "rel_l2": 0.13911360502243042
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 1,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_001250_1.mp4",
+   "rel_l2": 0.13917313516139984
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 1,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_001500_1.mp4",
+   "rel_l2": 0.13865584135055542
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 1,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_001750_1.mp4",
+   "rel_l2": 0.13916970789432526
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 1,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_002000_1.mp4",
+   "rel_l2": 0.13862131536006927
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 2,
+   "step": 0,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_000000_2.mp4",
+   "rel_l2": 0.052367258816957474
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 2,
+   "step": 250,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_000250_2.mp4",
+   "rel_l2": 0.05235321819782257
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 2,
+   "step": 500,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_000500_2.mp4",
+   "rel_l2": 0.05217062309384346
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 2,
+   "step": 750,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_000750_2.mp4",
+   "rel_l2": 0.0523226372897625
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 2,
+   "step": 1000,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_001000_2.mp4",
+   "rel_l2": 0.05248895287513733
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 2,
+   "step": 1250,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_001250_2.mp4",
+   "rel_l2": 0.052236396819353104
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 2,
+   "step": 1500,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_001500_2.mp4",
+   "rel_l2": 0.05238208919763565
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 2,
+   "step": 1750,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_001750_2.mp4",
+   "rel_l2": 0.05242058262228966
+  },
+  {
+   "arm": "spec_wireframe",
+   "sample": 2,
+   "step": 2000,
+   "gen": "outputs/training/ladder2/spec_wireframe/samples/step_002000_2.mp4",
+   "rel_l2": 0.052336785942316055
+  }
+ ]
+}

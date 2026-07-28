@@ -37,7 +37,11 @@ MARKER = "The scene transforms into "
 #: were audited one-by-one against their frames (0 transition leaks); the rest cover the
 #: remaining training clips. Where they overlap they are byte-identical (verified 49/49).
 CAPTION_SOURCES = (
-    "docs/eval_ladder/clip_captions.json",
+    # NOTE: d7bfb16 ("eval_ladder: promote to top-level, archive v1") moved docs/eval_ladder/ to
+    # docs/archive/eval_ladder_v1/ but left these two constants pointing at the old path, so
+    # audited_clips()/captions() — and therefore build_registry.py — died with FileNotFoundError.
+    # The file is unchanged by that commit; only its location moved.
+    "docs/archive/eval_ladder_v1/clip_captions.json",
     "experiments/exp_058_ic_lora_diverse_retrain/dataset/captions.json",
     "data/processed/transitions_std121/dataset_exp058.json",
     "data/processed/transitions_std121/dataset_exp064_missing.json",
@@ -45,7 +49,7 @@ CAPTION_SOURCES = (
 )
 
 #: clips whose caption was audited against the actual frames (leak-free, eval-eligible)
-AUDITED_SOURCE = "docs/eval_ladder/clip_captions.json"
+AUDITED_SOURCE = "docs/archive/eval_ladder_v1/clip_captions.json"
 #: promoted to test by split v1.2 after the 81-endpoint audit; audited separately 2026-07-22
 AUDITED_EXTRA = ("earth_element_6", "money_rain_1")
 

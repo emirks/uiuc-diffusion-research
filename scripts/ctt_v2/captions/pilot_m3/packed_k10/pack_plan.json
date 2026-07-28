@@ -1,0 +1,1838 @@
+{
+ "created": "2026-07-28T10:43:02",
+ "authority": "advisors/A12_budget_allocation_VERBATIM.md \u00a73",
+ "K": 10,
+ "n_packs": 20,
+ "n_items": 200,
+ "pack_seed": 4242,
+ "prompt_variant": "v2",
+ "round3_cancelled": true,
+ "generator_model": "gemini-3.6-flash",
+ "deviations_from_round2": [
+  "pack-level N by stratified systematic sampling of the clamped empirical distribution (marginal preserved; per-item N is impossible with one prompt)",
+  "schema-constrained JSON array output keyed by echoed opaque item codes",
+  "opaque 5-consonant item codes instead of real clip_ids (clip_ids carry content words that are not in the nine frames -- sending them would be a leak channel)"
+ ],
+ "packs": [
+  {
+   "pack_id": "P00",
+   "role": "A",
+   "bank": "humanvid",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "humanvid_6988779",
+     "role": "A",
+     "arm": "fresh",
+     "code": "PBGCL",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6988779__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_4446866",
+     "role": "A",
+     "arm": "fresh",
+     "code": "WGJTP",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_4446866__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6898098",
+     "role": "A",
+     "arm": "paired",
+     "code": "KGNBJ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6898098__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8724423",
+     "role": "A",
+     "arm": "paired",
+     "code": "ZNZZX",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8724423__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8762603",
+     "role": "A",
+     "arm": "paired",
+     "code": "TXNPC",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8762603__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6625516",
+     "role": "A",
+     "arm": "paired",
+     "code": "NKVCK",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6625516__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8859334",
+     "role": "A",
+     "arm": "fresh",
+     "code": "SDZCP",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8859334__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8165568",
+     "role": "A",
+     "arm": "fresh",
+     "code": "CLZVM",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8165568__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8774686",
+     "role": "A",
+     "arm": "fresh",
+     "code": "GZPVL",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8774686__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7985893",
+     "role": "A",
+     "arm": "fresh",
+     "code": "KSDFV",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7985893__A.mp4",
+     "bank": "humanvid"
+    }
+   ],
+   "N_target": 34,
+   "system_prompt_sha256": "55d832b2d6079d6371eceefae670eab5f9715ca33590cc8d228dbda5908a0459",
+   "embedded_round2_prompt_sha256": "79fe3d3b17198b8c871ce541c26bfb6400426de1d7b4bfad30f0631830a22f6a"
+  },
+  {
+   "pack_id": "P01",
+   "role": "A",
+   "bank": "humanvid",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "humanvid_5271439",
+     "role": "A",
+     "arm": "paired",
+     "code": "WPVXW",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_5271439__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_9218284",
+     "role": "A",
+     "arm": "paired",
+     "code": "JKQXD",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_9218284__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8376542",
+     "role": "A",
+     "arm": "paired",
+     "code": "JFGFR",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8376542__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7187085",
+     "role": "A",
+     "arm": "fresh",
+     "code": "CHKCJ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7187085__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_5916780",
+     "role": "A",
+     "arm": "paired",
+     "code": "JMBBZ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_5916780__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8964793",
+     "role": "A",
+     "arm": "fresh",
+     "code": "TVPPW",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8964793__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6724988",
+     "role": "A",
+     "arm": "paired",
+     "code": "BWSGX",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6724988__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7550840",
+     "role": "A",
+     "arm": "fresh",
+     "code": "XPNZF",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7550840__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6517433",
+     "role": "A",
+     "arm": "fresh",
+     "code": "PPGPB",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6517433__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7969936",
+     "role": "A",
+     "arm": "fresh",
+     "code": "PMCGV",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7969936__A.mp4",
+     "bank": "humanvid"
+    }
+   ],
+   "N_target": 33,
+   "system_prompt_sha256": "61a52db590aed150258fc0b3df6cc8487dd33b1f3f1fbb5cfb28cd1c716864b5",
+   "embedded_round2_prompt_sha256": "9ffbb6b5b974eb5c3c37f6ec499f08425397b45aeba788d248a7c77411e3e99b"
+  },
+  {
+   "pack_id": "P02",
+   "role": "A",
+   "bank": "humanvid",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "humanvid_5054318",
+     "role": "A",
+     "arm": "paired",
+     "code": "RWCWD",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_5054318__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8512828",
+     "role": "A",
+     "arm": "fresh",
+     "code": "ZJZLB",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8512828__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_4491305",
+     "role": "A",
+     "arm": "fresh",
+     "code": "FKJLF",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_4491305__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7148139",
+     "role": "A",
+     "arm": "paired",
+     "code": "HNRTQ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7148139__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6892550",
+     "role": "A",
+     "arm": "fresh",
+     "code": "HQLWL",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6892550__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6529534",
+     "role": "A",
+     "arm": "fresh",
+     "code": "TTZHW",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6529534__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7659135",
+     "role": "A",
+     "arm": "paired",
+     "code": "KTQQD",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7659135__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_9005815",
+     "role": "A",
+     "arm": "fresh",
+     "code": "CNTZZ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_9005815__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8546635",
+     "role": "A",
+     "arm": "fresh",
+     "code": "TRTVX",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8546635__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7682587",
+     "role": "A",
+     "arm": "paired",
+     "code": "WGDTP",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7682587__A.mp4",
+     "bank": "humanvid"
+    }
+   ],
+   "N_target": 21,
+   "system_prompt_sha256": "b073ec8fd413b240bb0c73842e927590f1304d8ee6284fc36a3a14f82b77ca77",
+   "embedded_round2_prompt_sha256": "61c1f8d8bdf9a68871890bef60d8ac6da194c3ee528814a7bb9d51bd795b9d27"
+  },
+  {
+   "pack_id": "P03",
+   "role": "A",
+   "bank": "humanvid",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "humanvid_8036712",
+     "role": "A",
+     "arm": "paired",
+     "code": "KWQSC",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8036712__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_4723042",
+     "role": "A",
+     "arm": "paired",
+     "code": "VBDHZ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_4723042__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6323274",
+     "role": "A",
+     "arm": "fresh",
+     "code": "LLBPS",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6323274__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7729987",
+     "role": "A",
+     "arm": "paired",
+     "code": "JNFQP",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7729987__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_9955062",
+     "role": "A",
+     "arm": "paired",
+     "code": "TWTJW",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_9955062__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_4110016",
+     "role": "A",
+     "arm": "fresh",
+     "code": "FMHVW",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_4110016__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6873329",
+     "role": "A",
+     "arm": "paired",
+     "code": "QHZVV",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6873329__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8369877",
+     "role": "A",
+     "arm": "paired",
+     "code": "TNGWR",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8369877__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7234854",
+     "role": "A",
+     "arm": "fresh",
+     "code": "FWQVR",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7234854__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_12331340",
+     "role": "A",
+     "arm": "paired",
+     "code": "QBTBJ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_12331340__A.mp4",
+     "bank": "humanvid"
+    }
+   ],
+   "N_target": 40,
+   "system_prompt_sha256": "49dbf59322034a7cbf70ecc7534ab18dd1986fdcfdca280b4923d6abfceaddcc",
+   "embedded_round2_prompt_sha256": "c78e399a12120589ccd4fdba46cd025f0d64879d233ee7d2a71a56e1ca4d50be"
+  },
+  {
+   "pack_id": "P04",
+   "role": "A",
+   "bank": "humanvid",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "humanvid_4838256",
+     "role": "A",
+     "arm": "fresh",
+     "code": "GPDBN",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_4838256__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7569631",
+     "role": "A",
+     "arm": "fresh",
+     "code": "JGPWT",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7569631__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6997942",
+     "role": "A",
+     "arm": "paired",
+     "code": "FWRKS",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6997942__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7530560",
+     "role": "A",
+     "arm": "paired",
+     "code": "WWXVH",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7530560__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6892729",
+     "role": "A",
+     "arm": "fresh",
+     "code": "RHJVG",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6892729__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_9564077",
+     "role": "A",
+     "arm": "paired",
+     "code": "JJHLL",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_9564077__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8189502",
+     "role": "A",
+     "arm": "paired",
+     "code": "KHCCV",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8189502__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8965270",
+     "role": "A",
+     "arm": "fresh",
+     "code": "JSQWF",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8965270__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8284329",
+     "role": "A",
+     "arm": "fresh",
+     "code": "FLRVT",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8284329__A.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8090682",
+     "role": "A",
+     "arm": "paired",
+     "code": "TRBHB",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8090682__A.mp4",
+     "bank": "humanvid"
+    }
+   ],
+   "N_target": 31,
+   "system_prompt_sha256": "0abdcb1d15a82bab0b01c561767e73f683cc7ef41a738eee260899a4f3121d63",
+   "embedded_round2_prompt_sha256": "bc612708a699172bbcdbff7c4b26b56f03b7d6eba94c3032442c718c07f923f9"
+  },
+  {
+   "pack_id": "P05",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "vcbench_mirror_4155070_4096x2160",
+     "role": "A",
+     "arm": "fresh",
+     "code": "XQDBT",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_mirror_4155070_4096x2160__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_school_5184436_1080x1920",
+     "role": "A",
+     "arm": "fresh",
+     "code": "LPGNN",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_school_5184436_1080x1920__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_sculpture_3959723_4096x2160",
+     "role": "A",
+     "arm": "fresh",
+     "code": "NBMRJ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_sculpture_3959723_4096x2160__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_phone_3115593_3840x2160",
+     "role": "A",
+     "arm": "paired",
+     "code": "ZVRJS",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_phone_3115593_3840x2160__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "davis_judo",
+     "role": "A",
+     "arm": "paired",
+     "code": "JTLGB",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/davis_judo__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "davis_dogs-scale",
+     "role": "A",
+     "arm": "paired",
+     "code": "DLDGV",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/davis_dogs-scale__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_photography_3894706_2160x4096",
+     "role": "A",
+     "arm": "paired",
+     "code": "TTLKH",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_photography_3894706_2160x4096__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_URLAedhIKbk_2_0to415",
+     "role": "A",
+     "arm": "paired",
+     "code": "MDCMD",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_URLAedhIKbk_2_0to415__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_photography_3917513_4096x2160",
+     "role": "A",
+     "arm": "fresh",
+     "code": "GHJKB",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_photography_3917513_4096x2160__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_T3NNiOsFLEw_12_21to157",
+     "role": "A",
+     "arm": "paired",
+     "code": "MFJHG",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_T3NNiOsFLEw_12_21to157__A.mp4",
+     "bank": "synth_endpoints"
+    }
+   ],
+   "N_target": 30,
+   "system_prompt_sha256": "b263b75eae8ed17cca0f68867d80ee82ccea391b3b5923b217d43d8cd9aec4f6",
+   "embedded_round2_prompt_sha256": "a61af8f4c456a6f4a4c75bf55e074d4021b425e4047d1479164417cfb1f71990"
+  },
+  {
+   "pack_id": "P06",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "vcbench_phone_3044315_3840x2160",
+     "role": "A",
+     "arm": "paired",
+     "code": "FRQFM",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_phone_3044315_3840x2160__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_meeting_3252919_3840x2160",
+     "role": "A",
+     "arm": "fresh",
+     "code": "MXZSM",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_meeting_3252919_3840x2160__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_action_2791956_2160x3840",
+     "role": "A",
+     "arm": "fresh",
+     "code": "XRZCN",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_action_2791956_2160x3840__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_action_5310858_3840x2160",
+     "role": "A",
+     "arm": "paired",
+     "code": "MKKTR",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_action_5310858_3840x2160__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "davis_cows",
+     "role": "A",
+     "arm": "fresh",
+     "code": "DLWDT",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/davis_cows__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_turtle_5259430_2160x4096",
+     "role": "A",
+     "arm": "paired",
+     "code": "TBRDH",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_turtle_5259430_2160x4096__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_music_4088836_1920x1080",
+     "role": "A",
+     "arm": "paired",
+     "code": "CSPLG",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_music_4088836_1920x1080__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_reading_4153582_2160x4096",
+     "role": "A",
+     "arm": "paired",
+     "code": "QVNBX",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_reading_4153582_2160x4096__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_TI78Alt9t5k_19_91to227",
+     "role": "A",
+     "arm": "fresh",
+     "code": "RLFRF",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_TI78Alt9t5k_19_91to227__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_architecture_2828876_1080x1920",
+     "role": "A",
+     "arm": "fresh",
+     "code": "CRSCX",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_architecture_2828876_1080x1920__A.mp4",
+     "bank": "synth_endpoints"
+    }
+   ],
+   "N_target": 25,
+   "system_prompt_sha256": "59d26ea4fbcecf0b9cad7475ae1f24f55ec6b8dedc55480b51b77b2bfb923e9c",
+   "embedded_round2_prompt_sha256": "fcc714630eac177bb28217d368083caa5b33fa88cd2b288917ba70f77dca2c26"
+  },
+  {
+   "pack_id": "P07",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "vcbench_robot_8764794_2160x3840",
+     "role": "A",
+     "arm": "paired",
+     "code": "WLLTD",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_robot_8764794_2160x3840__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_conversation_3206301_1920x1080",
+     "role": "A",
+     "arm": "paired",
+     "code": "MTZMX",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_conversation_3206301_1920x1080__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid__sRboZAx_zk_41_0to136",
+     "role": "A",
+     "arm": "fresh",
+     "code": "XGKHQ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid__sRboZAx_zk_41_0to136__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_butterfly_854867_3840x2160",
+     "role": "A",
+     "arm": "paired",
+     "code": "KBBGW",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_butterfly_854867_3840x2160__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_coast_33754706_2160x3840",
+     "role": "A",
+     "arm": "paired",
+     "code": "TFJTV",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_coast_33754706_2160x3840__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_UUUWxvofLgU_13_19to453",
+     "role": "A",
+     "arm": "fresh",
+     "code": "MLWLT",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_UUUWxvofLgU_13_19to453__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_destination_33713788_3840x2160",
+     "role": "A",
+     "arm": "paired",
+     "code": "SGRPK",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_destination_33713788_3840x2160__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid__hKvS8p3JCM_17_0to102",
+     "role": "A",
+     "arm": "fresh",
+     "code": "NNQGB",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid__hKvS8p3JCM_17_0to102__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "davis_dancing",
+     "role": "A",
+     "arm": "fresh",
+     "code": "VKZFK",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/davis_dancing__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_RzR0x2J5sPA_7_1368to1499",
+     "role": "A",
+     "arm": "fresh",
+     "code": "BNMQR",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_RzR0x2J5sPA_7_1368to1499__A.mp4",
+     "bank": "synth_endpoints"
+    }
+   ],
+   "N_target": 36,
+   "system_prompt_sha256": "c6b71791cc279ad07c174b0e4909a41ee5b1ceb5902ecc363e80eee02b86b544",
+   "embedded_round2_prompt_sha256": "cf06e4ce6b5743eeba71af27b15947c48318d29c8db07f669eaa1bb6c6198b0f"
+  },
+  {
+   "pack_id": "P08",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "vcbench_animal_2430774_3840x2160",
+     "role": "A",
+     "arm": "paired",
+     "code": "NSFXM",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_animal_2430774_3840x2160__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_animal_2122952_1920x1080",
+     "role": "A",
+     "arm": "paired",
+     "code": "QHHFC",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_animal_2122952_1920x1080__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_T4RelfB1P2A_14_45to200",
+     "role": "A",
+     "arm": "paired",
+     "code": "ZMRXZ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_T4RelfB1P2A_14_45to200__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_sculpture_3713530_2160x4096",
+     "role": "A",
+     "arm": "fresh",
+     "code": "HFBVH",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_sculpture_3713530_2160x4096__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_teacher_11025559_4096x2160",
+     "role": "A",
+     "arm": "fresh",
+     "code": "CPSJZ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_teacher_11025559_4096x2160__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_Ry-JeKr-i2M_56_33to175",
+     "role": "A",
+     "arm": "fresh",
+     "code": "LVLFF",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_Ry-JeKr-i2M_56_33to175__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid__pWnn1ODmiY_6_0to270",
+     "role": "A",
+     "arm": "fresh",
+     "code": "VBQXT",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid__pWnn1ODmiY_6_0to270__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_reading_853947_1920x1080",
+     "role": "A",
+     "arm": "paired",
+     "code": "SQQFM",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_reading_853947_1920x1080__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_XA2HBBrkUbU_109_0to173",
+     "role": "A",
+     "arm": "paired",
+     "code": "VFDLK",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_XA2HBBrkUbU_109_0to173__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_animal_3191251_4096x2160",
+     "role": "A",
+     "arm": "fresh",
+     "code": "WHPRL",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_animal_3191251_4096x2160__A.mp4",
+     "bank": "synth_endpoints"
+    }
+   ],
+   "N_target": 32,
+   "system_prompt_sha256": "d6906c92a170104a048db24a99d9167173503ec07b2f5b85b391e9f78bbff505",
+   "embedded_round2_prompt_sha256": "e2891d56768fa50dd254b9eb8fb62814005d0f2023994f1762d1a852c62072d9"
+  },
+  {
+   "pack_id": "P09",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "davis_elephant",
+     "role": "A",
+     "arm": "fresh",
+     "code": "DJHVD",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/davis_elephant__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_meeting_3256571_2160x3840",
+     "role": "A",
+     "arm": "paired",
+     "code": "NQBSX",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_meeting_3256571_2160x3840__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_meeting_3251811_3840x2160",
+     "role": "A",
+     "arm": "fresh",
+     "code": "PNBWG",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_meeting_3251811_3840x2160__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid__oJxPqTzmHM_33_0to162",
+     "role": "A",
+     "arm": "paired",
+     "code": "XHJNX",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid__oJxPqTzmHM_33_0to162__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_tulip_7268820_4096x2160",
+     "role": "A",
+     "arm": "fresh",
+     "code": "CNCTB",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_tulip_7268820_4096x2160__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_dancing_4540332_3840x2160",
+     "role": "A",
+     "arm": "fresh",
+     "code": "PRTDZ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_dancing_4540332_3840x2160__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_S-eyEO9SmLs_3_0to210",
+     "role": "A",
+     "arm": "fresh",
+     "code": "FFRHV",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_S-eyEO9SmLs_3_0to210__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_conversation_4326529_3840x2160",
+     "role": "A",
+     "arm": "paired",
+     "code": "WNLMC",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_conversation_4326529_3840x2160__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_animal_3195531_3840x2160",
+     "role": "A",
+     "arm": "fresh",
+     "code": "LFLXT",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_animal_3195531_3840x2160__A.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_teacher_6333712_4096x2160",
+     "role": "A",
+     "arm": "paired",
+     "code": "THHDL",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_teacher_6333712_4096x2160__A.mp4",
+     "bank": "synth_endpoints"
+    }
+   ],
+   "N_target": 38,
+   "system_prompt_sha256": "1efed28fdd39db86ab791a14ce7343c5d6e13c47cf7bda295bb79577f7a358e7",
+   "embedded_round2_prompt_sha256": "f1497470ee2946d9340ccd8417abefd796dc9a3ca99c97e46760cc4c87f31cc8"
+  },
+  {
+   "pack_id": "P10",
+   "role": "B",
+   "bank": "humanvid",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "humanvid_7530560",
+     "role": "B",
+     "arm": "paired",
+     "code": "ZWWSB",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7530560__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6873329",
+     "role": "B",
+     "arm": "paired",
+     "code": "RMHLN",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6873329__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6297115",
+     "role": "B",
+     "arm": "fresh",
+     "code": "BNWQW",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6297115__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8293312",
+     "role": "B",
+     "arm": "fresh",
+     "code": "HDNHN",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8293312__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7628755",
+     "role": "B",
+     "arm": "paired",
+     "code": "WKFBR",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7628755__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_9006364",
+     "role": "B",
+     "arm": "paired",
+     "code": "FRBJZ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_9006364__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6708593",
+     "role": "B",
+     "arm": "fresh",
+     "code": "QTGQH",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6708593__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_5271439",
+     "role": "B",
+     "arm": "paired",
+     "code": "VKZZN",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_5271439__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8419407",
+     "role": "B",
+     "arm": "fresh",
+     "code": "FXGKM",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8419407__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6944304",
+     "role": "B",
+     "arm": "fresh",
+     "code": "TFJWL",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6944304__B.mp4",
+     "bank": "humanvid"
+    }
+   ],
+   "N_target": 32,
+   "system_prompt_sha256": "f3f075d98c85617c2e1cfcc71d18f26658f132c3c8d64c11258cc9b701a1347b",
+   "embedded_round2_prompt_sha256": "24cd9adc9c3b9bf3b9721c51660e0a8fda0537d147c4db9d882b1f7cc2d1867d"
+  },
+  {
+   "pack_id": "P11",
+   "role": "B",
+   "bank": "humanvid",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "humanvid_8873231",
+     "role": "B",
+     "arm": "fresh",
+     "code": "DRQGW",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8873231__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_9005890",
+     "role": "B",
+     "arm": "paired",
+     "code": "VRCBF",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_9005890__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7092087",
+     "role": "B",
+     "arm": "fresh",
+     "code": "CBPZP",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7092087__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_9005815",
+     "role": "B",
+     "arm": "fresh",
+     "code": "VKNTX",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_9005815__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7603782",
+     "role": "B",
+     "arm": "fresh",
+     "code": "NSJBX",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7603782__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6997942",
+     "role": "B",
+     "arm": "paired",
+     "code": "ZZQXP",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6997942__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8762603",
+     "role": "B",
+     "arm": "paired",
+     "code": "PDSJL",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8762603__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7664823",
+     "role": "B",
+     "arm": "paired",
+     "code": "BMPKH",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7664823__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8036712",
+     "role": "B",
+     "arm": "paired",
+     "code": "TWPKH",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8036712__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6455087",
+     "role": "B",
+     "arm": "fresh",
+     "code": "XVGSD",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6455087__B.mp4",
+     "bank": "humanvid"
+    }
+   ],
+   "N_target": 27,
+   "system_prompt_sha256": "bc22f02d38ce2e1495160e65cf115a8b2ada7755e2646c25022c924a45845d18",
+   "embedded_round2_prompt_sha256": "834dd30b43fb57be1bb0e0c42af5e771c4337d796ade153ea3ccd3c14c58c848"
+  },
+  {
+   "pack_id": "P12",
+   "role": "B",
+   "bank": "humanvid",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "humanvid_6785683",
+     "role": "B",
+     "arm": "fresh",
+     "code": "DQFPS",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6785683__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6790437",
+     "role": "B",
+     "arm": "fresh",
+     "code": "MBCLD",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6790437__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8047701",
+     "role": "B",
+     "arm": "fresh",
+     "code": "BKPSF",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8047701__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6724988",
+     "role": "B",
+     "arm": "paired",
+     "code": "PMKXS",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6724988__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_5916780",
+     "role": "B",
+     "arm": "paired",
+     "code": "BWPNX",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_5916780__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8344810",
+     "role": "B",
+     "arm": "fresh",
+     "code": "NBKRK",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8344810__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_10349048",
+     "role": "B",
+     "arm": "fresh",
+     "code": "GGKQG",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_10349048__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_4723042",
+     "role": "B",
+     "arm": "paired",
+     "code": "KNVWB",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_4723042__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7659135",
+     "role": "B",
+     "arm": "paired",
+     "code": "KXTMX",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7659135__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8058398",
+     "role": "B",
+     "arm": "fresh",
+     "code": "QGRFC",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8058398__B.mp4",
+     "bank": "humanvid"
+    }
+   ],
+   "N_target": 42,
+   "system_prompt_sha256": "8c363993b42620e08924645ec328e840fdeddde8bfd8c4ceafa4d8c58513d770",
+   "embedded_round2_prompt_sha256": "f7e8ac0fe559444657e1964e107251816c4eb1c94810eb3b3ac95cc79ca249e8"
+  },
+  {
+   "pack_id": "P13",
+   "role": "B",
+   "bank": "humanvid",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "humanvid_4651102",
+     "role": "B",
+     "arm": "fresh",
+     "code": "PMNDM",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_4651102__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_9955062",
+     "role": "B",
+     "arm": "paired",
+     "code": "SDZRM",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_9955062__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_4058810",
+     "role": "B",
+     "arm": "fresh",
+     "code": "ZHTXQ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_4058810__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7975461",
+     "role": "B",
+     "arm": "paired",
+     "code": "JZKDM",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7975461__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7648962",
+     "role": "B",
+     "arm": "paired",
+     "code": "XWSCP",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7648962__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7150191",
+     "role": "B",
+     "arm": "paired",
+     "code": "WTMHG",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7150191__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_5054318",
+     "role": "B",
+     "arm": "paired",
+     "code": "QHKXN",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_5054318__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8377703",
+     "role": "B",
+     "arm": "paired",
+     "code": "MXTZS",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8377703__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_5378938",
+     "role": "B",
+     "arm": "paired",
+     "code": "SMDPM",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_5378938__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6607407",
+     "role": "B",
+     "arm": "fresh",
+     "code": "NJLXT",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6607407__B.mp4",
+     "bank": "humanvid"
+    }
+   ],
+   "N_target": 15,
+   "system_prompt_sha256": "7e59df2fe795d2d605dc10dac013781a4f64968db3ac3580c532d0be6238f932",
+   "embedded_round2_prompt_sha256": "25928ba79add8a7a2f64b2a420b1c642441deadae6ec560f4d8dc39c45e085d0"
+  },
+  {
+   "pack_id": "P14",
+   "role": "B",
+   "bank": "humanvid",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "humanvid_7148139",
+     "role": "B",
+     "arm": "paired",
+     "code": "PNNQD",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7148139__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_9218284",
+     "role": "B",
+     "arm": "paired",
+     "code": "WBQNF",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_9218284__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_5337101",
+     "role": "B",
+     "arm": "paired",
+     "code": "CBMSF",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_5337101__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6263402",
+     "role": "B",
+     "arm": "fresh",
+     "code": "NKJDW",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6263402__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7648961",
+     "role": "B",
+     "arm": "fresh",
+     "code": "BSXJF",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7648961__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8724423",
+     "role": "B",
+     "arm": "paired",
+     "code": "BNJZV",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8724423__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_8519351",
+     "role": "B",
+     "arm": "fresh",
+     "code": "RCDMQ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_8519351__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_7564887",
+     "role": "B",
+     "arm": "fresh",
+     "code": "LWBSN",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_7564887__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_5636773",
+     "role": "B",
+     "arm": "fresh",
+     "code": "WRWJB",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_5636773__B.mp4",
+     "bank": "humanvid"
+    },
+    {
+     "clip_id": "humanvid_6617460",
+     "role": "B",
+     "arm": "fresh",
+     "code": "PHJXJ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/humanvid/humanvid_6617460__B.mp4",
+     "bank": "humanvid"
+    }
+   ],
+   "N_target": 17,
+   "system_prompt_sha256": "2f0931bc4258128744f78af4c3af4340da6ba0343b402843bb004016b07346c4",
+   "embedded_round2_prompt_sha256": "d256a182fed283b141403121144e1c0d0df3c7b983d3b7e81e4f042f1be79df7"
+  },
+  {
+   "pack_id": "P15",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "openvid_T5ZCFynSomc_29_0to139",
+     "role": "B",
+     "arm": "paired",
+     "code": "DCFZX",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_T5ZCFynSomc_29_0to139__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_URLAedhIKbk_2_0to415",
+     "role": "B",
+     "arm": "paired",
+     "code": "CMDZV",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_URLAedhIKbk_2_0to415__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_meeting_4428751_3840x2160",
+     "role": "B",
+     "arm": "fresh",
+     "code": "VMGXZ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_meeting_4428751_3840x2160__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_RjQG9PQv9UM_10_41to241",
+     "role": "B",
+     "arm": "fresh",
+     "code": "JDNSH",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_RjQG9PQv9UM_10_41to241__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_teacher_6334253_4096x2160",
+     "role": "B",
+     "arm": "fresh",
+     "code": "FPDRK",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_teacher_6334253_4096x2160__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_dancing_3761544_3840x2160",
+     "role": "B",
+     "arm": "paired",
+     "code": "VFKJZ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_dancing_3761544_3840x2160__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "davis_horsejump-high",
+     "role": "B",
+     "arm": "paired",
+     "code": "XFGHQ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/davis_horsejump-high__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_painting_3805736_2160x4096",
+     "role": "B",
+     "arm": "paired",
+     "code": "QRVST",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_painting_3805736_2160x4096__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "davis_bear",
+     "role": "B",
+     "arm": "fresh",
+     "code": "GZTKC",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/davis_bear__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid__t-96LgcizU_7_0to191",
+     "role": "B",
+     "arm": "paired",
+     "code": "LTZTJ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid__t-96LgcizU_7_0to191__B.mp4",
+     "bank": "synth_endpoints"
+    }
+   ],
+   "N_target": 29,
+   "system_prompt_sha256": "63d6830851a99a96ccf17072f1d9642f082e6ebbc7699d2e8ae53946bceef7c4",
+   "embedded_round2_prompt_sha256": "8fd5a11ede6659d83b25fe5933fecbac17900410ebef43a0512b8193faf1271b"
+  },
+  {
+   "pack_id": "P16",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "openvid_Rv5tq_kWjRE_23_0to288",
+     "role": "B",
+     "arm": "paired",
+     "code": "BKJSL",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_Rv5tq_kWjRE_23_0to288__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_conversation_3248276_3840x2160",
+     "role": "B",
+     "arm": "fresh",
+     "code": "HVRTH",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_conversation_3248276_3840x2160__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_sunset_1686791_1080x1920",
+     "role": "B",
+     "arm": "paired",
+     "code": "NVJFV",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_sunset_1686791_1080x1920__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_talk_3255327_3840x2160",
+     "role": "B",
+     "arm": "paired",
+     "code": "PHJRV",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_talk_3255327_3840x2160__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_XEPyFpamcfs_25_183to461",
+     "role": "B",
+     "arm": "fresh",
+     "code": "NVQPV",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_XEPyFpamcfs_25_183to461__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_XA2HBBrkUbU_109_0to173",
+     "role": "B",
+     "arm": "paired",
+     "code": "CTHVB",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_XA2HBBrkUbU_109_0to173__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "davis_dance-jump",
+     "role": "B",
+     "arm": "fresh",
+     "code": "DNPWX",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/davis_dance-jump__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_RquUFnOoNRk_17_0to110",
+     "role": "B",
+     "arm": "fresh",
+     "code": "LDBGV",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_RquUFnOoNRk_17_0to110__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_teenager_4100460_4096x2160",
+     "role": "B",
+     "arm": "paired",
+     "code": "KQGZJ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_teenager_4100460_4096x2160__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_dancing_2795737_3840x2160",
+     "role": "B",
+     "arm": "fresh",
+     "code": "KJXKS",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_dancing_2795737_3840x2160__B.mp4",
+     "bank": "synth_endpoints"
+    }
+   ],
+   "N_target": 35,
+   "system_prompt_sha256": "5a6bc0f046f1e66c1154ffa4ba884caa2e23d40ea1e15b63416c6ec4691802f7",
+   "embedded_round2_prompt_sha256": "48a31e60d2e725043d77ea3f53a5aa8fda7a4c80f0efb6a633dde9931c8e7b39"
+  },
+  {
+   "pack_id": "P17",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "vcbench_tulip_7661799_4096x2160",
+     "role": "B",
+     "arm": "fresh",
+     "code": "VPHWR",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_tulip_7661799_4096x2160__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_XM9K4luhq4U_8_0to127",
+     "role": "B",
+     "arm": "fresh",
+     "code": "JRRKQ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_XM9K4luhq4U_8_0to127__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_meeting_3255226_3840x2160",
+     "role": "B",
+     "arm": "fresh",
+     "code": "VCBNF",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_meeting_3255226_3840x2160__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_destination_33713788_3840x2160",
+     "role": "B",
+     "arm": "paired",
+     "code": "ZKRCH",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_destination_33713788_3840x2160__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_conversation_3206301_1920x1080",
+     "role": "B",
+     "arm": "paired",
+     "code": "QCBWB",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_conversation_3206301_1920x1080__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "davis_judo",
+     "role": "B",
+     "arm": "paired",
+     "code": "PGFRM",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/davis_judo__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_book_4034130_2160x4096",
+     "role": "B",
+     "arm": "fresh",
+     "code": "WXBTG",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_book_4034130_2160x4096__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_UUUWxvofLgU_13_19to453",
+     "role": "B",
+     "arm": "fresh",
+     "code": "HKBKM",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_UUUWxvofLgU_13_19to453__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_football_10349005_4096x2160",
+     "role": "B",
+     "arm": "paired",
+     "code": "SKBHZ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_football_10349005_4096x2160__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid__nLdQ5vZP5c_6_0to148",
+     "role": "B",
+     "arm": "paired",
+     "code": "RCHCB",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid__nLdQ5vZP5c_6_0to148__B.mp4",
+     "bank": "synth_endpoints"
+    }
+   ],
+   "N_target": 34,
+   "system_prompt_sha256": "90c3190b077662cee32fc68da71a031fc8d90c979fac79e2354334e38f58d723",
+   "embedded_round2_prompt_sha256": "3ee65c2f650a8bf84c3b7e358ab93f30870864cd657addfa85e8f305ace30cf8"
+  },
+  {
+   "pack_id": "P18",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "openvid_RsC5X2XNAsA_5_0to140",
+     "role": "B",
+     "arm": "fresh",
+     "code": "VQQBS",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_RsC5X2XNAsA_5_0to140__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_teacher_6333712_4096x2160",
+     "role": "B",
+     "arm": "paired",
+     "code": "NPVCC",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_teacher_6333712_4096x2160__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_library_4860943_4096x2160",
+     "role": "B",
+     "arm": "fresh",
+     "code": "RVDDM",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_library_4860943_4096x2160__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_T4xqFDJf7yM_2_76to186",
+     "role": "B",
+     "arm": "paired",
+     "code": "DTPGL",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_T4xqFDJf7yM_2_76to186__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_X2t4l_yMStE_4_0to207",
+     "role": "B",
+     "arm": "fresh",
+     "code": "LSBMR",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_X2t4l_yMStE_4_0to207__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_robot_7651117_1920x1080",
+     "role": "B",
+     "arm": "paired",
+     "code": "RZGVL",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_robot_7651117_1920x1080__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "davis_blackswan",
+     "role": "B",
+     "arm": "fresh",
+     "code": "MGDGQ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/davis_blackswan__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "davis_dance-twirl",
+     "role": "B",
+     "arm": "fresh",
+     "code": "MRSJN",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/davis_dance-twirl__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_turtle_17823784_2160x3840",
+     "role": "B",
+     "arm": "fresh",
+     "code": "WGGGM",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_turtle_17823784_2160x3840__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "davis_horsejump-low",
+     "role": "B",
+     "arm": "fresh",
+     "code": "XRHLX",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/davis_horsejump-low__B.mp4",
+     "bank": "synth_endpoints"
+    }
+   ],
+   "N_target": 36,
+   "system_prompt_sha256": "6bc54ab8eed7d900dea8a56c66db9b896c905c69787d6a0f2294387e11ef5108",
+   "embedded_round2_prompt_sha256": "c6439259c461b2905d3508f94d8801bd0bfc64158fb4d44894a19ade46dc889d"
+  },
+  {
+   "pack_id": "P19",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "k": 10,
+   "items": [
+    {
+     "clip_id": "openvid__y0W5Nty9Z8_91_51to188",
+     "role": "B",
+     "arm": "fresh",
+     "code": "TWPCT",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid__y0W5Nty9Z8_91_51to188__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_phone_3115593_3840x2160",
+     "role": "B",
+     "arm": "paired",
+     "code": "LRNFJ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_phone_3115593_3840x2160__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_TFG-PvdqCjc_0_0to109",
+     "role": "B",
+     "arm": "fresh",
+     "code": "WJMHV",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_TFG-PvdqCjc_0_0to109__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_library_8086641_2160x4096",
+     "role": "B",
+     "arm": "paired",
+     "code": "PGZWN",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_library_8086641_2160x4096__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_photography_3894706_2160x4096",
+     "role": "B",
+     "arm": "paired",
+     "code": "DXFWL",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_photography_3894706_2160x4096__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_conversation_3045059_3840x2160",
+     "role": "B",
+     "arm": "fresh",
+     "code": "FZHML",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_conversation_3045059_3840x2160__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_vegetable_853790_1920x1080",
+     "role": "B",
+     "arm": "paired",
+     "code": "GJPWH",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_vegetable_853790_1920x1080__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_animal_2430774_3840x2160",
+     "role": "B",
+     "arm": "paired",
+     "code": "ZZTZQ",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_animal_2430774_3840x2160__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "vcbench_photography_2795401_2160x3840",
+     "role": "B",
+     "arm": "paired",
+     "code": "LLCQL",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/vcbench_photography_2795401_2160x3840__B.mp4",
+     "bank": "synth_endpoints"
+    },
+    {
+     "clip_id": "openvid_XHZmNU-De3A_62_0to504",
+     "role": "B",
+     "arm": "fresh",
+     "code": "WQQCL",
+     "video": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/caption_strips/synth_endpoints/openvid_XHZmNU-De3A_62_0to504__B.mp4",
+     "bank": "synth_endpoints"
+    }
+   ],
+   "N_target": 37,
+   "system_prompt_sha256": "67a9c0ffbf21726e0e8818d04516d8b01a03974c85f45fb5d2deae5a8334b902",
+   "embedded_round2_prompt_sha256": "bfd8002d6ed5d1dc474c5b0d552db9ddef0ee01ddbde9283b4d465c36b2cbdc7"
+  }
+ ]
+}

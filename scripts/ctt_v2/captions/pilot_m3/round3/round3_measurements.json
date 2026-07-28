@@ -1,0 +1,219 @@
+{
+ "round": 3,
+ "prompt_variant": "v3",
+ "generator": "gemini-3.6-flash",
+ "audited": false,
+ "n_pairs": 399,
+ "accepted": 398,
+ "manual_rewrite_queue": 1,
+ "accepted_on_attempt": {
+  "1": 396,
+  "2": 2
+ },
+ "first_attempt_failures": {
+  "format": 2,
+  "tier1": 0,
+  "leak": "NOT_MEASURED",
+  "inaccurate": "NOT_MEASURED"
+ },
+ "first_pass_format_tier1_pct": 99.5,
+ "first_pass_note": "UPPER BOUND \u2014 leak component unmeasured. Rounds 1/2 each lost 0.5pp to leak.",
+ "tier2_flag_pct": 9.8,
+ "gates": {
+  "8a": 0.6929,
+  "8b": 0.5454,
+  "9_auc": 0.9102,
+  "hard_failures": []
+ },
+ "gate8a_std": 0.0568,
+ "gate9_disposition": {
+  "verdict": "ACCEPT and record",
+  "reason": "content-dominated: of the 40 top-weighted features, ~32 are content words (garment/colour/lighting/scene nouns); the function words present ('the','on','under','is','at','of','with') are the gate-8 fingerprint already characterised in rounds 1-2. No new style axis.",
+  "top_toward_NEW": [
+   [
+    "short",
+    1.2009
+   ],
+   [
+    "soft",
+    1.1362
+   ],
+   [
+    "light",
+    1.0773
+   ],
+   [
+    "daylight",
+    1.0478
+   ],
+   [
+    "hair",
+    0.9872
+   ],
+   [
+    "brown",
+    0.9747
+   ],
+   [
+    "indoor",
+    0.9374
+   ],
+   [
+    "shirt",
+    0.8563
+   ],
+   [
+    "lit",
+    0.8532
+   ],
+   [
+    "room",
+    0.8386
+   ],
+   [
+    "gray",
+    0.8206
+   ],
+   [
+    "with",
+    0.7603
+   ],
+   [
+    "skinned",
+    0.7289
+   ],
+   [
+    "white",
+    0.7171
+   ],
+   [
+    "t",
+    0.6988
+   ],
+   [
+    "brightly",
+    0.6819
+   ],
+   [
+    "wooden",
+    0.6716
+   ],
+   [
+    "dark",
+    0.6513
+   ],
+   [
+    "fair",
+    0.6304
+   ],
+   [
+    "looking",
+    0.6135
+   ]
+  ],
+  "top_toward_CORPUS": [
+   [
+    "stands",
+    -1.193
+   ],
+   [
+    "sky",
+    -1.0609
+   ],
+   [
+    "sunglasses",
+    -1.0111
+   ],
+   [
+    "the",
+    -0.7996
+   ],
+   [
+    "on",
+    -0.7734
+   ],
+   [
+    "under",
+    -0.7515
+   ],
+   [
+    "is",
+    -0.6818
+   ],
+   [
+    "warm",
+    -0.6517
+   ],
+   [
+    "trousers",
+    -0.6271
+   ],
+   [
+    "night",
+    -0.5368
+   ],
+   [
+    "golden",
+    -0.5323
+   ],
+   [
+    "young",
+    -0.5241
+   ],
+   [
+    "field",
+    -0.4981
+   ],
+   [
+    "red",
+    -0.4665
+   ],
+   [
+    "sign",
+    -0.4646
+   ],
+   [
+    "concrete",
+    -0.4591
+   ],
+   [
+    "skirt",
+    -0.4399
+   ],
+   [
+    "at",
+    -0.4244
+   ],
+   [
+    "of",
+    -0.4233
+   ],
+   [
+    "parking",
+    -0.4063
+   ]
+  ]
+ },
+ "be_verb_by_role_pct": {
+  "corpus_A": 5.04,
+  "corpus_B": 25.0,
+  "corpus_pooled": 8.77,
+  "round3_A": 0.0,
+  "round3_B": 1.0,
+  "round3_pooled": 0.5
+ },
+ "v3_mechanism_verdict": "FALSIFIED. v3's sole change was to relax A4's 'simple-present or present-progressive verbs' clause to permit plain is/are, A-role only, to close a claimed 8.8%-vs-0.5% be-verb tell. The A-role prompt was verified changed, yet the realised A-role be-verb rate stayed at 0.0% (round 2: 0.0%). The intended mechanism produced no measurable effect. Two further findings: (a) the 8.8% corpus figure is POOLED and mis-attributed \u2014 corpus A-role is only 5.0% (n=139) while corpus B-role is 25.0% (n=32, so 8 descriptions), i.e. the be-verb deficit is predominantly a B-role phenomenon and v3 deliberately did not touch the B prompt; (b) gate 8a moved 0.7066 -> 0.6929, a delta of 0.0137 against a fit std of 0.0568 \u2014 indistinguishable from run-to-run noise, so the improvement cannot be attributed to v3.",
+ "round_comparison": {
+  "8a": {
+   "r1": 0.7139,
+   "r2": 0.7066,
+   "r3": 0.6929,
+   "bar": 0.73
+  },
+  "8b": {
+   "r2": 0.5518,
+   "r3": 0.5454,
+   "bar": 0.6
+  }
+ }
+}

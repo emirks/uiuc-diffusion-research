@@ -1,0 +1,379 @@
+{
+ "n_items": 200,
+ "bars": {
+  "cond2_hard": 0.6,
+  "cond2_reject": 0.73,
+  "cond3a_min_pct": 99.0,
+  "cond3b_max_pct": 10.0,
+  "cond3c_pct": 100.0,
+  "cond4_clip_min_pct": 98.0,
+  "cond4_lex_ratio_max": 1.15,
+  "cond5_min_pct": 97.0
+ },
+ "cond5_first_pass_prompt_controllable": {
+  "n": 200,
+  "failures": 0,
+  "rate_pct": 100.0,
+  "bar": ">= 97%",
+  "verdict": "PASS",
+  "breakdown": {
+   "no_text": 0,
+   "format": 0,
+   "tier1": 0,
+   "audio": 0,
+   "markup/style": 0,
+   "leak": 0
+  },
+  "inaccurate_out_of_scope": {
+   "n": 4,
+   "rate_pct": 2.0,
+   "governance": "<=8% REVIEW; 0 unresolved in final store HARD",
+   "round2_baseline_pct": 5.75
+  }
+ },
+ "cond3c_id_echo": {
+  "n": 200,
+  "id_echo_intact": 200,
+  "intact_pct": 100.0,
+  "order_preserved": 198,
+  "order_preserved_pct": 99.0,
+  "bar": "intact on 100% of items",
+  "verdict": "PASS",
+  "note": "every code was echoed exactly once (0 missing / 0 extra / 0 corrupted), so the echo is intact; but 1 pack of 20 returned two ADJACENT items transposed, so ARRAY POSITION is not a safe key -- rows are keyed by the echoed id. Whether the model's own id or its position tells the truth is decided by cond4 CLIP."
+ },
+ "cond3b_matched_flag_rate": {
+  "n": 200,
+  "flagged": 4,
+  "rate_pct": 2.0,
+  "bar": "<= 10%",
+  "round2_baseline_pct": 5.75,
+  "verdict": "PASS",
+  "auditor_errors": 0
+ },
+ "cond3a_packed_derangement": {
+  "n_deranged": 100,
+  "deranged_flagged": 96,
+  "deranged_flag_pct": 96.0,
+  "bar_deranged": ">= 99%",
+  "n_matched_in_packed": 100,
+  "matched_flagged_in_packed": 3,
+  "matched_flag_pct_in_packed": 3.0,
+  "packs_with_exact_positional_attribution": "17/20",
+  "exact_attribution_pct": 85.0,
+  "id_echo_failures_in_packed_audits": 0,
+  "verdict": "FAIL",
+  "per_pack": [
+   {
+    "pack_id": "P00",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P01",
+    "exact_attribution": false,
+    "n_deranged": 5,
+    "n_flagged": 4,
+    "missed": [
+     "PMCGV"
+    ],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P02",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P03",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P04",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P05",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P06",
+    "exact_attribution": false,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [
+     "CRSCX",
+     "RLFRF"
+    ],
+    "false_flags": [
+     "MKKTR",
+     "XRZCN"
+    ]
+   },
+   {
+    "pack_id": "P07",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P08",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P09",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P10",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P11",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P12",
+    "exact_attribution": false,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [
+     "KXTMX"
+    ],
+    "false_flags": [
+     "PMKXS"
+    ]
+   },
+   {
+    "pack_id": "P13",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P14",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P15",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P16",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P17",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P18",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   },
+   {
+    "pack_id": "P19",
+    "exact_attribution": true,
+    "n_deranged": 5,
+    "n_flagged": 5,
+    "missed": [],
+    "false_flags": []
+   }
+  ]
+ },
+ "cond3_overall": "FAIL",
+ "cond2_packed_vs_unpacked_probe": {
+  "n_paired": 99,
+  "balanced_accuracy": 0.6529,
+  "std": 0.0809,
+  "bar": "<= 0.60 HARD; 0.60-0.73 REVIEW; > 0.73 packing rejected",
+  "verdict": "REVIEW-ESCALATE",
+  "controls": {
+   "NULL_same_shape_unpacked_vs_unpacked_other_clips": 0.4808,
+   "NULL_packed_paired_vs_packed_fresh": 0.5151,
+   "reference_round2_stratum_internal_8b": 0.5518,
+   "reference_measured_NULL": 0.506
+  },
+  "top_features_toward_PACKED": [
+   [
+    "near",
+    0.9312
+   ],
+   [
+    "inside",
+    0.7699
+   ],
+   [
+    "down",
+    0.5749
+   ],
+   [
+    "to",
+    0.5273
+   ],
+   [
+    "t",
+    0.4688
+   ],
+   [
+    "at",
+    0.442
+   ],
+   [
+    "PUNCT[,]",
+    0.4025
+   ],
+   [
+    "her",
+    0.3802
+   ],
+   [
+    "out",
+    0.3792
+   ],
+   [
+    "through",
+    0.348
+   ]
+  ],
+  "top_features_toward_UNPACKED": [
+   [
+    "with",
+    -0.7457
+   ],
+   [
+    "during",
+    -0.6548
+   ],
+   [
+    "n_words",
+    -0.6255
+   ],
+   [
+    "from",
+    -0.4459
+   ],
+   [
+    "against",
+    -0.4397
+   ],
+   [
+    "the",
+    -0.4261
+   ],
+   [
+    "its",
+    -0.4163
+   ],
+   [
+    "a",
+    -0.375
+   ],
+   [
+    "n_chars",
+    -0.3386
+   ],
+   [
+    "his",
+    -0.3238
+   ]
+  ]
+ },
+ "cond4_lexical_overlap": {
+  "bar": "within/cross ratio <= 1.15 (ADVISORY; exceedance => REVIEW, not fail)",
+  "primary": "token_jaccard",
+  "token_jaccard": {
+   "within_pack_mean": 0.15007,
+   "cross_pack_mean": 0.14502,
+   "n_within_pairs": 900,
+   "n_cross_pairs": 4000,
+   "ratio": 1.0348,
+   "verdict": "PASS"
+  },
+  "bigram_jaccard": {
+   "within_pack_mean": 0.04075,
+   "cross_pack_mean": 0.03709,
+   "n_within_pairs": 900,
+   "n_cross_pairs": 4000,
+   "ratio": 1.0985,
+   "verdict": "PASS"
+  },
+  "trigram_jaccard": {
+   "within_pack_mean": 0.01116,
+   "cross_pack_mean": 0.00912,
+   "n_within_pairs": 900,
+   "n_cross_pairs": 4000,
+   "ratio": 1.2242,
+   "verdict": "REVIEW"
+  }
+ },
+ "c_desc_measured": {
+  "n_descriptions": 200,
+  "packed_generation_tok_per_desc": 175.9,
+  "unpacked_audit_tok_per_desc": 203.0,
+  "packed_audit_tok_per_desc": 188.3,
+  "c_desc_packed_gen_plus_unpacked_audit": 378.9,
+  "c_desc_packed_gen_plus_packed_audit": 364.2,
+  "round2_unpacked_baseline": 682.0,
+  "round2_generation_only": 472.2,
+  "round2_audit_only": 209.4,
+  "saving_vs_round2_pct": 44.4,
+  "note": "A12 was right that the audit barely amortises: the description text itself is per-item, so packed audit is only ~7% cheaper than unpacked."
+ }
+}

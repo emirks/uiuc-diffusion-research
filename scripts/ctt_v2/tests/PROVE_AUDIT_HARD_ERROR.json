@@ -1,0 +1,204 @@
+{
+ "auditor_pin": {
+  "model": "gemini-3-flash-preview",
+  "temperature": 0.0,
+  "thinking_level": "minimal",
+  "max_output_tokens": 512
+ },
+ "n_cases": 32,
+ "n_failed": 0,
+ "results": [
+  {
+   "case": "auditor_model",
+   "kind": "config",
+   "ok": true,
+   "detail": "pinned = gemini-3-flash-preview"
+  },
+  {
+   "case": "token_cap",
+   "kind": "config",
+   "ok": true,
+   "detail": "512"
+  },
+  {
+   "case": "temperature",
+   "kind": "config",
+   "ok": true,
+   "detail": "0.0"
+  },
+  {
+   "case": "thinking_level",
+   "kind": "config",
+   "ok": true,
+   "detail": "'minimal' for gemini-3-flash-preview"
+  },
+  {
+   "case": "http_500_exhausted",
+   "kind": "raises",
+   "ok": true,
+   "detail": "the actual \u00a721 outage: 5xx retried out -> AuditError(clip_x|A: audit call failed: exhausted_retries:HTTP503:model overloade)"
+  },
+  {
+   "case": "http_non_200",
+   "kind": "raises",
+   "ok": true,
+   "detail": "non-200 rejected by the API -> AuditError(clip_x|A: audit call failed: HTTP400:invalid thinkingLevel)"
+  },
+  {
+   "case": "no_response_object",
+   "kind": "raises",
+   "ok": true,
+   "detail": "no response object at all -> AuditError(clip_x|A: audit returned no response object)"
+  },
+  {
+   "case": "empty_verdict_none",
+   "kind": "raises",
+   "ok": true,
+   "detail": "200 OK but the model emitted no text -> AuditError(clip_x|A: audit returned an EMPTY verdict (no text in response))"
+  },
+  {
+   "case": "empty_verdict_dict",
+   "kind": "raises",
+   "ok": true,
+   "detail": "parsed to an EMPTY object -- the literal 'empty verdict' -> AuditError(clip_x|A: audit verdict missing required field(s) ['leak', 'inaccurate)"
+  },
+  {
+   "case": "unparseable",
+   "kind": "raises",
+   "ok": true,
+   "detail": "prose instead of JSON -> AuditError(clip_x|A: audit verdict is not JSON: \"I'm sorry, I cannot analyse this)"
+  },
+  {
+   "case": "truncated_json",
+   "kind": "raises",
+   "ok": true,
+   "detail": "verdict truncated by the token cap -> AuditError(clip_x|A: audit verdict is not JSON: '{\"leak\": \"NO\", \"inacc')"
+  },
+  {
+   "case": "missing_inaccurate",
+   "kind": "raises",
+   "ok": true,
+   "detail": "only one of the two required fields -> AuditError(clip_x|A: audit verdict missing required field(s) ['inaccurate']: {'le)"
+  },
+  {
+   "case": "missing_leak",
+   "kind": "raises",
+   "ok": true,
+   "detail": "only one of the two required fields -> AuditError(clip_x|A: audit verdict missing required field(s) ['leak']: {'inaccura)"
+  },
+  {
+   "case": "both_fields_missing",
+   "kind": "raises",
+   "ok": true,
+   "detail": "schema honoured in shape only -> AuditError(clip_x|A: audit verdict missing required field(s) ['leak', 'inaccurate)"
+  },
+  {
+   "case": "out_of_domain_value",
+   "kind": "raises",
+   "ok": true,
+   "detail": "value outside {YES,NO} -> AuditError(clip_x|A: audit verdict field(s) outside {YES,NO}: {'leak': 'MAYBE'})"
+  },
+  {
+   "case": "null_field",
+   "kind": "raises",
+   "ok": true,
+   "detail": "field present but null -> AuditError(clip_x|A: audit verdict field(s) outside {YES,NO}: {'leak': None})"
+  },
+  {
+   "case": "verdict_not_an_object",
+   "kind": "raises",
+   "ok": true,
+   "detail": "JSON parsed to a list -> AuditError(clip_x|A: audit verdict is list, not an object: ['NO', 'NO'])"
+  },
+  {
+   "case": "verdict_is_string",
+   "kind": "raises",
+   "ok": true,
+   "detail": "JSON parsed to a bare string -> AuditError(clip_x|A: audit verdict is str, not an object: 'NO')"
+  },
+  {
+   "case": "clean",
+   "kind": "accepts",
+   "ok": true,
+   "detail": "leak=NO inaccurate=NO"
+  },
+  {
+   "case": "leak_yes",
+   "kind": "accepts",
+   "ok": true,
+   "detail": "leak=YES inaccurate=NO"
+  },
+  {
+   "case": "inaccurate_yes",
+   "kind": "accepts",
+   "ok": true,
+   "detail": "leak=NO inaccurate=YES"
+  },
+  {
+   "case": "both_yes",
+   "kind": "accepts",
+   "ok": true,
+   "detail": "leak=YES inaccurate=YES"
+  },
+  {
+   "case": "no_errors_key",
+   "kind": "accepts",
+   "ok": true,
+   "detail": "leak=NO inaccurate=NO"
+  },
+  {
+   "case": "old_expression",
+   "kind": "regression",
+   "ok": true,
+   "detail": "12/14 unusable verdicts were scored as CLEAN PASSES before the fix: http_500_exhausted, http_non_200, no_response_object, empty_verdict_none..."
+  },
+  {
+   "case": "driver_aborts_on_outage",
+   "kind": "end2end",
+   "ok": true,
+   "detail": "AuditError propagated out of run(): clip_x|A: audit call failed: exhausted_retries:HTTP503:overloaded"
+  },
+  {
+   "case": "archives_before_raising",
+   "kind": "end2end",
+   "ok": true,
+   "detail": "1 raw audit record(s) on disk despite the abort"
+  },
+  {
+   "case": "no_store_from_aborted_run",
+   "kind": "end2end",
+   "ok": true,
+   "detail": "descriptions.json was NOT written by the aborted run"
+  },
+  {
+   "case": "driver_aborts_on_empty_text",
+   "kind": "end2end",
+   "ok": true,
+   "detail": "AuditError on a 200-OK empty verdict: clip_x|A: audit returned an EMPTY verdict (no text in respon"
+  },
+  {
+   "case": "driver_aborts_on_missing_field",
+   "kind": "end2end",
+   "ok": true,
+   "detail": "AuditError on a half-filled verdict: clip_x|A: audit verdict missing required field(s) ['inaccura"
+  },
+  {
+   "case": "driver_accepts_clean_audit",
+   "kind": "end2end",
+   "ok": true,
+   "detail": "description stored, 1 audit call(s)"
+  },
+  {
+   "case": "clean_verdict_recorded",
+   "kind": "end2end",
+   "ok": true,
+   "detail": "audit field carries the real verdict: {'leak': 'NO', 'inaccurate': 'NO', 'errors': []}"
+  },
+  {
+   "case": "real_leak_still_regenerates",
+   "kind": "end2end",
+   "ok": true,
+   "detail": "attempt 1 failed on leak, accepted on attempt 2"
+  }
+ ]
+}

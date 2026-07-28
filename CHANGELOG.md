@@ -1,3 +1,374 @@
+## 2026-07-28
+
+- **12:25** — **CTT v2 captions LOCKED for S0/S1/S2 — 1,403 / 1,403 = 100%.** Found and fixed the
+  real defect: `build_mass_pair_list.py` read only 2 of 3 sources, because **S2a's endpoints live
+  only in its rendered metadata keyed `A`/`B`**, so a strict `endpoint_a` lookup returns an empty set
+  and the bug reads as the reassuring *"S2a needs no descriptions."* The true requirement is **1,404**
+  (S2a 454 ∪ S2b 1,217 ∪ S1 400), not 1,348 — 36 (clip, role) pairs were absent and 26 were at risk
+  of never being generated. The builder now requires all three schemas, asserts positive presence per
+  record, recomputes the derived constant 454 with **SPEC-CONSTANT-MISMATCH** escalation (never a
+  fallback branch), and records the vacuous `endpoint_a` lookup as a trap witness. Adding S2a also
+  made the `openvid_T1MiFx98l3g_0_50to156|A` role-scoped exclusion **live** (it was a genuine no-op
+  under two sources), so 1,404 − 1 = **1,403 generatable** and nothing is short. Generated the 213
+  missing descriptions and resolved the residual 3 via `manual_rewrite.py` — a deliberately separate,
+  re-audited operator path, so a hand-written string can never enter the store on a path mistakable
+  for a generated one; **unresolved `inaccurate` = 0**. Ran the **S0 corpus-139 Layer-2 audit** for
+  the first time: **0 / 171 `leak=YES`** (no endpoint description leaks the transition effect) and
+  4 / 171 `inaccurate=YES` — certified captions kept byte-identical, all four escalated to the owner,
+  the script read-only by construction. Consolidated 10 scattered shards into one hashed canonical
+  store (`sha256:c8e2d95b…`, single prompt variant `v2`, single auditor `gemini-3.5-flash-lite`) with
+  everything else moved to `archive/`. Docs: `data/CAPTIONS.md` is now the caption authority and
+  DOSSIER §26 supersedes the caption trajectory for state. **Two deviations reported, not buried:**
+  the directive's v3 prompt was not used (it would mix prompts into a v2 store, trip the bug class
+  gate 8a detects, and cost ~290 TRY to chase a ~1.2 SE noise delta), and its `gemini-3.5-flash`
+  auditor is HTTP 503 / unavailable. **One gap named:** the 12-gate battery stands on a 447-row
+  subset (`hard_fail: []`, 8a 0.7099 ≤ 0.73, 8b 0.5787 ≤ 0.60), not the full 1,403 — no new gates
+  were run per owner direction. Session spend measured at 609 calls / 185,089 tokens ≈ 58.6 TRY.
+- **12:10** — Executed reconciliation ruling A14 for the CTT v2 caption lane. The keystone
+  matched-side auditor control **PASSES**: `gemini-3-flash-preview` flags only **1/192 = 0.52 %** of
+  correctly-matched descriptions (bar ≤10 %) with **0 errors** over 213 calls, closing the one-sided
+  gap the 220/220 mismatch certificate left open — it is the best of the three candidates
+  (flash-lite 2.00 %, 3.5-flash 5.75 %). Auditor **pinned**, no switch-back. The cross-auditor
+  calibration shows it re-flags only 52.4 % of 3.5-flash's positives (−47.6 pp), so first-pass rates
+  measured under it run **mechanically higher** — the ≥97 % bar is easier under the pin, and that is
+  recorded rather than banked. Reuse of the round-2 descriptions verified: the v2 prompt is
+  **byte-identical** to the round-2-era blob across all 62 reachable renderings, and the generation
+  config matches, so A14's overturning condition does not fire. Also landed the gate battery's
+  mean ± SE-of-mean reporting (8a = 0.6909 ± 0.0119 SE, which is what makes v3's 0.0137 movement
+  visibly 1.2 SE of noise) and the **fourth** fix in the "checker whose failure looks like a pass"
+  class — `gate_s1_pilot.py` no longer lets a judge outage shrink *n* instead of failing.
+  **Stopped before the mass run**: a second session is executing the same lane concurrently and has
+  already generated and audited the whole store under the *fallback* auditor. Details, priced
+  options and the recommendation are in `misc/ctt_v2_final/DOSSIER.md` §25.
+
+
+- **11:15** ctt_v2/captions: **K=10 PACKING PILOT RUN — PACKING IS REJECTED, twice over** (advisor
+  A12 §3, steps 1–4; `scripts/ctt_v2/captions/pack_pilot.py`, `pack_analysis.py`,
+  `pack_clip_check.py`; artifacts in `pilot_m3/packed_k10/`). 200 descriptions in 20 role- AND
+  bank-homogeneous packs, the pinned round-2 prompt embedded byte-identically exactly once
+  (assert proven to fire on tampering, double-embedding, absence, wrong role and any `v3` text).
+  **Generation packing fails gate 8a at 0.7544 vs the ≤0.73 drift guard**; **audit packing fails
+  independently** — the within-pack derangement control flags only 96.0% (bar ≥99%) with exact
+  positional attribution in 17/20 packs. Cost measured, not estimated: `c_desc` = **378.9 tok**
+  (packed gen 175.9 + unpacked audit 203.0) against the 682 unpacked baseline, and packed audits
+  save only 7% because the description text itself never amortises — A12's correction confirmed
+  and then some. Passing conditions: 3b matched flag rate 2.0% (≤10%), 3c ID echo intact 200/200,
+  5 first-pass 100% on the prompt-controllable scope, 4 lexical-overlap ratio 1.035 (≤1.15).
+  **Diagnosis of the 8a failure:** packing silently compresses descriptions by **−4.61 words on
+  the same clips** (−7.0 SE, p50 28 vs 34, corpus 33) because `calibrate_ask`'s length fit was
+  fitted on *unpacked* generation and does not transfer to K=10; removing length/punctuation
+  features drops 8a to 0.7408, still over the bar, so the residual is genuine register drift.
+- **11:15** ctt_v2/captions: 🔑 **the echoed item ID is a WORSE attribution key than array
+  position** — the opposite of what the packing spec assumed. One pack in 20 returned all ten ids
+  intact but with two ADJACENT items transposed; CLIP text-image adjudication (`clip_diagonal.json`)
+  says the pixels support **array position** (mean sim 0.3151) over the echoed id (0.2880), with the
+  two transposed items at sim 0.348/0.291 by position vs 0.133/0.236 by id. So the model emitted the
+  descriptions in the right order and mislabelled two of them. Keying by id — which the spec
+  mandates — therefore *introduced* the only two real mispairings in the store, and the diagonal
+  argmax would have been 199/200 rather than 197/200 under position-keying. Neither key is safe at
+  K=10: 5% of packs carried an attribution defect under either. Recorded because any future packing
+  or multi-item-response design will hit this, and an ID echo that is 100% "intact" is *not*
+  evidence of correct attribution.
+- **11:13** ctt_v2/captions: **an empty/failed Layer-2 audit verdict is now a HARD ERROR, and the
+  auditor is re-pinned to `gemini-3.1-pro-preview`** (advisor A13, steps 1–2). §21 recorded that a
+  non-200, unparseable or empty audit response was scored as a **clean pass** — `_post` returned
+  `(None, err)`, `verdict` stayed `None`, and the caller's `v = arec.get("verdict") or {}` turned it
+  into `{}`, which fires neither `leak == "YES"` nor `inaccurate == "YES"`. An auditor outage
+  therefore minted descriptions that *look* audited and are not: the §13.12 defect class (a checker
+  whose failure is indistinguishable from a pass) for the third time this campaign. `AuditError` now
+  raises on non-200, no-response, unparseable, empty, field-incomplete and out-of-domain verdicts,
+  the raw response is archived and flushed *before* the raise, and the run aborts rather than
+  writing a partly-unaudited store. `scripts/ctt_v2/tests/prove_audit_hard_error.py` proves it:
+  **32/32 cases**, including 14 fatal shapes, 5 in-domain verdicts that must still be honoured, an
+  end-to-end run of the real driver over a scripted network boundary (abort on outage, archive
+  survives, no store written, happy path still stores, a genuine leak still regenerates), and a
+  demonstration that the pre-fix expression scored **12 of the 14** unusable verdicts as clean
+  passes. Auditor pin: `gemini-3.1-pro-preview`, temp 0, `thinkingLevel: "low"` (the pro tier
+  rejects `"minimal"`), `max_output_tokens` 512 so the JSON verdict cannot truncate.
+
+- **11:05** ctt_v2/captions: `build_mass_pair_list.py` written and run — **the mass caption run
+  needs 1,348 descriptions, not the ~5,600 the runbook assumed** (~4× less, ≈85 s at the measured
+  16 desc/s including the 100% Layer-2 audit). It turns the pinned grids into the (clip, role)
+  list A4 Q7.3 asks for, understanding both grid schemas (S2 `pairs`, S1 `rows` with
+  one-/two-sided endpoint semantics) and hard-stopping on an unrecognised one rather than
+  contributing zero pairs silently. The 800 S2 rows collapse to 1,217 distinct (clip, role)
+  and the 390 S1 rows to 400, because a description is per-(clip, role) and clips recur across
+  rows; 376 clips need both roles. Role-scoped exclusions are read through the same
+  `root_common.load_caption_store_exclusions` loader the generator and `assert_root.py` use, so
+  the three channels cannot drift. Worth recording: the
+  `openvid_T1MiFx98l3g_0_50to156|A` exclusion **matches nothing in the requested set** — the
+  pinned grids never use that clip as an A endpoint (0 times A, 3 times B), so it is a no-op
+  here and its legitimate B-role is present as required. The script says so out loud rather
+  than reporting a reassuring "skipped 1". Blocked on the auditor before generation can run.
+
+- **10:55** ctt_v2/captions: **round 3 (prompt v3) run and scored — all 12 gates PASS, but v3's
+  stated mechanism is FALSIFIED.** The Gemini generator (`gemini-3.6-flash`) came back, so
+  `RESUME_ON_CREDITS.sh` steps 1–2 ran: 399 pairs (the role-scoped A-exclusion for
+  `openvid_T1MiFx98l3g_0_50to156` correctly derived from `POOL_DROPS_M3_ADJUDICATION.json`),
+  398 accepted, 9.4 s, 0 retries, 0 HTTP 429. Gate **8a 0.6929** (bar ≤0.73) and **8b 0.5454**
+  (bar ≤0.60, load-bearing) both PASS with no hard failures; 8c stays FAIL-on-record at 0.6929
+  as pre-committed. Gate 9 AUC 0.9102 → top-40 dump is content-dominated (~32/40 content words),
+  disposition **ACCEPT and record**, consistent with rounds 1–2. **However:** v3's only change
+  was relaxing A4's verb-form clause to permit plain *is/are* on the A-role, to close a claimed
+  be-verb tell — the A-role prompt was verified changed, yet the realised A-role be-verb rate
+  stayed at **0.0%** (round 2: 0.0%). Two follow-ons: the motivating "8.8% corpus" figure is
+  *pooled* and mis-attributed — corpus A-role is only 5.0% (n=139) while corpus B-role is 25.0%
+  (n=32), so the deficit is mainly a **B-role** phenomenon that v3 deliberately did not touch;
+  and 8a's move 0.7066→0.6929 is 0.0137 against a fit std of 0.0568, i.e. noise. A4's third and
+  last regeneration round bought a passing store, not a demonstrated fix.
+  Round 3 ran **unaudited**: `gemini-3.5-flash` (the round-1/2 Layer-2 auditor) is HTTP 503 on
+  0/18 probes at concurrency 1 and 8, so the run used `--no-audit` rather than a 503 auditor
+  whose empty verdict is indistinguishable from a clean pass. Its first-pass number therefore
+  covers format+Tier-1 only (99.5%, an upper bound) and **cannot gate** the ≥97% / ≤8% bars.
+  Availability archived in `pilot_m3/MODEL_AVAILABILITY_20260728.json`: note that
+  `gemini-3-pro-preview` is **retired (404), not 429** — DOSSIER §5.1's 429 note is superseded —
+  and its successor **`gemini-3.1-pro-preview` is available**, which reopens A4's original
+  pro-tier auditor as a live option. Steps 3–7 are blocked pending an auditor ruling.
+  Two archival defects fixed in `generate_descriptions.py`: `N_asked` recorded the
+  pre-calibration draw for v3 (calibration is applied for v2 *and* v3), and `run_meta` named an
+  auditor model even on `--no-audit` runs.
+
+- **10:45** ctt_v2: **group ids are now SLUGGED AT PATH CONSTRUCTION** (A11 item 3 — the
+  slugging existed and was declared, but `assemble_root.py` still wrote raw ids into paths).
+  `assemble_root.py` builds every relative path from `root_common.slug_group` — the *same*
+  function assert A14 checks with, deliberately not a second implementation — hard-stops on a
+  collision or an empty slug over both the assembled and the full inventory group sets, and
+  stores the raw↔slug mapping in `ROOT_MANIFEST.json:group_slugs`. `assert_root.py` resolves
+  the path's group through that mapping before every group-keyed comparison (the inventory
+  lookup, the inline-OOD op set): a slug silently matching nothing is exactly the
+  namespace-drift vacuity A0 exists to catch. A14 additionally requires that every group
+  component in a root path resolves back to a raw inventory id and that the *stored* mapping
+  agrees with the recomputed one. **Nothing on disk is re-keyed** — symlink targets are
+  untouched absolute paths into the render/encode stores, and `.get(group, group)` bridges a
+  root assembled before this landed (root_2shape, raw paths, still 33/33 PASS). Verified on a
+  fresh fixture root (`_root_machinery_test/root_slug`): 33/33 asserts PASS, 810 of 2,458 rows
+  carry a slugged group, no group dir contains an unsafe character, and the real 42 refVFX S4
+  effect ids — **40 of which contain spaces today** — slug to 42 unique non-empty strings.
+
+- **10:40** ctt_v2/asserts: `A3b_prorata_multipliers_equal` is **proven to fire** — it was the
+  one assert in the battery with no mutation (added by the A12 rewrite after the mutation set
+  was written, so it had never failed). The new mutation moves five S2b samples into a second
+  replica dir in all five trees, so S2b shows 2 replica multipliers on disk against S2a's 1
+  while every stratum's counted share is untouched — count-preserving on purpose, because a
+  literal ×2 duplication would also (correctly) blow A3's ±0.5 pp tolerance and the run would
+  not show A3b is sensitive to the multiplier itself. It fires **strictly**: A3b alone, with
+  no external co-firing. Proof set 35 → 36 mutations.
+
+- **10:35** ctt_v2/smoke: the smoke gate's own checkers are now **proven to fire**, GPU-free,
+  against the archived log of the passing run (`scripts/ctt_v2/smoke/prove_smoke_gate.py`,
+  16 cases). Three defects found and fixed by the mutations. (1) A log that EXISTS but cannot
+  be read raised an uncaught `OSError`, and Python exits **1** for that — the same code A9 §4's
+  fallback ladder reads as a DATA failure; the read is now a checked step (`read_log`) and
+  every such case is `PARSER_FAIL`/exit 2. (2) With Rich escapes present but unstrippable,
+  `T3_steps_completed` still found a checkpoint filename and reported "highest evidenced step
+  N of 30" about a 30/30 run — the original false negative surviving in one check; T1–T4 are
+  now forced UNEVALUABLE whenever `T0_parser_sane` fails, with the suppressed reading kept for
+  the record. (3) Fed the Slurm capture (which the sbatch appends the gate's own report to),
+  the gate reported `T6 … 'loss is NaN'` and exited 1 purely from its previous report — the
+  self-test pinned that hazard for `evaluate()` but nothing guarded the CLI path, which now
+  slices the trainer's region first. **And A11's Derived-Constant Rule is now implemented in
+  the shift assert**: G3 classifies its own failure as `DATA-FAIL` (mechanism inconsistent —
+  verdict FAIL, exit 1, ladder permitted) or `SPEC-CONSTANT-MISMATCH` (a pinned literal
+  disagrees with reality — verdict `SPEC_CONSTANT_MISMATCH`, exit 3, escalates, ladder
+  forbidden), from one shared classifier used by both the `--shifts-only` and full paths.
+  Proven by setting the 1,820-token pin to A9 §3's superseded 1.120 and, separately, by
+  repointing the S4 arm's tensors at 121f geometry: both come out as escalations, not as the
+  auto-drop of a healthy stratum.
+
+- **04:36** ctt_v2/smoke: both smoke-gate "failures" in job 9688250 were in the CHECKERS,
+  not the training — the trainer had in fact completed 30/30 steps over the mixed two-shape
+  root with a finite loss. `check_train_log.py`: an empty match set is now its own hard error
+  (`T0_parser_sane` → verdict `PARSER_FAIL`), and every check that reads the extraction goes
+  UNEVALUABLE rather than FAIL, so "I can't read this log" can no longer surface as "your
+  training is broken". T3 now also takes step evidence from the trainer's checkpoint lines
+  (a 30-step run logs only one loss line, at step 20). A `--self-test` runs on every
+  invocation against the sha-pinned job-9688250_1 capture plus three negative cases.
+  `mixed_format_probe.py`: the float32-vs-bf16 crash was the intrinsic-mask promotion in
+  `flexible.py:542`, which the real trainer absorbs via accelerate's bf16 autocast — the probe
+  now reproduces and guards that instead of casting. A11 item 4 clause (b) now *observes* the
+  shift the sampler was actually handed (`_ShiftRecorder`) instead of re-deriving it from
+  `f*h*w`, which had made the assert unfailable.
+
+- **04:32** ctt_v2/S1: role-scoped (clip, role) exclusions now enforced at S1 grid-build time (mandatory `for_role` in `take()`), not merely detected by assert A13. Proven by mutation.
+
+- **04:45** — **The RULING-9 assert battery is now PROVEN TO FIRE, on a real two-shape root.**
+  An assert that has never failed is not known to work, and this campaign has twice met the
+  failure class where a gate prints PASS on a broken input. So: `scripts/ctt_v2/tests/
+  make_fixture.py` builds a five-stratum fixture with **real structure and stub payloads** —
+  real S0 tensors and captions, S2a from the 7,990-row render manifest, S2b from the frozen
+  800-op plan, **S4 from the frozen `selection.json` at (5,14,26) @ 16 fps**, S1 from the
+  Ruling-3 grid grouped by *arm* (A11 item 6) — so the root holds **both shapes** and masks,
+  token counts and derived shifts are exercised for real. `scripts/ctt_v2/tests/
+  prove_asserts.py` then breaks **one invariant at a time, in place**, and requires the
+  intended check(s) to fail and nothing else to (strict by default), restoring byte-exactly
+  and re-establishing the green baseline at the end. Coupled failures are *declared* with
+  their reason, never tolerated quietly; the harness holds an exclusive lock on the root
+  because two concurrent runs corrupt each other's baseline (that happened once, and it
+  looked exactly like a real assert failure).
+  New checks, all proven: **A0** pairs every absence assert with a *positive-presence
+  control* — A5/A7/A8/A9 all report "= 0" just as happily when the two sides are in different
+  id namespaces, which is the same silent failure as a log grep that never matches; **A11a–f**
+  the record-level two-shape clauses (did the assembler tell the truth about what it built —
+  a stale `_shape_cache.json` makes it self-consistent and wrong); **A12/A13** the two
+  consumption channels of A10's role-scoped exclusion; **A14** group ids slug to unique
+  path-safe strings; **A15** records nominal vs effective weights. `assert_root.py` now
+  **imports** `assert_root_shapes.py` rather than reimplementing it, narrowing its expected
+  shape classes to what the manifest declares so the pre-registered S4-cutoff branch (one
+  shape) cannot false-FAIL — and a mutation proves that a failure inside the imported module
+  reaches the exit code.
+  `dryrun_epoch.py`'s "zero skipped" is now **two-sided**: it must also resolve exactly the
+  count `ROOT_MANIFEST.json` names, because an absence assert passes trivially when the
+  instrument found nothing. It reads no log at all, deliberately — the `RichHandler` ANSI
+  escapes that broke a parallel lane's log gate cannot reach it.
+  Also: `make_stamp.py` generates the DATASET.md STAMP block from artefacts on disk (so
+  stamping is a fill-in, not a rewrite), including a **root content hash** over every
+  `(relative path, resolved target)` — what the trainer actually opens, not what the manifest
+  claims. DATASET §8.2.1/§8.2.2 carry the analytic σ table, the binding invariant verbatim,
+  the supersession note on A9's wrong `{1.120, (5,20,15)}` constants, and the nominal-vs-
+  effective disclosure (**S4's 10 % nominal is 3.04 % effective**, inside the ruled 2.8–3.0 %).
+  All three pre-registered contingency branches verified numerically against A9 §4 by
+  `--plan-only` assembly. **Nothing was stamped and no real root was assembled.**
+
+- **04:20** — **A12: the S2a:S2b split is now DERIVED pro-rata, not forced equal — 271,965 files
+  instead of 5,030,200.** Advisor ruling `misc/ctt_v2_final/advisors/A12_prorata_s2_split_VERBATIM.md`
+  (0.9+) read A9's full clause — *"S2 total 69, split **pro-rata to the assembled counts**, which are
+  ~equal"* — and held that "pro-rata" is the instruction while "~equal" was an observation of counts
+  that had not yet met the exclusions. Post-exclusion they are not equal (S2a **22,731** vs S2b
+  **23,577** base pairs), and forcing an equal *share* onto unequal *bases* requires differentially
+  duplicating the halves — the *"extra reweighting knob"* A1b excluded by name, and a breach of A9's
+  own per-op rationale for S2 = 69 (~4.3 draws/op).
+  **The mix contract is now `S0 15 / S1 6 / S2 total 69 / S4 10`, with the S2a:S2b split computed
+  from the assembled post-exclusion counts.** `root_common.STRATUM_WEIGHTS_PCT` + `PRORATA_GROUPS`
+  replace `INTENDED_WEIGHTS_PCT`; the two literal 34.5s are gone from the codebase and from the
+  strata manifest (`weight_pct: null`), and `assemble_root.py` hard-refuses a pre-A12 manifest that
+  still declares a per-half number. `expand_prorata_weights()` is the single place the split exists,
+  and `solve_multipliers()` solves a pro-rata group **as one unit**, so the two halves share a
+  multiplier structurally rather than by assertion. The three contingency branches restate the same
+  way (S2 total 73 / 79 / 85, split pro-rata); S1 and S4 stay fixed numbers.
+  **Measured on the live `S1,S4`-absent branch:** multipliers `{S0 21, S2a 1, S2b 1}`, **54,393**
+  base pairs, **max_dev 0.1360 pp** — against forced-equal's `{S0 389, S2a 19, S2b 18}`, 1,006,040
+  samples and 0.4296 pp. **18.5x fewer inodes and a 3.2x better deviation.**
+  **Assert A3 gained a clause, `A3b_prorata_multipliers_equal`** (`assert_root.py`): the members of a
+  pro-rata group carry the SAME replica multiplier, counted from the replica dirs on disk and
+  cross-checked against the manifest. It is an exact integer identity, so unlike a share tolerance it
+  cannot be satisfied approximately; S0's +-0.5 pp tolerance is unchanged. **Proven to fire:** on a
+  throwaway root with half of S2a's groups moved into a second replica dir — sample set and every
+  per-stratum count untouched — A3b failed **alone** out of the whole battery.
+  **The derived split is pre-registered by freezing its inputs**:
+  `misc/ctt_v2_final/PREREG_mix_inputs.json`, written by
+  `assemble_root.py --plan-only --write-prereg-mix-inputs`, records every inventory and exclusion
+  list by sha256 (the M3 role-scoped adjudication, the seed-42 inline-OOD draw, the holdout/reserved/
+  zs/eval sets), the per-reason drop counts that *produce* the counts (S2a 333, S2b 131), the frozen
+  counts themselves, the derived targets/shares/multipliers/max_dev, and an amendment rule: any
+  change to an exclusion means recomputing the split and logging it as a dossier amendment — the
+  counts may move only via a logged amendment, never silently. DOSSIER §15, DATASET §11.1b.
+
+- **04:05** — **S4 credit-independent prep COMPLETE — captions are now S4's only pending item**
+  (A9 §5; full record in `misc/ctt_v2_final/artefacts/S4_PREP_REPORT.md`). Zero Gemini calls; the
+  trainer was not modified.
+  **(1) The mandatory mixed-format smoke gate PASSES, both halves.** The per-format probe
+  (`scripts/ctt_v2/smoke/mixed_format_probe.py`, job 9688255, H100) replays
+  `trainer.py:_training_step` line-for-line using the certified trainer's own dataset/strategy/
+  model/loss — including accelerate's `autocast(bf16)` wrapper, without which the float32
+  intrinsic mask times bf16 clean latents promotes `noisy_latents` and `F.linear` raises. All 6
+  gates PASS over 130 loss measurements: **realized shifts exactly `{1.2350, 2.3021}` and nothing
+  else**; per-format native loss 121f **2.1769** vs 33f **2.3991** (max/min 1.102); and at
+  **matched σ** — the shift confound removed — the two formats sit within **1.7–24.6 %**
+  (ratios 1.031/1.017/1.032/1.091/1.246 at σ = 0.10/0.25/0.50/0.75/0.90). The real
+  `scripts/train.py` over the same mixed root completed **30/30 steps, exit 0, 1.4 min, loss
+  finite**, with the trainer's own `Fast index: 10 valid samples from 10 total`, 0 skipped.
+  **S4 does NOT auto-drop.**
+  **(2) 🔴 A9 §3's pre-written assert would have killed S4.** It orders "realized shifts ∈
+  {1.120, 2.302} exactly", but 1.120 needs S4 = (5,20,15) = 1,500 tokens, which cannot exist:
+  832×464 is not VAE-legal (464/32 = 14.5), the delivered bucket is 832×448×33 (a pure 16-row
+  centre crop, no resampling), so the grid is **(5,14,26) = 1,820 tokens ⇒ shift 1.2350**. On
+  healthy data that assert FAILS, and A9 §4 makes a gate failure an S4 auto-drop. The constants
+  were re-extracted from `timestep_samplers.py:121-134` (`m = 1.1/3072`, `b = 0.5833…`) and the
+  `seq_len = F·H·W` claim verified through the call chain — `sample_for` runs at flexible.py
+  Step 3, *before* the reference concat at Step 5, so the IC-LoRA reference does not double it.
+  **(3) Per-stratum σ archived analytically** (`scripts/ctt_v2/sigma/sigma_schedule.py` →
+  `artefacts/sigma/SIGMA_SCHEDULE.{json,txt,md}`, the `.md` paste-ready for DATASET.md): closed-form
+  CDF with the reflection branch and the σ=1 point mass modelled exactly, validated against the
+  trainer's own sampler at 4 M draws/stratum (worst sup|ΔF| = **0.00036**). E[σ] = 0.7614 (121f)
+  vs 0.6620 (S4), pooled 0.7515. The effectiveness discount A9 weighted S4 on is **12 % smaller**
+  than its premise implied.
+  **(4) Masks regenerated, never reused** (`scripts/ctt_v2/masks/regen_masks.py`): geometry
+  *discovered* from all 2,000 S4 latents (one geometry, one fps), 3 masks over 2 geometries, each
+  proven **bit-identical (sha256) to `assemble_root.ensure_mask()`** and asserted absent at A9's
+  impossible (5,20,15). Found: S4 conditions **40 %** of its tokens (2 of 5 latent frames) vs
+  12.5 % at 121f — a second, undocumented S4 discount.
+  **(5) S4 VAE encodes were already complete** (job 9687985): 2,000/2,000 latents + cond_clean,
+  all `(128,5,14,26)` fps 16.0, re-verified exhaustively tonight — **not coerced to 121f**. Nothing
+  resubmitted.
+  **(6) Two-shape root asserts** as a separate importable module (`scripts/ctt_v2/assert_root_shapes.py`;
+  `assert_root.py` untouched — another agent owns it), covering what A1's path-level set equality
+  cannot see: per-shape five-tree equality, per-sample geometry agreement across all five trees,
+  fps-vs-shape, S4's **6,000** (confirmed from `selection.json`: 42 effects × ring `k=3` = 6,000),
+  the `Fast index: N of N` gate over both shapes, and a token-count-collision check for the one
+  *silent* failure mode. **Proven to fire by 10 deliberately broken two-shape fixtures**, all
+  caught, clean one passing.
+  **(7) A gate bug worth propagating:** the trainer logs through `RichHandler`, so numbers arrive
+  wrapped in SGR/OSC-8 escapes (`Step \x1b[1;36m20\x1b[0m/…`). Regexing a raw capture matches
+  nothing and reports **spurious FAILs on a healthy run** — it did, on the first pass. Both log
+  gates now strip ANSI first and carry an explicit `T0_ansi_stripped` check.
+  **(8) 🔴 A9 §3 item 2 (post-hoc σ split by stratum) is NOT achievable** without editing the
+  pinned trainer: `SigmaBucketTracker` carries no sample or stratum identity, its only consumer
+  writes to wandb, and `batch["idx"]` is set by the dataset but never read. Options recorded for
+  the advisor. ~0.42 GPU-h used total.
+- **03:05** — **`data/DATASET.md` written — the CTT v2 dataset single source of truth**
+  (`ctt-v2-dataset/0.9.0-DRAFT`, status **NOT STAMPABLE**). Modelled on `eval_ladder/SPEC.md`:
+  version stamp + FROZEN/PENDING table, the sample contract (five root dirs, `{target}__ref_{ref}.pt`
+  naming, tensor shapes, the trainer's silent-drop hazard), caption grammar with the pre-registered
+  §4 bars and the gate-#8 re-pin, sidedness as a class property driving caption/mask/cond_clean,
+  one section per stratum (S0/S1/S2a/S2b/S4) with disk-verified counts and gate results, the mix,
+  a consolidated holdout table (9 sets), the accepted risks with their rulings, the A1–A10 + D1–D4
+  assert checklist, and per-stratum reproduction commands.
+  **Every count was verified first-hand on disk; §11 records eight places where disk disagreed with
+  the prose.** The three that matter: (a) `root_common.py` still carries A5's mix with **S4 at 0 %**,
+  which **A9 reversed** — assembling today would build the wrong mix and then assert it correct;
+  (b) S4's real latent grid is **(5,14,26) = 1,820 tokens ⇒ shift 1.2350**, not the (5,20,15)/1,500/
+  1.120 the dossier and `REF_mixed_length.md` assume, so A9's pre-written smoke-gate assert
+  `shifts ∈ {1.120, 2.302}` would fail; (c) S2a needs **333** caption strings from **454**
+  (clip, role) descriptions, not 666/582 — `swap` inverts the shader progress argument only, it does
+  not exchange A/B content. §12 lists 8 OPEN items needing a ruling, headed by the unwritten
+  `PREREG_inline_ood_ops_s2a.json` (assert A6 hard-fails without it).
+- **02:47** — ctt_v2 **VAE-encode pipeline built and launched** for all new strata
+  (`scripts/ctt_v2/encode/`). Writes only the two prompt-agnostic root trees —
+  `latents/` + `cond_clean/` — so it is fully independent of the Gemini caption blocker;
+  `masks/` stay shape-derived and `conditions/` stay blocked. 18,013 clips staged
+  (S2a 7,990 / S2b 7,990 / S1 33 / S4 2,000) under `outputs/ctt_v2/encodes/<stratum>/`;
+  latents come from the trainer's own `process_videos.py` so the payload schema is
+  byte-identical to ic_gen's, and `cond_clean` goes through
+  `encode_conditioning.write_cond_clean()` unchanged. Shard counts are hardcoded in the
+  module (never derived from `SLURM_ARRAY_TASK_COUNT`) and each stratum's roster is frozen
+  to `ROSTER.json`, so a partial resubmit cannot re-partition; every write is `.tmp` +
+  `os.replace`, so a preempted requeue can never leave a truncated `.pt`.
+  Smoke-verified on GPU: S2a/S2b/S1 → `(128,16,20,15)` bf16 `fps=24.0`, S4 →
+  `(128,5,14,26)` bf16 `fps=16.0`; cond_clean corrects exactly the last latent frame on
+  two-sided clips and is bitwise-identical on one-sided ones (S1 came out 6 corrected /
+  27 copies, matching the registry's `hero_flight`+`shadow_smoke` two-sided pair).
+  Jobs 9687982 (L40S ×6) / 9687983 (scavenger ×6) / 9687984 (secondary H100 ×4) /
+  9687985 (aux ×4).
+- **04:52** — ✅ **ENCODES COMPLETE, ALL CHECKS PASS.** 18,013 clips × 2 trees = **36,026
+  `.pt`**, 42 G, in **1h52m wall / ~11.3 GPU-h** on L40S. Per-stratum count asserts are
+  set-equal to the frozen rosters (S2a 7,990 · S2b 7,990 · S1 33 · S4 2,000), so there is
+  nothing for the trainer's path-join to silently drop. Bleed magnitude is stable across all
+  32 S2 shards: median-of-medians `suffix_rel_l2` **S2a 0.334** (0.325–0.345) / **S2b 0.317**
+  (0.312–0.325), consistent with exp_073's 0.280 and d2f's 0.314 — the suffix anchor really
+  was reaching backwards, and cond_clean really is correcting it. `secondary` was a dead lane
+  (zero starts in 90 min); re-bidding shards 12–15 onto `scavenger` (9687984 cancelled →
+  **9688318**) had all four running within 6 min. Remaining before root assembly: Gemma
+  text-encode (~2 GPU-h) once billing is restored; masks are built by `assemble_root.py`.
+- **02:47** — 🔴 **S4 cannot be encoded at literally-native resolution.** refVFX I2V_LoRA is
+  832×464; 33f/16fps carry through fine, but **464 is not a multiple of the VAE spatial
+  factor 32** and `process_videos.py:parse_resolution_buckets` rejects the bucket outright.
+  S4 is therefore encoded at `832x448x33`, which for a 832×464 source is a **pure 16-row
+  centre crop with no resampling** (the width scale is exactly 1.0). This corrects the
+  2026-07-27 13:16 note that S4 needed "zero-cut reshape" — zero-cut holds temporally, not
+  spatially. It also means A9's "masks regenerated at (5,20,15)" is unachievable for S4:
+  the real S4 latent grid is **(5,14,26)**. Masks are derived from the latent shape by
+  `assemble_root.py:ensure_mask()`, so nothing downstream hardcodes it.
+
 ## 2026-07-27
 
 - **20:05** — HumanVid endpoint screening COMPLETE (job 9680734, 1h19m): 3,000 candidates →
