@@ -23,11 +23,11 @@ import argparse
 import json
 import os
 import re
-import shutil
 import signal
 import subprocess
 import sys
 import time
+from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
@@ -69,8 +69,99 @@ def probe(port: int, path: str = "/") -> bool:
         return False
 
 
-def by_slug(reg: dict, slug: str) -> dict:
+# Where a viewer is allowed to appear without anyone registering it. Narrow on
+# purpose: templates, worktrees and build output must never surface here.
+DISCOVER = [
+    "outputs/viewers/*/index.html",
+    "outputs/videos/*/run_*/viewer.html",
+    "outputs/eval/*/viewer/index.html",
+    "outputs/reports/*/index.html",
+    "outputs/presentation/*/index.html",
+]
+RUN_RE = re.compile(r"outputs/videos/(?P<exp>[^/]+)/run_(?P<run>\d+)/viewer\.html$")
+
+
+def _title_of(p: Path, slug: str) -> str:
+    try:
+        head = p.read_text(encoding="utf-8", errors="replace")[:4000]
+    except OSError:
+        return slug
+    for pat in (r"<title>(.*?)</title>", r"<h1[^>]*>(.*?)</h1>"):
+        m = re.search(pat, head, re.S | re.I)
+        if m:
+            t = re.sub(r"<[^>]+>", "", m.group(1))
+            t = re.sub(r"\s+", " ", t).strip()
+            if t:
+                return t
+    return slug
+
+
+def discover(known: set[str]) -> list[dict]:
+    """Find viewers nobody registered, so a new page needs no bookkeeping to show up.
+
+    Metadata comes from a `viewer.json` beside the page when present, otherwise
+    from the page's own <title> and mtime. A registry entry always wins — this
+    only fills gaps.
+    """
+    found: list[dict] = []
+    for pattern in DISCOVER:
+        for p in sorted(REPO.glob(pattern)):
+            rel = str(p.relative_to(REPO))
+            if rel in known or p.name == "index.html" and p.parent == VIEWERS_DIR:
+                continue
+            slug = (p.parent.name if p.name in ("index.html", "viewer.html")
+                    else p.stem)
+            if m := RUN_RE.search(rel):
+                slug = f"{m.group('exp')}_run{int(m.group('run'))}"
+            v = {"slug": slug, "path": rel, "discovered": True,
+                 "group": "unsorted",
+                 "date": datetime.fromtimestamp(p.stat().st_mtime).strftime("%Y-%m-%d"),
+                 "title": _title_of(p, slug), "blurb": ""}
+            side = p.parent / "viewer.json"
+            if side.exists():
+                try:
+                    v.update(json.loads(side.read_text()))
+                    v["path"], v["discovered"] = rel, True
+                except json.JSONDecodeError as e:
+                    v["blurb"] = f"(viewer.json is not valid JSON: {e})"
+            found.append(v)
+
+    # Runs of the same experiment are one family: newest is current, the rest
+    # become its earlier versions instead of separate cards.
+    fam: dict[str, list[dict]] = defaultdict(list)
+    loose: list[dict] = []
+    for v in found:
+        m = RUN_RE.search(v["path"])
+        if m:
+            fam[m.group("exp")].append(v)
+        else:
+            loose.append(v)
+    out = list(loose)
+    for exp, group in fam.items():
+        group.sort(key=lambda v: v["path"], reverse=True)
+        head, *rest = group
+        if rest:
+            head.setdefault("supersedes", []).extend(
+                {"label": f"{r['slug']} ({r['date']})", "path": r["path"]} for r in rest)
+        out.append(head)
+    return out
+
+
+def catalog(reg: dict) -> list[dict]:
+    """Registry entries plus discovered ones — what the dashboard actually shows."""
+    known = set()
     for v in viewers(reg):
+        known.add(v["path"])
+        known.update(p["path"] for p in v.get("pages", []))
+        known.update(s["path"] for s in v.get("supersedes", []))
+        if v.get("mount"):
+            known.update(f"{v['mount']['dir']}/{pg['name']}" for pg in v["mount"].get("pages", []))
+            known.update(pg["target"] for pg in v["mount"].get("pages", []))
+    return viewers(reg) + discover(known)
+
+
+def by_slug(reg: dict, slug: str) -> dict:
+    for v in catalog(reg):
         if v["slug"] == slug:
             return v
     sys.exit(f"unknown viewer slug: {slug}")
@@ -232,7 +323,7 @@ def health(v: dict, sample_n: int = SAMPLE_N) -> dict:
 
 def cmd_check(args) -> None:
     reg = load_registry()
-    targets = [by_slug(reg, args.slug)] if args.slug else viewers(reg)
+    targets = [by_slug(reg, args.slug)] if args.slug else catalog(reg)
     worst = 0
     for v in targets:
         h = health(v)
@@ -294,9 +385,19 @@ input[type=search]:focus{outline:2px solid var(--accent);outline-offset:1px}
 button.ghost{background:var(--panel);border:1px solid var(--line);color:var(--muted);
   border-radius:var(--radius);padding:8px 11px;font-size:13px;cursor:pointer;font-family:inherit}
 button.ghost:hover{color:var(--ink);border-color:var(--accent)}
+nav.bar{position:sticky;top:0;z-index:5;display:flex;gap:12px;align-items:baseline;
+  background:var(--bg);border-bottom:1px solid var(--line);padding:11px 0 12px;margin-bottom:6px}
+.barlabel{font-size:10.5px;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);
+  font-weight:660;flex-shrink:0;padding-top:2px}
+.barlinks{display:flex;gap:7px;flex-wrap:wrap}
+.barlink{font-size:12.8px;text-decoration:none;color:var(--muted);background:var(--panel);
+  border:1px solid var(--line);border-radius:999px;padding:4px 11px;white-space:nowrap;
+  transition:color .12s ease,border-color .12s ease}
+.barlink:hover{color:var(--accent);border-color:var(--accent)}
+.barlink.hot{color:var(--accent);border-color:var(--accent);background:var(--accent-soft);font-weight:600}
 h2.group{font-size:12.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);
   margin:34px 0 4px;font-weight:620}
-h2.group:first-of-type{margin-top:8px}
+h2.group:first-of-type{margin-top:22px}
 .group-note{color:var(--muted);font-size:13px;margin:0 0 14px}
 .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(310px,1fr))}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
@@ -442,14 +543,49 @@ def server_card_html(s: dict) -> str:
       </article>"""
 
 
+def split_current(reg: dict) -> tuple[list, list, dict]:
+    """Current vs archived, decided by health rather than by hand.
+
+    A viewer drops out of the live set when its page or media is gone — the
+    dashboard stays honest without anyone remembering to mark it. Explicit
+    `archived` in the registry still wins.
+    """
+    items = catalog(reg)
+    checks = {v["slug"]: health(v) for v in items}
+    current, archived = [], []
+    for v in items:
+        st = checks[v["slug"]]["status"]
+        if v.get("archived"):
+            archived.append(v)
+        elif st in ("broken", "missing"):
+            v = dict(v, archived=v.get("archived") or f"media does not resolve ({st})")
+            archived.append(v)
+        else:
+            current.append(v)
+    return current, archived, checks
+
+
 def build_hub(reg: dict) -> str:
-    checks = {v["slug"]: health(v) for v in viewers(reg)}
-    live = sum(1 for v in viewers(reg)
-               if not v.get("archived") and checks[v["slug"]]["status"] in ("live", "standalone"))
+    current, archived, checks = split_current(reg)
+    live = sum(1 for v in current if checks[v["slug"]]["status"] in ("live", "standalone"))
     groups = {g["id"]: g for g in reg["groups"]}
+    groups.setdefault("unsorted", {"id": "unsorted", "title": "Unsorted",
+                                   "blurb": "Found on disk and shown automatically. Give one a "
+                                            "title and a home by adding it to registry.json, or "
+                                            "dropping a viewer.json beside the page."})
+
+    # The bar: newest first, latest-of-family only — the whole point is that it
+    # never grows past what is current.
+    bar = "".join(
+        f'<a class="barlink{" hot" if v.get("featured") else ""}" '
+        f'href="{esc(url_for(v["path"]))}" title="{esc(v.get("blurb", "") or v["title"])}">'
+        f'{esc(v["title"])}</a>'
+        for v in sorted(current, key=lambda v: (not v.get("featured"),
+                                                -_datekey(v.get("date", "")), v["title"])))
+
     sections = []
     for gid, g in groups.items():
-        vs = [v for v in viewers(reg) if v.get("group") == gid and not v.get("archived")]
+        vs = [v for v in current if v.get("group", "unsorted") == gid]
         srv = [s for s in servers(reg) if s.get("group") == gid]
         if not vs and not srv:
             continue
@@ -465,21 +601,27 @@ def build_hub(reg: dict) -> str:
       </div>
     </section>""")
 
-    archived = [v for v in viewers(reg) if v.get("archived")]
+    # Everything not current, in one openable place: superseded builds and
+    # anything whose data went away.
+    older = [(v, o) for v in current for o in v.get("supersedes", [])]
     arch_html = ""
-    if archived:
+    if archived or older:
         rows = "".join(
             f'<tr><td><a href="{esc(url_for(v["path"]))}">{esc(v["title"])}</a></td>'
             f'<td class="why">{esc(v.get("archived", ""))}</td>'
             f'<td class="why">{esc(v.get("date", ""))}</td></tr>'
             for v in sorted(archived, key=lambda v: -_datekey(v.get("date", ""))))
+        rows += "".join(
+            f'<tr><td><a href="{esc(url_for(o["path"]))}">{esc(o["label"])}</a></td>'
+            f'<td class="why">earlier build of <b>{esc(v["title"])}</b></td><td class="why"></td></tr>'
+            for v, o in older)
         arch_html = f"""    <details class="archive">
-      <summary>Archive — {len(archived)} superseded or stale viewer(s)</summary>
+      <summary>Earlier versions &amp; archive — {len(archived) + len(older)} page(s), still openable</summary>
       <table>{rows}</table>
     </details>"""
 
     built = datetime.now().strftime("%Y-%m-%d %H:%M")
-    total = len(viewers(reg)) - len(archived) + len(servers(reg))
+    total = len(current) + len(servers(reg))
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -493,13 +635,17 @@ def build_hub(reg: dict) -> str:
   <header class="top">
     <div>
       <h1>diffusion-research · viewers</h1>
-      <p class="sub">{total} current viewers · {live} with all media resolving · {len(archived)} archived · built {built}</p>
+      <p class="sub">{total} current · {live} with all media resolving · {len(archived)} archived · built {built}</p>
     </div>
     <div class="tools">
       <input type="search" id="q" placeholder="filter viewers…" aria-label="filter viewers">
       <button class="ghost" id="theme" title="toggle light / dark">◐</button>
     </div>
   </header>
+  <nav class="bar" aria-label="latest viewers">
+    <span class="barlabel">latest</span>
+    <div class="barlinks">{bar}</div>
+  </nav>
 {chr(10).join(sections)}
 {arch_html}
   <footer>
@@ -720,7 +866,7 @@ SCAFFOLD = """<!doctype html>
   <div class="grid" id="grid"></div>
 </div>
 <script>
-const CLIPS = [];  // e.g. ["media/clip_000.mp4", ...]
+const CLIPS = [];  // fill with paths under media/ — relative to this directory
 document.getElementById('grid').innerHTML = CLIPS.map(
   s => `<div><video src="${{s}}" muted loop playsinline controls></video></div>`).join('');
 </script>
@@ -736,13 +882,23 @@ def cmd_new(args) -> None:
     if page.exists():
         sys.exit(f"{page} already exists")
     page.write_text(SCAFFOLD.format(slug=args.slug), encoding="utf-8")
+    # Sidecar metadata: enough to appear on the dashboard properly without
+    # anyone editing the registry. Promote it to registry.json when it matters.
+    side = d / "viewer.json"
+    if not side.exists():
+        side.write_text(json.dumps({
+            "title": args.title or args.slug.replace("_", " "),
+            "blurb": args.blurb or "what this shows, over what data, what to look for",
+            "group": args.group,
+            "featured": bool(args.featured),
+        }, indent=2) + "\n", encoding="utf-8")
     if args.media:
         print(f"  media/: {_link(d / 'media', args.media)}")
-    print(f"[new] {page.relative_to(REPO)}")
-    print("\nNext:\n  1. point media/ at the clips  "
-          "(ln -s ../../videos/<run> outputs/viewers/%s/media)" % args.slug)
-    print("  2. add an entry to scripts/viewers/registry.json")
-    print("  3. python3 scripts/viewers/viewerctl.py hub")
+    print(f"[new] {page.relative_to(REPO)}  (+ viewer.json)")
+    print("\nIt is already on the dashboard — nothing to register.")
+    print("  1. write the page: paths relative to this directory only (media/clip.mp4)")
+    print("  2. fill in title/blurb/group in viewer.json")
+    print("  3. python3 scripts/viewers/viewerctl.py serve")
 
 
 # ────────────────────────────────────────────────────────────── main ─────
@@ -783,6 +939,11 @@ def main() -> None:
     n = sub.add_parser("new", help="scaffold a viewer directory")
     n.add_argument("slug")
     n.add_argument("--media", help="repo-relative dir to symlink as ./media")
+    n.add_argument("--title")
+    n.add_argument("--blurb")
+    n.add_argument("--group", default="unsorted",
+                   help="datasets | eval | runs | reports (default: unsorted)")
+    n.add_argument("--featured", action="store_true", help="pin to the front of the bar")
     n.set_defaults(func=cmd_new)
 
     args = ap.parse_args()

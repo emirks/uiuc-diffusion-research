@@ -17,8 +17,10 @@ than described.
    no `../../` climbing out of the repo. Media reaches the page through a
    symlink in its own directory, so the page does not care where the repo lives.
 3. **`outputs/` is disposable; the registry is not.** `outputs/` is gitignored.
-   Anything durable — which viewers exist, what they show, how their media is
-   wired — lives in `scripts/viewers/registry.json`, which is tracked.
+   Anything durable — what a viewer shows, how its media is wired, why it was
+   retired — lives in `scripts/viewers/registry.json`, which is tracked. A viewer
+   still *appears* without being registered (see Creating a viewer); the registry
+   is for the parts worth keeping when `outputs/` is wiped.
 4. **The generator is the artifact.** A viewer that cannot be regenerated is a
    liability. Generators live in `scripts/` and are tracked; their output is not.
 5. **One page per family is current.** Older builds of the same viewer become
@@ -67,24 +69,53 @@ with a mount only if it needs media wiring it does not already have.
 
 ## Creating a viewer
 
+Nothing to register. Put a page where viewers live and it is on the dashboard.
+
 ```bash
-# 1. scaffold, and point ./media at the clips in one step
-python3 scripts/viewers/viewerctl.py new my_thing --media outputs/videos/exp_090/run_0001
+python3 scripts/viewers/viewerctl.py new my_thing \
+    --media outputs/videos/exp_090/run_0001 --group datasets \
+    --title "exp_090 — what it shows" --blurb "over what data, what to look for"
 
-# 2. write the page (relative paths only — media/clip.mp4, never /outputs/...)
-
-# 3. register it: add an entry to scripts/viewers/registry.json
-#      slug · title · blurb · group · date · path
-#      optional: featured, latest_of, supersedes, pages, mount
-
-# 4. rebuild + look at it
-python3 scripts/viewers/viewerctl.py check my_thing
+# write the page (relative paths only — media/clip.mp4, never /outputs/...)
 python3 scripts/viewers/viewerctl.py serve
 ```
 
-Write a real blurb. The dashboard is read months later by someone deciding
-whether to open the page — "what it shows, over what data, what to look for"
-beats "viewer for exp_090".
+`new` writes the page **and** a `viewer.json` beside it holding title, blurb,
+group and `featured`. That sidecar is all the metadata the dashboard needs.
+
+**Discovery.** `hub` scans these locations and shows anything it finds, with or
+without a registry entry:
+
+```
+outputs/viewers/*/index.html            outputs/reports/*/index.html
+outputs/videos/*/run_*/viewer.html      outputs/presentation/*/index.html
+outputs/eval/*/viewer/index.html
+```
+
+Metadata comes from `viewer.json` if present, otherwise from the page's own
+`<title>` and mtime; unlabelled pages land in an **Unsorted** group. Registry
+entries always win, so promoting a viewer means moving its sidecar fields into
+`registry.json` — worth doing for anything that needs a mount, cross-links, or a
+curated blurb.
+
+Multiple runs of one experiment fold automatically: newest is the card, the rest
+become its earlier versions.
+
+Write a real blurb either way. The dashboard is read months later by someone
+deciding whether to open the page — "what it shows, over what data, what to look
+for" beats "viewer for exp_090".
+
+### What the dashboard shows
+
+A **latest bar** across the top: one link per current viewer, newest and
+featured first, and nothing else. Cards by category beneath it. Everything
+that is not current — earlier builds, and anything whose data went away — sits
+in one openable **Earlier versions & archive** block at the bottom, still
+clickable, with the reason next to it.
+
+Archiving is automatic: a viewer whose page or media stops resolving drops out
+of the bar into the archive by itself, so the top of the page cannot rot.
+Explicit `"archived": "<why>"` in the registry still wins.
 
 ### Mounts — for pages you should not edit
 
@@ -155,8 +186,9 @@ instead.
 
 | Situation | Do this |
 |---|---|
+| Added a new viewer | Nothing — `serve` finds it. Fill in its `viewer.json` for a proper title and group |
 | New build of an existing viewer | Update its `path` and `date`; move the old path into `supersedes` |
-| A viewer's data was cleaned up | Add `"archived": "<why>"` — it drops to the archive table, still linked |
+| A viewer's data was cleaned up | Nothing — it self-archives with the reason. Add `"archived": "<why>"` to say it better |
 | Media stopped resolving | `viewerctl check <slug>` names the first failing ref |
 | Wiped `outputs/` | `viewerctl mount --all && viewerctl hub` rebuilds every mount and the dashboard |
 | Before a demo | `viewerctl check --strict` exits 1 if anything current is broken |

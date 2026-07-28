@@ -1,5 +1,15 @@
 ## 2026-07-28
 
+- **10:35** — **Viewers register themselves now, and the dashboard leads with a latest-only bar.**
+  Adding a viewer no longer means editing anything: `hub` discovers pages under
+  `outputs/viewers/*/`, `outputs/videos/*/run_*/`, `outputs/eval/*/viewer/`, `outputs/reports/*/`
+  and `outputs/presentation/*/`, taking metadata from a `viewer.json` sidecar when present and
+  from the page's own `<title>` otherwise; `viewerctl new` writes that sidecar for you. Runs of
+  one experiment fold into a single card, newest first. The dashboard now opens with a sticky
+  bar of current viewers only — earlier builds and anything whose media stopped resolving fall
+  into one openable "Earlier versions & archive" block with the reason attached. Archiving is by
+  health, not by memory, so the top of the page cannot rot.
+
 - **10:25** — **The ctt_v2 corpora viewer is now static — the app server was working around a
   one-line gap in ours.** `viewerctl httpd` (the viewer system's static server) answers byte
   ranges; stock `python -m http.server` ignores `Range` and returns 200 with the whole file,
