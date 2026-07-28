@@ -378,5 +378,34 @@ Scripts, `scripts/ctt_v2/captions/`:
 | `gate_battery.py` | the 12-gate battery |
 | `cost_ledger.py` | measured spend |
 
-`outputs/` is gitignored — the artifacts live on disk under `$LAB`, not in git. The content hash
-covers `descriptions` only, so it is **unchanged** by the archive reorganisation (verified).
+### 10.1 Where these files live — and why `git merge` was never going to move them
+
+`outputs/` is **gitignored**, so merging `ctt-v2` into `main` moved the **code** and could never move
+the **artifacts**. Git has no merge operation for files it was told to ignore.
+
+This repo's existing answer to that is **symlinks**, not git: in a worktree, nearly every `outputs/`
+subdirectory (`analysis`, `videos`, `training`, `signals`, `logs`, …) is a symlink back to the main
+tree, so both trees read and write one physical copy.
+
+`outputs/ctt_v2/` was an **exception** to that convention, and that was the actual defect. CTT v2
+artifacts were split across two unlinked directories:
+
+- main tree: `encodes/`, `masks/`, `smoke/`
+- `ctt-v2` worktree: `captions/`, `inventories/`, `roots/`, `s1/`, and two manifests
+
+**Fixed** — the worktree's subdirectories were moved into the main tree's `outputs/ctt_v2/` (no
+collisions) and the worktree now holds a symlink, matching the convention used by every other
+`outputs/` subdirectory. One physical copy, reachable from both trees; verified by identical
+`sha256` of `CAPTION_STORE.json` and `CAPTION_LOCK.json` read through the symlink.
+
+Two related facts:
+
+- `misc/ctt_v2_final/` (the DOSSIER, advisor verbatim files, `S1_GRID*.json`) is **outside the repo
+  entirely** — never merged, never committed. That is deliberate: it is the campaign's durable record.
+- `/projects/illinois/.../diffusion-research` and `/taiga/illinois/.../diffusion-research` are the
+  **same directory** (identical inode) — two mount paths for one filesystem. `git worktree list`
+  prints the `/taiga` form; that is cosmetic, not a second copy.
+
+All paths in `CAPTION_LOCK.json` are **repo-relative**, so the lock does not depend on any worktree
+existing. The content hash covers `descriptions` only, so it is **unchanged** by both the archive
+reorganisation and this relocation (verified before and after each).
