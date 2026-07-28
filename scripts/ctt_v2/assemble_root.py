@@ -175,11 +175,27 @@ def apply_exclusions(inv: dict, ex: rc.Exclusions) -> tuple[dict, dict]:
             hit_reserved = sorted(set(eps) & ex.reserved_pool_clips)
             if hit_reserved:
                 creasons.append("reserved_pool_clip:" + ",".join(hit_reserved))
-            # M3 adjudication: a (clip, role) description may be excluded without the clip
-            # being dropped.  `openvid_T1MiFx98l3g_0_50to156` has a blank A-anchor and a
-            # healthy B-anchor, and occupies field B in all 10 rendered clips, so role-A is
-            # excluded and the clip itself is KEPT — a whole-clip drop would discard 10 good
-            # rendered clips to fix a defect that cannot manifest in the role it occupies.
+            # M3 adjudication: a (clip, role) description may be excluded without the POOL
+            # clip being dropped.  `openvid_T1MiFx98l3g_0_50to156` has a blank A-anchor and a
+            # healthy B-anchor, so role-A is excluded and the pool clip itself is KEPT (its
+            # B-role consumption is valid and verified rich).
+            #
+            # The comment that used to sit here said it "occupies field B in all 10 rendered
+            # clips" and concluded the defect "cannot manifest in the role it occupies".
+            # BOTH CLAUSES ARE FALSE, and they encode the exact wrong belief behind three
+            # incidents in this campaign.  Verified reality, counted over
+            # `outputs/videos/ctt_v2_s2/full/meta/clips_shard*.jsonl`:
+            #   S2a — 29 rows use it as field A, 0 as field B, across 29 DISTINCT ops
+            #         (22 distinct shaders); each affected op keeps 9/10 contents.
+            #   S2b — 37 rows, all field B (the stratum A10 actually walked).
+            # So the blank window DOES reach a consumption unit, and the disposition of those
+            # 29 is a DROP, executed right here at the consumption unit and recorded below.
+            # Authority, cite both filenames, never the bare number:
+            #   misc/ctt_v2_final/advisors/A16_29_orphaned_s2a_clips_VERBATIM.md  (RULING OF RECORD)
+            #   misc/ctt_v2_final/advisors/A17_29clip_affirmation_VERBATIM.md     (INDEPENDENT AFFIRMATION)
+            # NOTE for anyone counting the drop record: a clip whose whole GROUP is dropped
+            # first (holdout shader / inline-OOD op / zs class) never reaches this loop and
+            # is recorded in `dropped_groups`, not `dropped_clips`.
             hit_caps = ex.caption_store_hits(
                 rc.caption_sources(entry, g.get("sided", "two"), kind))
             if hit_caps:

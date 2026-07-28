@@ -62,19 +62,64 @@ def _fmt(tpl: str, **kw) -> str:
 def _attach(inv: dict, args, require: bool) -> None:
     """Fill latents / cond_clean / conditions / caption from CLI templates.
 
-    CAPTION LOOKUP IS (clip, role)-KEYED, HARD-FAILS ON MISSING, AND HAS NO CROSS-ROLE
-    FALLBACK (A10 `enforced_at[0]`).  Two guards, both hard:
+    CAPTION LOOKUP IS (clip, role)-KEYED, HAS NO CROSS-ROLE FALLBACK (A10 `enforced_at[0]`),
+    AND HARD-FAILS ON EVERY MISSING KEY IT HAS NOT BEEN GIVEN A DISPOSITION FOR.  Three
+    rules, in this order:
 
-    * requesting a role-excluded (clip, role) description raises immediately — a request
-      for `openvid_T1MiFx98l3g_0_50to156`'s A-role description means the clip leaked into
-      A-role upstream, and that must crash rather than silently substitute the healthy
-      B-role text and describe the wrong nine frames;
-    * a missing key is an error, never a fallback to the other role or to a clip-level key.
+    1. **A consumption hit carried by the STANDING `ROLE_EXCLUSIONS` is DROPPED-AND-RECORDED,
+       not a crash.**  This used to `SystemExit` with *"fix the grid or the render, do not
+       degrade"* — a crash written when a violation implied an upstream leak.  The
+       disposition that message demanded has since been ruled, twice, on primary evidence:
+       `misc/ctt_v2_final/advisors/A16_29_orphaned_s2a_clips_VERBATIM.md` (RULING OF RECORD)
+       and `misc/ctt_v2_final/advisors/A17_29clip_affirmation_VERBATIM.md` (independent
+       affirmation, same disposition, reached before it found A16).  Neither grid-fix nor
+       re-render: **drop**.  The defect is in the pixels, not the caption gap — frames 0–17
+       of the affected clips are flat white (YMIN=YMAX=231, probed directly) — so no caption,
+       not even a truthful one, repairs them.  The drop set is computed here as
+       `ROLE_EXCLUSIONS ∩ this inventory's consumed (clip, role) sources`; a hand-kept stem
+       list would recreate the `INTENDED_WEIGHTS_PCT` landmine class.
+       The entries stay in the inventory with `caption = None` and are removed at ASSEMBLY,
+       where `assemble_root.apply_exclusions` records each one in
+       `ROOT_MANIFEST.json:drops` under `role_scoped_caption_exclusion` /
+       `role_scoped_prefix_condition` — that manifest record is the closing evidence the
+       ruling asks for, which is why the drop is *recorded here* and *executed there*
+       rather than silently vanishing from this file.
+    2. **A missing NON-EXCLUDED key is still a hard crash** — unchanged.  A key that no
+       standing exclusion accounts for is instrument failure, never a skipped row.
+    3. **No cross-role fallback, ever.**  Nothing here ever consults another role or a
+       clip-level key, and a dropped clip that *does* carry a description in the store is a
+       hard error: it means something upstream invented the fallback A10 forbids.
     """
     caps = json.loads(Path(args.captions).read_text()) if args.captions else None
     if isinstance(caps, list):  # [{video, caption}] shape
         caps = {r["video"]: r["caption"] for r in caps}
-    missing, role_violations = [], []
+
+    # ---- pass 1: record consumed (clip, role) sources and DERIVE the drop set -----------
+    # `ROLE_EXCLUSIONS ∩ rendered meta`, at build time.  If the standing exclusion set is
+    # empty this loop is vacuous and every missing key falls through to the pass-2 crash —
+    # a silently-degraded sidecar therefore cannot buy a clip an exemption (and
+    # `root_common` now raises rather than degrading in the first place).
+    excluded: dict[str, list[str]] = {}
+    for stem, c in inv["clips"].items():
+        g = inv["groups"][c["group"]]
+        # the (clip, role) descriptions this clip's caption will consume — recorded on the
+        # entry so the root asserts do not have to re-derive them
+        srcs = rc.caption_sources(c, g.get("sided", "two"), inv.get("kind", "synthetic_op"))
+        c["caption_sources"] = [list(x) for x in srcs]
+        reasons = []
+        hits = sorted({f"{cl}:{ro}" for cl, ro in srcs if rc.role_excluded(cl, ro)})
+        if hits:  # same reason vocabulary as assemble_root.apply_exclusions
+            reasons.append("role_scoped_caption_exclusion:" + ",".join(hits))
+        eps = list(c.get("endpoints") or [])
+        if eps and rc.role_excluded(eps[0], "A"):
+            # ...and the CONDITIONING channel of the same exclusion: the prefix anchor is
+            # the A endpoint's frames 0-8 (A10 `enforced_at[2]`).
+            reasons.append(f"role_scoped_prefix_condition:{eps[0]}:A")
+        if reasons:
+            excluded[stem] = reasons
+
+    # ---- pass 2: resolve source templates and captions ---------------------------------
+    missing, fallback_evidence = [], []
     for stem, c in inv["clips"].items():
         g = inv["groups"][c["group"]]
         eps = list(c["endpoints"])
@@ -90,25 +135,56 @@ def _attach(inv: dict, args, require: bool) -> None:
                 c[key] = str(p)
                 if require and not p.exists():
                     missing.append(f"{key}:{p}")
-        # the (clip, role) descriptions this clip's caption will consume — recorded on the
-        # entry so the root asserts do not have to re-derive them
-        srcs = rc.caption_sources(c, g.get("sided", "two"), inv.get("kind", "synthetic_op"))
-        c["caption_sources"] = [list(x) for x in srcs]
-        for clip_id, role in srcs:
-            if rc.role_excluded(clip_id, role):
-                role_violations.append(f"{stem}: needs the role-{role} description of "
-                                       f"{clip_id!r}, which is role-excluded by A10")
-        if caps is not None:
-            k = _fmt(args.caption_key, **ctx)
-            if k not in caps:
-                missing.append(f"caption:{k}")
-            else:
-                c["caption"] = caps[k]
-    if role_violations:
+        if caps is None:
+            continue
+        k = _fmt(args.caption_key, **ctx)
+        if stem in excluded:
+            # DROPPED (rule 1).  Its description does not exist BY ADJUDICATION, so its
+            # absence is the exclusion working, not a missing source.  `caption` stays None
+            # and no other key is consulted.
+            if k in caps:
+                fallback_evidence.append(f"{stem} ({k!r}): {excluded[stem]}")
+            continue
+        if k not in caps:
+            missing.append(f"caption:{k}")
+        else:
+            c["caption"] = caps[k]
+
+    if fallback_evidence:
         raise SystemExit(
-            f"[inventory] {len(role_violations)} clips consume a ROLE-EXCLUDED (clip, role) "
-            f"description (A10; {rc.POOL_DROPS.name}). No cross-role fallback exists — fix "
-            f"the grid or the render, do not degrade:\n  " + "\n  ".join(role_violations[:10]))
+            f"[inventory] {len(fallback_evidence)} ROLE-EXCLUDED clip(s) CARRY A CAPTION in "
+            f"{args.captions} — a description exists for a (clip, role) that A10 withheld "
+            f"({rc.POOL_DROPS.name}). Something upstream invented the cross-role fallback "
+            f"A10 forbids: it would caption a blank-screen anchor with content it does not "
+            f"show. Fix the caption source; do not relax this check:\n  "
+            + "\n  ".join(fallback_evidence[:10]))
+    if excluded:
+        inv["role_scoped_exclusion_drops"] = {
+            "authority": [
+                "misc/ctt_v2_final/advisors/A16_29_orphaned_s2a_clips_VERBATIM.md "
+                "(RULING OF RECORD — drop at assembly, derived, recorded)",
+                "misc/ctt_v2_final/advisors/A17_29clip_affirmation_VERBATIM.md "
+                "(INDEPENDENT AFFIRMATION — same disposition on independent evidence)",
+            ],
+            "derivation": "ROLE_EXCLUSIONS n this inventory's consumed (clip, role) "
+                          "sources, computed at build time — never a hand-kept stem list",
+            "standing_role_exclusions": {c: list(r) for c, r in rc.ROLE_EXCLUSIONS.items()},
+            "sidecar": str(rc.POOL_DROPS),
+            "n_clips": len(excluded),
+            "clips": {s: excluded[s] for s in sorted(excluded)},
+            "disposition": "kept in this file with caption=null; REMOVED AT ASSEMBLY by "
+                           "assemble_root.apply_exclusions, which records each one in "
+                           "ROOT_MANIFEST.json:drops under the same two reasons. A clip "
+                           "whose whole GROUP is dropped first (holdout shader / inline-OOD "
+                           "op / zs class) is removed by that group drop instead, and so "
+                           "appears in `drops[*].groups`, not in `drops[*].clips`.",
+        }
+        print(f"[inventory] {len(excluded)} clip(s) consume a ROLE-EXCLUDED (clip, role) "
+              f"description (A10; {rc.POOL_DROPS.name}) -> DROPPED AT ASSEMBLY per "
+              f"A16_29_orphaned_s2a_clips_VERBATIM.md + A17_29clip_affirmation_VERBATIM.md; "
+              f"recorded in `role_scoped_exclusion_drops`. No cross-role fallback was used.")
+        for s in sorted(excluded)[:5]:
+            print(f"        drop: {s}: {excluded[s]}")
     if missing:
         raise SystemExit(f"[inventory] {len(missing)} missing sources, first 10:\n  "
                          + "\n  ".join(missing[:10]))

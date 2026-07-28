@@ -552,22 +552,40 @@ def load_caption_store_exclusions(path: Path | None = None) -> tuple[dict, set, 
 #: Whole-clip drop DENIED as written. Confidence 0.93.").
 #:
 #: `openvid_T1MiFx98l3g_0_50to156` has a blank-white A-anchor (ffprobe YMIN=YMAX=YAVG=232)
-#: and a healthy B-anchor (Y 12-242); it is field B in 37/37 rendered S2b rows, byte-pure on
-#: every one, so the render contract makes the blank window structurally unreachable in the
-#: role it occupies.  The pool file and the endpoint frame cache stay BYTE-UNCHANGED — a
-#: completed render and the running encodes are keyed to them — which is exactly why the
-#: exclusion has to live in code that every consumer reads.
+#: and a healthy B-anchor (Y 12-242).  It is field B in 37/37 rendered S2b rows, byte-pure on
+#: every one — but the once-recorded conclusion that "the render contract makes the blank
+#: window structurally unreachable in the role it occupies" was **S2b-only and is FALSE
+#: campaign-wide**: 29 rendered S2a rows use the clip as their A endpoint (29 as A, 0 as B,
+#: across 29 distinct ops), so the blank window IS reachable there and those 29 are dropped
+#: at assembly — `A16_29_orphaned_s2a_clips_VERBATIM.md` (ruling of record) and
+#: `A17_29clip_affirmation_VERBATIM.md` (independent affirmation).  The pool file and the
+#: endpoint frame cache stay BYTE-UNCHANGED — a completed render and the running encodes are
+#: keyed to them — which is exactly why the exclusion has to live in code that every
+#: consumer reads.
 #:
 #: A10's standing rule, campaign-wide: **defects are dispositioned at the unit of
 #: CONSUMPTION — (clip, role) — not the unit of storage.**  Whole-clip drops are reserved
 #: for role-independent defects (leakage, duplication, provenance) or clips not yet
 #: consumed anywhere.  `enforced_at` in the sidecar enumerates the consumption channels;
 #: a recorded exclusion that no code reads is a landmine.
+#:
+#: THIS RAISES; IT DOES NOT DEGRADE.  It used to read `except OSError: ROLE_EXCLUSIONS = {}`
+#: — a silent-degrade fallback of exactly the class CAPTIONS.md §4.1 bans ("never selects a
+#: fallback branch").  It failed safe for the S2a lane only by accident of ordering (a
+#: missing caption key crashed downstream anyway); for a GRID build, where render precedes
+#: captioning, an unreadable sidecar would silently re-open `endpoint_a` eligibility and the
+#: crash would arrive far too late to matter.  Hardening ordered by
+#: `A17_29clip_affirmation_VERBATIM.md` §5(c).
 try:
     ROLE_EXCLUSIONS: dict = {c: tuple(sorted(r))
                              for c, r in load_caption_store_exclusions()[0].items()}
-except OSError:  # pragma: no cover — the sidecar is on /projects, not /tmp
-    ROLE_EXCLUSIONS = {}
+except OSError as _exc:  # pragma: no cover — the sidecar is on /projects, not /tmp
+    raise RuntimeError(
+        f"{POOL_DROPS} is UNREADABLE ({_exc}). The A10 role-scoped exclusion cannot be "
+        f"honoured, and an empty ROLE_EXCLUSIONS would be SILENTLY VACUOUS — every "
+        f"role-excluded (clip, role) would become eligible again, in this process and in "
+        f"every grid built by it. Fix the sidecar; there is no degraded mode."
+    ) from _exc
 
 
 def role_excluded(clip: str, role: str) -> bool:
