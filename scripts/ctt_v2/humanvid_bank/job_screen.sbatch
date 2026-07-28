@@ -17,7 +17,7 @@ source ~/.bashrc
 set -u
 LAB=/projects/illinois/eng/cs/jrehg/users/emirkisa
 SCRIPTS=$LAB/diffusion-research/.claude/worktrees/bottleneck-branch/scripts/ctt_v2/humanvid_bank
-WORK=$LAB/diffusion-research/.claude/worktrees/bottleneck-branch/data/processed/humanvid_bank/_work
+WORK=$LAB/diffusion-research/data/processed/humanvid_bank/_work
 mkdir -p "$WORK"
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader

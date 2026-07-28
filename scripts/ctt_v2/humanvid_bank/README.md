@@ -24,7 +24,7 @@ Idempotent: detections are cached per clip; requeue resumes. `build.py --cap N` 
 selection/encode from cached detections at any cap without re-detecting.
 
 ## Outputs
-`data/processed/humanvid_bank/` (worktree): `clips/*.mp4` (480×640·121f·24fps),
+`data/processed/humanvid_bank/` (main tree, gitignored data): `clips/*.mp4` (480×640·121f·24fps),
 `manifest.jsonl`, `embeddings.npy` + `embed_ids.json`, `license_ledger.json`,
 `bank_sample_sheet.png`, `_work/{candidates,detections,qc_log}.jsonl`,
 `_work/build_report.json`.

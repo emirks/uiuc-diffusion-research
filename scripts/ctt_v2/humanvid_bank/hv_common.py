@@ -20,8 +20,9 @@ HV_MANIFEST = os.path.join(REPO, "data/manifests/humanvid_real/clips.jsonl.gz")
 DSX_WORK = os.path.join(REPO, "data/processed/synth_endpoints/_work")  # read-only (weights)
 OLD_BANK = os.path.join(REPO, "data/processed/synth_endpoints")        # read-only (dedup ref)
 
-WT = os.path.join(REPO, ".claude/worktrees/bottleneck-branch")
-BANK = os.path.join(WT, "data/processed/humanvid_bank")
+# Bank lives in the MAIN tree's data/ (gitignored), next to synth_endpoints and the
+# raw humanvid_real — data never lives inside a worktree.
+BANK = os.path.join(REPO, "data/processed/humanvid_bank")
 WORK = os.path.join(BANK, "_work")
 CLIPS = os.path.join(BANK, "clips")
 FFMPEG = "/u/emirkisa/.local/bin/ffmpeg"
