@@ -85,8 +85,40 @@ UNIFORM_PROB = 0.1
 Z_999 = 3.0902
 Z_005 = -2.5758
 
-#: A9 §4 mix weights (DOSSIER §12, also `root_common.INTENDED_WEIGHTS_PCT`)
-WEIGHTS_PCT = {"S0": 15.0, "S1": 6.0, "S2a": 34.5, "S2b": 34.5, "S4": 10.0}
+#: A9 §4 mix weights (DOSSIER §12), DERIVED from the single ruled source
+#: `root_common.STRATUM_WEIGHTS_PCT` — S0 15 / S1 6 / S2 total 69 / S4 10 — with the
+#: S2a:S2b split computed pro-rata from the FROZEN assembled base pair counts (A12,
+#: `misc/ctt_v2_final/PREREG_mix_inputs.json`).  Never restated as a literal here: a
+#: private copy of the mix is exactly how DATASET §11.1's stale-weights landmine arose.
+#:
+#: The split is IMMATERIAL to every number this module computes — S2a and S2b carry the
+#: same geometry, so only the S2 TOTAL can enter a sigma law — and `_weights_pct()` asserts
+#: that invariance rather than asking the reader to take it on trust.  It matters only for
+#: the per-stratum display rows, which must not print a number the mix contract disowns.
+sys.path.insert(0, str(HERE.parent))
+import root_common as rc  # noqa: E402
+
+PRORATA_GROUPS = {k: tuple(v) for k, v in rc.PRORATA_GROUPS.items()}
+
+
+def _weights_pct() -> tuple[dict, str]:
+    counts, src = None, None
+    if rc.PREREG_MIX_INPUTS.exists():
+        rec = rc.read_json(rc.PREREG_MIX_INPUTS)
+        counts = rec.get("frozen_assembled_base_pair_counts") or None
+        src = f"{rc.PREREG_MIX_INPUTS} (frozen counts {counts})"
+    if not counts or not all(counts.get(m) for g in rc.PRORATA_GROUPS.values() for m in g):
+        # No frozen counts yet.  The S2 TOTAL is ruled and is all that can affect a sigma
+        # number, so fall back to an even display split and SAY SO — never silently.
+        counts = {m: 1 for g in rc.PRORATA_GROUPS.values() for m in g}
+        src = (f"{rc.PREREG_MIX_INPUTS} ABSENT — S2a:S2b shown as an even DISPLAY split; "
+               f"the ruled S2 total is unaffected and no computed number changes")
+        print(f"[sigma] ⚠ {src}", file=sys.stderr)
+    weights, _split = rc.expand_prorata_weights(rc.STRATUM_WEIGHTS_PCT, counts)
+    return weights, src
+
+
+WEIGHTS_PCT, WEIGHTS_SOURCE = _weights_pct()
 
 #: The four `sigma_tracker.SigmaBucketTracker` default buckets — the diagnostic A9 §3 item 2
 #: asks to split by stratum, so the analytic table is reported in the SAME bins.
@@ -359,6 +391,17 @@ def mc_check(laws: dict[str, SigmaLaw], n: int, seed: int = 42) -> dict:
 # --------------------------------------------------------------------------------------
 def build(weights: dict[str, float] | None = None) -> dict:
     weights = dict(weights or WEIGHTS_PCT)
+    # A12 — the DERIVED S2a:S2b split cannot move any number computed here, because the
+    # members of a pro-rata group share a geometry and a sigma law is a function of the
+    # geometry alone.  Asserted rather than assumed: if a future stratum joins S2 with a
+    # different grid, this stops the module from silently reporting a split-dependent
+    # pooled sigma while the split itself is derived from counts.
+    for g, members in PRORATA_GROUPS.items():
+        geos = {tuple(STRATA_GEOMETRY[m]["latent"]) for m in members if m in STRATA_GEOMETRY}
+        assert len(geos) <= 1, (
+            f"pro-rata group {g} spans geometries {sorted(geos)}; the derived split would "
+            f"then change the pooled sigma, and this module's weights would need the real "
+            f"assembled counts rather than the frozen pre-registration")
     law_by_stratum: dict[str, SigmaLaw] = {}
     rows = []
     for s, geo in STRATA_GEOMETRY.items():
