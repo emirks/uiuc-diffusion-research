@@ -139,6 +139,135 @@ class _ShiftRecorder:
         return self.inner.sample_for(batch)
 
 
+def _build_config(root: Path, model_path: Path):
+    """The certified dataset/conditioning config block, verbatim; only the root is repointed."""
+    import yaml
+    from ltx_trainer.config import LtxTrainerConfig
+
+    ic = yaml.safe_load((LAB / "diffusion-research/eval_ladder/train/configs/ic_gen.yaml")
+                        .read_text())
+    return LtxTrainerConfig(**{
+        "model": {"model_path": str(model_path), "training_mode": "lora",
+                  "text_encoder_path": ic["model"]["text_encoder_path"]},
+        "lora": ic["lora"],
+        "training_strategy": ic["training_strategy"],
+        "optimization": dict(ic["optimization"], steps=1),
+        "acceleration": ic["acceleration"],
+        "data": {"preprocessed_data_root": str(root), "num_dataloader_workers": 0},
+        "validation": {"samples": [], "interval": None},
+        "checkpoints": ic["checkpoints"],
+        "flow_matching": ic["flow_matching"],
+        "wandb": {"enabled": False},
+        "seed": 42,
+        "output_dir": str(root / "_probe_out"),
+    })
+
+
+# --------------------------------------------------------------------------------------
+def shifts_only(root: Path, out: Path, model_path: Path) -> int:
+    """A11 item 4's shift assert ALONE, with NO transformer and NO GPU.
+
+    The shift is decided entirely by `prepare_training_inputs` -> `sampler.sample_for(latents)`;
+    the 19B forward has nothing to do with it.  Separating them means the campaign's
+    load-bearing, never-yet-measured assert can be re-run in seconds on a login node instead
+    of queueing for an 80GB card behind other people's work.
+    """
+    import torch
+    from ltx_trainer.datasets import PrecomputedDataset
+    from ltx_trainer.timestep_samplers import SAMPLERS
+    from ltx_trainer.timestep_samplers import ShiftedLogitNormalTimestepSampler as SLN
+    from ltx_trainer.training_strategies import get_training_strategy
+
+    man = json.loads((root / "SMOKE_ROOT_MANIFEST.json").read_text())
+    by_rel = {r["rel"]: r for r in man["samples"]}
+    cfg = _build_config(root, model_path)
+    strategy = get_training_strategy(cfg.training_strategy)
+    ds = PrecomputedDataset(str(root), data_sources=cfg.training_strategy.get_data_sources())
+    native = SAMPLERS[cfg.flow_matching.timestep_sampling_mode](
+        **cfg.flow_matching.timestep_sampling_params)
+    idx_rel = [str(p) for p in ds.sample_files[next(iter(ds.sample_files))]]
+    log(f"shifts-only: {len(ds)} samples, sampler {type(native).__name__}, device=cpu")
+
+    # ---- clause (a): the FUNCTION pin, pure arithmetic, no data involved ----------------
+    tol = GATE_BARS["G3_shift_pin_tol"]
+    pin_rows, g3a = [], True
+    for t_str, want_v in GATE_BARS["G3_shift_pins"].items():
+        got_v = SLN._get_shift_for_sequence_length(int(t_str))
+        ok_p = abs(got_v - want_v) <= tol
+        g3a &= ok_p
+        pin_rows.append({"seq_len": int(t_str), "pinned": want_v, "from_trainer_fn": got_v,
+                         "abs_err": abs(got_v - want_v), "tol": tol, "ok": ok_p})
+        log(f"  (a) _get_shift_for_sequence_length({t_str}) = {got_v:.10f}  pinned {want_v}"
+            f"  |err|={abs(got_v - want_v):.3e}  {'ok' if ok_p else 'MISMATCH'}")
+
+    # ---- clause (b): OBSERVE what the strategy hands the sampler ------------------------
+    rows, bad = [], []
+    for i in range(len(ds)):
+        rel = idx_rel[i]
+        meta = by_rel[rel]
+        raw = ds[i]
+        f, h, w = (int(raw["video_latents"]["num_frames"]),
+                   int(raw["video_latents"]["height"]), int(raw["video_latents"]["width"]))
+        tok = f * h * w
+        rec = _ShiftRecorder(native)
+        torch.manual_seed(GATE_BARS["seed"] + i)
+        mi = strategy.prepare_training_inputs(collate1(raw), rec)
+        obs = sorted({(c["seq_length"], c["shift"]) for c in rec.calls})
+        want_shift = SLN._get_shift_for_sequence_length(tok)
+        for sl, sh in obs:
+            if sl != tok:
+                bad.append(f"{rel}: sampler handed seq_len {sl}, not tok {tok} (2*tok={2*tok})")
+            if abs(sh - want_shift) > 1e-12:
+                bad.append(f"{rel}: observed shift {sh!r} != fn({tok}) = {want_shift!r}")
+        if not obs:
+            bad.append(f"{rel}: sampler never called")
+        rows.append({"rel": rel, "arm": meta["arm"], "format": meta["format"],
+                     "latent_fhw": [f, h, w], "tokens": tok,
+                     "seq_len_with_reference": int(mi.video.latent.shape[1]),
+                     "fn_shift_at_tokens": want_shift,
+                     "observed_sampler_calls": [{"seq_length": s, "shift": v} for s, v in obs]})
+        log(f"  (b) [{i+1}/{len(ds)}] {meta['arm']:14s} tok={tok:5d} "
+            f"seq_len HANDED TO SAMPLER={[s for s, _ in obs]} "
+            f"observed shift={[round(v, 6) for _, v in obs]} "
+            f"(seq with reference = {int(mi.video.latent.shape[1])})")
+        del raw, mi
+
+    obs_seq_lens = sorted({c["seq_length"] for r in rows for c in r["observed_sampler_calls"]})
+    observed_shifts = sorted({c["shift"] for r in rows for c in r["observed_sampler_calls"]})
+    want_tokens = sorted(GATE_BARS["G3_expected_token_counts"])
+    g3b = (not bad and obs_seq_lens == want_tokens
+           and len(observed_shifts) == len(want_tokens)
+           and all(abs(a - SLN._get_shift_for_sequence_length(t)) < 1e-12
+                   for a, t in zip(observed_shifts, want_tokens)))
+    verdict = "PASS" if (g3a and g3b) else "FAIL"
+
+    rec_out = {
+        "schema": "ctt_v2_shift_assert_A11_item4/1",
+        "when": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "host": os.uname().nodename,
+        "device": "cpu (no transformer loaded — the shift does not depend on the forward)",
+        "root": str(root), "n_samples": len(rows),
+        "clause_a_function_pin": {"ok": g3a, "tol": tol, "rows": pin_rows},
+        "clause_b_realized": {"ok": g3b, "observed_sampler_seq_lengths": obs_seq_lens,
+                              "expected_token_counts": want_tokens,
+                              "observed_shifts": observed_shifts,
+                              "function_outputs": [SLN._get_shift_for_sequence_length(t)
+                                                   for t in want_tokens],
+                              "offenders": bad},
+        "samples": rows, "VERDICT": verdict,
+    }
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "SHIFT_ASSERT_A11_item4.json").write_text(json.dumps(rec_out, indent=1) + "\n")
+    log("")
+    log(f"clause (a) FUNCTION PIN [{'PASS' if g3a else 'FAIL'}]")
+    log(f"clause (b) REALIZED     [{'PASS' if g3b else 'FAIL'}]  "
+        f"seq_lens handed to sampler = {obs_seq_lens}, observed shifts = "
+        f"{[round(x, 6) for x in observed_shifts]}")
+    for b in bad:
+        log(f"   OFFENDER {b}")
+    log(f"VERDICT: {verdict} -> {out/'SHIFT_ASSERT_A11_item4.json'}")
+    return 0 if verdict == "PASS" else 1
+
+
 # --------------------------------------------------------------------------------------
 def build(root: Path, model_path: Path):
     """Instantiate the trainer's own dataset / strategy / model. Nothing bespoke."""
@@ -574,8 +703,12 @@ def main() -> int:
     ap.add_argument("--out", default=str(LAB / "misc/ctt_v2_final/artefacts/smoke_gate"))
     ap.add_argument("--model", default=str(MODEL))
     ap.add_argument("--quick", action="store_true", help="2 sigmas, 2 native draws")
+    ap.add_argument("--shifts-only", action="store_true",
+                    help="A11 item 4's shift assert ONLY — no transformer, no GPU, seconds")
     args = ap.parse_args()
     try:
+        if args.shifts_only:
+            return shifts_only(Path(args.root), Path(args.out), Path(args.model))
         return run(Path(args.root), Path(args.out), Path(args.model), args.quick)
     except Exception:
         traceback.print_exc()
