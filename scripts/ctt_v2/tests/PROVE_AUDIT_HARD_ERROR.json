@@ -1,18 +1,18 @@
 {
  "auditor_pin": {
-  "model": "gemini-3.1-pro-preview",
+  "model": "gemini-3-flash-preview",
   "temperature": 0.0,
-  "thinking_level": "low",
+  "thinking_level": "minimal",
   "max_output_tokens": 512
  },
  "n_cases": 32,
  "n_failed": 0,
  "results": [
   {
-   "case": "auditor_pin",
+   "case": "auditor_model",
    "kind": "config",
    "ok": true,
-   "detail": "gemini-3.1-pro-preview"
+   "detail": "pinned = gemini-3-flash-preview"
   },
   {
    "case": "token_cap",
@@ -21,16 +21,16 @@
    "detail": "512"
   },
   {
-   "case": "thinking_level",
-   "kind": "config",
-   "ok": true,
-   "detail": "'low'"
-  },
-  {
    "case": "temperature",
    "kind": "config",
    "ok": true,
    "detail": "0.0"
+  },
+  {
+   "case": "thinking_level",
+   "kind": "config",
+   "ok": true,
+   "detail": "'minimal' for gemini-3-flash-preview"
   },
   {
    "case": "http_500_exhausted",

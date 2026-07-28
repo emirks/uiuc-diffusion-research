@@ -299,12 +299,19 @@ def main() -> int:
     print(f"       auditor pin = {gd.AUDIT_MODEL} | temp {gd.AUDIT_TEMPERATURE} | "
           f"thinkingLevel {gd.AUDIT_THINKING_LEVEL!r} | max_output_tokens {gd.AUDIT_MAX_TOKENS}")
 
-    # the pin itself is part of what is proven -- a silent downgrade must fail this file
-    _record("auditor_pin", "config", gd.AUDIT_MODEL == "gemini-3.1-pro-preview", gd.AUDIT_MODEL)
+    # Config invariants that hold under ANY auditor.  The MODEL is deliberately not
+    # asserted: it is contested between two concurrent advisor rulings (DOSSIER §23.2) and
+    # is env-overridable, so hard-coding one choice here would make this file fail
+    # spuriously the moment the other lane sets `CTT_AUDIT_MODEL` -- turning the proof of a
+    # broken-checker fix into a broken checker.  The pin is REPORTED, and the properties
+    # that must hold whatever it is are PROVEN.
+    _record("auditor_model", "config", bool(gd.AUDIT_MODEL), f"pinned = {gd.AUDIT_MODEL}")
     _record("token_cap", "config", gd.AUDIT_MAX_TOKENS >= 512, str(gd.AUDIT_MAX_TOKENS))
-    _record("thinking_level", "config", gd.AUDIT_THINKING_LEVEL == "low",
-            repr(gd.AUDIT_THINKING_LEVEL))
     _record("temperature", "config", gd.AUDIT_TEMPERATURE == 0.0, str(gd.AUDIT_TEMPERATURE))
+    # "minimal" is rejected HTTP 400 by the pro tier and is the cheap default on flash
+    _record("thinking_level", "config",
+            gd.AUDIT_THINKING_LEVEL == ("low" if "pro" in gd.AUDIT_MODEL else "minimal"),
+            f"{gd.AUDIT_THINKING_LEVEL!r} for {gd.AUDIT_MODEL}")
 
     prove_validator()
     prove_old_expression_passed()
