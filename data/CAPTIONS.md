@@ -98,7 +98,33 @@ By role A 750 / B 653. By bank humanvid 836 / synth_endpoints 567. 968 distinct 
 `openvid_T1MiFx98l3g_0_50to156` is excluded in role **A only** (its opening anchor is a blank
 screen); its B-role window is fine and kept. Authority A10 — a whole-clip drop was **denied**.
 Standing rule: **defects are dispositioned at the unit of consumption — (clip, role) — not of
-storage.** The 1,404th pair is excluded by adjudication, not missing. **Nothing is short.**
+storage.** The 1,404th pair is excluded by adjudication, not missing: **the store is not short
+against its requirement.**
+
+### 4.2 🔴 OPEN — 29 rendered S2a clips consume the excluded pair. Owner decision, not a caption bug.
+
+The store is complete *against the requirement*, but the requirement **excluded a pair that 29
+already-rendered S2a clips still reference**. Verified first-hand: of the 7,990 S2a rendered
+records, **29 use `openvid_T1MiFx98l3g_0_50to156` as their A endpoint** and therefore need the
+A-role description that A10 deliberately withheld. Its **B-role is present**, 0 records use it as a
+B endpoint, and **S2b (0 pairs) and S1 (0 rows) are unaffected** — this is S2a-only.
+
+This is the **same shape as the §4.1 defect**: correct at the requirement level, wrong against what
+was actually rendered. It changes **no count and no hash** — 1,403/1,403 stands, `c8e2d95b…` stands —
+because it is a *consumption-side* gap, not a store gap. What it means concretely is that at
+assembly those 29 clips have no A-role caption available.
+
+⚠ **There is no cross-role fallback and one must not be invented.** Substituting the B-role text, or
+any other clip's text, would caption a blank-screen anchor with content it does not show — the exact
+failure A10's exclusion exists to prevent. The options are the owner's:
+
+1. **Drop the 29 clips** from the S2a roster at assembly (29 / 7,990 = **0.36 %** of S2a) — cheapest,
+   costs nothing but 29 samples, and is consistent with A10.
+2. **Overturn A10's role-A exclusion** for this clip — note A10 denied a *whole-clip* drop precisely
+   because the A window is defective, so this reopens an adjudicated question.
+3. **Re-render the 29** against a different A endpoint — correct but costs render time.
+
+Recorded rather than papered over, and **not** decided here.
 
 ### 4.1 🔴 The S2a defect — recorded so nobody reintroduces it
 

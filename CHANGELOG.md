@@ -1,5 +1,18 @@
 ## 2026-07-28
 
+- **13:05** — 🔴 **Real defect found at assembly-inventory time: 29 rendered S2a clips consume the
+  one role-excluded (clip, role) pair.** Of the 7,990 S2a records, **29 use
+  `openvid_T1MiFx98l3g_0_50to156` as their A endpoint** and so need the role-A description A10
+  deliberately withheld (blank-screen opening anchor). Verified first-hand: 0 B-endpoint users, its
+  B-role description is present, **S2b and S1 unaffected**. Changes **no count and no hash** —
+  1,403/1,403 and `c8e2d95b…` stand — because it is a *consumption*-side gap at assembly, not a
+  store gap. Same shape as the original S2a requirement defect: right about the requirement, wrong
+  about what was rendered. **No cross-role fallback invented** (it would caption a blank screen with
+  content it does not show). Recorded OPEN in `CAPTIONS.md` §4.2, `CAPTION_LOCK.json`
+  (`OPEN_CONSUMPTION_GAP`) and DOSSIER §27.6 with three priced owner options: drop the 29 (0.36 % of
+  S2a), overturn the A10 exclusion, or re-render. Found by the assembly rehearsal's first inventory
+  build before it was stopped.
+
 - **12:56** — **Caption lane finished: one source of truth, the battery gap closed, and the DeltaAI
   S1 package built.** (1) `data/CAPTIONS.md` is now **the** authority for captions — rewritten lean
   (store, keying, grammar, the three sources, the S2a defect, the auditor churn, v2-not-v3, the
