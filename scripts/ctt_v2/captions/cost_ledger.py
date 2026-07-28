@@ -149,16 +149,19 @@ def collect(strict: bool = False) -> list[Path]:
             raise SystemExit("[ledger] STRICT: archives on disk matched by no glob "
                              "(they would be silently uncounted):\n  "
                              + "\n  ".join(sorted(str(m) for m in missed)))
-        # (b) every EXTERNAL_GLOBS pattern must resolve to at least one file. A mis-derived
-        #     LAB makes these silently empty -- the exact bug that undercounted the first run,
-        #     and one that (a) alone cannot see, because it globs from the same wrong root.
-        for g in EXTERNAL_GLOBS:
-            if not glob.glob(str(LAB / g), recursive=True):
-                raise SystemExit(
-                    f"[ledger] STRICT: external glob resolved to nothing:\n"
-                    f"    {LAB / g}\n"
-                    f"  LAB was derived as {LAB} -- if that looks wrong, the marker-directory\n"
-                    f"  lookup in _find_lab() failed and external archives are being dropped.")
+        # (b) AT LEAST ONE external pattern must resolve. This exists to prove LAB is right --
+        #     a mis-derived LAB makes every external glob silently empty, the exact bug that
+        #     undercounted the first run, and one that (a) cannot see because it globs from the
+        #     same wrong root. Requiring *every* pattern to match would be wrong: some cover
+        #     layouts that legitimately do not exist yet, and a seatbelt that fails on a healthy
+        #     tree gets switched off.
+        if not any(glob.glob(str(LAB / g), recursive=True) for g in EXTERNAL_GLOBS):
+            raise SystemExit(
+                f"[ledger] STRICT: no external glob resolved to anything under\n"
+                f"    {LAB}\n"
+                f"  patterns tried: {list(EXTERNAL_GLOBS)}\n"
+                f"  LAB was derived as {LAB} -- if that looks wrong, the marker-directory\n"
+                f"  lookup in _find_lab() failed and external archives are being dropped.")
     return sorted(found)
 
 
