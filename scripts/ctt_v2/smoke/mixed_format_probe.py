@@ -103,6 +103,42 @@ class _FixedSigmaSampler:
         return self.sample(batch.shape[0], device=batch.device)
 
 
+class _ShiftRecorder:
+    """Transparent pass-through around the REAL sampler that records what it was handed.
+
+    A11 item 4 clause (b) asks for *the shifts actually observed in the mixed run*.  Deriving
+    them from `f*h*w` would be circular: the manifest, the assert and the "observation" would
+    all be the same arithmetic, and the assert could not fail.  The substantive question is
+    which sequence length the strategy hands the sampler — the target's own token count, or
+    the reference-prepended `2*tok`?  `sample_for` takes `mu` from `batch.shape[1]`
+    (`timestep_samplers.py:117`), so that choice IS the noise schedule.  This wrapper observes
+    it instead of assuming it.  It changes no behaviour: every call is delegated.
+    """
+
+    def __init__(self, inner):
+        self.inner = inner
+        self.calls: list[dict] = []
+
+    def __getattr__(self, name):        # delegate everything not overridden
+        return getattr(self.inner, name)
+
+    def _record(self, seq_length: int) -> None:
+        self.calls.append({
+            "seq_length": int(seq_length),
+            "shift": type(self.inner)._get_shift_for_sequence_length(int(seq_length))})
+
+    def sample(self, batch_size, seq_length=None, device=None):
+        if seq_length is not None:
+            self._record(seq_length)
+        return self.inner.sample(batch_size, seq_length, device=device)
+
+    def sample_for(self, batch):
+        if batch.ndim != 3:
+            raise ValueError(f"Batch should have 3 dimensions, got {batch.ndim}")
+        self._record(batch.shape[1])
+        return self.inner.sample_for(batch)
+
+
 # --------------------------------------------------------------------------------------
 def build(root: Path, model_path: Path):
     """Instantiate the trainer's own dataset / strategy / model. Nothing bespoke."""
@@ -284,9 +320,20 @@ def run(root: Path, out: Path, model_path: Path, quick: bool) -> int:
             geo_bad.append(f"realized shift {realized_shift!r} != manifest "
                            f"{meta['expected_shift']!r}")
 
-        # native schedule, ndraw independent draws
+        # native schedule, ndraw independent draws — through the recorder, so the shift the
+        # sampler ACTUALLY used is observed rather than re-derived (A11 item 4 clause b)
+        rec = _ShiftRecorder(native)
         torch.manual_seed(GATE_BARS["seed"] + i)
-        nat = [one_forward(batch, strategy, tr, emb, conv, native, dev) for _ in range(ndraw)]
+        nat = [one_forward(batch, strategy, tr, emb, conv, rec, dev) for _ in range(ndraw)]
+        observed = sorted({(c["seq_length"], c["shift"]) for c in rec.calls})
+        if not observed:
+            geo_bad.append("the sampler was never called — no realized shift could be observed")
+        for sl, sh in observed:
+            if sl != tok:
+                geo_bad.append(f"sampler was handed seq_len {sl}, not this sample's token "
+                               f"count {tok} (2*tok = {2 * tok})")
+            if abs(sh - realized_shift) > 1e-12:
+                geo_bad.append(f"observed shift {sh!r} != fn({tok}) = {realized_shift!r}")
 
         # the reference is prepended AFTER the sigma draw and shares this sample's geometry,
         # so the combined sequence must be exactly twice the target and the loss mask must be
@@ -314,6 +361,9 @@ def run(root: Path, out: Path, model_path: Path, quick: bool) -> int:
             "fps": float(raw["video_latents"]["fps"]),
             "realized_shift": realized_shift,
             "expected_shift": meta["expected_shift"],
+            #: what the sampler was actually handed, observed via _ShiftRecorder
+            "observed_sampler_calls": [{"seq_length": sl, "shift": sh} for sl, sh in observed],
+            "n_sampler_calls": len(rec.calls),
             "seq_len_with_reference": nat[0]["seq_len_total"],
             "target_seq_len": nat[0]["target_seq_len"],
             "loss_mask_frac": nat[0]["loss_mask_frac"],
@@ -375,16 +425,23 @@ def run(root: Path, out: Path, model_path: Path, quick: bool) -> int:
     realized_tokens = sorted({r["tokens"] for r in rows})
     want_tokens = sorted(GATE_BARS["G3_expected_token_counts"])
     tokens_ok = realized_tokens == want_tokens
-    # every realized shift must BE the function's output at that sample's realized token count
-    per_sample_ok = all(abs(r["realized_shift"]
-                           - SLN._get_shift_for_sequence_length(r["tokens"])) < 1e-12
-                        for r in rows)
-    realized = sorted({r["realized_shift"] for r in rows})
-    realized_from_fn = sorted({SLN._get_shift_for_sequence_length(t)
-                               for t in realized_tokens})
+    # OBSERVED, not re-derived: what _ShiftRecorder saw the sampler actually handed. If the
+    # strategy fed the sampler the reference-prepended 2*tok, these would differ from
+    # fn(tok) and this clause would fail — which is the only way it can mean anything.
+    obs_seq_lens = sorted({c["seq_length"] for r in rows for c in r["observed_sampler_calls"]})
+    observed_shifts = sorted({c["shift"] for r in rows for c in r["observed_sampler_calls"]})
+    obs_tokens_ok = obs_seq_lens == want_tokens
+    per_sample_ok = all(
+        bool(r["observed_sampler_calls"])
+        and all(c["seq_length"] == r["tokens"]
+                and abs(c["shift"] - SLN._get_shift_for_sequence_length(r["tokens"])) < 1e-12
+                for c in r["observed_sampler_calls"])
+        for r in rows)
+    realized = observed_shifts
+    realized_from_fn = sorted({SLN._get_shift_for_sequence_length(t) for t in want_tokens})
     set_ok = (len(realized) == len(realized_from_fn)
               and all(abs(a - b) < 1e-12 for a, b in zip(realized, realized_from_fn)))
-    g3b = tokens_ok and per_sample_ok and set_ok
+    g3b = tokens_ok and obs_tokens_ok and per_sample_ok and set_ok
 
     # third, independent cross-check: the manifest the root was BUILT from agrees too
     expected = sorted(set(man["distinct_expected_shifts"]))
@@ -424,14 +481,17 @@ def run(root: Path, out: Path, model_path: Path, quick: bool) -> int:
                 "rows": pin_rows},
             "clause_b_realized": {
                 "ok": g3b,
-                "statement": "the shifts realized by this mixed root equal the function's "
-                             "outputs at the realized token counts {5*14*26, 16*20*15}",
-                "realized_token_counts": realized_tokens,
+                "statement": "the shifts OBSERVED (via _ShiftRecorder) in the mixed run equal "
+                             "the function's outputs at the realized token counts "
+                             "{5*14*26, 16*20*15}",
+                "latent_token_counts": realized_tokens,
+                "observed_sampler_seq_lengths": obs_seq_lens,
                 "expected_token_counts": want_tokens,
-                "token_counts_match": tokens_ok,
-                "realized_shifts": realized,
-                "function_outputs_at_realized_tokens": realized_from_fn,
-                "every_sample_shift_equals_fn_of_its_tokens": per_sample_ok,
+                "latent_token_counts_match": tokens_ok,
+                "observed_seq_lengths_match": obs_tokens_ok,
+                "observed_shifts": observed_shifts,
+                "function_outputs_at_expected_tokens": realized_from_fn,
+                "every_sample_observed_shift_equals_fn_of_its_tokens": per_sample_ok,
                 "shift_sets_match": set_ok},
             "clause_c_manifest_crosscheck": {
                 "ok": g3c, "manifest_distinct_expected_shifts": expected},
@@ -490,11 +550,13 @@ def run(root: Path, out: Path, model_path: Path, quick: bool) -> int:
             f"   pinned {p['pinned']:.4f}   |err| = {p['abs_err']:.3e}  (tol {p['tol']})"
             f"   {'ok' if p['ok'] else 'MISMATCH'}")
     log(f"   clause (b) REALIZED      [{'PASS' if g3b else 'FAIL'}]")
-    log(f"      realized token counts = {realized_tokens}  (expected {want_tokens}"
+    log(f"      latent token counts        = {realized_tokens}  (expected {want_tokens}"
         f" = 5*14*26, 16*20*15)")
-    log(f"      realized shifts       = {[round(x, 6) for x in realized]}")
-    log(f"      fn(realized tokens)   = {[round(x, 6) for x in realized_from_fn]}")
-    log(f"      every sample's shift == fn(its own tokens): {per_sample_ok}")
+    log(f"      seq_len HANDED TO SAMPLER  = {obs_seq_lens}   (observed, not re-derived; "
+        f"2*tok would be {[2 * t for t in realized_tokens]})")
+    log(f"      OBSERVED shifts            = {[round(x, 6) for x in observed_shifts]}")
+    log(f"      fn(expected tokens)        = {[round(x, 6) for x in realized_from_fn]}")
+    log(f"      every sample's OBSERVED shift == fn(its own tokens): {per_sample_ok}")
     log(f"   clause (c) manifest cross-check [{'PASS' if g3c else 'FAIL'}] {expected}")
     log("")
     for k, v in gates.items():
