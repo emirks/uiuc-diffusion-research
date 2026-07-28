@@ -42,7 +42,7 @@ judges existed (pre-registration), not yet exercised.
 | S2a render (7,990 clips / 799 ops) | **FROZEN** | `S2_ACCEPTANCE.json` verdict PASS, §5.4 |
 | S2b render (7,990 clips / 799 ops) | **FROZEN** | `S2_ACCEPTANCE.json` verdict PASS, §5.5 |
 | S2a blind audit (2/64 BAD, bar ≤3) | **FROZEN** | `AUDIT_RESULT.json` |
-| S2b blind audit (0 consensus-BAD, bar ≤3) | **FROZEN** | DOSSIER §10.6 — ⚠ no `AUDIT_RESULT.json` on disk, §11.7 |
+| S2b blind audit (0 consensus-BAD, bar ≤3) | **FROZEN** | `AUDIT_RESULT.json` + `AUDIT_RATERS_RAW.md` written, §11.7 |
 | S4 selection (2,000 samples / 42+5 triggers) | **FROZEN** | `selection.json`, §5.6 |
 | Union content pool (1,146 train / 120 reserved) | **FROZEN** | `CONTENT_POOL_union.json`, gates PASS |
 | Full-occlusion family tags (1,730 / 15,980) | **FROZEN** | `s2_full_occlusion_tags.json` |
@@ -51,7 +51,7 @@ judges existed (pre-registration), not yet exercised.
 | Holdouts: 10 zs classes · 10 shader families · 120 reserved clips | **FROZEN** | §7 |
 | Caption grammar + §4 distributional bars | **PINNED** | measured from the 139 corpus captions before any new caption existed |
 | Copy-gate admissibility + bars | **PINNED** | `VERIFY_copy_ref_discriminator.md` verdict PASS; A7 amendment-2 |
-| Mix weights 15 / 6 / 34.5 / 34.5 / 10 | **PINNED (ruled)** | A9; **not yet in code** — §11.1 |
+| Mix weights 15 / 6 / 34.5 / 34.5 / 10 (+ 3 contingency branches) | **PINNED (ruled), IN CODE** | A9 / A11 item 3; `root_common.INTENDED_WEIGHTS_PCT` + `ABSENT_BRANCH_WEIGHTS_PCT`, §11.1 |
 | Pairing rule (ring offset, k=min(3,n−1)) | **PINNED** | `root_common.PAIRING_RULE` |
 | VAE latents + cond_clean for S1/S2a/S2b/S4 | **IN FLIGHT** | jobs 9687982–9687985 running, §5 per-stratum |
 | S1 full render (390 clips) | **PENDING** | 33 pilot clips exist; gate is credit-blocked |
@@ -61,7 +61,7 @@ judges existed (pre-registration), not yet exercised.
 | Corpus-139 Layer-2 leak audit | **PENDING (blocked: Gemini credits)** | anchors built; A4/A8 require it *before assembly* |
 | S4 blind-guess caption gate (seed 44, n=150) | **PENDING (blocked: Gemini credits)** | A9 |
 | `conditions/` (Gemma text embeds) | **PENDING (blocked: captions)** | ~2 GPU-h once captions land |
-| The 8 pre-registered S2a inline-OOD ops | **PENDING (not pre-registered)** | §11.4 — selector exists, file does not |
+| The 8 pre-registered S2a inline-OOD ops | **FROZEN (pre-registered)** | `PREREG_inline_ood_ops_s2a.json`, advisor-ratified 2026-07-28, §11.4 |
 | Assembled root + `ROOT_MANIFEST.json` | **PENDING** | machinery built, never run against real inventories |
 | Assert battery A1–A10 executed | **PENDING** | §9 |
 | Mixed-format smoke gate (2 shapes) | **PENDING** | A1b Q3 / A9; non-negotiable before S4 trains |
@@ -80,11 +80,13 @@ not exist:
 2. **No `conditions/` tree**, because every caption costs a Gemma-3-12b text-encode pass.
 3. **No assembled root**, therefore no counted realized mix and no `ROOT_MANIFEST.json`.
 4. **No executed assert battery.** §9 is a checklist, not a record.
-5. **Two pre-registration holes** — the 8 inline-OOD ops (§11.4) and the S4 caption gates.
+5. **One pre-registration hole left** — the S4 caption gates. (The 8 inline-OOD ops are now
+   pre-registered and ratified, §11.4.)
 
-Additionally, **three of the numbers this document must stamp are wrong in the governing prose and
-right on disk** (§11.1, §11.2, §11.3). Those must be reconciled by a ruling before a stamp means
-anything.
+Additionally, **three of the numbers this document must stamp were wrong in the governing prose and
+right on disk** (§11.1, §11.2, §11.3). §11.1 and §11.2 are now **reconciled by A11**; §11.3 is a
+caption-count estimate that changes no byte the trainer reads. **Every §12 row now carries a
+ruling** (stamp precondition 2 of §13.3 is met); what remains is execution, not decision.
 
 ---
 
@@ -281,6 +283,7 @@ Groups with fewer than 2 trainable clips after exclusions are dropped whole.
 | **Counts (grid, verified in `S1_GRID.json`)** | 390 rows = 9 one-sided specialists × 30 + 2 two-sided × 60. Per-arm: 30 each except `spec_hero_flight` 60 and `spec_shadow_smoke` 60. **400 distinct endpoint clips**; endpoint_a bank split exactly **195 synth / 195 humanvid**; a **10-endpoint probe set shared by all 11** arms (110 of the 390 rows) gives the same-content × diff-op diagonal. |
 | **Counts (rendered)** | **33 pilot clips on disk** (3 per specialist × 11), `outputs/videos/ctt_v2_s1/spec_*/`. The remaining 357 are PENDING. |
 | **Format** | 480×640 × 121f @24fps, identical to S0. |
+| **Pairing group — RULED (A11 item 6, 2026-07-28)** | The inventory's group key is the **ARM (specialist)**, never the endpoint, and **1,170 stands**. The endpoint reading is not merely different, it is **wrong**: group=endpoint would pair same-content × different-op, violating the standing rule *"reference = same operator, different content."* A1b is explicit both ways — Q5 ("endpoints unique within a specialist… within-op endpoint disjointness guarantees ref shares no content with target") and the count itself (9×30×3 + 2×60×3 = 1,170 only works with the specialist as the ring group). **Inventory schema: 11 groups**, one per specialist. And yes — **a shared-probe row may reference a non-probe row**: within an arm, probe endpoints are ordinary distinct clips, the ring runs over the arm's sorted stems irrespective of probe membership, and the probe set's cross-arm role (the same-content × diff-op diagonal) is a *diagnostic across arms*, not a pairing constraint within one. **No count change.** §12.6 closed. |
 | **Sidedness** | Native per specialist — 9 one / 2 two. Forced by the mechanism, not chosen: `run_gen.py` appends a `SuffixConditionConfig` only when `row["sided"] == "two"`, and 9 of 11 specialists are one-sided, so they *cannot* produce a true A→B pair. |
 | **Gates** | **Batch gate (A5 Ruling 3(i)):** blind 11-way Gemini class identification, `gemini-3.5-flash`, temp 0, `max_output_tokens ≥ 2000`, bar **top-1 ≥ 80 %** (chance 9.09 %), **with a 33-clip control arm of real corpus clips of the same classes**. Verdict rule: `PASS` = batch ≥80 % **and** control ≥80 % **and** mechanical rejects ≤3/33; `FAIL_S1_DROPS` = batch <80 % with passing control; `INSTRUMENT_INVALID` = control <80 % (re-adjudicate, do not blame S1). **Result: PENDING (blocked: Gemini credits).** |
 | | **Per-clip mechanical rejects only (A5 Ruling 3(ii)):** decode corruption (frame count ≠ 121 or geometry ≠ 480×640); frozen (mean abs inter-frame delta over frames 9–120 < 1/255) or black (mean luma < 8/255 on ≥10 % of frames); endpoint identity — prefix rel-L2(gen[0:9], anchor) > **τ = 0.12790240**. **No DINOv2, no harness substrate, anywhere in selection.** |
@@ -338,7 +341,7 @@ Groups with fewer than 2 trainable clips after exclusions are dropped whole.
 | **Byte-purity (the invariant the stratum rests on)** | `i0 = floor(onset)`, `j0 = ceil(release)`; the renderer asserts `clip[:i0+1] == a_src[:i0+1]` and `clip[j0:] == b_src[j0:]`. ⇒ **frames 0–8 are byte-identical to source A and frames 112–120 byte-identical to source B in every clip, unconditionally.** This is what makes per-content-clip A-role/B-role captioning exact. |
 | **Gates (`S2_ACCEPTANCE.json`, verdict PASS)** | `pure_phase_max_abs_diff` **0.0** (bar ≤0.5) · `seam_max` **1.9984** (≤2.0) · `m1_p10_min` **0.2547** (≥τ 0.2543) · `m2_max_dq` **0.4916** (≤0.5) · `m1_min_flag_count` 35 · overdraw **1.2506** (≤2.5) · attempts min/med/max 10/12/25 · shaders over 50 % rejection: **none** · all six hard invariants true. Plus per-clip pre-render gate-2 (endpoint identity at the op's params, `max(d0,d1) ≤ 0.5`). |
 | **Blind audit (`AUDIT_RESULT.json`, PASS)** | n=64 shader-stratified, two independent blind raters + operator adjudication, bar ≤3 consensus-BAD. rater1 [30,40] · rater2 [41,45] · **consensus []** · adjudicated **2 BAD** (`PuzzleRight` s2_0229_c06, `Slides` s2_0270_c08) · agreement 60/64 = 93.8 %. |
-| **Holdouts** | 10 shader families never rendered (§7). 8 inline-OOD ops to be excluded at assembly — **not yet pre-registered, §11.4**. |
+| **Holdouts** | 10 shader families never rendered (§7). **8 inline-OOD ops pre-registered and excluded at assembly** — `PREREG_inline_ood_ops_s2a.json`, seed 42, 8 distinct shaders, 80 clips (~1 % of S2a); their encodes stay on disk for the inline lane. §11.4. |
 | **Captions** | PENDING. **333 distinct caption strings** from **454 (clip, role) descriptions** over 291 clips (163 clips occupy both roles). §11.3 corrects the dossier's 666/582. |
 | **Encode state** | `outputs/ctt_v2/encodes/S2a/` — roster frozen at 7,990, `nshards=16`; 922 latents written at 02:56, jobs running. |
 | **Accepted risk** | The full-occlusion family, 870/7,990 = 10.89 % (§8.3). |
@@ -370,7 +373,7 @@ excluding S4 leaves the central claim with **zero** VFX-domain anti-copy signal.
 | **Provenance** | refVFX `I2V_LoRA` release. **ONE tar shard**, `data/raw/refvfx/data/I2V_LoRA/shard-00000.tar`, 12.32 GB; all 2,000 selected samples reference shard 0, **0 missing**. (An earlier note said `shard-{00000..00079}`, conflating the tar with the 80 caption `batches/` dirs; reconciled.) Each sample ships `output_video.mp4`, a clean `NNNNNN.input_image_or_video.png`, and a `.json` sidecar. |
 | **Sidecar ground truth** | 5 keys — `prompt`, `effect_type`, `mask_type` (always null), `orientation`, `data_subset`. `effect_type` = leet trigger + plain descriptor (`h01k green hulk transformation`); `prompt` names the effect in the clear. **Neither may ever reach a caption.** |
 | **Counts (verified in `selection.json`)** | **2,000 samples · 42 train triggers · 47–50 samples each · 5 held-out triggers · 2,000 filmstrips on disk.** |
-| **Format** | Native 832×464 · 33f · 16fps. **Encoded at 832×448×33** — 464 is not a multiple of the VAE spatial factor 32 (464/32 = 14.5) and `process_videos.py:parse_resolution_buckets` rejects it. The 832×448 bucket is a **pure 16-row centre crop with NO resampling** (width scale exactly 1.0). Verified latent on disk: `(128, 5, 14, 26)`, fps 16.0. **This contradicts A1b Q3's "no crop"; §11.2.** |
+| **Format — RATIFIED (A11 item 4, 2026-07-28)** | Native 832×464 · 33f · 16fps. **Encoded at 832×448×33** — 464 is not a multiple of the VAE spatial factor 32 (464/32 = 14.5) and `process_videos.py:parse_resolution_buckets` rejects it. The 832×448 bucket is a **pure 16-row centre crop with NO resampling** (width scale exactly 1.0, 3.4 % of height). Verified latent on disk: `(128, 5, 14, 26)`, fps 16.0 ⇒ **1,820 tokens, shift 1.2350**. **The latents on disk stand — do NOT re-encode.** A1b Q3's "no crop" *as literally written* is VAE-impossible, and a ruling premised on a physical impossibility is void on that word: it is amended to its **intent** — no resampling, no letterbox, no retiming, i.e. protect dynamics, which is half the frozen metric's definition of manner. 832×448 is the **minimal** such amendment; the 832×480 alternative resamples (3.4 % upscale) *and* crops width, strictly worse on the ruling's own intent, and re-encoding would spend 0.3 L40S-h to replace a correct artefact with a worse one. **A1b Q3 wording is amended to:** *"832×448×33@16fps: 16-row centre crop, zero resampling — the minimal VAE-legal bucket; literal 'no crop' is VAE-impossible."* §11.2 / §12.4 closed. |
 | **Sidedness** | 100 % one-sided (owner ruling; structurally correct for I2V) ⇒ entirely on the bitwise-copy `cond_clean` path, never touching the suffix machinery. |
 | **RoPE** | S4 references are **S4-native** (ring within op ⇒ same trigger), so reference and target share the ~2 s span. No cross-span mismatch. Downstream normalisation divides by a fixed 20-second horizon: 121f@24 → 5.0 s → 0.25; 33f@16 → 2.0 s → 0.10. Both in range, on the same physical time axis. |
 | **Caption source** | **Frames 0–8, exactly as A4 specced.** Neither of the owner's two counter-proposals is adopted, on measurement (§11 of DOSSIER, A9). |
@@ -378,8 +381,8 @@ excluding S4 leaves the central claim with **zero** VFX-domain anti-copy signal.
 | **Withdrawn** | DOSSIER §5's onset-audit argument. It does not reproduce (65.0 % → **56.0 %** same seed; control 2.5 % → **0.0 %**; n=200 seed 43 → 53.8 %), its config was never archived, and — the real error — it measured *"do the pixels show an onset"* and **inferred caption leak from pixel onset**. The direct measurement refutes the inference. |
 | **Rejected alternatives** | Frame-0 captioning is statistically identical to frames 0–8 (144/150 clips wrong under both, paired) and discards 8/9 of the evidence for no measurable gain. Clean-subset filtering would cost **≈925 of 2,000 clips (CI 789–1,063)** *non-uniformly*, wiping out five effect classes entirely (pirate / electricity / baby / squish / princess, all 100 % onset) — a silent re-weighting of the stratum. |
 | **Its own caption gates (A9; A5 Ruling 5's premise broke)** | S4's frames 0–8 are another model's outputs, not byte-pure source, so: the **full 12-gate battery including gate #8 run on S4 captions separately, not pooled**; a **blind-guess gate** (fresh seed 44, n=150, bar = permutation p ≥ 0.05 **AND** top-1 ≤ null + 3 pp, **with a mandatory last-frame positive control at ≥10× null to prove power**); and the Layer-2 named-effect judge on **100 %** of S4 captions as a tripwire. Blind-guess does **not** subsume gate #8 — blind-guess tests *reader* identifiability, gate #8 tests *encoder-exploitable statistical association*. **Keep both.** All PENDING (blocked: Gemini credits). |
-| **Mandatory before S4 trains** | The mixed-format smoke gate: mini-root of ~20 corpus + ~20 native-S4 samples, 100–200 steps, asserting (i) no silent skipping — per-format consumed counts logged and exact; (ii) finite, comparable per-format loss; (iii) shapes flow through RoPE in bf16 for both; (iv) one train==inference equivalence probe. **Additionally (A9): realized shifts ∈ {1.120, 2.302} exactly** — this assert as written will FAIL, §11.2. ~1–2 GPU-h. Placeholder captions suffice. |
-| **Masks** | Regenerated for the S4 shape, **never reused** (a reused 16-frame mask is a loud `RuntimeError` at `flexible.py:533`, which is the good failure mode). `assemble_root.ensure_mask` keys the store on `(f,h,w,sided)`, so it adapts automatically. |
+| **Mandatory before S4 trains** | The mixed-format smoke gate: mini-root of ~20 corpus + ~20 native-S4 samples, 100–200 steps, asserting (i) no silent skipping — per-format consumed counts logged and exact; (ii) finite, comparable per-format loss; (iii) shapes flow through RoPE in bf16 for both; (iv) one train==inference equivalence probe. **Additionally: the corrected two-clause shift assert — §9 D3** (pin check at t ∈ {1820, 4800} → {1.2350, 2.3021} within 1e-3, **plus** a realized check against the observed token counts). A9's `{1.120, 2.302}` is struck. ~1–2 GPU-h. Placeholder captions suffice. **Credit-independent — should run as soon as a GPU frees.** |
+| **Masks** | `(5, 14, 26)` = **1,820 elements** (A9's `(5,20,15)`/1,500 prose was the corpus-grid conflation and is **struck**; disk already agrees). Regenerated for the S4 shape, **never reused** (a reused 16-frame mask is a loud `RuntimeError` at `flexible.py:533`, which is the good failure mode). `assemble_root.ensure_mask` keys the store on `(f,h,w,sided)`, so it adapts automatically. |
 | **Schedule ruling — S4 rides for free or not at all** | The launch is **NEVER** held for S4. Cutoff pre-registered at **root-assembly time**: when every other stratum's captions and encodes are done and asserts pass, if S4's caption lane has not passed its gates, **assemble without S4** under the branch weights (§6.1). No slip, no debate. |
 | **Accepted risks** | The bimodal noise schedule (§8.2) and A3's format/latent-grid stratum signature — the two objections that survive; the caption leg is refuted. |
 
@@ -542,7 +545,7 @@ assembly time from the frozen source named in the last column — never a hand-k
 | H1 | **S0 zero-shot classes** | **10** | `cotton_cloud`, `display_transition`, `firelava`, `flying_cam_transition`, `live_concert`, `luminous_gaze`, `melt_transition`, `monstrosity`, `raven_transition`, `saint_glow` — 5 one-sided / 5 two-sided, a balanced zs set | `split_v1.2.json:generalist_holdout` (sha `c694659d`) | **A9** |
 | H2 | **S2 shader families** | **10** | `DefocusBlur`, `VerticalOpen`, `burn0`, `directionalwarp`, `fadegrayscale`, `parametric_glitch`, `randomsquares`, `ripple`, `scale-in`, `wipeUp`. Principle: **every held-out shader keeps a same-genre cousin in training.** Never rendered into either S2 batch | `exp_082_s2_humanvid/HOLDOUT_S2_UNION.json` | **A7** |
 | H3 | **Reserved union-pool clips** | **120** | 20 synth + 100 humanvid; `reserved[]` in the pool contract; never trained, eval-only | `CONTENT_POOL_union.json:reserved` | **A8** |
-| H4 | **S4 held-out triggers** | **5** | `1ung13 jungle transformation`, `5en3m venom transformation.`, `cr34sh crash zoom out effect`, `cr4n3 crane down camera motion`, `s31lf13 taking a selfie with their younger self`. ⚠ **Only 3 are clean — §8.6** | `s4_refvfx/selection.json:held_out_triggers` | excluded at selection; not in the root |
+| H4 | **S4 held-out triggers** | **5 selected, 3 usable** | **CLEAN (the diagnostic universe):** `1ung13 jungle transformation`, `5en3m venom transformation.`, `s31lf13 taking a selfie with their younger self`. **`CONTAMINATED — excluded from the diagnostic universe` (A11 item 2):** `cr34sh crash zoom out effect`, `cr4n3 crane down camera motion` — §8.6 | `s4_refvfx/selection.json:held_out_triggers` | excluded at selection; not in the root |
 | H5 | **Pre-registered S2a inline-OOD ops** | **8** | 8 ops from 8 distinct shaders, RNG seed 42, drawn from the otherwise-trainable S2a ops; supply the inline-validation OOD demos | `root_common.select_inline_ood_ops` | **A6** — ⚠ **the file does not exist; §11.4** |
 | H6 | **Eval-endpoint universe** | **92** | union of: 74 registry endpoints + 36 registry references + 9 DAVIS eval source sequences mapped to pool ids + 11 zs-audited endpoints + the 42 pre-registered test clips, deduplicated | `eval_ladder/registry.jsonl`, `davis.yaml`, `split_v1.2.json` | **A5** |
 | H7 | **S1 eligibility exclusions** | **26** | 5 DAVIS eval source sequences + 21 near-duplicate-pair members, removed from the 1,146 pool ⇒ **1,120 eligible** | `S1_GRID.json:eligibility` | asserted PASS in the grid |
@@ -599,6 +602,13 @@ It raises nothing and logs nothing.
 | S0 / S1 / S2a / S2b | (16, 20, 15) | 4,800 | **2.3021** |
 | **S4 as encoded** | **(5, 14, 26)** | **1,820** | **1.2350** |
 | *S4 as assumed by the prose* | *(5, 20, 15)* | *1,500* | *1.1204* |
+
+**σ caveat re-derived at 1.2350 (A11 item 4, 2026-07-28).** A9 wrote this caveat against the assumed
+1.1204; re-deriving it at the true 1.2350 is **mechanical and changes nothing qualitative** — the
+low-σ concentration still discounts S4's effectiveness. If anything **1.2350 vs 1.1204 slightly
+*narrows* the bimodality** (the two populations sit 1.067 apart in shift rather than 1.182), which
+weakens the objection rather than strengthening it. The pre-written report caveat stands with the
+number corrected.
 
 The two populations train at materially different noise levels — short clips mostly at low noise,
 long clips mostly at high noise. **Why it is not exclusion-grade once disclosed:** the shift is a
@@ -688,6 +698,23 @@ same magnitude ⇒ REVIEW, not fired. **If fired:** the claim of record still us
 **understate** capability. Corpus anchors (job 9686746, 222/222 clips, 444/444 mp4s) serve this lane
 and the corpus-139 audit.
 
+**Caption-battery scope for this lane — RULED (A11 item 7, 2026-07-28): EXEMPT from the 12-gate
+battery; three per-item checks are MANDATORY.** The distributional gates cannot coherently apply:
+the lane's whole purpose is that its register distribution *differs* from corpus, so gate 8a's
+separability is the **treatment, not a defect**, and "fixing" the swap descriptions to pass
+distributional bars would break the intervention's representativeness of the round-3 pipeline. The
+lane is diagnostic-only — A8 pre-registers that the claim of record uses old-register numbers even if
+it fires. What *is* load-bearing is the lane's internal validity, and A8's own spec already names it
+("same filters, Tier-1/Layer-2 audited"):
+
+| | per-item check on all 46 × 2 swap descriptions | why |
+|---|---|---|
+| (i) | **render-path asserts intact** — ` sksz.` exactly once, outcome marker absent | the lane must go through the unchanged `render_prompt` path |
+| (ii) | **Tier-1 mechanical tripwire** — zero trigger tokens, zero shader basenames | a leaked trigger/shader in a swap prompt would confound Δ with leakage |
+| (iii) | **standard Layer-2 accuracy audit, 0 unresolved-inaccurate** | an inaccurate description confounds Δ with *accuracy* rather than *register*; replace via the pipeline's normal retry |
+
+**Nothing distributional, nothing else.** §12.7 closed.
+
 ### 8.5 HumanVid is person-only
 
 100 % of the 1,499 HumanVid clips carry `subject.label = "person"`, against the synth bank's mixed
@@ -706,7 +733,25 @@ effect" claim on those two is contaminated** — and the leak is worse than toke
 "crash zoom out" vs "crash zoom in" is a semantic near-duplicate. **3 of 5 held-out triggers are
 clean.** A1b Q6 ordered a redraw from the 6,995 raw pool (no token overlap AND no semantic
 near-neighbour in the train 42); A5 Ruling 2 mooted it by excluding S4; **A9 reinstated S4 without
-restating the redraw.** Unresolved — §12.2.
+restating the redraw.**
+
+**RULED (A11 item 2, 2026-07-28): NO REDRAW. Strike the 2 contaminated triggers from the diagnostic
+universe.** A1b Q6's redraw is **formally superseded by a change of purpose**: at A1b time the
+held-out set was a design-level generalization diagnostic; post-A9 its *only* consumer is A2 Q4's
+winner-arm, non-claim lane, which **already** restricts itself to "only the 3 token-clean held-out
+triggers" (3 × 4 endpoints × 2 seeds = 24 gens). **The root is untouched either way** — held-out
+triggers were excluded at selection and the frozen 2,000 are all train-trigger clips.
+
+The token-leak framing above understates it in one direction and overstates it in another: the
+*lexical* leak is moot for the root, but the **semantic** leak stands — "crash zoom out" vs trained
+"crash zoom in" makes the model near-ID on that manner — so `cr34sh`/`cr4n3` are unusable as
+"unseen effect" probes **regardless of any redraw**. Redrawing 2 replacements would buy n=5 instead
+of n=3 on a **non-claim diagnostic**, at the price of operationalizing a fuzzy "no semantic
+near-neighbour" criterion. Simple wins.
+
+**What this means operationally:** H4 tags the two as `CONTAMINATED — excluded from the diagnostic
+universe` (§7); any "held-out effect" sentence in the report may cite **only the 3 clean triggers,
+with n=3 disclosed**. The frozen selection is **not re-opened**. §12.2 closed.
 
 ---
 
@@ -732,18 +777,47 @@ $PY scripts/ctt_v2/dryrun_epoch.py --root $ROOT      # zero-skip epoch, promoted
 | **A2** | inventory integrity — each stratum inventory's sha256 matches what the root was assembled from | provenance; a changed inventory means the root no longer describes itself | ☐ |
 | A2b | every relative path is `<stratum>_r<NN>/<group>/<target>__ref_<reference>.pt` | | ☐ |
 | A2c | every sample resolves to a verified inventory entry | | ☐ |
-| **A3** | realized mix within **±0.5 pp** of intended, **COUNTED from the assembled root** | the mix is realized by symlink duplication precisely so it can be counted, not asserted by construction (A3-F8.3) | ☐ |
+| **A3** | realized mix within **±0.5 pp** of intended, **COUNTED from the assembled root** | the mix is realized by symlink duplication precisely so it can be counted, not asserted by construction (A3-F8.3) | ☑ **solvable within tolerance** — a `--plan-only` assembly over the real S0+S2a+S2b inventories lands `max_dev 0.4296 pp` (tol 0.5) on the ruled `S1,S4`-absent branch, §11.1 |
 | **A4** | every caption contains ` sksz.` **exactly once**; the outcome marker is absent; zero Tier-1 leak strings; no caption in an inventory is missing from `CAPTIONS.json` | | ☐ |
 | **A5** | S1/S2 endpoints ∩ {eval endpoints, zs-audited endpoints, the 42 test clips} = ∅, classes resolved by `prompts.clip_class()` | A3-F5b | ☐ |
-| **A6** | the 8 pre-registered S2a inline-OOD ops are absent — **and a vacuous exclusion on a root containing S2a is itself a hard failure** | prevents the exclusion silently doing nothing | ☐ **will FAIL, §11.4** |
+| **A6** | the 8 pre-registered S2a inline-OOD ops are absent — **and a vacuous exclusion on a root containing S2a is itself a hard failure** | prevents the exclusion silently doing nothing | ☑ **non-vacuous; PASSES in a `--plan-only` assembly** (8/8 ops resolve, exactly 8 groups / 80 clips dropped with reason `inline_ood_op`, 0 survive), §11.4 |
 | **A7** | the 10 `HOLDOUT_S2` shader families are absent | | ☐ |
 | **A8** | the 120 reserved union-pool clips are absent | | ☐ |
 | **A9** | the S0 zero-shot classes are absent — as a group class *and* via any corpus-resolvable endpoint | | ☐ |
 | **A10** | the Day-0 copy-gate admissibility check is recorded as **PASSED** — absent file or non-PASS verdict ⇒ FAIL | A5 Ruling 1 makes it a training blocker | ☑ currently reads PASS from `VERIFY_copy_ref_discriminator.md` |
 | **D1** | **dry-run epoch: ZERO skipped samples.** Reproduces `_discover_samples` exactly, then resolves and metadata-loads every sample. Any skip — join miss, dangling symlink, unreadable tensor, wrong keys, disagreeing shapes — exits non-zero | the trainer only debug-logs a skip, which is how a silently truncated epoch reaches the claim table | ☐ |
 | **D2** | grep the trainer's own index line immediately after launch: `Fast index: N valid samples from N total`, **N == expected**, and it must count S4's 6,000 | the only in-band confirmation the trainer agrees with us | ☐ |
-| **D3** | **mixed-format smoke gate** — 2 shapes, 100–200 steps, per-format consumed counts exact, finite comparable per-format loss, RoPE in bf16 for both, one train==inference prefix-anchor probe, realized shifts asserted | three silent trainer defects are on record; this is non-negotiable (A1b Q3, 0.9 confidence) | ☐ |
+| **D3** | **mixed-format smoke gate** — 2 shapes, 100–200 steps, per-format consumed counts exact, finite comparable per-format loss, RoPE in bf16 for both, one train==inference prefix-anchor probe, **realized shifts asserted in two clauses (below)** | three silent trainer defects are on record; this is non-negotiable (A1b Q3, 0.9 confidence) | ☐ |
 | **D4** | `cond_clean` smoke assert logged before step 250 (kill rule K0) | | ☐ |
+
+#### D3's shift assert — CORRECTED (A11 item 4, 2026-07-28)
+
+A9 pre-wrote `realized shifts ∈ {1.120, 2.302} exactly`. **That assert would have FAILED on a
+correct encode** (§11.2). It is replaced by **two clauses**, because one clause alone catches only
+one of the two drift directions:
+
+```python
+from ltx_trainer.timestep_samplers import ShiftedLogitNormalTimestepSampler as S
+shift = S._get_shift_for_sequence_length
+
+# clause 1 — PIN CHECK: catches TRAINER-CONSTANT drift.
+#   m = (2.05-0.95)/(4096-1024) = 1.1/3072,  b = 0.95 - m*1024 = 0.5833...,  NO CLAMP,
+#   so 4,800 tokens legitimately extrapolates above max_tokens.  Verified first-hand in
+#   timestep_samplers.py:122-134.
+assert abs(shift(1820) - 1.2350) < 1e-3      # S4        5*14*26
+assert abs(shift(4800) - 2.3021) < 1e-3      # corpus   16*20*15
+
+# clause 2 — REALIZED CHECK: catches ENCODE-GEOMETRY drift.
+#   the set of shifts observed in the mixed-format smoke run must equal the function's
+#   outputs at the REALIZED token counts, exactly.
+assert observed_shifts == {shift(5*14*26), shift(16*20*15)}
+```
+
+**Why both.** Clause 1 alone passes even if S4 were re-encoded to a different grid (the constants
+never moved); clause 2 alone passes even if upstream changed `min_shift`/`max_shift` (observed and
+expected move together). `root_common.shift_for_tokens()` reproduces the trainer function verbatim
+and `root_common.RULED_SHAPES` carries the two ruled grids, so the numbers above are **derived from
+the shape, never restated** — the arithmetic that produced 1,500/1.120 cannot recur.
 
 **Pre-assembly, additionally required by A4/A8 and not covered by the battery:**
 
@@ -874,7 +948,16 @@ truncated `.pt` that skip-if-exists would then trust. Measured throughput ~1,750
 
 ```bash
 cd $W
-$PY scripts/ctt_v2/build_inventories.py                                   # -> outputs/ctt_v2/inventories/*.json
+# per-stratum inventories.  S2a/S2b are built from the RENDER MANIFESTS, not the encodes,
+# so they do not block on the in-flight VAE jobs (sources are attached later).
+$PY scripts/ctt_v2/build_inventories.py s0 --out outputs/ctt_v2/inventories/S0.json
+$PY scripts/ctt_v2/build_inventories.py s2meta --stratum S2a --sided two --no-require-sources \
+    --meta-glob 'outputs/videos/ctt_v2_s2/full/meta/clips_shard*.jsonl' \
+    --out outputs/ctt_v2/inventories/S2a.json          # 799 groups / 7,990 clips / 23,970 pairs
+$PY scripts/ctt_v2/build_inventories.py s2meta --stratum S2b --sided two --no-require-sources \
+    --meta-glob 'outputs/videos/ctt_v2_s2_humanvid/full/meta/clips_shard*.jsonl' \
+    --out outputs/ctt_v2/inventories/S2b.json          # 799 groups / 7,990 clips / 23,970 pairs
+# S1 groups are the 11 ARMS (A11 item 6), not the endpoints; S4 groups are the 42 triggers.
 $PY scripts/ctt_v2/assemble_root.py --init-manifest outputs/ctt_v2/strata_manifest.json
 $PY scripts/ctt_v2/assemble_root.py --manifest outputs/ctt_v2/strata_manifest.json --plan-only
 $PY scripts/ctt_v2/assemble_root.py --manifest outputs/ctt_v2/strata_manifest.json
@@ -891,7 +974,14 @@ in it, creates only what is missing. Re-running is a no-op.
 Recorded because the dossier already contains one such correction (S2a is 7,990/799, not the
 inherited 8,410/809) and **that pattern must not repeat silently**. Ordered by consequence.
 
-### 11.1 The assembly code carries A5's mix, which A9 superseded
+> **Status after A11 (2026-07-28):** §11.1 **RESOLVED** (code + manifest corrected, commit `674ecf1`
+> + this one) · §11.2 **RESOLVED** (crop ratified, assert rewritten, `REF_mixed_length.md` corrected)
+> · §11.3 recorded, no action beyond the caption-count estimate · §11.4 **RESOLVED**
+> (`PREREG_inline_ood_ops_s2a.json` written and ratified) · §11.5 recorded · §11.6 **RESOLVED**
+> (role-scoped exclusion now derived + machine-checked in three places) · §11.7 **RESOLVED**
+> (`AUDIT_RESULT.json` written) · §11.8 recorded.
+
+### 11.1 The assembly code carries A5's mix, which A9 superseded — **RESOLVED**
 
 | source | S0 | S1 | S2a | S2b | S4 |
 |---|---|---|---|---|---|
@@ -905,7 +995,27 @@ constants, so **an assembly run today would assemble the wrong mix and then asse
 The `present` flag is a clean toggle (`--set-present S4=true`) but the weights are not toggled with it.
 **Must be corrected before assembly.**
 
-### 11.2 S4's on-disk geometry is not what any ruling says
+**RESOLVED (A11 item 3).** `root_common.INTENDED_WEIGHTS_PCT` now reads
+`{S0 15, S1 6, S2a 34.5, S2b 34.5, S4 10}` behind a sum-to-100 guard; `assemble_root.py` **derives**
+the manifest's weights from it instead of restating literals; `_S_PRESENT` marks S2b and S4 present;
+and `outputs/ctt_v2/strata_manifest.json` was regenerated from that single source. A9's three
+pre-registered contingency branches are recorded next to the constants as
+`root_common.ABSENT_BRANCH_WEIGHTS_PCT`, each guarded to sum to 100 and to cover exactly the
+complement of its own key:
+
+| absent | S0 | S1 | S2a | S2b | S4 |
+|---|---|---|---|---|---|
+| — (headline) | 15 | 6 | 34.5 | 34.5 | 10 |
+| **S1** (S1-fail) | 15 | — | 36.5 | 36.5 | **12** |
+| **S4** (S4-cutoff) | 15 | 6 | 39.5 | 39.5 | — |
+| **S1 + S4** | 15 | — | 42.5 | 42.5 | — |
+
+⚠ **A latent second landmine, found while doing this:** the manifest's `absent_weight_overrides`
+previously held `{"S1": {S0 15, S2a 42.5, S2b 42.5}}` — that is A9's **both-absent** branch sitting
+under the **S1-only** key, so dropping S1 alone would have silently deleted S4 from the mix as well.
+Fixed by the table above. **A9's 34.5 is confirmed PER S2 HALF ⇒ S2 total 69 %** (A11 item 3, 0.98).
+
+### 11.2 S4's on-disk geometry is not what any ruling says — **RESOLVED**
 
 | claim | source | disk |
 |---|---|---|
@@ -920,6 +1030,14 @@ reshaped to 480×640, the very thing A1b ruled out. The encode script found the 
 documented it correctly in its own header. The crop is 16 rows of 464 (3.4 % of height), pure, no
 resampling, and `S4_BUCKET` is a one-line change costing ~0.3 L40S-h to revisit — but **"no crop" is
 now false and the σ caveat A9 pre-wrote quotes the wrong number.**
+
+**RESOLVED (A11 item 4).** The 832×448 encode is **ratified; the latents on disk stand and are not
+re-encoded.** A1b Q3's "no crop" is amended to its intent (§5.6); the masks row is corrected to
+`(5,14,26)` and A9's `(5,20,15)` prose is struck; `REF_mixed_length.md`'s 1,500-token/1.120 row is
+corrected to 1,820/1.2350 in place, with the root cause recorded there; the σ caveat is re-derived at
+1.2350 (§8.2); and A9's one-clause smoke-gate assert is replaced by the **two-clause** assert in §9.
+`m = 1.1/3072`, `b = 0.5833`, **no clamp** — re-verified first-hand against
+`ltx_trainer/timestep_samplers.py:122-134`.
 
 ### 11.3 S2a needs 333 caption strings, not 666 — `swap` does not exchange A/B content
 
@@ -953,6 +1071,38 @@ and its own output is stamped `"status": "operator-derived, awaiting owner ratif
 a **live, correctly-detected pre-registration hole**, not a bug — but assert A6 will fail until the
 file is written and ratified. §12.1.
 
+**RESOLVED (A11 item 1, 2026-07-28).** The file is written and advisor-ratified. The draw was run
+against the frozen S2a inventory (`outputs/ctt_v2/inventories/S2a.json`, sha
+`5cd883e2add1641d…`, 799 groups / 7,990 clips), which is built from the render manifests
+`meta/clips_shard*.jsonl` — **not** from the still-running VAE encodes, so nothing about the draw
+waits on GPU.
+
+| shader | pre-registered op |
+|---|---|
+| `BowTieWithParameter` | `BowTieWithParameter_d8b50f918c` |
+| `EdgeTransition` | `EdgeTransition_1560f76ce8` |
+| `FilmBurn` | `FilmBurn_bce3e2cb2d` |
+| `LinearBlur` | `LinearBlur_be1e988437` |
+| `Overexposure` | `Overexposure_ee3010899f` |
+| `Slides` | `Slides_a8d71c73fe` |
+| `morph` | `morph_07a0c1cc6a` |
+| `randomNoisex` | `randomNoisex_a5f68f8fd2` |
+
+8 ops · 8 distinct shaders · drawn from 56 eligible shaders / 799 eligible ops · seed 42 · 80 clips
+(8 × 10, ~1 % of S2a). **Excluded from the assembled root, not merely held** — their encodes stay on
+disk for the inline lane's demos, and per A2 inline scores never gate anything. **S2a-only**: S2b's
+operators are all-new, so no S2b op shares an excluded op's id. The 8 are **complementary to** the 10
+held-out shader families (H2), not overlapping — H2 is a *family*-level holdout with zero rendered
+clips and stays eval-side; these are *op*-level near-OOD within trained families. Verified: **zero
+overlap with H2 and zero with the full-occlusion family** — and the draw was **not** post-filtered on
+either, since post-draw curation is exactly what the seed-42 procedure precludes.
+
+**Why this is a legitimate late pre-registration, not a contaminated one:** the property being
+protected is *"the trained model never saw these ops"*, which is fixed at **training** time, not
+data-creation time. No training step has run and no candidate has been scored. The file carries a
+verbatim timing declaration to that effect plus `source_inventory_sha256`, so the draw can be
+re-verified against the exact bytes it came from forever.
+
 ### 11.5 REF_root_format.md's per-dir file count is mis-stated
 
 It reads *"Current: 26 classes × 385 = 1,925 files per dir."* On disk each of the five dirs holds
@@ -969,12 +1119,36 @@ already rendered into 10 S2b clips, occupies the **B field in 10/10** of them, a
 at 1,146 / 120**, and the fix is a **role-scoped A-only caption exclusion**. Gate arithmetic for the
 counterfactual whole-drop was computed anyway (gate A 0.519960, gate B 50.46) and would have passed.
 
+**RESOLVED (A11 item 5, 2026-07-28) — role-scoping KEPT, whole-clip drop REJECTED.** Dropping the
+clip whole would re-cut a frozen, audited S2b batch on a post-hoc criterion (violating A10 /
+principle 8), discard 10 good renders, and the defect is *provably* role-confined (A-anchor blank at
+std 0.79; B-role frames 112–120 normal at std 74). What was missing was never the decision — it was
+the **machine check**. Now enforced in three places, all reading the *same* derived list from
+`POOL_DROPS_M3_ADJUDICATION.json` (`role_scoped_exclusions_for_caption_store`), never a hand-kept
+list:
+
+1. **`root_common.load_exclusions()`** gains `role_scoped_captions {clip_id: {roles}}` +
+   `clip_level_captions`, derived; an **absent** adjudication file is a hard failure, not an empty
+   exclusion, so the rule can never go silently vacuous.
+2. **Caption-store assert** — `scripts/ctt_v2/captions/assert_caption_store.py`, runs when the store
+   lands: `descriptions.json` must contain **no A-role** description for
+   `openvid_T1MiFx98l3g_0_50to156` (presence = hard FAIL) **and must contain its B-role** one
+   (absence = hard FAIL, guarding against an over-broad skip silently dropping the legitimate role).
+   Both directions proven to fire. The caption pipeline consumes the same derived list to skip
+   generation (`generate_descriptions.apply_role_scoped_exclusions`).
+3. **Root assert (§9)** — no assembled sample's caption may draw on an excluded (clip, role)
+   description. Passes **vacuously today** (the clip is B-field in 10/10 S2b rows; 0 occurrences
+   anywhere in `S1_GRID.json`) and permanently guards re-renders and future grid changes.
+
 ### 11.7 S2b's blind audit has no result artefact
 
 S2a has `outputs/videos/ctt_v2_s2/full/AUDIT_RESULT.json` with raters, adjudication and verdict.
 S2b's directory holds `AUDIT_KEY.json` and `audit_sheets/` but **no `AUDIT_RESULT.json`** — the
 1/64 · 0/64 · consensus-0 PASS lives only in DOSSIER §10.6 prose. Under A9's own config-archiving
 ruling *(an unarchived measurement cannot gate)*, this must be written to disk before the stamp.
+
+**RESOLVED.** `AUDIT_RESULT.json` + `AUDIT_RATERS_RAW.md` are written beside the S2b audit sheets and
+mirrored to `misc/ctt_v2_final/artefacts/s2b_audit/`. §12.8 closed.
 
 ### 11.8 Minor numeric disagreements, recorded for completeness
 
@@ -987,10 +1161,25 @@ ruling *(an unarchived measurement cannot gate)*, this must be written to disk b
 
 ---
 
-## 12. OPEN — needs a ruling
+## 12. CLOSED — every row now carries a ruling
 
-Genuine gaps where no recorded decision exists. **Nothing here has been filled in by the author of
-this document.**
+Genuine gaps where no recorded decision existed when this document was written. **All eight were
+ruled by `advisors/A11_seven_open_items_VERBATIM.md` (2026-07-28) plus the operator-owned 12.8**, and
+each row below records the ruling and where it landed. Nothing here remains open.
+
+| # | ruling | confidence | where it landed |
+|---|---|---|---|
+| **12.1** | **RATIFIED.** Pre-register the 8 inline-OOD ops NOW via the seed-42 selector; **full root exclusion** (not merely held); **S2a only**. A legitimate late pre-registration — the protected property ("the model never saw these ops") is fixed at *training* time, and no training step has run and no candidate has been scored. Draw ratified **as-is**; never post-filtered. | 0.85 | `misc/ctt_v2_final/PREREG_inline_ood_ops_s2a.json`; §11.4; assert A6 |
+| **12.2** | **NO REDRAW.** A1b Q6 is superseded by a change of purpose; the two contaminated triggers are struck from the diagnostic universe and tagged `CONTAMINATED`. "Held-out effect" claims may cite only the 3 clean triggers, n=3 disclosed. Frozen selection not re-opened. | 0.85 | §7 (H4); §8.6 |
+| **12.3** | **CONFIRMED: 34.5 is per S2 half ⇒ S2 total 69 %.** Code + manifest reconciled to `15 / 6 / 34.5 / 34.5 / 10`; S4 `present: true`; A9's three contingency branches recorded next to the constants. | 0.98 | `root_common.INTENDED_WEIGHTS_PCT` + `ABSENT_BRANCH_WEIGHTS_PCT`; `strata_manifest.json`; §11.1 |
+| **12.4** | **RATIFY 832×448. Do not re-encode.** A1b's literal "no crop" is VAE-impossible and is amended to its intent (no resampling/letterbox/retiming). The 16-row centre crop is the *minimal* amendment; 832×480 is strictly worse on the ruling's own intent. The smoke-gate assert is rewritten with **two clauses**, derived from the trainer's own function. | 0.9 | §5.6; §8.2; §9 (D3); §11.2; `REF_mixed_length.md` |
+| **12.5** | **KEEP the role-scoping; enforce by derivation + machine checks. Whole-clip drop REJECTED.** The defect is provably role-confined; dropping the clip would re-cut a frozen audited batch on a post-hoc criterion. Enforced in three places off one derived list. | 0.9 | `root_common.load_exclusions()`; `captions/assert_caption_store.py`; `generate_descriptions.py`; root assert; §11.6 |
+| **12.6** | **S1's pairing group is the ARM. 1,170 stands.** group=endpoint would pair same-content × different-op, violating "reference = same operator, different content" — it is wrong, not merely different. 11 groups. A shared-probe row **may** reference a non-probe row. | 0.95 | §5.2 |
+| **12.7** | **Swap-lane prompts are EXEMPT from the 12-gate battery; three per-item checks are mandatory** (render-path asserts, Tier-1 tripwire, Layer-2 accuracy with 0 unresolved-inaccurate). The gates cannot coherently apply — the register difference *is* the treatment. | 0.85 | §8.4 |
+| **12.8** | **Written.** `AUDIT_RESULT.json` + `AUDIT_RATERS_RAW.md` beside the S2b sheets, mirrored to `misc/ctt_v2_final/artefacts/s2b_audit/`. | — | §11.7 |
+
+<details>
+<summary>The original questions, preserved verbatim for the record</summary>
 
 | # | question | why it blocks | who can decide |
 |---|---|---|---|
@@ -1002,6 +1191,8 @@ this document.**
 | **12.6** | **S1 sample count under the pairing rule.** A1b Q5 states 1,170 (= 9×30×3 + 2×60×3), which treats the **specialist** as the pairing group. But S1's design gives each specialist 30 *unique* endpoints, so a ring-offset reference is a different endpoint's clip of the *same* specialist — i.e. same op, different content, which is correct. Confirm the group key for S1 is the **arm**, not the endpoint, and that a shared-probe-set row may reference a non-probe row. | changes the S1 sample count and the inventory schema | advisor |
 | **12.7** | **Does the register-swap lane's second prompt need its own caption-battery pass?** A8 specifies it is generated by the round-3 pipeline from corpus anchors, but does not say whether those 46×2 descriptions must clear the 12 gates before use. | small, but it is caption text entering a scored lane | advisor |
 | **12.8** | **What is the authoritative S2b blind-audit artefact?** (§11.7.) Under A9's config-archiving ruling an unarchived measurement cannot gate — and this one gates a FROZEN stratum. | blocks the stamp | operator writes it; the *form* is already ruled |
+
+</details>
 
 ---
 
