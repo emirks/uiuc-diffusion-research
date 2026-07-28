@@ -39,6 +39,24 @@ THE PRE-REGISTERED GATE (fixed before the job was submitted; see GATE_BARS below
                   S4 = (5,20,15) = 1,500 tokens, which cannot exist (832×464 is not VAE-legal,
                   464/32 = 14.5).  A11 item 4 corrected it to the delivered 832×448×33 bucket,
                   grid (5,14,26) = 1,820 tokens ⇒ 1.2350.
+
+                  🔴 TWO FAILURE CLASSES, NOT ONE (A11's DERIVED-CONSTANT RULE, in force
+                  campaign-wide).  A9 §4 pre-registers an AUTO-DROP as the consequence of this
+                  gate failing, and A9's own constants were wrong twice — so a gate that
+                  returns one undifferentiated FAIL would have executed the punishment branch
+                  on healthy data.  G3 therefore classifies its own failure:
+
+                    DATA-FAIL  (verdict FAIL, exit 1) — the MECHANISM disagrees with itself:
+                        the sampler was handed something other than the target's own token
+                        count, or the shift it produced is not this trainer's function of that
+                        count.  No pinned literal takes part, so a wrong spec cannot cause it.
+                        A9 §4's fallback ladder is permitted to run.
+                    SPEC-CONSTANT-MISMATCH  (verdict SPEC_CONSTANT_MISMATCH, exit 3) — the
+                        mechanism is self-consistent but REALITY DISAGREES WITH A PINNED
+                        LITERAL (`G3_shift_pins`, `G3_expected_token_counts`, or the root
+                        manifest's declared shifts).  Ambiguous between broken data and a
+                        broken spec — and both times so far it was the spec.  ESCALATES to
+                        advisor review; the fallback/punishment branch MUST NOT run.
     G4 comparable at MATCHED sigma, the per-format mean loss ratio lies in [1/3, 3]
     G5 native     under the native (unmatched) schedule every arm's mean loss is finite and
                   the arms stay within [1/10, 10] — a looser band because the shift
@@ -80,9 +98,118 @@ GATE_BARS = {
     "seed": 42,
 }
 
+#: TEST ONLY.  `--test-only-pin` overwrites a pinned constant so the SPEC-CONSTANT-MISMATCH
+#: branch can be PROVEN to fire without waiting for a real spec error.  Whatever it changes is
+#: recorded verbatim in the artefact under `TEST_ONLY_OVERRIDES`, so a real run can never hide
+#: an override.  Same pattern as `assert_root.py --override-role-exclusions`.
+TEST_ONLY_OVERRIDES: dict = {}
+
+
+#: exit codes.  3 is deliberately NOT 1: A9 §4's fallback ladder keys off the failure of this
+#: gate, and a spec/reality disagreement must never be able to trigger it.
+EXIT_PASS, EXIT_DATA_FAIL, EXIT_SPEC_MISMATCH = 0, 1, 3
+
+DERIVED_CONSTANT_RULE = (
+    "A11 RULING 3 (Derived-Constant Rule): where a literal is pinned, the gate MUST "
+    "independently recompute it and, on mismatch, raise a distinct SPEC-CONSTANT-MISMATCH "
+    "failure class that escalates to advisor review — it must NEVER execute a pre-registered "
+    "fallback/punishment branch, because a spec/reality disagreement is ambiguous between "
+    "broken data and a broken spec, and both times so far it was the spec."
+)
+
 
 def log(m: str) -> None:
     print(f"[probe] {m}", flush=True)
+
+
+# --------------------------------------------------------------------------------------
+def mechanism_offenders(rows: list[dict]) -> list[str]:
+    """The DATA clause of G3, in ONE place, over rows either path builds.
+
+    Mechanism self-consistency only: the sampler was called, it was handed the target's own
+    `f*h*w`, and the shift it returned is this trainer's function of that count.  No pinned
+    literal appears here — that is what makes a DATA-FAIL impossible to cause with a wrong
+    spec, and it is why `--shifts-only` (which runs without a GPU) exercises the same code the
+    full gate uses.
+    """
+    from ltx_trainer.timestep_samplers import ShiftedLogitNormalTimestepSampler as SLN
+
+    bad = []
+    for r in rows:
+        tok = int(r["tokens"])
+        want = SLN._get_shift_for_sequence_length(tok)
+        if not r["observed_sampler_calls"]:
+            bad.append(f"{r['rel']}: the sampler was never called")
+        for c in r["observed_sampler_calls"]:
+            if int(c["seq_length"]) != tok:
+                bad.append(f"{r['rel']}: sampler handed seq_len {c['seq_length']}, not the "
+                           f"target's own {tok} (2*tok = {2 * tok})")
+            if abs(c["shift"] - want) >= 1e-12:
+                bad.append(f"{r['rel']}: observed shift {c['shift']!r} != fn({tok}) = {want!r}")
+    return bad
+
+
+def classify_shift_assert(*, pin_rows: list, tol: float, data_offenders: list,
+                          realized_tokens: list, observed_seq_lens: list,
+                          want_tokens: list, observed_shifts: list,
+                          manifest_expected_shifts: list | None = None) -> dict:
+    """Split G3's outcome into DATA-FAIL vs SPEC-CONSTANT-MISMATCH.  Used by BOTH paths.
+
+    One function, two callers (`shifts_only` and `run`), on purpose: a second implementation
+    is a second place for the classification to drift, and the whole point of the rule is that
+    the classification is what protects the stratum.
+    """
+    spec_off = []
+    for p in pin_rows:
+        if not p["ok"]:
+            spec_off.append(
+                f"PINNED shift {p['pinned']} at seq_len {p['seq_len']} but this trainer's "
+                f"_get_shift_for_sequence_length({p['seq_len']}) = {p['from_trainer_fn']!r} "
+                f"(|err| {p['abs_err']:.3e} > tol {tol}) — the PIN is wrong, or the trainer's "
+                f"shift schedule changed. Recompute the constant before touching the data.")
+    if sorted(realized_tokens) != sorted(want_tokens):
+        spec_off.append(
+            f"the encoded latents realize token counts {sorted(realized_tokens)}, the SPEC "
+            f"pins {sorted(want_tokens)} — this is exactly the shape of A9 §3's 1,500-token "
+            f"error, which was the spec's fault and would have auto-dropped a healthy stratum")
+    if sorted(observed_seq_lens) != sorted(want_tokens):
+        spec_off.append(
+            f"the sampler was handed seq_lens {sorted(observed_seq_lens)}, the SPEC pins "
+            f"{sorted(want_tokens)}")
+    if manifest_expected_shifts is not None:
+        want_m = sorted(set(manifest_expected_shifts))
+        if len(want_m) != len(observed_shifts) or any(
+                abs(a - b) >= 1e-12 for a, b in zip(sorted(observed_shifts), want_m)):
+            spec_off.append(
+                f"ROOT/SMOKE manifest declares expected shifts {want_m}, the run observed "
+                f"{sorted(observed_shifts)}")
+
+    data_ok, spec_ok = not data_offenders, not spec_off
+    if not data_ok:
+        cls, verdict, code = "DATA-FAIL", "FAIL", EXIT_DATA_FAIL
+    elif not spec_ok:
+        cls, verdict, code = "SPEC-CONSTANT-MISMATCH", "SPEC_CONSTANT_MISMATCH", EXIT_SPEC_MISMATCH
+    else:
+        cls, verdict, code = None, "PASS", EXIT_PASS
+    return {
+        "ok": data_ok and spec_ok,
+        "data_ok": data_ok, "spec_ok": spec_ok,
+        "failure_class": cls, "verdict": verdict, "exit_code": code,
+        "escalates": cls == "SPEC-CONSTANT-MISMATCH",
+        "auto_drop_permitted": cls == "DATA-FAIL",
+        "data_offenders": data_offenders, "spec_offenders": spec_off,
+        "data_clause": "every sample: the sampler was CALLED, it was handed the target's own "
+                       "f*h*w (not the reference-prepended 2*tok), and the shift it produced "
+                       "is this trainer's function of that count. No pinned literal takes "
+                       "part, so a wrong spec cannot cause a DATA-FAIL.",
+        "spec_clause": "the pinned literals (G3_shift_pins, G3_expected_token_counts, the "
+                       "manifest's declared shifts) agree with what the trainer's function "
+                       "and the encoded latents actually are.",
+        "rule": DERIVED_CONSTANT_RULE,
+        "on_spec_mismatch": "ESCALATE to advisor review. Do NOT execute A9 §4's fallback "
+                            "ladder (S4 auto-drop): a spec/reality disagreement is not "
+                            "evidence about the data.",
+    }
 
 
 # --------------------------------------------------------------------------------------
@@ -201,7 +328,7 @@ def shifts_only(root: Path, out: Path, model_path: Path) -> int:
             f"  |err|={abs(got_v - want_v):.3e}  {'ok' if ok_p else 'MISMATCH'}")
 
     # ---- clause (b): OBSERVE what the strategy hands the sampler ------------------------
-    rows, bad = [], []
+    rows: list[dict] = []
     for i in range(len(ds)):
         rel = idx_rel[i]
         meta = by_rel[rel]
@@ -214,13 +341,6 @@ def shifts_only(root: Path, out: Path, model_path: Path) -> int:
         mi = strategy.prepare_training_inputs(collate1(raw), rec)
         obs = sorted({(c["seq_length"], c["shift"]) for c in rec.calls})
         want_shift = SLN._get_shift_for_sequence_length(tok)
-        for sl, sh in obs:
-            if sl != tok:
-                bad.append(f"{rel}: sampler handed seq_len {sl}, not tok {tok} (2*tok={2*tok})")
-            if abs(sh - want_shift) > 1e-12:
-                bad.append(f"{rel}: observed shift {sh!r} != fn({tok}) = {want_shift!r}")
-        if not obs:
-            bad.append(f"{rel}: sampler never called")
         rows.append({"rel": rel, "arm": meta["arm"], "format": meta["format"],
                      "latent_fhw": [f, h, w], "tokens": tok,
                      "seq_len_with_reference": int(mi.video.latent.shape[1]),
@@ -235,37 +355,56 @@ def shifts_only(root: Path, out: Path, model_path: Path) -> int:
     obs_seq_lens = sorted({c["seq_length"] for r in rows for c in r["observed_sampler_calls"]})
     observed_shifts = sorted({c["shift"] for r in rows for c in r["observed_sampler_calls"]})
     want_tokens = sorted(GATE_BARS["G3_expected_token_counts"])
-    g3b = (not bad and obs_seq_lens == want_tokens
-           and len(observed_shifts) == len(want_tokens)
-           and all(abs(a - SLN._get_shift_for_sequence_length(t)) < 1e-12
-                   for a, t in zip(observed_shifts, want_tokens)))
-    verdict = "PASS" if (g3a and g3b) else "FAIL"
+    realized_tokens = sorted({r["tokens"] for r in rows})
+    bad = mechanism_offenders(rows)
+    cls = classify_shift_assert(
+        pin_rows=pin_rows, tol=tol, data_offenders=bad, realized_tokens=realized_tokens,
+        observed_seq_lens=obs_seq_lens, want_tokens=want_tokens,
+        observed_shifts=observed_shifts,
+        manifest_expected_shifts=man.get("distinct_expected_shifts"))
+    verdict = cls["verdict"]
 
     rec_out = {
-        "schema": "ctt_v2_shift_assert_A11_item4/1",
+        "schema": "ctt_v2_shift_assert_A11_item4/2",
         "when": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "host": os.uname().nodename,
         "device": "cpu (no transformer loaded — the shift does not depend on the forward)",
         "root": str(root), "n_samples": len(rows),
-        "clause_a_function_pin": {"ok": g3a, "tol": tol, "rows": pin_rows},
-        "clause_b_realized": {"ok": g3b, "observed_sampler_seq_lengths": obs_seq_lens,
+        "gate_bars": {k: GATE_BARS[k] for k in
+                      ("G3_shift_pins", "G3_shift_pin_tol", "G3_expected_token_counts")},
+        "TEST_ONLY_OVERRIDES": TEST_ONLY_OVERRIDES or None,
+        "clause_a_function_pin": {"ok": all(p["ok"] for p in pin_rows), "tol": tol,
+                                  "rows": pin_rows},
+        "clause_b_realized": {"ok": cls["data_ok"] and not cls["spec_offenders"],
+                              "data_ok": cls["data_ok"],
+                              "latent_token_counts": realized_tokens,
+                              "observed_sampler_seq_lengths": obs_seq_lens,
                               "expected_token_counts": want_tokens,
                               "observed_shifts": observed_shifts,
                               "function_outputs": [SLN._get_shift_for_sequence_length(t)
                                                    for t in want_tokens],
                               "offenders": bad},
+        "failure_classification": cls,
         "samples": rows, "VERDICT": verdict,
     }
     out.mkdir(parents=True, exist_ok=True)
     (out / "SHIFT_ASSERT_A11_item4.json").write_text(json.dumps(rec_out, indent=1) + "\n")
     log("")
-    log(f"clause (a) FUNCTION PIN [{'PASS' if g3a else 'FAIL'}]")
-    log(f"clause (b) REALIZED     [{'PASS' if g3b else 'FAIL'}]  "
+    log(f"clause (a) FUNCTION PIN [{'PASS' if all(p['ok'] for p in pin_rows) else 'MISMATCH'}]")
+    log(f"clause (b) REALIZED     [{'PASS' if cls['data_ok'] else 'FAIL'}]  "
         f"seq_lens handed to sampler = {obs_seq_lens}, observed shifts = "
         f"{[round(x, 6) for x in observed_shifts]}")
-    for b in bad:
-        log(f"   OFFENDER {b}")
-    log(f"VERDICT: {verdict} -> {out/'SHIFT_ASSERT_A11_item4.json'}")
-    return 0 if verdict == "PASS" else 1
+    for b in cls["data_offenders"]:
+        log(f"   DATA OFFENDER {b}")
+    for s in cls["spec_offenders"]:
+        log(f"   SPEC OFFENDER {s}")
+    if cls["failure_class"] == "SPEC-CONSTANT-MISMATCH":
+        log("")
+        log("🔴 SPEC-CONSTANT-MISMATCH — the mechanism is self-consistent; a PINNED CONSTANT "
+            "disagrees with reality.")
+        log(f"   {cls['on_spec_mismatch']}")
+    log(f"VERDICT: {verdict} (exit {cls['exit_code']}) -> "
+        f"{out/'SHIFT_ASSERT_A11_item4.json'}")
+    return cls["exit_code"]
 
 
 # --------------------------------------------------------------------------------------
@@ -576,7 +715,16 @@ def run(root: Path, out: Path, model_path: Path, quick: bool) -> int:
     expected = sorted(set(man["distinct_expected_shifts"]))
     g3c = (len(realized) == len(expected)
            and all(abs(a - b) < 1e-12 for a, b in zip(realized, expected)))
-    g3 = bool(g3a and g3b and g3c)
+
+    # ---- and the A11 Derived-Constant classification, from the SAME two functions
+    # `--shifts-only` uses — so the GPU-free path exercises this path's logic, not a copy of it.
+    data_off = mechanism_offenders(rows)
+    g3cls = classify_shift_assert(
+        pin_rows=pin_rows, tol=tol, data_offenders=data_off,
+        realized_tokens=realized_tokens, observed_seq_lens=obs_seq_lens,
+        want_tokens=want_tokens, observed_shifts=observed_shifts,
+        manifest_expected_shifts=man["distinct_expected_shifts"])
+    g3 = bool(g3a and g3b and g3c and g3cls["ok"])
 
     lo, hi = GATE_BARS["G4_matched_sigma_ratio_band"]
     g4_rows, g4 = [], True
@@ -624,6 +772,7 @@ def run(root: Path, out: Path, model_path: Path, quick: bool) -> int:
                 "shift_sets_match": set_ok},
             "clause_c_manifest_crosscheck": {
                 "ok": g3c, "manifest_distinct_expected_shifts": expected},
+            "failure_classification": g3cls,
         },
         "G4_matched_sigma_comparable": {"ok": g4, "band": [lo, hi], "rows": g4_rows},
         "G5_native_loss_finite_comparable": {"ok": g5, "band": [nlo, nhi],
@@ -631,10 +780,22 @@ def run(root: Path, out: Path, model_path: Path, quick: bool) -> int:
                                             "per_format": per_format_native},
         "G6_geometry_consistent": {"ok": g6, "offenders": geo_bad},
     }
-    verdict = "PASS" if all(v["ok"] for v in gates.values()) else "FAIL"
+    # A9 §4's auto-drop keys off THIS verdict, so the spec/reality case gets its own name and
+    # its own exit code (3).  A real data failure always wins: a broken mechanism must never
+    # hide behind an escalation.
+    others_ok = all(v["ok"] for k, v in gates.items() if k != "G3_shift_assert_A11_item4")
+    #: the last clause is a deliberate belt: if the long-hand clauses (g3a/g3b/g3c) see a
+    #: problem the classifier does not, the classifier is the thing that is wrong, and the
+    #: safe reading of "my own gate disagrees with itself" is a plain FAIL, not a PASS.
+    if not others_ok or not g3cls["data_ok"] or (not g3 and g3cls["ok"]):
+        verdict = "FAIL"
+    elif not g3cls["spec_ok"]:
+        verdict = "SPEC_CONSTANT_MISMATCH"
+    else:
+        verdict = "PASS"
 
     rec = {
-        "schema": "ctt_v2_mixed_format_smoke_gate/1",
+        "schema": "ctt_v2_mixed_format_smoke_gate/2",
         "when": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         "host": os.uname().nodename,
         "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
@@ -644,6 +805,7 @@ def run(root: Path, out: Path, model_path: Path, quick: bool) -> int:
         "captions": "PLACEHOLDER — one shared Gemma embedding for every sample "
                     "(Gemini credit-blocked; A9 permits placeholders for this gate)",
         "gate_bars": GATE_BARS,
+        "TEST_ONLY_OVERRIDES": TEST_ONLY_OVERRIDES or None,
         "formats": fmts, "arms": arms,
         "per_format_native": per_format_native,
         "per_arm_native": per_arm_native,
@@ -687,13 +849,24 @@ def run(root: Path, out: Path, model_path: Path, quick: bool) -> int:
     log(f"      fn(expected tokens)        = {[round(x, 6) for x in realized_from_fn]}")
     log(f"      every sample's OBSERVED shift == fn(its own tokens): {per_sample_ok}")
     log(f"   clause (c) manifest cross-check [{'PASS' if g3c else 'FAIL'}] {expected}")
+    for b in g3cls["data_offenders"]:
+        log(f"      DATA OFFENDER {b}")
+    for s in g3cls["spec_offenders"]:
+        log(f"      SPEC OFFENDER {s}")
     log("")
     for k, v in gates.items():
         log(f"   [{'PASS' if v['ok'] else 'FAIL'}] {k}")
-    log(f"VERDICT: {verdict}")
+    if verdict == "SPEC_CONSTANT_MISMATCH":
+        log("")
+        log("🔴 SPEC-CONSTANT-MISMATCH — the mechanism is self-consistent; a PINNED CONSTANT "
+            "disagrees with reality.")
+        log(f"   {g3cls['on_spec_mismatch']}")
+    code = (EXIT_PASS if verdict == "PASS" else
+            EXIT_SPEC_MISMATCH if verdict == "SPEC_CONSTANT_MISMATCH" else EXIT_DATA_FAIL)
+    log(f"VERDICT: {verdict} (exit {code})")
     log(f"-> {out/'SMOKE_GATE.json'}")
     log("=" * 78)
-    return 0 if verdict == "PASS" else 1
+    return code
 
 
 def main() -> int:
@@ -705,7 +878,21 @@ def main() -> int:
     ap.add_argument("--quick", action="store_true", help="2 sigmas, 2 native draws")
     ap.add_argument("--shifts-only", action="store_true",
                     help="A11 item 4's shift assert ONLY — no transformer, no GPU, seconds")
+    ap.add_argument("--test-only-pin", metavar="JSON", action="append", default=[],
+                    help="TEST ONLY — overwrite a pinned GATE_BARS constant, e.g. "
+                         "'{\"G3_shift_pins\": {\"1820\": 1.120}}' (A9 §3's superseded "
+                         "figure). Exists so the SPEC-CONSTANT-MISMATCH branch can be PROVEN "
+                         "to fire. Recorded verbatim in the artefact as TEST_ONLY_OVERRIDES, "
+                         "so a real run can never hide an override.")
     args = ap.parse_args()
+    for spec in args.test_only_pin:
+        for k, v in json.loads(spec).items():
+            if k not in GATE_BARS:
+                raise SystemExit(f"--test-only-pin: {k!r} is not a GATE_BARS key")
+            TEST_ONLY_OVERRIDES[k] = {"was": GATE_BARS[k], "now": v}
+            GATE_BARS[k] = v
+            log(f"⚠ TEST-ONLY OVERRIDE: GATE_BARS[{k!r}] := {v!r} "
+                f"(was {TEST_ONLY_OVERRIDES[k]['was']!r})")
     try:
         if args.shifts_only:
             return shifts_only(Path(args.root), Path(args.out), Path(args.model))

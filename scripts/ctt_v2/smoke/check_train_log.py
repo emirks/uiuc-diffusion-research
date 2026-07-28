@@ -34,9 +34,27 @@ campaign keeps meeting; here it produced a false NEGATIVE rather than the usual 
 
 Fix 3 is the standing proof that fixes 1 and 2 still work: `--self-test` replays the parser
 over the real, permanently archived job-9688250_1 capture (Rich escapes and all) and asserts
-the four numbers it must recover, plus three negative cases that must trip `T0_parser_sane`.
+the four numbers it must recover, plus four negative cases that must trip `T0_parser_sane`.
 The self-test runs on EVERY invocation, before the log under test is even opened — a parser
 that cannot read a known-good log does not get to judge a new one.
+
+THREE MORE, found by MUTATING the archived log of the passing run (`prove_smoke_gate.py`)
+------------------------------------------------------------------------------------------
+4. A log that EXISTS but cannot be READ (permissions, a directory, a dead handle) raised an
+   uncaught `OSError`, and Python exits **1** for that — the same code this gate uses for a
+   DATA failure, which A9 §4's fallback ladder consumes.  `read_log()` makes the read a
+   checked step; absent and unreadable are both PARSER_FAIL (exit 2), with the cause named.
+5. Under PARTIAL extraction — escapes present but unstrippable, so `RE_STEP` matches nothing
+   while `RE_CKPT_FILE` still matches a checkpoint filename — `T3_steps_completed` had just
+   enough evidence to evaluate and reported "highest evidenced step N of 30" about a run that
+   finished 30/30.  The docstring's contract was right and one check quietly escaped it, so
+   T1..T4 are now forced UNEVALUABLE whenever `T0_parser_sane` fails; the suppressed reading is
+   kept under `reading_before_suppression` so nothing is hidden.
+6. The gate read its own output.  Production points it at the tee'd `train_mixed.log`, but the
+   Slurm capture has THIS GATE'S REPORT appended, and un-sliced the phrase "loss is NaN" in the
+   old report trips T6 — verified: the capture of the GREEN job 9688835_1 came out FAIL, exit 1.
+   The self-test pinned that hazard for `evaluate()`; nothing guarded the CLI path, which now
+   slices `trainer_region()` first (a no-op on a trainer-only log).
 """
 
 from __future__ import annotations
@@ -45,6 +63,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import re
 import sys
 import time
@@ -107,6 +126,28 @@ def trainer_region(text: str) -> str:
     return text[(s.end() if s else 0):(e.start() if e else len(text))]
 
 
+def read_log(path: Path) -> tuple[str, str | None]:
+    """(text, read_error).  NEVER raises: an I/O failure is an INSTRUMENT fact, not a verdict.
+
+    🔴 The gate used to do `log.read_text() if log.exists() else ""`, which is two bugs in one
+    line.  A file that exists but cannot be READ (permissions, a directory, a dead NFS handle)
+    raised an uncaught `OSError`, and Python's exit code for an uncaught exception is **1** —
+    the very code this gate uses for "the TRAINING failed".  A9 §4's fallback ladder consumes
+    that exit code, so a `chmod` accident would have been indistinguishable from a data
+    failure and could have executed a punishment branch.  And a MISSING file was reported as
+    "the log is EMPTY", which names the wrong cause.  Both now surface as their own
+    instrument-attributed error, and the verdict is PARSER_FAIL (exit 2), never FAIL.
+    """
+    if not path.exists():
+        return "", f"the log does not exist: {path}"
+    try:
+        return path.read_text(errors="replace"), None
+    except OSError as exc:
+        return "", (f"the log EXISTS but could not be read: {type(exc).__name__}: {exc}. "
+                    f"This is an instrument/plumbing failure and says NOTHING about the "
+                    f"training run")
+
+
 def _chk(ok, detail, **extra):
     """A check result.  `ok=None` means UNEVALUABLE — the parser could not see the evidence.
 
@@ -118,11 +159,14 @@ def _chk(ok, detail, **extra):
 
 
 # --------------------------------------------------------------------------------------
-def evaluate(raw: str, expected: int, target_steps: int) -> tuple[dict, str]:
+def evaluate(raw: str, expected: int, target_steps: int,
+             read_error: str | None = None) -> tuple[dict, str]:
     """Parse one trainer capture.  Returns (checks, verdict).
 
     verdict ∈ {PASS, FAIL, PARSER_FAIL}.  PARSER_FAIL means the checks say nothing at all
-    about the training — only about this file's ability to read the log.
+    about the training — only about this file's ability to read the log.  `read_error`, if
+    given, is an I/O failure from `read_log()`: it forces PARSER_FAIL and is quoted verbatim
+    in T0, so the cause named is the cause that happened.
     """
     text = strip_ansi(raw)
 
@@ -148,8 +192,13 @@ def evaluate(raw: str, expected: int, target_steps: int) -> tuple[dict, str]:
         missing.append("0 'Step N/M - Loss:' lines")
     if not steps and not ckpt:
         missing.append("0 checkpoint-save lines")
-    parser_sane = not empty_log and not missing
-    if empty_log:
+    parser_sane = not read_error and not empty_log and not missing
+    if read_error:
+        t0_detail = (f"THE LOG COULD NOT BE READ — {read_error}. The verdict is PARSER_FAIL and "
+                     f"every check below is UNEVALUABLE: an unreadable or absent log is an "
+                     f"INSTRUMENT failure and must never be reportable as a data failure, "
+                     f"because A9 §4's fallback ladder consumes this exit code")
+    elif empty_log:
         t0_detail = ("the log is EMPTY (0 non-whitespace bytes) — nothing to parse; this is a "
                      "job/plumbing failure, and NOTHING below is a statement about training")
     elif missing:
@@ -167,7 +216,7 @@ def evaluate(raw: str, expected: int, target_steps: int) -> tuple[dict, str]:
     checks["T0_parser_sane"] = _chk(parser_sane, t0_detail, raw_bytes=len(raw),
                                     clean_bytes=len(text), ansi_bytes_stripped=stripped_bytes,
                                     n_index_lines=len(idx), n_step_lines=len(steps),
-                                    n_checkpoint_lines=len(ckpt))
+                                    n_checkpoint_lines=len(ckpt), read_error=read_error)
 
     # ---- T1..T4 read the extraction, so they go UNEVALUABLE when it is empty ------------
     checks["T1_fast_index_present"] = _chk(
@@ -221,6 +270,28 @@ def evaluate(raw: str, expected: int, target_steps: int) -> tuple[dict, str]:
         not nan_hits,
         "no NaN/Inf attached to a loss or gradient anywhere in the log" if not nan_hits
         else f"NaN/Inf mentions: {nan_hits[:5]}")
+
+    # ---- T0 is the gate on T1..T4: PARTIAL evidence may not produce a verdict either -----
+    # 🔴 Found by mutation (`prove_smoke_gate.py` L5): with the Rich escapes present but
+    # unstrippable, `RE_STEP` matches nothing while `RE_CKPT_FILE` still matches a checkpoint
+    # filename — so T3 had just enough to evaluate and reported
+    # "[FAIL] T3_steps_completed: highest evidenced step N of 30" about a run that completed
+    # 30/30.  That is the SAME false negative as job 9688250_1, surviving in one check after
+    # the headline verdict was fixed.  The docstring's contract is "every check that depends on
+    # the extraction is reported UNEVALUABLE — never FAIL"; enforce it here rather than trusting
+    # each check to notice, because partial extraction is exactly when they cannot.
+    if not parser_sane:
+        for k in ("T1_fast_index_present", "T2_fast_index_N_of_N", "T3_steps_completed",
+                  "T4_losses_finite"):
+            c = checks[k]
+            if c["ok"] is not None:
+                c["suppressed_by_T0"] = True
+                c["reading_before_suppression"] = {"ok": c["ok"], "detail": c["detail"]}
+                c["ok"], c["state"] = None, "UNEVALUABLE"
+                c["detail"] = ("UNEVALUABLE — T0_parser_sane FAILED, so the extraction is "
+                               "PARTIAL and cannot support any verdict about the training "
+                               "(what it would have said is kept in "
+                               "`reading_before_suppression`)")
 
     if not parser_sane:
         verdict = "PARSER_FAIL"
@@ -308,11 +379,52 @@ def self_test() -> tuple[bool, list[str]]:
     want(cf["T4_losses_finite"]["ok"] is not False,
          "and T4 is NOT reported as a NaN/Inf data failure — the exact false negative that "
          "job 9688250_1 produced")
+    # partial extraction is the subtle case: RE_STEP matches nothing, RE_CKPT_FILE still
+    # matches a checkpoint filename, and T3 used to report "highest evidenced step N of 30"
+    # about a 30/30 run.  Every extraction-dependent check must go UNEVALUABLE, not just the
+    # ones that happened to extract nothing.
+    want(all(cf[k]["ok"] is None for k in ("T1_fast_index_present", "T2_fast_index_N_of_N",
+                                           "T3_steps_completed", "T4_losses_finite")),
+         "and T1..T4 are ALL UNEVALUABLE under partial extraction, not just the empty ones "
+         f"(T3 was {cf['T3_steps_completed'].get('reading_before_suppression')})")
 
     # --- negative 3: an empty log --------------------------------------------------------
     ce, ve = evaluate("", 10, 30)
     want(ve == "PARSER_FAIL", f"empty log -> PARSER_FAIL (got {ve})")
     want(ce["T4_losses_finite"]["ok"] is None, "empty log -> T4 UNEVALUABLE")
+
+    # --- negative 4: the log cannot be READ (absent, or present-but-unreadable) ----------
+    # An uncaught OSError exits 1 — the DATA-failure code A9 §4's ladder consumes. So the
+    # read itself must be a checked, instrument-attributed step, not an exception.
+    import tempfile  # noqa: PLC0415
+
+    absent_txt, absent_err = read_log(Path(tempfile.gettempdir()) / "ctt2_no_such_log_XYZ.out")
+    want(absent_err is not None and absent_txt == "",
+         f"an ABSENT log returns a read_error instead of raising (got {absent_err!r})")
+    ca, va = evaluate(absent_txt, 10, 30, read_error=absent_err)
+    want(va == "PARSER_FAIL", f"absent log -> PARSER_FAIL, not FAIL (got {va})")
+    want(ca["T4_losses_finite"]["ok"] is None, "absent log -> T4 UNEVALUABLE")
+    with tempfile.NamedTemporaryFile("w", suffix=".out", delete=False) as fh:
+        fh.write("Fast index: 10 valid samples from 10 total\n")
+        locked = Path(fh.name)
+    try:
+        os.chmod(locked, 0o000)
+        txt, err = read_log(locked)
+        if err is None:                      # running as root, or an exotic filesystem
+            rep.append("    [ok ] (skipped: this process can read a chmod-000 file)")
+        else:
+            want(txt == "", "an UNREADABLE log yields no text and no exception")
+            cu, vu = evaluate(txt, 10, 30, read_error=err)
+            want(vu == "PARSER_FAIL",
+                 f"unreadable (chmod 000) log -> PARSER_FAIL, not FAIL (got {vu})")
+            want(cu["T0_parser_sane"]["read_error"] is not None,
+                 "T0 names the I/O error as the cause")
+            for k in ("T1_fast_index_present", "T2_fast_index_N_of_N", "T3_steps_completed",
+                      "T4_losses_finite"):
+                want(cu[k]["ok"] is None, f"{k} is UNEVALUABLE on an unreadable log")
+    finally:
+        os.chmod(locked, 0o600)
+        locked.unlink(missing_ok=True)
     return ok, rep
 
 
@@ -344,14 +456,25 @@ def main() -> int:
             ap.error(f"--{req} is required unless --self-test")
 
     log = Path(a.log)
-    raw = log.read_text(errors="replace") if log.exists() else ""
+    whole, read_error = read_log(log)
+    #: Slice the TRAINER's own region out, exactly as the self-test does.  In production the
+    #: gate is pointed at the tee'd `train_mixed.log` and this is a no-op (no banners, so
+    #: `trainer_region` returns the whole text).  Pointed at the Slurm `%x-%A_%a.out` capture
+    #: — which the sbatch appends THIS GATE'S OWN REPORT to — it is what stops the gate
+    #: reading its own output: verified, the un-sliced capture of the GREEN job 9688835_1
+    #: reports `[FAIL] T6 ... NaN/Inf mentions: ['loss is NaN']` and exits 1, the data-failure
+    #: code, purely from the previous run's report text.  The self-test pinned that hazard for
+    #: `evaluate()` but nothing guarded the CLI path.
+    raw = trainer_region(whole)
     man = json.loads((Path(a.root) / "SMOKE_ROOT_MANIFEST.json").read_text())
     expected = man["n_samples"]
 
-    checks, verdict = evaluate(raw, expected, a.steps)
+    checks, verdict = evaluate(raw, expected, a.steps, read_error=read_error)
     rec = {"schema": "ctt_v2_smoke_train_gate/2",
            "when": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
            "log": str(log), "log_exists": log.exists(), "root": str(a.root),
+           "log_read_error": read_error,
+           "log_bytes_read": len(whole), "trainer_region_bytes": len(raw),
            "expected_samples": expected, "target_steps": a.steps,
            "parser_self_test": {"ok": st_ok, "fixture": str(FIXTURE),
                                 "fixture_sha256": FIXTURE_SHA256, "report": st_rep},

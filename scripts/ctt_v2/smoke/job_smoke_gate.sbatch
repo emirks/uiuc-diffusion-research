@@ -36,7 +36,11 @@ TASK=${SLURM_ARRAY_TASK_ID:-0}
 mkdir -p "$DR/outputs/logs/slurm" "$ART"
 echo "[smoke] host=$(hostname) task=$TASK $(date)"
 nvidia-smi -L || true
-test -f "$ROOT/SMOKE_ROOT_MANIFEST.json" || { echo "[smoke] no smoke root at $ROOT"; exit 3; }
+# exit-code contract (A11's Derived-Constant Rule):
+#   0 PASS · 1 DATA failure (A9 §4's fallback ladder MAY run) · 2 PARSER/instrument failure
+#   3 SPEC-CONSTANT-MISMATCH — a pinned literal disagrees with reality. ESCALATE to advisor
+#     review; the ladder must NOT run. · 5 plumbing (no smoke root) · 4 unknown task
+test -f "$ROOT/SMOKE_ROOT_MANIFEST.json" || { echo "[smoke] no smoke root at $ROOT"; exit 5; }
 
 if [ "$TASK" = "0" ]; then
     echo "[smoke] ===== TASK 0: per-format probe ====="
@@ -46,6 +50,13 @@ if [ "$TASK" = "0" ]; then
         --root "$ROOT" --out "$ART"
     rc=$?
     echo "[smoke] probe exit=$rc"
+    if [ "$rc" = "3" ]; then
+        echo "[smoke] 🔴 SPEC-CONSTANT-MISMATCH (A11 RULING 3): the mechanism is"
+        echo "[smoke]    self-consistent and a PINNED CONSTANT disagrees with reality."
+        echo "[smoke]    ESCALATE to advisor review. Do NOT execute A9 §4's fallback ladder"
+        echo "[smoke]    (S4 auto-drop) — twice already the spec was the thing that was wrong."
+        echo "[smoke]    Evidence: $ART/SMOKE_GATE.json .gates.G3_shift_assert_A11_item4"
+    fi
     exit $rc
 fi
 
@@ -65,12 +76,21 @@ if [ "$TASK" = "1" ]; then
     rc=${PIPESTATUS[0]}
     set -e
     echo "[smoke] train exit=$rc"
-    # the seatbelt-7 gate: the trainer's own index line must show N of N
+    # the seatbelt-7 gate: the trainer's own index line must show N of N.
+    # `set +e` matters: under `set -e` a nonzero gate exit killed the script BEFORE the
+    # annotation below, so a PARSER_FAIL left no note saying it was an instrument failure.
+    set +e
     "$VENV_PY" "$WT/scripts/ctt_v2/smoke/check_train_log.py" \
         --log "$ART/train_mixed.log" --root "$ROOT" --steps "$STEPS" \
         --out "$ART/SMOKE_TRAIN_GATE.json"
     grc=$?
+    set -e
     echo "[smoke] train-log gate exit=$grc"
+    if [ "$grc" = "2" ]; then
+        echo "[smoke] ⚠ PARSER_FAIL — the gate could not READ the log (absent, unreadable, or"
+        echo "[smoke]    unparseable). This says NOTHING about the training run: do not treat"
+        echo "[smoke]    it as a data failure and do not run any fallback branch on it."
+    fi
     [ "$rc" = "0" ] || exit $rc
     exit $grc
 fi
