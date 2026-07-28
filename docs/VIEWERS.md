@@ -105,12 +105,24 @@ directory, and `rewrite_abs` writes a derived copy with path prefixes replaced
 (used where a page climbs out of the repo). Mounts are rebuilt from the registry
 on every `mount`/`serve`, so derived copies never go stale.
 
+### The static server does byte ranges
+
+`viewerctl httpd` (what `serve` runs) is not `python -m http.server` — that one
+ignores `Range` and answers 200 with the whole file. Ours answers 206. Two things
+depend on it: **seeking inside a video**, and **reading one member out of a tar
+shard without downloading the shard**. Measured: 1.17 MB clip pulled out of a
+12 GB WebDataset tar in 54 ms, `ffprobe`-valid H.264.
+
+That second one matters for design — a corpus of video inside tars does *not*
+force an application server. A static page can fetch
+`[offset, offset+size)` from the shard and hand the bytes to `<video>` as a blob
+URL, with the offsets coming from a `_viewer_index/*.jsonl.gz`.
+
 ### Server-backed viewers — for pages that are an application
 
-Some viewers cannot be static files: they stream video out of WebDataset tar
-shards by byte offset, or query an index too large to inline. Those run their own
-HTTP server on their own port and are registered under `"servers"` rather than
-`"viewers"`:
+A viewer needs its own server only when it must compute per request — not merely
+because its media lives in tars. Those run on their own port and are registered
+under `"servers"` rather than `"viewers"`:
 
 ```json
 {"slug": "ctt_v2_dataset_viewer", "port": 8799,
@@ -121,6 +133,13 @@ HTTP server on their own port and are registered under `"servers"` rather than
 `viewerctl serve` starts each one alongside the static server (skipping any
 already up) and the dashboard cards them with a running / not-running pill.
 `--static-only` skips them.
+
+The one current entry, the ctt_v2 refVFX + VFXMaster viewer, predates range
+support and could be ported to a static page: its `/api/meta` and `/api/samples`
+become client-side grouping over the gzipped index (461 KB for LoRA, 7.1 MB for
+code — `DecompressionStream('gzip')` in the browser), and its media URLs become
+range fetches into the shards. VFXMaster is already loose files. Until someone
+does that, it stays an application and keeps port 8799.
 
 ---
 

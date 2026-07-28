@@ -540,6 +540,85 @@ def free_port(port: int) -> None:
         print(f"[serve] freed port {port} (killed pid {', '.join(killed)})")
 
 
+class _Slice:
+    """A file object that stops after n bytes, for serving one byte range."""
+
+    def __init__(self, fh, n):
+        self.fh, self.left = fh, n
+
+    def read(self, size=-1):
+        if self.left <= 0:
+            return b""
+        chunk = self.fh.read(self.left if size < 0 else min(size, self.left))
+        self.left -= len(chunk)
+        return chunk
+
+    def close(self):
+        self.fh.close()
+
+
+def cmd_httpd(args) -> None:
+    """The static server, with byte-range support.
+
+    Python's stock SimpleHTTPRequestHandler ignores Range and answers 200 with
+    the whole file. Two things depend on getting this right: seeking inside a
+    video (browsers seek by asking for a range), and reading one member out of a
+    WebDataset tar without downloading the shard — which is what lets a corpus
+    viewer be a static page instead of an application.
+    """
+    from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+    import functools
+
+    class Handler(SimpleHTTPRequestHandler):
+        protocol_version = "HTTP/1.1"
+
+        def send_response(self, code, message=None):
+            super().send_response(code, message)
+            self.send_header("Accept-Ranges", "bytes")
+
+        def log_message(self, fmt, *a):
+            pass  # the access log is noise; failures still surface as HTTP codes
+
+        def send_head(self):
+            rng = self.headers.get("Range")
+            path = self.translate_path(self.path)
+            if not rng or os.path.isdir(path):
+                return super().send_head()
+            m = re.match(r"bytes=(\d*)-(\d*)\s*$", rng.strip())
+            if not m:
+                return super().send_head()
+            try:
+                fh = open(path, "rb")
+            except OSError:
+                self.send_error(404, "File not found")
+                return None
+            size = os.fstat(fh.fileno()).st_size
+            first, last = m.group(1), m.group(2)
+            if first == "":                       # suffix range: last N bytes
+                start, end = max(0, size - int(last or 0)), size - 1
+            else:
+                start = int(first)
+                end = int(last) if last else size - 1
+            end = min(end, size - 1)
+            if start > end or start >= size:
+                fh.close()
+                self.send_response(416)
+                self.send_header("Content-Range", f"bytes */{size}")
+                self.send_header("Content-Length", "0")
+                self.end_headers()
+                return None
+            self.send_response(206)
+            self.send_header("Content-Type", self.guess_type(path))
+            self.send_header("Content-Range", f"bytes {start}-{end}/{size}")
+            self.send_header("Content-Length", str(end - start + 1))
+            self.end_headers()
+            fh.seek(start)
+            return _Slice(fh, end - start + 1)
+
+    handler = functools.partial(Handler, directory=args.root)
+    ThreadingHTTPServer((args.bind, args.port), handler).serve_forever()
+
+
 def cmd_serve(args) -> None:
     port = args.port
     reg = load_registry()
@@ -554,8 +633,8 @@ def cmd_serve(args) -> None:
     log.parent.mkdir(parents=True, exist_ok=True)
     fh = open(log, "w")
     proc = subprocess.Popen(
-        [sys.executable, "-m", "http.server", str(port), "--bind", "127.0.0.1",
-         "--directory", str(REPO)],
+        [sys.executable, str(Path(__file__).resolve()), "httpd",
+         "--port", str(port), "--bind", "127.0.0.1", "--root", str(REPO)],
         stdout=fh, stderr=subprocess.STDOUT, start_new_session=True)
     time.sleep(0.8)
     if proc.poll() is not None:
@@ -683,6 +762,12 @@ def main() -> None:
                    help="do not start server-backed viewers on their own ports")
     s.add_argument("--log")
     s.set_defaults(func=cmd_serve)
+
+    d = sub.add_parser("httpd", help="the range-capable static server (used by serve)")
+    d.add_argument("--port", type=int, default=DEFAULT_PORT)
+    d.add_argument("--bind", default="127.0.0.1")
+    d.add_argument("--root", default=str(REPO))
+    d.set_defaults(func=cmd_httpd)
 
     n = sub.add_parser("new", help="scaffold a viewer directory")
     n.add_argument("slug")
