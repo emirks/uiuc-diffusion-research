@@ -182,6 +182,13 @@ def main() -> None:
             "content_hash": "sha256:" + hashlib.sha256(
                 json.dumps({f"{k}|A": desc[k] for k in sorted(desc)},
                            sort_keys=True).encode()).hexdigest(),
+            #: NOT the locked store's recipe (that one uses compact separators and
+            #: ensure_ascii=False).  Recorded rather than silently differing, because a hash
+            #: whose recipe is not written down cannot be checked by anyone later.
+            "content_hash_covers": "the `descriptions` map only, keyed 'clip|A': "
+                                   "json.dumps(sorted-key dict, sort_keys=True) with "
+                                   "DEFAULT separators and ensure_ascii=True, sha256 of the "
+                                   "utf-8 bytes -- stable against provenance churn",
             "merge_report": {k: v for k, v in report.items() if k != "per_effect_word_p50"},
             "per_effect_word_p50": report["per_effect_word_p50"],
             "tier2_queue": sorted(t2_flag),
