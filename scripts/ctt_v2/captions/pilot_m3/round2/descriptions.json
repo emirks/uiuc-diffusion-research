@@ -1,0 +1,794 @@
+{
+ "davis_dog": {
+  "A": "A large golden retriever with fluffy light brown fur and a red harness walks left across a dry grassy lawn near a dark wooden fence under diffuse outdoor daylight",
+  "B": "a golden retriever with a red harness walking across dry grass and dirt in bright daylight"
+ },
+ "davis_dogs-scale": {
+  "A": "A dappled dachshund puppy with black and tan fur rests its head against a light pink analog kitchen scale on a brown wooden desk, while a black dachshund puppy with long ears watches from behind in a brightly lit room",
+  "B": "a small black and tan dachshund puppy standing on a pink and white kitchen scale, being petted by a human hand while looking forward in a softly lit indoor setting"
+ },
+ "davis_horsejump-high": {
+  "A": "A female rider with a dark helmet, wearing a white shirt, a black vest, and white pants, sits on a brown horse, standing in a sandy arena with white and green jump obstacles under a bright blue sky with white clouds",
+  "B": "a female equestrian rider with a black helmet, a white polo shirt, and white breeches riding a brown horse, galloping over a sandy show jumping arena past red and white obstacles under a blue sky with soft white clouds in daylight"
+ },
+ "davis_india": {
+  "A": "A woman with dark hair tied back, wearing a long yellow printed tunic, walks away down a street alongside another woman in a red and white pattern sari, surrounded by foliage and soft natural sunlight",
+  "B": "a young woman with pulled-back dark hair in a pink and dark gray tunic with a gold pattern, walking forward along an outdoor street line with dense green foliage while a man with dark hair in a blue and orange plaid shirt stands in the foreground"
+ },
+ "davis_judo": {
+  "A": "A bearded man in a white karate gi with a blue belt grapples with another man in a white gi with a black belt on green mats inside a brightly lit indoor studio with light grey walls",
+  "B": "two men in white martial arts gis with blue and black belts, one standing over the other and grabbing his arm on a green floor mat in a room with white walls and dim indoor lighting"
+ },
+ "davis_lady-running": {
+  "A": "An elderly woman with short white hair, wearing a colorful patterned long-sleeved shirt and black pants, walks through a dimly lit indoor dining area with wooden chairs and tables",
+  "B": "an elderly woman with short white hair in a colorful patterned sweater and black trousers, dancing in a brightly lit indoor space with white walls and a painted archway beside seated people"
+ },
+ "davis_mbike-trick": {
+  "A": "A person wearing a white helmet, a white short-sleeved shirt, and black pants rides a black motorcycle forward while performing a burnout on a dark asphalt road with tire marks",
+  "B": "a person in a white graphic t-shirt, dark trousers, and black sneakers, sitting on a dark green motorcycle and spinning the rear tire to produce thick white smoke on an asphalt surface under bright daylight"
+ },
+ "davis_scooter-gray": {
+  "A": "A man wearing a white helmet and a gray jacket rides a white motor scooter along an asphalt road in front of a tan building with parking signs, while a second gray motor scooter stands parked along the sidewalk in daylight"
+ },
+ "davis_snowboard": {
+  "B": "a snowboarder in a black jacket, black pants, and a black helmet, riding a dark blue snowboard across a snowy, sunlit mountain slope, carving a path and creating a spray of white snow in harsh daylight"
+ },
+ "davis_upside-down": {
+  "A": "A middle-aged man with short grey hair, wearing black sunglasses and a yellow and blue shirt, speaks while seated in an orange amusement ride harness under bright daylight outdoors near green grass and a white building",
+  "B": "an older man with short gray hair and sunglasses in a blue and red shirt, smiling while strapped into an orange roller coaster harness under bright daylight"
+ },
+ "humanvid_10344332": {
+  "A": "A dark silhouette of a person with multiple arms extended outward, wearing dark clothes, stands in a dark room lit by blue light behind them"
+ },
+ "humanvid_10380575": {
+  "A": "A person with short black hair, wearing an unzipped blue puffer jacket, a black crop top, and blue pants, stands in front of a grey car illuminated by blue background lights",
+  "B": "a woman with dark hair in a dark blue puffer jacket and matching pants, dancing in front of a white car under blue light"
+ },
+ "humanvid_10507608": {
+  "A": "A man with short curly dark hair, wearing an orange blazer, leans back against a orange sheet in a room bathed in bright red light",
+  "B": "a person with curly dark hair wearing a bright red hooded garment, holding a clear glass wine glass against a warm, solid red background bathed in vivid amber light"
+ },
+ "humanvid_10598658": {
+  "A": "A blonde woman with dark blue nail polish, wearing a white lab coat over a pink top, holds up a transparent slide with blue stripes in front of her face in a brightly lit indoor room",
+  "B": "a blonde woman with dark manicured nails in a white lab coat over a light pink lace top, holding up a transparent film with blue strip patterns in front of her face in a bright indoor room"
+ },
+ "humanvid_12331340": {
+  "A": "A tan-skinned man with short graying hair, wearing a dark gray short-sleeved t-shirt over black long sleeves, holds white papers in a recording studio with red acoustic foam panels illuminated by dim indoor light",
+  "B": "a bald man wearing silver headphones and a faded gray t-shirt over a long-sleeved black shirt, looking down at a paper in a dimly lit soundproof room"
+ },
+ "humanvid_3254197": {
+  "A": "A young woman with curly brown hair tied in a bun, wearing a cream t-shirt and a dark brown vest, holds a black mug and looks out a large window in a room lit by soft natural daylight",
+  "B": "a young woman in profile wearing a dark vest and white shirt, holding a black mug near a bright window"
+ },
+ "humanvid_3713450": {
+  "A": "A bald man with short facial hair, wearing an open black jacket and a thin silver chain necklace, holds a cigarette near his face while sitting in a dimly lit white room illuminated by a soft warm lamp light",
+  "B": "a person in a black hooded cape and a dark garment, moving past a cream-colored wall and a white carved mantelpiece in soft warm indoor light"
+ },
+ "humanvid_3805742": {
+  "A": "An older man with curly gray hair, wearing a black collared shirt, sits in profile while exhaling a plume of white smoke in a sunlit room filled with wooden beams and warm light",
+  "B": "a middle-aged man with short messy gray hair and light skin in a dark brown collared shirt, staring directly forward with a serious expression in warm golden sunlight that illuminates his face against a dimly lit background"
+ },
+ "humanvid_3972390": {
+  "A": "A fair-haired child with short blond hair, wearing a light grey henley shirt, holds a white egg up to their face while sitting at a wooden table in a brightly lit kitchen with white tiled walls",
+  "B": "a blond boy with short hair in a light gray long-sleeved shirt, holding eggs over a table with dye in a bright white tiled kitchen"
+ },
+ "humanvid_4098953": {
+  "A": "A short-haired woman with glasses, wearing a white button-up shirt, black pants, and a black jacket draped over her shoulders, sits in a brown wooden armchair holding a pen and notebook, framed over the shoulder of another person in a white room with bright daylight",
+  "B": "a woman with short gray hair and glasses in a white collared shirt and black jacket, writing in a small notebook with a pen inside a bright white room"
+ },
+ "humanvid_4107204": {
+  "B": "a bald man in a red t-shirt and black shorts, sitting in a boxing ring while wrapping his hands in black boxing tape under bright indoor light"
+ },
+ "humanvid_4115321": {
+  "A": "A young man with short dark hair, wearing a green hooded sweatshirt with the hood pulled up, recline on a dark brown leather couch next to a tan cushion, illuminated by soft natural light from a window behind him",
+  "B": "a young man with short dark hair in a green hooded sweatshirt and blue jeans, sitting on a dark brown leather couch and licking the edge of a rolling paper, in a dimly lit room with a soft curtained window in the background"
+ },
+ "humanvid_4259068": {
+  "A": "A bearded man with short dark hair, wearing a blue short-sleeved athletic shirt and matching blue shorts, performs bicep curls with two silver and black dumbbells in a brightly lit room with wooden shelves and a plant",
+  "B": "a bearded man in a blue athletic t-shirt and shorts, lifting black dumbbells in a brightly lit indoor space with wooden shelving in the background"
+ },
+ "humanvid_4320501": {
+  "A": "A woman with dark hair tied back, wearing a purple long-sleeved shirt, blue pants, and light blue socks, holds a yoga pose on a turquoise mat outdoors on a sunny day against a background of green trees and a low stone wall",
+  "B": "a woman with dark hair tied back in a purple long-sleeved shirt and blue sweatpants, holding a yoga pose on a light blue mat on a green lawn in bright daylight in front of green trees"
+ },
+ "humanvid_4473514": {
+  "A": "A woman with dark hair in a beige t-shirt dress sits on the floor playing a small wooden ukulele next to a bearded man with glasses in a beige t-shirt and brown pants in a bright room",
+  "B": "a woman with long dark hair in a beige dress playing a small ukulele beside a bearded man in glasses and a light pink shirt sitting on a patterned rug on a wooden floor in bright daylight"
+ },
+ "humanvid_4720432": {
+  "A": "A young boy with short blonde hair, wearing a white collared shirt, looks forward while holding a green broccoli stalk in front of a solid red background",
+  "B": "a young boy with short blonde hair and fair skin in a white collared shirt, holding a head of green broccoli in front of his chest against a plain bright orange background"
+ },
+ "humanvid_4723042": {
+  "A": "A woman with long black hair, wearing a white turtleneck shirt, a light blue denim jacket, and black jeans, sits on a brown floor against a matching brown wall while holding a green fern stalk against her cheek",
+  "B": "a young woman with long dark hair in a white top and a blue denim jacket over black jeans, sitting on a plain reddish-brown floor while holding a green fern leaf against a matching reddish-brown wall in soft lighting"
+ },
+ "humanvid_4769805": {
+  "A": "A smiling woman with light-brown braided hair, wearing a ribbed yellow tank top and tan pants, looks down toward a blond woman wearing a light-gray collared shirt in a bright room with soft daylight",
+  "B": "a woman with blonde braided hair wearing a yellow tank top and beige shorts, smiling and talking while looking at another woman in a bright indoor room"
+ },
+ "humanvid_5054318": {
+  "A": "A young man with short dark hair and a light beard, wearing a blue denim shirt over a grey shirt, looks down at a mobile phone in a room with a large grid window and dim natural lighting",
+  "B": "a young man with short dark hair in a blue denim shirt over a gray t-shirt, pointing his finger downward while holding a phone near a glass of beer in front of a window"
+ },
+ "humanvid_5090283": {
+  "A": "A dark-haired woman in a white t-shirt rests her chin on her fist against a yellow wall in warm indoor lighting",
+  "B": "a dark-haired woman with a high ponytail wearing a white v-neck t-shirt, sitting indoors with her head turned slightly down and away from the camera in warm, soft dim lighting against a muted yellow wall"
+ },
+ "humanvid_5192078": {
+  "A": "A short-haired man wearing a light yellow t-shirt, black shorts, white socks, and yellow sneakers sits on a red running track while looking away from a small glass bottle",
+  "B": "a short-haired young man with light skin in a light yellow t-shirt and black shorts with white stripes, sitting on a reddish-brown running track next to a glass bottle under soft natural daylight"
+ },
+ "humanvid_5271439": {
+  "A": "An elderly woman with short white hair, wearing round black glasses, a white collared shirt, and a brown tweed vest, stands while holding and typing on a silver laptop in front of a plain white background under bright, even studio lighting",
+  "B": "an elderly woman with short white hair and black glasses in a brown patterned pinafore dress over a white shirt, holding a gray laptop with both hands against a plain white background"
+ },
+ "humanvid_5310961": {
+  "A": "A woman with dark hair tied back, wearing an orange sports bra and dark blue patterned leggings, stands outdoors next to a building wall and triangular street signs while looking down in soft natural daylight",
+  "B": "a woman with dark hair in a red crop top and multi-colored leggings, stretching outdoors on a city street beside a building under muted daytime light"
+ },
+ "humanvid_5330650": {
+  "A": "A brown-haired woman wearing a blue denim dress sits in a grey armchair in front of a white geometric wall illuminated by soft daylight",
+  "B": "a woman with short dark hair in a blue long-sleeved denim dress, sitting in a dark gray armchair and gesturing with her hand in a brightly lit room with white geometric walls"
+ },
+ "humanvid_5337101": {
+  "A": "A smiling woman with curly short brown and blonde hair, wearing a silver headband, a silver twisted necklace, gold hoop earrings, and a green animal-print halter top, stands centered against a bright purple background illuminated by soft pink overhead lighting",
+  "B": "a smiling woman with curly short dark hair and blonde highlights, wearing a silver metallic choker necklace and a leopard print halter top, looking forward in front of a bright purple lit studio background"
+ },
+ "humanvid_5378938": {
+  "A": "A blonde man with a mustache, wearing a dark blue bellhop uniform with gold trim and buttons, looks down while standing inside a wood-paneled elevator illuminated by warm indoor lighting alongside a woman in a light beige trench coat",
+  "B": "a blonde man with a mustache in a dark blue jacket standing beside a smiling curly-haired woman inside an elevator with warm lighting"
+ },
+ "humanvid_5390227": {
+  "A": "A young man with short black hair, wearing a white t-shirt and beige shorts, bends sideways to touch his ankle on a black yoga mat in a sunny green park",
+  "B": "a young black man with short dark hair in a white t-shirt and beige shorts, leaning to the side with outstretched arms while doing yoga on a black mat in a green park under bright natural sunlight"
+ },
+ "humanvid_5787942": {
+  "A": "A barefoot woman with short brown hair, wearing a gray knit turtleneck sweater and blue jeans, sits on a wooden floor and knits with gray yarn near a window illuminated by soft daytime light",
+  "B": "a dark-haired woman with a bob haircut in a thick gray turtleneck sweater and blue jeans, smiling while knitting gray yarn on the wooden floor near a brightly lit window next to beige curtains and balls of yarn"
+ },
+ "humanvid_5793303": {
+  "A": "A woman with short dark hair, wearing a white mandarin-collar long-sleeved shirt, looks down while resting her hands on a wooden desk inside a brightly lit room with beige walls and soft natural light",
+  "B": "a short-haired woman with fair skin in a white long-sleeved buttoned shirt, looking down in profile in a softly lit indoor room with light beige walls"
+ },
+ "humanvid_5895167": {
+  "A": "A young girl with blonde hair in a bun, wearing a white ballet tutu and tights, stands in a dance studio holding a gray barre while adjusting her white pointe shoe",
+  "B": "a young girl with dark hair in a bun wearing a white ballet tutu and tights, holding her raised leg and posing in front of a mirror next to a barre in a bright dance studio with light wooden floors"
+ },
+ "humanvid_5916780": {
+  "A": "A man in a black short-sleeved shirt and dark grey shorts climbs an indoor climbing wall, reaching up with both hands toward colourful holds on a blue and yellow wall under bright indoor lighting",
+  "B": "a man in a black t-shirt and dark shorts climbing a indoor rock wall with bright yellow and blue holds"
+ },
+ "humanvid_6010953": {
+  "A": "A woman with brown hair tied back, wearing a white lab coat over a red top and red pants, stands holding a black tablet in a white-walled room lit by soft cool light",
+  "B": "a woman with dark hair pulled back in a bun wearing a white lab coat over a dark red top, holding a black tablet computer in both hands against a plain light gray wall with soft neutral indoor lighting"
+ },
+ "humanvid_6111085": {
+  "A": "A bearded man with short dark hair, wearing a grey t-shirt and black pants, pulls the handles of a rowing machine in a brightly lit room with white walls and a large window",
+  "B": "a bearded man with short dark hair in a gray t-shirt and black pants, sitting and pulling exercise straps while using a pilates reformer machine in front of a bright white window in natural daylight"
+ },
+ "humanvid_6111509": {
+  "A": "A woman with dark curly hair, wearing a beige jacket over a white turtleneck and light blue jeans, holds a silver disco ball beside a woman with dark hair, wearing a striped brown sweater and grey pants, who holds a black sign with white text in front of a white wall decorated with gold dots",
+  "B": "two women standing in front of a white wall decorated with gold paper circles, one in a light beige jacket and blue jeans holding a silver disco ball, and the other in a brown and beige striped sweater holding a small sign"
+ },
+ "humanvid_6174185": {
+  "A": "A young man with shoulder-length light brown hair, wearing a dark blue denim jacket and a black shirt, sits on a wooden chair in a dim room with a lighted lamp",
+  "B": "a smiling man with long light brown hair in a dark grey jacket, looking toward the foreground in a dimly lit room with warm ambient lighting"
+ },
+ "humanvid_6180903": {
+  "A": "A man with short brown hair, wearing tortoiseshell sunglasses and a brown jacket, sits at an outdoor terrace table holding a small white coffee cup under bright natural light",
+  "B": "a blonde woman in a brown hooded jacket with sunglasses resting on her head, seen from behind as she sits at a table on a terrace overlooking a sunlit European city with white buildings and red roofs"
+ },
+ "humanvid_6238332": {
+  "A": "A young woman with long curly brown hair, wearing a black tank top and beige wide-leg pants, sits on a wooden windowsill inside a bright white kitchen while tapping the screen of a smartphone lying on a counter",
+  "B": "a young woman with curly brown hair wearing a black spaghetti strap top and light beige trousers, sitting on a wooden kitchen countertop while tapping her smartphone screen next to a white mug and newspaper in soft natural light"
+ },
+ "humanvid_6248173": {
+  "A": "An older woman with short gray hair, wearing a white t-shirt, a pink apron, and a black skirt, stands facing away from the camera in a brightly lit kitchen next to a window, washed in soft natural light from the opening",
+  "B": "an elderly woman with short gray hair in a white t-shirt and a dark apron with a pink tied bow, washing dishes near a bright window in a modern kitchen"
+ },
+ "humanvid_6248605": {
+  "A": "A person with dark skin and a gray long-sleeved shirt uses a smartphone at a white oval desk holding a grey laptop, a black mouse, a tablet, and papers under bright indoor lighting",
+  "B": "a woman with long brown braided hair seen from behind in a white top, sitting at a desk with a laptop open before a bright window"
+ },
+ "humanvid_6326660": {
+  "A": "A light-skinned man with short dark hair, wearing a green sleeveless shirt, stands in profile in a room with a dark door and exposed brick walls illuminated by soft indoor lighting",
+  "B": "a man with short light brown hair and a stubble beard wearing a teal sleeveless top, standing in profile facing a dark blue door and a black light stand against a red brick wall"
+ },
+ "humanvid_6380991": {
+  "A": "A young woman with straight black hair, wearing a dark green long-sleeved sweater and cuffed blue jeans, sits solemnly with her head resting on her hand beside a woman in a grey jacket who reaches out to touch her shoulder in a brightly lit indoor setting",
+  "B": "a dark-haired woman in a green sweater resting her chin on her hand, listening to a curly-haired woman in a gray corduroy jacket with her hand on her shoulder beside a soft-lit window against a wood-paneled wall"
+ },
+ "humanvid_6474252": {
+  "A": "A bearded man with dark hair, wearing a white hard hat, clear safety glasses, a grey plaid shirt over a white shirt, holds a white tablet while looking upward in an indoor under-construction room with blurry neutral walls illuminated by soft natural light",
+  "B": "a bearded man with dark curly hair in a white hard hat, clear protective glasses, a white t-shirt, and a dark plaid button-down shirt, looking down while tapping a white digital tablet with his fingers in a dimly lit indoor construction setting"
+ },
+ "humanvid_6625516": {
+  "A": "A middle-aged man with short grey hair, wearing a white turtleneck sweater and cyan sunglasses, sits with folded hands against a purple background",
+  "B": "a middle-aged man with short grey hair and stubble wearing teal sunglasses and a white turtleneck sweater, sitting with crossed hands against a plain purple background in bright light"
+ },
+ "humanvid_6724988": {
+  "A": "A boy with short brown hair and a girl with long red hair, both wearing tan corduroy outfits and white socks, perform a synchronized dance pose in a bright studio with soft light and grey surroundings",
+  "B": "a young boy with short brown hair and a young girl with long red hair in matching tan corduroy suits and white socks, performing a synchronized dance pose against a pale gray wall"
+ },
+ "humanvid_6784960": {
+  "A": "An older man with short white hair and square glasses, wearing a teal t-shirt, sits in a prayer pose with his hands pressed together before his chest in a garden under soft daylight",
+  "B": "an elderly man with short white hair and black-rimmed glasses in a green t-shirt, holding his hands together in a prayer position with eyes closed outdoors in soft daylight"
+ },
+ "humanvid_6873329": {
+  "A": "A person with a grey glove wipes the roof of a black car with a cloth in a dark indoor garage lit by cool overhead fluorescent lights and faint red ambient highlights",
+  "B": "a woman with short pink hair in a black long-sleeved shirt, wiping a black car windshield with a blue cloth under dim artificial lighting"
+ },
+ "humanvid_6898098": {
+  "A": "A dark-skinned woman with braided black hair, wearing a white long-sleeved shirt and blue pants, sits cross-legged on a gray sofa while opening a small brown cardboard box stack in a dimly lit room with soft warm lighting",
+  "B": "a smiling dark-skinned woman with long braided hair wearing a white long-sleeve shirt and blue pants, opening a brown cardboard box while sitting cross-legged on a dark green couch in a softly lit room"
+ },
+ "humanvid_6940485": {
+  "A": "A woman with short black hair and glasses, wearing a gray long-sleeved sweatshirt and matching gray sweatpants, dances with her arms raised in a brightly lit room beside a white bed",
+  "B": "a person with glasses in a gray sweatshirt and matching sweatpants standing in a brightly lit room"
+ },
+ "humanvid_6997942": {
+  "A": "A fair-skinned woman with brown hair tied back, wearing a white wrap-style medical uniform top, walks forward past a closed grey door in a bright white hallway",
+  "B": "a young woman with brown hair tied back in a white uniform shirt walking down a brightly lit white corridor"
+ },
+ "humanvid_7148139": {
+  "A": "A young man with dreadlocks, wearing a black long-sleeved shirt, stands behind a woman with curly hair, wearing a black short-sleeved shirt, in a black-and-white studio setting with soft lighting and dark grey curtains in the background",
+  "B": "a man with dreadlocks in a black long-sleeved shirt standing behind a woman with a curly afro in a black short-sleeved shirt in black and white against a textured backdrop"
+ },
+ "humanvid_7150191": {
+  "A": "A young child with brown hair, wearing a tan sweater, holds a chocolate cupcake with a gold number four candle",
+  "B": "a smiling young girl in a cream knit sweater, holding a chocolate cupcake with a gold number 4 candle in her hands in warm indoor lighting"
+ },
+ "humanvid_7184184": {
+  "A": "A woman with straight dark hair and a bindi, wearing a green saree with gold trim, stands reaching one hand toward the camera against a plain white fabric backdrop illuminated by soft neutral lighting",
+  "B": "a woman with straight brown hair in a green saree with white embroidery, holding her hand up in a mudra gesture against a neutral white backdrop in soft indoor lighting"
+ },
+ "humanvid_7206044": {
+  "A": "A bearded man with a dark grey baseball cap and a black bandana around his neck, wearing a black short-sleeved t-shirt, looks up toward ancient stone ruins bathed in bright, natural daylight",
+  "B": "a man wearing a dark cap, a dark grey t-shirt, and blue denim shorts, walking away through a stone corridor in bright sunlight"
+ },
+ "humanvid_7235992": {
+  "A": "A woman with dark hair in a bun, wearing a black tank top and black leggings, dances outdoors next to green tropical plants and a large red ball on a wet stone floor",
+  "B": "a woman with curly brown hair in a black tank top and matching leggings, stretching her arm across her body in front of large green tropical plants and a brown door in soft natural daylight"
+ },
+ "humanvid_7291137": {
+  "A": "A young woman with wavy blonde hair, wearing a yellow gel eye patch under her right eye and a white ribbed tank top, looks directly forward against a solid red studio background illuminated by soft, bright lighting",
+  "B": "a young woman with blonde wavy hair wearing gold under-eye patches and a white tank top, applying a patch under her eye with her fingers against a plain red background"
+ },
+ "humanvid_7315375": {
+  "A": "A fair-skinned woman with short brown hair, wearing a black turtleneck sweater and gold hoop earrings, stands motionless against a dark wall illuminated by blue and violet side lighting with a vertical white light bar on the left",
+  "B": "a young woman with slicked-back dark hair in a black turtleneck sweater, standing with her arms crossed under vibrant blue and pink neon lighting"
+ },
+ "humanvid_7500726": {
+  "A": "An elderly man with short gray hair and a long gray beard, wearing a beige t-shirt and black pants, stands with his arms outstretched and head tilted back in a brightly lit room with a large window and potted plants",
+  "B": "an elderly man with a white beard and short gray hair in a beige t-shirt and dark pants, holding his arms stretched out to his sides in a bright room with tall windows and green potted plants on a wooden sill"
+ },
+ "humanvid_7530560": {
+  "A": "A blonde woman with a pink head wrap, silver hoop earrings, and a light gray sweatshirt holds a rolled-up blue yoga mat while standing in a brightly lit room with a gray background and a gold decorative object",
+  "B": "a blonde woman wearing a pink head wrap and gray long-sleeve top, holding a rolled blue yoga mat and smiling in a brightly lit room with a plain gray wall backdrop"
+ },
+ "humanvid_7569393": {
+  "A": "A fair-skinned woman with brown hair and dark eye makeup, wearing a black long-sleeved mesh shirt with attached silver chains and a black studded choker, poses against a bright yellow wall while holding her hand beneath her chin",
+  "B": "a woman with long brown hair, bangs, and blue eyeshadow wearing a black sheer long-sleeve top with silver chains, resting her hand on her cheek while posing against a plain yellow studio background under bright cool lighting"
+ },
+ "humanvid_7586534": {
+  "A": "A smiling woman with dark long hair, wearing a dark blue floral-patterned dress and gold necklaces, stands indoors in front of a dark background illuminated by warm overhead light",
+  "B": "a smiling woman with long dark hair in a floral navy blue dress and gold necklaces, looking directly ahead against a dark background in bright studio lighting"
+ },
+ "humanvid_7626767": {
+  "A": "A woman with dark braided hair and closed eyes, wearing a light gray long-sleeved button-up shirt and a beaded necklace, raises her right hand near her head against a plain beige background illuminated by soft studio lighting",
+  "B": "a black woman with braided dark hair in a light gray button-up shirt and a beaded necklace, looking downward with eyes closed against a neutral beige background under soft studio lighting"
+ },
+ "humanvid_7628755": {
+  "A": "A fair-skinned woman with dark hair tied in a bun, wearing a green hooded sweatshirt and grey sweatpants, squats outdoors while hugging a brown, white, and black dog on a patch of brown grass near trees",
+  "B": "a young woman with brown hair tied back in a bun wearing a green hooded sweatshirt, crouching on dry grass while hugging a small fluffy dog in bright daylight with bare trees in the background"
+ },
+ "humanvid_7648962": {
+  "A": "A young man with short brown hair, wearing a white polo shirt with navy trim, black shorts, and white socks, stands with his hands on his hips against a solid brown background under bright studio lighting",
+  "B": "a young man with short brown hair in a white polo shirt, black shorts, and a white headband, standing with his right hand on his hip against a plain brown studio background in bright studio light"
+ },
+ "humanvid_7652008": {
+  "A": "A man with short dark hair and glasses, wearing a light grey shirt, sits in a modern chair and writes on a white notepad in a sunlit room with blue armchairs, potted green plants, and glass windows",
+  "B": "a man with short hair wearing a grey jacket, sitting in a wooden armchair and drawing on a white sketchbook with a pencil, in a bright office lounge with glass walls, potted green plants, and blue seating"
+ },
+ "humanvid_7659135": {
+  "A": "A female medical professional with dark hair tied in a bun, wearing a light blue scrub top and a stethoscope around her neck, holds a pink ribbon forward against a plain pink background",
+  "B": "a female healthcare worker with dark hair in blue scrubs, holding a pink awareness ribbon close to the camera against a bright pink background"
+ },
+ "humanvid_7664823": {
+  "A": "A young woman with long dark hair, wearing a dark green coat and holding a white helmet, looks to the side in a dark room lit by blue and purple light sources",
+  "B": "a woman with dark shoulder-length hair and a subtle smile in a green jacket, looking forward under strong blue and pink neon light in a dark room"
+ },
+ "humanvid_7669397": {
+  "A": "A silhouetted woman with an afro hairstyle, wearing a short-sleeved dress and hoop earrings, sways her body against a bright solid blue background illuminated by a uniform blue light",
+  "B": "a dark silhouette of a woman with a high puffed hair bun wearing a short long-sleeved dress, holding a microphone in her right hand and leaning her body against a bright solid blue illuminated background"
+ },
+ "humanvid_7682587": {
+  "A": "A young man with short dark hair, wearing a beige button-down shirt and a black headset, looks down while sitting at a white desk in an indoor space with plain white and black walls under bright white lighting",
+  "B": "a young man with short dark hair in a beige button-down corduroy shirt, wearing black headphones with a boom microphone while seated at a white desk in front of a plain dark gray wall"
+ },
+ "humanvid_7699681": {
+  "A": "A man in a red short-sleeved shirt and blue baseball cap sits in a wheelchair, seen from behind indoors",
+  "B": "a man with short brown hair, glasses, and a goatee in a black shirt, sitting in a wheelchair and working at a desk in a brightly lit indoor space beside another person in a red t-shirt"
+ },
+ "humanvid_7729987": {
+  "A": "A young woman with long dark hair, wearing a white ribbed crop top and matching trousers, holds a pink flower while a man in a white jacket stands in profile against a plain white background",
+  "B": "a young woman with straight black hair in a white ribbed crop top, holding a pink flower beside a man in a white blazer against a plain background"
+ },
+ "humanvid_7957048": {
+  "A": "A young man with dark hair, wearing a white long-sleeved shirt and dark pants, stands holding his left forearm in front of a plain black background illuminated by soft dim light",
+  "B": "a young man with short dark hair in a long-sleeved white shirt and black pants, standing and swinging his arms in front of a plain black background"
+ },
+ "humanvid_7958702": {
+  "A": "A man with braided black hair and a shave-sided hairstyle, wearing a black shirt and a silver ring on his finger, sits outside against a blurred background of green foliage and pink flowers in soft natural daylight",
+  "B": "a man with short braided hair and shaved sides in a black long-sleeved shirt, sitting outdoors while looking directly at the camera in natural daylight against a blurred green background with pink flowers"
+ },
+ "humanvid_7975461": {
+  "A": "A dark-skinned man with thin glasses and a short beard, wearing a white thobe and a red and white checkered keffiyeh, sits and types on a light gray laptop resting on a tan wooden desk against a plain white wall in bright indoor lighting",
+  "B": "a man with glasses wearing a red and white checkered keffiyeh and a white thobe, typing on a silver laptop at a tan desk against a bright white background"
+ },
+ "humanvid_7986432": {
+  "A": "A smiling woman with dark curly hair, wearing a grey plaid blazer, holds black over-ear headphones to her ears against an abstract brown, beige, and white painting in a brightly lit gallery space",
+  "B": "a young woman with dark curly hair in a light gray plaid coat wearing black headphones, smiling and holding her hands to the earcups against a blurred brown and white abstract painting in soft light"
+ },
+ "humanvid_8011201": {
+  "A": "A pale woman with short reddish-brown hair, wearing a dark blue short-sleeved dress, sits facing right in profile with her arms crossed near her neck in a dimly lit room with soft side lighting and dark shadows",
+  "B": "a reddish-haired woman in a black short-sleeved top and dark dress, sitting in profile with her hands resting near her neck in a dark room with soft side lighting"
+ },
+ "humanvid_8036712": {
+  "A": "A bearded man with short brown hair and glasses, wearing an open khaki shirt over a black t-shirt, shuffles papers while sitting at a wooden desk in a dimly lit library with dark bookshelves and colorful books in the background",
+  "B": "a bearded man with short brown hair and eyeglasses wearing an olive green unbuttoned shirt over a black t-shirt, turning the white page of a document in front of a wooden bookshelf illuminated by soft indoor lighting"
+ },
+ "humanvid_8075417": {
+  "A": "A young woman with dark hair and black nail polish, wearing an unbuttoned blue shirt over a white top, touches her face near her eyes while looking forward against a plain white wall in bright even lighting",
+  "B": "a woman with short dark hair in an oversized blue button-up shirt and a white top, using her hands to pull down the skin under her eyes in front of a white wall in soft lighting"
+ },
+ "humanvid_8090682": {
+  "A": "A woman with dark hair, wearing a white oversized hoodie, a matching white skirt, and white sneakers, walks down a white indoor staircase while holding onto a white metal railing in a brightly lit home with white walls and framed art",
+  "B": "a young woman with long braided dark hair wearing a white hoodie and matching shorts, descending a white indoor staircase while holding the white handrail, framed against bright white walls and natural light in a low-angle shot"
+ },
+ "humanvid_8090906": {
+  "A": "A dark-haired woman in a light blue sleeveless top and matching pants sits on a dark gray sectional sofa, typing on a dark laptop in a sunlit living room with white walls and dark wood flooring",
+  "B": "a woman with dark hair in a gray sleeveless top and matching gray pants, sitting on a dark gray sectional sofa and typing on a black laptop beside a bright window"
+ },
+ "humanvid_8189502": {
+  "A": "A woman with long black braided hair, wearing a white long-sleeved shirt, black overalls, and black pants, sits cross-legged while playing an acoustic brown wooden guitar in a brightly lit indoor space with white walls and soft natural daylight",
+  "B": "a woman with long black braids in a white long-sleeved shirt and black overalls, sitting cross-legged while strumming a brown acoustic guitar indoors, set against a light gray wood-paneled wall with soft natural lighting from the side"
+ },
+ "humanvid_8217123": {
+  "A": "A smiling woman with dark hair tied back, wearing a yellow high-neck long-sleeved top and patterned blue denim pants, stands against a white window frame in a bright room filled with natural daylight",
+  "B": "a smiling woman with long braided dark hair wearing a yellow turtleneck sweater and high-waisted acid-wash jeans, leaning against a white grid window while posing with hands on her hips in a brightly lit studio"
+ },
+ "humanvid_8369877": {
+  "A": "A man with short brown hair, wearing a black suit jacket, a white dress shirt, and a dark tie, points at a map on a large brown corkboard with white papers and black thread in a dimly lit office with cool overhead lighting",
+  "B": "a fair-skinned man with short blond hair in a black suit, a white shirt, and a black tie pointing toward a corkboard covered with photographs and maps in a dimly lit office"
+ },
+ "humanvid_8376542": {
+  "A": "A man with short brown hair, wearing yellow long-sleeved pajamas, walks across a white studio space with scattered blue, pink, and green pillows on the floor under bright, direct light",
+  "B": "a young man with short dark hair in yellow pajamas, dancing and balancing on one leg beside colorful throw pillows scattered on a bright white floor under even studio lighting"
+ },
+ "humanvid_8377703": {
+  "A": "A dark-skinned woman with long, curly black hair, wearing a white sleeveless top with a notch neckline, sits indoors against a plain beige wall in soft natural light while looking off to the side",
+  "B": "a woman with long curly dark hair and dark eyes in a white ribbed notch-neck tank top, looking directly into the camera with a neutral expression in soft indoor light against a plain beige wall"
+ },
+ "humanvid_8405739": {
+  "A": "A bearded young man with curly brown hair, wearing a beige headscarf, a grey t-shirt, and khaki pants, walks leftward across a sandy beach with dark rocks and ocean under pale natural light",
+  "B": "a man with curly dark hair wearing a light gray headwrap, a blue t-shirt, and brown pants, dancing on a sandy beach in front of a heap of dark gray rocks under a hazy sky"
+ },
+ "humanvid_8544230": {
+  "A": "A young man with short dark hair, wearing a blue t-shirt with volunteer printed in white text and green gloves, holds a round pink clock with blue numbers in front of a blue background",
+  "B": "a young man with short dark hair in a bright blue volunteer t-shirt and green gloves, holding a small round pink clock in his hands against a plain blue background"
+ },
+ "humanvid_8724423": {
+  "A": "An elderly woman with short blonde hair, wearing a light pink shirt, looks forward against a dark background",
+  "B": "a fair-skinned woman in a light pink crewneck t-shirt and grey striped pants, clenching her fists with raised arms against a dark grey background"
+ },
+ "humanvid_8762603": {
+  "A": "A young man with spiked blond-tipped hair, wearing a white shirt and a clear plastic jacket, looks down against a purple background illuminated by subtle pink and blue lights",
+  "B": "a young man with frosted blond spiky hair in a white high-neck top and a clear plastic jacket, looking directly into the camera against a soft purple background lit with subtle pink and blue highlights"
+ },
+ "humanvid_8847380": {
+  "A": "An elderly man with a white beard and a blonde woman sit in blue armchairs in a dimly lit room, with the man holding a newspaper and the woman knitting",
+  "B": "an elderly woman with short blonde hair in a white shirt and beige pants, knitting while sitting in a blue armchair beside a man reading a newspaper in a brightly lit room with floral wallpaper"
+ },
+ "humanvid_8928290": {
+  "A": "A young woman with long dark wavy hair, wearing a yellow tank top, ripped blue jeans, and white sneakers, dances playfully in front of a grey garage door under bright natural daylight",
+  "B": "a woman with long curly brown hair in a bright yellow crop top and light blue ripped jeans, dancing and posing outside on an asphalt ground against a light gray metal shutter door in soft natural daylight"
+ },
+ "humanvid_8955364": {
+  "A": "A blonde woman wearing a patterned purple cropped tank top, black wide-leg trousers, and black high-top sneakers poses with her arms outstretched on a reflective wooden floor in a brightly lit indoor studio with large windows",
+  "B": "a woman with long light brown hair in a patterned purple crop top and black wide-leg pants, stretching her torso sideways with her arms extended in a bright dance studio with light wooden floors"
+ },
+ "humanvid_9005890": {
+  "A": "A smiling man with short curly dark hair, wearing a white button-up shirt and dark suspenders, dances behind a vintage metal microphone on a dimly lit stage filled with white fog and soft green and red light",
+  "B": "a smiling black woman with braided hair in a purple top, singing into a silver vintage microphone next to two other people in a brightly lit studio with pink and blue background lighting"
+ },
+ "humanvid_9006364": {
+  "A": "A man with a short beard and dark skin, wearing a white button-up shirt with black suspenders, holds a vintage silver microphone in his hands while singing in a dimly lit studio illuminated by subtle green and red background lights",
+  "B": "a man with a black hat and beard in a white shirt and black suspenders, singing into a silver vintage microphone held in his hands with beaded bracelets in a dimly lit studio with subtle purple lighting"
+ },
+ "humanvid_9039061": {
+  "A": "A woman with long blonde hair, wearing a tan short-sleeved t-shirt and white drawstring pants, sits cross-legged outdoors near a grey building and dark water under soft overcast lighting",
+  "B": "a fair-skinned woman with blonde hair wearing a beige t-shirt and white pants, sitting outdoors in a cross-legged position with her hand raised in front of her body against a soft-focus background of water and buildings"
+ },
+ "humanvid_9065027": {
+  "A": "A blonde woman with framed glasses, wearing a black floral print blouse and dark pants, bends forward while holding a wooden clipboard with black calligraphy against a plain beige background and bright studio light",
+  "B": "a blonde woman with a high bun and glasses in a black floral-print long-sleeved shirt and black leggings, leaning forward while holding a small black-and-white artwork on cardboard in a brightly lit studio with a white background"
+ },
+ "humanvid_9218284": {
+  "A": "A woman wearing a black hijab, tortoise-shell sunglasses, and a brown long-sleeved button-up cardigan over a black top stands outdoors on a stone balcony, leaning against a low wall in front of city buildings under soft daytime lighting",
+  "B": "a woman wearing a black hijab and sunglasses with a brown long-sleeved shirt outdoors during daytime"
+ },
+ "humanvid_9558742": {
+  "A": "A young man with short curly brown hair, wearing a light pink crewneck t-shirt, smiles while looking off to the side against a plain white background with bright studio lighting",
+  "B": "a young man with curly brown hair wearing a pink t-shirt, smiling and looking off to the side against a bright white background"
+ },
+ "humanvid_9564077": {
+  "A": "A pale woman with short curly brown hair, wearing a black long-sleeved dress, sits at a dark wooden table in a dimly lit room with bookshelves while holding a white cigarette, as an older man with gray hair in a gray jacket smiles behind her",
+  "B": "a woman with short curly dark hair in a black long-sleeved dress, looking back towards an older man in a gray blazer while resting her arms on a table in a dark bar with a patterned wall"
+ },
+ "humanvid_9807743": {
+  "B": "a young man with slicked dark hair in a black sweater vest with white trim over a beige sweater, looking forward while sitting on the floor in front of a wooden cabinet topped with a glowing television displaying static"
+ },
+ "humanvid_9955062": {
+  "A": "A shirtless man with short dark hair, wearing a white cape held by a gold chain, holds a pink flower in his hand against a plain blue backdrop",
+  "B": "a dark-skinned man in a white hat and white cape with gold lion shoulder brooches, holding a bright pink flower on a stem before his face against a solid bright blue backdrop in studio lighting"
+ },
+ "openvid_Rif_AG6RfMs_0_0to430": {
+  "A": "A bald man with a short gray beard, wearing a light blue dress shirt and a dark blue patterned bowtie, speaks directly toward the camera in a room with light green walls and a Statue of Liberty picture in the background",
+  "B": "a bald man in a light blue shirt and dark pattern bow tie, talking directly to the camera in a brightly lit room"
+ },
+ "openvid_RlN2dYjH4_E_3_0to160": {
+  "A": "A light-skinned man with short brown hair and a light beard, wearing a beige t-shirt with a graphic print, stands and reads an open book in a kitchen with white tile walls",
+  "B": "a light-skinned man with short brown hair and a receding hairline wearing a beige graphic t-shirt, standing indoors and gesturing while talking as another person holds an open book in the foreground, set against white tiled walls with a stainless steel range hood and kitchen utensils in bright even lighting"
+ },
+ "openvid_Rv5tq_kWjRE_23_0to288": {
+  "A": "A fair-skinned man with a red beard, wearing a grey flat cap, large aviator glasses, and an orange polo shirt, smiles directly at the camera outdoors in front of a wooden window with stained glass panes",
+  "B": "a fair-skinned man with a red beard, aviator glasses, and a gray flat cap in an orange polo shirt, talking while looking directly at the camera outdoors in natural light in front of a stained-glass window set into a dark wooden wall"
+ },
+ "openvid_SyGOidmxV_E_4_0to163": {
+  "A": "A man with short brown hair, wearing a white short-sleeved patterned shirt with sunglasses hooked on his collar, speaks while holding a black microphone on a sunny beach near bright blue water",
+  "B": "a smiling young man with short brown hair in a patterned white short-sleeved shirt, speaking into a black microphone on a sunny beach with clear turquoise water"
+ },
+ "openvid_SzPp0ZStWmw_18_28to169": {
+  "A": "A young man with short brown hair, wearing a grey backward baseball cap, a blue short-sleeved t-shirt with white text, and black shorts, sits outdoors on a dark tricycle on a paved surface during the day",
+  "B": "a young man wearing a grey backward baseball cap, a blue graphic t-shirt, and black shorts, sitting outdoors on a small wheeled vehicle on asphalt with his hands resting on his knees under natural light"
+ },
+ "openvid_T1MiFx98l3g_0_50to156": {
+  "A": "A solid white background fills the frame with a bright, uniform light and plain texture",
+  "B": "a man with short spiky brown hair and glasses in a red, white, and black plaid button-up shirt, gesturing with his hands while speaking against a plain bright white studio background under even lighting"
+ },
+ "openvid_T3NNiOsFLEw_12_21to157": {
+  "A": "A man with short dark hair, wearing a black suit jacket, white shirt, and blue patterned bow tie, speaks in front of a blue background",
+  "B": "a dark-skinned man with short black hair wearing a dark gray suit jacket, a white collared shirt, and a blue plaid bowtie, speaking directly to the camera in front of a blue studio backdrop with illuminated grid patterns and skyscraper outlines"
+ },
+ "openvid_T4RelfB1P2A_14_45to200": {
+  "A": "A man with curly dark hair, wearing a grey short-sleeved collared shirt and blue jeans, holds a tool beside a red and black motorcycle indoors under bright white overhead lights",
+  "B": "a pale man with dark curly hair and a beard in a gray button-up shirt, pointing with a tool toward an orange and black motorcycle indoors under bright studio lighting with red and white background panels"
+ },
+ "openvid_T4xqFDJf7yM_2_76to186": {
+  "A": "A young person wearing a black cap, a black and white paisley bandana over their face, a red patterned tank top, and a green chain necklace stands outside near a fountain under bright daylight",
+  "B": "a person wearing a black snapback hat, a black patterned bandana over their face, and a colorful tank top, standing outdoors in front of buildings under bright daylight"
+ },
+ "openvid_T5ZCFynSomc_29_0to139": {
+  "A": "An elderly man with gray hair and glasses, wearing a black suit jacket, white shirt, light yellow tie with a tie clip, and white pocket square, stands inside an brightly lit room while people around him clap",
+  "B": "an elderly black man with short graying hair and glasses wearing a black suit and a white shirt with a white pocket square, clapping his hands together while seated in a brightly lit indoor space beside other people"
+ },
+ "openvid_TAMTRf1piJo_404_0to119": {
+  "B": "a woman in traditional Indian attire with an ornate gold crown and elaborate jewelry, raising her right hand with open palm against a soft beige background with subtle light rays radiating outwards"
+ },
+ "openvid_TBApWe8MIhI_86_35to141": {
+  "A": "A young blonde woman wearing a red knit beanie and a teal coat speaks while looking off-camera inside a dark vehicle lit by soft natural daylight from the side",
+  "B": "a blonde woman wearing a red beanie and green aviation headphones with black metal bands in soft dim lighting"
+ },
+ "openvid_TGDmTsO0888_3_0to163": {
+  "A": "An elderly woman with fair skin and white hair, wearing a black bonnet with lace, a black lace dress, and a black choker with a round pendant, looks forward in a dimly lit room with soft green background tones",
+  "B": "an elderly fair-skinned woman with white hair in a black veil and a black dress with a black choker necklace, talking and looking slightly to the side in a softly lit interior room with beige walls and dark furniture"
+ },
+ "openvid_UAR9cccDKSI_16_0to208": {
+  "A": "A light-skinned man with short blond hair, wearing a black cloth face mask and a navy-blue t-shirt with a yellow letter logo, stands in a brightly lit indoor space with grey walls and metallic fixtures",
+  "B": "a fair-skinned man with short blonde hair and a black face mask in a blue t-shirt with a yellow logo, looking directly at the camera while gesturing with his hands in a brightly lit indoor studio setting"
+ },
+ "openvid_UQyA-uwH6ac_23_0to109": {
+  "A": "A woman with short blonde cropped hair, wearing a blue denim jacket with a white fleece collar over a black shirt, turns her head slightly in an indoor setting lit by soft white light",
+  "B": "a blonde woman with a short pixie haircut wearing a blue denim jacket with a white fleece collar, smiling while turning her head slightly to the left against a plain white wall under soft indoor lighting"
+ },
+ "openvid_URLAedhIKbk_2_0to415": {
+  "A": "A dark-haired man in sunglasses, wearing a blue jacket over a black shirt, holds a steering wheel inside a car with a tan interior while driving along a road bordered by green trees under bright daytime lighting",
+  "B": "a light-skinned man with short brown hair wearing sunglasses and a navy blue zip-up hoodie, driving a car with tan interior and speaking while holding the black steering wheel in bright daytime lighting"
+ },
+ "openvid_X3APUuLOug4_20_126to270": {
+  "A": "An older man with wavy grey hair and a full grey beard, wearing a dark suit jacket over a blue patterned shirt, talks against a soft-focus warm brown background lit by dim indoor lighting",
+  "B": "an older man with wavy silver hair and a full gray beard wearing a navy blue suit jacket and a dark patterned shirt, talking while wincing in a dimly lit room with a blurred painting behind him"
+ },
+ "openvid_X3pL1dkTHIA_23_0to132": {
+  "A": "A young man with short brown hair, wearing a black hooded sweatshirt, looks forward in a brightly lit indoor market",
+  "B": "a young man with short dark hair in a black hoodie, talking and smiling while looking into the camera in a brightly lit indoor market with colorful flags hanging from the ceiling"
+ },
+ "openvid_XA2HBBrkUbU_109_0to173": {
+  "A": "A woman with short dark hair, wearing a white shirt, applies lip tint using her fingers against a white wall in natural indoor lighting",
+  "B": "a woman with short dark hair and bright red lipstick in a light purple textured shirt, talking while looking down against a plain white wall in soft indoor lighting"
+ },
+ "openvid_XFSw6t7SP00_79_0to109": {
+  "B": "a fair-skinned hand gripping a black leather gear shifter with a silver-rimmed top in a car interior, pulling the gear shift backward beside a silver start-engine button under soft indoor lighting"
+ },
+ "openvid_XMr5MkOHB5o_2_59to276": {
+  "A": "A woman with wavy blonde hair, wearing a sleeveless white dress with blue and red floral patterns, stands in a kitchen next to sliced pineapples on a white counter",
+  "B": "a blonde woman in a dark blue floral sleeveless dress holding a piece of pineapple near a stainless steel juicer on a kitchen counter, gesturing while looking slightly off-camera in a bright indoor room with framed art on a gray wall behind her"
+ },
+ "openvid__i1gxHY_Av0_28_40to294": {
+  "A": "A dark-haired woman in a pink and white tweed jacket over a white top holds a clear plastic container with food, looking down in a brightly lit indoor space with neutral-colored walls",
+  "B": "a woman with long dark hair in a pink and white textured tweed blouse, talking directly to the camera in a brightly lit indoor space with a white background"
+ },
+ "openvid__jHeXEJseBk_1_22to131": {
+  "A": "A blonde woman wearing a grey t-shirt sits in profile at a dark wooden table with an open book, inside a library filled with dimly lit dark bookshelves",
+  "B": "a fair-skinned woman with long straight blonde hair and side-swept bangs in a dark gray short-sleeved top, looking down while typing on a laptop at a reflective wooden desk with open books and notebooks in front of a bookshelf filled with colorful books in a warmly lit library"
+ },
+ "openvid__mXW7-0ebK0_14_0to281": {
+  "A": "A fair-skinned man with short wavy brown hair, wearing brown tortoiseshell glasses, a light blue collared shirt, and a dark grey tie, talks softly indoors in front of a blurry green slatted background under soft dim lighting",
+  "B": "a fair-skinned man with short wavy reddish-brown hair and black-framed glasses wearing a light blue dress shirt and a grey tie, speaking in a close-up portrait with a muted grey window blind in the soft indoor light"
+ },
+ "openvid__nLdQ5vZP5c_6_0to148": {
+  "A": "A bearded man with short brown hair, wearing a dark cap, a dark blue jacket, and a red shirt, speaks directly while standing on an outdoor balcony against a glass building, a body of water, and bright daylight",
+  "B": "a man with a dark gray flat cap and short brown hair wearing a dark blue Columbia puffer jacket over a red shirt, gesturing with his hand in front of a modern glass building and a body of water under overcast light"
+ },
+ "openvid__oJxPqTzmHM_33_0to162": {
+  "A": "A bald man with glasses, wearing a blue t-shirt and a black apron, stands behind a counter while holding a metal spatula in one hand and pressing his other hand into a black skillet under white light",
+  "B": "a fair-skinned bald man with glasses and a beard in a blue t-shirt and black apron, using a silver spatula beside a black skillet in a bright room with light gray brick walls"
+ },
+ "openvid__oppseM4TZU_0_0to176": {
+  "A": "A light-skinned man with short brown hair and a trim beard, wearing a dark blue suit jacket, a grey shirt, and a patterned purple tie, sits with his hands clasped together against a dark indoor backdrop",
+  "B": "a man with short brown hair in a dark blue suit jacket and dark patterned tie, resting his fingertips together while smiling on a dark studio stage set with blurred city lights in the background"
+ },
+ "openvid__p707YmBNVY_22_77to201": {
+  "A": "A man with short brown hair, wearing a black suit jacket over a black shirt, looks down at a table while gesturing with his right hand in front of a blue background with small lights",
+  "B": "a man with short brown hair in a black blazer and a black collared shirt, smiling down at a table with coffee mugs in front of a blue decorative wall with round mirrors"
+ },
+ "openvid__pRREeqmqMs_5_0to286": {
+  "A": "A blonde woman with shoulder-length hair and pink lipstick, wearing a white short-sleeved t-shirt with thin black horizontal stripes and small white stud earrings, looks slightly to her right while sitting in an indoor room with soft grey lighting and a dark background",
+  "B": "a fair-skinned woman with blonde hair and bright pink lipstick in a white striped crewneck shirt, speaking in a close shot against a dark gray background with soft indoor lighting"
+ },
+ "openvid__qNWfoRp3Gg_30_552to717": {
+  "A": "A fair-skinned man with short blonde hair and sunglasses, wearing a black v-neck shirt and magenta beaded necklace, looks forward inside a vehicle with purple seats under natural daylight",
+  "B": "a fair-skinned man with blonde hair and aviator sunglasses wearing purple beads, running a hand through his hair inside a dark vehicle in natural daylight"
+ },
+ "openvid__qbsmhHO950_5_121to392": {
+  "A": "A woman with long red braided hair and black-framed glasses, wearing a multi-colored patterned top, stands facing slightly left against a black background illuminated by studio lights and a small white tree graphic",
+  "B": "a woman with reddish brown hair in a long side braid and black-framed glasses wearing a cupcake-printed top, speaking and looking upward against a plain black studio background"
+ },
+ "openvid__t-96LgcizU_7_0to191": {
+  "A": "A man with dark facial hair, wearing a black top and dark sunglasses, stands in a brightly lit grocery store aisle surrounded by shelves filled with products under bright white overhead lights",
+  "B": "a young man with short brown hair and a trim beard wearing black sunglasses and a dark gray t-shirt, talking indoors while turning his head slightly against a softly blurred, brightly lit background"
+ },
+ "openvid__teMxcOcVyw_195_0to119": {
+  "A": "A woman with dark hair in an updo, wearing a blue sheer dress and long silver earrings, smiles with her eyes closed and holds a microphone close to her mouth in front of a red backdrop illuminated by bright lighting",
+  "B": "a woman with dark hair in a high bun and wearing a blue lace dress, holding her hands over her chest while smiling into a microphone against a bright pink background"
+ },
+ "openvid__uJLNGVICts_19_0to113": {
+  "A": "A black car seat with a seatbelt lies empty inside a car, illuminated by natural daylight coming through the car window",
+  "B": "an empty dark gray leather back seat of a car with a black seatbelt, showing the dark door panel and daylight streaming through the window in natural light"
+ },
+ "openvid__vGh-6Ms-io_26_19to219": {
+  "A": "A blonde woman with long straight hair, wearing a light green short-sleeved t-shirt and a silver necklace, works at a white sewing machine on a table in front of a pink and white checkered wall",
+  "B": "a blond woman with long hair in a light green t-shirt and a black and white checkered apron, operating a white sewing machine on a white table in front of a pink and white tiled wall"
+ },
+ "vcbench_action_5310858_3840x2160": {
+  "A": "A runner wearing blue, red, and white leggings with grey and colorful running shoes runs away on a wet asphalt street in a low-angle shot, with blurred grey buildings in the background under soft daylight",
+  "B": "a low-angle view of a blurry figure walking on a wet paved street in overcast daylight"
+ },
+ "vcbench_animal_2122952_1920x1080": {
+  "A": "A large brown horse with a white face patch and dark legs, wearing a bridle and connected to a long lead rope, gallops forward across a dusty dirt arena bounded by a low white wooden fence and tall leafless trees under bright sunlight",
+  "B": "a dark brown horse with a black mane moving past a row of tall bare trees and a white wooden fence under a blue sky with soft white clouds in bright daylight"
+ },
+ "vcbench_animal_2430774_3840x2160": {
+  "A": "A young seagull with speckled brown and white feathers, featuring a grey beak and webbed feet, dips its beak into shallow water along a wet sand beach illuminated by soft grey daylight",
+  "B": "a juvenile seagull with mottled gray and brown feathers standing in shallow water, resting on a flat sandy beach under soft overcast light"
+ },
+ "vcbench_boat_7318821_1080x1920": {
+  "A": "A white boat bow with silver metal handrails and a white fender attached to the railing points forward across a calm blue sea under a bright hazy sky filled with sunlight reflecting on the water surface",
+  "B": "the white wooden bow of a boat with silver handrails, sailing through calm turquoise ocean waters under bright hazy sunlight"
+ },
+ "vcbench_book_4034077_2160x4096": {
+  "A": "A bearded man with glasses, wearing a dark suit jacket over a white shirt, reads an open book in a dimly lit room beside a yellow floor lamp with a wooden stand",
+  "B": "a middle-aged man with a graying beard and glasses wearing a black suit jacket, turning the page of a large open book under warm yellow light from a floor lamp with a patterned shade"
+ },
+ "vcbench_butterfly_854867_3840x2160": {
+  "A": "A black and white striped butterfly rests on a red flower surrounded by green leaves under bright daylight",
+  "B": "a zebra longwing butterfly with black and white striped wings perched on a bright red flower cluster, resting among lush green leaves and a brown stem in soft natural daylight"
+ },
+ "vcbench_chicken_4911803_2160x4096": {
+  "A": "A white chicken with a bright red comb and light blue earlobes stands behind a green wire mesh cage in soft, natural daylight",
+  "B": "a close-up of a white hen with a red comb and wattle standing inside a green wire cage, looking toward the left in soft natural lighting"
+ },
+ "vcbench_coast_33754706_2160x3840": {
+  "A": "A blue and grey boat with orange floats stacked on its stern sits anchored in green water, near a sandy beach and a steep cliff covered in green vegetation under bright daytime light",
+  "B": "a rear view of a blue fishing boat loaded with bright orange buoys, floating in calm green water near a sandy beach and steep rocky cliffs under direct daylight"
+ },
+ "vcbench_conversation_3206301_1920x1080": {
+  "A": "A dark-skinned man with short black hair and a short beard, wearing a light brown coat over a black shirt, looks down at his black smartphone while standing in front of a white building under soft daylight",
+  "B": "a dark-skinned man with a short beard and buzz cut wearing a tan coat and black shirt, holding a black phone to his ear and smiling against a light gray stone pillar in soft daylight"
+ },
+ "vcbench_conversation_4326529_3840x2160": {
+  "A": "A young woman with long dark hair, wearing a red and white checkered button-down shirt, holds a beige smartphone while seated indoors against a dark green wooden wall in soft ambient lighting",
+  "B": "a smiling woman with long dark hair wearing large ornate silver earrings and a red and white plaid shirt, looking at her smartphone while sitting indoors in dim lighting"
+ },
+ "vcbench_conversation_4434067_3840x2160": {
+  "A": "A man with gray hair and a white beard, wearing glasses, a white dress shirt, a black jacket, and blue jeans, sits with crossed arms in a light gray chair in an indoor room with bright white lighting",
+  "B": "a middle-aged man with thick gray hair, glasses, and a full beard in a dark navy blazer, white collared shirt, and dark jeans, sitting with arms crossed in a light gray armchair beside a bright window in a white room"
+ },
+ "vcbench_dancing_3761544_3840x2160": {
+  "A": "A smiling woman with long dark hair, wearing a yellow t-shirt patterned with black text, covers her face with both hands against a plain light blue background",
+  "B": "a woman with long brown hair wearing a yellow t-shirt and white wireless earphones, smiling with her eyes closed while running her hands through her hair against a plain light blue background in soft lighting"
+ },
+ "vcbench_destination_33713788_3840x2160": {
+  "A": "An aerial view shows a dense coastal town with closely packed multi-story houses and flat roofs, where streets lined with parked cars lead past a green park toward a wide blue ocean under a clear blue sky illuminated by bright daylight",
+  "B": "an aerial view of a coastal city with light-colored houses and green trees, with cars driving on roads towards a deep blue ocean under a clear sky"
+ },
+ "vcbench_football_10349005_4096x2160": {
+  "A": "A man in a light blue sweatshirt, grey shorts, white socks, and white sneakers, stands over a white patterned soccer ball on a dark grey surface, with two other identical balls nearby against a black background illuminated by dim studio light",
+  "B": "a man with light skin in a light blue sweatshirt and gray shorts, juggling a white patterned soccer ball with his feet in front of a dark studio background with low lighting"
+ },
+ "vcbench_golf_6541965_2560x1440": {
+  "A": "A golfer in bright yellow pants and dark athletic shoes stands over a white golf ball resting on a tee, holding a driver club rested on the green grass under bright outdoor sunlight",
+  "B": "a golfer in a dark navy blue sneaker and yellow pants, stepping across a green grass field beside a white plastic golf tee stuck in the bright sunlight"
+ },
+ "vcbench_horse_7673265_2160x3840": {
+  "A": "A woman with blonde hair, wearing a white long-sleeved shirt, black riding pants, and a black helmet, rides a brown horse away from the camera through a sandy indoor arena while another woman in a dark jacket leads the horse",
+  "B": "a blonde woman wearing a black helmet and a light pink shirt riding a brown horse alongside a person with short brown hair in a dark gray jacket leading the horse by its reins in a sandy indoor arena under a arched metal beam structure in soft natural light"
+ },
+ "vcbench_library_4860895_4096x2160": {
+  "A": "A close view of a white wooden bookshelf displays several colorful books with red and blue spines standing vertically beside a white frame, while a blurred brown cushion rests in the brightly lit background near a window",
+  "B": "a person with light skin holding a white rectangular product box in front of a white wooden bookshelf with red and gray books, adjusting the box near a bright window bathed in soft natural light"
+ },
+ "vcbench_library_8086641_2160x4096": {
+  "A": "A tall wooden bookshelf with multiple shelves, filled with numerous books of various colors including white, black, and orange, stands in a dimly lit indoor space illuminated by soft natural light",
+  "B": "a close-up of a wooden bookshelf with colorful books in a brightly lit library room, with soft natural light coming from a blurry window in the background"
+ },
+ "vcbench_lunch_6958036_2160x4096": {
+  "A": "A blonde girl with a yellow headband, wearing a striped t-shirt and white pants, looks down at a phone while sitting at a wooden table, as a woman in a grey cardigan stands behind her in a brightly lit room",
+  "B": "a young girl with long blonde hair and a mustard yellow braided headband in a red and white striped t-shirt and white pants, seated at a dark wooden round table with food and drinks while looking at a woman in a gray cardigan standing beside her in a bright indoor room"
+ },
+ "vcbench_meeting_3255273_3840x2160": {
+  "A": "A fair-skinned woman with shoulder-length reddish-orange hair, wearing white-framed glasses and a dark olive green button-up shirt, looks downward while holding a pen in an indoor room with a red brick wall",
+  "B": "a fair-skinned woman with long straight orange hair and thick white glasses in a dark green corduroy shirt, looking down at a gray tablet in a brightly lit indoor space with plain gray wall behind her"
+ },
+ "vcbench_meeting_3256571_2160x3840": {
+  "A": "A short-haired man with a dark beard, wearing a beige suit jacket over a matching t-shirt, leans forward indoors while looking down beside a light brown wooden bookshelf in a bright white room",
+  "B": "a smiling man with short dark hair in a beige blazer and matching beige t-shirt, standing and looking toward colleagues in a brightly lit office setting with plain white walls"
+ },
+ "vcbench_music_4088836_1920x1080": {
+  "A": "A musician with fair skin, wearing an unseen outfit, plucks the metallic strings of a dark grey bass guitar in a dimly lit indoor setting with soft natural light",
+  "B": "a person's hand with pale skin, plucking the silver metal strings of a dark brown bass guitar in dim indoor lighting"
+ },
+ "vcbench_office_3196062_3840x2160": {
+  "A": "A young man with short dark hair, wearing glasses and a purple short-sleeved shirt, sits at a wooden table in a brightly lit office, smiling while looking at a woman with curly brown hair wearing a white striped shirt",
+  "B": "a smiling young woman with curly dark hair wearing a light blue striped shirt, sitting at a wooden office desk"
+ },
+ "vcbench_painting_3805736_2160x4096": {
+  "A": "An elderly man with short white hair, wearing a black collared shirt, holds a paintbrush near his mouth in an artist studio lit by soft natural light from a large window behind him",
+  "B": "a middle-aged man with short slicked-back gray hair and fair skin wearing a black button-down shirt, holding a beige wooden paintbrush near a white canvas under soft diffuse indoor lighting in a high-ceilinged room with large square window panes in the background"
+ },
+ "vcbench_painting_3960177_4096x2160": {
+  "A": "A young woman with short brown hair, wearing a white t-shirt and a blue surgical face mask, stands among other people in white t-shirts and blue surgical masks in front of a beige wall with a framed picture",
+  "B": "a fair-skinned woman with short brown hair wearing a white shirt and blue face mask, taking a selfie on a white smartphone alongside two men in white t-shirts and blue face masks against a beige wall framed by a painting of a woman in a blue face mask"
+ },
+ "vcbench_phone_3044315_3840x2160": {
+  "A": "A Black woman with dark hair tied back, wearing a gray turtleneck sweater and a black and white plaid jacket, holds a smartphone and paper coffee cup while looking down in an outdoor park with soft daylight",
+  "B": "a black woman with pulled-back dark hair and orange fingernails in a light olive turtleneck sweater and a black-and-grey plaid jacket, talking on a smartphone held to her ear while holding a white paper coffee cup in an outdoor park setting with soft natural daylight"
+ },
+ "vcbench_phone_3115593_3840x2160": {
+  "A": "A fair-skinned woman with straight blonde hair, wearing a beige trench coat and a white collared shirt, talks on a black smartphone outdoors in soft daytime light",
+  "B": "a fair-skinned woman with shoulder-length straight brown hair wearing a beige trench coat over a white collared shirt, smiling while holding a black smartphone to her ear outdoors against a soft-focus urban background under natural daylight"
+ },
+ "vcbench_photography_2795401_2160x3840": {
+  "A": "A woman with long brown hair, wearing a red beanie, a yellow raincoat, a white t-shirt, and blue jeans, holds a silver camera in front of a concrete building with large windows under overcast daylight",
+  "B": "a low-angle shot of a smiling woman with wavy light brown hair in a red beanie and a bright yellow hooded jacket over a white t-shirt, holding a silver camera against a large paned window"
+ },
+ "vcbench_photography_3894706_2160x4096": {
+  "A": "A blonde woman with long hair, wearing a black long-sleeved hooded sweatshirt, dances with raised arms against a dark grey background lit by soft white light from above",
+  "B": "a fair-skinned woman with long blonde hair wearing a black hooded sweatshirt over a black top, staring forward with a neutral expression against a dark black studio background"
+ },
+ "vcbench_reading_4153582_2160x4096": {
+  "A": "A young woman wrapped in a white head towel, wearing a white robe and black straps, sits cross-legged on a white bed while reading a magazine in a brightly lit room",
+  "B": "a young woman with her wet hair wrapped in a white towel and wearing an open white shirt, sitting on a bed and flipping through a magazine in a brightly lit room"
+ },
+ "vcbench_reading_853947_1920x1080": {
+  "A": "A dark-haired man in a white dotted shirt reads a black-and-white comic book inside a bright train car with a yellow ceiling",
+  "B": "a person with short black hair wearing a white dotted shirt, reading a manga book inside a subway car"
+ },
+ "vcbench_robot_7651117_1920x1080": {
+  "A": "A person wearing tan briefs and a black body harness stands under bright white light, with numerous black wires dangling around their body against a plain white background",
+  "B": "a woman with pale skin in a beige cutout bodysuit and black harness straps, standing while thin black wires hang across her torso and arms against a plain white background under bright overhead lighting"
+ },
+ "vcbench_robot_8327799_3840x2160": {
+  "A": "An elderly man with a long white beard and glasses, wearing a white dress shirt and a grey suit jacket, plays chess on a wooden board against a black background",
+  "B": "an elderly man with short white hair, a long white beard, and round glasses wearing a dark gray blazer over a white shirt, moving a wooden piece on a wooden chessboard set on a table against a solid black background"
+ },
+ "vcbench_robot_8764794_2160x3840": {
+  "A": "A young man with short blonde hair and a white long-sleeved shirt, wearing a black virtual reality headset, stands facing right in a room illuminated by pink and blue neon light while a woman in a white suit stands in the background",
+  "B": "a young man with short light hair wearing a blue shirt and a dark vr headset, standing beside a woman in a white jacket and white vr headset under bright pink and blue lighting"
+ },
+ "vcbench_school_5199627_3840x2160": {
+  "A": "A group of three students and a bald teacher wearing glasses, a yellow shirt, and a gray blazer stand together in front of a blackboard in a brightly lit classroom with soft light",
+  "B": "a bald man wearing a yellow shirt and three teenagers posing in front of a blackboard"
+ },
+ "vcbench_school_5200358_3840x2160": {
+  "A": "A fair-haired young boy wearing a black leather jacket over a yellow hoodie holds a grey skateboard as he walks with another boy through a green park under overcast daylight",
+  "B": "two young boys with short brown hair, one in a black leather jacket holding a skateboard and one in a black denim jacket, standing together outdoors on a paved walkway framed by green trees during daylight"
+ },
+ "vcbench_sculpture_33742628_2160x3840": {
+  "A": "Two brown hands work on a grey clay sculpture of a human face, smoothing the upper cheek with a finger, resting on a dark wooden surface in flat lighting",
+  "B": "an artisan with dark skin, holding a large gray clay sculpture of a human face with prominent lips and closed eyes while shaping the jawline in natural light"
+ },
+ "vcbench_sculpture_3978822_1920x1080": {
+  "A": "A close-up shot of a dark metallic crucifix sculpture, with the torso and cross arms highlighted by a warm side light, stands against a dark background illuminated by subtle ambient lighting",
+  "B": "a bronze crucifix with a figure of jesus christ, highlighted by warm side lighting against a dark background"
+ },
+ "vcbench_sunset_1686791_1080x1920": {
+  "A": "A dark gray airplane wing, featuring a curved vertical winglet at its tip, glides above a dark landscape under a gradient sky illuminated by a bright orange horizon",
+  "B": "a dark airplane wing silhouetted against a gradient sky, flying over clouds during a bright orange and yellow sunset"
+ },
+ "vcbench_talk_3044906_3840x2160": {
+  "A": "A woman with black hair in a high afro puff, wearing a beige turtleneck shirt and a red blazer, gestures with her hand while standing outdoors in front of a light gray background",
+  "B": "a woman with dark hair in a red blazer, talking while holding a white laptop outdoors"
+ },
+ "vcbench_talk_3141320_3840x2160": {
+  "A": "A young woman with long light brown hair, wearing a light blue collared shirt, smiles while sitting indoors against a dark wall and a brown brick background illuminated by soft indoor lighting",
+  "B": "a fair-skinned woman with long light brown hair wearing a light gray collared shirt, talking against a dark background with brick texture"
+ },
+ "vcbench_talk_3255327_3840x2160": {
+  "A": "A young woman with brown hair tied back, wearing a white t-shirt and a dark vest, looks to the side in a brightly lit indoor space with white walls and soft natural lighting",
+  "B": "a young light-skinned woman with brown hair tied back in a dark jacket and white t-shirt, smiling while looking off to the side in a softly lit room"
+ },
+ "vcbench_talk_3256821_2160x3840": {
+  "A": "A woman with short brown hair, wearing a pink blazer and a matching pink t-shirt, sits at a wooden table with her hand resting under her chin, in a room lit by soft natural light",
+  "B": "a light-skinned woman with brown hair tied back, wearing a pink blazer over a matching pink shirt, sitting at a light wooden table and resting her head on her hand in front of a exposed red brick wall"
+ },
+ "vcbench_talk_4146196_3840x2160": {
+  "A": "A young woman with curly blonde hair and black glasses, wearing a light blue denim shirt over a white top, eats noodles with wooden chopsticks from a beige paper takeout container in a brightly lit indoor space",
+  "B": "a woman with shoulder-length curly blonde hair wearing black-framed glasses, a blue denim shirt, and a white t-shirt, gesturing with her hand while holding a cardboard takeout container in a brightly lit indoor setting"
+ },
+ "vcbench_talk_4298771_3840x2160": {
+  "A": "A bald man with short facial hair, wearing a brown jacket over an olive green shirt, holds a clear glass of red wine in a brightly lit kitchen with white cabinets",
+  "B": "a dark-skinned man with short hair in a light tan blazer and green shirt, holding a clear wine glass in a white brightly lit kitchen with a woman in a colorful striped dress drinking wine in the soft-focus background"
+ },
+ "vcbench_talk_4625294_1920x1080": {
+  "A": "A dark-haired man with curly hair, wearing a black t-shirt and dark backpack straps, stands next to a woman with long brown hair in a peach top, outside a yellow building under bright daylight",
+  "B": "a man with short curly brown hair in a dark blue t-shirt and a woman with straight brown hair in a red top, standing outdoors in soft natural light while looking down near a yellow wall"
+ },
+ "vcbench_teacher_33674801_2160x3840": {
+  "A": "A man with short dark hair, wearing a black cap, grey vest, and brown long-sleeved shirt, leans forward to guide a boy in a navy blue polo shirt who shapes clay on a spinning pottery wheel in an outdoor workshop under bright daylight",
+  "B": "a young nepali boy in a navy-blue polo shirt and gloves, shaping a small clay pot on a spinning pottery wheel, while a man in a black Dhaka topi hat guides his hands indoors beside other adults and children"
+ },
+ "vcbench_teacher_5184440_1080x1920": {
+  "A": "A woman in glasses and a white short-sleeved t-shirt sits at a white table next to a boy in a grey short-sleeved t-shirt, pointing at a silver laptop screen in a brightly lit room with indoor plants",
+  "B": "a blonde woman with glasses in a white t-shirt and a young boy in a gray t-shirt sitting at a white table, pointing at a laptop screen together in a bright room with green potted plants in the background"
+ },
+ "vcbench_teacher_6333712_4096x2160": {
+  "A": "A young woman with voluminous curly brown hair, wearing a mustard-yellow turtleneck sweater, holds a white pen while studying open books on a table in a brightly lit room with blurred bookshelves in the background",
+  "B": "a young woman with a brown afro and tan skin wearing a yellow long-sleeved turtleneck, writing with a white pen on an open book in a brightly lit library with blurred bookshelves in the background"
+ },
+ "vcbench_teacher_6985519_3840x2160": {
+  "A": "A young man with short black hair, wearing a yellow long-sleeved sweatshirt, sits in a beige chair facing a wooden desk from an overhead camera viewpoint in a room with light wooden floorboards",
+  "B": "an overhead view of a dark-skinned person in a yellow long-sleeved shirt, placing their hands on a white laptop on a light brown wooden desk beside a black notebook"
+ },
+ "vcbench_teenager_2251680_3840x2160": {
+  "B": "a young man with short brown hair in a blue hooded jacket and black track pants with turquoise stripes, riding a skateboard on a sunny paved plaza with autumn trees and blurred pedestrians in the background"
+ },
+ "vcbench_teenager_4100460_4096x2160": {
+  "A": "A young man with short fair hair, wearing a black hooded sweatshirt with a silver zipper, looks downward in front of a plain white wall illuminated by soft indoor lighting",
+  "B": "a young man with short fair hair wearing a dark gray hooded sweatshirt, looking directly into the camera with a neutral expression in a close-up portrait against a plain light gray background"
+ },
+ "vcbench_tulip_10536489_4096x2160": {
+  "A": "A clear glass jar filled with soft pink rose petals sits outdoors against a blurred green and yellow background bathed in bright natural daylight",
+  "B": "a clear glass jar filled with pale pink rose petals, resting outdoors against a soft-focused green and yellow natural background in bright daylight"
+ },
+ "vcbench_turtle_5259430_2160x4096": {
+  "A": "A small turtle with green, black, and yellow markings on its head and shell sits on a gray surface while a person in a white dotted shirt reaches down to touch the back of its shell in bright daylight",
+  "B": "a child with fair skin in a white polka dot dress gently touching the top shell of a small brown and yellow turtle resting on a pale gray surface in soft bright indoor lighting"
+ },
+ "vcbench_vegetable_853790_1920x1080": {
+  "A": "A man with short dark hair, wearing a gray t-shirt, reaches toward large piles of green leafy vegetables resting on a pale wooden table in an outdoor market lit by soft daylight with colorful blurred background lights",
+  "B": "a person in a gray short-sleeved shirt sorting green vegetables at a bright outdoor market stand with wooden crates"
+ }
+}

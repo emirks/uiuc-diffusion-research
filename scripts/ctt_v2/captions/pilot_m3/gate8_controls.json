@@ -1,0 +1,73 @@
+{
+ "gate8_controls_balanced_accuracy": {
+  "NULL_corpus_vs_itself_random_halves": 0.5059,
+  "corpus_Arole_vs_corpus_Brole": 0.6419,
+  "corpus_vs_round1_PINNED_GATE": 0.7139,
+  "corpus_vs_round2_PINNED_GATE": 0.7066,
+  "round1_vs_round2_same_model_prompt_delta_only": 0.7233,
+  "round2_synth_vs_humanvid_new_banks": 0.5579
+ },
+ "gate8_vocabulary_robustness": {
+  "operator_list_n196": {
+   "round1": 0.7139,
+   "round2": 0.7066
+  },
+  "sklearn_stopwords_n318": {
+   "round1": 0.7122,
+   "round2": 0.6921
+  },
+  "intersection_n176": {
+   "round1": 0.7122,
+   "round2": 0.6897
+  }
+ },
+ "gate8_ablation_round2": {
+  "fnwords_plus_punct_length": 0.7066,
+  "fnwords_only": 0.7208
+ },
+ "gate9_full_vocab_controls": {
+  "NULL_corpus_vs_itself": 0.5329,
+  "corpus_vs_round2": 0.8495,
+  "round2_synth_vs_humanvid": 0.6615
+ },
+ "style_statistics": {
+  "corpus": {
+   "n": 171,
+   "commas_per_desc": 1.877,
+   "while_pct": 11.7,
+   "be_verb_pct": 8.77,
+   "words_p50": 33.0
+  },
+  "round1": {
+   "n": 391,
+   "commas_per_desc": 0.777,
+   "while_pct": 27.88,
+   "be_verb_pct": 0.51,
+   "words_p50": 29.0
+  },
+  "round2": {
+   "n": 392,
+   "commas_per_desc": 1.74,
+   "while_pct": 27.04,
+   "be_verb_pct": 0.0,
+   "words_p50": 34.0
+  }
+ },
+ "length_sampler_fit_round1": {
+  "realised = a + b * N_asked": {
+   "a": 5.533,
+   "b": 0.7347,
+   "corr": 0.81
+  }
+ },
+ "corpus_tier1_reaudit": {
+  "n": 171,
+  "tier1_hits": 0
+ },
+ "corpus_tier2_baseline": {
+  "n": 171,
+  "flagged": 23,
+  "pct": 13.5
+ },
+ "notes": "Probe = TF-IDF on function words + punctuation + length, 5-fold x 5 seeds, balanced subsamples. Bar (A4 Q4 gate 8) = mean balanced accuracy <= 0.65."
+}

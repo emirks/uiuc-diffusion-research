@@ -1,0 +1,530 @@
+#!/usr/bin/env python
+"""CTT v2 per-(clip, role) description generator -- advisor A4 (round 8) Q1 + Q3.
+
+Produces a description store `{clip_id: {"A": "...", "B": "..."}}` from 9-frame
+byte-pure anchor VIDEOS (never the full clip, never a transition frame), runs the
+A4 Layer-1 tiered lexical filter and the A4 Layer-2 independent-model semantic
+audit, and archives every raw API response.
+
+MODEL SUBSTITUTION (measured, DOSSIER §5.1): A4 specified `gemini-3-pro-preview`
+as the Layer-2 auditor.  Every `*-pro-*` model returns HTTP 429 on this key; the
+whole flash tier is unlimited.  The auditor is therefore `gemini-3.5-flash`
+against a `gemini-3.6-flash` generator -- different models, so generator/auditor
+independence is preserved, at flash rather than pro capability.
+
+THINKING BUDGET (measured): with the default thinking level, gemini-3.x flash
+spends ~111 "thoughts" tokens before emitting text, so A4's
+`max_output_tokens=120` truncates the sentence mid-word.  Both calls therefore
+set `thinkingConfig.thinkingLevel = "minimal"`, which makes the 120-token budget
+apply to the visible text as A4 intended.  `thinkingBudget: 0` is rejected
+(HTTP 400) by these models.
+
+Usage
+-----
+  source /projects/illinois/eng/cs/jrehg/users/emirkisa/secrets/gemini_transition.env
+  PY=/projects/illinois/eng/cs/jrehg/users/emirkisa/envs/diffusion/bin/python
+
+  # deterministic per-(bank x role) sample -- the M3 pilot
+  $PY generate_descriptions.py --sample-per-cell 100 --seed 42 \
+      --out outputs/ctt_v2/captions/pilot
+
+  # explicit pair list: JSON [["clip_id","A"], ["clip_id","B"], ...]
+  $PY generate_descriptions.py --pairs pairs.json --out <dir>
+"""
+
+from __future__ import annotations
+
+import argparse
+import base64
+import json
+import os
+import random
+import sys
+import threading
+import time
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+
+import requests
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from caption_common import (  # noqa: E402
+    STRIPS_INDEX,
+    LeakFilter,
+    format_violations,
+    load_length_empirical,
+    word_count,
+)
+
+# --------------------------------------------------------------------------
+# Pinned model identity
+# --------------------------------------------------------------------------
+GEN_MODEL = "gemini-3.6-flash"
+AUDIT_MODEL = "gemini-3.5-flash"          # A4 said gemini-3-pro-preview; pro tier 429s
+GEN_TEMPERATURE = 0.7
+GEN_MAX_TOKENS = 120
+AUDIT_TEMPERATURE = 0.0
+AUDIT_MAX_TOKENS = 400
+API_ROOT = "https://generativelanguage.googleapis.com/v1beta/models"
+
+# --------------------------------------------------------------------------
+# A4 Q1 prompts -- VERBATIM
+# --------------------------------------------------------------------------
+_PROMPT_A_TEMPLATE = (
+    "You write one-sentence descriptions of short video snippets for a film-production "
+    "shot list. You will receive a 9-frame snippet of ordinary footage. Write exactly ONE "
+    "English sentence describing only what is visible in the snippet. Begin with the main "
+    'subject and its appearance (e.g. "A woman with…", "A young man in…"), then the '
+    "subject's action using simple-present or present-progressive verbs, then the setting, "
+    'lighting, and colors, using plain literal terms ("red dress", not "vibrant red dress"). '
+    "Mention the camera only if the snippet itself shows an obvious camera viewpoint (e.g. an "
+    "overhead view). Describe only this moment: do not mention anything that happens before "
+    "or after the snippet, and do not use any language about the scene changing, transforming, "
+    "beginning, ending, shifting, or revealing anything. Do not mention sounds, music, or "
+    "speech. Do not refer to the video, image, frames, snippet, or footage as objects. Do not "
+    "name any visual effect, editing technique, or animation style. Aim for about {N} words "
+    "(anywhere from {NLO} to {NHI} words is fine). Output only the sentence, ending with a "
+    "period — no quotes, no markdown, no preamble."
+)
+
+# A4 Q1: "identical system prompt except the second and third sentences are
+# replaced by [the noun-phrase instruction] and the final line reads
+# 'Output only the phrase, ending with a period.'"
+_PROMPT_B_TEMPLATE = (
+    "You write one-sentence descriptions of short video snippets for a film-production "
+    "shot list. You will receive a 9-frame snippet of ordinary footage. Write exactly ONE "
+    "lowercase English noun phrase (not a complete sentence) describing only what is visible "
+    'in the snippet, in the style: "a woman with long dark hair in a gray coat sipping coffee '
+    'beside a rain-streaked window". Begin with "a", "an", or a plural noun phrase; express '
+    "the action with -ing participles, never a standalone conjugated verb; then setting, "
+    "lighting, and colors in plain literal terms. "
+    "Mention the camera only if the snippet itself shows an obvious camera viewpoint (e.g. an "
+    "overhead view). Describe only this moment: do not mention anything that happens before "
+    "or after the snippet, and do not use any language about the scene changing, transforming, "
+    "beginning, ending, shifting, or revealing anything. Do not mention sounds, music, or "
+    "speech. Do not refer to the video, image, frames, snippet, or footage as objects. Do not "
+    "name any visual effect, editing technique, or animation style. Aim for about {N} words "
+    "(anywhere from {NLO} to {NHI} words is fine). Output only the phrase, ending with a "
+    "period — no quotes, no markdown, no preamble."
+)
+
+# --------------------------------------------------------------------------
+# Prompt variant "v2" -- OPERATOR DIAGNOSTIC, NOT A4's text.
+#
+# Round 1 of the M3 pilot (400 descriptions, A4's verbatim prompts) FAILED gate
+# #8 at balanced accuracy 0.7139 (bar <= 0.65).  The discriminative features were
+# pure style, not content:
+#
+#   statistic            corpus   round-1   delta
+#   commas/description    1.88     0.78     -1.10   (top corpus-side feature PUNCT[,])
+#   "while" rate         11.7%    27.9%    +16.2pp  (top new-side feature)
+#   be-verb rate          8.8%     0.5%     -8.3pp
+#   words p50              33       29        -4
+#   colour terms/desc     3.158    2.309    -0.85
+#
+# A4 Q4's pre-registered failure action is "fix the prompt or the length sampler
+# and regenerate the entire stratum ... max 3 regeneration rounds".  v2 is that
+# fix, kept OPT-IN so A4's verbatim prompt remains the default and round 1 stays
+# reproducible.  The delta is deliberately minimal and structural only:
+#   (1) the invented style exemplar is replaced by a REAL corpus description
+#       (A4's own thesis is instrument matching; A4's B exemplar has 0 commas,
+#       which alone explains most of the comma deficit);
+#   (2) an explicit appositive-comma instruction;
+#   (3) an explicit plain-colour instruction.
+# No banned-lexeme list is added -- A4 Q1's pink-elephant rule is respected, so
+# "while" is displaced structurally rather than named.
+# --------------------------------------------------------------------------
+CORPUS_EXEMPLAR_A = (
+    "A barefoot woman with long brown hair, wearing a red short-sleeved blouse and black "
+    "pants, runs forward through a hazy parking garage illuminated by green overhead lights "
+    "and a warm orange glow."
+)
+CORPUS_EXEMPLAR_B = (
+    "a pale woman with a tousled black bob and winged eyeliner in a black cutout halter top, "
+    "biting the fingertip of her long black latex glove beside a bright curtained window"
+)
+_V2_STYLE_A = (
+    " Match the sentence structure of this example exactly, but describe only what is in "
+    f'your own snippet: "{CORPUS_EXEMPLAR_A}" — that is, a subject noun phrase, then one or '
+    "two comma-separated appositive phrases giving clothing and features, then a single "
+    "finite main verb, then the setting and its lighting. Name the plain colour of every "
+    "significant garment, object and light source."
+)
+_V2_STYLE_B = (
+    " Match the structure of this example exactly, but describe only what is in your own "
+    f'snippet: "{CORPUS_EXEMPLAR_B}" — that is, a subject noun phrase, then appearance and '
+    "clothing, then a comma, then the -ing participle action, then the setting and its "
+    "lighting. Name the plain colour of every significant garment, object and light source."
+)
+
+# Length calibration fitted on round 1 (n=391): realised = 5.533 + 0.7347 * N_asked
+# (corr 0.810).  The model compresses the requested range, running ~3 words short
+# on average and ~7 short at the top of the range.  v2 inverts the fit so the
+# REALISED distribution matches the corpus draw.  The A4 draw+clamp itself is
+# unchanged; this is a post-draw transform on what we ask for.
+_LEN_FIT_A, _LEN_FIT_B = 5.533, 0.7347
+
+
+def calibrate_ask(n_drawn: int) -> int:
+    return int(round(max(10, min(60, (n_drawn - _LEN_FIT_A) / _LEN_FIT_B))))
+
+
+USER_TEXT = "Describe this snippet."
+
+AUDIT_QUESTION = (
+    "(a) Does this sentence describe, foreshadow, or hint at any scene change, "
+    "transformation, transition, ending, or visual effect? (b) Does it describe anything not "
+    "visible in these frames, or get any visible attribute wrong (colors, clothing, hair, "
+    "count, action)? Answer JSON {leak: YES/NO, inaccurate: YES/NO, errors: [...]}"
+)
+
+
+def build_system_prompt(role: str, n: int, variant: str = "a4") -> str:
+    """A4 Q1 prompts.  `variant="a4"` is A4's verbatim text (the default).
+    `variant="v2"` is the operator diagnostic described above."""
+    tmpl = _PROMPT_A_TEMPLATE if role == "A" else _PROMPT_B_TEMPLATE
+    if variant == "v2":
+        style = _V2_STYLE_A if role == "A" else _V2_STYLE_B
+        n = calibrate_ask(n)
+        # insert the structural guidance just before the length instruction
+        marker = " Aim for about {N} words"
+        tmpl = tmpl.replace(marker, style + marker)
+    return tmpl.format(N=n, NLO=n - 6, NHI=n + 8)
+
+
+# --------------------------------------------------------------------------
+# HTTP
+# --------------------------------------------------------------------------
+class HardStop(Exception):
+    """HTTP 429 -- A4/operator directive: treat as a hard stop, do not grind."""
+
+
+_stop = threading.Event()
+_lock = threading.Lock()
+_counters = {"calls": 0, "retries": 0, "http429": 0}
+
+
+def _post(model: str, body: dict, timeout: int = 240, max_tries: int = 5):
+    key = os.environ["GEMINI_API_KEY"]
+    url = f"{API_ROOT}/{model}:generateContent"
+    last = None
+    for attempt in range(max_tries):
+        if _stop.is_set():
+            raise HardStop("stopped")
+        try:
+            r = requests.post(
+                url,
+                headers={"x-goog-api-key": key, "Content-Type": "application/json"},
+                json=body,
+                timeout=timeout,
+            )
+        except Exception as e:  # transient network
+            last = f"EXC:{type(e).__name__}:{e}"
+            with _lock:
+                _counters["retries"] += 1
+            time.sleep(min(2 ** attempt, 20) + random.random())
+            continue
+        with _lock:
+            _counters["calls"] += 1
+        if r.status_code == 429:
+            with _lock:
+                _counters["http429"] += 1
+            _stop.set()
+            raise HardStop(f"HTTP 429 from {model}: {r.text[:300]}")
+        if r.status_code >= 500 or r.status_code in (408, 409):
+            last = f"HTTP{r.status_code}:{r.text[:200]}"
+            with _lock:
+                _counters["retries"] += 1
+            time.sleep(min(2 ** attempt, 20) + random.random())
+            continue
+        if r.status_code != 200:
+            return None, f"HTTP{r.status_code}:{r.text[:300]}"
+        return r.json(), None
+    return None, f"exhausted_retries:{last}"
+
+
+def _extract_text(resp: dict):
+    try:
+        parts = resp["candidates"][0]["content"]["parts"]
+        return "".join(p.get("text", "") for p in parts).strip()
+    except Exception:
+        return None
+
+
+_b64_cache: dict[str, str] = {}
+
+
+def _b64(path: str) -> str:
+    v = _b64_cache.get(path)
+    if v is None:
+        v = base64.b64encode(Path(path).read_bytes()).decode()
+        _b64_cache[path] = v
+    return v
+
+
+# --------------------------------------------------------------------------
+# Generation
+# --------------------------------------------------------------------------
+def sample_length(clip_id: str, role: str, attempt: int, empirical, seed: int) -> int:
+    """A4 Q1: draw N uniformly from the 171 corpus per-description word counts,
+    clamp to [15, 45].  Deterministic in (seed, clip, role, attempt)."""
+    rng = random.Random(f"{seed}|{clip_id}|{role}|{attempt}")
+    return max(15, min(45, rng.choice(empirical)))
+
+
+def postprocess(raw: str):
+    """A4 Q1 storage convention: strip the trailing period; keep everything else."""
+    t = (raw or "").strip()
+    t = t.strip("﻿").strip()
+    if t.endswith("."):
+        t = t[:-1].rstrip()
+    return t
+
+
+def generate_one(clip_id, role, video_path, attempt, empirical, seed, variant="a4"):
+    n = sample_length(clip_id, role, attempt, empirical, seed)
+    sysp = build_system_prompt(role, n, variant)
+    body = {
+        "systemInstruction": {"parts": [{"text": sysp}]},
+        "contents": [
+            {
+                "role": "user",
+                "parts": [
+                    {"inline_data": {"mime_type": "video/mp4", "data": _b64(video_path)}},
+                    {"text": USER_TEXT},
+                ],
+            }
+        ],
+        "generationConfig": {
+            "temperature": GEN_TEMPERATURE,
+            "maxOutputTokens": GEN_MAX_TOKENS,
+            "thinkingConfig": {"thinkingLevel": "minimal"},
+        },
+    }
+    resp, err = _post(GEN_MODEL, body)
+    rec = {
+        "clip_id": clip_id, "role": role, "attempt": attempt, "N_target": n,
+        "N_asked": calibrate_ask(n) if variant == "v2" else n, "prompt_variant": variant,
+        "model": GEN_MODEL, "temperature": GEN_TEMPERATURE,
+        "max_output_tokens": GEN_MAX_TOKENS, "error": err,
+        "raw_response": resp,
+    }
+    text = _extract_text(resp) if resp else None
+    rec["raw_text"] = text
+    rec["description"] = postprocess(text) if text else None
+    return rec
+
+
+def audit_one(clip_id, role, description, video_path):
+    body = {
+        "contents": [
+            {
+                "role": "user",
+                "parts": [
+                    {"inline_data": {"mime_type": "video/mp4", "data": _b64(video_path)}},
+                    {"text": f'Sentence: "{description}."\n\n{AUDIT_QUESTION}'},
+                ],
+            }
+        ],
+        "generationConfig": {
+            "temperature": AUDIT_TEMPERATURE,
+            "maxOutputTokens": AUDIT_MAX_TOKENS,
+            "responseMimeType": "application/json",
+            "responseSchema": {
+                "type": "OBJECT",
+                "properties": {
+                    "leak": {"type": "STRING", "enum": ["YES", "NO"]},
+                    "inaccurate": {"type": "STRING", "enum": ["YES", "NO"]},
+                    "errors": {"type": "ARRAY", "items": {"type": "STRING"}},
+                },
+                "required": ["leak", "inaccurate", "errors"],
+            },
+            "thinkingConfig": {"thinkingLevel": "minimal"},
+        },
+    }
+    resp, err = _post(AUDIT_MODEL, body)
+    rec = {
+        "clip_id": clip_id, "role": role, "model": AUDIT_MODEL,
+        "temperature": AUDIT_TEMPERATURE, "error": err, "raw_response": resp,
+    }
+    txt = _extract_text(resp) if resp else None
+    verdict = None
+    if txt:
+        try:
+            verdict = json.loads(txt)
+        except Exception:
+            rec["parse_error"] = txt[:400]
+    rec["verdict"] = verdict
+    return rec
+
+
+# --------------------------------------------------------------------------
+# Driver
+# --------------------------------------------------------------------------
+def run(pairs, outdir: Path, seed: int, workers: int, max_attempts: int,
+        audit: bool = True, variant: str = "a4"):
+    outdir.mkdir(parents=True, exist_ok=True)
+    index = json.loads(STRIPS_INDEX.read_text())
+    empirical = load_length_empirical()
+    lf = LeakFilter()
+
+    gen_archive = (outdir / "raw_generation_responses.jsonl").open("w")
+    audit_archive = (outdir / "raw_audit_responses.jsonl").open("w")
+    arch_lock = threading.Lock()
+
+    results = {}
+    t0 = time.time()
+
+    def one_pair(pair):
+        clip_id, role = pair
+        entry = index[clip_id]
+        video = entry[f"{role}_video"]
+        history = []
+        for attempt in range(1, max_attempts + 1):
+            rec = generate_one(clip_id, role, video, attempt, empirical, seed, variant)
+            with arch_lock:
+                gen_archive.write(json.dumps(rec) + "\n")
+            desc = rec["description"]
+            step = {
+                "attempt": attempt, "N_target": rec["N_target"], "error": rec["error"],
+                "description": desc,
+            }
+            if not desc:
+                step["fail"] = ["no_text"]
+                history.append(step)
+                continue
+            fmt = format_violations(desc, role)
+            t1 = lf.tier1(desc)
+            step["format_violations"] = fmt
+            step["tier1"] = t1
+            step["tier2"] = lf.tier2(desc)
+            if fmt or t1:
+                step["fail"] = (["format"] if fmt else []) + (["tier1"] if t1 else [])
+                history.append(step)
+                continue
+            if audit:
+                arec = audit_one(clip_id, role, desc, video)
+                with arch_lock:
+                    audit_archive.write(json.dumps(arec) + "\n")
+                v = arec.get("verdict") or {}
+                step["audit"] = v
+                step["audit_error"] = arec.get("error") or arec.get("parse_error")
+                if v.get("leak") == "YES" or v.get("inaccurate") == "YES":
+                    step["fail"] = (["leak"] if v.get("leak") == "YES" else []) + \
+                                   (["inaccurate"] if v.get("inaccurate") == "YES" else [])
+                    history.append(step)
+                    continue
+            step["fail"] = []
+            history.append(step)
+            return {
+                "clip_id": clip_id, "role": role, "bank": entry["bank"],
+                "description": desc, "accepted_on_attempt": attempt,
+                "N_target": rec["N_target"], "words": word_count(desc),
+                "tier2": step["tier2"], "audit": step.get("audit"),
+                "history": history,
+            }
+        return {
+            "clip_id": clip_id, "role": role, "bank": entry["bank"],
+            "description": None, "accepted_on_attempt": None,
+            "status": "MANUAL_REWRITE_QUEUE", "history": history,
+        }
+
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        futs = {ex.submit(one_pair, p): p for p in pairs}
+        done = 0
+        for f, p in list(futs.items()):
+            try:
+                r = f.result()
+            except HardStop as e:
+                print(f"HARD STOP: {e}", file=sys.stderr)
+                raise
+            results[f"{p[0]}|{p[1]}"] = r
+            done += 1
+            if done % 50 == 0:
+                print(f"  {done}/{len(pairs)}  {time.time()-t0:.0f}s", flush=True)
+
+    gen_archive.close()
+    audit_archive.close()
+
+    # description store
+    store = {}
+    for r in results.values():
+        if r["description"]:
+            store.setdefault(r["clip_id"], {})[r["role"]] = r["description"]
+    (outdir / "descriptions.json").write_text(json.dumps(store, indent=1, sort_keys=True))
+    (outdir / "records.json").write_text(json.dumps(results, indent=1, sort_keys=True))
+
+    wall = time.time() - t0
+    meta = {
+        "generator_model": GEN_MODEL, "auditor_model": AUDIT_MODEL,
+        "auditor_substitution_note": (
+            "A4 Q3 specified gemini-3-pro-preview; the pro tier returns HTTP 429 on this "
+            "key (DOSSIER §5.1). gemini-3.5-flash substituted; generator != auditor so "
+            "independence is preserved."
+        ),
+        "thinking_level": "minimal", "prompt_variant": variant,
+        "gen_temperature": GEN_TEMPERATURE, "gen_max_output_tokens": GEN_MAX_TOKENS,
+        "audit_temperature": AUDIT_TEMPERATURE,
+        "seed": seed, "workers": workers, "max_attempts": max_attempts,
+        "n_pairs": len(pairs), "wall_seconds": round(wall, 1),
+        "api_calls": _counters["calls"], "retries": _counters["retries"],
+        "http429": _counters["http429"],
+    }
+    (outdir / "run_meta.json").write_text(json.dumps(meta, indent=1))
+    print(json.dumps(meta, indent=1))
+    return results
+
+
+def deterministic_sample(n_per_cell: int, seed: int):
+    """N clips per bank (deterministic, sorted clip list, seeded), BOTH roles each.
+
+    This mirrors the production store shape `{clip_id: {A, B}}`: every sampled
+    clip contributes one A-role and one B-role description, giving
+    n_per_cell descriptions in each of the (bank x role) cells.
+    """
+    index = json.loads(STRIPS_INDEX.read_text())
+    banks = {}
+    for cid, e in index.items():
+        banks.setdefault(e["bank"], []).append(cid)
+    pairs = []
+    for bank in sorted(banks):
+        clips = sorted(banks[bank])
+        rng = random.Random(f"{seed}|{bank}")
+        chosen = sorted(rng.sample(clips, min(n_per_cell, len(clips))))
+        for c in chosen:
+            pairs.append((c, "A"))
+            pairs.append((c, "B"))
+    return pairs
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--pairs", type=str, default=None,
+                    help='JSON file: [["clip_id","A"], ...]')
+    ap.add_argument("--sample-per-cell", type=int, default=None)
+    ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--out", type=str, required=True)
+    ap.add_argument("--workers", type=int, default=120)
+    ap.add_argument("--max-attempts", type=int, default=2,
+                    help="A4 Q3: one regeneration on failure, then manual queue")
+    ap.add_argument("--no-audit", action="store_true")
+    ap.add_argument("--prompt-variant", choices=("a4", "v2"), default="a4",
+                    help='"a4" = A4 Q1 verbatim (default); "v2" = operator diagnostic '
+                         "fix for the gate-#8 failure (see module docstring)")
+    a = ap.parse_args()
+
+    if a.pairs:
+        pairs = [tuple(x) for x in json.loads(Path(a.pairs).read_text())]
+    elif a.sample_per_cell:
+        pairs = deterministic_sample(a.sample_per_cell, a.seed)
+    else:
+        ap.error("need --pairs or --sample-per-cell")
+
+    print(f"{len(pairs)} (clip, role) pairs; generator={GEN_MODEL} auditor={AUDIT_MODEL} "
+          f"prompt_variant={a.prompt_variant}")
+    run(pairs, Path(a.out), a.seed, a.workers, a.max_attempts, audit=not a.no_audit,
+        variant=a.prompt_variant)
+
+
+if __name__ == "__main__":
+    main()

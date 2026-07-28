@@ -1,0 +1,8 @@
+{
+ "n": 391,
+ "inaccurate_yes": 391,
+ "leak_yes": 2,
+ "errors": 0,
+ "inaccurate_pct": 100.0,
+ "leak_pct": 0.51
+}
