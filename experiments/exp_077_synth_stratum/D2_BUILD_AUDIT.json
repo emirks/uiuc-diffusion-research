@@ -556,5 +556,41 @@
     ],
     "param_clamp_active": false,
     "param_clamp_abandoned": true
+  },
+  "stage4_encode_assemble": {
+    "n_clips_encoded": 6144,
+    "n_latents": 6144,
+    "n_cond_clean": 3072,
+    "encode_counts_reconciled": true,
+    "cond_clean_scope": "target clips only (the reference clip is consumed as reference_latents)",
+    "n_synthetic_samples": 3072,
+    "n_real_pairs": 385,
+    "real_replicas": 8,
+    "n_real_samples": 3080,
+    "real_root": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/dataset/roots/ic_gen",
+    "real_root_source_counts": {
+      "latents": 385,
+      "conditions": 385,
+      "reference_latents": 385,
+      "masks": 385,
+      "cond_clean_latents": 385
+    },
+    "real_root_dangling_symlinks": 0,
+    "combined_root": "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/exp_077_synth_stratum_d2/d2full/dataset/roots/d2_combined",
+    "combined_root_source_counts": {
+      "latents": 6152,
+      "conditions": 6152,
+      "reference_latents": 6152,
+      "masks": 6152,
+      "cond_clean_latents": 6152
+    },
+    "combined_root_counts_equal": true,
+    "combined_root_total": 6152,
+    "combined_root_dangling_symlinks": 0,
+    "mix_ratio_real": 0.5007,
+    "mix_ratio_synth": 0.4993,
+    "neutral_prompt": "A scene. sksz. A scene.",
+    "token": "sksz",
+    "text_embedding": "ONE Gemma pass, shared by all synthetic samples (identical prompt)"
   }
 }

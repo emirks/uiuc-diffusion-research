@@ -73,8 +73,11 @@ def verify() -> dict:
         fails.append(f"op_id collision: {len(by_op)} op blocks but {len(ids)} unique ids")
 
     # --- rates ---------------------------------------------------------------------------
-    rendered = sum(json.loads(Path(f).read_text())["clips_rendered"]
-                   for f in glob.glob(str(ROOT / "meta/summary_shard*.json"))) or None
+    # Overdraw must come from the OPS LOG, not the per-shard summaries: a shard that is
+    # requeued rewrites its summary, so after the OOM restart the summaries undercounted
+    # renders and reported an impossible overdraw of 0.91x. The ops log is append-only and
+    # cumulative, and every render is either an accepted slot or a logged reject.
+    rendered = sum(o["n_slots"] + len(o["rejects"]) for o in ops) or None
     per_shader = collections.defaultdict(lambda: {"accepted": 0, "rejected": 0})
     for o in ops:
         per_shader[o["shader"]]["accepted"] += o["n_slots"]

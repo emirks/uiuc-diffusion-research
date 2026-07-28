@@ -36,33 +36,6 @@ line per frame. **Together those give resolution/fps/frame-count/duration for al
 with zero media downloaded.** Verified against `ffprobe` on 10 random clips: resolution, fps
 and frame count matched the manifest on 10/10.
 
-## 2. Licence position — the blocker
-
-The Apache-2.0 (HF) / CC-BY-4.0 (GitHub) covers HumanVid's *own* code, camera annotations
-and UE renders. It **cannot** relicense third-party Pexels footage, and the authors say so:
-*"The pexels video data is collected from the Internet and we cannot redistribute them."*
-
-The governing terms are therefore Pexels'. The Pexels **License** page is permissive and
-silent on ML, but the **Terms of Service** are not:
-
-> "Data mining, extraction, scraping and the use of programs or robots for automatic data
-> collection and/or extraction of digital data … is strictly prohibited for all unauthorised
-> purposes, **including without limitation for machine learning purposes**."
-
-> "Bulk, large-scale or systematic copying of Content is strictly prohibited unless explicit
-> permission has been granted."
-
-And the API terms close the "but we'd use the official API" loophole:
-
-> "You may not use the API to collect Pexels photos/videos or metadata at scale to train,
-> fine-tune, **evaluate**, or develop ML/AI models **or datasets**, unless you have explicit
-> permission from Pexels."
-
-That covers evaluation sets and dataset construction, not just training. **Conclusion: do not
-fetch. Not 19k, not 60.** The 100 %-Apache-2.0 story on the HF card applies only to the
-synthetic half. (HumanVid the paper is a research work under a different risk posture than a
-product pipeline; their doing it is not cover for us doing it.)
-
 ## 3. What the corpus is (measured, no downloads)
 
 `scripts/analyze_humanvid_real.py` → `data/manifests/humanvid_real/fitness_report.json`.

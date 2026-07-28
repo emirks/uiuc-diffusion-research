@@ -64,6 +64,10 @@ s2:
   max_pair_attempts: 25    # to fill 10 slots. Negative-binomial mean ~17 at p=0.59, sd ~3.4,
                            # so 25 ~ mean + 2.4sd => only ~1-2% of healthy ops hit the drop path.
   drop_op_on_underfill: true   # incidence integrity is a GATE: exactly 10 or the op is dropped
+  max_op_resamples: 3      # ruling 1c: an op that cannot fill 10 slots is discarded WHOLE and a
+                           # REPLACEMENT is drawn from the same shader (fresh uniforms/easing/
+                           # flip/swap/timing). The first build omitted this and shipped 755 ops
+                           # instead of 800. Bounded at 3 so a pathological shader cannot spin.
   probe_pairs: 3           # gate-2 pre-validation probes per candidate operator at plan time
   max_op_draws_factor: 50  # safety valve on operator pre-validation
   shader_blacklist_reject_rate: 0.50   # >50% clip rejection for a shader => blacklist it

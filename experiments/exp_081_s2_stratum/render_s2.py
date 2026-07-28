@@ -33,6 +33,7 @@ import collections
 import json
 import logging
 import os
+import random
 import subprocess
 import sys
 import time
@@ -50,6 +51,7 @@ sys.path.insert(0, str(REPO_ROOT / "experiments/exp_077_synth_stratum"))
 from diffusion.exp_utils import load_config  # noqa: E402
 
 import d2_metrics  # noqa: E402
+from plan_s2 import s2_op_id  # noqa: E402
 import streams_real as sr  # noqa: E402
 from engine import operators, shaders, videoio  # noqa: E402
 from engine.glrunner import GLRunner  # noqa: E402
@@ -149,6 +151,9 @@ def main() -> None:
     bank = {k: v for k, v in gated.items() if k in need}
     assert set(bank) == need, f"shader bank is missing planned shaders: {sorted(need - set(bank))}"
 
+    policy = json.loads((REPO_ROOT / cfg["inputs"]["policy"]).read_text())
+    easings = [e for e in sr.d2_easings() if e in policy["keep_easings"]]
+
     clips_dir = REPO_ROOT / cfg["inputs"]["clips_dir"]
     cache = ClipCache(clips_dir, s2["clip_cache"])
 
@@ -183,108 +188,142 @@ def main() -> None:
         if oi in done_ops:
             continue
         o = ops_plan[oi]
-        op = rebuild_operator(o)
-        i0, j0 = o["phase"]["i0"], o["phase"]["j0"]
-        p = sr.progress_ramp(T, K, op.easing, o["timing"]["onset"], o["timing"]["release"])
+        if o.get("retired"):
+            # its shader was blacklisted on >50% rejection and its clips were withdrawn; the
+            # ops-log rows went with them, so without this guard the resume logic would happily
+            # render the retired op all over again.
+            continue
+        # RULING 1c, now actually implemented. The first build dropped an op that could not fill
+        # its 10 slots and moved on, which left the stratum at 755 ops instead of 800 — the rule
+        # always said "drop the whole op and resample a REPLACEMENT from the same shader". A
+        # replacement is a fresh draw of uniforms/easing/flip/swap AND timing on the same shader,
+        # so op identity is never mutated mid-fill; the failed attempt is discarded whole.
+        resample_chain: list[dict] = []
+        for resample_i in range(s2["max_op_resamples"] + 1):
+            if resample_i == 0:
+                op = rebuild_operator(o)
+                timing = o["timing"]
+                i0, j0 = o["phase"]["i0"], o["phase"]["j0"]
+            else:
+                rs = random.Random(f"{cfg['runtime']['seed']}-resample-{oi}-{resample_i}")
+                op = sr.make_operator(bank, rs, o["shader"], easings=easings,
+                                      p_flip=smp["p_flip"], p_swap=smp["p_swap"],
+                                      p_vary=smp["p_vary"], param_filter=None)
+                td = sr.sample_timing(rs, T, K, frac=smp["timing_frac"])
+                timing = {k: td[k] for k in ("onset", "release", "duration", "u1", "u2")}
+                op.op_id = s2_op_id(o["shader"], op.params, op.easing, op.flip, op.swap, timing)
+                i0, j0 = sr.phase_indices(T, timing["onset"], timing["release"])
+            p = sr.progress_ramp(T, K, op.easing, timing["onset"], timing["release"])
 
-        accepted: list[dict] = []
-        used_clips: set[str] = set()
-        attempts = 0
-        rejects: list[dict] = []
+            accepted = []
+            used_clips = set()
+            attempts = 0
+            rejects = []
 
-        for pi in o["candidates"]:
-            if len(accepted) == m or attempts >= max_attempts:
+            for pi in o["candidates"]:
+                if len(accepted) == m or attempts >= max_attempts:
+                    break
+                pr = pairs[pi]
+                a_id, b_id = pr["A"], pr["B"]
+                # endpoint-disjointness ACROSS the op's accepted block (ruling 1b/2)
+                if a_id in used_clips or b_id in used_clips:
+                    continue
+                attempts += 1
+
+                # gate-2 first: a 2-frame endpoint-identity check is ~1000x cheaper than a render
+                d0, d1 = operators.check_operator(runner, bank, op, fa_cache[a_id], fb_cache[b_id])
+                if max(d0, d1) > smp["endpoint_tol_operator"]:
+                    rejects.append({"pair_id": pi, "stage": "gate2",
+                                    "gate2": [round(d0, 4), round(d1, 4)]})
+                    pair_rejects[f"{a_id}|{b_id}"] += 1
+                    continue
+
+                a_src, b_src = cache.get(a_id, pr["A_mp4"]), cache.get(b_id, pr["B_mp4"])
+                assert a_src.shape == (T, H, W, 3) and b_src.shape == (T, H, W, 3), \
+                    f"unexpected clip shape {a_src.shape}/{b_src.shape}"
+                t_r = time.time()
+                clip = sr.render_real(runner, bank, op, a_src, b_src, p)
+                render_s = time.time() - t_r
+                n_render += 1
+                shader_stat[op.shader]["rendered"] += 1
+
+                mm = d2_metrics.score_clip(clip, a_src, b_src, i0, j0)
+                v = d2_metrics.verdict(mm, gate["tau"], assert1_tol=gate["assert1_tol"],
+                                       seam_max=gate["seam_max"], m2_max=gate["m2_max_dq"])
+                if not v["pass"]:
+                    failed = [k for k in ("assert1", "assert2", "m1", "m2") if not v[k]]
+                    rejects.append({"pair_id": pi, "stage": "gate", "failed": failed,
+                                    "max_pure": round(mm["assert1"]["max_pure"], 3),
+                                    "seam": round(mm["assert2"]["seam_max_ratio"], 3),
+                                    "m1_p10": round(mm["m1_p10"], 4),
+                                    "m2_max_dq": round(mm["m2_max_dq"], 4)})
+                    pair_rejects[f"{a_id}|{b_id}"] += 1
+                    continue
+
+                slot = len(accepted)
+                stem = f"s2_{oi:04d}_c{slot:02d}"
+                # the contract, asserted per clip and not merely gated
+                assert mm["assert1"]["max_pure"] <= gate["assert1_tol"]
+                assert np.array_equal(clip[: i0 + 1], a_src[: i0 + 1]), \
+                    f"{stem}: pure-A phase is not the source frames"
+                assert np.array_equal(clip[j0:], b_src[j0:]), \
+                    f"{stem}: pure-B phase is not the source frames"
+
+                videoio.write_clip(vid_dir / f"{stem}.mp4", clip, fps=inf["fps"])
+                save_strip(strip_dir / f"{stem}.jpg", clip, idx_strip, s2["strip_frame_w"])
+                row = {
+                    "stem": stem, "op_index": oi, "op_id": op.op_id, "slot": slot,
+                    "shader": op.shader, "params": op.params, "easing": op.easing,
+                    "flip": op.flip, "swap": op.swap, "extension": "none", "aux_kind": None,
+                    "timing": o["timing"], "phase": {"i0": i0, "j0": j0},
+                    "pair_id": pi, "A": a_id, "B": b_id,
+                    "gate2": [round(d0, 4), round(d1, 4)],
+                    "assert1": mm["assert1"], "assert2": mm["assert2"],
+                    "m1_p10": mm["m1_p10"], "m1_min": mm["m1_min"], "m1_mean": mm["m1_mean"],
+                    "m2_max_dq": mm["m2_max_dq"], "n_ramp": mm["n_ramp"],
+                    "m1_min_flag": bool(mm["m1_min"] < gate["m1_min_flag_threshold"]),
+                    "render_s": round(render_s, 2), "engine_git_commit": commit,
+                }
+                # NOT written yet — see the flush below. An op is all-or-nothing, so its clip rows
+                # may only enter the manifest once the op is known to be complete.
+                accepted.append(row)
+                used_clips |= {a_id, b_id}
+                n_accept += 1
+                shader_stat[op.shader]["accepted"] += 1
+
+            # ---- incidence integrity is a GATE (advisor ruling 1c) ---------------------------
+            # All-or-nothing, and that has to include the MANIFEST, not just the media. The smoke
+            # run caught this: rows were streamed as clips were accepted, so a later drop deleted
+            # the mp4s but left their rows behind — a manifest claiming clips that do not exist.
+            # Clip rows are therefore buffered and flushed only when the op is known complete.
+            complete = len(accepted) == m
+            if complete:
                 break
-            pr = pairs[pi]
-            a_id, b_id = pr["A"], pr["B"]
-            # endpoint-disjointness ACROSS the op's accepted block (ruling 1b/2)
-            if a_id in used_clips or b_id in used_clips:
-                continue
-            attempts += 1
-
-            # gate-2 first: a 2-frame endpoint-identity check is ~1000x cheaper than a render
-            d0, d1 = operators.check_operator(runner, bank, op, fa_cache[a_id], fb_cache[b_id])
-            if max(d0, d1) > smp["endpoint_tol_operator"]:
-                rejects.append({"pair_id": pi, "stage": "gate2",
-                                "gate2": [round(d0, 4), round(d1, 4)]})
-                pair_rejects[f"{a_id}|{b_id}"] += 1
-                continue
-
-            a_src, b_src = cache.get(a_id, pr["A_mp4"]), cache.get(b_id, pr["B_mp4"])
-            assert a_src.shape == (T, H, W, 3) and b_src.shape == (T, H, W, 3), \
-                f"unexpected clip shape {a_src.shape}/{b_src.shape}"
-            t_r = time.time()
-            clip = sr.render_real(runner, bank, op, a_src, b_src, p)
-            render_s = time.time() - t_r
-            n_render += 1
-            shader_stat[op.shader]["rendered"] += 1
-
-            mm = d2_metrics.score_clip(clip, a_src, b_src, i0, j0)
-            v = d2_metrics.verdict(mm, gate["tau"], assert1_tol=gate["assert1_tol"],
-                                   seam_max=gate["seam_max"], m2_max=gate["m2_max_dq"])
-            if not v["pass"]:
-                failed = [k for k in ("assert1", "assert2", "m1", "m2") if not v[k]]
-                rejects.append({"pair_id": pi, "stage": "gate", "failed": failed,
-                                "max_pure": round(mm["assert1"]["max_pure"], 3),
-                                "seam": round(mm["assert2"]["seam_max_ratio"], 3),
-                                "m1_p10": round(mm["m1_p10"], 4),
-                                "m2_max_dq": round(mm["m2_max_dq"], 4)})
-                pair_rejects[f"{a_id}|{b_id}"] += 1
-                continue
-
-            slot = len(accepted)
-            stem = f"s2_{oi:04d}_c{slot:02d}"
-            # the contract, asserted per clip and not merely gated
-            assert mm["assert1"]["max_pure"] <= gate["assert1_tol"]
-            assert np.array_equal(clip[: i0 + 1], a_src[: i0 + 1]), \
-                f"{stem}: pure-A phase is not the source frames"
-            assert np.array_equal(clip[j0:], b_src[j0:]), \
-                f"{stem}: pure-B phase is not the source frames"
-
-            videoio.write_clip(vid_dir / f"{stem}.mp4", clip, fps=inf["fps"])
-            save_strip(strip_dir / f"{stem}.jpg", clip, idx_strip, s2["strip_frame_w"])
-            row = {
-                "stem": stem, "op_index": oi, "op_id": op.op_id, "slot": slot,
-                "shader": op.shader, "params": op.params, "easing": op.easing,
-                "flip": op.flip, "swap": op.swap, "extension": "none", "aux_kind": None,
-                "timing": o["timing"], "phase": {"i0": i0, "j0": j0},
-                "pair_id": pi, "A": a_id, "B": b_id,
-                "gate2": [round(d0, 4), round(d1, 4)],
-                "assert1": mm["assert1"], "assert2": mm["assert2"],
-                "m1_p10": mm["m1_p10"], "m1_min": mm["m1_min"], "m1_mean": mm["m1_mean"],
-                "m2_max_dq": mm["m2_max_dq"], "n_ramp": mm["n_ramp"],
-                "m1_min_flag": bool(mm["m1_min"] < gate["m1_min_flag_threshold"]),
-                "render_s": round(render_s, 2), "engine_git_commit": commit,
-            }
-            # NOT written yet — see the flush below. An op is all-or-nothing, so its clip rows
-            # may only enter the manifest once the op is known to be complete.
-            accepted.append(row)
-            used_clips |= {a_id, b_id}
-            n_accept += 1
-            shader_stat[op.shader]["accepted"] += 1
-
-        # ---- incidence integrity is a GATE (advisor ruling 1c) ---------------------------
-        # All-or-nothing, and that has to include the MANIFEST, not just the media. The smoke
-        # run caught this: rows were streamed as clips were accepted, so a later drop deleted
-        # the mp4s but left their rows behind — a manifest claiming clips that do not exist.
-        # Clip rows are therefore buffered and flushed only when the op is known complete.
-        complete = len(accepted) == m
-        if complete:
+            # failed fill: discard it whole, then resample a replacement if budget remains
             for r in accepted:
-                frow.write(json.dumps(r) + "\n")
-        elif s2["drop_op_on_underfill"]:
-            n_drop += 1
-            for r in accepted:                       # a dropped op leaves NOTHING behind
                 (vid_dir / f"{r['stem']}.mp4").unlink(missing_ok=True)
                 (strip_dir / f"{r['stem']}.jpg").unlink(missing_ok=True)
             n_accept -= len(accepted)
             shader_stat[op.shader]["accepted"] -= len(accepted)
-            log.warning("op %d (%s) DROPPED: only %d/%d slots filled in %d attempts",
-                        oi, op.shader, len(accepted), m, attempts)
+            resample_chain.append({"op_id": op.op_id, "slots": len(accepted),
+                                   "attempts": attempts})
+            log.warning("op %d (%s) attempt %d filled only %d/%d in %d attempts%s",
+                        oi, o["shader"], resample_i, len(accepted), m, attempts,
+                        " — resampling" if resample_i < s2["max_op_resamples"] else " — DROPPING")
+            accepted = []
+
+        if complete:
+            for r in accepted:
+                frow.write(json.dumps(r) + "\n")
+        else:
+            n_drop += 1
 
         distinct = sorted({c for r in accepted for c in (r["A"], r["B"])})
         fop.write(json.dumps({
-            "op_index": oi, "op_id": op.op_id, "shader": op.shader,
+            "op_index": oi, "op_id": op.op_id, "shader": o["shader"],
+            "params": op.params, "easing": op.easing, "flip": op.flip, "swap": op.swap,
+            "timing": timing, "resamples": len(resample_chain),
+            "resample_chain": resample_chain,
             "complete": complete, "dropped": (not complete) and s2["drop_op_on_underfill"],
             "n_slots": len(accepted) if complete else 0, "attempts": attempts,
             "n_distinct_endpoint_clips": len(distinct) if complete else 0,

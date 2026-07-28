@@ -1,0 +1,581 @@
+{
+  "version": "D2_POLICY v2",
+  "created": "2026-07-25",
+  "supersedes": "D2_POLICY_FINAL.json (v1, unmodified \u2014 this is an additive version, not a mutation of a frozen file)",
+  "authority": "fable-advisor: >50% per-shader rejection blacklist, fired on the S2 build",
+  "change": "6 shaders retired on measured rejection rate; trainable families 62 -> 56, blacklist 40 -> 46",
+  "rationale_selection_confound": "For a high-rejection shader the surviving pairs are extreme gate-selections on content \u2014 the pairs whose content happened to mask the shader's problems. That entangles operator and content BY SELECTION, degrading the same-op-any-content invariance signal even when every surviving clip is individually fine.",
+  "rejection_table": {
+    "BookFlip": {
+      "accepted": 130,
+      "rejected": 30,
+      "rate": 0.1875,
+      "ops": 13,
+      "dropped": 0
+    },
+    "BowTieWithParameter": {
+      "accepted": 130,
+      "rejected": 24,
+      "rate": 0.1558,
+      "ops": 13,
+      "dropped": 0
+    },
+    "Box": {
+      "accepted": 130,
+      "rejected": 23,
+      "rate": 0.1503,
+      "ops": 13,
+      "dropped": 0
+    },
+    "ButterflyWaveScrawler": {
+      "accepted": 130,
+      "rejected": 27,
+      "rate": 0.172,
+      "ops": 13,
+      "dropped": 0
+    },
+    "ColourDistance": {
+      "accepted": 130,
+      "rejected": 16,
+      "rate": 0.1096,
+      "ops": 13,
+      "dropped": 0
+    },
+    "CrossZoom": {
+      "accepted": 130,
+      "rejected": 28,
+      "rate": 0.1772,
+      "ops": 13,
+      "dropped": 0
+    },
+    "Dreamy": {
+      "accepted": 130,
+      "rejected": 24,
+      "rate": 0.1558,
+      "ops": 13,
+      "dropped": 0
+    },
+    "EdgeTransition": {
+      "accepted": 120,
+      "rejected": 62,
+      "rate": 0.3407,
+      "ops": 13,
+      "dropped": 1
+    },
+    "FilmBurn": {
+      "accepted": 130,
+      "rejected": 20,
+      "rate": 0.1333,
+      "ops": 13,
+      "dropped": 0
+    },
+    "GlitchDisplace": {
+      "accepted": 130,
+      "rejected": 16,
+      "rate": 0.1096,
+      "ops": 13,
+      "dropped": 0
+    },
+    "GridFlip": {
+      "accepted": 130,
+      "rejected": 20,
+      "rate": 0.1333,
+      "ops": 13,
+      "dropped": 0
+    },
+    "HSVfade": {
+      "accepted": 130,
+      "rejected": 13,
+      "rate": 0.0909,
+      "ops": 13,
+      "dropped": 0
+    },
+    "HorizontalClose": {
+      "accepted": 130,
+      "rejected": 19,
+      "rate": 0.1275,
+      "ops": 13,
+      "dropped": 0
+    },
+    "HorizontalOpen": {
+      "accepted": 130,
+      "rejected": 15,
+      "rate": 0.1034,
+      "ops": 13,
+      "dropped": 0
+    },
+    "LinearBlur": {
+      "accepted": 130,
+      "rejected": 22,
+      "rate": 0.1447,
+      "ops": 13,
+      "dropped": 0
+    },
+    "Overexposure": {
+      "accepted": 110,
+      "rejected": 78,
+      "rate": 0.4149,
+      "ops": 13,
+      "dropped": 2
+    },
+    "PolkaDotsCurtain": {
+      "accepted": 130,
+      "rejected": 21,
+      "rate": 0.1391,
+      "ops": 13,
+      "dropped": 0
+    },
+    "PuzzleRight": {
+      "accepted": 100,
+      "rejected": 111,
+      "rate": 0.5261,
+      "ops": 13,
+      "dropped": 3
+    },
+    "SimpleZoom": {
+      "accepted": 20,
+      "rejected": 256,
+      "rate": 0.9275,
+      "ops": 13,
+      "dropped": 11
+    },
+    "SimpleZoomOut": {
+      "accepted": 90,
+      "rejected": 112,
+      "rate": 0.5545,
+      "ops": 13,
+      "dropped": 4
+    },
+    "Slides": {
+      "accepted": 120,
+      "rejected": 79,
+      "rate": 0.397,
+      "ops": 13,
+      "dropped": 1
+    },
+    "StarWipe": {
+      "accepted": 130,
+      "rejected": 17,
+      "rate": 0.1156,
+      "ops": 13,
+      "dropped": 0
+    },
+    "StaticFade": {
+      "accepted": 100,
+      "rejected": 81,
+      "rate": 0.4475,
+      "ops": 13,
+      "dropped": 3
+    },
+    "StripDatamoshGlitch": {
+      "accepted": 90,
+      "rejected": 108,
+      "rate": 0.5455,
+      "ops": 13,
+      "dropped": 4
+    },
+    "TilesWave": {
+      "accepted": 130,
+      "rejected": 14,
+      "rate": 0.0972,
+      "ops": 13,
+      "dropped": 0
+    },
+    "VerticalClose": {
+      "accepted": 130,
+      "rejected": 14,
+      "rate": 0.0972,
+      "ops": 13,
+      "dropped": 0
+    },
+    "WaterDrop": {
+      "accepted": 130,
+      "rejected": 16,
+      "rate": 0.1096,
+      "ops": 13,
+      "dropped": 0
+    },
+    "ZoomRigthWipe": {
+      "accepted": 130,
+      "rejected": 71,
+      "rate": 0.3532,
+      "ops": 13,
+      "dropped": 0
+    },
+    "burn": {
+      "accepted": 130,
+      "rejected": 32,
+      "rate": 0.1975,
+      "ops": 13,
+      "dropped": 0
+    },
+    "cannabisleaf": {
+      "accepted": 130,
+      "rejected": 13,
+      "rate": 0.0909,
+      "ops": 13,
+      "dropped": 0
+    },
+    "chessboard": {
+      "accepted": 130,
+      "rejected": 21,
+      "rate": 0.1391,
+      "ops": 13,
+      "dropped": 0
+    },
+    "circleopen": {
+      "accepted": 130,
+      "rejected": 20,
+      "rate": 0.1333,
+      "ops": 13,
+      "dropped": 0
+    },
+    "colorphase": {
+      "accepted": 120,
+      "rejected": 43,
+      "rate": 0.2638,
+      "ops": 13,
+      "dropped": 1
+    },
+    "crosshatch": {
+      "accepted": 130,
+      "rejected": 14,
+      "rate": 0.0972,
+      "ops": 13,
+      "dropped": 0
+    },
+    "crosswarp": {
+      "accepted": 130,
+      "rejected": 28,
+      "rate": 0.1772,
+      "ops": 13,
+      "dropped": 0
+    },
+    "directionalwipe": {
+      "accepted": 130,
+      "rejected": 16,
+      "rate": 0.1096,
+      "ops": 13,
+      "dropped": 0
+    },
+    "dissolve": {
+      "accepted": 120,
+      "rejected": 40,
+      "rate": 0.25,
+      "ops": 13,
+      "dropped": 1
+    },
+    "fade": {
+      "accepted": 130,
+      "rejected": 19,
+      "rate": 0.1275,
+      "ops": 13,
+      "dropped": 0
+    },
+    "fadecolor": {
+      "accepted": 130,
+      "rejected": 19,
+      "rate": 0.1275,
+      "ops": 13,
+      "dropped": 0
+    },
+    "flyeye": {
+      "accepted": 130,
+      "rejected": 28,
+      "rate": 0.1772,
+      "ops": 13,
+      "dropped": 0
+    },
+    "fragment": {
+      "accepted": 130,
+      "rejected": 15,
+      "rate": 0.1034,
+      "ops": 13,
+      "dropped": 0
+    },
+    "heart": {
+      "accepted": 130,
+      "rejected": 19,
+      "rate": 0.1275,
+      "ops": 13,
+      "dropped": 0
+    },
+    "hexagonalize": {
+      "accepted": 130,
+      "rejected": 19,
+      "rate": 0.1275,
+      "ops": 13,
+      "dropped": 0
+    },
+    "luminance_melt": {
+      "accepted": 130,
+      "rejected": 22,
+      "rate": 0.1447,
+      "ops": 13,
+      "dropped": 0
+    },
+    "morph": {
+      "accepted": 130,
+      "rejected": 32,
+      "rate": 0.1975,
+      "ops": 13,
+      "dropped": 0
+    },
+    "multiply_blend": {
+      "accepted": 130,
+      "rejected": 25,
+      "rate": 0.1613,
+      "ops": 13,
+      "dropped": 0
+    },
+    "old_tv_lost_signal": {
+      "accepted": 130,
+      "rejected": 21,
+      "rate": 0.1391,
+      "ops": 13,
+      "dropped": 0
+    },
+    "perlin": {
+      "accepted": 130,
+      "rejected": 18,
+      "rate": 0.1216,
+      "ops": 13,
+      "dropped": 0
+    },
+    "pinwheel": {
+      "accepted": 130,
+      "rejected": 19,
+      "rate": 0.1275,
+      "ops": 13,
+      "dropped": 0
+    },
+    "pixelize": {
+      "accepted": 130,
+      "rejected": 34,
+      "rate": 0.2073,
+      "ops": 13,
+      "dropped": 0
+    },
+    "polar_function": {
+      "accepted": 130,
+      "rejected": 18,
+      "rate": 0.1216,
+      "ops": 13,
+      "dropped": 0
+    },
+    "randomNoisex": {
+      "accepted": 130,
+      "rejected": 28,
+      "rate": 0.1772,
+      "ops": 13,
+      "dropped": 0
+    },
+    "splitSlideOutHorizontal": {
+      "accepted": 100,
+      "rejected": 117,
+      "rate": 0.5392,
+      "ops": 13,
+      "dropped": 3
+    },
+    "squareswire": {
+      "accepted": 130,
+      "rejected": 13,
+      "rate": 0.0909,
+      "ops": 13,
+      "dropped": 0
+    },
+    "squeeze": {
+      "accepted": 130,
+      "rejected": 53,
+      "rate": 0.2896,
+      "ops": 13,
+      "dropped": 0
+    },
+    "swap": {
+      "accepted": 20,
+      "rejected": 281,
+      "rate": 0.9336,
+      "ops": 13,
+      "dropped": 11
+    },
+    "wind": {
+      "accepted": 120,
+      "rejected": 13,
+      "rate": 0.0977,
+      "ops": 12,
+      "dropped": 0
+    },
+    "windowblinds": {
+      "accepted": 120,
+      "rejected": 17,
+      "rate": 0.1241,
+      "ops": 12,
+      "dropped": 0
+    },
+    "windowslice": {
+      "accepted": 120,
+      "rejected": 14,
+      "rate": 0.1045,
+      "ops": 12,
+      "dropped": 0
+    },
+    "wipeDown": {
+      "accepted": 120,
+      "rejected": 19,
+      "rate": 0.1367,
+      "ops": 12,
+      "dropped": 0
+    },
+    "wipeLeft": {
+      "accepted": 120,
+      "rejected": 11,
+      "rate": 0.084,
+      "ops": 12,
+      "dropped": 0
+    },
+    "wipeRight": {
+      "accepted": 120,
+      "rejected": 30,
+      "rate": 0.2,
+      "ops": 12,
+      "dropped": 0
+    }
+  },
+  "newly_blacklisted": [
+    "PuzzleRight",
+    "SimpleZoom",
+    "SimpleZoomOut",
+    "StripDatamoshGlitch",
+    "splitSlideOutHorizontal",
+    "swap"
+  ],
+  "blacklist": [
+    "BlockDissolve",
+    "BowTieHorizontal",
+    "BowTieVertical",
+    "CircleCrop",
+    "CrazyParametricFun",
+    "Directional",
+    "DirectionalScaled",
+    "DoomScreenTransition",
+    "DreamyZoom",
+    "Drop_Zone_Flicker",
+    "Fold",
+    "LeftRight",
+    "Mosaic",
+    "PuzzleRight",
+    "Radial",
+    "Rectangle",
+    "RectangleCrop",
+    "Revolve_Left",
+    "Rolls",
+    "RotateScaleVanish",
+    "SimpleFlip",
+    "SimpleZoom",
+    "SimpleZoomOut",
+    "StereoViewer",
+    "StripDatamoshGlitch",
+    "TVStatic",
+    "TopBottom",
+    "ZoomLeftWipe",
+    "circle",
+    "coord-from-in",
+    "cube",
+    "doorway",
+    "kaleidoscope",
+    "powerKaleido",
+    "rotateTransition",
+    "rotate_scale_fade",
+    "splitSlideInHorizontal",
+    "splitSlideInOutHorizontal",
+    "splitSlideInOutVertical",
+    "splitSlideInVertical",
+    "splitSlideOutHorizontal",
+    "static_wipe",
+    "swap",
+    "undulatingBurnOut",
+    "x_axis_translation",
+    "zoomInOut"
+  ],
+  "keep_shaders": [
+    "BookFlip",
+    "BowTieWithParameter",
+    "Box",
+    "ButterflyWaveScrawler",
+    "ColourDistance",
+    "CrossZoom",
+    "DefocusBlur",
+    "Dreamy",
+    "EdgeTransition",
+    "FilmBurn",
+    "GlitchDisplace",
+    "GridFlip",
+    "HSVfade",
+    "HorizontalClose",
+    "HorizontalOpen",
+    "LinearBlur",
+    "Overexposure",
+    "PolkaDotsCurtain",
+    "Slides",
+    "StarWipe",
+    "StaticFade",
+    "TilesWave",
+    "VerticalClose",
+    "VerticalOpen",
+    "WaterDrop",
+    "ZoomRigthWipe",
+    "burn",
+    "burn0",
+    "cannabisleaf",
+    "chessboard",
+    "circleopen",
+    "colorphase",
+    "crosshatch",
+    "crosswarp",
+    "directionalwarp",
+    "directionalwipe",
+    "dissolve",
+    "fade",
+    "fadecolor",
+    "fadegrayscale",
+    "flyeye",
+    "fragment",
+    "heart",
+    "hexagonalize",
+    "luminance_melt",
+    "morph",
+    "multiply_blend",
+    "old_tv_lost_signal",
+    "parametric_glitch",
+    "perlin",
+    "pinwheel",
+    "pixelize",
+    "polar_function",
+    "randomNoisex",
+    "randomsquares",
+    "ripple",
+    "scale-in",
+    "squareswire",
+    "squeeze",
+    "wind",
+    "windowblinds",
+    "windowslice",
+    "wipeDown",
+    "wipeLeft",
+    "wipeRight",
+    "wipeUp"
+  ],
+  "holdout_unaffected": [
+    "DefocusBlur",
+    "VerticalOpen",
+    "burn0",
+    "directionalwarp",
+    "fadegrayscale",
+    "parametric_glitch",
+    "randomsquares",
+    "ripple",
+    "scale-in",
+    "wipeUp"
+  ],
+  "eval_stock_note": "the 6 are flagged DEAD in the eval-stock manifest too \u2014 a 93%-rejection shader is not a fair eval probe either; these families are dead, not held out."
+}
