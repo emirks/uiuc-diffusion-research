@@ -1,0 +1,587 @@
+{
+ "rule": "A4 Q4 gate 9: AUC >= 0.80 triggers investigation of top features; style features => fix generator; content features (person-domain) => accept and record",
+ "rounds": [
+  {
+   "store": "pilot_m3",
+   "label": "ROUND 1 (A4 verbatim)",
+   "auc": 0.8795,
+   "balanced_accuracy": 0.7721,
+   "n_style_in_top40": 5,
+   "novel_style_features": [],
+   "verdict": "ACCEPT AND RECORD (content-dominated; no style feature outside the known gate-8 fingerprint)",
+   "features": [
+    {
+     "side": "NEW",
+     "rank": 1,
+     "feature": "looking",
+     "weight": 0.9557,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 2,
+     "feature": "background",
+     "weight": 0.8238,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 3,
+     "feature": "daylight",
+     "weight": 0.7367,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 4,
+     "feature": "while",
+     "weight": 0.7269,
+     "kind": "STYLE"
+    },
+    {
+     "side": "NEW",
+     "rank": 5,
+     "feature": "indoors",
+     "weight": 0.7226,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 6,
+     "feature": "lit",
+     "weight": 0.7201,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 7,
+     "feature": "room",
+     "weight": 0.7142,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 8,
+     "feature": "light",
+     "weight": 0.6989,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 9,
+     "feature": "hair",
+     "weight": 0.6614,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 10,
+     "feature": "shot",
+     "weight": 0.652,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 11,
+     "feature": "soft",
+     "weight": 0.6325,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 12,
+     "feature": "close",
+     "weight": 0.6274,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 13,
+     "feature": "brightly",
+     "weight": 0.6126,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 14,
+     "feature": "sitting",
+     "weight": 0.6102,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 15,
+     "feature": "against",
+     "weight": 0.6075,
+     "kind": "STYLE"
+    },
+    {
+     "side": "NEW",
+     "rank": 16,
+     "feature": "glasses",
+     "weight": 0.5828,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 17,
+     "feature": "gray",
+     "weight": 0.5596,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 18,
+     "feature": "short",
+     "weight": 0.5392,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 19,
+     "feature": "indoor",
+     "weight": 0.5304,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 20,
+     "feature": "holding",
+     "weight": 0.5192,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 1,
+     "feature": "stands",
+     "weight": -1.1883,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 2,
+     "feature": "sky",
+     "weight": -1.1181,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 3,
+     "feature": "PUNCT[,]",
+     "weight": -0.9862,
+     "kind": "STYLE"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 4,
+     "feature": "sunglasses",
+     "weight": -0.8351,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 5,
+     "feature": "is",
+     "weight": -0.7089,
+     "kind": "STYLE"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 6,
+     "feature": "under",
+     "weight": -0.671,
+     "kind": "STYLE"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 7,
+     "feature": "field",
+     "weight": -0.6604,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 8,
+     "feature": "warm",
+     "weight": -0.5879,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 9,
+     "feature": "night",
+     "weight": -0.5524,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 10,
+     "feature": "blue",
+     "weight": -0.5235,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 11,
+     "feature": "making",
+     "weight": -0.5012,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 12,
+     "feature": "green",
+     "weight": -0.4824,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 13,
+     "feature": "red",
+     "weight": -0.457,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 14,
+     "feature": "hat",
+     "weight": -0.4547,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 15,
+     "feature": "peace",
+     "weight": -0.4391,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 16,
+     "feature": "parking",
+     "weight": -0.4281,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 17,
+     "feature": "golden",
+     "weight": -0.4256,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 18,
+     "feature": "city",
+     "weight": -0.421,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 19,
+     "feature": "slicked",
+     "weight": -0.4133,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 20,
+     "feature": "concrete",
+     "weight": -0.4098,
+     "kind": "content"
+    }
+   ]
+  },
+  {
+   "store": "pilot_m3_round2",
+   "label": "ROUND 2 (v2)",
+   "auc": 0.9192,
+   "balanced_accuracy": 0.8495,
+   "n_style_in_top40": 6,
+   "novel_style_features": [],
+   "verdict": "ACCEPT AND RECORD (content-dominated; no style feature outside the known gate-8 fingerprint)",
+   "features": [
+    {
+     "side": "NEW",
+     "rank": 1,
+     "feature": "short",
+     "weight": 1.4126,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 2,
+     "feature": "daylight",
+     "weight": 1.1197,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 3,
+     "feature": "gray",
+     "weight": 1.0346,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 4,
+     "feature": "light",
+     "weight": 1.0263,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 5,
+     "feature": "lit",
+     "weight": 0.9669,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 6,
+     "feature": "hair",
+     "weight": 0.948,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 7,
+     "feature": "room",
+     "weight": 0.9272,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 8,
+     "feature": "indoor",
+     "weight": 0.8967,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 9,
+     "feature": "soft",
+     "weight": 0.8785,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 10,
+     "feature": "brown",
+     "weight": 0.8702,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 11,
+     "feature": "dark",
+     "weight": 0.8669,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 12,
+     "feature": "with",
+     "weight": 0.835,
+     "kind": "STYLE"
+    },
+    {
+     "side": "NEW",
+     "rank": 13,
+     "feature": "shirt",
+     "weight": 0.8036,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 14,
+     "feature": "skinned",
+     "weight": 0.7727,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 15,
+     "feature": "brightly",
+     "weight": 0.7409,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 16,
+     "feature": "fair",
+     "weight": 0.6997,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 17,
+     "feature": "wooden",
+     "weight": 0.6351,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 18,
+     "feature": "white",
+     "weight": 0.6186,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 19,
+     "feature": "sleeved",
+     "weight": 0.6098,
+     "kind": "content"
+    },
+    {
+     "side": "NEW",
+     "rank": 20,
+     "feature": "looking",
+     "weight": 0.6066,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 1,
+     "feature": "sky",
+     "weight": -1.1512,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 2,
+     "feature": "stands",
+     "weight": -1.0996,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 3,
+     "feature": "sunglasses",
+     "weight": -0.9163,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 4,
+     "feature": "the",
+     "weight": -0.7802,
+     "kind": "STYLE"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 5,
+     "feature": "on",
+     "weight": -0.7459,
+     "kind": "STYLE"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 6,
+     "feature": "under",
+     "weight": -0.7442,
+     "kind": "STYLE"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 7,
+     "feature": "young",
+     "weight": -0.7014,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 8,
+     "feature": "is",
+     "weight": -0.6714,
+     "kind": "STYLE"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 9,
+     "feature": "trousers",
+     "weight": -0.6411,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 10,
+     "feature": "sunlight",
+     "weight": -0.6334,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 11,
+     "feature": "warm",
+     "weight": -0.5753,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 12,
+     "feature": "night",
+     "weight": -0.5728,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 13,
+     "feature": "city",
+     "weight": -0.5519,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 14,
+     "feature": "red",
+     "weight": -0.5327,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 15,
+     "feature": "at",
+     "weight": -0.5269,
+     "kind": "STYLE"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 16,
+     "feature": "golden",
+     "weight": -0.5267,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 17,
+     "feature": "field",
+     "weight": -0.525,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 18,
+     "feature": "concrete",
+     "weight": -0.5161,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 19,
+     "feature": "sign",
+     "weight": -0.4462,
+     "kind": "content"
+    },
+    {
+     "side": "CORPUS",
+     "rank": 20,
+     "feature": "slicked",
+     "weight": -0.4342,
+     "kind": "content"
+    }
+   ]
+  }
+ ]
+}

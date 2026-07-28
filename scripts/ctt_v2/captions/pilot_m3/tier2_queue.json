@@ -1,0 +1,1380 @@
+{
+ "created": "2026-07-28",
+ "adjudication_question": "Is this describing visible scene content, or an effect/change? Scene content passes (a house on fire is a house on fire).",
+ "verdict_values": [
+  "SCENE_CONTENT (keep)",
+  "EFFECT_OR_CHANGE (regenerate)",
+  "UNSURE (escalate)"
+ ],
+ "rule": "A4 Q3 Tier-2 is a REVIEW flag, not a rejection. Tier-1 is the only auto-reject tier. Filling `verdict` is the whole job.",
+ "calibration_note": "The certified 139 corpus captions trip Tier-2 at 13.5% (23/171) on exactly the same kind of legitimate content (glow, water, earth, box, fire, cloud). Those rows are included with verdict pre-filled so the reviewer can calibrate before judging new text.",
+ "counts": {
+  "new_flagged": 60,
+  "corpus_calibration": 23,
+  "total": 83,
+  "new_flag_histogram": {
+   "class_word:water": 21,
+   "class_word:set": 8,
+   "shader_escape:box": 6,
+   "class_word:smoke": 5,
+   "class_word:petals": 4,
+   "class_word:bending": 3,
+   "shader_escape:static": 3,
+   "class_word:jump": 2,
+   "class_word:illustration": 2,
+   "shader_escape:chessboard": 2,
+   "shader_escape:burn": 1,
+   "class_word:cloud": 1,
+   "class_word:seamless": 1,
+   "drift:shifting": 1,
+   "drift:faded": 1,
+   "drift:shift": 1,
+   "drift:shifter": 1,
+   "class_word:flying": 1
+  }
+ },
+ "queue": [
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_A_0",
+   "role": "A",
+   "bank": "corpus",
+   "description": "A barefoot woman with long brown hair, wearing a red short-sleeved blouse and black pants, runs forward through a hazy parking garage illuminated by green overhead lights and a warm orange glow",
+   "tier2_flags": [
+    "class_word:glow"
+   ],
+   "contexts": {
+    "class_word:glow": "\u2026 by green overhead lights and a warm orange \u00abglow\u00bb"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_A_18",
+   "role": "A",
+   "bank": "corpus",
+   "description": "A man with dreadlocks, wearing a light blue denim jacket with \"SUPREME N.Y.C.\" printed on the front over a white hoodie and white pants, sits on a concrete ledge in front of a body of water with a bridge in the background under a cloudy sky",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026s on a concrete ledge in front of a body of \u00abwater\u00bb with a bridge in the background under a clo\u2026"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_A_20",
+   "role": "A",
+   "bank": "corpus",
+   "description": "A woman wearing a long, vibrant green coat stands on a mound of brown earth under a blue sky with light clouds, looking upward with her arms slightly outstretched",
+   "tier2_flags": [
+    "class_word:earth"
+   ],
+   "contexts": {
+    "class_word:earth": "\u2026brant green coat stands on a mound of brown \u00abearth\u00bb under a blue sky with light clouds, looking\u2026"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_A_58",
+   "role": "A",
+   "bank": "corpus",
+   "description": "A woman wearing a black leather jacket stands outdoors at night as a hand lights the cigarette in her mouth with a red lighter, illuminating her face with a warm orange glow",
+   "tier2_flags": [
+    "class_word:glow"
+   ],
+   "contexts": {
+    "class_word:glow": "\u2026r, illuminating her face with a warm orange \u00abglow\u00bb"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_A_69",
+   "role": "A",
+   "bank": "corpus",
+   "description": "A young man sits on a sticker-covered box at a busy Japanese crossing",
+   "tier2_flags": [
+    "shader_escape:box"
+   ],
+   "contexts": {
+    "shader_escape:box": "A young man sits on a sticker-covered \u00abbox\u00bb at a busy Japanese crossing"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_A_70",
+   "role": "A",
+   "bank": "corpus",
+   "description": "Two men, one in light-colored clothing and the other in dark clothing, are captured mid-stride on a sandy desert ground in front of a massive, wrinkled creature with large eyes that is surrounded by a giant cloud of dust",
+   "tier2_flags": [
+    "class_word:cloud",
+    "class_word:giant"
+   ],
+   "contexts": {
+    "class_word:cloud": "\u2026th large eyes that is surrounded by a giant \u00abcloud\u00bb of dust",
+    "class_word:giant": "\u2026ure with large eyes that is surrounded by a \u00abgiant\u00bb cloud of dust"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_A_78",
+   "role": "A",
+   "bank": "corpus",
+   "description": "A young woman with dark curly hair and glossy lips looks to the side while wearing a bright red hooded jacket with white text, set against a solid grey background with soft lighting",
+   "tier2_flags": [
+    "class_word:set"
+   ],
+   "contexts": {
+    "class_word:set": "\u2026a bright red hooded jacket with white text, \u00abset\u00bb against a solid grey background with soft l\u2026"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_A_84",
+   "role": "A",
+   "bank": "corpus",
+   "description": "An illustrated character with messy purple hair, glasses, and headphones around their neck stands outside a gas station at night, looking at a smartphone with a distressed, open-mouthed expression under a green neon glow",
+   "tier2_flags": [
+    "class_word:gas",
+    "class_word:glow"
+   ],
+   "contexts": {
+    "class_word:gas": "\u2026adphones around their neck stands outside a \u00abgas\u00bb station at night, looking at a smartphone w\u2026",
+    "class_word:glow": "\u2026 open-mouthed expression under a green neon \u00abglow\u00bb"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_A_87",
+   "role": "A",
+   "bank": "corpus",
+   "description": "A stout, smiling cartoon man wearing a green suit and a small brown hat stands on a leaf-strewn street at night, illuminated by the warm glow of a street lamp overhead with a \"CURIOS\" shop in the background",
+   "tier2_flags": [
+    "class_word:glow"
+   ],
+   "contexts": {
+    "class_word:glow": "\u2026wn street at night, illuminated by the warm \u00abglow\u00bb of a street lamp overhead with a \"CURIOS\" s\u2026"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_A_89",
+   "role": "A",
+   "bank": "corpus",
+   "description": "A cartoon girl dressed in a black witch hat and robe smiles while stirring a large cauldron over a fire inside a wooden cabin illuminated by warm candlelight",
+   "tier2_flags": [
+    "class_word:fire"
+   ],
+   "contexts": {
+    "class_word:fire": "\u2026iles while stirring a large cauldron over a \u00abfire\u00bb inside a wooden cabin illuminated by warm c\u2026"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_A_92",
+   "role": "A",
+   "bank": "corpus",
+   "description": "A woman in a form-fitting, light green metallic dress stands with her arms crossed on dark rocks in front of a large, cresting ocean wave",
+   "tier2_flags": [
+    "class_word:wave"
+   ],
+   "contexts": {
+    "class_word:wave": "\u2026k rocks in front of a large, cresting ocean \u00abwave\u00bb"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_A_119",
+   "role": "A",
+   "bank": "corpus",
+   "description": "A young Asian woman with her dark hair in a ponytail runs along a paved path wearing a pink jacket over a dark sports bra, set against a background of green trees and a blurred city skyline under warm golden light",
+   "tier2_flags": [
+    "class_word:set"
+   ],
+   "contexts": {
+    "class_word:set": "\u2026aring a pink jacket over a dark sports bra, \u00abset\u00bb against a background of green trees and a b\u2026"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_A_130",
+   "role": "A",
+   "bank": "corpus",
+   "description": "A green glass bottle labeled \"Kahf\" with water droplets on its surface is framed by pieces of mossy driftwood against a dark teal background",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "A green glass bottle labeled \"Kahf\" with \u00abwater\u00bb droplets on its surface is framed by pieces\u2026"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_A_135",
+   "role": "A",
+   "bank": "corpus",
+   "description": "A young person with short curly dark hair looks upward while wearing a bright coral-red hooded sweatshirt with white embroidered text on the hood, set against a plain grey background under soft studio lighting",
+   "tier2_flags": [
+    "class_word:set"
+   ],
+   "contexts": {
+    "class_word:set": "\u2026rt with white embroidered text on the hood, \u00abset\u00bb against a plain grey background under soft \u2026"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_A_136",
+   "role": "A",
+   "bank": "corpus",
+   "description": "A woman with slicked-back hair wearing a high-necked, long-sleeved white dress sits in a wooden boat on a calm body of water, with a duck swimming nearby and a classical white building reflected in the background under soft, natural light",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026ess sits in a wooden boat on a calm body of \u00abwater\u00bb, with a duck swimming nearby and a classica\u2026"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_A_137",
+   "role": "A",
+   "bank": "corpus",
+   "description": "A young Black man wearing a blue denim jacket, matching jeans, and white sneakers sits on a green utility box on a sunny city sidewalk while holding a phone to his ear, with pedestrians and a storefront with a red awning in the background",
+   "tier2_flags": [
+    "shader_escape:box"
+   ],
+   "contexts": {
+    "shader_escape:box": "\u2026 and white sneakers sits on a green utility \u00abbox\u00bb on a sunny city sidewalk while holding a ph\u2026"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_B_7",
+   "role": "B",
+   "bank": "corpus",
+   "description": "a woman with long windblown dark curls in a fluffy black coat, crouched low in tall grass with her chin resting on folded hands, staring into the camera beneath a cloud-streaked blue sky",
+   "tier2_flags": [
+    "class_word:cloud"
+   ],
+   "contexts": {
+    "class_word:cloud": "\u2026ed hands, staring into the camera beneath a \u00abcloud\u00bb-streaked blue sky"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_B_12",
+   "role": "B",
+   "bank": "corpus",
+   "description": "the sunflower field with a giant hand making a peace sign above the hedge",
+   "tier2_flags": [
+    "class_word:giant"
+   ],
+   "contexts": {
+    "class_word:giant": "the sunflower field with a \u00abgiant\u00bb hand making a peace sign above the hedge"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_B_19",
+   "role": "B",
+   "bank": "corpus",
+   "description": "a person's arm and clenched fist wearing a black wristband are extended in the foreground on a rooftop with air conditioning units, a large tank, and an antenna, set against a city skyline during sunset",
+   "tier2_flags": [
+    "class_word:air",
+    "class_word:set"
+   ],
+   "contexts": {
+    "class_word:air": "\u2026xtended in the foreground on a rooftop with \u00abair\u00bb conditioning units, a large tank, and an an\u2026",
+    "class_word:set": "\u2026ioning units, a large tank, and an antenna, \u00abset\u00bb against a city skyline during sunset"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_B_20",
+   "role": "B",
+   "bank": "corpus",
+   "description": "in a high-angle view looking down a city street, a fist in a suit sleeve is extended in the foreground while a person wearing a grey jacket and dark pants is suspended in mid-air between tall buildings under an overcast sky",
+   "tier2_flags": [
+    "class_word:air"
+   ],
+   "contexts": {
+    "class_word:air": "\u2026y jacket and dark pants is suspended in mid-\u00abair\u00bb between tall buildings under an overcast sk\u2026"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_B_27",
+   "role": "B",
+   "bank": "corpus",
+   "description": "a woman with curly hair and glasses, wearing a navy suit over a white patterned shirt and holding a brown monogrammed tote bag, standing in the doorway of a modern house",
+   "tier2_flags": [
+    "shader_escape:doorway"
+   ],
+   "contexts": {
+    "shader_escape:doorway": "\u2026brown monogrammed tote bag, standing in the \u00abdoorway\u00bb of a modern house"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_B_28",
+   "role": "B",
+   "bank": "corpus",
+   "description": "a person in a dark hoodie and camouflage trousers holding a tall black pirate flag with a golden skull, standing inside a burning ring of fire in a rocky desert under a starry night sky",
+   "tier2_flags": [
+    "class_word:fire"
+   ],
+   "contexts": {
+    "class_word:fire": "\u2026en skull, standing inside a burning ring of \u00abfire\u00bb in a rocky desert under a starry night sky"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "corpus_calibration",
+   "store": "certified_139",
+   "clip_id": "corpus_B_29",
+   "role": "B",
+   "bank": "corpus",
+   "description": "a person with a voluminous curly afro and blue-tinted sunglasses in a color-blocked denim jacket crouching atop a stone ledge against a brilliant blue sky, one hand planted near the low camera",
+   "tier2_flags": [
+    "class_word:color"
+   ],
+   "contexts": {
+    "class_word:color": "\u2026 curly afro and blue-tinted sunglasses in a \u00abcolor\u00bb-blocked denim jacket crouching atop a stone\u2026"
+   },
+   "verdict": "SCENE_CONTENT (keep)",
+   "note": "CERTIFIED text \u2014 known-good by construction; calibration only, never edit."
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "davis_horsejump-high",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A female equestrian rider wearing a blue helmet and white pants rides a brown horse in an outdoor arena surrounded by white wooden jump barriers under a sunny sky",
+   "tier2_flags": [
+    "class_word:jump"
+   ],
+   "contexts": {
+    "class_word:jump": "\u2026an outdoor arena surrounded by white wooden \u00abjump\u00bb barriers under a sunny sky"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "davis_mbike-trick",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A motorcyclist wearing a white helmet performs a burnout, generating white smoke on an asphalt track marked with tire burn marks under a cloudy sky",
+   "tier2_flags": [
+    "class_word:smoke",
+    "shader_escape:burn"
+   ],
+   "contexts": {
+    "class_word:smoke": "\u2026helmet performs a burnout, generating white \u00absmoke\u00bb on an asphalt track marked with tire burn m\u2026",
+    "shader_escape:burn": "\u2026orcyclist wearing a white helmet performs a \u00abburnout\u00bb, generating white smoke on an asphalt track\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "davis_mbike-trick",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a man in a white t-shirt, black pants, and gloves sitting on a green motorcycle while doing a burnout on asphalt, creating a large cloud of thick white smoke behind the rear tire under an overcast sky",
+   "tier2_flags": [
+    "class_word:cloud",
+    "class_word:smoke"
+   ],
+   "contexts": {
+    "class_word:cloud": "\u2026oing a burnout on asphalt, creating a large \u00abcloud\u00bb of thick white smoke behind the rear tire u\u2026",
+    "class_word:smoke": "\u2026halt, creating a large cloud of thick white \u00absmoke\u00bb behind the rear tire under an overcast sky"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "humanvid_3805742",
+   "role": "A",
+   "bank": "humanvid",
+   "description": "A middle-aged man with messy gray hair and a dark shirt sits in profile as he exhales a plume of smoke, bathed in warm, soft sunlight indoors with wooden structures blurred in the background",
+   "tier2_flags": [
+    "class_word:smoke"
+   ],
+   "contexts": {
+    "class_word:smoke": "\u2026rt sits in profile as he exhales a plume of \u00absmoke\u00bb, bathed in warm, soft sunlight indoors with\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "humanvid_5192078",
+   "role": "B",
+   "bank": "humanvid",
+   "description": "a young man in a light yellow t-shirt and black athletic shorts sitting on a reddish outdoor running track, resting his arm behind him and looking to the side beside a glass water bottle under bright natural daylight",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026 him and looking to the side beside a glass \u00abwater\u00bb bottle under bright natural daylight"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "humanvid_7235992",
+   "role": "B",
+   "bank": "humanvid",
+   "description": "a woman with curly hair in a black tank top and dark leggings bending forward and moving her arms during an exercise routine in a garden setting filled with lush green tropical plants and a large red ball",
+   "tier2_flags": [
+    "class_word:bending"
+   ],
+   "contexts": {
+    "class_word:bending": "\u2026 hair in a black tank top and dark leggings \u00abbending\u00bb forward and moving her arms during an exerc\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "humanvid_8090682",
+   "role": "A",
+   "bank": "humanvid",
+   "description": "A woman in a white hoodie and short skirt walks down a set of white wooden stairs with a white railing in a brightly lit indoor space with framed pictures on the wall in the background",
+   "tier2_flags": [
+    "class_word:set"
+   ],
+   "contexts": {
+    "class_word:set": "\u2026a white hoodie and short skirt walks down a \u00abset\u00bb of white wooden stairs with a white railing\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "humanvid_8376542",
+   "role": "B",
+   "bank": "humanvid",
+   "description": "a young man in yellow pajamas dancing playfully in a bright white room, stepping between colorful floor cushions in blue, pink, and green against a seamless background",
+   "tier2_flags": [
+    "class_word:seamless"
+   ],
+   "contexts": {
+    "class_word:seamless": "\u2026cushions in blue, pink, and green against a \u00abseamless\u00bb background"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "humanvid_8405739",
+   "role": "B",
+   "bank": "humanvid",
+   "description": "a young man with curly hair and a grey headband wearing a blue t-shirt bending forward while walking on a sandy beach lined with dark rocks",
+   "tier2_flags": [
+    "class_word:bending"
+   ],
+   "contexts": {
+    "class_word:bending": "\u2026 and a grey headband wearing a blue t-shirt \u00abbending\u00bb forward while walking on a sandy beach line\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "humanvid_9039061",
+   "role": "A",
+   "bank": "humanvid",
+   "description": "A blonde woman in a light brown t-shirt and white pants sits outdoors with her eyes closed, framed in a close-up shot against a blurred background of water and buildings",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026ose-up shot against a blurred background of \u00abwater\u00bb and buildings"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "humanvid_9039061",
+   "role": "B",
+   "bank": "humanvid",
+   "description": "a blonde young woman with her hair loose in a beige short-sleeve t-shirt and light-colored pants sitting cross-legged outdoors in a soft overcast light, gesturing with her right hand while seated beside a calm body of water",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026ght hand while seated beside a calm body of \u00abwater\u00bb"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "humanvid_9065027",
+   "role": "B",
+   "bank": "humanvid",
+   "description": "a fair-haired woman in glasses and a black floral top bending down to place a printed paper on a clipboard in a bright indoor setting",
+   "tier2_flags": [
+    "class_word:bending"
+   ],
+   "contexts": {
+    "class_word:bending": "\u2026red woman in glasses and a black floral top \u00abbending\u00bb down to place a printed paper on a clipboar\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "humanvid_9807743",
+   "role": "A",
+   "bank": "humanvid",
+   "description": "A young man with dark hair pulled back in a ponytail sits with his head lowered in front of a wooden wall and a television displaying static in a dimly lit room",
+   "tier2_flags": [
+    "shader_escape:static"
+   ],
+   "contexts": {
+    "shader_escape:static": "\u2026f a wooden wall and a television displaying \u00abstatic\u00bb in a dimly lit room"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "humanvid_9807743",
+   "role": "B",
+   "bank": "humanvid",
+   "description": "a man with dark hair pulled back in a ponytail sitting in a dark room with a glowing television screen behind him displaying static",
+   "tier2_flags": [
+    "shader_escape:static"
+   ],
+   "contexts": {
+    "shader_escape:static": "\u2026ing television screen behind him displaying \u00abstatic\u00bb"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "openvid_SyGOidmxV_E_4_0to163",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A young man with short brown hair, wearing a white patterned short-sleeved button-down shirt, holds a microphone near a woman in a pink top on a sunny beach with blue water",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026an in a pink top on a sunny beach with blue \u00abwater\u00bb"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "openvid_XFSw6t7SP00_79_0to109",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a close-up shot of a hand shifting an automatic gear selector in a modern car interior with light gray console trim and a start engine button nearby",
+   "tier2_flags": [
+    "drift:shifting"
+   ],
+   "contexts": {
+    "drift:shifting": "a close-up shot of a hand \u00abshifting\u00bb an automatic gear selector in a modern car \u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "openvid__nLdQ5vZP5c_6_0to148",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A bearded man wearing a dark flat cap, a red shirt, and a blue Columbia puffer jacket stands outdoors on a balcony with a modern glass building and water in the background",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026 a balcony with a modern glass building and \u00abwater\u00bb in the background"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "openvid__nLdQ5vZP5c_6_0to148",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a man in a dark flat cap and blue zip-up jacket gesturing with his hand outdoors on a paved plaza, with a glass building and a body of water under hazy daylight in the background",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026 plaza, with a glass building and a body of \u00abwater\u00bb under hazy daylight in the background"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "openvid__oppseM4TZU_0_0to176",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a man with short brown hair in a dark suit jacket and patterned tie, holding his hands clasped together near his chest while talking on a brightly lit studio set with a city backdrop",
+   "tier2_flags": [
+    "class_word:set"
+   ],
+   "contexts": {
+    "class_word:set": "\u2026hest while talking on a brightly lit studio \u00abset\u00bb with a city backdrop"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "openvid__qbsmhHO950_5_121to392",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A woman with long reddish-brown hair in a side braid, wearing black glasses and a short-sleeved top with a pink and blue cupcake pattern, looks upward and speaks against a black background with a white tree illustration",
+   "tier2_flags": [
+    "class_word:illustration"
+   ],
+   "contexts": {
+    "class_word:illustration": "\u2026gainst a black background with a white tree \u00abillustration\u00bb"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "openvid__qbsmhHO950_5_121to392",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a young woman with glasses and long braided hair wearing a colorful patterned top speaking against a plain black background with a faint graphic illustration in the corner",
+   "tier2_flags": [
+    "class_word:illustration"
+   ],
+   "contexts": {
+    "class_word:illustration": "\u2026plain black background with a faint graphic \u00abillustration\u00bb in the corner"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "openvid__vGh-6Ms-io_26_19to219",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A blonde woman in a light green shirt operates a white sewing machine on a white table set with a black-and-white checkered fabric, framed against a soft pink and white grid background in a brightly lit room",
+   "tier2_flags": [
+    "class_word:set"
+   ],
+   "contexts": {
+    "class_word:set": "\u2026tes a white sewing machine on a white table \u00abset\u00bb with a black-and-white checkered fabric, fr\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "vcbench_animal_2430774_3840x2160",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A juvenile seagull with mottled grey and brown feathers pecks at the wet, light-colored sand at the edge of gentle ocean water under soft daylight",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026ht-colored sand at the edge of gentle ocean \u00abwater\u00bb under soft daylight"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "vcbench_boat_7318821_1080x1920",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "The white wooden bow of a yacht moves forward over a calm turquoise ocean under bright sunlight, with silver metal railings framing the front of the vessel and sunlight glittering on the surface of the water ahead towards a distant horizon",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026d sunlight glittering on the surface of the \u00abwater\u00bb ahead towards a distant horizon"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "vcbench_boat_7318821_1080x1920",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a first-person perspective of the bow of a wooden yacht with metal handrails sailing forward across calm, turquoise open water under bright sunlight",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026sailing forward across calm, turquoise open \u00abwater\u00bb under bright sunlight"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "vcbench_coast_33754706_2160x3840",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A blue fishing boat loaded with orange buoys sits in a green water harbor alongside other small boats, while steep rocky cliffs covered with green bushes rise up behind them under soft daylight",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026at loaded with orange buoys sits in a green \u00abwater\u00bb harbor alongside other small boats, while s\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "vcbench_library_4860895_4096x2160",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a person holding a white rectangular box with both hands near a wooden bookshelf filled with colorful books, shot in bright natural light in a close-up angle",
+   "tier2_flags": [
+    "shader_escape:box"
+   ],
+   "contexts": {
+    "shader_escape:box": "a person holding a white rectangular \u00abbox\u00bb with both hands near a wooden bookshelf fil\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "vcbench_robot_8327799_3840x2160",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "an elderly man with a long white beard and glasses wearing a suit leaning over a chessboard to move a wooden piece on a wooden table against a black background",
+   "tier2_flags": [
+    "shader_escape:chessboard"
+   ],
+   "contexts": {
+    "shader_escape:chessboard": "\u2026d and glasses wearing a suit leaning over a \u00abchessboard\u00bb to move a wooden piece on a wooden table ag\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "vcbench_talk_4146196_3840x2160",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A woman with curly light brown hair and black-framed glasses uses chopsticks to eat noodles from a cardboard takeout box, wearing a light blue denim shirt over a white top in a brightly lit indoor space",
+   "tier2_flags": [
+    "shader_escape:box"
+   ],
+   "contexts": {
+    "shader_escape:box": "\u2026cks to eat noodles from a cardboard takeout \u00abbox\u00bb, wearing a light blue denim shirt over a wh\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "vcbench_tulip_10536489_4096x2160",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A clear glass jar filled with soft pink rose petals sits outdoors in bright natural light, framed by blurred green foliage in the background and a sprig of eucalyptus leaves reaching in from the upper right",
+   "tier2_flags": [
+    "class_word:petals"
+   ],
+   "contexts": {
+    "class_word:petals": "\u2026 clear glass jar filled with soft pink rose \u00abpetals\u00bb sits outdoors in bright natural light, fram\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "vcbench_tulip_10536489_4096x2160",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a close-up shot of a clear glass jar filled with soft pink rose petals resting outdoors against a soft, blurred background of yellow wildflowers under natural daylight",
+   "tier2_flags": [
+    "class_word:petals"
+   ],
+   "contexts": {
+    "class_word:petals": "\u2026 clear glass jar filled with soft pink rose \u00abpetals\u00bb resting outdoors against a soft, blurred ba\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3",
+   "clip_id": "vcbench_vegetable_853790_1920x1080",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A man wearing a grey short-sleeved t-shirt reaches toward a pile of fresh green herbs arranged behind a wooden box in a brightly lit outdoor market with colorful blurred stalls in the background",
+   "tier2_flags": [
+    "shader_escape:box"
+   ],
+   "contexts": {
+    "shader_escape:box": "\u2026 fresh green herbs arranged behind a wooden \u00abbox\u00bb in a brightly lit outdoor market with color\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "davis_horsejump-high",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A female rider with a dark helmet, wearing a white shirt, a black vest, and white pants, sits on a brown horse, standing in a sandy arena with white and green jump obstacles under a bright blue sky with white clouds",
+   "tier2_flags": [
+    "class_word:jump"
+   ],
+   "contexts": {
+    "class_word:jump": "\u2026nding in a sandy arena with white and green \u00abjump\u00bb obstacles under a bright blue sky with whit\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "davis_mbike-trick",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a person in a white graphic t-shirt, dark trousers, and black sneakers, sitting on a dark green motorcycle and spinning the rear tire to produce thick white smoke on an asphalt surface under bright daylight",
+   "tier2_flags": [
+    "class_word:smoke"
+   ],
+   "contexts": {
+    "class_word:smoke": "\u2026inning the rear tire to produce thick white \u00absmoke\u00bb on an asphalt surface under bright daylight"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "humanvid_12331340",
+   "role": "B",
+   "bank": "humanvid",
+   "description": "a bald man wearing silver headphones and a faded gray t-shirt over a long-sleeved black shirt, looking down at a paper in a dimly lit soundproof room",
+   "tier2_flags": [
+    "drift:faded"
+   ],
+   "contexts": {
+    "drift:faded": "a bald man wearing silver headphones and a \u00abfaded\u00bb gray t-shirt over a long-sleeved black shir\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "humanvid_3805742",
+   "role": "A",
+   "bank": "humanvid",
+   "description": "An older man with curly gray hair, wearing a black collared shirt, sits in profile while exhaling a plume of white smoke in a sunlit room filled with wooden beams and warm light",
+   "tier2_flags": [
+    "class_word:smoke"
+   ],
+   "contexts": {
+    "class_word:smoke": "\u2026 in profile while exhaling a plume of white \u00absmoke\u00bb in a sunlit room filled with wooden beams a\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "humanvid_6898098",
+   "role": "A",
+   "bank": "humanvid",
+   "description": "A dark-skinned woman with braided black hair, wearing a white long-sleeved shirt and blue pants, sits cross-legged on a gray sofa while opening a small brown cardboard box stack in a dimly lit room with soft warm lighting",
+   "tier2_flags": [
+    "shader_escape:box"
+   ],
+   "contexts": {
+    "shader_escape:box": "\u2026 sofa while opening a small brown cardboard \u00abbox\u00bb stack in a dimly lit room with soft warm li\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "humanvid_6898098",
+   "role": "B",
+   "bank": "humanvid",
+   "description": "a smiling dark-skinned woman with long braided hair wearing a white long-sleeve shirt and blue pants, opening a brown cardboard box while sitting cross-legged on a dark green couch in a softly lit room",
+   "tier2_flags": [
+    "shader_escape:box"
+   ],
+   "contexts": {
+    "shader_escape:box": "\u2026t and blue pants, opening a brown cardboard \u00abbox\u00bb while sitting cross-legged on a dark green \u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "humanvid_8189502",
+   "role": "B",
+   "bank": "humanvid",
+   "description": "a woman with long black braids in a white long-sleeved shirt and black overalls, sitting cross-legged while strumming a brown acoustic guitar indoors, set against a light gray wood-paneled wall with soft natural lighting from the side",
+   "tier2_flags": [
+    "class_word:set"
+   ],
+   "contexts": {
+    "class_word:set": "\u2026 strumming a brown acoustic guitar indoors, \u00abset\u00bb against a light gray wood-paneled wall with\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "humanvid_9039061",
+   "role": "A",
+   "bank": "humanvid",
+   "description": "A woman with long blonde hair, wearing a tan short-sleeved t-shirt and white drawstring pants, sits cross-legged outdoors near a grey building and dark water under soft overcast lighting",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026gged outdoors near a grey building and dark \u00abwater\u00bb under soft overcast lighting"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "humanvid_9039061",
+   "role": "B",
+   "bank": "humanvid",
+   "description": "a fair-skinned woman with blonde hair wearing a beige t-shirt and white pants, sitting outdoors in a cross-legged position with her hand raised in front of her body against a soft-focus background of water and buildings",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026her body against a soft-focus background of \u00abwater\u00bb and buildings"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "humanvid_9807743",
+   "role": "B",
+   "bank": "humanvid",
+   "description": "a young man with slicked dark hair in a black sweater vest with white trim over a beige sweater, looking forward while sitting on the floor in front of a wooden cabinet topped with a glowing television displaying static",
+   "tier2_flags": [
+    "shader_escape:static"
+   ],
+   "contexts": {
+    "shader_escape:static": "\u2026topped with a glowing television displaying \u00abstatic\u00bb"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "openvid_RlN2dYjH4_E_3_0to160",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a light-skinned man with short brown hair and a receding hairline wearing a beige graphic t-shirt, standing indoors and gesturing while talking as another person holds an open book in the foreground, set against white tiled walls with a stainless steel range hood and kitchen utensils in bright even lighting",
+   "tier2_flags": [
+    "class_word:set"
+   ],
+   "contexts": {
+    "class_word:set": "\u2026erson holds an open book in the foreground, \u00abset\u00bb against white tiled walls with a stainless \u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "openvid_Rv5tq_kWjRE_23_0to288",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a fair-skinned man with a red beard, aviator glasses, and a gray flat cap in an orange polo shirt, talking while looking directly at the camera outdoors in natural light in front of a stained-glass window set into a dark wooden wall",
+   "tier2_flags": [
+    "class_word:set"
+   ],
+   "contexts": {
+    "class_word:set": "\u2026al light in front of a stained-glass window \u00abset\u00bb into a dark wooden wall"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "openvid_SyGOidmxV_E_4_0to163",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A man with short brown hair, wearing a white short-sleeved patterned shirt with sunglasses hooked on his collar, speaks while holding a black microphone on a sunny beach near bright blue water",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026icrophone on a sunny beach near bright blue \u00abwater\u00bb"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "openvid_SyGOidmxV_E_4_0to163",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a smiling young man with short brown hair in a patterned white short-sleeved shirt, speaking into a black microphone on a sunny beach with clear turquoise water",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026phone on a sunny beach with clear turquoise \u00abwater\u00bb"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "openvid_XFSw6t7SP00_79_0to109",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a fair-skinned hand gripping a black leather gear shifter with a silver-rimmed top in a car interior, pulling the gear shift backward beside a silver start-engine button under soft indoor lighting",
+   "tier2_flags": [
+    "drift:shift",
+    "drift:shifter"
+   ],
+   "contexts": {
+    "drift:shift": "\u2026-skinned hand gripping a black leather gear \u00abshifter\u00bb with a silver-rimmed top in a car interior,\u2026",
+    "drift:shifter": "\u2026-skinned hand gripping a black leather gear \u00abshifter\u00bb with a silver-rimmed top in a car interior,\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "openvid__nLdQ5vZP5c_6_0to148",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A bearded man with short brown hair, wearing a dark cap, a dark blue jacket, and a red shirt, speaks directly while standing on an outdoor balcony against a glass building, a body of water, and bright daylight",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026balcony against a glass building, a body of \u00abwater\u00bb, and bright daylight"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "openvid__nLdQ5vZP5c_6_0to148",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a man with a dark gray flat cap and short brown hair wearing a dark blue Columbia puffer jacket over a red shirt, gesturing with his hand in front of a modern glass building and a body of water under overcast light",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026nt of a modern glass building and a body of \u00abwater\u00bb under overcast light"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "openvid__oppseM4TZU_0_0to176",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a man with short brown hair in a dark blue suit jacket and dark patterned tie, resting his fingertips together while smiling on a dark studio stage set with blurred city lights in the background",
+   "tier2_flags": [
+    "class_word:set"
+   ],
+   "contexts": {
+    "class_word:set": "\u2026gether while smiling on a dark studio stage \u00abset\u00bb with blurred city lights in the background"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "vcbench_animal_2430774_3840x2160",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A young seagull with speckled brown and white feathers, featuring a grey beak and webbed feet, dips its beak into shallow water along a wet sand beach illuminated by soft grey daylight",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026and webbed feet, dips its beak into shallow \u00abwater\u00bb along a wet sand beach illuminated by soft \u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "vcbench_animal_2430774_3840x2160",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a juvenile seagull with mottled gray and brown feathers standing in shallow water, resting on a flat sandy beach under soft overcast light",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026gray and brown feathers standing in shallow \u00abwater\u00bb, resting on a flat sandy beach under soft o\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "vcbench_boat_7318821_1080x1920",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A white boat bow with silver metal handrails and a white fender attached to the railing points forward across a calm blue sea under a bright hazy sky filled with sunlight reflecting on the water surface",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026 sky filled with sunlight reflecting on the \u00abwater\u00bb surface"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "vcbench_coast_33754706_2160x3840",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A blue and grey boat with orange floats stacked on its stern sits anchored in green water, near a sandy beach and a steep cliff covered in green vegetation under bright daytime light",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026stacked on its stern sits anchored in green \u00abwater\u00bb, near a sandy beach and a steep cliff cover\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "vcbench_coast_33754706_2160x3840",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a rear view of a blue fishing boat loaded with bright orange buoys, floating in calm green water near a sandy beach and steep rocky cliffs under direct daylight",
+   "tier2_flags": [
+    "class_word:water"
+   ],
+   "contexts": {
+    "class_word:water": "\u2026bright orange buoys, floating in calm green \u00abwater\u00bb near a sandy beach and steep rocky cliffs u\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "vcbench_library_4860895_4096x2160",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a person with light skin holding a white rectangular product box in front of a white wooden bookshelf with red and gray books, adjusting the box near a bright window bathed in soft natural light",
+   "tier2_flags": [
+    "shader_escape:box"
+   ],
+   "contexts": {
+    "shader_escape:box": "\u2026ht skin holding a white rectangular product \u00abbox\u00bb in front of a white wooden bookshelf with r\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "vcbench_robot_8327799_3840x2160",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "an elderly man with short white hair, a long white beard, and round glasses wearing a dark gray blazer over a white shirt, moving a wooden piece on a wooden chessboard set on a table against a solid black background",
+   "tier2_flags": [
+    "class_word:set",
+    "shader_escape:chessboard"
+   ],
+   "contexts": {
+    "class_word:set": "\u2026oving a wooden piece on a wooden chessboard \u00abset\u00bb on a table against a solid black background",
+    "shader_escape:chessboard": "\u2026te shirt, moving a wooden piece on a wooden \u00abchessboard\u00bb set on a table against a solid black backgr\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "vcbench_sunset_1686791_1080x1920",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a dark airplane wing silhouetted against a gradient sky, flying over clouds during a bright orange and yellow sunset",
+   "tier2_flags": [
+    "class_word:flying"
+   ],
+   "contexts": {
+    "class_word:flying": "\u2026ne wing silhouetted against a gradient sky, \u00abflying\u00bb over clouds during a bright orange and yell\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "vcbench_tulip_10536489_4096x2160",
+   "role": "A",
+   "bank": "synth_endpoints",
+   "description": "A clear glass jar filled with soft pink rose petals sits outdoors against a blurred green and yellow background bathed in bright natural daylight",
+   "tier2_flags": [
+    "class_word:petals"
+   ],
+   "contexts": {
+    "class_word:petals": "\u2026 clear glass jar filled with soft pink rose \u00abpetals\u00bb sits outdoors against a blurred green and y\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  },
+  {
+   "source": "new",
+   "store": "pilot_m3_round2",
+   "clip_id": "vcbench_tulip_10536489_4096x2160",
+   "role": "B",
+   "bank": "synth_endpoints",
+   "description": "a clear glass jar filled with pale pink rose petals, resting outdoors against a soft-focused green and yellow natural background in bright daylight",
+   "tier2_flags": [
+    "class_word:petals"
+   ],
+   "contexts": {
+    "class_word:petals": "\u2026 clear glass jar filled with pale pink rose \u00abpetals\u00bb, resting outdoors against a soft-focused gr\u2026"
+   },
+   "verdict": "",
+   "note": ""
+  }
+ ]
+}
