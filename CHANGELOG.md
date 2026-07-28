@@ -1,5 +1,20 @@
 ## 2026-07-28
 
+- **11:05** ctt_v2/captions: `build_mass_pair_list.py` written and run — **the mass caption run
+  needs 1,348 descriptions, not the ~5,600 the runbook assumed** (~4× less, ≈85 s at the measured
+  16 desc/s including the 100% Layer-2 audit). It turns the pinned grids into the (clip, role)
+  list A4 Q7.3 asks for, understanding both grid schemas (S2 `pairs`, S1 `rows` with
+  one-/two-sided endpoint semantics) and hard-stopping on an unrecognised one rather than
+  contributing zero pairs silently. The 800 S2 rows collapse to 1,217 distinct (clip, role)
+  and the 390 S1 rows to 400, because a description is per-(clip, role) and clips recur across
+  rows; 376 clips need both roles. Role-scoped exclusions are read through the same
+  `root_common.load_caption_store_exclusions` loader the generator and `assert_root.py` use, so
+  the three channels cannot drift. Worth recording: the
+  `openvid_T1MiFx98l3g_0_50to156|A` exclusion **matches nothing in the requested set** — the
+  pinned grids never use that clip as an A endpoint (0 times A, 3 times B), so it is a no-op
+  here and its legitimate B-role is present as required. The script says so out loud rather
+  than reporting a reassuring "skipped 1". Blocked on the auditor before generation can run.
+
 - **10:55** ctt_v2/captions: **round 3 (prompt v3) run and scored — all 12 gates PASS, but v3's
   stated mechanism is FALSIFIED.** The Gemini generator (`gemini-3.6-flash`) came back, so
   `RESUME_ON_CREDITS.sh` steps 1–2 ran: 399 pairs (the role-scoped A-exclusion for
