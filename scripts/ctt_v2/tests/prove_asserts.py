@@ -230,6 +230,43 @@ def m_A3_mix(ctx: Ctx):
             f"COUNTED share past the +-0.5 pp tolerance")
 
 
+def m_A3b_prorata_multipliers(ctx: Ctx):
+    """Give ONE half of the pro-rata pair a second replica directory.
+
+    A9 §4 splits S2's 69 pp pro-rata across the two halves, which is only equivalent to A1b's
+    "uniform per-sample weight within S2, no extra reweighting knob" while the halves carry the
+    SAME replica multiplier — and they do, exactly (S2a 7,990 base clips, S2b 7,990).  A3b is
+    the check that catches that assumption silently breaking, and it was the one assert in the
+    battery with no mutation: it was added by the A12 rewrite AFTER the mutation set was
+    written, so it had never failed.
+
+    The break is COUNT-PRESERVING on purpose: five S2b samples are MOVED from `S2b_r00` into a
+    new `S2b_r01`, in all five trees, so S2b shows two replica dirs on disk against S2a's one
+    while every stratum's counted share is untouched.  A literal x2 duplication of S2b would
+    also (correctly) blow A3's +-0.5 pp share tolerance, and then the run would not show that
+    A3b is sensitive to the multiplier itself — which is the whole claim.  Differential
+    replication IS the extra reweighting knob; this isolates it.
+
+    Two of A3b's clauses fire together and both belong to it: the on-disk inequality, and the
+    ROOT_MANIFEST cross-check (the manifest still declares `replicas: {S2b: 1}`, and A3b counts
+    the disk rather than reading that number back).
+    """
+    victims = [r["rel"] for r in ctx.rows if r["stratum"] == "S2b"][-5:]
+    if len(victims) < 5:
+        raise SystemExit("need >=5 S2b samples to promote into a second replica dir")
+    for rel in victims:
+        _rdir, group, name = rel.split("/")
+        new_rel = f"{rc.replica_dir('S2b', 1)}/{group}/{name}"
+        for sub in rc.ROOT_DIRS:
+            src = ctx.root / f"{sub}/{rel}"
+            target = os.readlink(src) if src.is_symlink() else str(src)
+            ctx.add_link(f"{sub}/{new_rel}", target)
+            ctx.unlink(f"{sub}/{rel}")
+    return (f"moved {len(victims)} S2b samples from S2b_r00 into a second replica dir "
+            f"S2b_r01 in all 5 dirs — S2b now shows 2 replica dirs on disk, S2a 1, with "
+            f"every stratum's counted share unchanged")
+
+
 def _mutate_caption(ctx: Ctx, stratum: str, fn, what: str):
     row = ctx.pick(stratum)
     target = row["target"]
@@ -505,6 +542,13 @@ MUTATIONS: dict[str, tuple] = {
     "A2b_path_scheme": (m_A2b_path_scheme, {"A2b_path_scheme"}, ""),
     "A2c_unknown_sample": (m_A2c_unknown_sample, {"A2c_root_resolves_to_inventories"}, ""),
     "A3_realized_mix": (m_A3_mix, {"A3_realized_mix"}, ""),
+    "A3b_prorata_multipliers_unequal": (
+        m_A3b_prorata_multipliers, {"A3b_prorata_multipliers_equal"},
+        "two of A3b's own clauses fire — the on-disk inequality (S2b x2 replica dirs vs "
+        "S2a x1) and the ROOT_MANIFEST cross-check (the manifest still declares "
+        "replicas {S2b: 1}, and A3b counts the disk instead of reading that number back). "
+        "Both offenders belong to A3b; no other check is touched, which is why the "
+        "mutation is count-preserving"),
     "A4_trigger_absent": (m_A4_no_trigger, {"A4_captions"}, ""),
     "A4_trigger_twice": (m_A4_double_trigger, {"A4_captions"}, ""),
     "A4_outcome_marker": (m_A4_outcome_marker, {"A4_captions"}, ""),
