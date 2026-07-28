@@ -45,10 +45,15 @@ test -f "$ROOT/SMOKE_ROOT_MANIFEST.json" || { echo "[smoke] no smoke root at $RO
 if [ "$TASK" = "0" ]; then
     echo "[smoke] ===== TASK 0: per-format probe ====="
     cd "$TR"
+    # `set +e`: under the script's `set -e` a nonzero probe exit killed the shell BEFORE
+    # `rc=$?`, so neither the exit line nor the escalation banner below was ever printed —
+    # the one case where they matter most.
+    set +e
     PYTHONPATH="$TR/src" "$VENV_PY" \
         "$WT/scripts/ctt_v2/smoke/mixed_format_probe.py" \
         --root "$ROOT" --out "$ART"
     rc=$?
+    set -e
     echo "[smoke] probe exit=$rc"
     if [ "$rc" = "3" ]; then
         echo "[smoke] 🔴 SPEC-CONSTANT-MISMATCH (A11 RULING 3): the mechanism is"
