@@ -104,6 +104,25 @@ def scan(paths: list[Path]) -> tuple[dict, dict]:
     return per_file, dict(per_model)
 
 
+def _looks_like_api_archive(p: Path, probe_lines: int = 5) -> bool:
+    """Does this .jsonl actually hold Gemini responses? Content test, not a filename test."""
+    try:
+        with p.open(errors="replace") as fh:
+            for _ in range(probe_lines):
+                line = fh.readline()
+                if not line:
+                    break
+                try:
+                    rec = json.loads(line)
+                except Exception:
+                    continue
+                if _usage(rec) or "raw_response" in rec or "candidates" in rec:
+                    return True
+    except OSError:
+        return False
+    return False
+
+
 def collect(strict: bool = False) -> list[Path]:
     found: set[Path] = set()
     for g in ARCHIVE_GLOBS:
@@ -121,7 +140,11 @@ def collect(strict: bool = False) -> list[Path]:
             everywhere |= {Path(x) for x in glob.glob(str(REPO_ROOT / pat))}
         for pat in ("misc/ctt_v2_final/*/*.jsonl", "misc/ctt_v2_final/*/*/*.jsonl"):
             everywhere |= {Path(x) for x in glob.glob(str(LAB / pat))}
-        missed = everywhere - found
+        #: Decide by CONTENT, not by filename. A name-based rule flagged the root-machinery
+        #: harness's SAMPLES.jsonl -- sample manifests, not API archives -- and a --strict that
+        #: cries wolf gets disabled, which defeats the point. A file is an API archive iff one
+        #: of its first lines actually carries usageMetadata / raw_response.
+        missed = {p for p in (everywhere - found) if _looks_like_api_archive(p)}
         if missed:
             raise SystemExit("[ledger] STRICT: archives on disk matched by no glob "
                              "(they would be silently uncounted):\n  "
