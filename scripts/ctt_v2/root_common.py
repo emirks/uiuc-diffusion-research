@@ -207,12 +207,33 @@ SHIFT_MIN, SHIFT_MAX = 0.95, 2.05
 #: matching `scripts/ctt_v2/encode/encode_strata.py`'s bucket convention.
 RULED_SHAPES = {
     (16, 20, 15): {"name": "corpus_121f", "px": (480, 640, 121), "fps": 24.0,
-                   "strata": ("S0", "S1", "S2a", "S2b"),
+                   "strata": ("S0", "S1", "S2a", "S2b"), "prefix_latents": 2,
                    "authority": "REF_root_format.md (verified by loading)"},
     (5, 14, 26): {"name": "s4_33f", "px": (832, 448, 33), "fps": 16.0, "strata": ("S4",),
+                  "prefix_latents": 1,
                   "authority": "DOSSIER §13.2 — verified on disk; 832x448 is a pure "
                                "16-row centre crop, 464 is not a multiple of 32"},
 }
+
+#: Fallback for an unruled shape.  2 is the 121f value, so an unruled shape behaves like the
+#: corpus rather than like S4 — the conservative direction, since 2 conditions MORE.
+DEFAULT_PREFIX_LATENTS = 2
+
+
+def prefix_latents(fhw) -> int:
+    """How many leading LATENT frames the prefix anchor conditions, for this shape.
+
+    A shape property, not a constant.  At 121f, latent frame 0 is the causal single-frame
+    latent and latent frame 1 covers video frames 1-8, so `prefix_latents=2` is the 9-frame
+    endpoint window the corpus captions describe.  S4 conditions **video frame 0 alone**
+    (owner decision 2026-07-28), which is latent frame 0 alone, so `prefix_latents=1`.
+
+    This is why the number lives here: at f=5 a 2-latent prefix would condition 40 % of the
+    clip, and the S4 caption then describes 9 frames of a 33-frame transition.  One latent
+    frame is 20 %, and the caption describes exactly the conditioned pixel.
+    """
+    return RULED_SHAPES.get(tuple(int(x) for x in fhw), {}).get(
+        "prefix_latents", DEFAULT_PREFIX_LATENTS)
 
 
 def latent_tokens(fhw) -> int:
@@ -1470,25 +1491,28 @@ def slug_map(gids) -> tuple[dict, list]:
 # --------------------------------------------------------------------------------------
 # NOMINAL vs EFFECTIVE weights (A11 σ/S4-weight ruling item 2)
 # --------------------------------------------------------------------------------------
-#: `assemble_root.ensure_mask`: m[:2] = 1 always (the 2-latent-frame prefix anchor);
+#: `assemble_root.ensure_mask`: m[:prefix_latents(shape)] = 1 (the prefix anchor);
 #: m[-1] = 1 iff two-sided (the suffix anchor).  mask == 1 => the token is conditioned at
 #: timestep 0 and EXCLUDED FROM LOSS (`flexible.py:502-546`).  So the loss-bearing token
 #: count is a function of the shape and the sidedness, and nothing else.
-def conditioned_frames(sided: str) -> int:
-    return 3 if sided == "two" else 2
+def conditioned_frames(fhw, sided: str) -> int:
+    """Latent frames conditioned = the shape's prefix anchor, +1 for a suffix anchor."""
+    return prefix_latents(fhw) + (1 if sided == "two" else 0)
 
 
 def loss_bearing_tokens(fhw, sided: str) -> int:
     """Target tokens that actually carry loss for one sample of this shape + sidedness.
 
-    Derived, not tabulated — the tabulated values are 121f one-sided 4,200 (4,800 x 0.875),
-    121f two-sided 3,900 (4,800 x 0.8125) and S4 1,092 (1,820 x 0.60), and they fall out of
-    `1 - conditioned_frames/F` exactly.  S4's fixed 2-frame anchor conditions 40 % of its
-    tokens against 12.5 % at 121f, which is the second, independent discount on S4's
-    effective share — the first being its lower training shift.
+    Derived, not tabulated — the values are 121f one-sided 4,200 (4,800 x 0.875), 121f
+    two-sided 3,900 (4,800 x 0.8125) and S4 1,456 (1,820 x 0.80), and they fall out of
+    `1 - conditioned_frames/F` exactly.  S4's ONE-frame anchor conditions 20 % of its tokens
+    against 12.5 % at 121f, so the geometric discount on S4's effective share is now small;
+    the remaining discount is its lower training shift.  (Under the earlier fixed 2-frame
+    anchor this was 40 % / 1,092 tokens — the owner's frame-0 decision is what moved it, and
+    it moves because the number is derived from `prefix_latents`, not restated here.)
     """
     f, h, w = (int(x) for x in fhw)
-    return (f - conditioned_frames(sided)) * h * w
+    return (f - conditioned_frames(fhw, sided)) * h * w
 
 
 def effective_weights(rows: list[dict], replicas: dict) -> dict:

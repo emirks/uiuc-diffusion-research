@@ -23,7 +23,8 @@ What "regenerate, never reuse" means operationally, and what is checked
 2. `--force` UNLINKS an existing mask before writing.  Without it, an existing file with a
     mismatched payload is a hard failure rather than a silent reuse.
 3. Every mask is verified after writing: `numel == F*H*W`, dtype float32, values in {0,1},
-    `m[:2] == 1`, `m[2:-1] == 0`, and `m[-1] == (1 if two-sided else 0)`.
+    `m[:P] == 1`, `m[P:-1] == 0`, and `m[-1] == (1 if two-sided else 0)`, where
+    `P = root_common.prefix_latents(shape)` — 2 at 121f, **1 for S4** (frame-0 conditioning).
 4. The mask bytes are proven **bit-identical to `assemble_root.ensure_mask()`** — the
     function the real assembly will call — by running that function into a scratch dir and
     comparing sha256.  `assemble_root.py` is owned by another agent and is imported
@@ -65,6 +66,10 @@ IMPOSSIBLE_S4_LATENT = (5, 20, 15)
 
 REGISTRY = REPO_ROOT / "eval_ladder/registry.jsonl"
 
+if str(CTT) not in sys.path:
+    sys.path.insert(0, str(CTT))
+import root_common as rc  # noqa: E402  -- prefix width is a shape property, read from here
+
 
 def log(msg: str) -> None:
     print(f"[masks] {msg}", flush=True)
@@ -82,7 +87,30 @@ def _ensure_mask_from_assembler():
 
 
 def store_name(f: int, h: int, w: int, sided: str) -> str:
-    return f"f{f}_h{h}_w{w}_{sided}sided.pt"
+    """DELEGATED to the assembler, never restated.
+
+    The name encodes the prefix width (`p1`/`p2`), which became a shape property when S4
+    moved to frame-0 conditioning.  If this function kept its own format the two sides would
+    disagree silently: regen would validate `f5_h14_w26_onesided.pt` while assembly read
+    `f5_h14_w26_p1_onesided.pt`, and the mask assembly actually used would never be checked.
+    """
+    _, mask_store_path = _ensure_mask_from_assembler()
+    return mask_store_path(Path("/"), f, h, w, sided).name
+
+
+def content_sha256(t) -> str:
+    """Hash of the mask TENSOR, not the file.
+
+    `torch.save` is not byte-deterministic — its zip container records an mtime, so two saves
+    of an identical tensor seconds apart differ.  A file-sha equality check between two fresh
+    writes therefore passes or fails on wall-clock alignment, which is why the bit-identity
+    check below compares tensors.  This hash is over the raw buffer and IS reproducible.
+    """
+    import hashlib
+
+    c = t.contiguous()
+    return hashlib.sha256(
+        f"{tuple(c.shape)}|{c.dtype}|".encode() + c.numpy().tobytes()).hexdigest()
 
 
 def sha256_file(p: Path) -> str:
@@ -178,10 +206,11 @@ def verify_mask(path: Path, f: int, h: int, w: int, sided: str) -> list[str]:
         bad.append(f"dtype {m.dtype} != float32")
     if not bool(((m == 0) | (m == 1)).all()):
         bad.append("values outside {0,1}")
-    if not bool((m[:2] == 1).all()):
-        bad.append("prefix anchor m[:2] is not all 1 (2 latent frames)")
-    if f > 3 and not bool((m[2:-1] == 0).all()):
-        bad.append("interior m[2:-1] is not all 0")
+    p = rc.prefix_latents((f, h, w))
+    if not bool((m[:p] == 1).all()):
+        bad.append(f"prefix anchor m[:{p}] is not all 1 ({p} latent frame(s))")
+    if f > p + 1 and not bool((m[p:-1] == 0).all()):
+        bad.append(f"interior m[{p}:-1] is not all 0")
     tail_should_be = 1.0 if sided == "two" else 0.0
     if not bool((m[-1] == tail_should_be).all()):
         bad.append(f"suffix anchor m[-1] != {tail_should_be} for sided={sided!r}")
@@ -237,31 +266,42 @@ def regenerate(strata: list[str], force: bool, verify_only: bool, every: bool) -
                 fails.append(f"{name}: {bad}")
                 continue
 
-            # -- bit-identity with the assembler's own generator, into a scratch dir --------
+            m = torch.load(dst, map_location="cpu", weights_only=True)["mask"]
+
+            # -- identity with the assembler's own generator, into a scratch dir ------------
+            # Compared as TENSORS: `torch.save`'s container is not byte-deterministic (see
+            # `content_sha256`), so a file-sha check here would pass or fail on wall-clock
+            # alignment rather than on whether the mask is right.
             tmpd = Path(tempfile.mkdtemp(prefix="ctt_mask_ref_"))
             try:
                 ref = mask_store_path(tmpd, f, h, w, sided)
                 ensure_mask(ref, f, h, w, sided)
-                same = sha256_file(ref) == sha256_file(dst)
+                rm = torch.load(ref, map_location="cpu", weights_only=True)["mask"]
+                same = (rm.shape == m.shape and rm.dtype == m.dtype
+                        and bool(torch.equal(rm, m)))
                 if not same:
-                    fails.append(f"{name}: NOT bit-identical to assemble_root.ensure_mask "
+                    fails.append(f"{name}: NOT identical to assemble_root.ensure_mask "
                                  f"output — assembly would produce a different mask")
             finally:
                 shutil.rmtree(tmpd, ignore_errors=True)
 
-            m = torch.load(dst, map_location="cpu", weights_only=True)["mask"]
             rec["masks"][name] = {
                 "stratum": s, "geometry_fhw": [f, h, w], "sided": sided,
+                "prefix_latents": rc.prefix_latents((f, h, w)),
                 "tokens": f * h * w, "numel": int(m.numel()),
                 "n_conditioned_tokens": int(m.sum().item()),
                 "cond_fraction": float(m.mean().item()),
                 "sha256": sha256_file(dst),
-                "identical_to_assemble_root_ensure_mask": True,
+                "content_sha256": content_sha256(m),
+                "identical_to_assemble_root_ensure_mask": same,
                 "n_latents_justifying": info["n"], "examples": info["examples"],
             }
+            if not same:
+                continue
             log(f"{s}: {name} OK — numel {m.numel()} == {f}*{h}*{w}, "
-                f"{int(m.sum())} conditioned ({float(m.mean()):.4f}), "
-                f"bit-identical to assemble_root.ensure_mask")
+                f"{int(m.sum())} conditioned ({float(m.mean()):.4f}), prefix "
+                f"{rc.prefix_latents((f, h, w))} latent frame(s), "
+                f"tensor-identical to assemble_root.ensure_mask")
 
     # -- the impossible geometry must be absent -----------------------------------------
     bad_glob = sorted(STORE.glob(f"f{IMPOSSIBLE_S4_LATENT[0]}_h{IMPOSSIBLE_S4_LATENT[1]}_"

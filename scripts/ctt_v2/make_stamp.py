@@ -175,7 +175,8 @@ def block(root: Path, caption_store: Path, stamped: bool) -> str:
         L += ["",
               f"- **per-sample loss-bearing tokens** "
               f"`{json.dumps(eff['per_sample_loss_bearing_tokens'])}` — derived from the mask "
-              f"rule (`m[:2]=1` always, `m[-1]=1` iff two-sided; mask==1 ⇒ conditioned at "
+              f"rule (`m[:P]=1` where P=`prefix_latents(shape)` — 2 at 121f, **1 for S4** "
+              f"(frame-0 conditioning); `m[-1]=1` iff two-sided; mask==1 ⇒ conditioned at "
               f"timestep 0 and excluded from loss), never tabulated",
               f"- total loss-bearing tokens **{eff['total_loss_bearing_tokens']:,}** over "
               f"{eff['total_samples']:,} samples",

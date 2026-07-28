@@ -284,17 +284,22 @@ class ShapeCache:
 
 
 def mask_store_path(root: Path, f: int, h: int, w: int, sided: str) -> Path:
-    return root / "_mask_store" / f"f{f}_h{h}_w{w}_{sided}sided.pt"
+    #: `p{prefix}` is in the NAME on purpose.  The prefix width became a shape property when
+    #: S4 moved to frame-0 conditioning, so an f5 mask written under the old fixed-2 rule has
+    #: the same (f,h,w,sided) as one written under the new rule and would be reused silently.
+    #: Naming it forces a regeneration instead.
+    p = rc.prefix_latents((f, h, w))
+    return root / "_mask_store" / f"f{f}_h{h}_w{w}_p{p}_{sided}sided.pt"
 
 
 def ensure_mask(path: Path, f: int, h: int, w: int, sided: str) -> None:
-    """mask = f(conditioning): [0:2]=1 always (prefix anchor); [-1]=1 iff two-sided."""
+    """mask = f(conditioning): [:prefix_latents(shape)]=1; [-1]=1 iff two-sided."""
     if path.exists():
         return
     import torch  # noqa: PLC0415
 
     m = torch.zeros(f, h, w)
-    m[:2] = 1.0
+    m[:rc.prefix_latents((f, h, w))] = 1.0
     if sided == "two":
         m[-1] = 1.0
     path.parent.mkdir(parents=True, exist_ok=True)

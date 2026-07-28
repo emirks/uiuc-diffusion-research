@@ -74,12 +74,20 @@ ROOT_DIRS = ("latents", "conditions", "cond_clean_latents", "masks", "reference_
 GEOMETRIC_DIRS = ("latents", "cond_clean_latents", "reference_latents")
 
 #: A9 §4 / DOSSIER §12 / §10.9 — the two shape classes the mix may contain, and nothing else.
+#: `prefix_latents` is INDEPENDENTLY RESTATED here, not imported from `root_common`.  That is
+#: the point of this checker: if the assembler's shape table drifts, the disagreement is a
+#: failure rather than something both sides inherit.  2 at 121f; 1 for S4, whose conditioning
+#: is video frame 0 alone (owner decision 2026-07-28).
 EXPECTED_SHAPE_CLASSES = {
     (16, 20, 15): {"name": "121f", "px_whf": [480, 640, 121], "fps": 24.0, "tokens": 4800,
-                   "strata": ["S0", "S1", "S2a", "S2b"]},
+                   "strata": ["S0", "S1", "S2a", "S2b"], "prefix_latents": 2},
     (5, 14, 26): {"name": "33f", "px_whf": [832, 448, 33], "fps": 16.0, "tokens": 1820,
-                  "strata": ["S4"]},
+                  "strata": ["S4"], "prefix_latents": 1},
 }
+
+
+def expected_prefix(f: int, h: int, w: int) -> int:
+    return EXPECTED_SHAPE_CLASSES.get((f, h, w), {}).get("prefix_latents", 2)
 
 #: RULING 4 pairing; S4 = 2,000 clips over 42 effects, every group n>=4 => 3n pairs = 6,000
 EXPECTED_BASE_PAIRS = {"S4": 6000}
@@ -395,7 +403,7 @@ def _mk_mask(f: int, h: int, w: int, sided: str = "one"):
     import torch
 
     m = torch.zeros(f, h, w)
-    m[:2] = 1.0
+    m[:expected_prefix(f, h, w)] = 1.0
     if sided == "two":
         m[-1] = 1.0
     return {"mask": m}
