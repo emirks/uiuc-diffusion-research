@@ -1,5 +1,52 @@
 ## 2026-07-28
 
+- **10:45** ctt_v2: **group ids are now SLUGGED AT PATH CONSTRUCTION** (A11 item 3 — the
+  slugging existed and was declared, but `assemble_root.py` still wrote raw ids into paths).
+  `assemble_root.py` builds every relative path from `root_common.slug_group` — the *same*
+  function assert A14 checks with, deliberately not a second implementation — hard-stops on a
+  collision or an empty slug over both the assembled and the full inventory group sets, and
+  stores the raw↔slug mapping in `ROOT_MANIFEST.json:group_slugs`. `assert_root.py` resolves
+  the path's group through that mapping before every group-keyed comparison (the inventory
+  lookup, the inline-OOD op set): a slug silently matching nothing is exactly the
+  namespace-drift vacuity A0 exists to catch. A14 additionally requires that every group
+  component in a root path resolves back to a raw inventory id and that the *stored* mapping
+  agrees with the recomputed one. **Nothing on disk is re-keyed** — symlink targets are
+  untouched absolute paths into the render/encode stores, and `.get(group, group)` bridges a
+  root assembled before this landed (root_2shape, raw paths, still 33/33 PASS). Verified on a
+  fresh fixture root (`_root_machinery_test/root_slug`): 33/33 asserts PASS, 810 of 2,458 rows
+  carry a slugged group, no group dir contains an unsafe character, and the real 42 refVFX S4
+  effect ids — **40 of which contain spaces today** — slug to 42 unique non-empty strings.
+
+- **10:40** ctt_v2/asserts: `A3b_prorata_multipliers_equal` is **proven to fire** — it was the
+  one assert in the battery with no mutation (added by the A12 rewrite after the mutation set
+  was written, so it had never failed). The new mutation moves five S2b samples into a second
+  replica dir in all five trees, so S2b shows 2 replica multipliers on disk against S2a's 1
+  while every stratum's counted share is untouched — count-preserving on purpose, because a
+  literal ×2 duplication would also (correctly) blow A3's ±0.5 pp tolerance and the run would
+  not show A3b is sensitive to the multiplier itself. It fires **strictly**: A3b alone, with
+  no external co-firing. Proof set 35 → 36 mutations.
+
+- **10:35** ctt_v2/smoke: the smoke gate's own checkers are now **proven to fire**, GPU-free,
+  against the archived log of the passing run (`scripts/ctt_v2/smoke/prove_smoke_gate.py`,
+  16 cases). Three defects found and fixed by the mutations. (1) A log that EXISTS but cannot
+  be read raised an uncaught `OSError`, and Python exits **1** for that — the same code A9 §4's
+  fallback ladder reads as a DATA failure; the read is now a checked step (`read_log`) and
+  every such case is `PARSER_FAIL`/exit 2. (2) With Rich escapes present but unstrippable,
+  `T3_steps_completed` still found a checkpoint filename and reported "highest evidenced step
+  N of 30" about a 30/30 run — the original false negative surviving in one check; T1–T4 are
+  now forced UNEVALUABLE whenever `T0_parser_sane` fails, with the suppressed reading kept for
+  the record. (3) Fed the Slurm capture (which the sbatch appends the gate's own report to),
+  the gate reported `T6 … 'loss is NaN'` and exited 1 purely from its previous report — the
+  self-test pinned that hazard for `evaluate()` but nothing guarded the CLI path, which now
+  slices the trainer's region first. **And A11's Derived-Constant Rule is now implemented in
+  the shift assert**: G3 classifies its own failure as `DATA-FAIL` (mechanism inconsistent —
+  verdict FAIL, exit 1, ladder permitted) or `SPEC-CONSTANT-MISMATCH` (a pinned literal
+  disagrees with reality — verdict `SPEC_CONSTANT_MISMATCH`, exit 3, escalates, ladder
+  forbidden), from one shared classifier used by both the `--shifts-only` and full paths.
+  Proven by setting the 1,820-token pin to A9 §3's superseded 1.120 and, separately, by
+  repointing the S4 arm's tensors at 121f geometry: both come out as escalations, not as the
+  auto-drop of a healthy stratum.
+
 - **04:36** ctt_v2/smoke: both smoke-gate "failures" in job 9688250 were in the CHECKERS,
   not the training — the trainer had in fact completed 30/30 steps over the mixed two-shape
   root with a finite loss. `check_train_log.py`: an empty match set is now its own hard error
