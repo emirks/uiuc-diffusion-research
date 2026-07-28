@@ -286,13 +286,39 @@ def describe_set(texts):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--store", required=True, help="dir containing records.json")
+    ap.add_argument("--store", required=True, action="append",
+                    help="dir containing records.json; REPEATABLE -- several stores are "
+                         "POOLED into one battery (A14 step 4 gates chunk 1 TOGETHER "
+                         "with the reused round-2 rows, and step 5 pools the whole store)")
+    ap.add_argument("--restrict-to-grid", default=None,
+                    help="JSON [[clip_id, role], ...]; keep only rows inside this grid. "
+                         "The reused pilot stores contain OUT-OF-GRID rows that are in no "
+                         "production store, and pooling those would gate a set the "
+                         "campaign does not ship.")
     ap.add_argument("--out", required=True)
     ap.add_argument("--llm-participial", action="store_true")
     a = ap.parse_args()
 
-    recs = json.loads((Path(a.store) / "records.json").read_text())
-    accepted = [r for r in recs.values() if r.get("description")]
+    # Pooling is by (clip_id, role), and a later store WINS on collision -- there must
+    # never be two descriptions for one key in a battery, or the duplicate gates (7, 12)
+    # measure the pooling instead of the store.
+    grid = ({tuple(x) for x in json.loads(Path(a.restrict_to_grid).read_text())}
+            if a.restrict_to_grid else None)
+    merged, provenance = {}, {}
+    for sdir in a.store:
+        recs = json.loads((Path(sdir) / "records.json").read_text())
+        kept = 0
+        for k, r in recs.items():
+            if not r.get("description"):
+                continue
+            if grid is not None and (r["clip_id"], r["role"]) not in grid:
+                continue
+            merged[(r["clip_id"], r["role"])] = r
+            kept += 1
+        provenance[sdir] = kept
+    accepted = list(merged.values())
+    print(f"[battery] pooled {len(accepted)} accepted rows from {len(a.store)} store(s): "
+          f"{provenance}" + (f"  (restricted to {len(grid)}-pair grid)" if grid else ""))
     cA, cB = load_corpus_descriptions()
     corpus_all = cA + cB
 
