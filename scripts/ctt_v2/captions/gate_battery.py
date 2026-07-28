@@ -61,7 +61,9 @@ BARS = {
     "B_participial_llm_delta_pp": 10.0,
     "audio_max": 0,
     "dup_rate_max_pct": 2.0,
-    "gate8_bacc_max": 0.65,
+    "gate8_bacc_max": 0.65,          # ORIGINAL -- superseded, kept for 8c
+    "gate8a_max": 0.73,             # re-pinned drift guard (round-9 ruling)
+    "gate8b_max": 0.60,             # re-pinned load-bearing: stratum-internal blindness
     "gate9_auc_investigate": 0.80,
     "colour_band": (1.579, 4.737),
     "camera_corpus_pct": 3.51,
@@ -346,13 +348,47 @@ def main():
                       value=f"{worst_dup}% (worst bank x role cell)", corpus="0%",
                       bar="< 2%", verdict="PASS" if worst_dup < 2.0 else "FAIL", type="HARD"))
 
+    # ---- gate 8: RE-PINNED by the round-9 advisor into 8a / 8b / 8c ----------
+    # 8c records the original absolute <=0.65 bar as FAILED, never quietly replaced.
     g8 = classifier_probe(corpus_all, new_all, analyzer=function_word_tokens,
                           report_features=True)
-    gates.append(dict(gate=8, name="FUNCTION-WORD classifier probe (load-bearing)",
-                      value=round(g8["mean_balanced_accuracy"], 4),
-                      corpus="0.50 = chance", bar="mean balanced accuracy <= 0.65",
-                      verdict="PASS" if g8["mean_balanced_accuracy"] <= 0.65 else "FAIL",
+    b8 = g8["mean_balanced_accuracy"]
+    gates.append(dict(gate="8a", name="corpus-vs-new function-word probe (DRIFT GUARD)",
+                      value=round(b8, 4), corpus="0.50 = chance",
+                      bar=f'<= {BARS["gate8a_max"]} (above this cannot be the known '
+                          "fingerprint => bug: mixed prompts / wrong store / contamination)",
+                      verdict="PASS" if b8 <= BARS["gate8a_max"] else "FAIL",
                       type="HARD", detail=g8))
+
+    # 8b: stratum-internal style blindness -- the load-bearing replacement.
+    bank_groups = {}
+    for r in accepted:
+        bank_groups.setdefault(r["bank"], []).append(r["description"])
+    banks = sorted(bank_groups)
+    if len(banks) >= 2:
+        g8b = classifier_probe(bank_groups[banks[0]], bank_groups[banks[1]],
+                               analyzer=function_word_tokens, report_features=True)
+        b8b = g8b["mean_balanced_accuracy"]
+        gates.append(dict(gate="8b", name=f"stratum-internal blindness: "
+                                         f"{banks[0]} vs {banks[1]} (LOAD-BEARING)",
+                          value=round(b8b, 4), corpus="0.506 = measured NULL",
+                          bar=f'<= {BARS["gate8b_max"]}',
+                          verdict="PASS" if b8b <= BARS["gate8b_max"] else "FAIL",
+                          type="HARD", detail=g8b))
+    else:
+        gates.append(dict(gate="8b", name="stratum-internal blindness",
+                          value=None, corpus="0.506 = measured NULL",
+                          bar=f'<= {BARS["gate8b_max"]}',
+                          verdict="SKIPPED (need >=2 banks in the store)", type="HARD"))
+
+    gates.append(dict(gate="8c", name="ORIGINAL absolute bar (superseded, recorded not replaced)",
+                      value=round(b8, 4), corpus="0.50 = chance",
+                      bar="<= 0.65  [SUPERSEDED by 8a/8b -- round-9 ruling]",
+                      verdict="FAIL (recorded; the bar was in an unreachable reference frame: "
+                              "it demanded a different model generation land within 0.008 of the "
+                              "corpus's own internal A-vs-B register distance 0.6419, while a "
+                              "prompt delta inside one model opens 0.7233)",
+                      type="RECORD"))
 
     g9 = classifier_probe(corpus_all, new_all, analyzer=all_word_tokens,
                           use_numeric=True, report_features=True)
@@ -382,8 +418,10 @@ def main():
 
     report["gates"] = gates
     report["summary"] = {
-        "hard_fail": [g["gate"] for g in gates if g["type"] == "HARD" and g["verdict"] == "FAIL"],
-        "gate8_balanced_accuracy": round(g8["mean_balanced_accuracy"], 4),
+        "hard_fail": [g["gate"] for g in gates
+                      if g["type"] == "HARD" and str(g["verdict"]).startswith("FAIL")],
+        "gate8a_corpus_vs_new": round(b8, 4),
+        "gate8b_stratum_internal": next((g["value"] for g in gates if g["gate"] == "8b"), None),
         "gate9_auc": round(g9["mean_auc"], 4) if g9["mean_auc"] else None,
     }
     Path(a.out).write_text(json.dumps(report, indent=1))
@@ -394,9 +432,12 @@ def main():
         print(f'{gt["gate"]:<3}{gt["name"][:50]:<52}{str(gt["corpus"])[:16]:<18}'
               f'{str(gt["value"])[:24]:<26}{str(gt["bar"])[:42]:<44}{gt["verdict"]}')
     print()
-    print("GATE 8 balanced accuracy:", round(g8["mean_balanced_accuracy"], 4),
+    print("GATE 8a corpus-vs-new  :", round(b8, 4),
           "+/-", round(g8["std_balanced_accuracy"], 4),
-          f'({g8["n_fits"]} fits, {g8["n_per_class"]} per class)')
+          f'({g8["n_fits"]} fits, {g8["n_per_class"]} per class)   bar <= {BARS["gate8a_max"]}')
+    print("GATE 8b stratum-internal:",
+          next((g["value"] for g in gates if g["gate"] == "8b"), None),
+          f'  bar <= {BARS["gate8b_max"]}  (LOAD-BEARING)')
     print("HARD FAILURES:", report["summary"]["hard_fail"] or "none")
 
 
