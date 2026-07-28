@@ -189,13 +189,36 @@ def main() -> int:
             f"{len(invs)} inventories match their recorded sha256" if not bad
             else "inventories changed since assembly — the root's provenance is broken", bad)
 
+    # ---- the raw<->slug bridge (A11 item 3) --------------------------------------------
+    # `assemble_root.py` builds paths from `rc.slug_group(group)`, so the group component of a
+    # relative path is a SLUG.  Every group-keyed comparison below — the inventory lookup, the
+    # inline-OOD op set, the shader and class metadata — is keyed by the RAW id, and a slug
+    # silently matching nothing is precisely the namespace-drift failure A0 exists to catch.
+    # So resolve here, once, from the same `rc.slug_map` A14 checks with.
+    # `.get(group, group)` is the bridge in both directions: a root assembled BEFORE this
+    # landed carries raw ids in its paths, and a raw id is not a key of `slug->raw`, so it
+    # falls through unchanged.  Nothing already on disk is invalidated.
+    slug_to_raw: dict[str, dict] = {}
+    slug_collisions: dict[str, list] = {}
+    for s, inv in invs.items():
+        slug_to_raw[s], slug_collisions[s] = rc.slug_map(inv["groups"])
+
+    def resolve_group(stratum: str, gid: str) -> str:
+        return slug_to_raw.get(stratum, {}).get(gid, gid)
+
     # ---- decode the root ---------------------------------------------------------------
     parsed, malformed = [], []
+    unresolved_groups = []
     for rel in rels:
         try:
-            stratum, rep, group, name = parse_rel(rel)
+            stratum, rep, path_group, name = parse_rel(rel)
+            group = resolve_group(stratum, path_group)
             tgt, ref_clip = split_name(name)
             parsed.append((rel, stratum, rep, group, tgt, ref_clip))
+            if stratum in invs and group not in invs[stratum]["groups"]:
+                unresolved_groups.append(
+                    f"{rel}: path group {path_group!r} resolves to {group!r}, which is not a "
+                    f"group id in the {stratum} inventory")
         except ValueError as exc:
             malformed.append(f"{rel}: {exc}")
     b.check("A2b_path_scheme", not malformed,
@@ -500,17 +523,36 @@ def main() -> int:
     # change disguised as a path fix, so uniqueness is asserted per stratum and the raw->slug
     # mapping is recorded rather than inferred.
     slug_off, slug_tables = [], {}
-    for s, inv in sorted(invs.items()):
-        table, collisions = rc.slug_map(inv["groups"])
-        slug_tables[s] = table
-        for c in collisions:
+    for s in sorted(invs):
+        table = slug_tables[s] = slug_to_raw[s]
+        for c in slug_collisions[s]:
             slug_off.append(f"{s}: slug collision {c}")
         for slug, raw in sorted(table.items()):
             if not slug:
                 slug_off.append(f"{s}: group {raw!r} slugs to the empty string")
+    # A11 item 3 is only DONE if the slug is applied at path construction, so check the two
+    # halves of that: every group component in a root path resolves through the mapping (a
+    # slug that resolves to nothing means the mapping is stale — the drift this bridge exists
+    # to prevent), and the mapping the assembler STORED is the mapping recomputed here (a
+    # stored table nobody re-derives is a second implementation waiting to disagree).
+    slug_off += unresolved_groups[:50]
+    stored = (man.get("group_slugs") or {}).get("slug_to_raw") or {}
+    if stored:
+        for s, table in sorted(slug_tables.items()):
+            #: the manifest records only the groups it ASSEMBLED; the inventory table is a
+            #: superset, so compare on the stored keys and require agreement, not equality
+            drifted = {k: (v, table.get(k)) for k, v in (stored.get(s) or {}).items()
+                       if table.get(k) != v}
+            if drifted:
+                slug_off.append(f"{s}: ROOT_MANIFEST's stored raw->slug mapping disagrees with "
+                                f"root_common.slug_group for {len(drifted)} id(s): "
+                                f"{list(drifted.items())[:3]}")
+    n_applied = sum(1 for s, t in slug_tables.items() for slug, raw in t.items() if slug != raw)
     b.check("A14_group_ids_slug_safe", not slug_off,
-            "every group id slugs to a unique, non-empty, path-safe string "
-            + " | ".join(f"{s} {len(t)} ids" for s, t in sorted(slug_tables.items()))
+            "every group id slugs to a unique, non-empty, path-safe string, every group "
+            "component in a root path resolves back to a raw inventory id, and the manifest's "
+            f"stored mapping agrees ({n_applied} id(s) differ from their raw form; "
+            + " | ".join(f"{s} {len(t)} ids" for s, t in sorted(slug_tables.items())) + ")"
             if not slug_off else f"{len(slug_off)} slugging problems", slug_off)
 
     # ---- A15 nominal vs effective weights, recorded (derived disclosure) ------------------

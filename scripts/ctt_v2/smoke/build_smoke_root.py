@@ -167,6 +167,13 @@ def build(n_per_arm: int, out: Path) -> dict:
         lat_dir = ENC / a["stratum"] / "latents"
         cc_dir = ENC / a["stratum"] / "cond_clean"
         for tgt, ref in a["pairs"]:
+            #: RAW group id here, deliberately NOT `root_common.slug_group`, even though the
+            #: training root slugs (A11 item 3).  The S4 arm's group is a refVFX effect string
+            #: with spaces, so these rels contain spaces — and the PASSING gate's archived
+            #: evidence (`SMOKE_ROOT_MANIFEST.json`, `SHIFT_ASSERT_A11_item4.json`,
+            #: `SMOKE_GATE.json`, job 9688835) is keyed to exactly these strings.  Re-keying
+            #: them would invalidate finished work to tidy a fixture, which the campaign's
+            #: standard forbids.  If this root is ever rebuilt from scratch, slug it then.
             rel = f"{a['stratum']}_r00/{a['group']}/{tgt}__ref_{ref}.pt"
             tp, rp, cp = lat_dir / f"{tgt}.pt", lat_dir / f"{ref}.pt", cc_dir / f"{tgt}.pt"
             for p in (tp, rp, cp):

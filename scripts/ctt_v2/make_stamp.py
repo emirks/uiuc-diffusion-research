@@ -251,8 +251,15 @@ def block(root: Path, caption_store: Path, stamped: bool) -> str:
                   f"`_`, runs collapsed): "
                   + " · ".join(f"{s} {len(t)} unique" for s, t in sorted(tables.items()))
                   + (f" — ⚠ **COLLISIONS**: {colls}" if colls else " — no collisions"),
-                  f"  Raw→slug mapping is recoverable from the inventories and asserted by "
-                  f"`assert_root.py:A14`; nothing already written under raw strings is re-keyed."]
+                  f"  **APPLIED at path construction** (`assemble_root.py` builds every "
+                  f"relative path from `root_common.slug_group`), the raw→slug mapping is "
+                  f"stored in `ROOT_MANIFEST.json:group_slugs` and re-derived + asserted by "
+                  f"`assert_root.py:A14`. Symlink TARGETS are untouched, so nothing already "
+                  f"written under raw strings — the render, the encoded latents, the "
+                  f"endpoint-frame cache — is re-keyed; the mapping bridges."
+                  + (f" Manifest records {sum((man.get('group_slugs') or {}).get('n_slugged', {}).values())} "
+                     f"slugged id(s)." if (man.get("group_slugs") or {}).get("n_slugged")
+                     else "")]
     L += [f"- **inline-OOD draw seed** `{rc.SEED}` (`root_common.select_inline_ood_ops`, "
           f"blind draw over the sorted op list)",
           f"- **training seed** `42` (both arms, RULING 6) · **primary checkpoint** step 12,000",

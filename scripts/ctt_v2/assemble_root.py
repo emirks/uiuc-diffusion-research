@@ -11,7 +11,13 @@ A5 RULING 4 / RULING 9.  Three properties are structural, not conventions:
    literal exists anywhere; the split's inputs are frozen in `PREREG_mix_inputs.json`.
 2. **Pairing is ring offset within op, k = min(3, n-1), everywhere** — the same function
    for S0 classes and S1/S2/S4 ops (RULING 4, A1b Q5).
-3. **Holdouts are removed here, once**, and every removal is recorded with its reason in
+3. **Group ids are SLUGGED at path construction** (A11 item 3) — `root_common.slug_group`,
+   the same function assert A14 checks with, so the two cannot drift.  The raw→slug mapping is
+   stored in `ROOT_MANIFEST.json:group_slugs`; a collision is a hard stop, never a silent
+   merge of two pairing rings.  Symlink TARGETS are untouched absolute paths, so nothing
+   already written under a raw id (the render, the encoded latents, the endpoint-frame cache)
+   is re-keyed — the mapping bridges.
+4. **Holdouts are removed here, once**, and every removal is recorded with its reason in
    `ROOT_MANIFEST.json`.  The excluded sets: the 10 HOLDOUT_S2 shader families, the 8
    pre-registered S2a inline-OOD ops, the 120 reserved union-pool clips, the S0 zs
    classes, and (A3-F5b) any S1/S2 clip whose content endpoints touch the eval sets.
@@ -478,6 +484,37 @@ def main() -> None:
             out_path=out)
         print(f"[assemble] FROZE the A12 mix inputs -> {out}")
 
+    # ---- group-id slugs, decided ONCE, here (A11 item 3) -------------------------------
+    # A11: "sanitise deterministically before assembly — lowercase, non-alphanumeric ->
+    # underscore, collapse runs — assert the 42 slugged ids remain unique, and store the
+    # raw->slug mapping in the manifest.  The trainer globs fine is not the bar; path
+    # robustness across shells, rsync and future tooling is."  S4's raw group ids are refVFX
+    # effect strings with SPACES (`t2k1s takes off clothes revealing a lean muscular body`),
+    # which is what put a space in every S4 path in the smoke root.
+    #
+    # `rc.slug_group` is the SAME function assert A14 uses — deliberately not a second
+    # implementation, because two implementations of a path rule drift and the drift is silent.
+    # Uniqueness is asserted over the groups actually assembled AND over the full inventory
+    # (A14's scope), so a collision cannot appear later by including a group this run dropped.
+    slug_tables: dict[str, dict] = {}
+    for s in present:
+        for scope, gids in (("assembled", kept_groups[s]), ("inventory", invs[s]["groups"])):
+            table, collisions = rc.slug_map(gids)
+            if collisions:
+                raise SystemExit(
+                    f"[assemble] {s}: group-id slug COLLISION over the {scope} groups: "
+                    f"{collisions}. Two raw ids that slug to the same path would silently "
+                    f"MERGE two operator groups into one pairing ring — a design change "
+                    f"disguised as a path fix. Fix the ids; do not relax the slug.")
+            empty = sorted(raw for slug, raw in table.items() if not slug)
+            if empty:
+                raise SystemExit(f"[assemble] {s}: group id(s) {empty} slug to the empty "
+                                 f"string over the {scope} groups")
+        slug_tables[s] = {rc.slug_group(g): g for g in sorted(kept_groups[s])}
+        n_changed = sum(1 for slug, raw in slug_tables[s].items() if slug != raw)
+        print(f"[assemble] {s}: {len(slug_tables[s])} group slugs unique "
+              f"({n_changed} differ from the raw id)")
+
     # ---- desired filesystem -----------------------------------------------------------
     shapes = ShapeCache(root / "_shape_cache.json")
     desired: dict[str, str] = {}
@@ -499,7 +536,14 @@ def main() -> None:
                 if not cap:
                     raise SystemExit(f"[assemble] {s}/{smp['target']}: inventory has no caption")
 
-                rel = f"{rdir}/{smp['group']}/{smp['name']}"
+                #: THE path is built from the SLUG; the raw id survives in SAMPLES.jsonl and
+                #: in the manifest's mapping table, which is what every consumer resolves
+                #: through.  Nothing already written under a raw string is re-keyed: the
+                #: symlink TARGETS are untouched absolute realpaths into the encode store,
+                #: so the completed render, the ~16k encoded latents and the endpoint-frame
+                #: cache keep exactly the names they have (A11: "the mapping bridges").
+                gslug = rc.slug_group(smp["group"])
+                rel = f"{rdir}/{gslug}/{smp['name']}"
                 f, h, w = shapes.get(Path(tgt["latents"]))
                 mpath = mask_store_path(root, f, h, w, smp["sided"])
                 if not args.plan_only:
@@ -512,8 +556,9 @@ def main() -> None:
                 ckey = rc.sha256_text(cap)[:16]
                 captions[ckey] = cap
                 if rep == 0:
-                    rows.append({"rel": f"{rdir}/{smp['group']}/{smp['name']}", "stratum": s,
-                                 "group": smp["group"], "target": smp["target"],
+                    rows.append({"rel": rel, "stratum": s,
+                                 "group": smp["group"], "group_slug": gslug,
+                                 "target": smp["target"],
                                  "reference": smp["reference"], "sided": smp["sided"],
                                  "caption_key": ckey, "shape": [f, h, w],
                                  "replicas": mix["multipliers"][s],
@@ -614,6 +659,27 @@ def main() -> None:
                             "groups": len(invs[s]["groups"]),
                             "clips": len(invs[s]["clips"])} for s in present},
         "shapes": shapes_block,
+        # ---- A11 item 3: the raw->slug bridge, stored, not inferred ---------------------
+        "group_slugs": {
+            "rule": "lowercase, non-alphanumeric -> '_', runs collapsed, edges trimmed "
+                    "(root_common.slug_group — the same function assert A14 checks with, and "
+                    "the same call the path builder above makes)",
+            "authority": "A11 (σ / S4-weight ruling), RULING 4's minor ratifications, recorded "
+                         "in DOSSIER §15.5 — the same item `assert_root.py:A14`'s header calls "
+                         "'A11 item 3': 'sanitise "
+                         "deterministically before assembly, assert the 42 slugged ids remain "
+                         "unique, and store the raw->slug mapping in the manifest. Do not "
+                         "re-key anything already written under raw strings; the mapping "
+                         "table bridges.'",
+            "applies_to": "the GROUP component of every relative path inside this root. The "
+                          "symlink TARGETS are untouched absolute paths into the encode / "
+                          "render stores, so nothing already keyed to a raw id is re-keyed.",
+            "n_slugged": {s: sum(1 for slug, raw in t.items() if slug != raw)
+                          for s, t in sorted(slug_tables.items())},
+            "slug_to_raw": {s: dict(sorted(t.items())) for s, t in sorted(slug_tables.items())},
+            "raw_to_slug": {s: {raw: slug for slug, raw in sorted(t.items())}
+                            for s, t in sorted(slug_tables.items())},
+        },
         "exclusions": ex.as_record(),
         "drops": {s: {"n_groups": len(drops[s]["dropped_groups"]),
                       "n_clips": len(drops[s]["dropped_clips"]),
