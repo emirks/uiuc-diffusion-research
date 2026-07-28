@@ -643,6 +643,159 @@ DRYRUN_MUTATIONS = {
 
 
 # ======================================================================================
+# builder mutations — A16 action 1: the drop-and-record path must DISTINGUISH its two cases
+#
+# `build_inventories._attach` used to `SystemExit` on ANY consumption of a role-excluded
+# (clip, role).  `misc/ctt_v2_final/advisors/A16_29_orphaned_s2a_clips_VERBATIM.md` (ruling of
+# record) and `A17_29clip_affirmation_VERBATIM.md` (affirmation) replaced that with
+# **drop-and-record for hits carried by the standing `ROLE_EXCLUSIONS`, crash for everything
+# else**, and A16 action 1 required the distinction proven as a RERUNNABLE mutation here.
+#
+# `A18_28plus1_and_ood_demo_VERBATIM.md`'s residual item is why these live in this file:
+# the same three controls were first run by hand and captured in
+# `outputs/ctt_v2/roots/REHEARSAL_2026-07-28/A16_EXEC/logs/builder_controls.log`.
+# **A one-off log is not a test** — a log cannot fail tomorrow.
+#
+# A one-sided test would be worthless: *"it no longer crashes"* is satisfied just as well by
+# a builder that has stopped checking.  So both directions run, as real subprocess runs of
+# the real builder against a synthetic meta shard:
+#
+#   excluded hit          -> exit 0, RECORDED in `role_scoped_exclusion_drops` with BOTH
+#                            role-scoped reasons, and its caption left None (the clip is
+#                            removed at ASSEMBLY, which is where the manifest drop record —
+#                            the ruling's closing evidence — is written);
+#   missing non-excluded  -> exit != 0 and NO inventory written;
+#   both at once          -> still exit != 0, i.e. the drop path cannot mask the crash path;
+#   a fabricated fallback -> exit != 0 (a caption EXISTS for an excluded consumption).
+# ======================================================================================
+BUILDER = HERE.parent / "build_inventories.py"
+
+
+def _excluded_a_clip() -> str:
+    """The standing A-role exclusion, DERIVED — never a literal clip name in this file."""
+    clip = next((c for c, roles in rc.ROLE_EXCLUSIONS.items() if "A" in roles), None)
+    if clip is None:
+        raise SystemExit("root_common.ROLE_EXCLUSIONS carries no A-role exclusion to test — "
+                         "a vacuous standing exclusion is instrument failure, not 'nothing "
+                         "to exclude' (A16 keyed-join rule item 1)")
+    return clip
+
+
+def _builder_fixture(tmp: Path, tag: str, *, n_ok: int = 3, excluded: int = 0,
+                     missing: int = 0, fabricate_fallback: bool = False) -> tuple[Path, Path]:
+    """Write a minimal `render_s2.py`-shaped meta shard + a per-clip caption file."""
+    d = tmp / f"builder_{tag}"
+    d.mkdir(parents=True, exist_ok=True)
+    ex = _excluded_a_clip()
+    rows, caps = [], {}
+    for i in range(n_ok):
+        stem = f"bfx_{i:02d}"
+        rows.append({"stem": stem, "op_id": "op_fixture", "shader": "FixtureShader",
+                     "A": f"fixture_a_{i}", "B": f"fixture_b_{i}"})
+        caps[stem] = f"a fixture A description {i}. sksz. a fixture B description {i}."
+    for i in range(excluded):
+        stem = f"bfx_excluded_{i:02d}"
+        rows.append({"stem": stem, "op_id": "op_fixture", "shader": "FixtureShader",
+                     "A": ex, "B": f"fixture_b_x{i}"})
+        if fabricate_fallback:
+            caps[stem] = "a FABRICATED caption for a blank-white anchor. sksz. text."
+    for i in range(missing):
+        stem = f"bfx_missing_{i:02d}"
+        rows.append({"stem": stem, "op_id": "op_fixture", "shader": "FixtureShader",
+                     "A": f"fixture_a_m{i}", "B": f"fixture_b_m{i}"})
+        # deliberately NO caption entry, and NOT carried by any standing exclusion
+    shard = d / "clips_shard00.jsonl"
+    shard.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    cp = d / "captions.json"
+    cp.write_text(json.dumps(caps, indent=1))
+    return shard, cp
+
+
+def _run_builder(tmp: Path, tag: str, **kw) -> tuple[int, str, Path]:
+    shard, caps = _builder_fixture(tmp, tag, **kw)
+    out = shard.parent / "INVENTORY.json"
+    proc = subprocess.run(
+        [PY, str(BUILDER), "s2meta", "--stratum", "S2a", "--meta-glob", str(shard),
+         "--captions", str(caps), "--caption-key", "{clip}", "--out", str(out),
+         "--no-require-sources"], capture_output=True, text=True)
+    return proc.returncode, (proc.stdout + proc.stderr), out
+
+
+def b_excluded_hit_is_dropped(tmp: Path) -> dict:
+    """CONTROL 0 (positive) — the standing exclusion is DROPPED AND RECORDED, exit 0."""
+    code, log, out = _run_builder(tmp, "drop", excluded=1)
+    ex = _excluded_a_clip()
+    inv = rc.read_json(out) if out.exists() else {}
+    rec = inv.get("role_scoped_exclusion_drops") or {}
+    clips = rec.get("clips") or {}
+    stem = next(iter(clips), None)
+    reasons = set(clips.get(stem) or [])
+    want = {f"role_scoped_caption_exclusion:{ex}:A", f"role_scoped_prefix_condition:{ex}:A"}
+    entry = (inv.get("clips") or {}).get(stem) or {}
+    others = [c for s, c in (inv.get("clips") or {}).items() if s != stem]
+    ok = (code == 0 and out.exists() and rec.get("n_clips") == 1 and len(clips) == 1
+          and reasons == want
+          # dropped here means: recorded, caption withheld, NO cross-role substitute
+          and entry.get("caption") is None
+          # ...and the other rows are unaffected, so this is a DROP, not a dead builder
+          and all(c.get("caption") for c in others) and len(others) == 3
+          # ...derived, never a hand-kept stem list
+          and "ROLE_EXCLUSIONS" in (rec.get("derivation") or "")
+          and rec.get("standing_role_exclusions", {}).get(ex) == ["A"])
+    return {"ok": ok, "broke": f"one row consumes the role-excluded ({ex}, A)",
+            "expected": "exit 0; recorded in `role_scoped_exclusion_drops` with BOTH "
+                        "role-scoped reasons, caption left None, other rows untouched",
+            "exit_code": code, "inventory_written": out.exists(),
+            "n_recorded": len(clips), "reasons": sorted(reasons),
+            "reasons_expected": sorted(want),
+            "caption_withheld": entry.get("caption") is None,
+            "other_rows_captioned": len(others),
+            "derivation": rec.get("derivation"), "log_tail": log.strip()[-300:]}
+
+
+def b_missing_nonexcluded_crashes(tmp: Path) -> dict:
+    """CONTROL A (negative) — a missing key NO exclusion accounts for still HARD-CRASHES."""
+    code, log, out = _run_builder(tmp, "crash", missing=1)
+    ok = (code != 0 and "missing sources" in log and "caption:bfx_missing_00" in log
+          and not out.exists())
+    return {"ok": ok, "broke": "one row's caption key is absent and NOT carried by any "
+                               "standing exclusion",
+            "expected": "exit != 0, no inventory written — the converse defect must never "
+                        "degrade into a silent drop",
+            "exit_code": code, "inventory_written": out.exists(),
+            "log_tail": log.strip()[-300:]}
+
+
+def b_drop_does_not_mask_crash(tmp: Path) -> dict:
+    """The distinction itself: one of each in ONE build must still fail."""
+    code, log, out = _run_builder(tmp, "both", excluded=1, missing=1)
+    ok = code != 0 and "missing sources" in log and not out.exists()
+    return {"ok": ok, "broke": "one excluded row AND one missing-caption row in the same build",
+            "expected": "exit != 0 — the drop path must not swallow the crash path",
+            "exit_code": code, "inventory_written": out.exists(),
+            "log_tail": log.strip()[-300:]}
+
+
+def b_fabricated_fallback_crashes(tmp: Path) -> dict:
+    """CONTROL B (negative) — a caption that EXISTS for an excluded consumption is an error."""
+    code, log, out = _run_builder(tmp, "fallback", excluded=1, fabricate_fallback=True)
+    ok = code != 0 and "fallback" in log.lower() and not out.exists()
+    return {"ok": ok, "broke": "a caption EXISTS for a row whose (clip, role) description is "
+                               "role-excluded — i.e. text was substituted upstream",
+            "expected": "exit != 0 — no cross-role fallback may ever be consumed",
+            "exit_code": code, "inventory_written": out.exists(),
+            "log_tail": log.strip()[-300:]}
+
+
+BUILDER_MUTATIONS = {
+    "builder_A16_excluded_hit_is_dropped_and_recorded": b_excluded_hit_is_dropped,
+    "builder_A16_missing_nonexcluded_still_crashes": b_missing_nonexcluded_crashes,
+    "builder_A16_drop_does_not_mask_crash": b_drop_does_not_mask_crash,
+    "builder_A16_fabricated_cross_role_fallback_crashes": b_fabricated_fallback_crashes,
+}
+
+
+# ======================================================================================
 # runner
 # ======================================================================================
 def run_assert(root: Path, report: Path, extra: list[str]) -> tuple[int, dict]:
@@ -668,18 +821,66 @@ def offenders_for(rep: dict, names) -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--root", required=True)
+    ap.add_argument("--root")
     ap.add_argument("--manifest", help="the strata manifest the root was built from (recorded)")
     ap.add_argument("--only", action="append", default=[],
                     help="run just these mutations (repeatable)")
     ap.add_argument("--loose", action="store_true",
                     help="require the expected checks to fail, but tolerate extra failures")
     ap.add_argument("--skip-dryrun", action="store_true")
+    ap.add_argument("--builders-only", action="store_true",
+                    help="run ONLY the BUILDER_MUTATIONS family, which needs no assembled "
+                         "root (the builder runs long before one exists — this is what makes "
+                         "A16 action 1's controls rerunnable TODAY rather than a one-off log)")
     ap.add_argument("--report")
     args = ap.parse_args()
+    if not args.builders_only and not args.root:
+        ap.error("--root is required unless --builders-only is given")
+
+    t0 = time.time()
+
+    # ---- builders-only: no root, no lock, no baseline ----------------------------------
+    if args.builders_only:
+        tmp = Path(tempfile.mkdtemp(prefix="prove_builders_"))
+        results, failures = [], []
+        wanted = set(args.only) if args.only else None
+        for name, fn in BUILDER_MUTATIONS.items():
+            if wanted and name not in wanted:
+                continue
+            rec = dict(kind="builder", mutation=name, **fn(tmp))
+            if not rec["ok"]:
+                rec["ERROR"] = (f"expected {rec['expected']}; got exit={rec['exit_code']} "
+                                f"({rec.get('log_tail', '')[-160:]})")
+                failures.append(f"{name}: {rec.get('ERROR')}")
+            results.append(rec)
+            print(f"[{'PROVEN' if rec['ok'] else 'PROBLEM'}] {name}: {rec['broke']}\n"
+                  f"          exit={rec['exit_code']}")
+        proven = [r["mutation"] for r in results if r["ok"]]
+        out = Path(args.report) if args.report else Path("PROVE_BUILDERS.json")
+        rc.write_json(out, {
+            "scope": "BUILDER_MUTATIONS only (no assembled root involved)",
+            "authority": [
+                "misc/ctt_v2_final/advisors/A16_29_orphaned_s2a_clips_VERBATIM.md action 1",
+                "misc/ctt_v2_final/advisors/A17_29clip_affirmation_VERBATIM.md",
+                "misc/ctt_v2_final/advisors/A18_28plus1_and_ood_demo_VERBATIM.md "
+                "(residual: the controls must live in the test harness, not only in a log)",
+            ],
+            "when": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+            "n_mutations": len(results), "n_proven": len(proven), "proven": proven,
+            "failures": failures, "results": results,
+            "elapsed_s": round(time.time() - t0, 2),
+        })
+        shutil.rmtree(tmp, ignore_errors=True)
+        print(f"\n[prove] {len(proven)}/{len(results)} builder mutations proven -> {out}")
+        if failures:
+            print("[prove] PROBLEMS:")
+            for f in failures:
+                print(f"        - {f}")
+            return 1
+        print("[prove] A16's DROP-vs-CRASH DISTINCTION IS PROVEN, BOTH DIRECTIONS")
+        return 0
 
     root = Path(args.root)
-    t0 = time.time()
 
     # EXCLUSIVE LOCK on the root.  This harness deliberately mutates the root in place, so
     # two concurrent runs interleave one another's mutations and each sees the other's as a
@@ -787,6 +988,20 @@ def main() -> int:
                   f"          skipped={rec['n_skipped']} tag={tag}")
             if not rec["ok"]:
                 failures.append(f"{name}: {rec.get('ERROR')}")
+
+    # ---- builder mutations (root-independent; A16 action 1's two directions) -------------
+    for name, fn in BUILDER_MUTATIONS.items():
+        if wanted and name not in wanted:
+            continue
+        rec = dict(kind="builder", mutation=name, **fn(tmp))
+        if not rec["ok"]:
+            rec["ERROR"] = (f"expected {rec['expected']}; got exit={rec['exit_code']} "
+                            f"({rec.get('log_tail', '')[-160:]})")
+        results.append(rec)
+        print(f"[{'PROVEN' if rec['ok'] else 'PROBLEM'}] {name}: {rec['broke']}\n"
+              f"          exit={rec['exit_code']}")
+        if not rec["ok"]:
+            failures.append(f"{name}: {rec.get('ERROR')}")
 
     # ---- the root must be exactly as we found it ----------------------------------------
     baseline("after")
