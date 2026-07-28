@@ -254,6 +254,21 @@ def roster(stratum: str) -> list[str]:
 
 def shard_of(stratum: str, shard: int) -> list[str]:
     n = NSHARDS[stratum]
+    # 🔴 The roster is FROZEN with the shard count it was partitioned under. If this file's
+    # NSHARDS has since diverged from that, the partition silently changes shape: on
+    # 2026-07-28 the roster was staged at nshards=8 by the main checkout while the job ran a
+    # stale worktree copy at nshards=1, and 7 of 8 array tasks reported "shard is empty — skip"
+    # and exited 0 in ~26 s. The run looked clean and did an eighth of the work. `stage()`
+    # already refuses a roster/source disagreement; this is the same guard on the OTHER half of
+    # the contract, because a silent re-partition is exactly what the module docstring forbids.
+    rec = json.loads((paths(stratum)[3]).read_text())
+    frozen = rec.get("nshards")
+    if frozen is not None and int(frozen) != n:
+        raise SystemExit(
+            f"[encode] {stratum}: FROZEN roster was partitioned at nshards={frozen} but this "
+            f"module says NSHARDS[{stratum}]={n}. Refusing to shard: the partition would change "
+            f"shape and the difference is invisible in the exit code. Either run the checkout "
+            f"that staged the roster, or re-stage with --force under the new count.")
     return [s for i, s in enumerate(roster(stratum)) if i % n == shard] if shard < n else []
 
 

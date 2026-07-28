@@ -30,7 +30,14 @@ set -eo pipefail
 source ~/.bashrc || true
 
 LAB=/projects/illinois/eng/cs/jrehg/users/emirkisa
-WT=$LAB/diffusion-research/.claude/worktrees/bottleneck-branch
+# 🔴 WAS `$LAB/diffusion-research/.claude/worktrees/bottleneck-branch` — an EPHEMERAL worktree.
+# On 2026-07-28 that silently cost a run: `NSHARDS["S1"]` was raised 1 -> 8 in the MAIN checkout
+# and the roster was re-staged with main's copy (recording nshards=8), but the job kept executing
+# the worktree's stale copy, which still said 1. The array's 7 other tasks each reported
+# "S1: shard N is empty (nshards=1) — skip" and exited 0 in ~26 s, so the run LOOKED clean while
+# doing an eighth of the intended parallelism. Same defect family as the worktree-prefixed
+# inventory paths fixed in b71b2db: a worktree is not a durable location to execute from.
+WT=$LAB/diffusion-research
 # ABSOLUTE interpreter path — the trainer venv owns ltx_trainer (VAE + video reader).
 # A relative interpreter caused an exit-127 failure on 2026-07-27.
 PY=$LAB/LTX-2-official/.venv/bin/python
