@@ -7,7 +7,17 @@ are expected to gate on that exit code.
     A1  set-equality of RELATIVE PATHS across all 5 root dirs (A3-F8.1 — counts are NOT
         sufficient; the trainer joins by relative path and silently drops mismatches)
     A2  inventory integrity — the inventories the root was built from are unchanged
-    A3  realised mix within +-0.5 pp of intended, COUNTED from the assembled root
+    A3  realised mix within +-0.5 pp of intended, COUNTED from the assembled root.
+        Two clauses:
+        A3   every stratum's counted share is within tolerance of its target — and for a
+             pro-rata member (S2a/S2b) the target is itself DERIVED from the assembled
+             counts, not a declared number (A12);
+        A3b  the members of a pro-rata group carry the SAME replica multiplier, counted
+             from the replica dirs on disk.  This is A1b's "uniform per-sample weight
+             within S2 ... no extra reweighting knob" as an exact integer identity —
+             strictly stronger than a share tolerance on the halves, since differential
+             duplication is the only mechanism that can force a share the base counts do
+             not already produce.
     A4  every caption contains ` sksz.` exactly once; the outcome marker is absent;
         zero Tier-1 leak strings
     A5  S1/S2 endpoints n {eval endpoints, zs audited endpoints, the 42 test clips} = 0
@@ -209,6 +219,59 @@ def main() -> int:
     b.check("A3_realized_mix", not off,
             f"all strata within +-{tol} pp | " + " | ".join(rows), off)
 
+    # ---- A3b the PRO-RATA split's multipliers are EQUAL, COUNTED from the root ---------
+    # A12's machine-checkable form of A1b's "uniform per-sample weight within S2 ... no
+    # extra reweighting knob".  Unequal replica multipliers on the two S2 halves ARE that
+    # knob: differential duplication is the only way to force a share the base counts do
+    # not already produce, and it is what a forced-equal 34.5/34.5 would have required over
+    # counts of 22,731 vs 23,577.  Stronger and simpler than a share tolerance on the
+    # halves: it is an exact integer identity, so it cannot be satisfied "within tolerance".
+    #
+    # Counted from the ROOT — the distinct replica directories actually on disk — never
+    # read back from the manifest the assembler wrote; the manifest's own claim is then
+    # cross-checked against that count, so a manifest that lies is also a failure.
+    # The pro-rata grouping comes from the RULING in root_common, not from the manifest,
+    # so a manifest that simply omits the group cannot make this check vacuous.
+    reps_on_disk: dict[str, set] = defaultdict(set)
+    for _p in parsed:
+        reps_on_disk[_p[1]].add(_p[2])
+    declared_reps = (man.get("counts") or {}).get("replicas") or {}
+    manifest_groups = {k: sorted(v) for k, v in
+                       ((man.get("weights") or {}).get("prorata_groups") or {}).items()}
+    tie_off, tie_rows, checked = [], [], []
+    for gname, gmembers in sorted(rc.PRORATA_GROUPS.items()):
+        here = [m for m in gmembers if reps_on_disk.get(m)]
+        for m in gmembers:
+            if m in man["strata_present"] and m not in here:
+                tie_off.append(f"{gname}: {m} is declared present but contributes no sample "
+                               f"to the root — the pro-rata split it is a member of is not "
+                               f"realised")
+        if len(here) < 2:
+            tie_rows.append(f"{gname}: {here or 'no'} member(s) in the root, split not "
+                            f"exercised this branch")
+            continue
+        checked.append(gname)
+        got = {m: len(reps_on_disk[m]) for m in here}
+        tie_rows.append(f"{gname}: " + ", ".join(f"{m} x{got[m]} replicas" for m in here))
+        if len(set(got.values())) != 1:
+            tie_off.append(
+                f"{gname}: replica multipliers differ ON DISK {got} — the halves are being "
+                f"differentially duplicated, which is the extra reweighting knob A1b "
+                f"excluded and A12 forbids. The split must come from the base counts "
+                f"(A12: 'S2 total 69, split pro-rata to the assembled post-exclusion "
+                f"counts'), not from unequal replication.")
+        for m in here:
+            d = declared_reps.get(m)
+            if d is not None and int(d) != got[m]:
+                tie_off.append(f"{gname}: {m} has {got[m]} replica dirs on disk but "
+                               f"ROOT_MANIFEST declares {d}")
+        if manifest_groups and manifest_groups.get(gname) != sorted(gmembers):
+            tie_off.append(f"{gname}: ROOT_MANIFEST declares members "
+                           f"{manifest_groups.get(gname)}, the ruling says {sorted(gmembers)}")
+    b.check("A3b_prorata_multipliers_equal", not tie_off,
+            (f"pro-rata groups exercised: {checked or 'NONE'} | " + " | ".join(tie_rows))
+            if not tie_off else f"{len(tie_off)} pro-rata split problem(s)", tie_off)
+
     # ---- captions / endpoints, resolved through the (sha-verified) inventories ---------
     filt = rc.leak_filter()
     print(f"[assert] Tier-1 leak filter: {getattr(filt, 'source', type(filt).__name__)}")
@@ -217,6 +280,13 @@ def main() -> int:
         Path(args.pool_drops) if args.pool_drops else None)
 
     cap_off, missing_src, role_off, prefix_off = [], [], [], []
+    seen_endpoints: set = set()
+    seen_shaders: set = set()
+    seen_classes: set = set()
+    exempt_endpoints: set = set()
+    spath0 = root / "SAMPLES.jsonl"
+    rows_for_weights = ([json.loads(ln) for ln in spath0.read_text().splitlines() if ln.strip()]
+                        if spath0.exists() else [])
     endpoint_off, reserved_off, zs_off, shader_off, ood_off = [], [], [], [], []
     seen_captions: dict[str, list[str]] = defaultdict(list)
     prompts = rc._prompts()
@@ -273,6 +343,16 @@ def main() -> int:
             hit_eval = sorted(eps & ex.eval_endpoints)
             if hit_eval:
                 endpoint_off.append(f"{rel}: endpoints in the eval sets {hit_eval}")
+        # positive-presence controls: accumulate the namespaces the absence asserts compare
+        # against, so "= 0" can be distinguished from "compared nothing"
+        seen_endpoints.update(eps)
+        seen_endpoints.update({tgt, ref_clip})
+        if gmeta.get("shader"):
+            seen_shaders.add(gmeta["shader"])
+        if gmeta.get("class"):
+            seen_classes.add(gmeta["class"])
+        if not inv.get("endpoint_disjointness", True):
+            exempt_endpoints.update(eps)
         # A9 zs classes: group class (S0) and any corpus-resolvable endpoint
         if gmeta.get("class") and gmeta["class"] in ex.zs_classes:
             zs_off.append(f"{rel}: group class {gmeta['class']} is a zero-shot holdout class")
@@ -358,6 +438,92 @@ def main() -> int:
     b.check("A9_zs_classes_absent", not zs_off,
             f"none of the {len(ex.zs_classes)} zero-shot classes is in the root"
             if not zs_off else f"{len(zs_off)} samples touch a zero-shot class", zs_off)
+
+    # ---- A0 POSITIVE-PRESENCE CONTROLS for every absence assert --------------------------
+    # Standing campaign rule (A11, the σ / S4-weight ruling): an absence assert may only
+    # PASS if the instrument that would have carried the thing was positively found and
+    # parsed.  A5/A7/A8/A9 all report "= 0", and every one of them reports "= 0" just as
+    # happily when the two sides are in DIFFERENT NAMESPACES and the comparison could never
+    # have matched anything.  That is the same failure shape as a log grep that never
+    # matches, and it is silent.  These controls make it loud.
+    pc = []
+    if not ex.eval_endpoints:
+        pc.append("A5: the eval-endpoint universe is EMPTY — the disjointness check would "
+                  "compare against nothing")
+    elif exempt_endpoints and not (exempt_endpoints & ex.eval_endpoints):
+        pc.append(f"A5: no endpoint of any disjointness-EXEMPT stratum is in the eval "
+                  f"universe. Those strata (e.g. S0) ARE the eval endpoint bank by design, "
+                  f"so zero overlap means the two sides are in different id namespaces and "
+                  f"A5 can never fire ({len(exempt_endpoints)} exempt ids checked)")
+    shader_vocab = {p.stem for p in rc.SHADER_DIR.glob("*.glsl")}
+    if not ex.holdout_shaders:
+        pc.append("A7: the HOLDOUT_S2 shader list is EMPTY")
+    elif shader_vocab and (miss := sorted(ex.holdout_shaders - shader_vocab)):
+        pc.append(f"A7: {len(miss)} held-out shader names do not resolve to a real "
+                  f"`.glsl` in {rc.SHADER_DIR} — a typo'd holdout name matches nothing "
+                  f"and excludes nothing: {miss[:5]}")
+    if seen_shaders and not (seen_shaders & shader_vocab):
+        pc.append("A7: no shader named in the root resolves in the shader vocabulary — the "
+                  "root's shader ids and the holdout list are in different namespaces")
+    if not ex.reserved_pool_clips:
+        pc.append("A8: the reserved union-pool clip list is EMPTY")
+    else:
+        pool = rc.read_json(rc.CONTENT_POOL)
+        pool_ids = {r["clip_id"] for r in pool.get("training", [])} | ex.reserved_pool_clips
+        if seen_endpoints and not (seen_endpoints & pool_ids):
+            pc.append(f"A8: not one of the root's {len(seen_endpoints)} endpoint ids is a "
+                      f"union-pool clip id — the reserved-clip check is comparing across "
+                      f"namespaces and can never fire")
+    corpus_classes = set(rc.read_json(rc.CORPUS_MANIFEST)["classes"])
+    if not ex.zs_classes:
+        pc.append("A9: the zero-shot class list is EMPTY")
+    elif miss := sorted(ex.zs_classes - corpus_classes):
+        pc.append(f"A9: {len(miss)} zero-shot class names are not corpus classes — they "
+                  f"would match nothing: {miss[:5]}")
+    if seen_classes and not (seen_classes & corpus_classes):
+        pc.append("A9: no group class in the root is a corpus class — the class namespaces "
+                  "do not meet, so A9 can never fire")
+    b.check("A0_absence_assert_positive_controls", not pc,
+            f"every absence assert compares in a live, shared namespace: eval universe "
+            f"{len(ex.eval_endpoints)} ids (overlapping {len(exempt_endpoints & ex.eval_endpoints)} "
+            f"exempt-stratum endpoints) · {len(ex.holdout_shaders)} holdout shaders all "
+            f"resolving in {len(shader_vocab)} `.glsl` files · {len(ex.reserved_pool_clips)} "
+            f"reserved pool clips in the same id space as the root's {len(seen_endpoints)} "
+            f"endpoints · {len(ex.zs_classes)} zs classes all corpus classes"
+            if not pc else f"{len(pc)} absence asserts could not have fired", pc)
+
+    # ---- A14 group ids survive path-safe slugging, uniquely -------------------------------
+    # A11 item 3.  S4's raw group ids are refVFX effect strings with spaces
+    # (`0rb4it 360 degree orbit`), and "the trainer globs fine" is not the bar — robustness
+    # across shells, rsync and future tooling is.  Two raw ids that slug to the same string
+    # would silently MERGE two operator groups into one pairing ring, which is a design
+    # change disguised as a path fix, so uniqueness is asserted per stratum and the raw->slug
+    # mapping is recorded rather than inferred.
+    slug_off, slug_tables = [], {}
+    for s, inv in sorted(invs.items()):
+        table, collisions = rc.slug_map(inv["groups"])
+        slug_tables[s] = table
+        for c in collisions:
+            slug_off.append(f"{s}: slug collision {c}")
+        for slug, raw in sorted(table.items()):
+            if not slug:
+                slug_off.append(f"{s}: group {raw!r} slugs to the empty string")
+    b.check("A14_group_ids_slug_safe", not slug_off,
+            "every group id slugs to a unique, non-empty, path-safe string "
+            + " | ".join(f"{s} {len(t)} ids" for s, t in sorted(slug_tables.items()))
+            if not slug_off else f"{len(slug_off)} slugging problems", slug_off)
+
+    # ---- A15 nominal vs effective weights, recorded (derived disclosure) ------------------
+    if rows_for_weights:
+        eff = rc.effective_weights(rows_for_weights, man["counts"]["replicas"])
+        s4_eff = eff["effective_pct"].get("S4")
+        b.check("A15_effective_weights_recorded", True,
+                "nominal (sample count) vs EFFECTIVE (loss-bearing tokens): "
+                + " | ".join(f"{s} {eff['nominal_pct'][s]:.2f}% -> {eff['effective_pct'][s]:.2f}%"
+                             for s in sorted(eff["nominal_pct"]))
+                + (f"  [S4 effective {s4_eff:.2f}%]" if s4_eff is not None else "")
+                + ". Nominal is the pre-registered quantity; effective is a derived "
+                  "disclosure (A11 item 2), never a control variable.")
 
     # ---- A10 copy-gate admissibility ----------------------------------------------------
     ok, detail = rc.copy_gate_verdict(Path(args.copy_gate_verdict) if args.copy_gate_verdict

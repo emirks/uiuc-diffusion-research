@@ -1,5 +1,118 @@
 ## 2026-07-28
 
+- **20:05** — HumanVid endpoint screening COMPLETE (job 9680734, 1h19m): 3,000 candidates →
+  85% loose pass → **1,499 accepted** std121 clips (769 horizontal / 730 vertical; 0 cut
+  rejects, 1 dup vs the 227 bank) at `data/processed/humanvid_bank/`. The 19k-clip screen was
+  owner-vetoed as oversized; the capped rerun uses a deterministic-shuffle `--limit` that
+  resumes from cached detections if raised. Mix re-ratification advisor round relaunched (the
+  first round's output was lost to a session restart) with updated premises: baseline
+  `cond-bleed-fix` trainer (no mask), HumanVid cleared + measured yields.
+
+- **13:16** — ctt_v2 fresh-rebuild kickoff after owner rulings: dataset pipeline retired for
+  a clean redo (retire-commit; history kept), the retrain moves to the **baseline trainer
+  `LTX-2-cond-bleed-fix`** (bneck parked → this round is a pure dataset intervention), and
+  **HumanVid was owner-cleared** for use after the Pexels ToS flag. Built a fresh screening
+  pipeline `scripts/ctt_v2/humanvid_bank/` (same QC contract as the blessed endpoint bank;
+  center-window standardize, tightened+diversity-capped selection, dedup vs the 227 bank) —
+  18,702 candidates collected, screening job 9680692 on L40S. Measured: all refVFX I2V-LoRA
+  outputs are uniformly 832×464·16fps·33f (33 ≡ 1 mod 8 → zero-cut reshape possible; trainer
+  supports per-sample fps natively). Gemini key stored at `$LAB/secrets/` (CLAUDE.md Secrets
+  section); stale Gemma capbank job cancelled. Advisor round 7 (mix re-ratification) launched.
+
+## 2026-07-25
+
+- **09:50** — one-way reference attention now ships as a **two-call split**, not a dense mask.
+  The benchmark rejected the dense path against its pre-registered ≤30% bar: fwd+bwd attention
+  at the real T=9600 measured 26.97 ms unmasked / 82.49 ms dense (**3.06x**) / 21.79 ms split
+  (**0.81x** — faster than the bidirectional baseline, since the reference-over-target block is
+  never computed). This is the campaign's first change to `ltx-core`, so jobs must now put
+  `ltx-core/src` on PYTHONPATH; `job_train.sbatch` does, with a guard asserting the bneck
+  `ltx_core` actually loaded — a silent fallback would train bidirectionally while logging
+  `one_way`. 19/19 gates pass, including split-vs-dense numerical equivalence in fp32 and bf16
+  across both sequence layouts.
+- **09:50** — S2 delivered by the parallel agent (8,410 clips / 809 exact ops, blind audit PASS
+  at 2 BAD of 64). **S3 dropped** by their pre-committed tree — 62% defective, and the defect is
+  inpaint plausibility, a semantic property no geometric statistic separated. Our mix becomes
+  S0+S2+S4.
+- **09:50** — S4 reinstated by owner and re-scoped to one-sided (`{S1}. sksz.`). Measured that
+  rewriting refVFX prompts yields leak-free S1 for 96.3% of rows but at p50 8 words against the
+  corpus's 34 — nearly disjoint, so caption length alone would flag the stratum. Switched to
+  frame-based captioning; 2,000 filmstrips extracted (0 failures), pilot scored 25/25 in range
+  with zero violations. Paused pending a Gemini key.
+
+
+- **04:45** — **The RULING-9 assert battery is now PROVEN TO FIRE, on a real two-shape root.**
+  An assert that has never failed is not known to work, and this campaign has twice met the
+  failure class where a gate prints PASS on a broken input. So: `scripts/ctt_v2/tests/
+  make_fixture.py` builds a five-stratum fixture with **real structure and stub payloads** —
+  real S0 tensors and captions, S2a from the 7,990-row render manifest, S2b from the frozen
+  800-op plan, **S4 from the frozen `selection.json` at (5,14,26) @ 16 fps**, S1 from the
+  Ruling-3 grid grouped by *arm* (A11 item 6) — so the root holds **both shapes** and masks,
+  token counts and derived shifts are exercised for real. `scripts/ctt_v2/tests/
+  prove_asserts.py` then breaks **one invariant at a time, in place**, and requires the
+  intended check(s) to fail and nothing else to (strict by default), restoring byte-exactly
+  and re-establishing the green baseline at the end. Coupled failures are *declared* with
+  their reason, never tolerated quietly; the harness holds an exclusive lock on the root
+  because two concurrent runs corrupt each other's baseline (that happened once, and it
+  looked exactly like a real assert failure).
+  New checks, all proven: **A0** pairs every absence assert with a *positive-presence
+  control* — A5/A7/A8/A9 all report "= 0" just as happily when the two sides are in different
+  id namespaces, which is the same silent failure as a log grep that never matches; **A11a–f**
+  the record-level two-shape clauses (did the assembler tell the truth about what it built —
+  a stale `_shape_cache.json` makes it self-consistent and wrong); **A12/A13** the two
+  consumption channels of A10's role-scoped exclusion; **A14** group ids slug to unique
+  path-safe strings; **A15** records nominal vs effective weights. `assert_root.py` now
+  **imports** `assert_root_shapes.py` rather than reimplementing it, narrowing its expected
+  shape classes to what the manifest declares so the pre-registered S4-cutoff branch (one
+  shape) cannot false-FAIL — and a mutation proves that a failure inside the imported module
+  reaches the exit code.
+  `dryrun_epoch.py`'s "zero skipped" is now **two-sided**: it must also resolve exactly the
+  count `ROOT_MANIFEST.json` names, because an absence assert passes trivially when the
+  instrument found nothing. It reads no log at all, deliberately — the `RichHandler` ANSI
+  escapes that broke a parallel lane's log gate cannot reach it.
+  Also: `make_stamp.py` generates the DATASET.md STAMP block from artefacts on disk (so
+  stamping is a fill-in, not a rewrite), including a **root content hash** over every
+  `(relative path, resolved target)` — what the trainer actually opens, not what the manifest
+  claims. DATASET §8.2.1/§8.2.2 carry the analytic σ table, the binding invariant verbatim,
+  the supersession note on A9's wrong `{1.120, (5,20,15)}` constants, and the nominal-vs-
+  effective disclosure (**S4's 10 % nominal is 3.04 % effective**, inside the ruled 2.8–3.0 %).
+  All three pre-registered contingency branches verified numerically against A9 §4 by
+  `--plan-only` assembly. **Nothing was stamped and no real root was assembled.**
+
+- **04:20** — **A12: the S2a:S2b split is now DERIVED pro-rata, not forced equal — 271,965 files
+  instead of 5,030,200.** Advisor ruling `misc/ctt_v2_final/advisors/A12_prorata_s2_split_VERBATIM.md`
+  (0.9+) read A9's full clause — *"S2 total 69, split **pro-rata to the assembled counts**, which are
+  ~equal"* — and held that "pro-rata" is the instruction while "~equal" was an observation of counts
+  that had not yet met the exclusions. Post-exclusion they are not equal (S2a **22,731** vs S2b
+  **23,577** base pairs), and forcing an equal *share* onto unequal *bases* requires differentially
+  duplicating the halves — the *"extra reweighting knob"* A1b excluded by name, and a breach of A9's
+  own per-op rationale for S2 = 69 (~4.3 draws/op).
+  **The mix contract is now `S0 15 / S1 6 / S2 total 69 / S4 10`, with the S2a:S2b split computed
+  from the assembled post-exclusion counts.** `root_common.STRATUM_WEIGHTS_PCT` + `PRORATA_GROUPS`
+  replace `INTENDED_WEIGHTS_PCT`; the two literal 34.5s are gone from the codebase and from the
+  strata manifest (`weight_pct: null`), and `assemble_root.py` hard-refuses a pre-A12 manifest that
+  still declares a per-half number. `expand_prorata_weights()` is the single place the split exists,
+  and `solve_multipliers()` solves a pro-rata group **as one unit**, so the two halves share a
+  multiplier structurally rather than by assertion. The three contingency branches restate the same
+  way (S2 total 73 / 79 / 85, split pro-rata); S1 and S4 stay fixed numbers.
+  **Measured on the live `S1,S4`-absent branch:** multipliers `{S0 21, S2a 1, S2b 1}`, **54,393**
+  base pairs, **max_dev 0.1360 pp** — against forced-equal's `{S0 389, S2a 19, S2b 18}`, 1,006,040
+  samples and 0.4296 pp. **18.5x fewer inodes and a 3.2x better deviation.**
+  **Assert A3 gained a clause, `A3b_prorata_multipliers_equal`** (`assert_root.py`): the members of a
+  pro-rata group carry the SAME replica multiplier, counted from the replica dirs on disk and
+  cross-checked against the manifest. It is an exact integer identity, so unlike a share tolerance it
+  cannot be satisfied approximately; S0's +-0.5 pp tolerance is unchanged. **Proven to fire:** on a
+  throwaway root with half of S2a's groups moved into a second replica dir — sample set and every
+  per-stratum count untouched — A3b failed **alone** out of the whole battery.
+  **The derived split is pre-registered by freezing its inputs**:
+  `misc/ctt_v2_final/PREREG_mix_inputs.json`, written by
+  `assemble_root.py --plan-only --write-prereg-mix-inputs`, records every inventory and exclusion
+  list by sha256 (the M3 role-scoped adjudication, the seed-42 inline-OOD draw, the holdout/reserved/
+  zs/eval sets), the per-reason drop counts that *produce* the counts (S2a 333, S2b 131), the frozen
+  counts themselves, the derived targets/shares/multipliers/max_dev, and an amendment rule: any
+  change to an exclusion means recomputing the split and logging it as a dossier amendment — the
+  counts may move only via a logged amendment, never silently. DOSSIER §15, DATASET §11.1b.
+
 - **04:05** — **S4 credit-independent prep COMPLETE — captions are now S4's only pending item**
   (A9 §5; full record in `misc/ctt_v2_final/artefacts/S4_PREP_REPORT.md`). Zero Gemini calls; the
   trainer was not modified.
@@ -97,47 +210,6 @@
   `assemble_root.py:ensure_mask()`, so nothing downstream hardcodes it.
 
 ## 2026-07-27
-
-- **20:05** — HumanVid endpoint screening COMPLETE (job 9680734, 1h19m): 3,000 candidates →
-  85% loose pass → **1,499 accepted** std121 clips (769 horizontal / 730 vertical; 0 cut
-  rejects, 1 dup vs the 227 bank) at `data/processed/humanvid_bank/`. The 19k-clip screen was
-  owner-vetoed as oversized; the capped rerun uses a deterministic-shuffle `--limit` that
-  resumes from cached detections if raised. Mix re-ratification advisor round relaunched (the
-  first round's output was lost to a session restart) with updated premises: baseline
-  `cond-bleed-fix` trainer (no mask), HumanVid cleared + measured yields.
-
-- **13:16** — ctt_v2 fresh-rebuild kickoff after owner rulings: dataset pipeline retired for
-  a clean redo (retire-commit; history kept), the retrain moves to the **baseline trainer
-  `LTX-2-cond-bleed-fix`** (bneck parked → this round is a pure dataset intervention), and
-  **HumanVid was owner-cleared** for use after the Pexels ToS flag. Built a fresh screening
-  pipeline `scripts/ctt_v2/humanvid_bank/` (same QC contract as the blessed endpoint bank;
-  center-window standardize, tightened+diversity-capped selection, dedup vs the 227 bank) —
-  18,702 candidates collected, screening job 9680692 on L40S. Measured: all refVFX I2V-LoRA
-  outputs are uniformly 832×464·16fps·33f (33 ≡ 1 mod 8 → zero-cut reshape possible; trainer
-  supports per-sample fps natively). Gemini key stored at `$LAB/secrets/` (CLAUDE.md Secrets
-  section); stale Gemma capbank job cancelled. Advisor round 7 (mix re-ratification) launched.
-
-## 2026-07-25
-
-- **09:50** — one-way reference attention now ships as a **two-call split**, not a dense mask.
-  The benchmark rejected the dense path against its pre-registered ≤30% bar: fwd+bwd attention
-  at the real T=9600 measured 26.97 ms unmasked / 82.49 ms dense (**3.06x**) / 21.79 ms split
-  (**0.81x** — faster than the bidirectional baseline, since the reference-over-target block is
-  never computed). This is the campaign's first change to `ltx-core`, so jobs must now put
-  `ltx-core/src` on PYTHONPATH; `job_train.sbatch` does, with a guard asserting the bneck
-  `ltx_core` actually loaded — a silent fallback would train bidirectionally while logging
-  `one_way`. 19/19 gates pass, including split-vs-dense numerical equivalence in fp32 and bf16
-  across both sequence layouts.
-- **09:50** — S2 delivered by the parallel agent (8,410 clips / 809 exact ops, blind audit PASS
-  at 2 BAD of 64). **S3 dropped** by their pre-committed tree — 62% defective, and the defect is
-  inpaint plausibility, a semantic property no geometric statistic separated. Our mix becomes
-  S0+S2+S4.
-- **09:50** — S4 reinstated by owner and re-scoped to one-sided (`{S1}. sksz.`). Measured that
-  rewriting refVFX prompts yields leak-free S1 for 96.3% of rows but at p50 8 words against the
-  corpus's 34 — nearly disjoint, so caption length alone would flag the stratum. Switched to
-  frame-based captioning; 2,000 filmstrips extracted (0 failures), pilot scored 25/25 in range
-  with zero violations. Paused pending a Gemini key.
-
 
 - **02:38** — exp_081 scaffolded: the ctt_v2 masked retrain. Advisor round 6 ruled the mix is
   S0+S2+S3 (S4/refVFX **deferred**, not killed — it adds ~4% to the operator count while

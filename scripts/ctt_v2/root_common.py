@@ -61,45 +61,117 @@ MAX_REFS_PER_TARGET = 3
 PAIRING_RULE = "ring_offset_within_op__k=min(3,n-1)"
 
 #: A9 (2026-07-28, DOSSIER §12) — S4 REINSTATED, reversing A5 RULING 2.
-#: Ruled weights: S0 15 / S1 6 / S2a 34.5 / S2b 34.5 / S4 10.
-#: The previous value here was {S0 15, S1 6, S2a 39.5, S2b 39.5, S4 0.0} from the
-#: SUPERSEDED "S4 OUT" ruling. That was a live landmine: assert A3 validates the
-#: realized mix AGAINST these constants, so an assembly run would have built the
-#: wrong mix and then certified it as correct. Caught by the DATASET.md audit.
-INTENDED_WEIGHTS_PCT = {"S0": 15.0, "S1": 6.0, "S2a": 34.5, "S2b": 34.5, "S4": 10.0}
+#: A12 (2026-07-28, `advisors/A12_prorata_s2_split_VERBATIM.md`) — the S2a:S2b split is
+#: DERIVED, never declared.
+#:
+#: ══ THE MIX CONTRACT ══  **S0 15 / S1 6 / S2 total 69 / S4 10**, and the S2a:S2b split is
+#: derived PRO-RATA from the assembled POST-EXCLUSION base pair counts.  Only these
+#: stratum-level weights are fixed numbers; there is no fixed number for either S2 half.
+#:
+#: A9's operative clause reads "S2 total 69, split pro-rata to the A5-ratified assembled
+#: counts, which are ~equal": **"pro-rata" is the instruction, "~equal" was an observation**
+#: of counts that had not yet met the exclusions.  Post-exclusion they are NOT equal
+#: (S2a 22,731 vs S2b 23,577 base pairs — S2a loses 333 clips incl. the 8 inline-OOD ops,
+#: S2b loses 131), and forcing an equal SHARE onto unequal BASES can only be realised by
+#: differentially duplicating the two halves — which is precisely the "extra reweighting
+#: knob" A1b excluded by name ("uniform per-sample weight within S2; equal counts make this
+#: automatic; no extra reweighting knob").  Forced-equal also breaks A9's own stated
+#: rationale for S2 = 69, which is per-op exposure (~4.3 draws/op): it hands every surviving
+#: S2a op ~3.7 % more expected draws than every S2b op, purely by which half its sibling
+#: exclusions happened to fall in.  Pro-rata — multiplier 1 on both halves — is the unique
+#: implementation of A1b's spec under the actual counts.
+#:
+#: The value here previously read `{S2a 34.5, S2b 34.5}`, and before that
+#: `{S0 15, S1 6, S2a 39.5, S2b 39.5, S4 0.0}` from the SUPERSEDED "S4 OUT" ruling.  Both
+#: were live landmines of the SAME kind: assert A3 validates the realized mix AGAINST these
+#: constants, so an assembly run would have built the wrong mix and then certified it as
+#: correct.  The fix is the same in both cases — **derive, never restate**.  The split is
+#: computed exactly once, in `expand_prorata_weights()`, from the counts the assembler
+#: actually produced; its inputs are frozen in `PREREG_mix_inputs.json`.
+STRATUM_WEIGHTS_PCT = {"S0": 15.0, "S1": 6.0, "S2": 69.0, "S4": 10.0}
+
+#: Aggregate weight -> the member strata it splits across, PRO-RATA to their assembled
+#: post-exclusion base pair counts (A12).  S1 and S4 are deliberately NOT in here: they are
+#: independent strata with their own weight rationales, not a pro-rata pair.
+PRORATA_GROUPS = {"S2": ("S2a", "S2b")}
+
+#: The strata the mix names, aggregates expanded — the assembly / manifest key space.
+MIX_STRATA = ("S0", "S1", "S2a", "S2b", "S4")
+
 MIX_TOLERANCE_PP = 0.5
 
-#: Guard: these weights are a RULING, not a preference. If they are edited again,
-#: the sum must still be 100 and every stratum the mix names must be present.
-assert abs(sum(INTENDED_WEIGHTS_PCT.values()) - 100.0) < 1e-9, (
-    f"INTENDED_WEIGHTS_PCT must sum to 100, got {sum(INTENDED_WEIGHTS_PCT.values())}"
+
+def weight_owner(stratum: str) -> str:
+    """The mix-contract weight that owns this stratum.  'S2a' -> 'S2'; 'S0' -> 'S0'."""
+    for _g, _members in PRORATA_GROUPS.items():
+        if stratum in _members:
+            return _g
+    return stratum
+
+
+def expand_strata(names) -> tuple:
+    """Mix-contract space -> assembly space: ('S0','S2') -> ('S0','S2a','S2b')."""
+    out = []
+    for n in names:
+        out.extend(PRORATA_GROUPS.get(n, (n,)))
+    return tuple(out)
+
+
+#: Guard: these weights are a RULING, not a preference. If they are edited again, the sum
+#: must still be 100, every pro-rata group must own a declared weight, and the expansion
+#: must reproduce exactly the strata the assembly names.
+assert abs(sum(STRATUM_WEIGHTS_PCT.values()) - 100.0) < 1e-9, (
+    f"STRATUM_WEIGHTS_PCT must sum to 100, got {sum(STRATUM_WEIGHTS_PCT.values())}"
+)
+assert set(PRORATA_GROUPS) <= set(STRATUM_WEIGHTS_PCT), (
+    f"every pro-rata group must own a declared stratum weight; "
+    f"{sorted(set(PRORATA_GROUPS) - set(STRATUM_WEIGHTS_PCT))} does not"
+)
+assert set(expand_strata(STRATUM_WEIGHTS_PCT)) == set(MIX_STRATA), (
+    f"MIX_STRATA {sorted(MIX_STRATA)} != the expansion of STRATUM_WEIGHTS_PCT "
+    f"{sorted(expand_strata(STRATUM_WEIGHTS_PCT))}"
+)
+assert len(expand_strata(STRATUM_WEIGHTS_PCT)) == len(MIX_STRATA), (
+    "a stratum appears in more than one pro-rata group"
 )
 
-#: A9's PRE-REGISTERED CONTINGENCY BRANCHES, ratified verbatim by A11 item 3 (2026-07-28):
-#:   "S1-fail -> 15/0/36.5/36.5/12; S4-cutoff -> 15/6/39.5/39.5/0; both -> 15/42.5/42.5
-#:    (i.e. A9's 15/73/12, 15/79, 15/85 split pro-rata per half)."
+#: A9's PRE-REGISTERED CONTINGENCY BRANCHES, ratified verbatim by A11 item 3 (2026-07-28)
+#: and RESTATED by A12 in mix-contract space — "the equal-halves numbers there are the same
+#: illustration convention":
+#:   "S1-fail -> S0 15 / S2 total 73 / S4 12;  S4-cutoff -> S0 15 / S1 6 / S2 total 79;
+#:    both -> S0 15 / S2 total 85"  — each S2 total split PRO-RATA, exactly as the headline.
 #: A5 RULING 3's original S1-drop literal (15 / 42.5 / 42.5) was computed while S4 was OUT
 #: and the three shares had to absorb all 85 pp; it is now the *both-absent* branch, not the
 #: S1-only one.  Keyed by ",".join(sorted(absent)) — exactly the key `assemble_root.py`
 #: builds — so the branch is SELECTED, never re-derived by hand at assembly time.
 ABSENT_BRANCH_WEIGHTS_PCT = {
-    "S1":    {"S0": 15.0, "S2a": 36.5, "S2b": 36.5, "S4": 12.0},
-    "S4":    {"S0": 15.0, "S1": 6.0, "S2a": 39.5, "S2b": 39.5},
-    "S1,S4": {"S0": 15.0, "S2a": 42.5, "S2b": 42.5},
+    "S1":    {"S0": 15.0, "S2": 73.0, "S4": 12.0},
+    "S4":    {"S0": 15.0, "S1": 6.0, "S2": 79.0},
+    "S1,S4": {"S0": 15.0, "S2": 85.0},
 }
 
 #: Guard: every branch must sum to 100 and cover EXACTLY the complement of its own key.
+#: A branch key is in ASSEMBLY space (it names the strata that are absent from disk), so it
+#: may only remove WHOLE pro-rata groups — half a group absent has no pre-registered branch
+#: and falls to ABSENT_POLICY, which is the honest outcome rather than an invented split.
 for _absent_key, _branch in ABSENT_BRANCH_WEIGHTS_PCT.items():
     _gone = set(_absent_key.split(","))
-    assert _gone <= set(INTENDED_WEIGHTS_PCT), f"unknown stratum in branch key {_absent_key!r}"
-    assert set(_branch) == set(INTENDED_WEIGHTS_PCT) - _gone, (
+    assert _gone <= set(MIX_STRATA), f"unknown stratum in branch key {_absent_key!r}"
+    _gone_w = {weight_owner(s) for s in _gone}
+    for _g in _gone_w:
+        assert set(PRORATA_GROUPS.get(_g, (_g,))) <= _gone, (
+            f"ABSENT_BRANCH_WEIGHTS_PCT[{_absent_key!r}] removes only part of the pro-rata "
+            f"group {_g!r} ({sorted(PRORATA_GROUPS.get(_g, ()))}); a partial removal has no "
+            f"pre-registered branch — ABSENT_POLICY applies instead"
+        )
+    assert set(_branch) == set(STRATUM_WEIGHTS_PCT) - _gone_w, (
         f"ABSENT_BRANCH_WEIGHTS_PCT[{_absent_key!r}] must name exactly "
-        f"{sorted(set(INTENDED_WEIGHTS_PCT) - _gone)}, got {sorted(_branch)}"
+        f"{sorted(set(STRATUM_WEIGHTS_PCT) - _gone_w)}, got {sorted(_branch)}"
     )
     assert abs(sum(_branch.values()) - 100.0) < 1e-9, (
         f"ABSENT_BRANCH_WEIGHTS_PCT[{_absent_key!r}] must sum to 100, got {sum(_branch.values())}"
     )
-del _absent_key, _branch, _gone
+del _absent_key, _branch, _gone, _gone_w, _g
 
 #: Fallback for an absent-set A9 did NOT pre-register a branch for (e.g. S2b alone).
 ABSENT_POLICY = "renormalize_proportionally"
@@ -182,6 +254,11 @@ CONTENT_POOL = REPO_ROOT / "data/processed/ctt_v2_strata/CONTENT_POOL_union.json
 SHADER_DIR = LAB / "misc/gl-transitions/transitions"
 COPY_GATE_VERDICT = DOSSIER_DIR / "VERIFY_copy_ref_discriminator.md"
 PREREG_INLINE_OOD = DOSSIER_DIR / "PREREG_inline_ood_ops_s2a.json"
+#: A12 — the frozen inputs of the DERIVED S2a:S2b split.  The registered object is the
+#: RULE ("S2 total 69, split pro-rata to the assembled post-exclusion counts"); freezing
+#: its inputs is what removes the experimenter degree of freedom the rule would otherwise
+#: carry.  Written by `assemble_root.py --write-prereg-mix-inputs`.
+PREREG_MIX_INPUTS = DOSSIER_DIR / "PREREG_mix_inputs.json"
 #: the M3 pool-drop adjudication.  `CONTENT_POOL_union.json` is deliberately BYTE-UNCHANGED
 #: (nothing may desynchronise from the S2b render), so the adjudication lives here instead
 #: and `role_scoped_exclusions_for_caption_store` is the operative instruction.
@@ -254,19 +331,92 @@ def ring_pairs(stems: list[str], max_refs: int = MAX_REFS_PER_TARGET) -> list[tu
 # --------------------------------------------------------------------------------------
 # RULING 4 — realise the mix by integer replica duplication
 # --------------------------------------------------------------------------------------
+def expand_prorata_weights(stratum_weights_pct: dict[str, float],
+                           base_counts: dict[str, int],
+                           groups: dict | None = None) -> tuple[dict, dict]:
+    """A12 — mix-contract weights -> per-stratum weights, PRO-RATA to the base counts.
+
+    Input is mix-contract space (`S0`/`S1`/**`S2`**/`S4`); output is assembly space
+    (`S0`/`S1`/**`S2a`**/**`S2b`**/`S4`).  This is the ONE place the S2a:S2b split exists:
+    it is computed from the counts the assembler actually produced, so it can never be
+    restated as a literal and drift out of agreement with the root on disk — the exact
+    failure mode that produced the stale-mix landmine of DATASET §11.1.
+
+    A member with a zero/absent base count takes no share and its siblings absorb the whole
+    aggregate; that is what "pro-rata" means when one half is not on disk.  An aggregate
+    that carries weight but has NO member on disk is a hard error, not a silent zero.
+
+    Returns `(weights_pct, derivation)`; `derivation` is the audit record that goes into
+    `ROOT_MANIFEST.json` and `PREREG_mix_inputs.json`.
+    """
+    groups = PRORATA_GROUPS if groups is None else groups
+    out: dict[str, float] = {}
+    derivation: dict[str, dict] = {}
+    for name, w in stratum_weights_pct.items():
+        members = groups.get(name)
+        if not members:
+            out[name] = float(w)
+            continue
+        counts = {m: int(base_counts.get(m, 0) or 0) for m in members}
+        total = sum(counts.values())
+        if total <= 0:
+            raise ValueError(
+                f"pro-rata group {name!r} carries weight {w} but every member has a zero "
+                f"base count ({counts}); the split is undefined. Drop {name!r} from the "
+                f"branch weights instead of splitting nothing.")
+        shares = {m: float(w) * counts[m] / total for m, c in counts.items() if c > 0}
+        out.update(shares)
+        derivation[name] = {
+            "rule": "pro-rata to the assembled POST-EXCLUSION base pair counts (A12)",
+            "aggregate_weight_pct": float(w),
+            "base_counts": counts,
+            "base_total": total,
+            "derived_weight_pct": {m: round(v, 6) for m, v in sorted(shares.items())},
+        }
+    return out, derivation
+
+
 def solve_multipliers(base_counts: dict[str, int], weights_pct: dict[str, float],
-                      tol_pp: float = MIX_TOLERANCE_PP, max_mult: int = 200) -> dict:
+                      tol_pp: float = MIX_TOLERANCE_PP, max_mult: int = 200,
+                      groups: dict | None = None) -> dict:
     """Choose integer replica counts so the *counted* mix lands within `tol_pp`.
 
-    Deterministic sweep: for each stratum taken as the anchor and each anchor multiplier,
+    `base_counts` is ASSEMBLY space (per stratum, S2a and S2b separately); `weights_pct` is
+    MIX-CONTRACT space (S2 as one aggregate).  A12: **a pro-rata group is solved as ONE
+    unit**, so its members necessarily receive the SAME multiplier and their realized shares
+    land pro-rata to their base counts.  Uniform per-sample weight within the group is
+    therefore STRUCTURAL — it is not a constraint bolted on after the search — and there is
+    no representable state in which the solver hands the two halves different multipliers.
+    Assert A3b re-checks the property by counting replica dirs on the assembled root, which
+    is what makes it evidence rather than a comment.
+
+    Deterministic sweep: for each weight taken as the anchor and each anchor multiplier,
     derive the others by rounding, then keep the (max-deviation, total-size) minimum.
-    Returns the decision record; raises if nothing lands inside tolerance.
+    Deviations are measured PER STRATUM, against the derived per-stratum targets — exactly
+    the quantity assert A3 counts off the root — so the solver cannot pass a mix that A3
+    would then reject.  Raises if nothing lands inside tolerance.
     """
-    names = sorted(k for k in base_counts if base_counts[k] > 0 and weights_pct.get(k, 0) > 0)
+    groups = PRORATA_GROUPS if groups is None else groups
+    members: dict[str, list[str]] = {}
+    for name, w in weights_pct.items():
+        if w <= 0:
+            continue
+        live = sorted(m for m in groups.get(name, (name,)) if base_counts.get(m, 0) > 0)
+        if live:
+            members[name] = live
+    names = sorted(members)
     if not names:
         raise ValueError("no stratum with a positive base count and a positive weight")
-    total_w = sum(weights_pct[s] for s in names)
-    w = {s: weights_pct[s] / total_w for s in names}
+
+    #: aggregate base counts — the unit the search runs over
+    agg = {n: sum(base_counts[m] for m in members[n]) for n in names}
+    total_w = sum(weights_pct[n] for n in names)
+    w = {n: weights_pct[n] / total_w for n in names}
+    #: per-stratum targets, DERIVED (never restated): the renormalised aggregate weight
+    #: split pro-rata to the assembled counts.
+    intended_pct, split = expand_prorata_weights(
+        {n: 100.0 * w[n] for n in names}, base_counts, groups)
+    intended = {m: v / 100.0 for m, v in intended_pct.items()}
 
     # Objective: the SMALLEST root that lands inside tolerance.  (Ranking by deviation
     # alone always prefers a bigger root — finer rounding grain — and would silently
@@ -274,26 +424,38 @@ def solve_multipliers(base_counts: dict[str, int], weights_pct: dict[str, float]
     best = None
     for anchor in names:
         for m in range(1, max_mult + 1):
-            target_total = base_counts[anchor] * m / w[anchor]
-            mult = {s: max(1, int(round(w[s] * target_total / base_counts[s]))) for s in names}
+            target_total = agg[anchor] * m / w[anchor]
+            mult = {n: max(1, int(round(w[n] * target_total / agg[n]))) for n in names}
             mult[anchor] = m
-            tot = sum(base_counts[s] * mult[s] for s in names)
-            dev = {s: 100.0 * base_counts[s] * mult[s] / tot - 100.0 * w[s] for s in names}
+            tot = sum(agg[n] * mult[n] for n in names)
+            dev = {s: 100.0 * base_counts[s] * mult[n] / tot - 100.0 * intended[s]
+                   for n in names for s in members[n]}
             md = round(max(abs(v) for v in dev.values()), 9)
             key = (0, tot, md) if md <= tol_pp else (1, md, tot)
             if best is None or key < best[0]:
                 best = (key, dict(mult), dev, tot)
 
-    key, mult, dev, tot = best
+    key, agg_mult, dev, tot = best
+    mult = {s: agg_mult[n] for n in names for s in members[n]}
     max_dev = max(abs(v) for v in dev.values())
     rec = {
         "multipliers": mult,
-        "base_counts": {s: base_counts[s] for s in names},
-        "realized_counts": {s: base_counts[s] * mult[s] for s in names},
+        "aggregate_multipliers": agg_mult,
+        "prorata_groups": {n: members[n] for n in names if len(members[n]) > 1},
+        "split_rule": "A12 — a pro-rata group is solved as ONE unit, so its members share "
+                      "one multiplier and their shares follow their base counts; the "
+                      "stratum-level weights (S0 15 / S1 6 / S2 total 69 / S4 10) are the "
+                      "only fixed numbers",
+        "prorata_split": split,
+        "stratum_weights_pct": {n: round(weights_pct[n], 6) for n in names},
+        "stratum_weights_pct_renormalized": {n: round(100.0 * w[n], 6) for n in names},
+        "base_counts": {s: base_counts[s] for s in mult},
+        "aggregate_base_counts": agg,
+        "realized_counts": {s: base_counts[s] * mult[s] for s in mult},
         "total": tot,
-        "intended_pct": {s: round(100.0 * w[s], 6) for s in names},
-        "realized_pct": {s: round(100.0 * base_counts[s] * mult[s] / tot, 6) for s in names},
-        "deviation_pp": {s: round(dev[s], 6) for s in names},
+        "intended_pct": {s: round(intended_pct[s], 6) for s in mult},
+        "realized_pct": {s: round(100.0 * base_counts[s] * mult[s] / tot, 6) for s in mult},
+        "deviation_pp": {s: round(dev[s], 6) for s in mult},
         "max_deviation_pp": round(max_dev, 6),
         "tolerance_pp": tol_pp,
     }
@@ -666,6 +828,191 @@ def freeze_inline_ood_prereg(inventory_path: str | Path, exclusions: Exclusions,
 
 
 # --------------------------------------------------------------------------------------
+# A12 — freeze the INPUTS of the derived S2a:S2b split
+#
+# The registered object is the RULE, not a number: "S2 total 69, split pro-rata to the
+# assembled post-exclusion base pair counts".  A derived split is a feature rather than a
+# hazard ONLY if its inputs are frozen before training, so that no experimenter degree of
+# freedom survives.  This record is that freeze: every exclusion list that determines the
+# assembled counts, by path and sha256; the counts themselves; the split those counts
+# produce; and the amendment rule that makes any later change to the inputs visible.
+# --------------------------------------------------------------------------------------
+MIX_INPUTS_SCHEMA = "ctt_v2_prereg_mix_inputs/1"
+
+#: A12, verbatim intent.  The counts may move — exclusions can legitimately change — but
+#: only through a logged amendment, never silently.
+MIX_AMENDMENT_RULE = (
+    "ANY change to any input listed under `exclusion_inputs` or `inventories` — a new "
+    "exclusion, a withdrawn one, a re-rendered or re-audited stratum, a redrawn "
+    "inline-OOD pre-registration — CHANGES THE ASSEMBLED COUNTS AND THEREFORE THE DERIVED "
+    "S2a:S2b SPLIT. When that happens: (1) re-run "
+    "`assemble_root.py --plan-only --write-prereg-mix-inputs`, which recomputes the split "
+    "from the new counts; (2) log the recomputation as a DOSSIER AMENDMENT recording the "
+    "old and new counts, the old and new derived shares, the multipliers and max_dev, and "
+    "the input whose sha256 moved; (3) only then assemble. The counts in this file may "
+    "move ONLY via such a logged amendment — never silently. The stratum-level weights "
+    "(S0 15 / S1 6 / S2 total 69 / S4 10, and the pre-registered contingency branches) are "
+    "NOT amendable this way: they are a ruling, and changing them requires a new ruling."
+)
+
+MIX_PREREG_TIMING_DECLARATION = (
+    "written from a --plan-only assembly, before any training step, before any candidate "
+    "was scored, and before the root was materialised; the split is a deterministic "
+    "function of the recorded inputs and references no measured property of any sample."
+)
+
+
+def freeze_mix_inputs_prereg(*, strata_manifest_path: str | Path, manifest: dict,
+                             inventories: dict, exclusions: "Exclusions", drops: dict,
+                             base_counts: dict, mix: dict, weight_note: str,
+                             branch_key: str | None, present: list, absent: list,
+                             out_path: str | Path | None = None,
+                             when: str | None = None) -> dict:
+    """Write the A12 frozen-inputs record for the DERIVED S2a:S2b split.
+
+    Everything here is derived from the same `--plan-only` computation that produced the
+    split, so the file cannot describe a different assembly than the one it certifies.
+    """
+    import time  # noqa: PLC0415
+    from collections import Counter  # noqa: PLC0415
+
+    def _src(path, **extra) -> dict:
+        p = Path(path)
+        rec = {"path": str(p), "exists": p.exists()}
+        if p.exists():
+            rec["sha256"] = sha256_file(p)
+            rec["bytes"] = p.stat().st_size
+        rec.update(extra)
+        return rec
+
+    # every reason that removed a clip or a group, counted — this is the DERIVATION of the
+    # per-stratum drop totals (e.g. S2b's 131), not a restatement of them
+    drop_reasons = {}
+    for s, d in sorted(drops.items()):
+        cr = Counter(r.split(":", 1)[0] for c in d["dropped_clips"] for r in c["reasons"])
+        gr = Counter(r.split(":", 1)[0] for g in d["dropped_groups"] for r in g["reasons"])
+        drop_reasons[s] = {
+            "n_groups_dropped": len(d["dropped_groups"]),
+            "n_clips_dropped": len(d["dropped_clips"]),
+            "clip_drop_reasons": dict(sorted(cr.items())),
+            "group_drop_reasons": dict(sorted(gr.items())),
+        }
+
+    ex_rec = exclusions.as_record()
+    prereg_ood = (exclusions.provenance.get("inline_ood_ops") or {}).get("file")
+
+    rec = {
+        "schema": MIX_INPUTS_SCHEMA,
+        "authority": "A12 (2026-07-28) — misc/ctt_v2_final/advisors/"
+                     "A12_prorata_s2_split_VERBATIM.md. VERDICT (a): the S2a:S2b split is "
+                     "derived pro-rata from the post-exclusion assembled counts. Builds on "
+                     "A9 §4 (S2 total 69, split pro-rata), A11 item 3 (34.5 is per S2 half "
+                     "=> S2 total 69) and A1b (uniform per-sample weight within S2, no "
+                     "extra reweighting knob).",
+        "written": when or time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+        "timing_declaration": MIX_PREREG_TIMING_DECLARATION,
+        "amendment_rule": MIX_AMENDMENT_RULE,
+
+        # ---- (0) the contract ---------------------------------------------------------
+        "mix_contract": {
+            "statement": "S0 15 / S1 6 / S2 total 69 / S4 10; the S2a:S2b split is DERIVED "
+                         "pro-rata from the assembled post-exclusion base pair counts.",
+            "stratum_weights_pct": dict(STRATUM_WEIGHTS_PCT),
+            "prorata_groups": {k: list(v) for k, v in PRORATA_GROUPS.items()},
+            "contingency_branches_pct": {k: dict(v)
+                                         for k, v in ABSENT_BRANCH_WEIGHTS_PCT.items()},
+            "contingency_note": "S2 total 73 / 79 / 85, each split pro-rata exactly as the "
+                                "headline. S1 and S4 weights stay fixed numbers — they are "
+                                "independent strata, not a pro-rata pair.",
+            "absent_policy": ABSENT_POLICY,
+            "tolerance_pp": MIX_TOLERANCE_PP,
+            "implementation": "root_common.expand_prorata_weights + "
+                              "root_common.solve_multipliers (a pro-rata group is solved "
+                              "as one unit, so its members share one multiplier); "
+                              "re-checked off the root by assert_root A3 + A3b.",
+        },
+
+        # ---- (i) the inputs that determine the assembled counts ------------------------
+        "strata_manifest": _src(strata_manifest_path, strata_present=list(present),
+                                strata_absent=list(absent), weight_note=weight_note,
+                                branch_override_key=branch_key),
+        "inventories": {
+            s: _src(manifest["strata"][s]["inventory"],
+                    kind=inventories[s].get("kind"),
+                    n_groups=len(inventories[s]["groups"]),
+                    n_clips=len(inventories[s]["clips"]),
+                    endpoint_disjointness=inventories[s].get("endpoint_disjointness", True))
+            for s in sorted(present)
+        },
+        "exclusion_inputs": {
+            "role_scoped_pool_drops": _src(
+                POOL_DROPS,
+                derivation="root_common.load_caption_store_exclusions() reads "
+                           "`role_scoped_exclusions` (A10, authoritative) and the legacy "
+                           "`role_scoped_exclusions_for_caption_store`, and HARD-FAILS if "
+                           "they disagree; an absent file is a hard failure, never an "
+                           "empty exclusion",
+                role_scoped=ex_rec["role_scoped_caption_store_exclusions"],
+                clip_level=ex_rec["clip_level_caption_store_exclusions"],
+                provenance=exclusions.provenance.get("caption_store_exclusions")),
+            "inline_ood_prereg": _src(
+                prereg_ood or PREREG_INLINE_OOD,
+                derivation="seed-42 blind draw over the sorted S2a op list, 8 ops from 8 "
+                           "DISTINCT shader families (root_common.select_inline_ood_ops); "
+                           "8 ops x 10 clips = 80 clips excluded from the root",
+                op_ids=ex_rec["inline_ood_ops"]),
+            "holdout_s2_shader_families": _src(
+                HOLDOUT_S2, n=len(ex_rec["holdout_shaders"]),
+                shaders=ex_rec["holdout_shaders"]),
+            "reserved_pool_clips": _src(
+                CONTENT_POOL, n=ex_rec["n_reserved_pool_clips"],
+                derivation="the `reserved` block of the union content pool"),
+            "zs_classes_and_test_clips": _src(
+                SPLIT_PATH, zs_classes=ex_rec["zs_classes"],
+                derivation="`generalist_holdout` (10 zs classes) + the 42 pre-registered "
+                           "test clips from `classes[*].test`"),
+            "eval_endpoint_universe": {
+                "n": ex_rec["n_eval_endpoints"],
+                "sha256_of_sorted_ids": sha256_obj(ex_rec["eval_endpoints"]),
+                "provenance": exclusions.provenance.get("eval_endpoints"),
+                "registry": _src(REGISTRY),
+                "davis": _src(DAVIS_YAML),
+            },
+        },
+        "drops_that_produced_the_counts": drop_reasons,
+
+        # ---- (ii) the frozen counts ----------------------------------------------------
+        "frozen_assembled_base_pair_counts": {s: int(base_counts[s])
+                                              for s in sorted(base_counts)},
+        "frozen_counts_note": "post-exclusion base PAIRS (ring offset within group, "
+                              "k = min(3, n-1)) — the unit the mix is measured in, not "
+                              "clips. These are the numbers the split is pro-rata to.",
+
+        # ---- (iii) the derived split, shares, multipliers, deviation --------------------
+        "derived_split": {
+            "weight_note": weight_note,
+            "branch_override_key": branch_key,
+            "stratum_weights_pct_applied": mix["stratum_weights_pct"],
+            "stratum_weights_pct_renormalized": mix["stratum_weights_pct_renormalized"],
+            "prorata_split": mix["prorata_split"],
+            "intended_pct": mix["intended_pct"],
+            "multipliers": mix["multipliers"],
+            "aggregate_multipliers": mix["aggregate_multipliers"],
+            "realized_counts": mix["realized_counts"],
+            "realized_pct": mix["realized_pct"],
+            "deviation_pp": mix["deviation_pp"],
+            "max_deviation_pp": mix["max_deviation_pp"],
+            "tolerance_pp": mix["tolerance_pp"],
+            "total_base_pairs": mix["total"],
+            "total_files": mix["total"] * len(ROOT_DIRS),
+        },
+    }
+    if out_path is not None:
+        write_json(out_path, rec)
+    return rec
+
+
+# --------------------------------------------------------------------------------------
 # Tier-1 caption leak filter (import the caption pipeline's if present, else reimplement)
 # --------------------------------------------------------------------------------------
 def _word_re(s: str) -> re.Pattern:
@@ -836,6 +1183,93 @@ def rel_paths(root: Path, sub: str) -> set:
 
 
 # --------------------------------------------------------------------------------------
+# group-id slugging (A11 σ/S4-weight ruling item 3)
+# --------------------------------------------------------------------------------------
+_SLUG_RE = re.compile(r"[^a-z0-9]+")
+
+
+def slug_group(gid: str) -> str:
+    """A path-safe group id: lowercase, non-alphanumeric -> '_', runs collapsed.
+
+    S4's group ids are refVFX effect strings (`0rb4it 360 degree orbit`), so the raw id
+    carries spaces.  "the trainer globs fine" is not the bar — robustness across shells,
+    `rsync`, and future tooling is, and the slug costs nothing.
+    """
+    return _SLUG_RE.sub("_", str(gid).lower()).strip("_")
+
+
+def slug_map(gids) -> tuple[dict, list]:
+    """(slug -> raw, collisions).  A collision is a hard error, never a silent merge."""
+    out: dict[str, str] = {}
+    collisions = []
+    for gid in sorted(gids):
+        s = slug_group(gid)
+        if s in out and out[s] != gid:
+            collisions.append(f"{s!r} <- both {out[s]!r} and {gid!r}")
+        else:
+            out[s] = gid
+    return out, collisions
+
+
+# --------------------------------------------------------------------------------------
+# NOMINAL vs EFFECTIVE weights (A11 σ/S4-weight ruling item 2)
+# --------------------------------------------------------------------------------------
+#: `assemble_root.ensure_mask`: m[:2] = 1 always (the 2-latent-frame prefix anchor);
+#: m[-1] = 1 iff two-sided (the suffix anchor).  mask == 1 => the token is conditioned at
+#: timestep 0 and EXCLUDED FROM LOSS (`flexible.py:502-546`).  So the loss-bearing token
+#: count is a function of the shape and the sidedness, and nothing else.
+def conditioned_frames(sided: str) -> int:
+    return 3 if sided == "two" else 2
+
+
+def loss_bearing_tokens(fhw, sided: str) -> int:
+    """Target tokens that actually carry loss for one sample of this shape + sidedness.
+
+    Derived, not tabulated — the tabulated values are 121f one-sided 4,200 (4,800 x 0.875),
+    121f two-sided 3,900 (4,800 x 0.8125) and S4 1,092 (1,820 x 0.60), and they fall out of
+    `1 - conditioned_frames/F` exactly.  S4's fixed 2-frame anchor conditions 40 % of its
+    tokens against 12.5 % at 121f, which is the second, independent discount on S4's
+    effective share — the first being its lower training shift.
+    """
+    f, h, w = (int(x) for x in fhw)
+    return (f - conditioned_frames(sided)) * h * w
+
+
+def effective_weights(rows: list[dict], replicas: dict) -> dict:
+    """NOMINAL sample-count shares vs EFFECTIVE loss-bearing-token shares.
+
+    A11: the nominal vector stays the PRE-REGISTERED quantity — it is what the manifest
+    pins and what the contingency branches operate on.  The effective vector is stamped as a
+    DERIVED DISCLOSURE only: right for disclosure, wrong as a control variable, because
+    pre-registering it would force the nominal weights to chase every geometry change.
+    """
+    n_samples: dict[str, int] = {}
+    n_tokens: dict[str, int] = {}
+    for r in rows:
+        s = r["stratum"]
+        m = int(replicas.get(s, r.get("replicas", 1)))
+        n_samples[s] = n_samples.get(s, 0) + m
+        n_tokens[s] = n_tokens.get(s, 0) + m * loss_bearing_tokens(r["shape"], r["sided"])
+    tot_s = sum(n_samples.values()) or 1
+    tot_t = sum(n_tokens.values()) or 1
+    return {
+        "basis": "nominal = sample count; effective = loss-bearing target tokens "
+                 "(mask==0), derived from each sample's shape and ACTUAL sidedness",
+        "authority": "A11 (σ / S4-weight ruling) item 2 — nominal is pre-registered, "
+                     "effective is a derived disclosure and never a control variable",
+        "per_sample_loss_bearing_tokens": {
+            f"{tuple(v)}|{sd}": loss_bearing_tokens(v, sd)
+            for v, sd in sorted({(tuple(r["shape"]), r["sided"]) for r in rows})},
+        "n_samples": n_samples,
+        "n_loss_bearing_tokens": n_tokens,
+        "nominal_pct": {s: round(100.0 * v / tot_s, 4) for s, v in sorted(n_samples.items())},
+        "effective_pct": {s: round(100.0 * v / tot_t, 4) for s, v in sorted(n_tokens.items())},
+        "total_samples": tot_s,
+        "total_loss_bearing_tokens": tot_t,
+    }
+
+
+# --------------------------------------------------------------------------------------
 # two-shape assert — prefer an external importable module, else the fallback below
 # --------------------------------------------------------------------------------------
 def _fallback_check_shapes(root: Path, manifest: dict, rows: list[dict]) -> list[dict]:
@@ -905,21 +1339,45 @@ def _fallback_check_shapes(root: Path, manifest: dict, rows: list[dict]) -> list
                 "detail": f"mask store carries exactly the {len(want)} (shape, sidedness) "
                           f"combinations the samples use" if not bad
                           else f"{len(bad)} mask-store problems", "offenders": bad})
+
+    # SAMPLES.jsonl is written by the assembler, so trusting it alone would only prove the
+    # assembler is self-consistent.  Load ONE real tensor per stratum and confirm the shape
+    # the row claims is the shape on disk.  (The dry-run epoch does this for every sample;
+    # this is the cheap version that runs inside the battery.)
+    drift = []
+    try:
+        import torch  # noqa: PLC0415
+
+        for stratum, shapes in sorted(by_stratum.items()):
+            row = next(r for r in rows if r["stratum"] == stratum)
+            p = root / "latents" / row["rel"]
+            d = torch.load(os.path.realpath(p), map_location="cpu", weights_only=True)
+            disk = (int(d["num_frames"]), int(d["height"]), int(d["width"]))
+            if disk != tuple(int(x) for x in row["shape"]):
+                drift.append(f"{stratum}: SAMPLES.jsonl says {row['shape']} but "
+                             f"{p} holds {list(disk)}")
+        detail = (f"one tensor per stratum loaded; the declared shape is the shape on disk "
+                  f"({len(by_stratum)} strata spot-checked)")
+    except Exception as exc:  # noqa: BLE001 — an unreadable tensor is itself a failure
+        drift.append(f"could not verify shapes against disk: {exc!r}")
+        detail = "shape spot-check could not run"
+    out.append({"name": "A11f_declared_shape_is_the_disk_shape", "ok": not drift,
+                "detail": detail if not drift else f"{len(drift)} shape disagreements",
+                "offenders": drift})
     return out
 
 
 _fallback_check_shapes.source = "root_common._fallback_check_shapes"
 
 
-def shape_assert():
-    """The two-shape assert implementation to use.
+def _external_shape_module():
+    """Find the separate two-shape module, if one exists.  Returns (module, entrypoint).
 
-    A separate importable module is preferred if one exists — coordination point, so the
-    two-shape work is never written twice.  Contract: any module in this directory whose
-    name mentions `shape` and which exposes ``check_shapes(root, manifest, rows) -> list``
-    of ``{"name", "ok", "detail", "offenders"}`` records.  `rows` are the SAMPLES.jsonl
-    rows (they carry `rel`, `stratum`, `sided`, `shape`).  The chosen implementation is
-    printed and recorded, so a fallback is never silent.
+    Coordination point: the two-shape work is deliberately owned by a separate module so
+    that neither agent edits the other's file.  Two entrypoints are accepted —
+    ``check_shapes(root, manifest, rows) -> list`` of result records, or
+    ``assert_two_shapes(root, ...) -> int`` (the `assert_root_shapes.py` contract, whose
+    per-check records are read back out of the report it writes).
     """
     if str(HERE) not in sys.path:
         sys.path.insert(0, str(HERE))
@@ -928,12 +1386,86 @@ def shape_assert():
             continue
         try:
             mod = __import__(path.stem)
-            fn = getattr(mod, "check_shapes", None)
         except Exception as exc:  # noqa: BLE001 — never silently degrade
             print(f"[shapes] {path.name} import failed ({exc!r}); trying the next candidate",
                   file=sys.stderr)
             continue
-        if callable(fn):
-            fn.source = f"scripts/ctt_v2/{path.name}:check_shapes"
-            return fn
-    return _fallback_check_shapes
+        for entry in ("check_shapes", "assert_two_shapes"):
+            if callable(getattr(mod, entry, None)):
+                return mod, entry
+    return None, None
+
+
+def _run_external(mod, entry: str, root: Path, manifest: dict, rows: list[dict]) -> list[dict]:
+    """Run the external two-shape battery and return its per-check records.
+
+    `expected_classes` is NARROWED (never widened) to the shapes this root's manifest
+    declares, because the module's default expectation names both ruled shapes and would
+    therefore false-FAIL on the pre-registered S4-cutoff branch, where the root legitimately
+    holds ONE shape.  Narrowing keeps every check intact — an undeclared or unruled shape
+    still has no expectation to match and still fails — while letting the ruled branch pass.
+    Fixing the expectation rather than the check is the discipline; A11d (below) is what
+    stops the narrowing from being a hole, by asserting the branch itself.
+    """
+    if entry == "check_shapes":
+        return list(mod.check_shapes(root, manifest, rows))
+
+    declared = {tuple(int(x) for x in s["latent_fhw"])
+                for s in (manifest.get("shapes", {}).get("per_shape") or [])}
+    expected = getattr(mod, "EXPECTED_SHAPE_CLASSES", None)
+    narrowed = ({k: v for k, v in expected.items() if k in declared} or None) if expected else None
+    report = root / "SHAPE_ASSERT_REPORT.json"
+    code = mod.assert_two_shapes(root, expected_classes=narrowed, report_path=report)
+    if not report.exists():
+        return [{"name": "A11x_external_two_shape_module", "ok": code == 0,
+                 "detail": f"{mod.__name__}.assert_two_shapes returned {code} but wrote no "
+                           f"report at {report}", "offenders": []}]
+    rec = read_json(report)
+    out = list(rec.get("results") or [])
+    if not out:
+        out = [{"name": "A11x_external_two_shape_module", "ok": code == 0,
+                "detail": f"{mod.__name__}.assert_two_shapes returned {code}",
+                "offenders": []}]
+    return out
+
+
+def shape_assert():
+    """The two-shape assert to run: the record-level clauses PLUS the external module.
+
+    They are complementary, not redundant, and that is why both run:
+
+    * the clauses in `_fallback_check_shapes` read the assembler's OWN record
+      (`SAMPLES.jsonl` + `ROOT_MANIFEST.json`) and ask whether it agrees with the ruling and
+      with one loaded tensor per stratum — i.e. *did the assembler tell the truth about what
+      it built*, which no tensor-level pass can answer because a stale `_shape_cache.json`
+      makes the assembler self-consistent and wrong;
+    * the external module opens EVERY tensor in all five trees and checks per-shape set
+      equality, per-sample geometry agreement across the trees, token-count collisions and
+      the trainer's own index line — i.e. *is the media itself coherent*.
+
+    If the external module is absent the record-level clauses still run, and the returned
+    `.source` says so, so a degraded run is never silent.
+    """
+    mod, entry = _external_shape_module()
+
+    def run(root: Path, manifest: dict, rows: list[dict]) -> list[dict]:
+        out = _fallback_check_shapes(root, manifest, rows)
+        if mod is None:
+            out.append({
+                "name": "A11x_external_two_shape_module_present", "ok": False,
+                "detail": "no importable two-shape module was found — only the record-level "
+                          "clauses ran, so no tensor in the root was cross-checked against "
+                          "any other. A9 §5(iv) asks for the tensor-level pass.",
+                "offenders": [f"expected a module in {HERE} exposing check_shapes() or "
+                              f"assert_two_shapes()"]})
+            return out
+        try:
+            out.extend(_run_external(mod, entry, root, manifest, rows))
+        except Exception as exc:  # noqa: BLE001 — a crash there is a FAIL, not a traceback
+            out.append({"name": "A11x_external_two_shape_module", "ok": False,
+                        "detail": f"{mod.__name__}.{entry} raised", "offenders": [repr(exc)]})
+        return out
+
+    run.source = (f"root_common._fallback_check_shapes + scripts/ctt_v2/{mod.__name__}.py:{entry}"
+                  if mod else "root_common._fallback_check_shapes (NO external module found)")
+    return run

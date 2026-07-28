@@ -5,6 +5,10 @@ A5 RULING 4 / RULING 9.  Three properties are structural, not conventions:
 1. **The mix is realised by SYMLINK DUPLICATION, not by a sampler.**  Each stratum is
    emitted `m` times into replica directories `<stratum>_r00 .. r<m-1>`, so the realised
    ratio is a property of the root on disk and `assert_root.py` can *count* it (A3-F8.3).
+   The MIX CONTRACT is **S0 15 / S1 6 / S2 total 69 / S4 10**; the S2a:S2b split is
+   DERIVED pro-rata from the assembled post-exclusion base pair counts (A12), so the two
+   halves are solved as one unit and necessarily share a multiplier.  No per-half weight
+   literal exists anywhere; the split's inputs are frozen in `PREREG_mix_inputs.json`.
 2. **Pairing is ring offset within op, k = min(3, n-1), everywhere** — the same function
    for S0 classes and S1/S2/S4 ops (RULING 4, A1b Q5).
 3. **Holdouts are removed here, once**, and every removal is recorded with its reason in
@@ -36,7 +40,8 @@ REPO = rc.REPO_ROOT
 DEFAULT_ROOT = REPO / "outputs/ctt_v2/roots/ctt_v2_mix"
 
 #: Does this stratum's generated media EXIST ON DISK right now?  This is the ONLY
-#: hand-edited part of the default manifest — weights come from rc.INTENDED_WEIGHTS_PCT.
+#: hand-edited part of the default manifest — weights come from rc.STRATUM_WEIGHTS_PCT and
+#: the S2a:S2b split is DERIVED from the assembled counts (A12), never written here.
 #: Updated 2026-07-28 by the DATASET.md audit, which found S2b still marked absent after
 #: it had rendered + passed acceptance + passed its blind audit, and S4 still marked
 #: absent after A9 reinstated it.
@@ -47,8 +52,8 @@ _S_PRESENT = {
     "S2b": True,   # 7,990 clips / 799 ops, accept_s2 PASS, blind audit PASS (0 consensus-BAD)
     "S4": True,    # reinstated by A9; extraction + encode in flight
 }
-assert set(_S_PRESENT) == set(rc.INTENDED_WEIGHTS_PCT), (
-    "_S_PRESENT and rc.INTENDED_WEIGHTS_PCT must name exactly the same strata"
+assert set(_S_PRESENT) == set(rc.MIX_STRATA), (
+    "_S_PRESENT and rc.MIX_STRATA must name exactly the same strata"
 )
 
 
@@ -63,7 +68,24 @@ def default_manifest() -> dict:
         "pairing": {"rule": rc.PAIRING_RULE, "max_refs_per_target": rc.MAX_REFS_PER_TARGET},
         "mix_tolerance_pp": rc.MIX_TOLERANCE_PP,
         "absent_policy": rc.ABSENT_POLICY,
-        # A9 §4 "Pre-registered branches (record now, before any gate returns)", transcribed.
+        # ---- THE MIX CONTRACT (A9 / A11 item 3 / A12) ---------------------------------
+        # STRATUM-level weights are fixed numbers; `S2` is an AGGREGATE whose 69 pp splits
+        # across S2a and S2b PRO-RATA to the assembled post-exclusion base pair counts.
+        # There is deliberately NO per-half number anywhere in this manifest: A12 ruled
+        # that "pro-rata" is A9's instruction and "which are ~equal" was an observation of
+        # pre-exclusion counts, and A1b independently forbids the differential duplication
+        # that a forced-equal share would require.  The split is computed at assembly time
+        # from the counts the assembler produces, and its inputs are frozen in
+        # `misc/ctt_v2_final/PREREG_mix_inputs.json`.
+        "stratum_weights_pct": dict(rc.STRATUM_WEIGHTS_PCT),
+        "prorata_groups": {k: list(v) for k, v in rc.PRORATA_GROUPS.items()},
+        "mix_contract_authority":
+            "A9 §4 + A11 item 3 (S2 total 69) + A12 (split derived pro-rata to the "
+            "assembled post-exclusion base pair counts; A1b: uniform per-sample weight "
+            "within S2, no extra reweighting knob) — root_common.STRATUM_WEIGHTS_PCT + "
+            "root_common.PRORATA_GROUPS",
+        # A9 §4 "Pre-registered branches (record now, before any gate returns)", transcribed
+        # in mix-contract space per A12 ("S2 total 73 / 79 / 85, split pro-rata").
         # These are TOGGLES, not code paths: `--set-present S1=false` selects a branch and
         # the branch weights come from this table, so no assembly variant is ever hardcoded.
         #
@@ -71,24 +93,23 @@ def default_manifest() -> dict:
         # S2b 42.5}}` and was flagged STALE — that is A9's BOTH-absent branch sitting under
         # the S1-only key, i.e. dropping S1 alone would have silently deleted S4 from the
         # mix as well.  A9 §4 pre-registers all three branches explicitly, so transcribing
-        # them is not a design decision; the only derived step is splitting each S2
-        # aggregate into its two halves, which A9 itself specifies ("split pro-rata to the
-        # A5-ratified assembled counts, which are ~equal").
-        # DERIVED from the single ruled source, never restated here:
-        #   S1 fails its gates       -> S0 15 / S2 73 / S4 12
-        #   S4 misses the cutoff     -> A5's 15 / 6 / 79, unchanged
-        #   both                     -> A5's registered 15 / 85
+        # them is not a design decision.
+        #   S1 fails its gates       -> S0 15 / S2 total 73 / S4 12
+        #   S4 misses the cutoff     -> A5's 15 / 6 / S2 total 79, unchanged
+        #   both                     -> A5's registered 15 / S2 total 85
         "absent_weight_overrides": {k: dict(v)
                                     for k, v in rc.ABSENT_BRANCH_WEIGHTS_PCT.items()},
         "absent_weight_overrides_authority":
-            "A9 §4, ratified verbatim by A11 item 3 — root_common.ABSENT_BRANCH_WEIGHTS_PCT "
-            "(S2 aggregate split pro-rata per half; each branch guarded to sum to 100)",
+            "A9 §4, ratified verbatim by A11 item 3 and restated in mix-contract space by "
+            "A12 — root_common.ABSENT_BRANCH_WEIGHTS_PCT (each branch guarded to sum to "
+            "100 and to remove only WHOLE pro-rata groups; every S2 total splits pro-rata)",
         # Weights are NEVER duplicated here — they are read from the single ruled source,
-        # rc.INTENDED_WEIGHTS_PCT.  Literals in this dict are exactly how the mix drifted
-        # once already: this block still carried A5 RULING 2's "S4 OUT" (39.5/39.5/0.0)
-        # after A9 reversed it to 34.5/34.5/10, while assert A3 validated the realized mix
-        # against those same stale literals — i.e. it would have built the wrong mix and
-        # then certified it correct.  Derive, don't restate.
+        # rc.STRATUM_WEIGHTS_PCT.  Literals are exactly how the mix drifted twice already:
+        # this block once carried A5 RULING 2's "S4 OUT" (39.5/39.5/0.0) after A9 reversed
+        # it, and then carried a forced 34.5/34.5 after A9's "split pro-rata" said not to —
+        # while assert A3 validated the realized mix against those same stale literals,
+        # i.e. it would have built the wrong mix and then certified it correct.  Derive,
+        # don't restate.
         #
         # `present` is a statement of FACT about what exists on disk right now, and is the
         # only thing that should ever be edited by hand here:
@@ -101,10 +122,18 @@ def default_manifest() -> dict:
         "strata": {
             s: {
                 "present": _S_PRESENT[s],
-                "weight_pct": rc.INTENDED_WEIGHTS_PCT[s],
+                # the mix-contract weight this stratum draws from.  For a pro-rata member
+                # `weight_pct` is deliberately null — the number does not exist until the
+                # counts do.
+                "weight_group": rc.weight_owner(s),
+                "weight_pct": (rc.STRATUM_WEIGHTS_PCT[s]
+                               if s in rc.STRATUM_WEIGHTS_PCT else None),
+                "weight_rule": ("fixed (ruled)" if s in rc.STRATUM_WEIGHTS_PCT else
+                                f"DERIVED pro-rata within {rc.weight_owner(s)} from the "
+                                f"assembled post-exclusion base pair counts (A12)"),
                 "inventory": str(inv / f"{s}.json"),
             }
-            for s in ("S0", "S1", "S2a", "S2b", "S4")
+            for s in rc.MIX_STRATA
         },
     }
 
@@ -301,6 +330,12 @@ def main() -> None:
     ap.add_argument("--prereg-inline-ood", help="override the inline-OOD pre-registration file")
     ap.add_argument("--write-prereg-inline-ood", action="store_true",
                     help="derive and FREEZE the 8 inline-OOD ops if the file does not exist yet")
+    ap.add_argument("--write-prereg-mix-inputs", nargs="?", const="", metavar="PATH",
+                    default=None,
+                    help="write the A12 frozen-inputs record for the DERIVED S2a:S2b split "
+                         f"(default {rc.PREREG_MIX_INPUTS}). Works with --plan-only, which "
+                         "is how it should be run: the record is written BEFORE the root is "
+                         "materialised and before any training step.")
     ap.add_argument("--no-prune", action="store_true",
                     help="do not delete root entries that are no longer desired")
     ap.add_argument("--plan-only", action="store_true",
@@ -377,29 +412,71 @@ def main() -> None:
         print(f"[assemble] {s}: {len(kept_groups[s])}/{len(inv['groups'])} groups kept, "
               f"{len(drops[s]['dropped_clips'])} clips dropped, {len(samples[s])} base pairs")
 
-    # ---- weights ----------------------------------------------------------------------
-    intended = {s: float(man["strata"][s]["weight_pct"]) for s in present}
+    # ---- weights (MIX-CONTRACT space; the S2a:S2b split is DERIVED — A12) --------------
+    # Stratum-level weights are fixed ruled numbers.  `S2` is one aggregate here and stays
+    # one aggregate through the solver, which is what makes S2a and S2b share a multiplier
+    # by construction rather than by assertion.
+    stratum_weights = man.get("stratum_weights_pct")
+    if stratum_weights is None:
+        raise SystemExit(
+            f"{args.manifest}: no `stratum_weights_pct` block. This manifest predates A12 "
+            f"(it declares a per-half `weight_pct` for S2a/S2b, which A12 abolished). "
+            f"Regenerate it: assemble_root.py --init-manifest <path>")
+    groups = {k: tuple(v) for k, v in (man.get("prorata_groups")
+                                       or rc.PRORATA_GROUPS).items()}
+    if groups != {k: tuple(v) for k, v in rc.PRORATA_GROUPS.items()}:
+        raise SystemExit(f"{args.manifest}: prorata_groups {groups} disagree with the ruled "
+                         f"root_common.PRORATA_GROUPS {rc.PRORATA_GROUPS}")
+    stale = sorted(s for s in man["strata"]
+                   if man["strata"][s].get("weight_pct") is not None
+                   and rc.weight_owner(s) != s)
+    if stale:
+        raise SystemExit(
+            f"{args.manifest}: {stale} declare a literal `weight_pct` but are members of a "
+            f"pro-rata group — A12 forbids a per-half literal, the split is derived from "
+            f"the assembled counts. Regenerate the manifest.")
+
+    #: the mix-contract weights that own at least one PRESENT stratum
+    present_weights = sorted({rc.weight_owner(s) for s in present})
     overrides = man.get("absent_weight_overrides") or {}
     key = ",".join(absent)
     weight_note = "as-declared"
+    branch_key = None
+    intended = {n: float(stratum_weights[n]) for n in present_weights}
     if absent and key in overrides:
         ov = overrides[key]
-        if sorted(ov) != sorted(present):
-            raise SystemExit(f"absent_weight_overrides[{key!r}] covers {sorted(ov)}, "
-                             f"present strata are {sorted(present)}")
+        if sorted(ov) != present_weights:
+            raise SystemExit(f"absent_weight_overrides[{key!r}] covers {sorted(ov)}, the "
+                             f"present strata draw on weights {present_weights}")
         if abs(sum(float(v) for v in ov.values()) - 100.0) > 1e-9:
             raise SystemExit(f"absent_weight_overrides[{key!r}] sums to "
                              f"{sum(float(v) for v in ov.values())}, not 100")
-        intended = {s: float(ov[s]) for s in present}
+        intended = {n: float(ov[n]) for n in present_weights}
         weight_note = f"pre-registered branch override for absent={key}"
+        branch_key = key
     elif absent and abs(sum(intended.values()) - 100.0) > 1e-9:
-        tot = sum(intended.values())
-        intended = {s: 100.0 * v / tot for s, v in intended.items()}
-        weight_note = f"proportional renormalisation (absent={key or 'none'})"
+        weight_note = (f"proportional renormalisation ({rc.ABSENT_POLICY}, absent={key}) "
+                       f"— no pre-registered branch for this absent set")
 
-    mix = rc.solve_multipliers({s: len(samples[s]) for s in present}, intended, tol_pp=tol)
+    base_counts = {s: len(samples[s]) for s in present}
+    mix = rc.solve_multipliers(base_counts, intended, tol_pp=tol, groups=groups)
+    print(f"[assemble] mix weights ({weight_note}): "
+          + ", ".join(f"{n} {intended[n]:g}" for n in present_weights))
+    for gname, d in sorted(mix["prorata_split"].items()):
+        print(f"[assemble] {gname} {d['aggregate_weight_pct']:.4f} pp split PRO-RATA to "
+              f"{d['base_counts']} -> "
+              + ", ".join(f"{m} {v:.4f}" for m, v in sorted(d["derived_weight_pct"].items())))
     print(f"[assemble] mix: multipliers={mix['multipliers']} total={mix['total']} "
           f"max_dev={mix['max_deviation_pp']:.4f} pp (tol {tol})")
+
+    if args.write_prereg_mix_inputs is not None:
+        out = Path(args.write_prereg_mix_inputs or rc.PREREG_MIX_INPUTS)
+        rc.freeze_mix_inputs_prereg(
+            strata_manifest_path=args.manifest, manifest=man, inventories=invs,
+            exclusions=ex, drops=drops, base_counts=base_counts, mix=mix,
+            weight_note=weight_note, branch_key=branch_key, present=present, absent=absent,
+            out_path=out)
+        print(f"[assemble] FROZE the A12 mix inputs -> {out}")
 
     # ---- desired filesystem -----------------------------------------------------------
     shapes = ShapeCache(root / "_shape_cache.json")
@@ -500,12 +577,22 @@ def main() -> None:
         "pairing": {"rule": rc.PAIRING_RULE, "max_refs_per_target": max_refs},
         "weights": {
             "note": weight_note,
-            "branch": {"absent": absent, "override_key": key if key in overrides else None,
+            "contract": "S0 15 / S1 6 / S2 total 69 / S4 10; the S2a:S2b split is DERIVED "
+                        "pro-rata from the assembled post-exclusion base pair counts (A12). "
+                        "`intended_pct` below is that derivation's output, not a declared "
+                        "number — assert A3 counts the root against it, and assert A3b "
+                        "re-checks that the two S2 halves carry the SAME multiplier.",
+            "authority": man.get("mix_contract_authority"),
+            "branch": {"absent": absent, "override_key": branch_key,
                        "authority": man.get("absent_weight_overrides_authority")},
-            "intended_pct": {s: round(intended[s], 6) for s in present},
-            "declared_pct": {s: float(man["strata"][s]["weight_pct"]) for s in man["strata"]},
+            "stratum_weights_pct": {n: round(intended[n], 6) for n in present_weights},
+            "prorata_groups": {k: list(v) for k, v in groups.items()},
+            "prorata_split": mix["prorata_split"],
+            "prereg_mix_inputs": str(rc.PREREG_MIX_INPUTS),
+            "intended_pct": {s: mix["intended_pct"][s] for s in present},
+            "declared_pct": {s: man["strata"][s].get("weight_pct") for s in man["strata"]},
             "realized_pct": {s: round(100.0 * realized[s] / total, 6) for s in present},
-            "deviation_pp": {s: round(100.0 * realized[s] / total - intended[s], 6)
+            "deviation_pp": {s: round(100.0 * realized[s] / total - mix["intended_pct"][s], 6)
                              for s in present},
             "tolerance_pp": tol,
             "solver": mix,

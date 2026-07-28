@@ -51,7 +51,7 @@ judges existed (pre-registration), not yet exercised.
 | Holdouts: 10 zs classes · 10 shader families · 120 reserved clips | **FROZEN** | §7 |
 | Caption grammar + §4 distributional bars | **PINNED** | measured from the 139 corpus captions before any new caption existed |
 | Copy-gate admissibility + bars | **PINNED** | `VERIFY_copy_ref_discriminator.md` verdict PASS; A7 amendment-2 |
-| Mix weights 15 / 6 / 34.5 / 34.5 / 10 (+ 3 contingency branches) | **PINNED (ruled), IN CODE** | A9 / A11 item 3; `root_common.INTENDED_WEIGHTS_PCT` + `ABSENT_BRANCH_WEIGHTS_PCT`, §11.1 |
+| Mix weights **S0 15 / S1 6 / S2 total 69 / S4 10** (+ 3 contingency branches), S2a:S2b **derived pro-rata** | **PINNED (ruled), IN CODE**; the split's inputs **FROZEN** | A9 / A11 item 3 / **A12**; `root_common.STRATUM_WEIGHTS_PCT` + `PRORATA_GROUPS` + `ABSENT_BRANCH_WEIGHTS_PCT`, §11.1; `misc/ctt_v2_final/PREREG_mix_inputs.json` |
 | Pairing rule (ring offset, k=min(3,n−1)) | **PINNED** | `root_common.PAIRING_RULE` |
 | VAE latents + cond_clean for S1/S2a/S2b/S4 | **IN FLIGHT** | jobs 9687982–9687985 running, §5 per-stratum |
 | S1 full render (390 clips) | **PENDING** | 33 pilot clips exist; gate is credit-blocked |
@@ -624,6 +624,93 @@ realized shifts; (4) the report caveat is pre-written. **Do not pad or resample*
 invents frames; retiming corrupts dynamics, half the frozen metric's definition of manner) and **do
 not patch the sampler** (that is a recipe change smuggled inside a "pure dataset intervention" claim).
 
+#### 8.2.1 Per-stratum σ distribution — ANALYTIC, and it discharges A9 §3 item 2
+
+Source of record: `misc/ctt_v2_final/artefacts/sigma/SIGMA_SCHEDULE.{md,json,txt}`.
+
+**Shift-law provenance.** `ltx_trainer/timestep_samplers.py:121-134`, `m = 1.1/3072`,
+`b = 0.58333…`, **no clamp**; sampler defaults `std = 1.0`, `eps = 1e-3`, `uniform_prob = 0.1`;
+`ic_gen.yaml: timestep_sampling_params: {}` (so the defaults are what runs). `tokens` is the target's
+`F_lat·H_lat·W_lat` at patch size 1; **the IC-LoRA reference is concatenated *after* the σ draw**, so
+it does not enter the token count. **The trainer was NOT modified.**
+
+| stratum | mix % | pixels (W×H×F) | latent (F,H,W) | fps | tokens | shift | E[σ] | sd | p10 | p50 | p90 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| S0 | 15.0 | 480×640×121 | (16,20,15) | 24 | 4,800 | **2.3021** | 0.7614 | 0.2145 | 0.4438 | 0.8325 | 0.9584 |
+| S1 | 6.0 | 480×640×121 | (16,20,15) | 24 | 4,800 | **2.3021** | 0.7614 | 0.2145 | 0.4438 | 0.8325 | 0.9584 |
+| S2a | 34.5 | 480×640×121 | (16,20,15) | 24 | 4,800 | **2.3021** | 0.7614 | 0.2145 | 0.4438 | 0.8325 | 0.9584 |
+| S2b | 34.5 | 480×640×121 | (16,20,15) | 24 | 4,800 | **2.3021** | 0.7614 | 0.2145 | 0.4438 | 0.8325 | 0.9584 |
+| S4 | 10.0 | 832×448×33 | (5,14,26) | 16 | 1,820 | **1.2350** | 0.6620 | 0.2315 | 0.3131 | 0.7142 | 0.9198 |
+| **pooled** | 100.0 | mixture | — | — | — | — | 0.7515 | 0.2183 | 0.4237 | 0.8228 | 0.9564 |
+
+Mass in the four `sigma_tracker` default buckets — the bins the per-stratum training-health split
+would be read in:
+
+| stratum | 0.00–0.25 | 0.25–0.50 | 0.50–0.75 | 0.75–1.00 |
+|---|---|---|---|---|
+| S0 / S1 / S2a / S2b | 0.04434 | 0.07983 | 0.21877 | 0.65707 |
+| S4 | 0.07122 | 0.15879 | 0.33163 | 0.43835 |
+| **pooled** | 0.04703 | 0.08772 | 0.23005 | 0.63519 |
+
+*Method: closed-form CDF of `ShiftedLogitNormalTimestepSampler` (reflection and clamp modelled
+exactly); moments by Simpson quadrature of 1−F; quantiles by bisection on the closed-form CDF. **NO
+training run, NO sampling.** Validated against the trainer's own sampler by Monte Carlo: worst
+sup|F_emp − F_analytic| = **0.00036** at 4,000,000 draws per stratum, seed 42.*
+
+**🔒 THE BINDING INVARIANT, verbatim.** *"The realized training σ distribution equals this table
+exactly, conditional on: B3/B6/B7 geometry asserts passing at assembly, smoke-gate G3 having asserted
+realized shifts ∈ {1.2350260416666665, 2.302083333333333} on the certified trainer path, and B4
+replica counts matching the manifest. No training-time σ measurement exists or is needed; this stamp
+plus those asserts is the record."*
+
+That sentence names §9's asserts as load-bearing, so it is worth stating why they suffice: the root is
+a **flat replica-encoded** dataset, so a uniform shuffle realizes the manifest mix exactly over an
+epoch. The only drift path is replica arithmetic, and **B4** checks that against `ROOT_MANIFEST.json`;
+**B2/B3/B6/B7** close geometry; **G3** closes the trainer path. No trainer edit was made or ordered.
+
+**🔴 SUPERSESSION NOTE — do not "repair" the encodes toward 1.120.** A9 §3 states S4 as `(5,20,15)` =
+1,500 tokens ⇒ shift **1.1204**, and gives the mask grid as `(5,20,15)`. **Both constants are wrong.**
+(a) That geometry is not achievable: 832×464 is not VAE-legal (464/32 = 14.5), so the delivered bucket
+is **832×448×33** — a pure 16-row centre crop of the native source, **no resampling**, the only
+VAE-legal bucket that preserves native content, **ratified by A11 item 4**; the real grid is
+`(5,14,26)` = **1,820 tokens ⇒ shift 1.2350** (+0.1146). (b) There is no separate mask geometry to
+specify: `assemble_root.ensure_mask(path, f, h, w, sided)` does `torch.zeros(f, h, w)` with the triple
+taken **verbatim from the target latent**, and `flexible.py:533` reshapes it to `seq_len = F·H·W` — the
+**mask triple IS the latent triple**. A9's `(5,20,15)` can only be read as a claim about the latent
+grid, and it is wrong for the same reason the 1,500-token figure is. Anyone who later "fixes" the
+encode to hit 1.120 would be re-encoding a correct artefact into a worse one.
+
+#### 8.2.2 The merged S4 caveat — TWO discounts, and nominal ≠ effective
+
+S4 carries **two independent effectiveness discounts**, and they compound:
+
+1. **σ**: its 1,820-token samples train at shift 1.2350 against 2.3021 for every 121-frame stratum, so
+   its draws concentrate at lower noise (E[σ] 0.6620 vs 0.7614), attenuating its structural anti-copy
+   signal. Upstream by design, unmodified, disclosed.
+2. **conditioning fraction**: the prefix anchor is a **fixed 2 latent frames**, which is 2/5 = **40 %**
+   of S4's tokens against 2/16 = **12.5 %** at 121f. Conditioned tokens sit at timestep 0 and are
+   excluded from loss, so a far smaller share of an S4 sample carries gradient.
+
+⇒ **Nominal and effective weights differ, and both are stamped.** Nominal (sample-count) weights
+remain the **pre-registered** quantity — they are what the manifest pins and what the contingency
+branches operate on. Effective (loss-bearing-token) shares are a **derived disclosure only**: right
+for disclosure, wrong as a control variable, because pre-registering them would force the nominal
+weights to chase every geometry change (A11 item 2). Per-sample loss-bearing target tokens, derived
+from the mask rule rather than tabulated (`root_common.loss_bearing_tokens`):
+
+| shape | sidedness | conditioned frames | loss-bearing tokens |
+|---|---|---|---|
+| 121f (16,20,15) | one-sided | 2 of 16 | **4,200** (4,800 × 0.875) |
+| 121f (16,20,15) | two-sided | 3 of 16 | **3,900** (4,800 × 0.8125) |
+| S4 (5,14,26) | one-sided | 2 of 5 | **1,092** (1,820 × 0.60) |
+
+**S4's 10 % nominal is ≈ 3 % effective.** Measured on the two-shape fixture root by
+`assert_root.py:A15`: nominal 10.17 % → effective **3.04 %** (i.e. 2.99 % at exactly 10.00 % nominal —
+inside the ruling's 2.8–3.0 % expectation). The weights themselves are **unchanged**: 15 / 6 / 34.5 /
+34.5 / 10, and all three branches unchanged.
+
+**A3's format/latent-grid signature objection also survives** and is accepted on the ground that
+
 **A3's format/latent-grid signature objection also survives** and is accepted on the ground that
 excluding S4 for identifiability while keeping S2 — perfectly identifiable by demo appearance plus
 compression signature — is not a consistent principle; and the binding claims are measured at 121f
@@ -674,7 +761,7 @@ Neither verdict may be overridden by pointing at the other.**
 | **statistic** | per generated eval clip, over the **core-mask frames**, per-frame `max(zNCC(F, A_endpoint), zNCC(F, B_endpoint))`; record the per-clip **min** = `leg_min`. Existing M1 machinery pointed at outputs. CPU, minutes. |
 | **report** | per cell, median `leg_min` for the candidate vs median `leg_min` for that cell's GT donors |
 | **TRIGGER** | the family is implicated **iff** the candidate FAILS the pre-registered pass bars **AND** candidate median `leg_min` < GT median `leg_min` − **0.15** on `G-unseen-cross` **or** `G-zs-cross` |
-| **RESPONSE** | iff triggered, ONE ablation: retrain with all `full_occlusion_family` clips excluded from both halves (~1,730 clips; renormalize **within S2 only**, holding the 34.5/34.5 stratum weights so the mix contract is preserved), score the same cells (~6.4 H100-h + ~6 GPU-h) |
+| **RESPONSE** | iff triggered, ONE ablation: retrain with all `full_occlusion_family` clips excluded from both halves (~1,730 clips; renormalize **within S2 only** — hold the **S2 total** and **re-derive the S2a:S2b split pro-rata to the new post-exclusion counts** (A12), which is what "renormalize within S2" means and is self-correcting when the ablation removes clips from both halves), score the same cells (~6.4 H100-h + ~6 GPU-h) |
 | **CLOSURE** | if the trigger does not fire, **the family is exonerated and the question is permanently closed** — it may not be reopened on rater impressions alone |
 | **negative** | **no new measurement is required before training. Do not build a legibility gate.** |
 
@@ -777,7 +864,8 @@ $PY scripts/ctt_v2/dryrun_epoch.py --root $ROOT      # zero-skip epoch, promoted
 | **A2** | inventory integrity — each stratum inventory's sha256 matches what the root was assembled from | provenance; a changed inventory means the root no longer describes itself | ☐ |
 | A2b | every relative path is `<stratum>_r<NN>/<group>/<target>__ref_<reference>.pt` | | ☐ |
 | A2c | every sample resolves to a verified inventory entry | | ☐ |
-| **A3** | realized mix within **±0.5 pp** of intended, **COUNTED from the assembled root** | the mix is realized by symlink duplication precisely so it can be counted, not asserted by construction (A3-F8.3) | ☑ **solvable within tolerance** — a `--plan-only` assembly over the real S0+S2a+S2b inventories lands `max_dev 0.4296 pp` (tol 0.5) on the ruled `S1,S4`-absent branch, §11.1 |
+| **A3** | realized mix within **±0.5 pp** of intended, **COUNTED from the assembled root** — and for S2a/S2b the target is itself **derived** from the assembled counts, not declared (A12) | the mix is realized by symlink duplication precisely so it can be counted, not asserted by construction (A3-F8.3) | ☑ **solvable within tolerance** — a `--plan-only` assembly over the real S0+S2a+S2b inventories lands `max_dev 0.1360 pp` (tol 0.5) on the ruled `S1,S4`-absent branch, §11.1b |
+| **A3b** | the members of a pro-rata group (S2a, S2b) carry the **SAME replica multiplier**, counted from the replica dirs on disk and cross-checked against the manifest | A12's machine-checkable form of A1b's *"uniform per-sample weight within S2 … no extra reweighting knob"*. An exact integer identity, so it cannot be satisfied "within tolerance" — and differential duplication is the **only** mechanism that can force a share the base counts do not produce. The ±0.5 pp tolerance for S0 is unchanged | ☑ **PASS, and PROVEN TO FIRE** — on a throwaway root with half of S2a's groups moved into a second replica dir (sample set and every per-stratum count untouched) A3b failed **alone**, reporting `{'S2a': 2, 'S2b': 1}` |
 | **A4** | every caption contains ` sksz.` **exactly once**; the outcome marker is absent; zero Tier-1 leak strings; no caption in an inventory is missing from `CAPTIONS.json` | | ☐ |
 | **A5** | S1/S2 endpoints ∩ {eval endpoints, zs-audited endpoints, the 42 test clips} = ∅, classes resolved by `prompts.clip_class()` | A3-F5b | ☐ |
 | **A6** | the 8 pre-registered S2a inline-OOD ops are absent — **and a vacuous exclusion on a root containing S2a is itself a hard failure** | prevents the exclusion silently doing nothing | ☑ **non-vacuous; PASSES in a `--plan-only` assembly** (8/8 ops resolve, exactly 8 groups / 80 clips dropped with reason `inline_ood_op`, 0 survive), §11.4 |
@@ -785,8 +873,15 @@ $PY scripts/ctt_v2/dryrun_epoch.py --root $ROOT      # zero-skip epoch, promoted
 | **A8** | the 120 reserved union-pool clips are absent | | ☐ |
 | **A9** | the S0 zero-shot classes are absent — as a group class *and* via any corpus-resolvable endpoint | | ☐ |
 | **A10** | the Day-0 copy-gate admissibility check is recorded as **PASSED** — absent file or non-PASS verdict ⇒ FAIL | A5 Ruling 1 makes it a training blocker | ☑ currently reads PASS from `VERIFY_copy_ref_discriminator.md` |
-| **D1** | **dry-run epoch: ZERO skipped samples.** Reproduces `_discover_samples` exactly, then resolves and metadata-loads every sample. Any skip — join miss, dangling symlink, unreadable tensor, wrong keys, disagreeing shapes — exits non-zero | the trainer only debug-logs a skip, which is how a silently truncated epoch reaches the claim table | ☐ |
-| **D2** | grep the trainer's own index line immediately after launch: `Fast index: N valid samples from N total`, **N == expected**, and it must count S4's 6,000 | the only in-band confirmation the trainer agrees with us | ☐ |
+| **A11** | **the TWO SHAPES — record level**, six clauses: (a) every shape is one of the two ruled grids · (b) exactly one shape per stratum · (c) the manifest's declared shape set == the set realized on disk · (d) two shapes **iff** `s4_in_mix` · (e) the mask store holds exactly the `(shape, sidedness)` combinations in use and no stale mask · (f) the declared shape **is** the shape inside the tensor (one load per stratum) | A9 §5(iv). These read the assembler's OWN record (`SAMPLES.jsonl` + `ROOT_MANIFEST.json`) and ask *did the assembler tell the truth about what it built* — which no tensor-level pass can answer, because a stale `_shape_cache.json` makes the assembler self-consistent and wrong. (c)–(d) make the S4-cutoff branch visible in the root rather than only in prose | ☑ **all six PASS** |
+| **B0–B7** | **the TWO SHAPES — tensor level**, imported from `scripts/ctt_v2/assert_root_shapes.py` (a deliberately separate module, so neither lane edits the other's file): five-tree set equality *inside each shape class* · per-sample geometry agreement across all five trees incl. `mask numel == F·H·W` and reference/`cond_clean` geometry == target · the shape-class set is exactly the expected one · per-stratum and per-shape counts against the manifest's replica arithmetic · the `Fast index: N of N` gate (ANSI-stripped) · realized shift == the analytic value per class · **no two shape classes share a token count** (a collision is the one mixed-format failure that would be *silent*) | opens every tensor in all five trees — the hazard `REF_mixed_length.md` ranks first is a sample whose five paths all exist but whose `masks/` entry is the 121f mask, which `flexible.py:533` only raises on when that sample is finally drawn, possibly thousands of steps in | ☑ **8/8 PASS**; its own checks proven by `assert_root_shapes.py --self-test` (10 broken fixtures), and the **delegation** proven separately (§9.1) |
+| **A12** | no assembled caption draws on a role-excluded `(clip, role)` description | A10 `enforced_at[0]` — the caption channel. **Fails if the exclusion set is empty**, because a vacuous exclusion is the failure mode ("a recorded exclusion that no code reads is a landmine") | ☑ PASS |
+| **A13** | no assembled sample's **prefix-condition source** (`endpoint_a`) is a role-excluded clip | A10 `enforced_at[2]` — the conditioning channel. `build_from_stream(start9)` makes `endpoint_a` the prefix anchor, so a blank-white A-anchor would enter conditioning *and* corrupt the S1 mechanical gate, which compares against that same start9 (`gate_s1_pilot.py:120`) | ☑ PASS |
+| **A0** | **positive-presence controls for every absence assert**: the eval-endpoint universe is non-empty *and* meets the id namespace of the disjointness-exempt strata · all 10 held-out shader names resolve to real `.glsl` files · the reserved-clip ids share the root's endpoint namespace · all 10 zs class names are real corpus classes | A5/A7/A8/A9 all report "= 0", and each reports "= 0" just as happily when the two sides are in **different namespaces** and the comparison could never have matched. Same failure shape as a log grep that never matches, and just as silent. **Standing campaign rule** (A11, σ/S4-weight ruling): an absence assert may only PASS if the instrument that would have carried the thing was positively found and parsed | ☑ PASS — 92 eval ids overlapping 26 exempt-stratum endpoints; 10/10 shaders resolving in 125 `.glsl`; 120 reserved clips in the root's endpoint id space; 10/10 zs classes are corpus classes |
+| **A14** | every group id slugs to a **unique**, non-empty, path-safe string (lowercase, non-alphanumeric → `_`, runs collapsed), per stratum; the raw→slug mapping is recorded, not inferred | A11 item 3. S4's raw ids are refVFX effect strings with spaces; *"the trainer globs fine" is not the bar* — robustness across shells, `rsync` and future tooling is, and the slug costs nothing. Two raw ids slugging alike would silently **merge two pairing rings**, a design change disguised as a path fix. Nothing already written under raw strings is re-keyed; the mapping bridges | ☑ PASS |
+| **A15** | **nominal and effective weight vectors recorded side by side** (§8.2.2) | A11 item 2 — a derived **disclosure**, not a gate: nominal stays the pre-registered quantity | ☑ recorded; S4 10.17 % nominal → **3.04 %** effective |
+| **D1** | **dry-run epoch: ZERO skipped samples — AND the epoch resolved exactly the sample count `ROOT_MANIFEST.json` names.** Reproduces `_discover_samples` exactly, then resolves and metadata-loads every sample. Any skip — join miss, dangling symlink, unreadable tensor, wrong keys, disagreeing shapes — exits non-zero, and so does any population mismatch in either direction | the trainer only debug-logs a skip, which is how a silently truncated epoch reaches the claim table. **The assert is TWO-SIDED by ruling**: "zero skipped" alone passes trivially when the instrument found nothing to inspect, so an empty or half-assembled root would read as healthy. Under-count is the silent-truncation case; over-count means the root holds samples nothing accounts for | ☑ **PASS on the fixture root** — 0 skipped over 2,536 samples, population control 2,536 == 2,536 |
+| **D2** | grep the trainer's own index line immediately after launch: `Fast index: N valid samples from N total`, **N == expected**, and it must count S4's 6,000. ⚠ **STRIP ANSI FIRST** — see below | the only in-band confirmation the trainer agrees with us | ☐ implemented as `B5_fast_index_N_of_N` in `assert_root_shapes.py --train-log`; prints the exact expected line when no log is supplied |
 | **D3** | **mixed-format smoke gate** — 2 shapes, 100–200 steps, per-format consumed counts exact, finite comparable per-format loss, RoPE in bf16 for both, one train==inference prefix-anchor probe, **realized shifts asserted in two clauses (below)** | three silent trainer defects are on record; this is non-negotiable (A1b Q3, 0.9 confidence) | ☐ |
 | **D4** | `cond_clean` smoke assert logged before step 250 (kill rule K0) | | ☐ |
 
@@ -818,6 +913,110 @@ never moved); clause 2 alone passes even if upstream changed `min_shift`/`max_sh
 expected move together). `root_common.shift_for_tokens()` reproduces the trainer function verbatim
 and `root_common.RULED_SHAPES` carries the two ruled grids, so the numbers above are **derived from
 the shape, never restated** — the arithmetic that produced 1,500/1.120 cannot recur.
+
+#### ⚠ Any assert that reads a trainer log must strip ANSI first
+
+The trainer logs through `RichHandler`, so every number arrives wrapped in SGR colour codes and
+OSC-8 hyperlink escapes. A regex over the raw captured output **silently never matches** — which on
+D1/D2 means reporting *zero skipped samples on a root that is quietly dropping them*: a false PASS on
+a HARD gate, the worst failure direction available. A parallel lane hit this and got four spurious
+FAILs on a healthy run before finding it.
+
+Rules, in force for every log-reading check:
+1. strip ANSI before matching — `assert_root_shapes.strip_ansi()` (SGR `\x1b[…m` **and** OSC
+   `\x1b]…\x07`/`\x1b\\`), verified against real captured output, not against a regex from a message;
+2. carry an explicit **positive** self-check that the stripping worked, so a future escape-sequence
+   change cannot silently reintroduce the bug;
+3. a pattern that does not match is a **FAIL**, never a pass — "absent" and "clean" must never share
+   a code path.
+
+**`dryrun_epoch.py` is deliberately immune**: it does not read any log. It re-implements
+`_discover_samples` in-process and opens every tensor itself, so its "zero skipped" is a counted
+property of the filesystem, not a string match. D2 is the only log-reading check, and it lives in
+`assert_root_shapes.py:B5`, which already strips.
+
+#### 9.1 🔑 THE ASSERTS ARE PROVEN TO FIRE — an assert that has never failed is not known to work
+
+A5 Ruling 9 makes twenty-one checks launch-blocking. A typo in any one of them turns it into a
+decoration that prints `PASS` on a broken root forever — and this campaign has already met that exact
+failure class twice (the mix constants that would have assembled the wrong dataset *and certified it
+correct*; the caption filter that caught 0/150 on captions leaking at 71.3 %). So the battery is
+tested the only way that constitutes evidence:
+
+```bash
+$PY scripts/ctt_v2/tests/make_fixture.py   --out  <fixture dir>        # stub media, real structure
+$PY scripts/ctt_v2/assemble_root.py        --manifest <manifest>       # a real assembled root
+$PY scripts/ctt_v2/tests/prove_asserts.py  --root <root> --manifest <manifest>
+```
+
+`prove_asserts.py` establishes a green baseline, then **breaks exactly one invariant at a time, in
+place**, re-runs the battery, and requires the intended check(s) to fail **and nothing else** to fail
+(strict mode is the default). Every mutation registers its undo *before* it is applied; the baseline
+is re-established at the end, so a leaked mutation cannot masquerade as a pass. Where a mutation
+necessarily trips a second check, the coupled set is **declared** with its reason, never tolerated
+quietly.
+
+Two scoping details, both deliberate:
+
+- **The B-series is exempt from the "nothing else may fail" rule** and recorded instead under
+  `also_fired_external`. B1 is per-shape-class five-tree set equality and B2 opens every tensor, so
+  both are deliberately *broader* views of the same filesystem facts A1/A2b/A2c check — any defect
+  those see, B1/B2 may legitimately see too, and demanding their silence would be demanding they be
+  worse checks. Their own specificity is proven by their own `--self-test`; the **delegation** is
+  proven here.
+- **The harness takes an exclusive lock on the root.** It mutates in place, so two concurrent runs
+  interleave each other's mutations and each reads the other's as a dirty baseline. That happened once
+  during development and looked exactly like a real assert failure; the lock turns it into a refusal.
+
+**Result — 31/31, strict, on the two-shape fixture root** (`PROVE_ASSERTS.json`):
+
+| broken invariant | check(s) that fired |
+|---|---|
+| a sample present in 4 dirs, absent from the 5th | A1 |
+| a sample present in 1 dir only | A1 |
+| all 5 dirs present, zero samples | A1b (**A1 correctly passes** — five empty sets *are* equal, which is why A1b is separate) |
+| one byte appended to an inventory | A2 + A2c *(declared: an inventory failing its sha256 is not consulted, so the samples it should explain become unexplained)* |
+| a path at depth 2 instead of 3 | A2b |
+| a well-formed sample no inventory explains | A2c |
+| 20 S4 samples deleted from all 5 dirs | A3 |
+| ` sksz.` removed / duplicated / outcome marker spliced in / Tier-1 shader basename spliced in | A4 (4 separate mutations) |
+| `endpoint_a` := a real eval-side endpoint | A5 |
+| an op in the root pre-registered as inline-OOD | A6 |
+| the inline-OOD pre-registration file made absent | A6 (**the vacuity branch**) |
+| a group's shader := a HOLDOUT_S2 family | A7 |
+| `endpoint_b` := a reserved union-pool clip | A8 |
+| a group's class := a zero-shot holdout class | A9 |
+| the copy-gate verdict absent / saying FAIL | A10 (2 mutations) |
+| the S4 shape dropped from the declared set | A11c |
+| one S4 sample given the corpus shape | A11b |
+| one S4 sample given an **unruled** shape | A11a + A11b + A11c + A11d + A11e *(declared: five independent clauses all see it — the point of having five)* |
+| a latents symlink repointed at the other shape while the metadata still claims the first | A11f (**the stale-shape-cache case**) |
+| an S4 sample's `masks/` entry repointed at a 121f mask | B2 — **the delegation test**: invisible to A1 (path sets stay equal) and to the record-level clauses (`SAMPLES.jsonl` is untouched and truthful), so it proves both that the imported module sees it *and* that its failure reaches `assert_root.py`'s exit code instead of being printed and dropped |
+| role B excluded for a clip the root legitimately consumes as role B | A12 |
+| the M3 adjudication sidecar made absent | A12 (**the vacuity branch**) |
+| the blank-A-anchor clip put into `endpoint_a` | A12 + A13 *(declared: `endpoint_a` is both the prefix-condition source and the role-A caption source, so one clip in the wrong slot breaks both consumption channels — A10's rule seen from two sides)* |
+| `ROLE_EXCLUSIONS` overridden empty | A13 (**the vacuity branch**) |
+| every S0 endpoint id prefixed `zzz_`, moving the exempt stratum out of the eval namespace | A0 — A5 then still reports "= 0", **truthfully and uselessly**, because the two sides can no longer meet. This is the vacuity failure absence asserts hide |
+| a second group id added that slugs to the same path as an existing one | A14 |
+| a dangling symlink | D1 `DANGLING` |
+| an orphan in a non-primary dir | D1 `ORPHAN` |
+| a join miss | D1 `JOIN-MISS` |
+| a corpus sample's `cond_clean` repointed at an S4 latent | D1 `SHAPE-DISAGREE` (**the two-shape mix's worst silent failure**) |
+| `latents` repointed at a conditions tensor | D1 `BAD-KEYS` |
+
+**The fixture** (`scripts/ctt_v2/tests/make_fixture.py`) is real structure with stub payloads: S0 is
+the real corpus stratum with real tensors and real captions; S2a's op/clip/endpoint structure comes
+from the 7,990-row render manifest, S2b's from the frozen 800-op plan, S4's from the frozen
+`selection.json`, S1 from the Ruling-3 grid grouped by **arm** (A11 item 6). Stub latents carry the
+real `num_frames/height/width/fps`, so masks, shapes, token counts and derived shifts are all
+exercised for real. It deliberately preserves two things so the asserts are never vacuous: **all 8**
+pre-registered inline-OOD ops resolve in the S2a inventory (A6 requires it), and a **legal role-B**
+occurrence of the role-excluded clip is forced into S2b (so A12/A13 run against a root that really
+contains it).
+
+The fixture's `small` preset is tuned so at least one stratum needs a replica multiplier > 1 —
+otherwise the mix would be realized with one replica each and the replica-duplication mechanism, the
+thing that makes the mix **countable**, would never be exercised.
 
 **Pre-assembly, additionally required by A4/A8 and not covered by the battery:**
 
@@ -959,7 +1158,10 @@ $PY scripts/ctt_v2/build_inventories.py s2meta --stratum S2b --sided two --no-re
     --out outputs/ctt_v2/inventories/S2b.json          # 799 groups / 7,990 clips / 23,970 pairs
 # S1 groups are the 11 ARMS (A11 item 6), not the endpoints; S4 groups are the 42 triggers.
 $PY scripts/ctt_v2/assemble_root.py --init-manifest outputs/ctt_v2/strata_manifest.json
-$PY scripts/ctt_v2/assemble_root.py --manifest outputs/ctt_v2/strata_manifest.json --plan-only
+# FREEZE the A12 mix inputs BEFORE assembling — the derived S2a:S2b split is pre-registered by
+# freezing its inputs, so this must run (and be logged) before any training step.
+$PY scripts/ctt_v2/assemble_root.py --manifest outputs/ctt_v2/strata_manifest.json --plan-only \
+    --write-prereg-mix-inputs                    # -> misc/ctt_v2_final/PREREG_mix_inputs.json
 $PY scripts/ctt_v2/assemble_root.py --manifest outputs/ctt_v2/strata_manifest.json
 $PY scripts/ctt_v2/assert_root.py  --root outputs/ctt_v2/roots/ctt_v2_mix
 $PY scripts/ctt_v2/dryrun_epoch.py --root outputs/ctt_v2/roots/ctt_v2_mix
@@ -995,25 +1197,56 @@ constants, so **an assembly run today would assemble the wrong mix and then asse
 The `present` flag is a clean toggle (`--set-present S4=true`) but the weights are not toggled with it.
 **Must be corrected before assembly.**
 
-**RESOLVED (A11 item 3).** `root_common.INTENDED_WEIGHTS_PCT` now reads
-`{S0 15, S1 6, S2a 34.5, S2b 34.5, S4 10}` behind a sum-to-100 guard; `assemble_root.py` **derives**
-the manifest's weights from it instead of restating literals; `_S_PRESENT` marks S2b and S4 present;
-and `outputs/ctt_v2/strata_manifest.json` was regenerated from that single source. A9's three
+**RESOLVED (A11 item 3, then AMENDED by A12).** `root_common` now carries the mix as
+`STRATUM_WEIGHTS_PCT = {S0 15, S1 6, S2 69, S4 10}` behind a sum-to-100 guard, with
+`PRORATA_GROUPS = {S2: (S2a, S2b)}`; `assemble_root.py` **derives** the manifest's weights from it
+instead of restating literals; `_S_PRESENT` marks S2b and S4 present; and
+`outputs/ctt_v2/strata_manifest.json` was regenerated from that single source. A9's three
 pre-registered contingency branches are recorded next to the constants as
-`root_common.ABSENT_BRANCH_WEIGHTS_PCT`, each guarded to sum to 100 and to cover exactly the
-complement of its own key:
+`root_common.ABSENT_BRANCH_WEIGHTS_PCT`, each guarded to sum to 100, to cover exactly the complement
+of its own key, and to remove only **whole** pro-rata groups:
 
-| absent | S0 | S1 | S2a | S2b | S4 |
+| absent | S0 | S1 | **S2 total** | S4 | derived S2a / S2b |
 |---|---|---|---|---|---|
-| — (headline) | 15 | 6 | 34.5 | 34.5 | 10 |
-| **S1** (S1-fail) | 15 | — | 36.5 | 36.5 | **12** |
-| **S4** (S4-cutoff) | 15 | 6 | 39.5 | 39.5 | — |
-| **S1 + S4** | 15 | — | 42.5 | 42.5 | — |
+| — (headline) | 15 | 6 | **69** | 10 | 33.8697 / 35.1303 |
+| **S1** (S1-fail) | 15 | — | **73** | **12** | 35.8332 / 37.1668 |
+| **S4** (S4-cutoff) | 15 | 6 | **79** | — | 38.7784 / 40.2216 |
+| **S1 + S4** *(live today)* | 15 | — | **85** | — | **41.7236 / 43.2764** |
+
+The last column is **computed, not declared** — it is the S2 total split pro-rata to the frozen
+assembled post-exclusion base pair counts (S2a 22,731 · S2b 23,577) and is shown here only so a
+reader can check the code; the numbers live nowhere in the source.
 
 ⚠ **A latent second landmine, found while doing this:** the manifest's `absent_weight_overrides`
 previously held `{"S1": {S0 15, S2a 42.5, S2b 42.5}}` — that is A9's **both-absent** branch sitting
 under the **S1-only** key, so dropping S1 alone would have silently deleted S4 from the mix as well.
 Fixed by the table above. **A9's 34.5 is confirmed PER S2 HALF ⇒ S2 total 69 %** (A11 item 3, 0.98).
+
+### 11.1b The 34.5s themselves were a misreading — **RESOLVED (A12)**
+
+A11 item 3 answered *per-half vs S2-total*; it never asked *equal vs pro-rata*, because the
+exclusion gap had not yet surfaced. A9's full clause is **"S2 total 69, split pro-rata to the
+A5-ratified assembled counts, which are ~equal"** — *"pro-rata"* is the instruction and *"which are
+~equal"* an observation of counts that had not yet met the exclusions. Post-exclusion they are not
+equal (**S2a 22,731 vs S2b 23,577** base pairs; S2a loses 333 clips incl. the 8 inline-OOD ops, S2b
+loses 131), and forcing an equal *share* onto unequal *bases* can only be realized by differentially
+duplicating the halves — which is exactly the *"extra reweighting knob"* A1b excluded by name
+(*"uniform per-sample weight within S2 … no extra reweighting knob"*). It also breaks A9's stated
+reason for S2 = 69, which is per-op exposure (~4.3 draws/op): every surviving S2a op would receive
+~3.7 % more expected draws than every S2b op.
+
+**A12 (0.9+) rules pro-rata.** Measured on the live branch:
+
+| S2 split | multipliers | samples | files (×5) | max_dev |
+|---|---|---|---|---|
+| forced-equal 42.5 / 42.5 | `{S0 389, S2a 19, S2b 18}` | 1,006,040 | 5,030,200 | 0.4296 pp |
+| **pro-rata (A12)** | **`{S0 21, S2a 1, S2b 1}`** | **54,393** | **271,965** | **0.1360 pp** |
+
+18.5× fewer inodes *and* a 3.2× better deviation — a consequence of the correct reading, not a reason
+for it. Implementation: `expand_prorata_weights()` is the only place the split exists;
+`solve_multipliers()` solves a pro-rata group as **one unit**, so the two halves share a multiplier
+structurally; assert **A3b** re-checks that off the assembled root; and the split's inputs are frozen
+in `misc/ctt_v2_final/PREREG_mix_inputs.json` with an amendment rule. See DOSSIER §15.
 
 ### 11.2 S4's on-disk geometry is not what any ruling says — **RESOLVED**
 
@@ -1171,7 +1404,7 @@ each row below records the ruling and where it landed. Nothing here remains open
 |---|---|---|---|
 | **12.1** | **RATIFIED.** Pre-register the 8 inline-OOD ops NOW via the seed-42 selector; **full root exclusion** (not merely held); **S2a only**. A legitimate late pre-registration — the protected property ("the model never saw these ops") is fixed at *training* time, and no training step has run and no candidate has been scored. Draw ratified **as-is**; never post-filtered. | 0.85 | `misc/ctt_v2_final/PREREG_inline_ood_ops_s2a.json`; §11.4; assert A6 |
 | **12.2** | **NO REDRAW.** A1b Q6 is superseded by a change of purpose; the two contaminated triggers are struck from the diagnostic universe and tagged `CONTAMINATED`. "Held-out effect" claims may cite only the 3 clean triggers, n=3 disclosed. Frozen selection not re-opened. | 0.85 | §7 (H4); §8.6 |
-| **12.3** | **CONFIRMED: 34.5 is per S2 half ⇒ S2 total 69 %.** Code + manifest reconciled to `15 / 6 / 34.5 / 34.5 / 10`; S4 `present: true`; A9's three contingency branches recorded next to the constants. | 0.98 | `root_common.INTENDED_WEIGHTS_PCT` + `ABSENT_BRANCH_WEIGHTS_PCT`; `strata_manifest.json`; §11.1 |
+| **12.3** | **CONFIRMED: 34.5 is per S2 half ⇒ S2 total 69 %.** Code + manifest reconciled; S4 `present: true`; A9's three contingency branches recorded next to the constants. **AMENDED by A12:** the S2 *total* stands, the equal halves do not — the split is **derived pro-rata** to the assembled post-exclusion counts, so the contract is `S0 15 / S1 6 / S2 total 69 / S4 10` and no per-half number exists. | 0.98 (A11) / 0.9+ (A12) | `root_common.STRATUM_WEIGHTS_PCT` + `PRORATA_GROUPS` + `ABSENT_BRANCH_WEIGHTS_PCT`; `strata_manifest.json`; §11.1 + §11.1b; assert A3b |
 | **12.4** | **RATIFY 832×448. Do not re-encode.** A1b's literal "no crop" is VAE-impossible and is amended to its intent (no resampling/letterbox/retiming). The 16-row centre crop is the *minimal* amendment; 832×480 is strictly worse on the ruling's own intent. The smoke-gate assert is rewritten with **two clauses**, derived from the trainer's own function. | 0.9 | §5.6; §8.2; §9 (D3); §11.2; `REF_mixed_length.md` |
 | **12.5** | **KEEP the role-scoping; enforce by derivation + machine checks. Whole-clip drop REJECTED.** The defect is provably role-confined; dropping the clip would re-cut a frozen audited batch on a post-hoc criterion. Enforced in three places off one derived list. | 0.9 | `root_common.load_exclusions()`; `captions/assert_caption_store.py`; `generate_descriptions.py`; root assert; §11.6 |
 | **12.6** | **S1's pairing group is the ARM. 1,170 stands.** group=endpoint would pair same-content × different-op, violating "reference = same operator, different content" — it is wrong, not merely different. 11 groups. A shared-probe row **may** reference a non-probe row. | 0.95 | §5.2 |
