@@ -1,5 +1,23 @@
 ## 2026-07-28
 
+- **12:10** — Executed reconciliation ruling A14 for the CTT v2 caption lane. The keystone
+  matched-side auditor control **PASSES**: `gemini-3-flash-preview` flags only **1/192 = 0.52 %** of
+  correctly-matched descriptions (bar ≤10 %) with **0 errors** over 213 calls, closing the one-sided
+  gap the 220/220 mismatch certificate left open — it is the best of the three candidates
+  (flash-lite 2.00 %, 3.5-flash 5.75 %). Auditor **pinned**, no switch-back. The cross-auditor
+  calibration shows it re-flags only 52.4 % of 3.5-flash's positives (−47.6 pp), so first-pass rates
+  measured under it run **mechanically higher** — the ≥97 % bar is easier under the pin, and that is
+  recorded rather than banked. Reuse of the round-2 descriptions verified: the v2 prompt is
+  **byte-identical** to the round-2-era blob across all 62 reachable renderings, and the generation
+  config matches, so A14's overturning condition does not fire. Also landed the gate battery's
+  mean ± SE-of-mean reporting (8a = 0.6909 ± 0.0119 SE, which is what makes v3's 0.0137 movement
+  visibly 1.2 SE of noise) and the **fourth** fix in the "checker whose failure looks like a pass"
+  class — `gate_s1_pilot.py` no longer lets a judge outage shrink *n* instead of failing.
+  **Stopped before the mass run**: a second session is executing the same lane concurrently and has
+  already generated and audited the whole store under the *fallback* auditor. Details, priced
+  options and the recommendation are in `misc/ctt_v2_final/DOSSIER.md` §25.
+
+
 - **11:15** ctt_v2/captions: **K=10 PACKING PILOT RUN — PACKING IS REJECTED, twice over** (advisor
   A12 §3, steps 1–4; `scripts/ctt_v2/captions/pack_pilot.py`, `pack_analysis.py`,
   `pack_clip_check.py`; artifacts in `pilot_m3/packed_k10/`). 200 descriptions in 20 role- AND
