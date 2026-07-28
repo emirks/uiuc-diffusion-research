@@ -26,9 +26,19 @@ THE PRE-REGISTERED GATE (fixed before the job was submitted; see GATE_BARS below
     G1 index      the trainer's own `PrecomputedDataset` indexes N of N samples, no silent
                   drop  (REF_mixed_length "Fast index: N valid samples from N total")
     G2 finite     every per-sample loss, in every arm, at every sigma, is finite and > 0
-    G3 shifts     the set of realized shifts, computed by the trainer's own
-                  `_get_shift_for_sequence_length` from each sample's ACTUAL patchified
-                  seq_len, is EXACTLY the two expected values and nothing else
+    G3 shifts     A11 item 4's TWO-CLAUSE assert, both clauses required:
+                    (a) PIN — the trainer's own `_get_shift_for_sequence_length(t)` returns
+                        {1.2350, 2.3021} (tol 1e-3) at t ∈ {1820, 4800}.  This pins the
+                        FUNCTION, independently of any data, so a silent change to the
+                        trainer's shift schedule cannot hide behind agreeing data.
+                    (b) REALIZED — the shifts actually observed in the mixed run equal that
+                        function's outputs at the REALIZED token counts, and those realized
+                        counts are exactly {5·14·26, 16·20·15} = {1820, 4800}.  This pins the
+                        DATA against the function.
+                  A9 §3's original pre-written assert said {1.120, 2.302}; 1.120 needs
+                  S4 = (5,20,15) = 1,500 tokens, which cannot exist (832×464 is not VAE-legal,
+                  464/32 = 14.5).  A11 item 4 corrected it to the delivered 832×448×33 bucket,
+                  grid (5,14,26) = 1,820 tokens ⇒ 1.2350.
     G4 comparable at MATCHED sigma, the per-format mean loss ratio lies in [1/3, 3]
     G5 native     under the native (unmatched) schedule every arm's mean loss is finite and
                   the arms stay within [1/10, 10] — a looser band because the shift
@@ -57,6 +67,12 @@ MODEL = LAB / "cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors"
 #: pre-registered bars — edited only by a ruling, never by a result
 GATE_BARS = {
     "G2_min_loss": 0.0,
+    #: A11 item 4, clause (a): the FUNCTION pin. seq_len -> shift, tolerance 1e-3.
+    #: Superseded A9 §3's {1.120, 2.302}; see the G3 entry in the module docstring.
+    "G3_shift_pins": {"1820": 1.2350, "4800": 2.3021},
+    "G3_shift_pin_tol": 1e-3,
+    #: A11 item 4, clause (b): the token counts the mixed root must realize, 5·14·26 / 16·20·15
+    "G3_expected_token_counts": [1820, 4800],
     "G4_matched_sigma_ratio_band": [1.0 / 3.0, 3.0],
     "G5_native_ratio_band": [0.1, 10.0],
     "sigma_grid": [0.1, 0.25, 0.5, 0.75, 0.9],
@@ -177,14 +193,28 @@ def one_forward(batch, strategy, tr, emb, conv, sampler, dev):
     conditions["prompt_attention_mask"] = am
 
     mi = strategy.prepare_training_inputs(b, sampler)
-    # The real trainer runs this forward under accelerate's native-AMP wrapper:
-    # `Accelerator(mixed_precision="bf16").prepare(model)` replaces `model.forward` with
-    # `convert_outputs_to_fp32(autocast(bf16)(forward))`.  Reproduced literally, because
-    # without it the intrinsic-mask multiply (`flexible.py:542`, a float32 mask times bf16
-    # clean latents) promotes `noisy_latents` to float32 and `F.linear` raises
-    # "mat1 and mat2 must have the same dtype".  Autocast is what makes the certified run
-    # work; the probe must not differ from it.
+    # 🔴 WHY THE AUTOCAST — do not replace this with a cast (job 9688250_0, DOSSIER §13.12).
+    # Everything on disk is bf16 (latents, reference_latents, cond_clean_latents); only
+    # `masks/*.pt` is float32, and `flexible.py:533` re-`.float()`s it anyway to binarise.
+    # Then `flexible.py:542` does
+    #     noisy_latents = m * clean_latents + (1 - m) * noisy_latents
+    # with `m` float32 and the latents bf16, so torch type-promotion makes `noisy_latents`
+    # FLOAT32.  That promoted tensor reaches `transformer_args.py:211`'s `patchify_proj`,
+    # an nn.Linear holding bf16 weights, and F.linear raises
+    #     "mat1 and mat2 must have the same dtype, but got Float and BFloat16".
+    # So the float32 latent is LEGITIMATE and intended — it is produced by the certified
+    # intrinsic-conditioning path itself.  The real trainer survives it not by casting but
+    # because `trainer.py:620` does `self._transformer = self._accelerator.prepare(...)` with
+    # `mixed_precision: bf16`, and accelerate (`accelerator.py:1780`) replaces forward with
+    # `convert_outputs_to_fp32(autocast(bf16)(forward))` — autocast casts the Linear's inputs
+    # down at the op.  Reproduced literally here: autocast for the forward, `.float()` on the
+    # outputs for the `convert_outputs_to_fp32` half.  Casting the latent instead would make
+    # the probe differ from the trainer at exactly the point under test.
+    lat_dtype = mi.video.latent.dtype
     with torch.no_grad(), torch.autocast("cuda", dtype=torch.bfloat16):
+        if not torch.is_autocast_enabled():          # the guard, not decoration
+            raise RuntimeError("bf16 autocast is NOT active — the probe would then differ "
+                               "from the certified trainer at the promoted-latent step")
         vp, ap = tr(video=mi.video, audio=mi.audio, perturbations=None)
     vp = vp.float() if vp is not None else None
     ap = ap.float() if ap is not None else None
@@ -195,6 +225,11 @@ def one_forward(batch, strategy, tr, emb, conv, sampler, dev):
         "seq_len_total": int(mi.video.latent.shape[1]),
         "target_seq_len": int(mi.video_targets.shape[1]),
         "loss_mask_frac": float(mi.video_loss_mask.float().mean().item()),
+        # recorded, not asserted: float32 here is the mask promotion described above, and is
+        # exactly the condition autocast exists to absorb. Kept in the artefact so a future
+        # dtype change in the trainer is visible rather than inferred.
+        "latent_dtype": str(lat_dtype),
+        "autocast_bf16": True,
     }
 
 
@@ -322,10 +357,40 @@ def run(root: Path, out: Path, model_path: Path, quick: bool) -> int:
     g2_bad = [x for x in all_losses if not math.isfinite(x) or x <= GATE_BARS["G2_min_loss"]]
     g2 = not g2_bad
 
+    # ---- G3: A11 item 4's TWO-CLAUSE shift assert --------------------------------------
+    # Clause (a) pins the FUNCTION against hard-coded constants; clause (b) pins the DATA
+    # against the function. Neither alone is sufficient: (a) alone says nothing about what
+    # this root realized, and (b) alone would still "pass" if the trainer's shift schedule
+    # silently changed, because both sides would move together.
+    tol = GATE_BARS["G3_shift_pin_tol"]
+    pin_rows = []
+    g3a = True
+    for t_str, want_v in GATE_BARS["G3_shift_pins"].items():
+        got_v = SLN._get_shift_for_sequence_length(int(t_str))
+        ok_p = abs(got_v - want_v) <= tol
+        g3a &= ok_p
+        pin_rows.append({"seq_len": int(t_str), "pinned": want_v, "from_trainer_fn": got_v,
+                         "abs_err": abs(got_v - want_v), "tol": tol, "ok": ok_p})
+
+    realized_tokens = sorted({r["tokens"] for r in rows})
+    want_tokens = sorted(GATE_BARS["G3_expected_token_counts"])
+    tokens_ok = realized_tokens == want_tokens
+    # every realized shift must BE the function's output at that sample's realized token count
+    per_sample_ok = all(abs(r["realized_shift"]
+                           - SLN._get_shift_for_sequence_length(r["tokens"])) < 1e-12
+                        for r in rows)
     realized = sorted({r["realized_shift"] for r in rows})
+    realized_from_fn = sorted({SLN._get_shift_for_sequence_length(t)
+                               for t in realized_tokens})
+    set_ok = (len(realized) == len(realized_from_fn)
+              and all(abs(a - b) < 1e-12 for a, b in zip(realized, realized_from_fn)))
+    g3b = tokens_ok and per_sample_ok and set_ok
+
+    # third, independent cross-check: the manifest the root was BUILT from agrees too
     expected = sorted(set(man["distinct_expected_shifts"]))
-    g3 = (len(realized) == len(expected)
-          and all(abs(a - b) < 1e-12 for a, b in zip(realized, expected)))
+    g3c = (len(realized) == len(expected)
+           and all(abs(a - b) < 1e-12 for a, b in zip(realized, expected)))
+    g3 = bool(g3a and g3b and g3c)
 
     lo, hi = GATE_BARS["G4_matched_sigma_ratio_band"]
     g4_rows, g4 = [], True
@@ -350,7 +415,27 @@ def run(root: Path, out: Path, model_path: Path, quick: bool) -> int:
         "G1_fast_index_N_of_N": {"ok": g1, "dataset_n": len(ds), "expected_n": n_expected},
         "G2_all_losses_finite_positive": {"ok": g2, "n_measurements": len(all_losses),
                                           "offenders": g2_bad[:10]},
-        "G3_realized_shifts_exact": {"ok": g3, "realized": realized, "expected": expected},
+        "G3_shift_assert_A11_item4": {
+            "ok": g3,
+            "clause_a_function_pin": {
+                "ok": g3a,
+                "statement": "ShiftedLogitNormalTimestepSampler._get_shift_for_sequence_length"
+                             f"(t) == {GATE_BARS['G3_shift_pins']} within {tol}",
+                "rows": pin_rows},
+            "clause_b_realized": {
+                "ok": g3b,
+                "statement": "the shifts realized by this mixed root equal the function's "
+                             "outputs at the realized token counts {5*14*26, 16*20*15}",
+                "realized_token_counts": realized_tokens,
+                "expected_token_counts": want_tokens,
+                "token_counts_match": tokens_ok,
+                "realized_shifts": realized,
+                "function_outputs_at_realized_tokens": realized_from_fn,
+                "every_sample_shift_equals_fn_of_its_tokens": per_sample_ok,
+                "shift_sets_match": set_ok},
+            "clause_c_manifest_crosscheck": {
+                "ok": g3c, "manifest_distinct_expected_shifts": expected},
+        },
         "G4_matched_sigma_comparable": {"ok": g4, "band": [lo, hi], "rows": g4_rows},
         "G5_native_loss_finite_comparable": {"ok": g5, "band": [nlo, nhi],
                                             "max_over_min": native_ratio,
@@ -397,6 +482,20 @@ def run(root: Path, out: Path, model_path: Path, quick: bool) -> int:
         s = "  ".join(f"{f_}={d[f_]['mean']:.6f}" for f_ in fmts if f_ in d)
         r = [x for x in g4_rows if x["sigma"] == k]
         log(f"   sigma={k}  {s}   max/min={r[0]['max_over_min']:.3f}" if r else f"   sigma={k}  {s}")
+    log("")
+    log("A11 ITEM 4 — THE TWO-CLAUSE SHIFT ASSERT")
+    log(f"   clause (a) FUNCTION PIN  [{'PASS' if g3a else 'FAIL'}]")
+    for p in pin_rows:
+        log(f"      _get_shift_for_sequence_length({p['seq_len']}) = {p['from_trainer_fn']:.6f}"
+            f"   pinned {p['pinned']:.4f}   |err| = {p['abs_err']:.3e}  (tol {p['tol']})"
+            f"   {'ok' if p['ok'] else 'MISMATCH'}")
+    log(f"   clause (b) REALIZED      [{'PASS' if g3b else 'FAIL'}]")
+    log(f"      realized token counts = {realized_tokens}  (expected {want_tokens}"
+        f" = 5*14*26, 16*20*15)")
+    log(f"      realized shifts       = {[round(x, 6) for x in realized]}")
+    log(f"      fn(realized tokens)   = {[round(x, 6) for x in realized_from_fn]}")
+    log(f"      every sample's shift == fn(its own tokens): {per_sample_ok}")
+    log(f"   clause (c) manifest cross-check [{'PASS' if g3c else 'FAIL'}] {expected}")
     log("")
     for k, v in gates.items():
         log(f"   [{'PASS' if v['ok'] else 'FAIL'}] {k}")
