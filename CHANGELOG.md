@@ -1,5 +1,29 @@
 ## 2026-07-28
 
+- **13:45** — **The 29-orphaned-S2a-clip ruling EXECUTED in code — and the closing count is 28 + 1,
+  not 29, so the RESOLVED flip is HELD pending escalation.** Authority, both filenames:
+  `advisors/A16_29_orphaned_s2a_clips_VERBATIM.md` (**ruling of record**) and
+  `advisors/A17_29clip_affirmation_VERBATIM.md` (**independent affirmation**) — drop the 29 at
+  assembly; it is pixel contamination (frames 0–17 flat white, YMIN=YMAX=231), not a caption gap.
+  Three changes: (1) `build_inventories.py:_attach` no longer `SystemExit`s on a standing-exclusion
+  hit — it **drops-and-records**, with the drop set derived as `ROLE_EXCLUSIONS ∩ consumed (clip,
+  role) sources` and written to the inventory as `role_scoped_exclusion_drops`; a missing
+  **non-excluded** key still hard-crashes, and a caption that *exists* for an excluded clip is now a
+  hard error (that would be the cross-role fallback A10 forbids). Both negative controls fired.
+  (2) `root_common.py` — `except OSError: ROLE_EXCLUSIONS = {}` **now raises**: a silently-vacuous
+  exclusion would re-open `endpoint_a` eligibility for future grid builds, where render precedes
+  captioning. (3) `assemble_root.py` — the stale *"occupies field B in all 10 rendered clips"*
+  comment replaced with the counted reality (S2a **29 as A, 0 as B, 29 distinct ops, 22 shaders**;
+  S2b 37, all B). Grep of the assembly lane for a literal `7990`: **no expected-count constant
+  exists** (only prose comments; the sole literal is the accepted `S2_ACCEPTANCE.json`, untouched).
+  Plan-only rehearsal evidence at
+  `outputs/ctt_v2/roots/REHEARSAL_2026-07-28/A16_EXEC/`: **0 of the 29 survive, 0 appear as a pair
+  target, 0 as a reference** — but **28**, not 29, land in `dropped_clips` under the two role-scoped
+  reasons. The 29th, `s2_0818_c03`, is removed one step earlier by its op `FilmBurn_bce3e2cb2d`
+  being a pre-registered **inline-OOD** group drop, so it is recorded in `dropped_groups`. A16's own
+  overturn condition (ii) names any count other than 29, so `CAPTIONS.md` §4.2, the DOSSIER and the
+  lock's `OPEN_CONSUMPTION_GAP` stay **OPEN** pending an owner/advisor call.
+
 - **13:05** — 🔴 **Real defect found at assembly-inventory time: 29 rendered S2a clips consume the
   one role-excluded (clip, role) pair.** Of the 7,990 S2a records, **29 use
   `openvid_T1MiFx98l3g_0_50to156` as their A endpoint** and so need the role-A description A10
