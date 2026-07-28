@@ -75,7 +75,33 @@ assert abs(sum(INTENDED_WEIGHTS_PCT.values()) - 100.0) < 1e-9, (
     f"INTENDED_WEIGHTS_PCT must sum to 100, got {sum(INTENDED_WEIGHTS_PCT.values())}"
 )
 
-#: RULING 3 pre-registered fallback: if S1 drops, the mix renormalises (S0 15 / S2 85)
+#: A9's PRE-REGISTERED CONTINGENCY BRANCHES, ratified verbatim by A11 item 3 (2026-07-28):
+#:   "S1-fail -> 15/0/36.5/36.5/12; S4-cutoff -> 15/6/39.5/39.5/0; both -> 15/42.5/42.5
+#:    (i.e. A9's 15/73/12, 15/79, 15/85 split pro-rata per half)."
+#: A5 RULING 3's original S1-drop literal (15 / 42.5 / 42.5) was computed while S4 was OUT
+#: and the three shares had to absorb all 85 pp; it is now the *both-absent* branch, not the
+#: S1-only one.  Keyed by ",".join(sorted(absent)) — exactly the key `assemble_root.py`
+#: builds — so the branch is SELECTED, never re-derived by hand at assembly time.
+ABSENT_BRANCH_WEIGHTS_PCT = {
+    "S1":    {"S0": 15.0, "S2a": 36.5, "S2b": 36.5, "S4": 12.0},
+    "S4":    {"S0": 15.0, "S1": 6.0, "S2a": 39.5, "S2b": 39.5},
+    "S1,S4": {"S0": 15.0, "S2a": 42.5, "S2b": 42.5},
+}
+
+#: Guard: every branch must sum to 100 and cover EXACTLY the complement of its own key.
+for _absent_key, _branch in ABSENT_BRANCH_WEIGHTS_PCT.items():
+    _gone = set(_absent_key.split(","))
+    assert _gone <= set(INTENDED_WEIGHTS_PCT), f"unknown stratum in branch key {_absent_key!r}"
+    assert set(_branch) == set(INTENDED_WEIGHTS_PCT) - _gone, (
+        f"ABSENT_BRANCH_WEIGHTS_PCT[{_absent_key!r}] must name exactly "
+        f"{sorted(set(INTENDED_WEIGHTS_PCT) - _gone)}, got {sorted(_branch)}"
+    )
+    assert abs(sum(_branch.values()) - 100.0) < 1e-9, (
+        f"ABSENT_BRANCH_WEIGHTS_PCT[{_absent_key!r}] must sum to 100, got {sum(_branch.values())}"
+    )
+del _absent_key, _branch, _gone
+
+#: Fallback for an absent-set A9 did NOT pre-register a branch for (e.g. S2b alone).
 ABSENT_POLICY = "renormalize_proportionally"
 
 TRIGGER = "sksz"
@@ -84,6 +110,67 @@ OUTCOME_MARKER = "The scene transforms into "
 
 SEED = 42
 N_INLINE_OOD_OPS = 8
+
+# --------------------------------------------------------------------------------------
+# TWO SHAPES (A9 §3 + §5 "extend the root asserts to two shapes")
+#
+# S4 is 33-frame / 16 fps material; every other stratum is 121-frame / 24 fps.  The root
+# therefore holds two latent shapes at once, and the trainer's noise schedule is a
+# DETERMINISTIC FUNCTION of the token count, so the two shapes train at two different
+# shifts.  That is the disclosed-and-controlled confound of A9 §3 — it is only controlled
+# if the shapes present in the root are asserted, not assumed.
+#
+# ⚠ The token/shift numbers in A9's prose (1,500 tokens / shift 1.120) are WRONG and were
+# corrected from disk in DOSSIER §13.2: the encoded S4 latent is (128,5,14,26) @ fps 16,
+# i.e. 5*14*26 = 1,820 tokens => shift 1.2350.  A9's pre-written smoke-gate assert
+# `shifts in {1.120, 2.302}` would FAIL on a correct encode.  These constants are derived
+# from the shape, never restated, so the arithmetic cannot drift again.
+# --------------------------------------------------------------------------------------
+#: `ltx_trainer/timestep_samplers.py:122-134` verbatim defaults — NOT clamped upstream,
+#: so 4,800 tokens legitimately extrapolates past max_tokens.
+SHIFT_MIN_TOKENS, SHIFT_MAX_TOKENS = 1024, 4096
+SHIFT_MIN, SHIFT_MAX = 0.95, 2.05
+
+#: latent (F, H/32, W/32) -> the ruled provenance of that shape.  `px` is (W, H, frames),
+#: matching `scripts/ctt_v2/encode/encode_strata.py`'s bucket convention.
+RULED_SHAPES = {
+    (16, 20, 15): {"name": "corpus_121f", "px": (480, 640, 121), "fps": 24.0,
+                   "strata": ("S0", "S1", "S2a", "S2b"),
+                   "authority": "REF_root_format.md (verified by loading)"},
+    (5, 14, 26): {"name": "s4_33f", "px": (832, 448, 33), "fps": 16.0, "strata": ("S4",),
+                  "authority": "DOSSIER §13.2 — verified on disk; 832x448 is a pure "
+                               "16-row centre crop, 464 is not a multiple of 32"},
+}
+
+
+def latent_tokens(fhw) -> int:
+    """Sequence length the timestep sampler sees = the product of the latent dims."""
+    f, h, w = (int(x) for x in fhw)
+    return f * h * w
+
+
+def shift_for_tokens(n_tokens: int) -> float:
+    """`ShiftedLogitNormalTimestepSampler._get_shift_for_sequence_length`, verbatim."""
+    m = (SHIFT_MAX - SHIFT_MIN) / (SHIFT_MAX_TOKENS - SHIFT_MIN_TOKENS)
+    b = SHIFT_MIN - m * SHIFT_MIN_TOKENS
+    return m * n_tokens + b
+
+
+def shape_record(fhw) -> dict:
+    """Everything determinable about one shape, derived — never restated."""
+    key = tuple(int(x) for x in fhw)
+    n = latent_tokens(key)
+    ruled = RULED_SHAPES.get(key)
+    return {
+        "latent_fhw": list(key),
+        "tokens": n,
+        "shift": round(shift_for_tokens(n), 6),
+        "ruled": ruled is not None,
+        "name": (ruled or {}).get("name"),
+        "px_whf": list((ruled or {}).get("px", ())) or None,
+        "fps": (ruled or {}).get("fps"),
+        "authority": (ruled or {}).get("authority"),
+    }
 
 #: frozen sources
 SPLIT_PATH = REPO_ROOT / "data/processed/transitions_std121/split_v1.2.json"
@@ -95,6 +182,10 @@ CONTENT_POOL = REPO_ROOT / "data/processed/ctt_v2_strata/CONTENT_POOL_union.json
 SHADER_DIR = LAB / "misc/gl-transitions/transitions"
 COPY_GATE_VERDICT = DOSSIER_DIR / "VERIFY_copy_ref_discriminator.md"
 PREREG_INLINE_OOD = DOSSIER_DIR / "PREREG_inline_ood_ops_s2a.json"
+#: the M3 pool-drop adjudication.  `CONTENT_POOL_union.json` is deliberately BYTE-UNCHANGED
+#: (nothing may desynchronise from the S2b render), so the adjudication lives here instead
+#: and `role_scoped_exclusions_for_caption_store` is the operative instruction.
+POOL_DROPS = REPO_ROOT / "data/processed/ctt_v2_strata/POOL_DROPS_M3_ADJUDICATION.json"
 
 INVENTORY_SCHEMA = "ctt_v2_stratum_inventory/1"
 STRATA_MANIFEST_SCHEMA = "ctt_v2_strata_manifest/1"
@@ -223,6 +314,9 @@ class Exclusions:
     reserved_pool_clips: set = field(default_factory=set)      # 120 reserved union-pool clips
     zs_classes: set = field(default_factory=set)               # 10 S0 zero-shot classes
     eval_endpoints: set = field(default_factory=set)           # eval + zs-audited + 42 test
+    #: {clip_id: {"A", "B"}} — per-(clip, role) caption-store exclusions (M3 adjudication)
+    role_scoped_captions: dict = field(default_factory=dict)
+    clip_level_captions: set = field(default_factory=set)
     provenance: dict = field(default_factory=dict)
 
     def as_record(self) -> dict:
@@ -234,8 +328,137 @@ class Exclusions:
             "zs_classes": sorted(self.zs_classes),
             "n_eval_endpoints": len(self.eval_endpoints),
             "eval_endpoints": sorted(self.eval_endpoints),
+            "role_scoped_caption_store_exclusions":
+                {k: sorted(v) for k, v in sorted(self.role_scoped_captions.items())},
+            "clip_level_caption_store_exclusions": sorted(self.clip_level_captions),
             "provenance": self.provenance,
         }
+
+    def caption_store_hits(self, sources) -> list[str]:
+        """Which excluded (clip, role) descriptions a sample's caption draws on."""
+        hits = []
+        for clip, role in sources:
+            if clip in self.clip_level_captions:
+                hits.append(f"{clip}:*")
+            elif role in self.role_scoped_captions.get(clip, ()):
+                hits.append(f"{clip}:{role}")
+        return sorted(set(hits))
+
+
+def load_caption_store_exclusions(path: Path | None = None) -> tuple[dict, set, dict]:
+    """(role_scoped, clip_level, provenance) from the M3 pool-drop adjudication.
+
+    ABSENT IS A FAILURE, not an empty set: the whole point of the adjudication is that the
+    pool file was left byte-unchanged, so this file is the only carrier of the instruction.
+    A silently-vacuous exclusion is exactly the class of defect the campaign keeps meeting,
+    so the caller is told, in `provenance["error"]`, and the assert battery hard-fails.
+
+    Two keys carry the same disposition — A10's authoritative `role_scoped_exclusions`
+    (which also carries `enforced_at`) and the earlier `role_scoped_exclusions_for_caption_
+    store`.  Both are read and they must AGREE; a disagreement is a hard error, because a
+    half-updated sidecar is how a role exclusion silently narrows to one consumption channel.
+    """
+    p = Path(path) if path else POOL_DROPS
+    if not p.exists():
+        return {}, set(), {"file": str(p), "error": "ABSENT — the role-scoped exclusion "
+                           "cannot be honoured and would be silently vacuous"}
+    rec = read_json(p)
+    ruling = {c: set(v.get("excluded_roles") or ()) for c, v in
+              (rec.get("role_scoped_exclusions") or {}).items()}
+    legacy = {c: set(v) for c, v in
+              (rec.get("role_scoped_exclusions_for_caption_store") or {}).items()}
+    if ruling and legacy and ruling != legacy:
+        raise AssertionError(
+            f"{p}: `role_scoped_exclusions` {ruling} disagrees with "
+            f"`role_scoped_exclusions_for_caption_store` {legacy} — a half-updated sidecar "
+            f"would enforce the exclusion on one consumption channel and not the other")
+    role = ruling or legacy
+    clip = set(rec.get("clip_level_exclusions_for_caption_store") or [])
+    prov = {"file": str(p), "sha256": sha256_file(p),
+            "authority": (rec.get("ruling_of_record") or {}).get("advisor") or rec.get("authority"),
+            "verdict": (rec.get("ruling_of_record") or {}).get("verdict"),
+            "standing_rule": (rec.get("ruling_of_record") or {}).get("standing_rule"),
+            "status": rec.get("status"),
+            "enforced_at": {c: (v.get("enforced_at") or []) for c, v in
+                            (rec.get("role_scoped_exclusions") or {}).items()}}
+    return role, clip, prov
+
+
+#: A10 (2026-07-28) — the standing role-scoped exclusion, DERIVED from the sidecar so the
+#: two can never drift.  Authority: `data/processed/ctt_v2_strata/
+#: POOL_DROPS_M3_ADJUDICATION.json:role_scoped_exclusions` (verdict "ROLE-SCOPED EXCLUSION.
+#: Whole-clip drop DENIED as written. Confidence 0.93.").
+#:
+#: `openvid_T1MiFx98l3g_0_50to156` has a blank-white A-anchor (ffprobe YMIN=YMAX=YAVG=232)
+#: and a healthy B-anchor (Y 12-242); it is field B in 37/37 rendered S2b rows, byte-pure on
+#: every one, so the render contract makes the blank window structurally unreachable in the
+#: role it occupies.  The pool file and the endpoint frame cache stay BYTE-UNCHANGED — a
+#: completed render and the running encodes are keyed to them — which is exactly why the
+#: exclusion has to live in code that every consumer reads.
+#:
+#: A10's standing rule, campaign-wide: **defects are dispositioned at the unit of
+#: CONSUMPTION — (clip, role) — not the unit of storage.**  Whole-clip drops are reserved
+#: for role-independent defects (leakage, duplication, provenance) or clips not yet
+#: consumed anywhere.  `enforced_at` in the sidecar enumerates the consumption channels;
+#: a recorded exclusion that no code reads is a landmine.
+try:
+    ROLE_EXCLUSIONS: dict = {c: tuple(sorted(r))
+                             for c, r in load_caption_store_exclusions()[0].items()}
+except OSError:  # pragma: no cover — the sidecar is on /projects, not /tmp
+    ROLE_EXCLUSIONS = {}
+
+
+def role_excluded(clip: str, role: str) -> bool:
+    """Is this (clip, role) — this unit of CONSUMPTION — excluded? (A10 standing rule.)"""
+    return role in ROLE_EXCLUSIONS.get(clip, ())
+
+
+def caption_lookup(store: dict, clip: str, role: str, key_fmt: str = "{clip}|{role}") -> str:
+    """(clip, role)-keyed caption-store lookup.  Hard-fail; NO cross-role fallback.
+
+    A10, verbatim intent: a request for a role-excluded clip's A-caption means the clip
+    leaked into A-role somewhere upstream, and that **must crash, not silently degrade** —
+    a cross-role fallback would substitute the healthy B description and produce a caption
+    that describes the wrong nine frames, with nothing in any log to show it happened.
+    """
+    if role_excluded(clip, role):
+        raise SystemExit(
+            f"[caption] REFUSING to look up ({clip!r}, role {role!r}): that (clip, role) is "
+            f"role-excluded by A10 ({POOL_DROPS.name}). A request for it means the clip "
+            f"leaked into role {role} upstream — fix the caller, do not fall back.")
+    key = key_fmt.format(clip=clip, role=role)
+    if key not in store:
+        raise SystemExit(f"[caption] caption store has no entry for key {key!r} "
+                         f"((clip, role) = ({clip!r}, {role!r})); no cross-role fallback exists")
+    return store[key]
+
+
+def caption_sources(entry: dict, sided: str, kind: str) -> list[tuple[str, str]]:
+    """The (clip, role) descriptions an ASSEMBLED caption draws on.
+
+    An explicit `caption_sources` on the inventory entry always wins.  Otherwise it is
+    derived from the S2/S1 render contract (DOSSIER §13.1, verified against `render_s2.py`):
+    `build_from_stream(start9)` puts the A endpoint's FIRST 9 frames at the head, so the A
+    endpoint supplies the **role-A** description; `build_to_stream(end9)` puts the B
+    endpoint's LAST 9 frames at the tail, so the B endpoint supplies the **role-B**
+    description.  `swap` inverts the shader progress argument only — it never exchanges the
+    A/B content assignment, which is why role scoping is meaningful at all.
+
+    A one-sided clip's caption has no suffix sentence (`{S1}. sksz.`), so it draws on no
+    role-B description.  `kind == "corpus"` (S0) draws on the 139 certified corpus captions,
+    not on the per-(clip, role) store at all.
+    """
+    if entry.get("caption_sources") is not None:
+        return [(c, r) for c, r in entry["caption_sources"]]
+    if kind == "corpus":
+        return []
+    eps = list(entry.get("endpoints") or [])
+    if not eps:
+        return []
+    out = [(eps[0], "A")]
+    if sided == "two" and len(eps) > 1:
+        out.append((eps[1], "B"))
+    return out
 
 
 def zs_classes() -> set:
@@ -314,21 +537,26 @@ def eval_endpoint_universe() -> tuple[set, dict]:
     return universe, prov
 
 
-def load_exclusions(prereg_inline_ood: Path | None = None) -> Exclusions:
+def load_exclusions(prereg_inline_ood: Path | None = None,
+                    pool_drops: Path | None = None) -> Exclusions:
     holdout = read_json(HOLDOUT_S2)
     pool = read_json(CONTENT_POOL)
     universe, prov = eval_endpoint_universe()
+    role_caps, clip_caps, cap_prov = load_caption_store_exclusions(pool_drops)
     ex = Exclusions(
         holdout_shaders=set(holdout["holdout_shaders"]),
         inline_ood_ops=set(),
         reserved_pool_clips={r["clip_id"] for r in pool["reserved"]},
         zs_classes=zs_classes(),
         eval_endpoints=universe,
+        role_scoped_captions=role_caps,
+        clip_level_captions=clip_caps,
         provenance={
             "holdout_shaders": str(HOLDOUT_S2.relative_to(REPO_ROOT)),
             "reserved_pool_clips": str(CONTENT_POOL.relative_to(REPO_ROOT)),
             "zs_classes": str(SPLIT_PATH.relative_to(REPO_ROOT)),
             "eval_endpoints": prov,
+            "caption_store_exclusions": cap_prov,
         },
     )
     path = Path(prereg_inline_ood) if prereg_inline_ood else PREREG_INLINE_OOD
@@ -371,6 +599,70 @@ def select_inline_ood_ops(groups: dict, exclusions: Exclusions, n: int = N_INLIN
         "eligible_shaders": shaders,
         "eligible_op_count": sum(len(v) for v in eligible.values()),
     }
+
+
+# --------------------------------------------------------------------------------------
+# A11 item 1 — freeze the inline-OOD draw as a PRE-REGISTRATION artefact
+# --------------------------------------------------------------------------------------
+#: A11 item 1, verbatim.  The declaration is the whole evidentiary content of the file: it
+#: states WHEN the draw happened relative to the only two events that could contaminate it.
+PREREG_TIMING_DECLARATION = (
+    "written after S2a data existed, before any training step and before any candidate was "
+    "scored; selection is a blind seed-42 draw over the sorted op list, referencing no "
+    "measured property of any op."
+)
+#: A11 item 1, verbatim.  Assembly does NOT wait for the countersign.
+PREREG_STATUS = ("advisor-ratified 2026-07-28; owner countersign folded into the stamp "
+                 "sign-off batch (DATASET §13.3 item 8)")
+#: A11 item 1 — the two OOD tiers are complementary, and confusing them is the live risk.
+PREREG_AUTHORITY = (
+    "A5 RULING 4 (8 pre-registered S2a inline-OOD ops, 8 distinct shaders, seed 42), "
+    "ratified by A11 item 1 (2026-07-28). RELATION TO THE 10 HELD-OUT SHADER FAMILIES "
+    "(H2): complementary tiers, NOT overlap. H2 is a FAMILY-level holdout with ZERO "
+    "rendered clips — it cannot supply inline demos without new rendering and it stays "
+    "eval-side. These 8 are OP-level near-OOD (a novel op drawn from a shader family the "
+    "model DOES train on), with clips already rendered and encoded. The 8 ops are EXCLUDED "
+    "from the assembled root — not merely held — while their encodes stay on disk for the "
+    "inline lane's diagnostic demos. Per A2 the inline scores never gate anything. "
+    "S2a-ONLY by ruling: S2b's operators are all-new, so no S2b op shares an excluded "
+    "op's id and the excluded ops remain globally unseen at op level. The draw is "
+    "RATIFIED AS-IS and is NEVER post-filtered (e.g. to avoid full-occlusion shaders) — "
+    "post-draw curation is exactly the cherry-picking the seed-42 procedure precludes."
+)
+
+
+def freeze_inline_ood_prereg(inventory_path: str | Path, exclusions: Exclusions,
+                             out_path: str | Path | None = None,
+                             when: str | None = None) -> dict:
+    """Derive the 8 inline-OOD ops from a FROZEN S2a inventory and write the artefact.
+
+    Everything in the written record is derived from the inventory on disk — the 8 op ids,
+    the 80 clip ids and the inventory's own sha256 — so the pre-registration can be
+    re-verified against the exact bytes it was drawn from, forever.  Re-running is a no-op
+    unless the inventory changed, in which case the sha256 in the file stops matching and
+    assert A6 says so instead of silently re-drawing.
+    """
+    import time  # noqa: PLC0415
+
+    inv_path = Path(inventory_path)
+    inv = read_json(inv_path)
+    if inv.get("stratum") != "S2a":
+        raise ValueError(f"{inv_path}: the inline-OOD pre-registration is S2a-only, "
+                         f"got stratum {inv.get('stratum')!r}")
+    rec = select_inline_ood_ops(inv["groups"], exclusions)
+    clips = sorted(c for op in rec["op_ids"] for c in inv["groups"][op]["clips"])
+    rec["authority"] = PREREG_AUTHORITY
+    rec["status"] = PREREG_STATUS
+    rec["timing_declaration"] = PREREG_TIMING_DECLARATION
+    rec["written"] = when or time.strftime("%Y-%m-%d")
+    rec["source_inventory"] = str(inv_path)
+    rec["source_inventory_sha256"] = sha256_file(inv_path)
+    rec["source_inventory_counts"] = dict(inv.get("counts") or {})
+    rec["n_clips"] = len(clips)
+    rec["clip_ids"] = clips
+    if out_path is not None:
+        write_json(out_path, rec)
+    return rec
 
 
 # --------------------------------------------------------------------------------------
@@ -541,3 +833,107 @@ def parse_replica(rel: str) -> tuple[str, int]:
 def rel_paths(root: Path, sub: str) -> set:
     base = root / sub
     return {str(p.relative_to(base)) for p in base.glob("**/*.pt")}
+
+
+# --------------------------------------------------------------------------------------
+# two-shape assert — prefer an external importable module, else the fallback below
+# --------------------------------------------------------------------------------------
+def _fallback_check_shapes(root: Path, manifest: dict, rows: list[dict]) -> list[dict]:
+    """Fallback two-shape assert.  Same result contract as an external module.
+
+    Each returned dict is {"name", "ok", "detail", "offenders"} and every one of them is a
+    HARD check.  What is asserted:
+
+    * every sample's shape is one of `RULED_SHAPES` (an unruled shape means the encode
+      drifted from the bucket, which no other check would notice);
+    * a stratum has exactly ONE shape (a mixed-shape stratum means two encodes got merged);
+    * the shape set realised on disk == the shape set the root manifest declares;
+    * a two-shape root actually contains BOTH shapes when S4 is in the mix (and only one
+      when it is not) — i.e. the S4 cutoff branch is visible in the root, not just in prose;
+    * the mask store carries exactly the (shape, sidedness) combinations the samples use,
+      and no stale mask from another shape (a reused 16-frame mask is a `RuntimeError` at
+      `flexible.py:533`, which is a good failure mode but far too late).
+    """
+    out: list[dict] = []
+    by_stratum: dict[str, set] = {}
+    unruled, need_masks = [], set()
+    for r in rows:
+        fhw = tuple(int(x) for x in r["shape"])
+        by_stratum.setdefault(r["stratum"], set()).add(fhw)
+        need_masks.add((fhw, r["sided"]))
+        if fhw not in RULED_SHAPES:
+            unruled.append(f"{r['rel']}: latent shape {list(fhw)} is not a ruled shape "
+                           f"({sorted(list(k) for k in RULED_SHAPES)})")
+    out.append({"name": "A11a_shapes_are_ruled", "ok": not unruled,
+                "detail": f"{len(rows)} sample rows carry only ruled latent shapes"
+                          if not unruled else f"{len(unruled)} unruled shapes",
+                "offenders": unruled})
+
+    mixed = [f"{s}: {sorted(list(x) for x in shapes)}"
+             for s, shapes in sorted(by_stratum.items()) if len(shapes) != 1]
+    out.append({"name": "A11b_one_shape_per_stratum", "ok": not mixed,
+                "detail": " | ".join(f"{s} {sorted(list(x) for x in v)[0]}"
+                                     for s, v in sorted(by_stratum.items()))
+                          if not mixed else f"{len(mixed)} strata carry >1 shape",
+                "offenders": mixed})
+
+    realized = {fhw for shapes in by_stratum.values() for fhw in shapes}
+    declared = {tuple(int(x) for x in v["latent_fhw"])
+                for v in (manifest.get("shapes", {}).get("per_shape") or [])}
+    diff = sorted(list(x) for x in (realized ^ declared))
+    out.append({"name": "A11c_declared_shapes_match_disk", "ok": not diff,
+                "detail": f"{len(realized)} distinct shape(s) on disk == declared"
+                          if not diff else "declared vs realised shape sets differ",
+                "offenders": [f"symmetric difference: {diff}"] if diff else []})
+
+    s4 = bool(manifest.get("s4_in_mix"))
+    want_n = 2 if s4 else 1
+    ok_n = len(realized) == want_n
+    out.append({"name": "A11d_two_shapes_iff_s4", "ok": ok_n,
+                "detail": (f"s4_in_mix={s4} and the root holds {len(realized)} shape(s) "
+                           f"{sorted(list(x) for x in realized)} — as ruled"),
+                "offenders": [] if ok_n else
+                [f"s4_in_mix={s4} implies {want_n} shape(s), found {len(realized)}: "
+                 f"{sorted(list(x) for x in realized)}"]})
+
+    store = root / "_mask_store"
+    have = {p.name for p in store.glob("*.pt")} if store.is_dir() else set()
+    want = {f"f{f}_h{h}_w{w}_{sided}sided.pt" for (f, h, w), sided in need_masks}
+    bad = [f"missing mask {n}" for n in sorted(want - have)]
+    bad += [f"stale mask {n} (no sample uses it)" for n in sorted(have - want)]
+    out.append({"name": "A11e_mask_store_matches_shapes", "ok": not bad,
+                "detail": f"mask store carries exactly the {len(want)} (shape, sidedness) "
+                          f"combinations the samples use" if not bad
+                          else f"{len(bad)} mask-store problems", "offenders": bad})
+    return out
+
+
+_fallback_check_shapes.source = "root_common._fallback_check_shapes"
+
+
+def shape_assert():
+    """The two-shape assert implementation to use.
+
+    A separate importable module is preferred if one exists — coordination point, so the
+    two-shape work is never written twice.  Contract: any module in this directory whose
+    name mentions `shape` and which exposes ``check_shapes(root, manifest, rows) -> list``
+    of ``{"name", "ok", "detail", "offenders"}`` records.  `rows` are the SAMPLES.jsonl
+    rows (they carry `rel`, `stratum`, `sided`, `shape`).  The chosen implementation is
+    printed and recorded, so a fallback is never silent.
+    """
+    if str(HERE) not in sys.path:
+        sys.path.insert(0, str(HERE))
+    for path in sorted(HERE.glob("*shape*.py")):
+        if path.name.startswith("_"):
+            continue
+        try:
+            mod = __import__(path.stem)
+            fn = getattr(mod, "check_shapes", None)
+        except Exception as exc:  # noqa: BLE001 — never silently degrade
+            print(f"[shapes] {path.name} import failed ({exc!r}); trying the next candidate",
+                  file=sys.stderr)
+            continue
+        if callable(fn):
+            fn.source = f"scripts/ctt_v2/{path.name}:check_shapes"
+            return fn
+    return _fallback_check_shapes

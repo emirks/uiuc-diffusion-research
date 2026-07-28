@@ -63,16 +63,26 @@ def default_manifest() -> dict:
         "pairing": {"rule": rc.PAIRING_RULE, "max_refs_per_target": rc.MAX_REFS_PER_TARGET},
         "mix_tolerance_pp": rc.MIX_TOLERANCE_PP,
         "absent_policy": rc.ABSENT_POLICY,
-        # ⚠ OPEN — NEEDS A RULING.  A5 RULING 3 named the S1-drop renormalisation as
-        # S0 15 / S2a 42.5 / S2b 42.5, but that was computed while S4 was OUT and the
-        # three shares had to absorb all 85 pp.  With S4 reinstated at 10 pp (A9), those
-        # literals no longer sum correctly against the current mix and the override is
-        # stale.  Left in place UNCHANGED rather than silently re-derived — inventing a
-        # renormalisation is a design decision, not an operator fix.  It only bites if S1
-        # actually drops; S1 is currently `present: False` pending its gate, so this MUST
-        # be ruled on before assembly runs without S1.
-        "absent_weight_overrides": {"S1": {"S0": 15.0, "S2a": 42.5, "S2b": 42.5}},
-        "absent_weight_overrides_STALE": True,
+        # A9 §4 "Pre-registered branches (record now, before any gate returns)", transcribed.
+        # These are TOGGLES, not code paths: `--set-present S1=false` selects a branch and
+        # the branch weights come from this table, so no assembly variant is ever hardcoded.
+        #
+        # History worth keeping: this dict previously held `{"S1": {S0 15, S2a 42.5,
+        # S2b 42.5}}` and was flagged STALE — that is A9's BOTH-absent branch sitting under
+        # the S1-only key, i.e. dropping S1 alone would have silently deleted S4 from the
+        # mix as well.  A9 §4 pre-registers all three branches explicitly, so transcribing
+        # them is not a design decision; the only derived step is splitting each S2
+        # aggregate into its two halves, which A9 itself specifies ("split pro-rata to the
+        # A5-ratified assembled counts, which are ~equal").
+        # DERIVED from the single ruled source, never restated here:
+        #   S1 fails its gates       -> S0 15 / S2 73 / S4 12
+        #   S4 misses the cutoff     -> A5's 15 / 6 / 79, unchanged
+        #   both                     -> A5's registered 15 / 85
+        "absent_weight_overrides": {k: dict(v)
+                                    for k, v in rc.ABSENT_BRANCH_WEIGHTS_PCT.items()},
+        "absent_weight_overrides_authority":
+            "A9 §4, ratified verbatim by A11 item 3 — root_common.ABSENT_BRANCH_WEIGHTS_PCT "
+            "(S2 aggregate split pro-rata per half; each branch guarded to sum to 100)",
         # Weights are NEVER duplicated here — they are read from the single ruled source,
         # rc.INTENDED_WEIGHTS_PCT.  Literals in this dict are exactly how the mix drifted
         # once already: this block still carried A5 RULING 2's "S4 OUT" (39.5/39.5/0.0)
@@ -104,6 +114,7 @@ def apply_exclusions(inv: dict, ex: rc.Exclusions) -> tuple[dict, dict]:
     """Return (kept_groups, drop_record).  Groups/clips are removed, never silently."""
     prompts = rc._prompts()
     stratum = inv["stratum"]
+    kind = inv.get("kind", "synthetic_op")
     check_endpoints = bool(inv.get("endpoint_disjointness", True))
     dropped_groups, dropped_clips = [], []
     kept: dict[str, dict] = {}
@@ -129,6 +140,20 @@ def apply_exclusions(inv: dict, ex: rc.Exclusions) -> tuple[dict, dict]:
             hit_reserved = sorted(set(eps) & ex.reserved_pool_clips)
             if hit_reserved:
                 creasons.append("reserved_pool_clip:" + ",".join(hit_reserved))
+            # M3 adjudication: a (clip, role) description may be excluded without the clip
+            # being dropped.  `openvid_T1MiFx98l3g_0_50to156` has a blank A-anchor and a
+            # healthy B-anchor, and occupies field B in all 10 rendered clips, so role-A is
+            # excluded and the clip itself is KEPT — a whole-clip drop would discard 10 good
+            # rendered clips to fix a defect that cannot manifest in the role it occupies.
+            hit_caps = ex.caption_store_hits(
+                rc.caption_sources(entry, g.get("sided", "two"), kind))
+            if hit_caps:
+                creasons.append("role_scoped_caption_exclusion:" + ",".join(hit_caps))
+            # ...and the CONDITIONING channel of the same (clip, role) exclusion: the prefix
+            # anchor is the A endpoint's frames 0-8, so endpoint_a is the prefix-condition
+            # source (A10 `enforced_at[2]`).
+            if eps and rc.role_excluded(eps[0], "A"):
+                creasons.append(f"role_scoped_prefix_condition:{eps[0]}:A")
             if check_endpoints:
                 hit_eval = sorted(set(eps) & ex.eval_endpoints)
                 if hit_eval:
@@ -331,8 +356,8 @@ def main() -> None:
             print("[assemble] WARNING: no inline-OOD pre-registration and no S2a inventory; "
                   "the 8-op exclusion is VACUOUS this run")
         elif args.write_prereg_inline_ood:
-            rec = rc.select_inline_ood_ops(s2a["groups"], ex)
-            rc.write_json(prereg_path, rec)
+            rec = rc.freeze_inline_ood_prereg(man["strata"]["S2a"]["inventory"], ex,
+                                              out_path=prereg_path)
             ex.inline_ood_ops = set(rec["op_ids"])
             ex.provenance["inline_ood_ops"] = {"file": str(prereg_path),
                                                "status": rec["status"], "just_written": True}
@@ -362,8 +387,11 @@ def main() -> None:
         if sorted(ov) != sorted(present):
             raise SystemExit(f"absent_weight_overrides[{key!r}] covers {sorted(ov)}, "
                              f"present strata are {sorted(present)}")
+        if abs(sum(float(v) for v in ov.values()) - 100.0) > 1e-9:
+            raise SystemExit(f"absent_weight_overrides[{key!r}] sums to "
+                             f"{sum(float(v) for v in ov.values())}, not 100")
         intended = {s: float(ov[s]) for s in present}
-        weight_note = f"override for absent={key}"
+        weight_note = f"pre-registered branch override for absent={key}"
     elif absent and abs(sum(intended.values()) - 100.0) > 1e-9:
         tot = sum(intended.values())
         intended = {s: 100.0 * v / tot for s, v in intended.items()}
@@ -412,8 +440,35 @@ def main() -> None:
                                  "reference": smp["reference"], "sided": smp["sided"],
                                  "caption_key": ckey, "shape": [f, h, w],
                                  "replicas": mix["multipliers"][s],
-                                 "endpoints": tgt.get("endpoints") or []})
+                                 "endpoints": tgt.get("endpoints") or [],
+                                 "caption_sources": [list(x) for x in rc.caption_sources(
+                                     tgt, smp["sided"], inv.get("kind", "synthetic_op"))]})
     shapes.save()
+
+    # ---- the two shapes, derived from what the encodes actually are --------------------
+    shape_counts: dict[tuple, int] = {}
+    shape_by_stratum: dict[str, set] = {}
+    for r in rows:
+        key = tuple(r["shape"])
+        shape_counts[key] = shape_counts.get(key, 0) + r["replicas"]
+        shape_by_stratum.setdefault(r["stratum"], set()).add(key)
+    shapes_block = {
+        "note": "A9 §3/§5 — the root holds TWO SHAPES; tokens and shift are DERIVED from "
+                "the latent shape via ltx_trainer/timestep_samplers.py, never restated. "
+                "A9's prose figures (1,500 tokens / shift 1.120) are wrong; see DOSSIER §13.2.",
+        "per_shape": [dict(rc.shape_record(k), n_samples=v,
+                           strata=sorted(s for s, v2 in shape_by_stratum.items() if k in v2))
+                      for k, v in sorted(shape_counts.items())],
+        "per_stratum": {s: sorted(list(k) for k in v) for s, v in sorted(shape_by_stratum.items())},
+        "sigma_distributions": "<PENDING: per-stratum sigma distributions, computed "
+                               "analytically from these shifts (A9 §3.1) — owed by the "
+                               "sigma-distribution lane>",
+    }
+
+    for sh in shapes_block["per_shape"]:
+        print(f"[assemble] shape {sh['latent_fhw']} ({sh['name'] or 'UNRULED'}): "
+              f"{sh['tokens']} tokens -> shift {sh['shift']}, {sh['n_samples']} samples, "
+              f"strata {sh['strata']}")
 
     if args.plan_only:
         print(f"[assemble] PLAN ONLY: {len(desired)} files across {len(rc.ROOT_DIRS)} dirs, "
@@ -445,6 +500,8 @@ def main() -> None:
         "pairing": {"rule": rc.PAIRING_RULE, "max_refs_per_target": max_refs},
         "weights": {
             "note": weight_note,
+            "branch": {"absent": absent, "override_key": key if key in overrides else None,
+                       "authority": man.get("absent_weight_overrides_authority")},
             "intended_pct": {s: round(intended[s], 6) for s in present},
             "declared_pct": {s: float(man["strata"][s]["weight_pct"]) for s in man["strata"]},
             "realized_pct": {s: round(100.0 * realized[s] / total, 6) for s in present},
@@ -469,6 +526,7 @@ def main() -> None:
                             "endpoint_disjointness": invs[s].get("endpoint_disjointness", True),
                             "groups": len(invs[s]["groups"]),
                             "clips": len(invs[s]["clips"])} for s in present},
+        "shapes": shapes_block,
         "exclusions": ex.as_record(),
         "drops": {s: {"n_groups": len(drops[s]["dropped_groups"]),
                       "n_clips": len(drops[s]["dropped_clips"]),
