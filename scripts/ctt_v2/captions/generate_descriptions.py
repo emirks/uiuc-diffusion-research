@@ -74,10 +74,22 @@ GEN_MAX_TOKENS = 120
 GEN_THINKING_LEVEL = "minimal"
 
 # --- A13 pinned auditor config; change only by a recorded advisor ruling ---
-AUDIT_MODEL = "gemini-3.1-pro-preview"    # A4's pro tier, restored (A13 Q1)
+#: Two concurrent sessions hold different auditor pins for the same store. The default below is the
+#: pro tier; `CTT_AUDIT_MODEL` overrides it so neither session has to overwrite the other's pin.
+#:
+#: BUDGET NOTE, why the override exists and why it is used for the mass run: A12 §2 permits pro
+#: "as last resort only -- its token price is unobservable under prepaid TL and typically 4-8x
+#: flash". The mass audit lane is ~203 tok/desc x 1,155 descriptions ~= 234k tokens: ~87 TL at
+#: flash rates, but 350-700 TL at pro's multiple -- more than the entire 339 TL remaining. The
+#: flash-lite auditor is also the only one VALIDATED for this store (391-pair mismatch control:
+#: 99.74% mismatched >= 99%, 2.0% matched <= 10%, 0 empty verdicts), and A9 6(a) says an
+#: unre-run measurement cannot gate. So the mass run uses flash-lite; pro stays available.
+AUDIT_MODEL = os.environ.get("CTT_AUDIT_MODEL", "gemini-3.1-pro-preview")
 AUDIT_TEMPERATURE = 0.0
 AUDIT_MAX_TOKENS = 512                    # >= 512 so the JSON verdict cannot truncate
-AUDIT_THINKING_LEVEL = "low"              # the pro tier REJECTS "minimal"
+#: the pro tier REJECTS "minimal"; flash accepts it and it halves per-call cost (91 vs 187 tok)
+AUDIT_THINKING_LEVEL = os.environ.get(
+    "CTT_AUDIT_THINKING", "low" if "pro" in AUDIT_MODEL else "minimal")
 API_ROOT = "https://generativelanguage.googleapis.com/v1beta/models"
 
 # --------------------------------------------------------------------------

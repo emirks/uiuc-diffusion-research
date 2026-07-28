@@ -50,7 +50,10 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "eval_ladder"))
 import encode_conditioning as ec  # noqa: E402  -- the ONE definition of a conditioning window
 
-LAB = Path("/projects/illinois/eng/cs/jrehg/users/emirkisa")
+# $LAB is /projects/... on the Campus Cluster and /taiga/... on DeltaAI -- the SAME Taiga
+# filesystem, mounted at two paths. Honour the env var so one script runs on both; the literal
+# keeps the previous cc behaviour exactly when LAB is unset.
+LAB = Path(os.environ.get("LAB", "/projects/illinois/eng/cs/jrehg/users/emirkisa"))
 MODEL = LAB / "cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors"
 GEMMA = LAB / "cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
 ARMS = REPO_ROOT / "eval_ladder/arms.yaml"
