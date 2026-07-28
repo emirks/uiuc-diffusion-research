@@ -109,14 +109,28 @@ def main() -> int:
         old_p = S0_OLD / inv["clips"][clip]["group"] / f"{clip}.pt"
         if not (new_p.exists() and old_p.exists()):
             continue
-        a = torch.load(new_p, map_location="cpu", weights_only=True)["video_prompt_embeds"]
-        b = torch.load(old_p, map_location="cpu", weights_only=True)["video_prompt_embeds"]
-        cmp_out.append({"clip": clip, "identical": bool(torch.equal(a, b)),
-                        "max_abs_diff": float((a.float() - b.float()).abs().max())})
-    n_same = sum(c["identical"] for c in cmp_out)
+        a = torch.load(new_p, map_location="cpu", weights_only=True)["video_prompt_embeds"].float()
+        b = torch.load(old_p, map_location="cpu", weights_only=True)["video_prompt_embeds"].float()
+        # NOT `torch.equal`: these are bf16 tensors produced by two different runs on
+        # different hardware, so the same text re-encodes to a bf16-rounding difference
+        # (max_abs_diff lands on exact powers of two -- 1/64, 1/128 -- which is the giveaway).
+        # Exact equality here is the same error class as comparing `torch.save` file bytes:
+        # a precision the process never promised. The threshold is calibrated against a
+        # MEASURED control -- two genuinely different captions give cos 0.27 / rel_l2 1.31,
+        # while same-text re-encodes give cos 0.99996 / rel_l2 5e-3. Any bar between those
+        # separates them by ~250x, so its exact value is not load-bearing.
+        cos = float(torch.nn.functional.cosine_similarity(a.flatten(), b.flatten(), dim=0))
+        rel = float((a - b).norm() / b.norm())
+        cmp_out.append({"clip": clip, "same_text": cos >= 0.999 and rel <= 1e-2,
+                        "cosine": round(cos, 6), "rel_l2": round(rel, 6),
+                        "max_abs_diff": float((a - b).abs().max())})
+    n_same = sum(c["same_text"] for c in cmp_out)
     rep["s0_old_vs_new"] = {
         "compared": len(cmp_out), "identical": n_same, "detail": cmp_out,
-        "verdict": ("OLD S0 EMBEDS CONFIRMED = certified training text"
+        "bar": "cos >= 0.999 AND rel_l2 <= 1e-2 (measured control: different captions give "
+               "cos 0.27 / rel_l2 1.31; same text re-encoded gives cos 0.99996 / rel_l2 5e-3)",
+        "verdict": ("OLD S0 EMBEDS CONFIRMED = the certified training text (differences are "
+                    "bf16 re-encode rounding, ~250x smaller than any real text difference)"
                     if cmp_out and n_same == len(cmp_out) else
                     "MISMATCH -- the pre-existing S0 embeds encode DIFFERENT text; do not cite "
                     "them as real, use the freshly encoded ones"
