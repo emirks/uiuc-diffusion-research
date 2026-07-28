@@ -336,7 +336,10 @@ def generate_one(clip_id, role, video_path, attempt, empirical, seed, variant="a
     resp, err = _post(GEN_MODEL, body)
     rec = {
         "clip_id": clip_id, "role": role, "attempt": attempt, "N_target": n,
-        "N_asked": calibrate_ask(n) if variant == "v2" else n, "prompt_variant": variant,
+        # v2 AND v3 both apply the length calibration in build_system_prompt(); the
+        # archive must record what was actually asked, not the pre-calibration draw.
+        "N_asked": calibrate_ask(n) if variant in ("v2", "v3") else n,
+        "prompt_variant": variant,
         "model": GEN_MODEL, "temperature": GEN_TEMPERATURE,
         "max_output_tokens": GEN_MAX_TOKENS, "error": err,
         "raw_response": resp,
@@ -488,11 +491,19 @@ def run(pairs, outdir: Path, seed: int, workers: int, max_attempts: int,
 
     wall = time.time() - t0
     meta = {
-        "generator_model": GEN_MODEL, "auditor_model": AUDIT_MODEL,
+        "generator_model": GEN_MODEL,
+        # An unaudited run must NEVER archive an auditor model string: a reader who
+        # trusts run_meta would conclude the Layer-2 audit ran when it did not.
+        "audit_enabled": bool(audit),
+        "auditor_model": AUDIT_MODEL if audit else None,
         "auditor_substitution_note": (
             "A4 Q3 specified gemini-3-pro-preview; the pro tier returns HTTP 429 on this "
             "key (DOSSIER §5.1). gemini-3.5-flash substituted; generator != auditor so "
             "independence is preserved."
+        ) if audit else (
+            "NO LAYER-2 AUDIT RAN (--no-audit). Records carry no `audit` field; leak= and "
+            "inaccurate= were NOT measured, so first-pass rate covers only format+Tier-1 "
+            "and is an UPPER BOUND. Not eligible to gate the >=97% / <=8% bars."
         ),
         "thinking_level": "minimal", "prompt_variant": variant,
         "gen_temperature": GEN_TEMPERATURE, "gen_max_output_tokens": GEN_MAX_TOKENS,

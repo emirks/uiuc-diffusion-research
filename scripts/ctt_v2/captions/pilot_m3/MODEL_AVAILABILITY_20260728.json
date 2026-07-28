@@ -1,0 +1,147 @@
+{
+ "probed_at_utc": "2026-07-28T15:53:15.229447+00:00",
+ "purpose": "CTT v2 caption pipeline resume \u2014 generator/auditor availability (RESUME_ON_CREDITS STEP 0)",
+ "verdict": {
+  "generator_gemini-3.6-flash": "AVAILABLE",
+  "auditor_gemini-3.5-flash": "HTTP 503 service-unavailable, 0/18 across conc 1 and conc 8",
+  "gemini-3-pro-preview": "RETIRED (HTTP 404 'no longer available') \u2014 NOT 429; DOSSIER \u00a75.1's 429 note is superseded",
+  "gemini-3.1-pro-preview": "AVAILABLE (rejects thinkingLevel=minimal; low/high/unset all 200)"
+ },
+ "probes": [
+  {
+   "model": "gemini-3.6-flash",
+   "n": 8,
+   "thinking_level": "minimal",
+   "status_counts": {
+    "200": 8
+   },
+   "ok": 8,
+   "sample_error": ""
+  },
+  {
+   "model": "gemini-3.5-flash",
+   "n": 8,
+   "thinking_level": "minimal",
+   "status_counts": {
+    "503": 8
+   },
+   "ok": 0,
+   "sample_error": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
+  },
+  {
+   "model": "gemini-3.5-flash-lite",
+   "n": 8,
+   "thinking_level": "minimal",
+   "status_counts": {
+    "200": 8
+   },
+   "ok": 8,
+   "sample_error": ""
+  },
+  {
+   "model": "gemini-3.1-flash-lite",
+   "n": 8,
+   "thinking_level": "minimal",
+   "status_counts": {
+    "200": 8
+   },
+   "ok": 8,
+   "sample_error": ""
+  },
+  {
+   "model": "gemini-3-flash-preview",
+   "n": 8,
+   "thinking_level": "minimal",
+   "status_counts": {
+    "200": 8
+   },
+   "ok": 8,
+   "sample_error": ""
+  },
+  {
+   "model": "gemini-3.1-pro-preview",
+   "n": 8,
+   "thinking_level": null,
+   "status_counts": {
+    "200": 8
+   },
+   "ok": 8,
+   "sample_error": "",
+   "note": "retried without thinkingConfig"
+  },
+  {
+   "model": "gemini-3-pro-preview",
+   "n": 8,
+   "thinking_level": "minimal",
+   "status_counts": {
+    "404": 8
+   },
+   "ok": 0,
+   "sample_error": "{\n  \"error\": {\n    \"code\": 404,\n    \"message\": \"This model models/gemini-3-pro-preview is no longer available. Please update your code to use a newer model for the latest features and improvements. We"
+  },
+  {
+   "model": "gemini-2.5-pro",
+   "n": 8,
+   "thinking_level": "minimal",
+   "status_counts": {
+    "404": 8
+   },
+   "ok": 0,
+   "sample_error": "{\n  \"error\": {\n    \"code\": 404,\n    \"message\": \"This model models/gemini-2.5-pro is no longer available to new users. Please update your code to use a newer model for the latest features and improveme"
+  },
+  {
+   "model": "gemini-2.5-flash",
+   "n": 8,
+   "thinking_level": null,
+   "status_counts": {
+    "200": 8
+   },
+   "ok": 8,
+   "sample_error": "",
+   "note": "retried without thinkingConfig"
+  }
+ ],
+ "models_supporting_generateContent": [
+  "antigravity-preview-05-2026",
+  "deep-research-max-preview-04-2026",
+  "deep-research-preview-04-2026",
+  "deep-research-pro-preview-12-2025",
+  "gemini-2.0-flash",
+  "gemini-2.0-flash-001",
+  "gemini-2.0-flash-lite",
+  "gemini-2.0-flash-lite-001",
+  "gemini-2.5-computer-use-preview-10-2025",
+  "gemini-2.5-flash",
+  "gemini-2.5-flash-image",
+  "gemini-2.5-flash-lite",
+  "gemini-2.5-flash-preview-tts",
+  "gemini-2.5-pro",
+  "gemini-2.5-pro-preview-tts",
+  "gemini-3-flash-preview",
+  "gemini-3-pro-image",
+  "gemini-3-pro-image-preview",
+  "gemini-3-pro-preview",
+  "gemini-3.1-flash-image",
+  "gemini-3.1-flash-image-preview",
+  "gemini-3.1-flash-lite",
+  "gemini-3.1-flash-lite-image",
+  "gemini-3.1-flash-lite-preview",
+  "gemini-3.1-flash-tts-preview",
+  "gemini-3.1-pro-preview",
+  "gemini-3.1-pro-preview-customtools",
+  "gemini-3.5-flash",
+  "gemini-3.5-flash-lite",
+  "gemini-3.6-flash",
+  "gemini-flash-latest",
+  "gemini-flash-lite-latest",
+  "gemini-omni-flash-preview",
+  "gemini-pro-latest",
+  "gemini-robotics-er-1.5-preview",
+  "gemini-robotics-er-1.6-preview",
+  "gemma-4-26b-a4b-it",
+  "gemma-4-31b-it",
+  "lyria-3-clip-preview",
+  "lyria-3-pro-preview",
+  "nano-banana-pro-preview"
+ ]
+}

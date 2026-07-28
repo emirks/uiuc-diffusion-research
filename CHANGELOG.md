@@ -1,5 +1,32 @@
 ## 2026-07-28
 
+- **10:55** ctt_v2/captions: **round 3 (prompt v3) run and scored — all 12 gates PASS, but v3's
+  stated mechanism is FALSIFIED.** The Gemini generator (`gemini-3.6-flash`) came back, so
+  `RESUME_ON_CREDITS.sh` steps 1–2 ran: 399 pairs (the role-scoped A-exclusion for
+  `openvid_T1MiFx98l3g_0_50to156` correctly derived from `POOL_DROPS_M3_ADJUDICATION.json`),
+  398 accepted, 9.4 s, 0 retries, 0 HTTP 429. Gate **8a 0.6929** (bar ≤0.73) and **8b 0.5454**
+  (bar ≤0.60, load-bearing) both PASS with no hard failures; 8c stays FAIL-on-record at 0.6929
+  as pre-committed. Gate 9 AUC 0.9102 → top-40 dump is content-dominated (~32/40 content words),
+  disposition **ACCEPT and record**, consistent with rounds 1–2. **However:** v3's only change
+  was relaxing A4's verb-form clause to permit plain *is/are* on the A-role, to close a claimed
+  be-verb tell — the A-role prompt was verified changed, yet the realised A-role be-verb rate
+  stayed at **0.0%** (round 2: 0.0%). Two follow-ons: the motivating "8.8% corpus" figure is
+  *pooled* and mis-attributed — corpus A-role is only 5.0% (n=139) while corpus B-role is 25.0%
+  (n=32), so the deficit is mainly a **B-role** phenomenon that v3 deliberately did not touch;
+  and 8a's move 0.7066→0.6929 is 0.0137 against a fit std of 0.0568, i.e. noise. A4's third and
+  last regeneration round bought a passing store, not a demonstrated fix.
+  Round 3 ran **unaudited**: `gemini-3.5-flash` (the round-1/2 Layer-2 auditor) is HTTP 503 on
+  0/18 probes at concurrency 1 and 8, so the run used `--no-audit` rather than a 503 auditor
+  whose empty verdict is indistinguishable from a clean pass. Its first-pass number therefore
+  covers format+Tier-1 only (99.5%, an upper bound) and **cannot gate** the ≥97% / ≤8% bars.
+  Availability archived in `pilot_m3/MODEL_AVAILABILITY_20260728.json`: note that
+  `gemini-3-pro-preview` is **retired (404), not 429** — DOSSIER §5.1's 429 note is superseded —
+  and its successor **`gemini-3.1-pro-preview` is available**, which reopens A4's original
+  pro-tier auditor as a live option. Steps 3–7 are blocked pending an auditor ruling.
+  Two archival defects fixed in `generate_descriptions.py`: `N_asked` recorded the
+  pre-calibration draw for v3 (calibration is applied for v2 *and* v3), and `run_meta` named an
+  auditor model even on `--no-audit` runs.
+
 - **10:45** ctt_v2: **group ids are now SLUGGED AT PATH CONSTRUCTION** (A11 item 3 — the
   slugging existed and was declared, but `assemble_root.py` still wrote raw ids into paths).
   `assemble_root.py` builds every relative path from `root_common.slug_group` — the *same*
