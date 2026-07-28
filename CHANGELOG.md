@@ -1,5 +1,22 @@
 ## 2026-07-28
 
+- **03:05** — **`data/DATASET.md` written — the CTT v2 dataset single source of truth**
+  (`ctt-v2-dataset/0.9.0-DRAFT`, status **NOT STAMPABLE**). Modelled on `eval_ladder/SPEC.md`:
+  version stamp + FROZEN/PENDING table, the sample contract (five root dirs, `{target}__ref_{ref}.pt`
+  naming, tensor shapes, the trainer's silent-drop hazard), caption grammar with the pre-registered
+  §4 bars and the gate-#8 re-pin, sidedness as a class property driving caption/mask/cond_clean,
+  one section per stratum (S0/S1/S2a/S2b/S4) with disk-verified counts and gate results, the mix,
+  a consolidated holdout table (9 sets), the accepted risks with their rulings, the A1–A10 + D1–D4
+  assert checklist, and per-stratum reproduction commands.
+  **Every count was verified first-hand on disk; §11 records eight places where disk disagreed with
+  the prose.** The three that matter: (a) `root_common.py` still carries A5's mix with **S4 at 0 %**,
+  which **A9 reversed** — assembling today would build the wrong mix and then assert it correct;
+  (b) S4's real latent grid is **(5,14,26) = 1,820 tokens ⇒ shift 1.2350**, not the (5,20,15)/1,500/
+  1.120 the dossier and `REF_mixed_length.md` assume, so A9's pre-written smoke-gate assert
+  `shifts ∈ {1.120, 2.302}` would fail; (c) S2a needs **333** caption strings from **454**
+  (clip, role) descriptions, not 666/582 — `swap` inverts the shader progress argument only, it does
+  not exchange A/B content. §12 lists 8 OPEN items needing a ruling, headed by the unwritten
+  `PREREG_inline_ood_ops_s2a.json` (assert A6 hard-fails without it).
 - **02:47** — ctt_v2 **VAE-encode pipeline built and launched** for all new strata
   (`scripts/ctt_v2/encode/`). Writes only the two prompt-agnostic root trees —
   `latents/` + `cond_clean/` — so it is fully independent of the Gemini caption blocker;
