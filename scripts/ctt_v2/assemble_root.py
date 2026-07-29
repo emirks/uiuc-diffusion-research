@@ -413,6 +413,13 @@ def main() -> None:
                          f"(default {rc.PREREG_MIX_INPUTS}). Works with --plan-only, which "
                          "is how it should be run: the record is written BEFORE the root is "
                          "materialised and before any training step.")
+    ap.add_argument("--sampler-mix", action="store_true",
+                    help="emit ONE row per base pair and record the per-stratum target weights "
+                         "for the trainer's sampler to realise, instead of duplicating symlinks "
+                         "to bake the mix into the filesystem. 56,368 rows instead of 404,259, "
+                         "exact weights instead of an integer-multiplier residual, and the mix "
+                         "becomes changeable without touching the dataset. Requires the trainer's "
+                         "stratified sampler + its consumed-count assert.")
     ap.add_argument("--no-prune", action="store_true",
                     help="do not delete root entries that are no longer desired")
     ap.add_argument("--plan-only", action="store_true",
@@ -538,7 +545,35 @@ def main() -> None:
                        f"— no pre-registered branch for this absent set")
 
     base_counts = {s: len(samples[s]) for s in present}
-    mix = rc.solve_multipliers(base_counts, intended, tol_pp=tol, groups=groups)
+    if args.sampler_mix:
+        # ---- SAMPLER MIX: one row per base pair; the mix moves into the TRAINER ------------
+        # Physical duplication made the realised ratio countable off disk, which is why it was
+        # chosen (A3 counts it).  It also cost 2,021,295 symlinks for 56,368 distinct pairs,
+        # forced INTEGER multipliers (hence a 0.4289 pp residual the contract had to tolerate),
+        # and produced the `S0_r100` class of bug because S0 needed x153.
+        #
+        # Here every base pair is emitted EXACTLY ONCE and the per-stratum target weights are
+        # recorded in the manifest for the trainer's sampler to realise EXACTLY.  The path
+        # scheme keeps its `<stratum>_r00/` component on purpose, so A1 set-equality, A2b path
+        # scheme, B1 per-shape set-equality and `parse_replica` are all unchanged, and A3b is
+        # trivially satisfied (every member of a pro-rata group carries the same multiplier, 1).
+        #
+        # ⚠ THE ONE PROPERTY THIS GIVES UP: the realised mix is no longer countable from the
+        # root, so A3 cannot be evidence any more.  It is replaced, not dropped — the sampler
+        # logs per-stratum CONSUMED counts and asserts them against these weights at train
+        # start, failing closed.  A mix that is only a number in a config with nothing counting
+        # it is exactly the silent-failure shape this campaign keeps getting bitten by.
+        intended_pct, split = rc.expand_prorata_weights(intended, base_counts, groups)
+        mix = {"multipliers": {s: 1 for s in present},
+               "total": sum(base_counts.values()),
+               "intended_pct": intended_pct,
+               "prorata_split": split,
+               "max_deviation_pp": 0.0,
+               "mode": "sampler",
+               "note": "one row per base pair; the mix is realised by the trainer's sampler "
+                       "from `sampler_mix.weights_pct` below, not by symlink duplication"}
+    else:
+        mix = rc.solve_multipliers(base_counts, intended, tol_pp=tol, groups=groups)
     print(f"[assemble] mix weights ({weight_note}): "
           + ", ".join(f"{n} {intended[n]:g}" for n in present_weights))
     for gname, d in sorted(mix["prorata_split"].items()):
@@ -724,6 +759,18 @@ def main() -> None:
         "counts": {
             "base_pairs": {s: len(samples[s]) for s in present},
             "replicas": mix["multipliers"],
+            "mix_mode": mix.get("mode", "replica_duplication"),
+            "sampler_mix": ({
+                "weights_pct": mix["intended_pct"],
+                "base_pairs": {s: len(samples[s]) for s in present},
+                "contract": "the trainer's sampler MUST realise these per-stratum shares exactly "
+                            "and assert its own consumed counts against them at train start, "
+                            "failing closed. With replica duplication A3 counted the realised mix "
+                            "off disk; in sampler mode that evidence moves into the trainer.",
+                "authority": "A9 §4 + A11 item 3 (S2 total 69) + A12 (pro-rata split); mechanism "
+                             "translated from physical duplication to index expansion, identical "
+                             "slot multiset per epoch, exact rather than integer-rounded",
+            } if mix.get("mode") == "sampler" else None),
             "realized_samples": realized,
             "total_samples": total,
             "files_per_dir": total,

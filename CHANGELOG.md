@@ -1,3 +1,22 @@
+## 2026-07-29
+
+- **12:12** — **CTT v2 dataset FINALIZED at v2.1.0: list-based SSOT directory + trainer-side
+  stratified sampler; the 2M-symlink physical root is retired.** Owner rejected 192/1,417 S1
+  generations in a grouped-autoplay labelling viewer (`scripts/build_s1_label_viewer.py`;
+  hero_flight 87→9, its 1-sided sibling dropped) — applied at the spec (`build_s1_spec.py
+  --rejects`), cascading to 56,368 base pairs. Owner then halted physical symlink assembly, so
+  `scripts/ctt_v2/build_dataset.py` now builds **`outputs/ctt_v2/dataset/`** — samples.jsonl
+  (one row per pair naming its 5 store files), mix.json, moved stores with compat symlinks,
+  S0 copies (originals untouched), inventories, docs, MANIFEST. Trainer (`LTX-2-cond-bleed-fix`)
+  gained `SampleListDataset` (explicit list, missing file = hard error — deletes the silent-drop
+  glob-join failure mode) and `StratifiedEpochSampler` (largest-remainder quotas, without-
+  replacement per stratum, deterministic in (seed, epoch), fails closed; replaces assert A3's
+  off-disk countability). Verified with real trainer code on the real directory: 41,195 files
+  present, realised mix within 0.0006 pp of target (physical root's residual was 0.4289 pp),
+  determinism + `set_epoch` exact, per-stratum tensor loads correct. Mix weights are now plain
+  training-config floats — changing proportions never rebuilds the dataset. DATASET.md §15 +
+  a fresh STAMP block record it (sign-off rows pending owner).
+
 ## 2026-07-28
 
 - **16:14** — **S4 captioned and wired in: 2,000 first-frame descriptions at zero API cost, conditioning

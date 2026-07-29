@@ -42,6 +42,9 @@ import root_common as rc  # noqa: E402
 
 BEGIN, END = "<!-- STAMP:BEGIN -->", "<!-- STAMP:END -->"
 DEFAULT_CAPTION_STORE = rc.HERE / "captions/pilot_m3/round2"
+#: where the mixed-format smoke gate writes its two verdict files (job_smoke_gate.sbatch
+#: `ART`).  Read rather than hardcoded, so the row can never claim a gate ran that did not.
+SMOKE_DIR = rc.DOSSIER_DIR / "artefacts/smoke_gate"
 
 
 def pending(what: str) -> str:
@@ -431,11 +434,62 @@ def block(root: Path, caption_store: Path, stamped: bool) -> str:
           "AUDIT_RESULT.json` + `misc/ctt_v2_final/artefacts/s2b_audit/` |",
           "| union-pool gates (numbers of record, A10) | **PASS** — n=1,146, gate A 0.519971 "
           "(≤0.52), gate B 50.56 (≥42.82) |",
-          f"| S4 12-gate battery + blind-guess (seed 44, n=150) + 100 % Layer-2 tripwire | "
-          f"{pending('blocked: Gemini credits')} |",
-          f"| mixed-format smoke gate (2 shapes, per-format consumed counts + finite "
-          f"comparable loss + shifts pinned at {{1.2350, 2.3021}}) | {pending('needs a GPU')} |",
           ""]
+
+    # ---- A9 split S4's caption requirement into THREE components; report each separately -----
+    # These rows used to be one hardcoded `<PENDING: blocked: Gemini credits>`.  Credits were
+    # restored and the battery RAN AND FAILED A BAR, so that literal was false in the worst
+    # possible direction: a PENDING line hiding a recorded gate failure.  Each component is now
+    # read from its own artefact, and A9's "Keep both" is honoured by never collapsing them.
+    s4b = load(caption_store / "GATE_BATTERY_S4.json")
+    if s4b:
+        s = s4b.get("summary", {})
+        L.append(f"| S4 12-gate battery (run SEPARATELY per A9, NOT pooled) | "
+                 f"**RAN — hard_fail `{s.get('hard_fail')}`**; gate 8a "
+                 f"{s.get('gate8a_mean_pm_se')} vs bar ≤0.73 ⇒ **FAIL**; gate 9 AUC "
+                 f"{s.get('gate9_auc')}. Owner declined the pre-registered remedy and directed "
+                 f"ship-as-is 2026-07-28; formal countersign PENDING. See S.6b. |")
+    else:
+        L.append(f"| S4 12-gate battery | {pending('GATE_BATTERY_S4.json absent')} |")
+    for label, globs in (
+        ("S4 blind-guess gate (seed 44, n=150; bar permutation p ≥ 0.05 AND top-1 ≤ null + 3 pp, "
+         "with a mandatory last-frame positive control at ≥10× null to prove power)",
+         ("*BLIND_GUESS*S4*.json", "*S4*BLIND*.json", "*blind_guess*s4*.json")),
+        ("S4 Layer-2 named-effect tripwire on **100 %** of S4 captions",
+         ("*LAYER2*S4*.json", "*S4*LAYER2*.json", "S4_LAYER2*.json")),
+    ):
+        hits = [p for g in globs for p in caption_store.glob(g)]
+        if hits:
+            L.append(f"| {label} | **RAN** — `{hits[0]}` |")
+        else:
+            #: NOT "blocked: Gemini credits" — credits were restored and used to generate the S4
+            #: captions themselves.  The honest status is that these two components were never run.
+            L.append(f"| {label} | {pending('NOT RUN — no artefact on disk. Gemini credits are '
+                                            'NOT the blocker (they were restored and used for the '
+                                            'S4 captions); this component simply has not been '
+                                            'executed. A9: blind-guess does NOT subsume gate 8 '
+                                            '— Keep both')} |")
+
+    sg = load(SMOKE_DIR / "SMOKE_GATE.json")
+    st = load(SMOKE_DIR / "SMOKE_TRAIN_GATE.json")
+    if sg or st:
+        def _tally(doc):
+            g = (doc or {}).get("gates") or (doc or {}).get("checks") or {}
+            vals = [v.get("ok", v.get("pass")) for v in g.values() if isinstance(v, dict)] \
+                if isinstance(g, dict) else []
+            return sum(1 for v in vals if v), len(vals)
+        pa, na = _tally(sg)
+        pb, nb = _tally(st)
+        L.append(f"| mixed-format smoke gate (2 shapes, per-format consumed counts + finite "
+                 f"comparable loss + shifts pinned at {{1.2350, 2.3021}}) | "
+                 f"**PASS {pa + pb}/{na + nb}** — probe {pa}/{na}, real-trainer {pb}/{nb}; the "
+                 f"trainer's own index line reads 10 of 10, 0 skipped. A TRAINING gate (A23), not "
+                 f"a stamp gate. ⚠ OOM'd on an L40S 44 GiB at batch 1 with gradient "
+                 f"checkpointing; PASSED unchanged on H100 80 GiB — L40S is not a viable training "
+                 f"partition for this root. |")
+    else:
+        L.append(f"| mixed-format smoke gate | {pending('no smoke-gate artefact')} |")
+    L.append("")
 
     # ---- the HARD battery --------------------------------------------------------------------
     L += ["### S.8 Pre-launch HARD asserts — result, and the proof each one fires", ""]

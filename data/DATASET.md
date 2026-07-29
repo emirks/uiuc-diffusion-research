@@ -1,16 +1,19 @@
 # CTT v2 training dataset — DATASET SPEC
 
-**Design version: `ctt-v2-dataset/0.9.0-DRAFT`**
-**Status: `NOT STAMPABLE` — the blocker is now S1 MEDIA, not captions.** 35 of 390 S1 clips
-exist; S1 generation moved to DeltaAI by owner directive, so no `conditions/` tree exists and no
-root has been assembled. See §1.2 for the blocking set.
+**Design version: `ctt-v2-dataset/2.1.0`**
+**Status: `BUILT + VERIFIED` (2026-07-29).** The dataset of record is
+**`outputs/ctt_v2/dataset/`** — list-based, no symlink root: 56,368 base pairs across 5 strata,
+41,195 distinct store files all verified present, mix realised by the trainer's stratified
+sampler (max deviation 0.0006 pp vs the physical root's 0.4289 pp integer residual). §15 records
+the finalization; the STAMP block below is current. Status tables in §1 describe the 2026-07-28
+physical-root state and are superseded by §15 where they collide.
 
 > 🔴 **CAPTIONS ARE DONE. `data/CAPTIONS.md` IS THE SINGLE SOURCE OF TRUTH FOR THE CAPTION LANE.**
 > 1,403 / 1,403 locked, one prompt variant (`v2`), one auditor (`gemini-3.5-flash-lite`), content
 > hash `c8e2d95b…`, 12-gate battery on the **full** store with `hard_fail: []`, corpus-139 audit
 > 0/171 leaks. Every caption row in the tables below that still says *"blocked: Gemini credits"* is
 > **stale** — `CAPTIONS.md` and the disk win. **S4 captions are now DONE too** (2,000 / 2,000
-> first-frame descriptions, separate store, hash `fcd46f33…`, 0 leaks, 0 ₺ — `CAPTIONS.md` §12), and
+> first-frame descriptions, separate store, hash `34534e47…`, 0 leaks — `CAPTIONS.md` §12), and
 > S4's conditioning is now **video frame 0 alone** per the owner's 2026-07-28 decision.
 
 This file is authoritative for the dataset. Where a script, README, dossier paragraph or advisor
@@ -67,12 +70,12 @@ judges existed (pre-registration), not yet exercised.
 | Caption store (all strata) | ✅ **DONE — 1,403/1,403 LOCKED** | `data/CAPTIONS.md` (authority), `CAPTION_LOCK.json` |
 | Caption round 3 / `v3` be-verb fix | ⛔ **CLOSED — v3 is an archived negative result, enters no store** | mechanism falsified; delta ~1.2 SE of noise; no round 4. `CAPTIONS.md` §6 |
 | Corpus-139 Layer-2 leak audit | ✅ **DONE — 0/171 `leak=YES`** | 4/171 `inaccurate` ESCALATED, captions byte-identical. `CAPTIONS.md` §8 |
-| S4 blind-guess caption gate (seed 44, n=150) | **PENDING (blocked: Gemini credits)** | A9 |
+| S4 blind-guess caption gate (seed 44, n=150) | ✅ **PASS 2026-07-29** — top-1 **2.03 %** vs permutation null **2.89 %** (0.70×, **p=0.815**, −0.86 pp); **positive control 73.33 % vs 2.80 % = 26.17× (p=5e-5)** proves the attack has power. Judged on the stricter menu-resolvable subset (2/150 true labels absent from the 41-way menu can never score correct, which biases top-1 DOWN). `_verify_s4_inputs/s4_gate_final/` | A9 |
 | `conditions/` (Gemma text embeds) | **PENDING (blocked: S1 media)** | captions are done; ~2 GPU-h once S1 clips land |
 | The 8 pre-registered S2a inline-OOD ops | **FROZEN (pre-registered)** | `PREREG_inline_ood_ops_s2a.json`, advisor-ratified 2026-07-28, §11.4 |
 | Assembled root + `ROOT_MANIFEST.json` | **PENDING** | machinery built, never run against real inventories |
 | Assert battery A1–A10 executed | **PENDING** | §9 |
-| Mixed-format smoke gate (2 shapes) | **PENDING** | A1b Q3 / A9; non-negotiable before S4 trains |
+| Mixed-format smoke gate (2 shapes) | ✅ **PASS 13/13 2026-07-28** — probe 6/6 + real trainer 7/7; the trainer's own index line reads **10 of 10, 0 skipped**; realized shifts exactly {1.235026, 2.302083}. ⚠ OOM'd on L40S 44 GiB at bs 1 + grad-ckpt, PASSED on H100 80 GiB | A1b Q3 / A9; non-negotiable before S4 trains |
 | **THE STAMP** | **PENDING** | §1.2 |
 
 ### 1.2 Why this is not stampable
@@ -299,7 +302,7 @@ Groups with fewer than 2 trainable clips after exclusions are dropped whole.
 | **Format** | 480×640 × 121f @24fps, identical to S0. |
 | **Pairing group — RULED (A11 item 6, 2026-07-28)** | The inventory's group key is the **ARM (specialist)**, never the endpoint, and **1,170 stands**. The endpoint reading is not merely different, it is **wrong**: group=endpoint would pair same-content × different-op, violating the standing rule *"reference = same operator, different content."* A1b is explicit both ways — Q5 ("endpoints unique within a specialist… within-op endpoint disjointness guarantees ref shares no content with target") and the count itself (9×30×3 + 2×60×3 = 1,170 only works with the specialist as the ring group). **Inventory schema: 11 groups**, one per specialist. And yes — **a shared-probe row may reference a non-probe row**: within an arm, probe endpoints are ordinary distinct clips, the ring runs over the arm's sorted stems irrespective of probe membership, and the probe set's cross-arm role (the same-content × diff-op diagonal) is a *diagnostic across arms*, not a pairing constraint within one. **No count change.** §12.6 closed. |
 | **Sidedness** | Native per specialist — 9 one / 2 two. Forced by the mechanism, not chosen: `run_gen.py` appends a `SuffixConditionConfig` only when `row["sided"] == "two"`, and 9 of 11 specialists are one-sided, so they *cannot* produce a true A→B pair. |
-| **Gates** | **Batch gate (A5 Ruling 3(i)):** blind 11-way Gemini class identification, `gemini-3.5-flash`, temp 0, `max_output_tokens ≥ 2000`, bar **top-1 ≥ 80 %** (chance 9.09 %), **with a 33-clip control arm of real corpus clips of the same classes**. Verdict rule: `PASS` = batch ≥80 % **and** control ≥80 % **and** mechanical rejects ≤3/33; `FAIL_S1_DROPS` = batch <80 % with passing control; `INSTRUMENT_INVALID` = control <80 % (re-adjudicate, do not blame S1). **Result: PENDING (blocked: Gemini credits).** |
+| **Gates** | **Batch gate (A5 Ruling 3(i)):** blind 11-way Gemini class identification, `gemini-3.5-flash`, temp 0, `max_output_tokens ≥ 2000`, bar **top-1 ≥ 80 %** (chance 9.09 %), **with a 33-clip control arm of real corpus clips of the same classes**. Verdict rule: `PASS` = batch ≥80 % **and** control ≥80 % **and** mechanical rejects ≤3/33; `FAIL_S1_DROPS` = batch <80 % with passing control; `INSTRUMENT_INVALID` = control <80 % (re-adjudicate, do not blame S1). **Result: NOT RUN** — ⚠ credits are NOT the blocker (restored and consumed for S4 captioning and both S4 gates on 2026-07-29); this gate has simply not been executed. |
 | | **Per-clip mechanical rejects only (A5 Ruling 3(ii)):** decode corruption (frame count ≠ 121 or geometry ≠ 480×640); frozen (mean abs inter-frame delta over frames 9–120 < 1/255) or black (mean luma < 8/255 on ≥10 % of frames); endpoint identity — prefix rel-L2(gen[0:9], anchor) > **τ = 0.12790240**. **No DINOv2, no harness substrate, anywhere in selection.** |
 | | **τ provenance (measured, CPU):** p95 over n=198 prefix-conditioned inline-validation clips across all checkpoints; p50 0.0526, p90 0.0997, max 0.1397. Artefact `outputs/ctt_v2/s1/tau_endpoint.json`. |
 | | **Acceptance-by-bank differential audit**, flag if synth vs humanvid acceptance differs >15 pp (A1b Q1e). |
@@ -1039,10 +1042,10 @@ thing that makes the mix **countable**, would never be exercised.
 
 | | check | status |
 |---|---|---|
-| C1 | corpus-139 Layer-2 leak audit (anchors ready, `corpus_anchors/`) | ☐ **PENDING (blocked: Gemini credits)** |
-| C2 | caption round 3 passes the re-pinned 12-gate battery | ☐ **PENDING (blocked: Gemini credits)** |
-| C3 | S4's separate 12-gate battery + blind-guess gate + 100 % Layer-2 tripwire | ☐ **PENDING (blocked: Gemini credits)** |
-| C4 | S1 pilot batch gate (blind 11-way Gemini + control arm) | ☐ **PENDING (blocked: Gemini credits)** |
+| C1 | corpus-139 Layer-2 leak audit (anchors ready, `corpus_anchors/`) | ☑ **DONE — 0/171 `leak=YES`**; 4/171 `inaccurate` ESCALATED to the owner, captions byte-identical |
+| C2 | caption round 3 passes the re-pinned 12-gate battery | ☑ **DONE — 1,403/1,403 locked, `hard_fail: []`** on the full store (`GATE_BATTERY_FULL_1403.json`) |
+| C3 | S4's separate 12-gate battery + blind-guess gate + 100 % Layer-2 tripwire | **ALL THREE RUN — MIXED**: battery ☒ **gate 8a FAIL 0.8849 vs bar ≤0.73** (+ gate 2 FAIL), owner declined the remedy and directed ship-as-is, countersign PENDING · blind-guess ☑ **PASS** (2.03 % vs null 2.89 %, p=0.815; control 26.17×) · Layer-2 100 % tripwire ☑ **RUN — 7/2,000 (0.35 %) named-effect YES**, RECORDED not acted on. ⚠ the blind-guess and Layer-2 components had NEVER been run before 2026-07-29 (operator omission, not credits) |
+| C4 | S1 pilot batch gate (blind 11-way Gemini + control arm) | ☐ **NOT RUN** — ⚠ credits are NOT the blocker (restored and used for S4 captioning + both S4 gates); this component has simply not been executed |
 | C5 | `eval_ladder/prompts.py` diff resolved | ☑ committed `3bed923` |
 | C6 | certified instrument hygiene — `reference_v4.npz` sha matches the pin | ☑ restored; sha `e6ea4011…a8ad2818` matches |
 
@@ -1517,263 +1520,91 @@ instance of it.
 
 ---
 
+## 15. v2.1.0 — the dataset of record (2026-07-29)
+
+Two owner decisions on 2026-07-29 finalized the dataset and changed its physical form. This
+section supersedes §1's status tables and §9's root-assert framing where they collide.
+
+### 15.1 S1 owner reject pass
+
+The owner labelled all 1,417 S1 generations in a grouped autoplay viewer
+(`outputs/viewers/s1_label`) and rejected **192 (13.5%)** — hero_flight generations were
+generally unusable (87→9 kept; its `__1sided` sibling fell below 2 clips and was dropped by the
+ring rule); the rest were low-quality rejects. Applied at the SPEC (`build_s1_spec.py
+--rejects`), so every downstream artifact derives from survivors. Cascade: S1 = 12 groups,
+1,225 clips, 3,675 base pairs (was 4,251); total base pairs 56,944 → **56,368**. The label
+export is preserved at `outputs/ctt_v2/dataset/docs/s1_owner_rejects.json`; pre-reject
+inventories at `outputs/ctt_v2/inventories/*.PRE_REJECT.json`.
+
+### 15.2 The physical root is retired; the mix moved into the trainer
+
+The owner halted symlink assembly ("are you still doing that physically? if so stop."). The
+2,021,295-symlink root (`roots/ctt_v2_mix`) is **retired** — kept on disk only as a historical
+artifact; its integer multipliers, its `S0_r100`-class parser bugs, and the silent-drop
+glob-and-join it forced on the trainer all go with it.
+
+The replacement, built by `scripts/ctt_v2/build_dataset.py`:
+
+- **`outputs/ctt_v2/dataset/` is the single source of truth** — samples.jsonl (one row per
+  base pair naming its 5 store files, paths relative to the directory), mix.json, captions.json,
+  the moved stores (encodes incl. the actual mp4 clips, conditions, masks), frozen inventory
+  copies, docs, MANIFEST.json, VERSION. Moves left compat symlinks so every recorded path still
+  resolves. S0's 417 store files are **copies** (originals in eval_ladder/exp_058/062/064 belong
+  to other campaigns and were not touched).
+- **Trainer** (`LTX-2-cond-bleed-fix`, ltx_trainer): `SampleListDataset` reads the list — a
+  missing file is a hard error, never a skipped sample, which deletes the failure mode §9's
+  launch gate ("N valid from N total") existed to catch. `StratifiedEpochSampler` realises
+  `data.stratum_weights_pct` exactly: largest-remainder quotas per epoch, without-replacement
+  within stratum, deterministic in (seed, epoch), **fails closed** on weight/data mismatch and
+  logs per-stratum consumed counts — this replaces retired assert A3's off-disk countability.
+  Weights are now plain config floats; **changing the mix never rebuilds the dataset.** Two
+  shapes coexist, so stratified runs require `batch_size: 1` (trainer-enforced).
+- **Verified 2026-07-29** with the real trainer code against the real directory: 41,195 distinct
+  files present; realised epoch shares S0 14.9996 / S1 5.9999 / S2a 33.8703 / S2b 35.1299 /
+  S4 10.0004 (%) vs targets, max dev 0.0006 pp; determinism + `set_epoch` fast-forward exact;
+  one real 5-tensor load per stratum, shapes correct (121f `(128,16,20,15)`, S4 `(128,5,14,26)`).
+
 <!-- STAMP:BEGIN -->
 
 ## STAMP
 
-**STAMPED: NO** — generated `2026-07-28T04:27:17-0500` by `scripts/ctt_v2/make_stamp.py` from artefacts on disk. RULING 9 defines the contents; every item this script cannot read from disk appears below as an explicit `<PENDING: …>`.
+**STAMPED: NO** — stamping is an owner act; this block being present is not a stamp.
+`STAMPED: YES` plus the sign-off row is. Written 2026-07-29 against the v2.1.0 dataset of
+record (the machine-readable stamp is `outputs/ctt_v2/dataset/MANIFEST.json`; this block
+restates it). The previous block here described the 2026-07-28 machinery-proof FIXTURE root
+and was replaced when the physical-root form was retired (§15.2); it survives in git history.
 
-Stamping is an owner act. This block being present is not a stamp; `STAMPED: YES` plus the sign-off row below is.
+### Dataset identity
 
-> 🔴🔴 **THIS STAMP DESCRIBES THE MACHINERY-PROOF *FIXTURE* ROOT, NOT THE REAL DATASET.** Strata ['S1', 'S2a', 'S2b', 'S4'] resolve to inventories whose provenance is marked `FIXTURE` — **stub tensors, never trainable**. Every hash, count and percentage below is therefore a property of the fixture. It is here to show the stamp generator works end to end and that the numbers it emits are the right numbers; **it is not the dataset of record and must be regenerated against the real root before anything is signed.**
+- **dataset** `outputs/ctt_v2/dataset/` · **version** `2.1.0` · **created** `2026-07-29T12:05:20-0500` · **seed** `42`
+- **MANIFEST.json sha256** `f83b06dfe6330f16205cae7955a57b72f3d3fdfa6d743741283a529621e3730f`
+- **samples.jsonl sha256** `1a086911e44d7686074f5e87f42eae9679a48636efdf8a25baeba336c028ef16`
+- **captions.json sha256** `7f4709097afa95eedd933aa8ca398275c4954f24c22e3bf5da99a6f7b1604087`
+- **mix.json sha256** `5c33ab1bd4114377bf40d6ec79da73ce518fe4520abe9f92ab5b7a8a764612b4`
+- **pairing** `ring_offset_within_op__k=min(3,n-1)` · max_refs_per_target 3
 
-### S.1 Root identity
+### Counts (verified on disk 2026-07-29)
 
-- **root** `/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/ctt_v2_final/_root_machinery_test/root_v2`
-- **assembled** `2026-07-28T04:22:42-0500`  ·  **seed** `42`
-- **ROOT_MANIFEST.json sha256** `ccdee9c83ada44639d5667daf073c94c7a3896d4f2a66dac393162134d59572b`
-- **root content hash** `5e13a9f702c7d6fd56240f61bfd3dc72969aeb80178566504c59ed4efa6a2e1a`
-  (sha256 over the sorted `(relative path, resolved target)` of all **12680** files in the 5 trees — this is what the trainer actually opens, not what the manifest claims)
-- **SAMPLES.jsonl sha256** `e997fdea9012a1211faa9b675b13c7f3d69c746517405d1f20e9e21df16bcc6b`
-- **CAPTIONS.json sha256** `41b518fde8674c549ec332c36fc0554c0129cd05eb80c6afa1e97cd80fc123ad`
-- **strata manifest** `/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/ctt_v2_final/_root_machinery_test/manifest_v2.json` sha256 `d0f60e5c1a4c2963ae904be592f0ba64b6f237cfa0543a4ca62d2358b55ab362`
+- **rows (base pairs)** 56,368 — S0 385 · S1 3,675 · S2a 22,731 · S2b 23,577 · S4 6,000
+- **distinct store files** 41,195, all present (builder verify + trainer `SampleListDataset` verify, independently)
+- **distinct captions** 3,453
 
-| stratum | inventory | sha256 | groups | clips |
-|---|---|---|---|---|
-| S0 | `S0.json` | `a1bc64901c9e258e…` | 26 | 139 |
-| S1 | `S1.json` | `f488877f321b9409…` | 2 | 26 |
-| S2a | `S2a.json` | `b408a5507c6c8457…` | 38 | 380 |
-| S2b | `S2b.json` | `52125fb0f1918667…` | 30 | 300 |
-| S4 | `S4.json` | `0b093d29420bbfa3…` | 2 | 86 |
+### Mix (mode: sampler — §15.2)
 
-### S.2 Strata, exact counts, and the mix — intended AND counted
+- ruled: S0 15 · S1 6 · S2 69 · S4 10 (%); S2 split pro-rata to base counts (A12)
+- trainer weights: S0 15.00000 · S1 6.00000 · S2a 33.86972 · S2b 35.13028 · S4 10.00000 (%)
+- realised epoch shares (measured): 14.9996 / 5.9999 / 33.8703 / 35.1299 / 10.0004 — max dev 0.0006 pp
 
-| stratum | base pairs | replicas | realized samples | intended % | **counted %** | dev pp |
-|---|---|---|---|---|---|---|
-| S0 | 385 | 1 | 385 | 15.000 | **15.181** | +0.181 |
-| S1 | 78 | 2 | 156 | 6.000 | **6.151** | +0.151 |
-| S2a | 870 | 1 | 870 | 34.560 | **34.306** | -0.254 |
-| S2b | 867 | 1 | 867 | 34.440 | **34.188** | -0.253 |
-| S4 | 258 | 1 | 258 | 10.000 | **10.174** | +0.174 |
-| **total** | | | **2536** | 100.000 | 100.000 | |
+### S1 owner reject pass
 
-- **tolerance** ±0.5 pp — max realized deviation **0.254 pp**
-- **weight basis** as-declared; branch `None` (absent strata: none)
-- **S4 in mix** `True`
-- **files** 2536 samples × 5 dirs = 12680 · **distinct captions** 139
-- the counted column is COUNTED FROM THE ASSEMBLED ROOT by `assert_root.py:A3`, not computed from the plan (A3-F8.3)
+- 192/1,417 rejected 2026-07-29 (13.5%); hero_flight 87→9; `hero_flight__1sided` dropped (<2 clips)
+- label export: `outputs/ctt_v2/dataset/docs/s1_owner_rejects.json`
 
-### S.2b Weights — NOMINAL (pre-registered) and EFFECTIVE (derived disclosure)
-
-| stratum | nominal % (sample count) | **effective % (loss-bearing tokens)** | loss-bearing tokens |
-|---|---|---|---|
-| S0 | 15.181 | **17.148** | 1,591,200 |
-| S1 | 6.151 | **6.809** | 631,800 |
-| S2a | 34.306 | **36.566** | 3,393,000 |
-| S2b | 34.188 | **36.440** | 3,381,300 |
-| S4 | 10.174 | **3.036** | 281,736 |
-
-- **per-sample loss-bearing tokens** `{"(5, 14, 26)|one": 1456, "(16, 20, 15)|one": 4200, "(16, 20, 15)|two": 3900}` — derived from the mask rule (`m[:P]=1` where `P=prefix_latents(shape)`: 2 at 121f, **1 for S4**; `m[-1]=1` iff two-sided; mask==1 ⇒ conditioned at timestep 0 and excluded from loss), never tabulated. **S4 was 1,092 before the 2026-07-28 frame-0 decision.**
-- total loss-bearing tokens **9,279,036** over 2,536 samples
-- **NOMINAL is the pre-registered quantity** — it is what the manifest pins and what the contingency branches operate on. **EFFECTIVE is a derived disclosure only** (A11 item 2): right for disclosure, wrong as a control variable, because pre-registering it would force the nominal weights to chase every geometry change.
-- S4 carries two compounding discounts: the lower training shift (§8.2.1) and a fixed 2-latent-frame anchor conditioning 40 % of its tokens against 12.5 % at 121f. Its 10 % nominal is ≈ 3 % effective.
-
-### S.3 Grid definitions — the TWO SHAPES, and the σ schedule they imply
-
-| shape (latent F,H,W) | px W×H×F | fps | tokens | shift | samples | strata |
-|---|---|---|---|---|---|---|
-| `[5, 14, 26]`  | 832×448×33 | 16.0 | 1820 | **1.235026** | 258 | S4 |
-| `[16, 20, 15]`  | 480×640×121 | 24.0 | 4800 | **2.302083** | 2278 | S0, S1, S2a, S2b |
-
-- tokens = the product of the latent dims; shift = `ShiftedLogitNormalTimestepSampler._get_shift_for_sequence_length` (`m = 1.1/3072`, `b = 0.5833`, **no clamp**) evaluated at that token count. Both are DERIVED here, never restated — A9's prose figures (1,500 tokens / 1.120) are wrong and would have failed the smoke gate (DOSSIER §13.2, A11 item 4).
-
-- **per-stratum σ distributions**: `/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/ctt_v2_final/artefacts/sigma/SIGMA_SCHEDULE.md` sha256 `369dfb74966b05561938bc038ae3e61c13c740a26d6692eaa7500585dd1c1aa1` — analytic (closed-form CDF, no sampling), MC-validated against the trainer's own sampler at sup|ΔF| = 0.00036. Reproduced in full in DATASET §8.2.1, with the binding invariant and the supersession note on A9's wrong constants.
-
-- **shift-law provenance**: `ltx_trainer/timestep_samplers.py:121-134`, `m = 1.1/3072`, `b = 0.58333…`, **no clamp**; sampler defaults `std = 1.0`, `eps = 1e-3`, `uniform_prob = 0.1`; `ic_gen.yaml: timestep_sampling_params: {}`. The IC-LoRA reference is concatenated AFTER the σ draw, so it does not enter the token count. The trainer was NOT modified.
-- **ratified**: the **832×448×33** bucket — a pure 16-row centre crop of the native 832×464 source, no resampling, the only VAE-legal bucket preserving native content (A11 item 4). A9's `(5,20,15)` / 1,500 tokens / shift 1.120 are **wrong constants**; see DATASET §8.2.1 for the derivation, recorded explicitly so nobody later 'repairs' the encodes toward 1.120.
-
-### S.4 Pairing rule and every seed
-
-- **pairing** `ring_offset_within_op__k=min(3,n-1)` — ring offset within the group, ref ≠ target, k = min(3, n−1), applied identically to S0 classes and S1/S2/S4 ops (RULING 4, A1b Q5)
-- **assembly seed** `42`
-- **group-id slugs** (A11 item 3, path-safe: lowercase, non-alphanumeric → `_`, runs collapsed): S0 26 unique · S1 2 unique · S2a 38 unique · S2b 30 unique · S4 2 unique — no collisions
-  Raw→slug mapping is recoverable from the inventories and asserted by `assert_root.py:A14`; nothing already written under raw strings is re-keyed.
-- **inline-OOD draw seed** `42` (`root_common.select_inline_ood_ops`, blind draw over the sorted op list)
-- **training seed** `42` (both arms, RULING 6) · **primary checkpoint** step 12,000
-- **S4 blind-guess gate seed** `44`, n=150 (A9 §2)
-- **pool-gate seed** `20260725`, 300 draws, match_n 187
-
-### S.5 Holdout and exclusion lists (enumerated, not described)
-
-- **10 HOLDOUT_S2 shader families** (10): `DefocusBlur`, `VerticalOpen`, `burn0`, `directionalwarp`, `fadegrayscale`, `parametric_glitch`, `randomsquares`, `ripple`, `scale-in`, `wipeUp`
-- **8 pre-registered S2a inline-OOD ops** (8): `BowTieWithParameter_d8b50f918c`, `EdgeTransition_1560f76ce8`, `FilmBurn_bce3e2cb2d`, `LinearBlur_be1e988437`, `Overexposure_ee3010899f`, `Slides_a8d71c73fe`, `morph_07a0c1cc6a`, `randomNoisex_a5f68f8fd2`
-- **reserved union-pool clips**: 120
-- **S0 zero-shot classes** (10): `cotton_cloud`, `display_transition`, `firelava`, `flying_cam_transition`, `live_concert`, `luminous_gaze`, `melt_transition`, `monstrosity`, `raven_transition`, `saint_glow`
-- **eval-endpoint universe** (eval ∪ zs-audited ∪ the 42 test clips): 92 ids, classes resolved via `eval_ladder/prompts.py:clip_class()`
-- **role-scoped (clip, role) exclusions** (A10): `{"openvid_T1MiFx98l3g_0_50to156": ["A"]}` — enforced on BOTH consumption channels (caption store A12, prefix conditioning A13)
-
-| stratum | groups dropped | clips dropped |
-|---|---|---|
-| S0 | 0 | 0 |
-| S1 | 0 | 0 |
-| S2a | 8 | 10 |
-| S2b | 0 | 11 |
-| S4 | 0 | 0 |
-
-Every drop carries its reason in `ROOT_MANIFEST.json:drops`.
-
-### S.6 Caption store — hash, model versions, raw archives, battery
-
-- **store** `/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/scripts/ctt_v2/captions/pilot_m3/round2/descriptions.json`  sha256 `466b758cf82fa12ff8abe906824222048646c09a0632ebc9274fb2450f04f641`
-- **raw generation responses** `/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/scripts/ctt_v2/captions/pilot_m3/round2/raw_generation_responses.jsonl`
-- **raw audit responses** `/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/scripts/ctt_v2/captions/pilot_m3/round2/raw_audit_responses.jsonl`
-- **records** `/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/scripts/ctt_v2/captions/pilot_m3/round2/records.json`
-- **api_calls** `862`
-- **audit_temperature** `0.0`
-- **auditor_model** `gemini-3.5-flash`
-- **auditor_substitution_note** `A4 Q3 specified gemini-3-pro-preview; the pro tier returns HTTP 429 on this key (DOSSIER §5.1). gemini-3.5-flash substituted; generator != auditor so independence is preserved.`
-- **gen_max_output_tokens** `120`
-- **gen_temperature** `0.7`
-- **generator_model** `gemini-3.6-flash`
-- **http429** `0`
-- **max_attempts** `2`
-- **n_pairs** `400`
-- **prompt_variant** `v2`
-- **retries** `0`
-- **seed** `42`
-- **thinking_level** `minimal`
-- **wall_seconds** `23.2`
-- **workers** `120`
-
-- **battery**: `/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-branch/scripts/ctt_v2/captions/pilot_m3/round2/gate_report_repinned.json`  sha256 `ad29c486c7e5a6f6aab7a1dc2b7eb23bfc638bbe0015f69835620dfda9d5226a`
-- **hard failures**: `[]`
-
-| gate | value | bar | verdict |
-|---|---|---|---|
-| word-count p50 | 34.0 | p50 in [29, 36] | PASS |
-| word-count p10 / p90 | 24.0 / 40.0 | p10 in [16,26] and p90 in [34,44] | PASS |
-| opens with determiner (A / B) | 99.5% / 98.5% | >= 86.4% / >= 86.9% | PASS |
-| B-role lowercase-initial (and A-role uppercase-initial) | B 100.0% / A 100.0% | both 100% | PASS |
-| B-role participial-NP | 100.0% (-ing regex) | >= 80.6% (pinned regex form) | PASS |
-| audio words / Style: prefix / markdown / quotes | audio 0, markup 0 (visible-speech actions, not gated: 32) | 0 | PASS |
-| exact-duplicate rate within stratum | 0.0% (worst bank x role cell) | < 2% | PASS |
-| corpus-vs-new function-word probe (DRIFT GUARD) | 0.7066 | <= 0.73 (above this cannot be the known fingerprint => bug: mixed prompts / wrong store / contamination) | PASS |
-| stratum-internal blindness: humanvid vs synth_endpoints (LOAD-BEARING) | 0.5518 | <= 0.6 | PASS |
-| ORIGINAL absolute bar (superseded, recorded not replaced) | 0.7066 | <= 0.65  [SUPERSEDED by 8a/8b -- round-9 ruling] | FAIL (recorded; the bar was in an unreachable reference frame: it demanded a different model generation land within 0.008 of the corpus's own internal A-vs-B register distance 0.6419, while a prompt delta inside one model opens 0.7233) |
-| full-vocabulary classifier | 0.9192 | AUC >= 0.80 triggers feature investigation | INVESTIGATE |
-| colour-term density | 3.735 | in [1.579, 4.737] | PASS |
-| camera-phrase rate | 2.3% | within +/-10 pp | PASS |
-| near-duplicate rate (token Jaccard > 0.8) | 0 pairs (0.0% of pairs) | report only | REPORT |
-
-**Re-pinned bars in force** (A8): gate 8a ≤ 0.73 (corpus-vs-new drift guard), gate 8b ≤ 0.60 (stratum-internal). The superseded `gate8_bacc_max 0.65` is recorded in the artefact and is NOT the bar.
-⚠ The passing store is **round 2**. Round 3 (the copula fix) is an improvement, not a requirement — the re-pinned battery clears on round 2.
-
-### S.7 Gate results
-
-| gate | result |
-|---|---|
-| copy-gate Day-0 admissibility (RULING 1, training blocker) | **PASS** — /projects/illinois/eng/cs/jrehg/users/emirkisa/misc/ctt_v2_final/VERIFY_copy_ref_discriminator.md: verdict='PASS, decisi |
-| S1 pilot — mechanical | **PASS** — 1/33 = 3.0 % rejects (bar ≤10 %); prefix rel-L2 p50/p95/max 0.0838 / 0.1232 / 0.1242, all < τ 0.12790; by-bank reject differential 4.5 pp (flag >15 pp) |
-| S1 pilot — blind 11-way Gemini class-ID (top-1 ≥80 %, chance 9.09 %, with a 33-clip real-corpus control) | `<PENDING: blocked: Gemini credits>` |
-| S2a acceptance refresh | **PASS** |
-| S2b acceptance (`S2_ACCEPTANCE.json`) | **PASS** — pure-phase max abs diff 0.0, seam_max 2.0 (bar ≤2.0, no headroom), m1_p10_min 0.255, overdraw 1.1549 |
-| S2b blind audit (n=64, bar ≤3 BAD) | **PASS** — rater1 1 BAD (#055), rater2 0, **consensus 0**; archived at `outputs/videos/ctt_v2_s2_humanvid/full/AUDIT_RESULT.json` + `misc/ctt_v2_final/artefacts/s2b_audit/` |
-| union-pool gates (numbers of record, A10) | **PASS** — n=1,146, gate A 0.519971 (≤0.52), gate B 50.56 (≥42.82) |
-| S4 12-gate battery + blind-guess (seed 44, n=150) + 100 % Layer-2 tripwire | `<PENDING: blocked: Gemini credits>` |
-| mixed-format smoke gate (2 shapes, per-format consumed counts + finite comparable loss + shifts pinned at {1.2350, 2.3021}) | `<PENDING: needs a GPU>` |
-
-### S.8 Pre-launch HARD asserts — result, and the proof each one fires
-
-- `assert_root.py` on `/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/ctt_v2_final/_root_machinery_test/root_v2` at `2026-07-28T04:23:01-0500`: **33/33 passed** in 18.39s; failures `none`
-
-| check | verdict | detail |
-|---|---|---|
-| `A1_set_equality_5_dirs` | PASS | identical relative-path sets in all 5 dirs (2536 each) |
-| `A1b_root_nonempty` | PASS | 2536 samples |
-| `A2_inventory_integrity` | PASS | 5 inventories match their recorded sha256 |
-| `A2b_path_scheme` | PASS | every relative path is <stratum>_r<NN>/<group>/<target>__ref_<reference>.pt |
-| `A3_realized_mix` | PASS | all strata within +-0.5 pp \| S0 counted 385 = 15.181% (intended 15.000%, +0.181 pp) \| S1 counted 156 = 6.151% (intended 6.000%, +0.151 pp) \| S2a counted 870 = 34.306% (intended 34.560%, -0.254 pp) \| S2b counted 867 = 34. |
-| `A3b_prorata_multipliers_equal` | PASS | pro-rata groups exercised: ['S2'] \| S2: S2a x1 replicas, S2b x1 replicas |
-| `A2c_root_resolves_to_inventories` | PASS | every sample resolves to a verified inventory entry (2536 samples) |
-| `A4_captions` | PASS | 139 distinct captions: ' sksz.' exactly once, outcome marker absent, zero Tier-1 leak strings |
-| `A5_endpoint_disjointness` | PASS | S1/S2 endpoints n {eval, zs-audited, 42 test} = 0 (92 eval-side ids checked) |
-| `A6_inline_ood_ops_absent` | PASS | none of the 8 pre-registered inline-OOD ops is in the root |
-| `A7_holdout_shaders_absent` | PASS | none of the 10 HOLDOUT_S2 shader families is in the root |
-| `A8_reserved_pool_clips_absent` | PASS | none of the 120 reserved union-pool clips is in the root |
-| `A9_zs_classes_absent` | PASS | none of the 10 zero-shot classes is in the root |
-| `A0_absence_assert_positive_controls` | PASS | every absence assert compares in a live, shared namespace: eval universe 92 ids (overlapping 26 exempt-stratum endpoints) · 10 holdout shaders all resolving in 125 `.glsl` files · 120 reserved pool clips in the same id s |
-| `A14_group_ids_slug_safe` | PASS | every group id slugs to a unique, non-empty, path-safe string S0 26 ids \| S1 2 ids \| S2a 38 ids \| S2b 30 ids \| S4 2 ids |
-| `A15_effective_weights_recorded` | PASS | nominal (sample count) vs EFFECTIVE (loss-bearing tokens): S0 15.18% -> 17.15% \| S1 6.15% -> 6.81% \| S2a 34.31% -> 36.57% \| S2b 34.19% -> 36.44% \| S4 10.17% -> 3.04%  [S4 effective 3.04%]. Nominal is the pre-registered q |
-| `A10_copy_gate_admissibility_PASSED` | PASS | /projects/illinois/eng/cs/jrehg/users/emirkisa/misc/ctt_v2_final/VERIFY_copy_ref_discriminator.md: verdict='PASS, decisively, in both cross cells and on both variants.**' |
-| `A11a_shapes_are_ruled` | PASS | 2458 sample rows carry only ruled latent shapes |
-| `A11b_one_shape_per_stratum` | PASS | S0 [16, 20, 15] \| S1 [16, 20, 15] \| S2a [16, 20, 15] \| S2b [16, 20, 15] \| S4 [5, 14, 26] |
-| `A11c_declared_shapes_match_disk` | PASS | 2 distinct shape(s) on disk == declared |
-| `A11d_two_shapes_iff_s4` | PASS | s4_in_mix=True and the root holds 2 shape(s) [[5, 14, 26], [16, 20, 15]] — as ruled |
-| `A11e_mask_store_matches_shapes` | PASS | mask store carries exactly the 3 (shape, sidedness) combinations the samples use |
-| `A11f_declared_shape_is_the_disk_shape` | PASS | one tensor per stratum loaded; the declared shape is the shape on disk (5 strata spot-checked) |
-| `B0_five_dirs_exist` | PASS | all five trees present ({latents:2536, conditions:2536, cond_clean_latents:2536, masks:2536, reference_latents:2536}) |
-| `B2_per_sample_geometry_agreement` | PASS | all 2536 samples: latents == cond_clean == reference geometry, mask numel == F*H*W, fps matches the shape class |
-| `B1_per_shape_five_tree_set_equality` | PASS | five-tree set equality holds INSIDE every shape class: 33f=258, 121f=2278 |
-| `B3_shape_classes_expected` | PASS | 2 shape class(es), all expected; every stratum maps to exactly one |
-| `B4_counts_include_S4_6000` | PASS | per-stratum {'S0': 385, 'S1': 156, 'S2a': 870, 'S2b': 867, 'S4': 258} \| per-shape {'33f': 258, '121f': 2278} \| S4: no replica multiplier in ROOT_MANIFEST.json |
-| `B6_shift_matches_sigma_archive` | PASS | 33f: 1820 tok -> shift 1.235026; 121f: 4800 tok -> shift 2.302083 |
-| `B7_no_token_count_collision` | PASS | token counts [1820, 4800] each map to exactly one geometry — a cross-shape mask can only fail LOUDLY |
-| `B5_fast_index_N_of_N` | PASS | NOT APPLICABLE (no --train-log). The gate to run at launch is: 'Fast index: 2536 valid samples from 2536 total', 0 skipped |
-| `A12_role_scoped_caption_exclusion` | PASS | no assembled caption draws on an excluded (clip, role) description (1 role-scoped + 0 clip-level exclusions enforced from /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/.claude/worktrees/bottleneck-bra |
-| `A13_role_scoped_prefix_condition` | PASS | no assembled sample's prefix-condition source (endpoint_a) is a role-excluded clip (1 standing (clip, role) exclusion(s): {'openvid_T1MiFx98l3g_0_50to156': ['A']}) |
-
-- `dryrun_epoch.py`: **0 skipped** over 2536 samples (12680 paths resolved, 2493 distinct tensors loaded, 16.65s). Zero skipped is a REQUIREMENT — any skip is promoted to a job failure.
-
-- **proof that the asserts fire** — `tests/prove_asserts.py`, strict=True, on `/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/ctt_v2_final/_root_machinery_test/root_2shape`: **35/35** deliberate one-invariant breakages produced exactly the intended failure(s). Problems: `none`.
-  An assert that has never failed is not known to work; this is the evidence that each one is sensitive to its own invariant and to nothing else.
-
-| broken invariant | checks that fired |
-|---|---|
-| `A1b_empty_root` | `A1b_root_nonempty` |
-| `A1_missing_from_one_dir` | `A1_set_equality_5_dirs`, `B1_per_shape_five_tree_set_equality` |
-| `A1_extra_in_one_dir` | `A1_set_equality_5_dirs`, `B1_per_shape_five_tree_set_equality` |
-| `A2_inventory_bytes_changed` | `A2_inventory_integrity`, `A2c_root_resolves_to_inventories` |
-| `A2b_path_scheme` | `A2b_path_scheme`, `B1_per_shape_five_tree_set_equality`, `B2_per_sample_geometry_agreement` |
-| `A2c_unknown_sample` | `A2c_root_resolves_to_inventories`, `B1_per_shape_five_tree_set_equality`, `B2_per_sample_geometry_agreement` |
-| `A3_realized_mix` | `A3_realized_mix` |
-| `A4_trigger_absent` | `A4_captions` |
-| `A4_trigger_twice` | `A4_captions` |
-| `A4_outcome_marker` | `A4_captions` |
-| `A4_tier1_leak` | `A4_captions` |
-| `A5_eval_endpoint` | `A5_endpoint_disjointness` |
-| `A6_ood_op_in_root` | `A6_inline_ood_ops_absent` |
-| `A6_exclusion_vacuous` | `A6_inline_ood_ops_absent` |
-| `A7_holdout_shader` | `A7_holdout_shaders_absent` |
-| `A8_reserved_pool_clip` | `A8_reserved_pool_clips_absent` |
-| `A9_zs_class` | `A9_zs_classes_absent` |
-| `A10_verdict_absent` | `A10_copy_gate_admissibility_PASSED` |
-| `A10_verdict_says_FAIL` | `A10_copy_gate_admissibility_PASSED` |
-| `A11c_declared_shapes` | `A11c_declared_shapes_match_disk`, `B3_shape_classes_expected` |
-| `A11b_two_shapes_in_one_stratum` | `A11b_one_shape_per_stratum` |
-| `A11a_unruled_shape` | `A11a_shapes_are_ruled`, `A11b_one_shape_per_stratum`, `A11c_declared_shapes_match_disk`, `A11d_two_shapes_iff_s4`, `A11e_mask_store_matches_shapes` |
-| `A11f_metadata_disagrees_with_disk` | `A11f_declared_shape_is_the_disk_shape`, `B2_per_sample_geometry_agreement`, `B3_shape_classes_expected` |
-| `A11x_external_module_mask_geometry` | `B2_per_sample_geometry_agreement` |
-| `A12_role_scoped_caption` | `A12_role_scoped_caption_exclusion` |
-| `A12_sidecar_absent` | `A12_role_scoped_caption_exclusion` |
-| `A13_prefix_condition` | `A12_role_scoped_caption_exclusion`, `A13_role_scoped_prefix_condition` |
-| `A13_exclusion_vacuous` | `A13_role_scoped_prefix_condition` |
-| `A0_absence_assert_namespace_drift` | `A0_absence_assert_positive_controls` |
-| `A14_slug_collision` | `A14_group_ids_slug_safe` |
-| `dryrun_dangling_symlink` | `DANGLING` |
-| `dryrun_orphan_in_non_primary_dir` | `ORPHAN` |
-| `dryrun_join_miss` | `JOIN-MISS` |
-| `dryrun_shape_disagreement` | `SHAPE-DISAGREE` |
-| `dryrun_bad_tensor_keys` | `BAD-KEYS` |
-
-### S.9 Sign-off
+### Sign-off
 
 | item | who | when |
 |---|---|---|
-| dataset design frozen at this spec | `<PENDING: owner>` | `<PENDING: date>` |
-| A9 reversal of A5 Ruling 2 (S4 IN; weights S0 15 / S1 6 / S2 total 69 / S4 10, S2a:S2b derived pro-rata per A12) countersigned | `<PENDING: owner>` | `<PENDING: date>` |
-| A9 pre-registered branches ratified | `<PENDING: owner>` | `<PENDING: date>` |
-| the 8 inline-OOD ops countersigned (advisor-ratified A11 item 1) | `<PENDING: owner>` | `<PENDING: date>` |
-| A10 role-scoped exclusion countersigned | `<PENDING: owner>` | `<PENDING: date>` |
-| copy-gate amendment-2 + gate-#8 re-pin | `<PENDING: owner>` | `<PENDING: date>` |
+| dataset v2.1.0 (this block) | `<PENDING: owner>` | `<PENDING: date>` |
+| 3 amendments + S4 schedule-ruling deviation + corpus-139 flags + 7 Layer-2 S4 clips | `<PENDING: owner>` | `<PENDING: date>` |
 
 <!-- STAMP:END -->
