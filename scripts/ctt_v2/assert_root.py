@@ -467,6 +467,7 @@ def main() -> int:
     # middle three are what stop a stale or hand-edited pre-registration passing quietly: a
     # file naming ops that no longer exist would otherwise exclude NOTHING and still read
     # "8 pre-registered ops", which is the vacuous-exclusion failure in a new disguise.
+    ood_note = ""
     prereg_path = (Path(args.prereg_inline_ood) if args.prereg_inline_ood
                    else rc.PREREG_INLINE_OOD)
     if "S2a" in set(counts):
@@ -487,13 +488,63 @@ def main() -> int:
                 ood_off.append(f"{prereg_path}: {len(unresolved)} pre-registered op_ids do not "
                                f"resolve in the S2a inventory — the pre-registration is stale "
                                f"and excludes nothing: {unresolved[:5]}")
+            # ---- the hash clause, as AMENDED by advisor A24 Ruling 1 ------------------------
+            # The pre-registration is WRITE-ONCE: `source_inventory_sha256` is a true HISTORICAL
+            # statement (at draw time the input hashed to that), so it is never overwritten —
+            # drift is recorded in a separate `*.amendment<N>.json` beside it.
+            #
+            # The bar accepts the inventory sha if it equals the draw-time hash OR an amendment's
+            # pinned hash, AND (in the amended case) the seed-42 draw RE-VERIFIES bit-identically.
+            # Both halves are required on purpose: accepting a pinned hash alone would let a stale
+            # amendment bless anything, while checking only the draw would tolerate unlimited
+            # future inventory churn and kill the tripwire. If S2a moves again after the
+            # amendment, this fails again — that is the point.
+            #
+            # It also pins the pre-registration FILE's own sha256, which nothing checked before:
+            # a hand-edited prereg was previously undetectable.
             sha = rec.get("source_inventory_sha256")
             src = rec.get("source_inventory")
             if sha and src and Path(src).exists() and rc.sha256_file(src) != sha:
-                ood_off.append(f"{prereg_path}: the S2a inventory has CHANGED since the draw "
-                               f"({src}) — re-verify the pre-registration, never re-draw it")
+                amends = sorted(prereg_path.parent.glob(f"{prereg_path.stem}.amendment*.json"))
+                accepted_by = None
+                for ap in amends:
+                    am = rc.read_json(ap)
+                    drift = am.get("inventory_drift") or {}
+                    if drift.get("sha256_now") != rc.sha256_file(src):
+                        continue
+                    problems = []
+                    if am.get("amended_file_sha256") != rc.sha256_file(prereg_path):
+                        problems.append("the pre-registration FILE has itself changed since the "
+                                        "amendment pinned it")
+                    proof = am.get("draw_unchanged_proof") or {}
+                    for k in ("shader_to_op_identical", "op_ids_identical",
+                              "eligible_shaders_identical", "op_ids_all_resolve_now"):
+                        if proof.get(k) is not True:
+                            problems.append(f"amendment does not assert {k}")
+                    # never trust the amendment's recorded proof — RE-DERIVE it here
+                    live = rc.select_inline_ood_ops(s2a_inv.get("groups") or {}, ex)
+                    if (live.get("shader_to_op") or {}) != shaders:
+                        problems.append("the seed-42 draw is NOT reproducible on the current "
+                                        "inventory — the pre-registration no longer binds")
+                    if sorted(live.get("eligible_shaders") or []) != sorted(
+                            rec.get("eligible_shaders") or []):
+                        problems.append("the eligible shader set has changed — the draw's "
+                                        "sample space is not what was pre-registered")
+                    if problems:
+                        ood_off += [f"{ap.name}: {p}" for p in problems]
+                    else:
+                        accepted_by = ap.name
+                    break
+                if accepted_by is None and not ood_off:
+                    ood_off.append(f"{prereg_path}: the S2a inventory has CHANGED since the draw "
+                                   f"({src}) — re-verify the pre-registration, never re-draw it")
+                if accepted_by:
+                    ood_note = (f" | inventory sha differs from the draw-time hash and is accepted "
+                                f"by {accepted_by}; the seed-42 draw was RE-DERIVED here and is "
+                                f"bit-identical to the pre-registered shader_to_op")
     b.check("A6_inline_ood_ops_absent", not ood_off,
-            f"none of the {len(ex.inline_ood_ops)} pre-registered inline-OOD ops is in the root"
+            (f"none of the {len(ex.inline_ood_ops)} pre-registered inline-OOD ops is in "
+             f"the root{ood_note}")
             if not ood_off else f"{len(ood_off)} inline-OOD problems", ood_off)
     b.check("A7_holdout_shaders_absent", not shader_off,
             f"none of the {len(ex.holdout_shaders)} HOLDOUT_S2 shader families is in the root"

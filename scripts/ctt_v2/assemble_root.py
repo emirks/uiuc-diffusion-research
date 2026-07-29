@@ -320,12 +320,10 @@ def conditions_provenance(present, samples, invs) -> dict:
 
 
 def mask_store_path(root: Path, f: int, h: int, w: int, sided: str) -> Path:
-    #: `p{prefix}` is in the NAME on purpose.  The prefix width became a shape property when
-    #: S4 moved to frame-0 conditioning, so an f5 mask written under the old fixed-2 rule has
-    #: the same (f,h,w,sided) as one written under the new rule and would be reused silently.
-    #: Naming it forces a regeneration instead.
-    p = rc.prefix_latents((f, h, w))
-    return root / "_mask_store" / f"f{f}_h{h}_w{w}_p{p}_{sided}sided.pt"
+    #: The NAME is owned by `root_common.mask_store_name` and delegated to here, never restated:
+    #: four sites had grown their own copy of it and two were computing the pre-`p{prefix}` form.
+    #: This function is just the path wrapper.
+    return root / "_mask_store" / rc.mask_store_name(f, h, w, sided)
 
 
 def ensure_mask(path: Path, f: int, h: int, w: int, sided: str) -> None:

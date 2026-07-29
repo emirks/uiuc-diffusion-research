@@ -285,6 +285,23 @@ def prefix_latents(fhw) -> int:
         "prefix_latents", DEFAULT_PREFIX_LATENTS)
 
 
+def mask_store_name(f: int, h: int, w: int, sided: str) -> str:
+    """THE mask-store filename.  Every other site delegates here; nobody restates it.
+
+    `p{prefix}` is in the name on purpose: the prefix width became a SHAPE property when S4
+    moved to frame-0 conditioning, so an f5 mask written under the old fixed-2 rule shares
+    `(f,h,w,sided)` with one written under the new rule and would be reused SILENTLY.  Naming it
+    forces a regeneration instead.
+
+    It is a function because the hand-rolled copies kept drifting.  Three sites had their own
+    f-string; the two that computed the pre-rename name failed loudly (`build_smoke_root.py`
+    could not find any mask; A11e reported all three real masks simultaneously "missing" and
+    "stale" on a root whose every per-sample mask B2 had just verified).  `assemble_root.
+    mask_store_path` is the path-returning wrapper around this.
+    """
+    return f"f{f}_h{h}_w{w}_p{prefix_latents((f, h, w))}_{sided}sided.pt"
+
+
 def latent_tokens(fhw) -> int:
     """Sequence length the timestep sampler sees = the product of the latent dims."""
     f, h, w = (int(x) for x in fhw)
@@ -1674,7 +1691,12 @@ def _fallback_check_shapes(root: Path, manifest: dict, rows: list[dict]) -> list
 
     store = root / "_mask_store"
     have = {p.name for p in store.glob("*.pt")} if store.is_dir() else set()
-    want = {f"f{f}_h{h}_w{w}_{sided}sided.pt" for (f, h, w), sided in need_masks}
+    #: `mask_store_name`, never a restated f-string.  This line used to build
+    #: `f{f}_h{h}_w{w}_{sided}sided.pt` itself, which predates the `p{prefix}` component and made
+    #: A11e report all three real masks "missing" AND all three "stale" simultaneously — a root
+    #: whose every per-sample mask B2 had just verified.  Fourth site to carry a hand-rolled copy
+    #: of this name (after regen_masks.py and build_smoke_root.py); hence one function, here.
+    want = {mask_store_name(f, h, w, sided) for (f, h, w), sided in need_masks}
     bad = [f"missing mask {n}" for n in sorted(want - have)]
     bad += [f"stale mask {n} (no sample uses it)" for n in sorted(have - want)]
     out.append({"name": "A11e_mask_store_matches_shapes", "ok": not bad,
