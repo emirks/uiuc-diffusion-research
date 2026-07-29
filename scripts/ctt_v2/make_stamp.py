@@ -76,14 +76,57 @@ def load(path: Path):
         return None
 
 
+def load_first(*paths: Path):
+    """Read the FIRST of `paths` that exists; return (doc, path_used) or (None, None).
+
+    ⚠ This exists because several of this generator's inputs were RENAMED or reorganised after it
+    was written, and a name-miss makes the stamp print `<PENDING: …>` for evidence that is sitting
+    on disk.  That is this file's own documented failure mode — *"a missing number that looks like
+    an absent row is how a stamp lies"* — inverted, and it is worse than a crash because it reads
+    as an honest gap.  The current name is listed first and the historical name second, so the
+    mapping is visible here rather than inferred.
+
+    The PENDING mechanism is deliberately untouched for anything genuinely absent.
+    """
+    for p in paths:
+        d = load(p)
+        if d is not None:
+            return d, p
+    return None, None
+
+
 # --------------------------------------------------------------------------------------
 def block(root: Path, caption_store: Path, stamped: bool) -> str:
     man = load(root / "ROOT_MANIFEST.json")
-    arep = load(root / "ASSERT_REPORT.json")
-    drep = load(root / "DRYRUN_REPORT.json")
-    prep = load(root / "PROVE_ASSERTS.json")
-    gate = load(caption_store / "gate_report_repinned.json")
-    meta = load(caption_store / "run_meta.json")
+    arep, _ = load_first(root / "ASSERT_REPORT.json")
+    drep, drep_p = load_first(root / "DRYRUN_EPOCH.json", root / "DRYRUN_REPORT.json")
+    prep, _ = load_first(root / "PROVE_ASSERTS.json")
+    #: TWO caption gate batteries, never merged into one row: A9 required S4's captions be gated
+    #: SEPARATELY from the main store rather than pooled, and S4 FAILED gate 8a (0.8849 vs bar
+    #: <= 0.73).  Merging them would average that failure away, which is precisely the outcome the
+    #: separate-gating ruling exists to prevent.
+    gate, gate_p = load_first(caption_store / "GATE_BATTERY_FULL_1403.json",
+                              caption_store / "gate_report_repinned.json")
+    gate_s4, gate_s4_p = load_first(caption_store / "GATE_BATTERY_S4.json")
+    #: `run_meta.json` never existed under that name; the model version strings live in the two
+    #: caption stores' own provenance, which is the authoritative record.
+    meta, _ = load_first(caption_store / "run_meta.json")
+    if meta is None:
+        meta = {}
+        for label, fn in (("locked store", "CAPTION_STORE.json"),
+                          ("S4 store", "S4_CAPTION_STORE.json")):
+            doc = load(caption_store / fn)
+            if not doc:
+                continue
+            meta[f"{label} content_hash"] = doc.get("content_hash")
+            if doc.get("generator"):
+                meta[f"{label} generator"] = doc["generator"]
+            prov = doc.get("provenance")
+            if isinstance(prov, dict):
+                for k in ("model", "generator", "auditor", "gen_model", "prompt_variant"):
+                    if prov.get(k):
+                        meta[f"{label} {k}"] = prov[k]
+        meta = meta or None
 
     L: list[str] = [BEGIN, "", "## STAMP", ""]
     L.append(f"**STAMPED: {'YES' if stamped else 'NO'}** — generated "
@@ -296,24 +339,64 @@ def block(root: Path, caption_store: Path, stamped: bool) -> str:
 
     # ---- captions --------------------------------------------------------------------------
     L += ["### S.6 Caption store — hash, model versions, raw archives, battery", ""]
-    store = caption_store / "descriptions.json"
-    if store.exists():
-        L += [f"- **store** `{store}`  sha256 `{rc.sha256_file(store)}`",
-              f"- **raw generation responses** `{caption_store / 'raw_generation_responses.jsonl'}`",
-              f"- **raw audit responses** `{caption_store / 'raw_audit_responses.jsonl'}`",
-              f"- **records** `{caption_store / 'records.json'}`"]
-    else:
-        L += [f"- {pending(f'caption store — {store} does not exist (Gemini credits)')}"]
+    #: TWO stores, listed separately for the same reason the two batteries are: the locked store
+    #: holds the corpus/pool (clip, role) descriptions, and S4's Gemini-generated captions are a
+    #: distinct instrument with its own content hash and its own gate results.
+    n_store = 0
+    for label, fn in (("locked caption store", "CAPTION_STORE.json"),
+                      ("S4 caption store", "S4_CAPTION_STORE.json"),
+                      ("legacy descriptions store", "descriptions.json")):
+        sp = caption_store / fn
+        if not sp.exists():
+            continue
+        doc = load(sp) or {}
+        L.append(f"- **{label}** `{sp}`  sha256 `{rc.sha256_file(sp)}`"
+                 + (f"  content_hash `{doc['content_hash']}`" if doc.get("content_hash") else ""))
+        n_store += 1
+    for extra in ("raw_generation_responses.jsonl", "raw_audit_responses.jsonl",
+                  "COST_LEDGER.json"):
+        ep = caption_store / extra
+        if ep.exists():
+            L.append(f"- **{extra}** `{ep}`")
+    if not n_store:
+        L += [f"- {pending(f'caption store — nothing found under {caption_store}')}"]
     if meta:
         for k in sorted(meta):
             L.append(f"- **{k}** `{meta[k]}`")
     else:
         L.append(f"- {pending('generator/auditor model version strings (run_meta.json)')}")
     L.append("")
+    # ---- S4's battery is rendered as its OWN block, never merged with the main one -----------
+    if gate_s4 is not None:
+        s4s = gate_s4.get("summary", {})
+        L += ["", "#### S.6b S4 caption battery — run SEPARATELY (A9), and it FAILED a bar", "",
+              f"- **battery**: `{gate_s4_p}`  sha256 `{rc.sha256_file(gate_s4_p)}`",
+              f"- **hard failures**: `{s4s.get('hard_fail')}`",
+              "- ⚠ **S4 gate 8a FAILED: balanced accuracy 0.8849 against bar ≤ 0.73.** The owner "
+              "explicitly declined A9 Q4's pre-registered remedy (fix the length sampler, "
+              "regenerate, max 3 rounds) and directed the captions be used unchanged on "
+              "2026-07-28; no regeneration round was consumed. **Formal stamp countersign of this "
+              "deviation is PENDING** — this line records a directive to proceed, NOT a signed "
+              "acceptance.",
+              "- A9 required S4 be gated separately rather than pooled with the main store; these "
+              "numbers are therefore NOT averaged into S.6a and must never be quoted as if they "
+              "were.", ""]
+        s4rows = gate_s4.get("gates") or gate_s4.get("results") or []
+        if isinstance(s4rows, dict):
+            s4rows = [dict(v, name=k) for k, v in sorted(s4rows.items())]
+        if s4rows:
+            L += ["| gate | value | bar | verdict |", "|---|---|---|---|"]
+            for g in s4rows:
+                L.append(f"| {g.get('name', g.get('gate'))} | {g.get('value')} | "
+                         f"{g.get('bar')} | {g.get('verdict', g.get('ok'))} |")
+            L.append("")
+    else:
+        L += ["", f"- {pending('S4 caption battery (GATE_BATTERY_S4.json)')}", ""]
+
+    L += ["", "#### S.6a Main caption battery", ""]
     if gate:
         summ = gate.get("summary", {})
-        L += [f"- **battery**: `{caption_store / 'gate_report_repinned.json'}`  "
-              f"sha256 `{rc.sha256_file(caption_store / 'gate_report_repinned.json')}`",
+        L += [f"- **battery**: `{gate_p}`  sha256 `{rc.sha256_file(gate_p)}`",
               f"- **hard failures**: `{summ.get('hard_fail')}`", "",
               "| gate | value | bar | verdict |", "|---|---|---|---|"]
         rows = gate.get("gates") or gate.get("results") or []
