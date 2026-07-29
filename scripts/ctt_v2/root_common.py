@@ -1487,7 +1487,17 @@ def copy_gate_verdict(path: Path | None = None) -> tuple[bool, str]:
 # --------------------------------------------------------------------------------------
 # root path scheme
 # --------------------------------------------------------------------------------------
-_REPLICA_RE = re.compile(r"^(?P<stratum>[A-Za-z0-9]+)_r(?P<rep>\d{2})$")
+#: `\d{2,}` and NOT `\d{2}`.  `replica_dir` pads to a MINIMUM of two digits, so a multiplier
+#: above 100 emits three: S0's realized multiplier is 153, giving `S0_r00 .. S0_r99` followed
+#: by `S0_r100 .. S0_r152`.  Those names are correct and unambiguous (the stratum part cannot
+#: contain `_`, so `S0_r100` can only read as rep 100), but the two-digit regex could not parse
+#: them and `assert_root` CRASHED — not failed, crashed — on the first S0 replica past 99:
+#:     ValueError: relative path does not start with a <stratum>_r<NN> dir:
+#:                 'S0_r100/air_bending/air_bending_0__ref_air_bending_2.pt'
+#: Every previous root had every multiplier under 100, so the ceiling was never reached.  The
+#: fix is in the PARSER, never in `replica_dir`: re-padding to `:03d` would rename all 2,021,295
+#: symlinks for cosmetics and invalidate a root that A1 has already certified.
+_REPLICA_RE = re.compile(r"^(?P<stratum>[A-Za-z0-9]+)_r(?P<rep>\d{2,})$")
 
 
 def replica_dir(stratum: str, rep: int) -> str:
@@ -1495,7 +1505,10 @@ def replica_dir(stratum: str, rep: int) -> str:
 
 
 def parse_replica(rel: str) -> tuple[str, int]:
-    """'S2a_r03/BookFlip_x/a__ref_b.pt' -> ('S2a', 3).  Raises on anything else."""
+    """'S2a_r03/BookFlip_x/a__ref_b.pt' -> ('S2a', 3).  Raises on anything else.
+
+    Handles >=3-digit replica indices (`S0_r152`); see `_REPLICA_RE` for why that matters.
+    """
     first = rel.split(os.sep, 1)[0]
     m = _REPLICA_RE.match(first)
     if not m:
