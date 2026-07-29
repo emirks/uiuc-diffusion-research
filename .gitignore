@@ -64,3 +64,6 @@ scripts/**/logs/*_[0-9]*.err
 eval_ladder/conds/
 eval_ladder/dataset/
 experiments/exp_079_standalone_operator_encoder/dataset/
+
+# finalized datasets are data, never git (public repo)
+datasets/

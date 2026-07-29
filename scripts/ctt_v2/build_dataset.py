@@ -4,7 +4,7 @@
 This replaces `assemble_root.py`'s physical tree (one symlink per sample x 5 dirs;
 2,021,295 links at its peak) with ONE directory that IS the dataset:
 
-    outputs/ctt_v2/dataset/
+    datasets/ctt_v2/
       README.md  VERSION  MANIFEST.json
       samples.jsonl          # one JSON row per base pair: id, stratum, group, caption_key,
                              # shape, and the 5 store paths RELATIVE to this directory
@@ -47,8 +47,8 @@ import root_common as rc
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = REPO / "outputs/ctt_v2/strata_manifest.json"
-DEFAULT_OUT = REPO / "outputs/ctt_v2/dataset"
-OLD_SHAPE_CACHE = REPO / "outputs/ctt_v2/roots/ctt_v2_mix/_shape_cache.json"
+DEFAULT_OUT = REPO / "datasets/ctt_v2"
+OLD_SHAPE_CACHE = Path("/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/ctt_v2_final/artefacts/retired_roots/ctt_v2_mix/_shape_cache.json")
 OLD_MASK_STORE = REPO / "outputs/ctt_v2/masks/_mask_store"
 
 #: Stores that MOVE into the dataset (same filesystem: an instant rename). A relative

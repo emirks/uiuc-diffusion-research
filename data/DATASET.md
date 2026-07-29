@@ -2,7 +2,7 @@
 
 **Design version: `ctt-v2-dataset/2.1.0`**
 **Status: `BUILT + VERIFIED` (2026-07-29).** The dataset of record is
-**`outputs/ctt_v2/dataset/`** — list-based, no symlink root: 56,368 base pairs across 5 strata,
+**`datasets/ctt_v2/`** — list-based, no symlink root: 56,368 base pairs across 5 strata,
 41,195 distinct store files all verified present, mix realised by the trainer's stratified
 sampler (max deviation 0.0006 pp vs the physical root's 0.4289 pp integer residual). §15 records
 the finalization; the STAMP block below is current. Status tables in §1 describe the 2026-07-28
@@ -1533,7 +1533,7 @@ generally unusable (87→9 kept; its `__1sided` sibling fell below 2 clips and w
 ring rule); the rest were low-quality rejects. Applied at the SPEC (`build_s1_spec.py
 --rejects`), so every downstream artifact derives from survivors. Cascade: S1 = 12 groups,
 1,225 clips, 3,675 base pairs (was 4,251); total base pairs 56,944 → **56,368**. The label
-export is preserved at `outputs/ctt_v2/dataset/docs/s1_owner_rejects.json`; pre-reject
+export is preserved at `datasets/ctt_v2/docs/s1_owner_rejects.json`; pre-reject
 inventories at `outputs/ctt_v2/inventories/*.PRE_REJECT.json`.
 
 ### 15.2 The physical root is retired; the mix moved into the trainer
@@ -1545,7 +1545,7 @@ glob-and-join it forced on the trainer all go with it.
 
 The replacement, built by `scripts/ctt_v2/build_dataset.py`:
 
-- **`outputs/ctt_v2/dataset/` is the single source of truth** — samples.jsonl (one row per
+- **`datasets/ctt_v2/` is the single source of truth** — samples.jsonl (one row per
   base pair naming its 5 store files, paths relative to the directory), mix.json, captions.json,
   the moved stores (encodes incl. the actual mp4 clips, conditions, masks), frozen inventory
   copies, docs, MANIFEST.json, VERSION. Moves left compat symlinks so every recorded path still
@@ -1570,13 +1570,13 @@ The replacement, built by `scripts/ctt_v2/build_dataset.py`:
 
 **STAMPED: NO** — stamping is an owner act; this block being present is not a stamp.
 `STAMPED: YES` plus the sign-off row is. Written 2026-07-29 against the v2.1.0 dataset of
-record (the machine-readable stamp is `outputs/ctt_v2/dataset/MANIFEST.json`; this block
+record (the machine-readable stamp is `datasets/ctt_v2/MANIFEST.json`; this block
 restates it). The previous block here described the 2026-07-28 machinery-proof FIXTURE root
 and was replaced when the physical-root form was retired (§15.2); it survives in git history.
 
 ### Dataset identity
 
-- **dataset** `outputs/ctt_v2/dataset/` · **version** `2.1.0` · **created** `2026-07-29T12:05:20-0500` · **seed** `42`
+- **dataset** `datasets/ctt_v2/` · **version** `2.1.0` · **created** `2026-07-29T12:05:20-0500` · **seed** `42`
 - **MANIFEST.json sha256** `f83b06dfe6330f16205cae7955a57b72f3d3fdfa6d743741283a529621e3730f`
 - **samples.jsonl sha256** `1a086911e44d7686074f5e87f42eae9679a48636efdf8a25baeba336c028ef16`
 - **captions.json sha256** `7f4709097afa95eedd933aa8ca398275c4954f24c22e3bf5da99a6f7b1604087`
@@ -1598,7 +1598,7 @@ and was replaced when the physical-root form was retired (§15.2); it survives i
 ### S1 owner reject pass
 
 - 192/1,417 rejected 2026-07-29 (13.5%); hero_flight 87→9; `hero_flight__1sided` dropped (<2 clips)
-- label export: `outputs/ctt_v2/dataset/docs/s1_owner_rejects.json`
+- label export: `datasets/ctt_v2/docs/s1_owner_rejects.json`
 
 ### Sign-off
 

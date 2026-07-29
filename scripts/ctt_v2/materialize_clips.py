@@ -21,7 +21,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
-DATASET = REPO / "outputs/ctt_v2/dataset"
+DATASET = REPO / "datasets/ctt_v2"
 
 
 def main() -> None:

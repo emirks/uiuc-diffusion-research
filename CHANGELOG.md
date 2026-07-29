@@ -1,5 +1,13 @@
 ## 2026-07-29
 
+- **12:45** — **CTT v2 dataset promoted to top-level `datasets/ctt_v2/` (gitignored; public-repo
+  safe) and the three retired symlink roots DELETED.** Dataset verified intact post-move (56,368
+  rows, 41,195 files, 0 missing, 4 s); compat symlink left at `outputs/ctt_v2/dataset` so every
+  earlier pointer chain still resolves. Clip mp4s were also materialized beforehand — the SSOT now
+  contains ZERO symlinks (19,536 real mp4s incl. the 139 S0 corpus sources; staging paths under
+  `outputs/videos/ctt_v2_*` compat-link back in). Retired roots' assert/manifest records archived
+  to `$LAB/misc/ctt_v2_final/artefacts/retired_roots/` before deletion (~2M inodes freed).
+
 - **12:12** — **CTT v2 dataset FINALIZED at v2.1.0: list-based SSOT directory + trainer-side
   stratified sampler; the 2M-symlink physical root is retired.** Owner rejected 192/1,417 S1
   generations in a grouped-autoplay labelling viewer (`scripts/build_s1_label_viewer.py`;
