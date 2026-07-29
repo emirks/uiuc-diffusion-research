@@ -6,9 +6,16 @@ Checks, and nothing beyond them:
   coverage   every distinct caption of every stratum has an embed file
   shape      `video_prompt_embeds (1024,3840) bf16`, `prompt_attention_mask (1024,) int64`,
              `audio_prompt_embeds (1024,3840) bf16` -- the format S0's certified embeds carry
-  distinct   the embeds are not all the same tensor.  This is the check that would have caught
-             the rehearsal's 168,184-samples-share-one-file defect, which every path-alignment
-             assert passes on BY CONSTRUCTION (a placeholder aligns perfectly).
+  distinct   two DIFFERENT caption texts never produce the same tensor.  This is the check that
+             would have caught the rehearsal's 168,184-samples-share-one-file defect, which every
+             path-alignment assert passes on BY CONSTRUCTION (a placeholder aligns perfectly).
+
+             ⚠ It is stated over the UNION of referenced caption hashes, not the per-stratum sum.
+             Cross-stratum sharing is the DESIGN of a content-addressed store, not a defect: S1's
+             s0cf layer carries the certified S0 caption verbatim, so all 139 S0 hashes are a
+             subset of S1's 434 and the per-stratum sum (3,704) legitimately exceeds the distinct
+             count (3,565) by exactly that 139.  Comparing the sum against distinct tensors made
+             correct sharing indistinguishable from a placeholder collapse, and failed the job.
   s0_text    ⚠ advisor A21's open question: the pre-existing `eval_ladder/dataset/conditions/`
              embeds date from Jul 22 and their TEXT provenance was never recorded. We now
              encode S0 ourselves from the certified captions, so comparing the new tensor
@@ -58,7 +65,9 @@ def main() -> int:
            "at": datetime.now(timezone.utc).isoformat(),
            "tree": str(OUT.relative_to(REPO)), "strata": {}}
     hard: list[str] = []
-    seen_content: Counter = Counter()
+    #: caption_hash -> tensor content sha.  Keyed by hash so a file referenced by two strata is
+    #: examined ONCE; the distinct check is then a bijection test over the union.
+    file_content: dict[str, str] = {}
 
     for st, rec in man["strata"].items():
         rows = json.loads((IN / f"{st}_captions.json").read_text())
@@ -72,6 +81,8 @@ def main() -> int:
 
         badshape = []
         for h in present:
+            if h in file_content:      # already examined via another stratum -- same file
+                continue
             d = torch.load(OUT / f"{h}.pt", map_location="cpu", weights_only=True)
             if set(d) != set(EXPECT):
                 badshape.append(f"{h}: keys {sorted(d)}")
@@ -79,25 +90,30 @@ def main() -> int:
             for k, (shp, dt) in EXPECT.items():
                 if tuple(d[k].shape) != shp or str(d[k].dtype) != dt:
                     badshape.append(f"{h}.{k}: {tuple(d[k].shape)}/{d[k].dtype}")
-            seen_content[content_sha(d["video_prompt_embeds"])] += 1
+            file_content[h] = content_sha(d["video_prompt_embeds"])
         sr["shape_violations"] = len(badshape)
         sr["shape_violation_examples"] = badshape[:5]
         if badshape:
             hard.append(f"{st}: {len(badshape)} shape/key violations")
         rep["strata"][st] = sr
 
-    n_files = sum(v["present"] for v in rep["strata"].values())
+    per_stratum_sum = sum(v["present"] for v in rep["strata"].values())
+    tensors: Counter = Counter(file_content.values())
+    collisions = {sha: n for sha, n in tensors.items() if n > 1}
     rep["distinct_check"] = {
-        "embed_files_examined": n_files,
-        "distinct_video_prompt_embeds": len(seen_content),
-        "most_shared_tensor_count": max(seen_content.values()) if seen_content else 0,
-        "rule": "distinct tensor count must equal the file count: each file is one distinct "
-                "caption by construction (content-addressed), so two files sharing a tensor "
-                "means the encoder ignored its input -- the placeholder defect.",
+        "distinct_caption_hashes_examined": len(file_content),
+        "per_stratum_sum": per_stratum_sum,
+        "cross_stratum_shared": per_stratum_sum - len(file_content),
+        "distinct_video_prompt_embeds": len(tensors),
+        "most_shared_tensor_count": max(tensors.values()) if tensors else 0,
+        "rule": "BIJECTION over the union of referenced caption hashes: N distinct caption "
+                "hashes must yield N distinct tensors. Two hashes sharing a tensor means the "
+                "encoder ignored its input (the placeholder defect). Cross-stratum reuse of "
+                "the SAME hash is the design and is excluded by keying on the hash.",
     }
-    if seen_content and len(seen_content) != n_files:
-        hard.append(f"distinct tensors {len(seen_content)} != files {n_files} -- embeds are "
-                    f"being shared where they should be unique")
+    if collisions:
+        hard.append(f"{len(collisions)} tensor(s) shared by >1 distinct caption hash "
+                    f"(max {max(collisions.values())}) -- the encoder ignored its input")
 
     # ---- the S0 text-provenance question ---------------------------------------------------
     s0_rows = json.loads((IN / "S0_captions.json").read_text())
