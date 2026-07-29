@@ -459,12 +459,52 @@ def block(root: Path, caption_store: Path, stamped: bool) -> str:
               f"to a job failure.", ""]
     else:
         L += [f"- {pending('dry-run epoch has not been run against this root')}", ""]
-    if prep:
+    if prep and prep.get("schema", "").startswith("ctt_v2_prove_asserts/v2"):
+        #: The v2 artifact is a COMPOSITE and says so. Rendering the harness's raw
+        #: `n_proven/n_mutations` here would print "9/37", which is both wrong (the harness books
+        #: the one structurally-excluded check as an extra on every line) and the exact phrasing
+        #: advisor A25b forbade: "never '37/37 strict'". So the stamp reports the composite's own
+        #: declared structure and the mechanical verification, not a ratio.
+        b1 = prep["item1_battery"]
+        L += [f"- **proof that the asserts fire** — `tests/prove_asserts.py` on a DISPOSABLE "
+              f"FIXTURE with stub payloads, **not** the production root.",
+              f"  - structure: {prep['structure']}",
+              f"  - battery, verified MECHANICALLY over all {b1['n_mutations']} records: "
+              f"**{b1['mutations_that_failed_to_fire_intended']}** mutations failed to fire their "
+              f"intended check(s); **{b1['mutations_with_an_extra_other_than_A6']}** had an extra "
+              f"beyond the one structurally-excluded check; "
+              f"{b1['builder_side_records']}/{b1['builder_side_records']} builder-side records at "
+              f"their expected exit codes.",
+              f"  - the excluded check's baseline failure was CAPTURED and confirmed to be the "
+              f"predicted reason: {prep['item2_A6_baseline_reason_captured']['offenders'][0]}",
+              f"  - that same failure is itself a negative result: "
+              f"{prep['item2_A6_baseline_reason_captured']['confirms'][:220]}",
+              f"  - targeted harness for it: "
+              f"**{prep['item3_A6_targeted_harness']['result']}**",
+              f"  - tautology detector on the mask-store check: "
+              f"**{prep['item4_A11e_tautology_detector']['verdict'][:150]}**",
+              f"  - fixture report `{prep['fixture_report']}` sha256 "
+              f"`{prep['fixture_report_sha256']}`",
+              "  An assert that has never failed is not known to work. Every check is proven from "
+              "a state in which that check was GREEN — which is what makes each fire "
+              "interpretable.", ""]
+        L += ["| broken invariant | checks that fired |", "|---|---|"]
+        for r in prep["per_mutation"]:
+            if r["kind"] == "builder":
+                L.append(f"| `{r['mutation']}` (builder) | exit={r['exit_code']} |")
+            else:
+                L.append(f"| `{r['mutation']}` | "
+                         f"{', '.join('`' + x + '`' for x in r['actually_failed'])} |")
+        L.append("")
+        L += [f"- **assert-code identity**: the code that produced the battery results is recorded "
+              f"in `PROVE_ASSERTS.json:assert_code_identity`; "
+              f"{prep['assert_code_identity']['reading'][:300]}", ""]
+    elif prep:
         L += [f"- **proof that the asserts fire** — `tests/prove_asserts.py`, "
-              f"strict={prep['strict']}, on `{prep['root']}`: "
-              f"**{prep['n_proven']}/{prep['n_mutations']}** deliberate one-invariant "
+              f"strict={prep.get('strict')}, on `{prep.get('root')}`: "
+              f"**{prep.get('n_proven')}/{prep.get('n_mutations')}** deliberate one-invariant "
               f"breakages produced exactly the intended failure(s). "
-              f"Problems: `{prep['failures'] or 'none'}`.",
+              f"Problems: `{prep.get('failures') or 'none'}`.",
               "  An assert that has never failed is not known to work; this is the evidence "
               "that each one is sensitive to its own invariant and to nothing else.", ""]
         L += ["| broken invariant | checks that fired |", "|---|---|"]

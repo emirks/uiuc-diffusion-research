@@ -532,16 +532,37 @@ MUTATIONS: dict[str, tuple] = {
         "A1 correctly PASSES here — five empty path sets really are equal — which is "
         "exactly why A1b exists as a separate check: set-equality alone cannot tell a "
         "correct root from an empty one"),
-    "A1_missing_from_one_dir": (m_A1_missing, {"A1_set_equality_5_dirs"}, ""),
+    "A1_missing_from_one_dir": (
+        m_A1_missing, {"A1_set_equality_5_dirs", "A1c_conditions_distinct_targets"},
+        "this mutation DELETES a `conditions/` entry, and A1c counts the DISTINCT conditions "
+        "targets per stratum against the expected distinct-caption count — so removing one "
+        "necessarily drops that count below expectation. The coupling is arithmetic, not "
+        "incidental. A1c was added later (advisor A21 Q2) and its coupling was never declared "
+        "here, which is why 4 mutations reported it as an unexpected extra"),
     "A1_extra_in_one_dir": (m_A1_extra, {"A1_set_equality_5_dirs"}, ""),
     "A2_inventory_bytes_changed": (
         m_A2_inventory_bytes,
         {"A2_inventory_integrity", "A2c_root_resolves_to_inventories"},
         "an inventory that fails its sha256 is not consulted, so every sample it should "
         "explain becomes unexplained — the coupling IS the intended behaviour"),
-    "A2b_path_scheme": (m_A2b_path_scheme, {"A2b_path_scheme"}, ""),
-    "A2c_unknown_sample": (m_A2c_unknown_sample, {"A2c_root_resolves_to_inventories"}, ""),
-    "A3_realized_mix": (m_A3_mix, {"A3_realized_mix"}, ""),
+    #: The three mutations below all CHANGE THE SAMPLE SET, and A1c's distinct-conditions count is
+    #: a function of the sample set, so A1c fires by arithmetic in each case.  Declared rather than
+    #: tolerated, per this file's own rule; the reason differs slightly per mutation.
+    "A2b_path_scheme": (
+        m_A2b_path_scheme, {"A2b_path_scheme", "A1c_conditions_distinct_targets"},
+        "renaming a sample to an off-scheme path removes it from every per-stratum tally A1c "
+        "computes, so the distinct-conditions count no longer matches the expected distinct "
+        "captions"),
+    "A2c_unknown_sample": (
+        m_A2c_unknown_sample,
+        {"A2c_root_resolves_to_inventories", "A1c_conditions_distinct_targets"},
+        "an injected sample no inventory explains also contributes a conditions target A1c did "
+        "not expect, so the distinct count moves"),
+    "A3_realized_mix": (
+        m_A3_mix, {"A3_realized_mix", "A1c_conditions_distinct_targets"},
+        "deleting 20 S4 samples to push the counted share past tolerance also removes their "
+        "conditions targets, so S4's distinct-conditions count drops below its expected "
+        "distinct-caption count"),
     "A3b_prorata_multipliers_unequal": (
         m_A3b_prorata_multipliers, {"A3b_prorata_multipliers_equal"},
         "two of A3b's own clauses fire — the on-disk inequality (S2b x2 replica dirs vs "
