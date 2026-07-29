@@ -59,7 +59,31 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", required=True)
     ap.add_argument("--captions-out", required=True)
+    ap.add_argument("--rejects", help="owner-labelled reject list "
+                                     "(outputs/viewers/s1_label/rejects.json). Rejected stems are "
+                                     "excluded HERE, at the spec, so every downstream artefact "
+                                     "derives from the surviving set instead of being filtered "
+                                     "afterwards. A group left with 0 clips is dropped; one left "
+                                     "with 1 clip is dropped too, since the ring rule "
+                                     "k=min(3,n-1) yields no pairs below 2.")
     args = ap.parse_args()
+
+    rejects: set[str] = set()
+    reject_meta: dict = {}
+    if args.rejects:
+        rp = Path(args.rejects)
+        rp = rp if rp.is_absolute() else REPO / rp
+        rdoc = json.loads(rp.read_text())
+        rejects = set(rdoc["rejects"])
+        reject_meta = {"path": str(rp.relative_to(REPO)),
+                       "sha256": rc.sha256_file(rp),
+                       "labelled_at": rdoc.get("at"),
+                       "n_rejected_declared": rdoc.get("n_rejected"),
+                       "instrument": "outputs/viewers/s1_label — every clip shown grouped by "
+                                     "class, autoplaying; the owner marked the bad generations. "
+                                     "S1 had no per-clip gate before this: a 33-clip mechanical "
+                                     "pilot passed (1/33) and the blind 11-way batch gate never "
+                                     "ran, so 1,384 clips had never been looked at."}
 
     import encode_strata as es
     sided_of = es.s1_sidedness()
@@ -77,6 +101,7 @@ def main() -> None:
                       key=len, reverse=True)
 
     downgraded: list[str] = []
+    rejected_seen: set[str] = set()
     groups: dict[str, dict] = {}
     endpoints: dict[str, list] = {}
     cap_sources: dict[str, list] = {}
@@ -88,6 +113,9 @@ def main() -> None:
     for layer, root in LAYERS.items():
         for p in sorted(root.glob("spec_*/*.mp4")):
             arm, stem = p.parent.name, p.stem
+            if stem in rejects:
+                rejected_seen.add(stem)
+                continue
             sided = sided_of[arm]
             mid = re.sub(r"__s\d+$", "", stem[len(arm) + 2:])
             # longest-first match; for a two-endpoint stem, strip the first hit and match again
@@ -169,6 +197,14 @@ def main() -> None:
         raise SystemExit(f"[s1-spec] {len(bad)} caption(s) violate RULING 9: "
                          + json.dumps(dict(list(bad.items())[:4]), indent=1))
 
+    # A group whose survivors fall below 2 yields NO pairs under the ring rule k=min(3,n-1), so it
+    # is dropped rather than carried as an empty shell an assert would later trip over. Recorded,
+    # never silent: `spec_hero_flight__1sided` went 5 -> 0 in the owner's labelling pass.
+    emptied = {g: len(v["clips"]) for g, v in groups.items() if len(v["clips"]) < 2}
+    for g in emptied:
+        del groups[g]
+    unknown = sorted(rejects - rejected_seen)
+
     for g in groups.values():
         g["clips"].sort()
     spec = {
@@ -196,6 +232,17 @@ def main() -> None:
             "n_orphan_descriptions_consumed": len(used_orphans),
             "per_clip_sidedness_downgrades": downgraded,
             "n_per_clip_sidedness_downgrades": len(downgraded),
+            "owner_reject_pass": ({
+                **reject_meta,
+                "n_rejected_applied": len(rejected_seen),
+                "n_rejected_not_found_on_disk": len(unknown),
+                "rejected_not_found": unknown[:20],
+                "groups_dropped_below_2_clips": emptied,
+                "rule": "a rejected stem is excluded at the SPEC, so the inventory, the encodes "
+                        "roster, the caption assembly and the root all derive from the surviving "
+                        "set. A group left with <2 clips is dropped, because the ring rule "
+                        "k=min(3,n-1) produces no pairs from a single clip.",
+            } if reject_meta else None),
         },
     }
     out = Path(args.out)
