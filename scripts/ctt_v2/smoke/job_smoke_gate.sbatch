@@ -24,7 +24,14 @@ source ~/.bashrc || true
 
 LAB=/projects/illinois/eng/cs/jrehg/users/emirkisa
 DR=$LAB/diffusion-research
-WT=$LAB/diffusion-research/.claude/worktrees/bottleneck-branch
+# 🔴 WT USED TO BE $DR/.claude/worktrees/bottleneck-branch, and every script below is invoked
+# from it.  That is the SAME defect that made 7 of 8 encode array tasks silently no-op and exit
+# 0 in 26s (job 9696499): the worktree copy had drifted from main.  Verified drifted again here
+# on 2026-07-28 — worktree `build_smoke_root.py` and `mixed_format_probe.py` differed from main,
+# and the mask-name delegation fix (`p{prefix}`) existed ONLY in main, so the gate would have
+# run code looking for a mask filename that no longer exists.  WT now IS main; the guard below
+# fails loudly if anyone repoints it at a tree that is not the one we edit.
+WT=$DR
 TR=$LAB/LTX-2-cond-bleed-fix/packages/ltx-trainer
 # ABSOLUTE interpreter paths only. The worktree depth makes a relative interpreter path
 # resolve wrong and a job died that way; both of these are absolute and stay absolute.
@@ -41,6 +48,18 @@ nvidia-smi -L || true
 #   3 SPEC-CONSTANT-MISMATCH — a pinned literal disagrees with reality. ESCALATE to advisor
 #     review; the ladder must NOT run. · 5 plumbing (no smoke root) · 4 unknown task
 test -f "$ROOT/SMOKE_ROOT_MANIFEST.json" || { echo "[smoke] no smoke root at $ROOT"; exit 5; }
+
+# STALE-CHECKOUT GUARD (the 7-of-8-no-op defect).  Every script this job runs must be the one
+# in the tree we edit.  A silent divergence here is invisible in the log and exits 0.
+for f in mixed_format_probe.py check_train_log.py make_smoke_config.py; do
+    test -f "$WT/scripts/ctt_v2/smoke/$f" || { echo "[smoke] MISSING $WT/.../$f"; exit 5; }
+    if ! cmp -s "$WT/scripts/ctt_v2/smoke/$f" "$DR/scripts/ctt_v2/smoke/$f"; then
+        echo "[smoke] 🔴 STALE CHECKOUT: $f differs between \$WT and \$DR — refusing to gate on"
+        echo "[smoke]    code that is not the code under review. Sync or repoint \$WT."
+        exit 5
+    fi
+done
+echo "[smoke] stale-checkout guard: OK (WT=$WT)"
 
 if [ "$TASK" = "0" ]; then
     echo "[smoke] ===== TASK 0: per-format probe ====="

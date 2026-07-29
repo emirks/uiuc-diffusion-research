@@ -26,12 +26,17 @@ Design decisions, all of them made to keep FORMAT the only thing that varies
 
 A geometric fact the gate must be read against (not a defect, a consequence)
 ---------------------------------------------------------------------------
-The prefix anchor is a fixed **2 latent frames** (`assemble_root.ensure_mask`).  At 121f that
-is 2/16 = 12.5% of tokens conditioned; at S4's 5 latent frames it is 2/5 = **40%**.  So S4's
-loss is computed over 60% of its tokens vs 87.5% for a one-sided 121f sample.  The trainer's
-loss is normalised by the mask mean (`flexible.py:_compute_modality_loss`), so this does not
-scale the loss, but it does mean the two arms average over different fractions of their
-sequence.  Recorded here so the gate's numbers are not over-read.
+The prefix anchor is a **shape property**, not a constant: `root_common.prefix_latents` gives
+p=2 at f16 (121f) and p=1 at f5 (S4's 33f, frame-0 conditioning).  So 121f conditions 2/16 =
+12.5% of tokens and S4 conditions 1/5 = **20%** — S4's loss is computed over 80% of its tokens
+vs 87.5% for a one-sided 121f sample.  The trainer's loss is normalised by the mask mean
+(`flexible.py:_compute_modality_loss`), so this does not scale the loss, but it does mean the
+two arms average over different fractions of their sequence.  Recorded here so the gate's
+numbers are not over-read.
+
+⚠ Under the SUPERSEDED fixed-2 rule S4 conditioned 40% and trained on 60%.  Any smoke result
+recorded before the frame-0 change was measured on that geometry and does not describe this
+root.  The mask name carries `p{prefix}` precisely so the two cannot be confused.
 
     python scripts/ctt_v2/smoke/build_smoke_root.py            # CPU, seconds
 """
@@ -39,6 +44,7 @@ sequence.  Recorded here so the gate's numbers are not over-read.
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import os
 import sys
@@ -64,6 +70,23 @@ SHIFT_M, SHIFT_B = 1.1 / 3072, 0.95 - (1.1 / 3072) * 1024
 
 def shift_for(tokens: int) -> float:
     return SHIFT_M * tokens + SHIFT_B
+
+
+def mask_name(f: int, h: int, w: int, sided: str) -> str:
+    """DELEGATED to `assemble_root.mask_store_path`, never restated here.
+
+    The store name carries `p{prefix}` because the prefix width became a SHAPE property when
+    S4 moved to frame-0 conditioning (`root_common.prefix_latents`: p1 at f5, p2 at f16).  This
+    fixture used to compute `f{f}_h{h}_w{w}_{sided}sided.pt` itself, and after the rename that
+    name no longer exists — so the build hard-fails with "no regenerated mask" instead of
+    silently gating on a mask the real assembly would never use.  Delegating means the gate
+    can only ever run on the mask the trainer actually reads.
+    """
+    spec = importlib.util.spec_from_file_location("_ctt_assemble_root", CTT / "assemble_root.py")
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = mod
+    spec.loader.exec_module(mod)
+    return mod.mask_store_path(Path("/"), f, h, w, sided).name
 
 
 def log(m: str) -> None:
@@ -186,7 +209,7 @@ def build(n_per_arm: int, out: Path) -> dict:
             if (f, h, w) != (rf, rh, rw):
                 raise SystemExit(f"{rel}: reference geometry ({rf},{rh},{rw}) != target "
                                  f"({f},{h},{w}) — cross-span RoPE mismatch, refusing")
-            mask = MASK_STORE / f"f{f}_h{h}_w{w}_{a['sided']}sided.pt"
+            mask = MASK_STORE / mask_name(f, h, w, a["sided"])
             if not mask.exists():
                 raise SystemExit(f"{rel}: no regenerated mask at {mask} — run "
                                  f"scripts/ctt_v2/masks/regen_masks.py first")
