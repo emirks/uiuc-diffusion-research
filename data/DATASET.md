@@ -20,7 +20,9 @@ This file is authoritative for the dataset. Where a script, README, dossier para
 ruling disagrees with this document, **this document wins and the other thing is a bug** — with one
 exception, recorded here because it is load-bearing: where *this document* disagrees with **the
 disk**, the disk wins and §11 records the correction. Every number below was counted first-hand on
-2026-07-28; none was copied from prose.
+2026-07-28; none was copied from prose. Final v2.1.0 numbers were recounted from
+`datasets/ctt_v2/samples.jsonl` on 2026-07-29 (§5.0, §15) — where a planning-era figure
+survives below it is labelled as such.
 
 **Governing authority chain** (each supersedes the one before it where they collide):
 
@@ -64,40 +66,40 @@ judges existed (pre-registration), not yet exercised.
 | Copy-gate admissibility + bars | **PINNED** | `VERIFY_copy_ref_discriminator.md` verdict PASS; A7 amendment-2 |
 | Mix weights **S0 15 / S1 6 / S2 total 69 / S4 10** (+ 3 contingency branches), S2a:S2b **derived pro-rata** | **PINNED (ruled), IN CODE**; the split's inputs **FROZEN** | A9 / A11 item 3 / **A12**; `root_common.STRATUM_WEIGHTS_PCT` + `PRORATA_GROUPS` + `ABSENT_BRANCH_WEIGHTS_PCT`, §11.1; `misc/ctt_v2_final/PREREG_mix_inputs.json` |
 | Pairing rule (ring offset, k=min(3,n−1)) | **PINNED** | `root_common.PAIRING_RULE` |
-| VAE latents + cond_clean for S1/S2a/S2b/S4 | **FROZEN** | **18,013 clips → 36,026 `.pt`, 42 G, `encode_strata.py verify` = ALL CHECKS PASS** (2026-07-28 04:50). Counts **set-equal to each frozen roster** (not merely equal cardinality), so the trainer's relative-path join has nothing it *could* silently drop; shape+fps asserted **inline on every clip** during encoding, not sampled. S2a 7,990 · S2b 7,990 · S1 33 · S4 2,000. `suffix_rel_l2` median-of-medians S2a 0.334 / S2b 0.317, consistent with exp_073's 0.280 and d2f's 0.314 — independent re-validation of the cond_clean correction on new data. §17 |
-| S1 full render (390 clips) | **PENDING — owner runs it on DeltaAI** | 35 clips exist; run book + grid + shas in `misc/ctt_v2_final/deltaai_s1_handoff/` |
-| S1 pilot batch gate (blind 11-way Gemini) | **PENDING — moved to DeltaAI with the generation** | `misc/ctt_v2_final/deltaai_s1_handoff/` |
+| VAE latents + cond_clean for S1/S2a/S2b/S4 | **FROZEN** | **18,013 clips → 36,026 `.pt`, 42 G, `encode_strata.py verify` = ALL CHECKS PASS** (2026-07-28 04:50). Counts **set-equal to each frozen roster** (not merely equal cardinality), so the trainer's relative-path join has nothing it *could* silently drop; shape+fps asserted **inline on every clip** during encoding, not sampled. S2a 7,990 · S2b 7,990 · S1 33 · S4 2,000 — **superseded on S1:** the full DeltaAI render was encoded after this row froze (1,417 S1 latents + cond_clean on disk); final consumed counts in §5.0. `suffix_rel_l2` median-of-medians S2a 0.334 / S2b 0.317, consistent with exp_073's 0.280 and d2f's 0.314 — independent re-validation of the cond_clean correction on new data. §17 |
+| S1 full render | ✅ **DONE — 1,417 clips rendered on DeltaAI** (the 390-row foreign-endpoint grid + a 1,027-clip s0cf corpus-frame layer), then the owner reject pass removed 192 ⇒ **1,225 consumed** | `outputs/videos/ctt_v2_s1*/` (staging links), `datasets/ctt_v2/encodes/S1/`; §15.1 |
+| S1 pilot batch gate (blind 11-way Gemini) | ⚠ **NEVER RUN — SUPERSEDED** by the owner's exhaustive visual labelling of **all 1,417** S1 clips (192 rejected, 13.5 %): per-clip and total-coverage where the planned gate was batch-level and blind. Recorded as a deviation from A5 Ruling 3(i) | `datasets/ctt_v2/docs/s1_owner_rejects.json`; §15.1 |
 | Caption store (all strata) | ✅ **DONE — 1,403/1,403 LOCKED** | `data/CAPTIONS.md` (authority), `CAPTION_LOCK.json` |
 | Caption round 3 / `v3` be-verb fix | ⛔ **CLOSED — v3 is an archived negative result, enters no store** | mechanism falsified; delta ~1.2 SE of noise; no round 4. `CAPTIONS.md` §6 |
 | Corpus-139 Layer-2 leak audit | ✅ **DONE — 0/171 `leak=YES`** | 4/171 `inaccurate` ESCALATED, captions byte-identical. `CAPTIONS.md` §8 |
 | S4 blind-guess caption gate (seed 44, n=150) | ✅ **PASS 2026-07-29** — top-1 **2.03 %** vs permutation null **2.89 %** (0.70×, **p=0.815**, −0.86 pp); **positive control 73.33 % vs 2.80 % = 26.17× (p=5e-5)** proves the attack has power. Judged on the stricter menu-resolvable subset (2/150 true labels absent from the 41-way menu can never score correct, which biases top-1 DOWN). `_verify_s4_inputs/s4_gate_final/` | A9 |
-| `conditions/` (Gemma text embeds) | **PENDING (blocked: S1 media)** | captions are done; ~2 GPU-h once S1 clips land |
+| `conditions/` (Gemma text embeds) | ✅ **DONE** — 3,592 distinct embeds consumed (3,453 content-addressed by caption + 139 per-clip S0), attached in every inventory | `datasets/ctt_v2/conditions/`, `VERIFY_CONDITIONS.json` |
 | The 8 pre-registered S2a inline-OOD ops | **FROZEN (pre-registered)** | `PREREG_inline_ood_ops_s2a.json`, advisor-ratified 2026-07-28, §11.4 |
-| Assembled root + `ROOT_MANIFEST.json` | **PENDING** | machinery built, never run against real inventories |
-| Assert battery A1–A10 executed | **PENDING** | §9 |
+| Assembled root + `ROOT_MANIFEST.json` | ⛔ **SUPERSEDED — no root exists.** The physical form was assembled, verified, then retired and deleted; the dataset of record is `datasets/ctt_v2/` (v2.1.0, built + verified 2026-07-29) | §15.2; records archived at `$LAB/misc/ctt_v2_final/artefacts/retired_roots/` |
+| Assert battery A1–A10 executed | ✅ **EXECUTED against the physical root 2026-07-28** (standing passes recorded), then **RETIRED with that form**. v2.1.0's replacements: builder verify + trainer hard-error loading + fail-closed sampler | §9 banner; §15.2 |
 | Mixed-format smoke gate (2 shapes) | ✅ **PASS 13/13 2026-07-28** — probe 6/6 + real trainer 7/7; the trainer's own index line reads **10 of 10, 0 skipped**; realized shifts exactly {1.235026, 2.302083}. ⚠ OOM'd on L40S 44 GiB at bs 1 + grad-ckpt, PASSED on H100 80 GiB | A1b Q3 / A9; non-negotiable before S4 trains |
-| **THE STAMP** | **PENDING** | §1.2 |
+| **THE STAMP** | ✅ **WRITTEN for v2.1.0 — owner sign-off row open** | §15 + the STAMP block |
 
-### 1.2 Why this is not stampable
+### 1.2 Why this was not stampable — ALL FIVE GAPS CLOSED (2026-07-29)
 
 A5 Ruling 9 defines "frozen" as: strata + exact counts + grid definitions + **caption store hash,
 model version strings, raw-response archive paths and battery results** + holdout lists + mix
-weights **intended and realized (counted)** + pairing rule + seeds + gate results. Five of those do
-not exist:
+weights **intended and realized (counted)** + pairing rule + seeds + gate results. The five gaps
+that blocked the stamp, and how each closed:
 
-1. **No caption store.** The Gemini project's prepayment credits are depleted (HTTP 429
-   `RESOURCE_EXHAUSTED`, verified independently three times, most recently DOSSIER §10.3 at 02:15).
-   This is billing exhaustion, not rate limiting; only the owner can clear it.
-2. **No `conditions/` tree**, because every caption costs a Gemma-3-12b text-encode pass.
-3. **No assembled root**, therefore no counted realized mix and no `ROOT_MANIFEST.json`.
-4. **No executed assert battery.** §9 is a checklist, not a record.
-5. **One pre-registration hole left** — the S4 caption gates. (The 8 inline-OOD ops are now
-   pre-registered and ratified, §11.4.)
+1. **Caption store** — DONE: 1,403/1,403 locked (`data/CAPTIONS.md`, hash `c8e2d95b…`) plus the
+   separate S4 store (2,000/2,000, hash `34534e47…`).
+2. **`conditions/` tree** — DONE: 3,592 distinct embeds consumed, attached in every inventory.
+3. **Assembled root / counted realized mix** — the physical root WAS assembled and its mix counted
+   (0.4289 pp residual), then the form was **retired**: v2.1.0 realizes the mix by sampler with
+   the quotas asserted fail-closed at train start (measured max deviation **0.0006 pp**, §15.2).
+4. **Assert battery** — executed against the physical root 2026-07-28; v2.1.0's verification is
+   the builder + trainer checks of §15.2.
+5. **S4 caption gates** — executed 2026-07-29: blind-guess PASS with positive control; Layer-2
+   tripwire 7/2,000 recorded; the S4 battery ran MIXED — gate 8a FAIL 0.8849 vs bar ≤0.73 (+ gate 2 FAIL); the owner declined the remedy and directed ship-as-is, **countersign pending** (C3, §5.6).
 
-Additionally, **three of the numbers this document must stamp were wrong in the governing prose and
-right on disk** (§11.1, §11.2, §11.3). §11.1 and §11.2 are now **reconciled by A11**; §11.3 is a
-caption-count estimate that changes no byte the trainer reads. **Every §12 row now carries a
-ruling** (stamp precondition 2 of §13.3 is met); what remains is execution, not decision.
+The §11 prose/disk reconciliations (§11.1–.3) closed under A11. What remains open is exclusively
+**owner sign-off** — see the STAMP block's sign-off table.
 
 ---
 
@@ -107,9 +109,11 @@ Inherited from `eval_ladder/SPEC.md` §1 and re-stated only where the dataset ch
 
 1. **Derive, don't author.** Every set in this document is recomputed from a frozen source on disk
    (`root_common.py` holds no hand-kept list). A literal list is a list that will drift.
-2. **Seatbelts are asserts, not comments.** The trainer joins the five root trees by identical
-   relative path and **silently drops mismatches** — so a design invariant that is not machine-checked
-   at assembly time is a wish. §9 is the machine-checked set.
+2. **Seatbelts are asserts, not comments.** A design invariant that is not machine-checked is a
+   wish. Under the retired physical form the hazard was the trainer's glob-and-join silently
+   dropping mismatches, and §9 was the machine-checked set; in v2.1.0 the checks moved into the
+   machinery itself — the builder verifies every referenced file, `SampleListDataset` hard-errors
+   on any missing file, and the stratified sampler fails closed on any weight/data mismatch (§15.2).
 3. **Freeze before you look.** Caption bars, copy bars and the mix were pinned before the data they
    judge existed. Post-hoc changes are **amendments**, written down and labelled.
 4. **Never delete an inconvenient number.** Gate #8 failed at 0.7066 against its original ≤0.65 bar;
@@ -130,26 +134,29 @@ Inherited from `eval_ladder/SPEC.md` §1 and re-stated only where the dataset ch
 
 ### 3.1 What one training sample IS
 
-Five files, one per root dir, **at the identical relative path in each**:
+One JSONL row in `datasets/ctt_v2/samples.jsonl`, naming its five store files explicitly with
+paths relative to the dataset directory:
 
-```
-<root>/latents/<stratum>_r<NN>/<group>/<target>__ref_<reference>.pt
-<root>/conditions/…            same relative path
-<root>/cond_clean_latents/…    same relative path
-<root>/reference_latents/…     same relative path
-<root>/masks/…                 same relative path
+```json
+{"id": "S0/air_bending/air_bending_0__ref_air_bending_2", "stratum": "S0",
+ "group": "air_bending", "target": "air_bending_0", "reference": "air_bending_2",
+ "sided": "two", "caption_key": "866e93fca30437fe", "shape": [16, 20, 15],
+ "paths": {"latents": …, "reference_latents": …, "cond_clean_latents": …,
+           "conditions": …, "masks": "masks/f16_h20_w15_p2_twosided.pt"}}
 ```
 
 | element | meaning |
 |---|---|
-| `<stratum>_r<NN>` | **replica directory.** The mix is realized by duplicating whole stratum replicas, never by a sampler — so the realized ratio is a property of the root on disk and can be *counted* (A3-F8.3 / A5 Ruling 4) |
-| `<group>` | the class (S0) or the op id (S1 / S2 / S4) — the unit the ring-offset pairing runs inside |
-| `<target>__ref_<reference>` | **the pairing is recorded in the filename.** Nothing inside any `.pt` names the reference. This is the operative record the trainer sees |
+| `group` | the class (S0) or the op id (S1 / S2 / S4) — the unit the ring-offset pairing runs inside |
+| `id` = `<stratum>/<group>/<target>__ref_<reference>` | **the pairing is recorded in the row.** Nothing inside any `.pt` names the reference |
+| `paths` | the five store files. All real files inside the dataset directory — no symlinks anywhere in it. Conditions are content-addressed and shared across rows; masks deduplicate to 3 files keyed on `(f, h, w, sidedness)` |
 
-`latents`, `conditions`, `cond_clean_latents`, `reference_latents` are **per-file symlinks** into the
-physical encode trees; `masks` are **real files**, deduplicated through a `_mask_store/` keyed on
-`(f, h, w, sidedness)` and symlinked in. Verified on the S0 root: 385 symlinks in each of the four,
-385 real files in `masks/`, over 26 class subdirs.
+**The mix is NOT materialized in the data** — every base pair appears exactly once, and the
+weights are realized by the trainer's stratified sampler (§15.2). *Historical:* the retired
+v2.0.0 form realized the mix by duplicating whole stratum replicas into
+`<stratum>_r<NN>/` symlink trees so the ratio was countable off disk (A3-F8.3 / A5 Ruling 4);
+that countability is replaced by the sampler's fail-closed quota assert and per-epoch consumed
+logging.
 
 ### 3.2 Tensor payloads (verified by loading, not by documentation)
 
@@ -162,11 +169,16 @@ physical encode trees; `masks` are **real files**, deduplicated through a `_mask
 Pixel → latent: 480×640×121 @24fps → 16×20×15; 832×448×33 @16fps → 5×14×26. Spatial factor 32,
 temporal factor 8 with `(F−1)/8+1`.
 
-### 3.3 The silent-drop hazard — why exact set-equality is mandatory
+### 3.3 The silent-drop hazard — ELIMINATED in v2.1.0, recorded here as the reason for it
 
-`ltx_trainer/datasets.py:202-228`: `latents` is the primary source; for every `latents/**/*.pt` the
-loader requires an **exact relative-path match** in each of the other four trees, else the sample is
-dropped and training proceeds on the reduced set. Three verified gaps:
+**v2.1.0 does not use directory scanning.** `SampleListDataset` loads the explicit row list and a
+missing file is a **hard error at startup** (all 41,195 distinct files stat'd), never a silently
+skipped sample — so the entire hazard class below is structurally impossible now. It is kept on
+the record because it shaped the design and it still lives in the stock loader:
+
+`ltx_trainer/datasets.py` (`PrecomputedDataset`): `latents` is the primary source; for every
+`latents/**/*.pt` the loader requires an **exact relative-path match** in each of the other four
+trees, else the sample is dropped and training proceeds on the reduced set. Three verified gaps:
 
 - **Gap 1** — `break` on first miss: only ONE missing source is reported per file.
 - **Gap 2** — nothing is ever a `WARNING` and **nothing raises** unless *every* sample drops. The
@@ -236,7 +248,7 @@ Per-stratum sidedness, verified:
 | stratum | sidedness | source |
 |---|---|---|
 | S0 | 299 one-sided / 86 two-sided **pairs**; 107 / 32 **clips**; 7 of 26 classes two-sided | `inventory.json`, counted |
-| S1 | per specialist — 9 one-sided (270 clips) / 2 two-sided (120 clips) | forced by `run_gen.py`: only `spec_hero_flight` and `spec_shadow_smoke` take a suffix anchor |
+| S1 | per specialist — 9 one-sided / 2 two-sided (`spec_hero_flight`, `spec_shadow_smoke`). **Final consumed pairs: 3,387 one / 288 two** (hero_flight 27 + shadow_smoke 261 after the owner reject pass; 5 clips sidedness-DOWNGRADED by splice measurement, DOSSIER §A22.3) | forced by `run_gen.py`: only those two specialists take a suffix anchor |
 | S2a / S2b | **100 % two-sided** — a true A→B between two different contents | render contract |
 | S4 | **100 % one-sided** — refVFX I2V is A → effect(A) | A1b Q3; keeps S4 entirely on the bitwise-copy `cond_clean` path |
 
@@ -249,19 +261,23 @@ The two two-sided S0 classes owning the most pairs: `hero_flight` 24, `shadow_sm
 
 ## 5. Strata
 
-Sample counts below are **planned, pre-exclusion**: they apply the ring-offset rule to the verified
-clip counts. Assembled counts are PENDING (§1.2).
+### 5.0 Summary — FINAL, counted from `datasets/ctt_v2/samples.jsonl` (2026-07-29)
 
-### 5.0 Summary
+**Consumed** = what the 56,368 training rows actually reference, after exclusions and the S1 owner
+reject pass. Disk stores are deliberate supersets (S1 1,417 encoded, S2a/S2b 7,990 each — the
+archive of rejected/excluded clips stays physically present, referenced by nothing).
 
-| stratum | clips (disk) | groups | ring-offset samples | format | sidedness | captions |
+| stratum | clips consumed | groups | pairs | format | sidedness (pairs) | captions |
 |---|---|---|---|---|---|---|
-| S0 | 139 | 26 classes | **385** (fixed by inventory) | 480×640×121 @24 | 107 one / 32 two | 139, **frozen, byte-identical** |
-| S1 | 33 of 390 rendered | 11 specialists | 1,170 planned | 480×640×121 @24 | 270 one / 120 two | PENDING |
-| S2a | 7,990 | 799 ops | 23,970 | 480×640×121 @24 | all two | PENDING (333 strings) |
-| S2b | 7,990 | 799 ops | 23,970 | 480×640×121 @24 | all two | PENDING (800 strings) |
-| S4 | 2,000 | 42 triggers | 6,000 | **832×448×33 @16** | all one | PENDING |
-| **total** | **18,152 on disk** (+357 S1 pending) | **1,677 groups** | **≈ 55,495** | two shapes | | |
+| S0 | 139 | 26 classes | **385** | 480×640×121 @24 | 299 one / 86 two | 139, **frozen, byte-identical** |
+| S1 | 1,225 (of 1,417 rendered) | 12 | **3,675** | 480×640×121 @24 | 3,387 one / 288 two | done, 1,225/1,225 |
+| S2a | 7,577 (of 7,990) | 791 ops | **22,731** | 480×640×121 @24 | all two | done (333 strings) |
+| S2b | 7,859 (of 7,990) | 799 ops | **23,577** | 480×640×121 @24 | all two | done (800 strings) |
+| S4 | 2,000 | 42 triggers | **6,000** | **832×448×33 @16** | all one | done (2,000) |
+| **total** | **18,800** | **1,670** | **56,368** | two shapes | | |
+
+*(The planning-era table said 18,152 clips on disk / 1,677 groups / ≈55,495 samples — those were
+pre-render, pre-exclusion projections; the numbers above are the counted final.)*
 
 Ring offset, everywhere, one rule (A1b Q5 / A5 Ruling 4):
 
@@ -293,22 +309,31 @@ Groups with fewer than 2 trainable clips after exclusions are dropped whole.
 
 ### 5.2 S1 — specialist counterfactuals
 
+> ✅ **AS LANDED (2026-07-29):** the DeltaAI render produced **1,417 clips in two layers** — the
+> 390-row foreign-endpoint grid below plus a **1,027-clip s0cf corpus-frame layer** added by the
+> owner. The pre-registered blind batch gate was **never run**; instead the owner visually
+> labelled **all 1,417** clips and rejected **192** (13.5 % — hero_flight 87→9 kept; its
+> `__1sided` sibling group fell below 2 clips and was dropped at the spec). Final: **1,225 clips ·
+> 12 groups · 3,675 pairs**, captions 1,225/1,225, embeds attached. Rows below are the frozen
+> plan-of-record for the grid layer; where they say PENDING they are superseded by this block
+> and §15.1.
+
 | | |
 |---|---|
 | **What** | Generated clips: for each of 11 pinned specialist LoRAs, run its transition on **synthetic-bank endpoints that are not corpus content**. The only stratum that punishes appearance-copying *in the real-VFX visual domain* while decoupling class-manner from class-typical content. |
 | **Provenance** | Endpoints from the union content pool (§5.3); adapters `outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_02000.safetensors`. |
 | **Counts (grid, verified in `S1_GRID.json`)** | 390 rows = 9 one-sided specialists × 30 + 2 two-sided × 60. Per-arm: 30 each except `spec_hero_flight` 60 and `spec_shadow_smoke` 60. **400 distinct endpoint clips**; endpoint_a bank split exactly **195 synth / 195 humanvid**; a **10-endpoint probe set shared by all 11** arms (110 of the 390 rows) gives the same-content × diff-op diagonal. |
-| **Counts (rendered)** | **33 pilot clips on disk** (3 per specialist × 11), `outputs/videos/ctt_v2_s1/spec_*/`. The remaining 357 are PENDING. |
+| **Counts (rendered)** | Superseded — 1,417 on disk across both layers (see the AS LANDED block above); the 33-clip pilot row froze before the DeltaAI run. |
 | **Format** | 480×640 × 121f @24fps, identical to S0. |
 | **Pairing group — RULED (A11 item 6, 2026-07-28)** | The inventory's group key is the **ARM (specialist)**, never the endpoint, and **1,170 stands**. The endpoint reading is not merely different, it is **wrong**: group=endpoint would pair same-content × different-op, violating the standing rule *"reference = same operator, different content."* A1b is explicit both ways — Q5 ("endpoints unique within a specialist… within-op endpoint disjointness guarantees ref shares no content with target") and the count itself (9×30×3 + 2×60×3 = 1,170 only works with the specialist as the ring group). **Inventory schema: 11 groups**, one per specialist. And yes — **a shared-probe row may reference a non-probe row**: within an arm, probe endpoints are ordinary distinct clips, the ring runs over the arm's sorted stems irrespective of probe membership, and the probe set's cross-arm role (the same-content × diff-op diagonal) is a *diagnostic across arms*, not a pairing constraint within one. **No count change.** §12.6 closed. |
 | **Sidedness** | Native per specialist — 9 one / 2 two. Forced by the mechanism, not chosen: `run_gen.py` appends a `SuffixConditionConfig` only when `row["sided"] == "two"`, and 9 of 11 specialists are one-sided, so they *cannot* produce a true A→B pair. |
-| **Gates** | **Batch gate (A5 Ruling 3(i)):** blind 11-way Gemini class identification, `gemini-3.5-flash`, temp 0, `max_output_tokens ≥ 2000`, bar **top-1 ≥ 80 %** (chance 9.09 %), **with a 33-clip control arm of real corpus clips of the same classes**. Verdict rule: `PASS` = batch ≥80 % **and** control ≥80 % **and** mechanical rejects ≤3/33; `FAIL_S1_DROPS` = batch <80 % with passing control; `INSTRUMENT_INVALID` = control <80 % (re-adjudicate, do not blame S1). **Result: NOT RUN** — ⚠ credits are NOT the blocker (restored and consumed for S4 captioning and both S4 gates on 2026-07-29); this gate has simply not been executed. |
+| **Gates** | **Batch gate (A5 Ruling 3(i)):** blind 11-way Gemini class identification, `gemini-3.5-flash`, temp 0, `max_output_tokens ≥ 2000`, bar **top-1 ≥ 80 %** (chance 9.09 %), **with a 33-clip control arm of real corpus clips of the same classes**. Verdict rule: `PASS` = batch ≥80 % **and** control ≥80 % **and** mechanical rejects ≤3/33; `FAIL_S1_DROPS` = batch <80 % with passing control; `INSTRUMENT_INVALID` = control <80 % (re-adjudicate, do not blame S1). **Result: NOT RUN — superseded** by the owner's exhaustive per-clip labelling of all 1,417 clips (AS LANDED block; deviation from A5 Ruling 3(i) recorded in §15.1). |
 | | **Per-clip mechanical rejects only (A5 Ruling 3(ii)):** decode corruption (frame count ≠ 121 or geometry ≠ 480×640); frozen (mean abs inter-frame delta over frames 9–120 < 1/255) or black (mean luma < 8/255 on ≥10 % of frames); endpoint identity — prefix rel-L2(gen[0:9], anchor) > **τ = 0.12790240**. **No DINOv2, no harness substrate, anywhere in selection.** |
 | | **τ provenance (measured, CPU):** p95 over n=198 prefix-conditioned inline-validation clips across all checkpoints; p50 0.0526, p90 0.0997, max 0.1397. Artefact `outputs/ctt_v2/s1/tau_endpoint.json`. |
 | | **Acceptance-by-bank differential audit**, flag if synth vs humanvid acceptance differs >15 pp (A1b Q1e). |
 | **Holdouts** | None of its own — the contrast is free: 11 held-in classes get S1 amplification, 15 do not. Pre-registered as an **observational diagnostic, never a selection criterion**. |
 | **Disjointness (asserted, PASS)** | S1's 400 endpoints ∩ {74 eval endpoints, 11 zs-audited endpoints, 42 test clips, 9 DAVIS eval source sequences, 222 corpus clips} = **∅**. Recorded in `S1_GRID.json:HARD_ASSERT_endpoint_disjointness`. Eligibility: 1,146 pool training clips → **1,120 eligible**, 26 excluded (5 DAVIS eval sequences + 21 near-duplicate-pair members). |
-| **Captions** | PENDING. 144 of 390 rows are renderable today from the M3 pilot store; 246 need the full store. `S1_GRID.json:prompts.provisional` requires **all 390 to re-render from the final pinned caption store before the S1 root is assembled** — pilot prompts are provisional. |
+| **Captions** | ✅ done — 1,225/1,225 consumed clips captioned from the final pinned store, 0 hash mismatches, 0 RULING-9 violations (`S1_CAPTIONS_ASSEMBLED.json`). The plan-era note (144/390 renderable from the M3 pilot store; all 390 re-render before assembly) is discharged. |
 | **Pre-registered fallback** | If the 33-clip pilot fails its gates, **S1 drops entirely** and the mix renormalizes. The schedule does not slip. |
 | **Accepted risk** | Generated data trained on generated data; mitigated by the class-ID batch gate and by S1 being ≤6 % of stream. |
 
@@ -359,8 +384,8 @@ Groups with fewer than 2 trainable clips after exclusions are dropped whole.
 | **Gates (`S2_ACCEPTANCE.json`, verdict PASS)** | `pure_phase_max_abs_diff` **0.0** (bar ≤0.5) · `seam_max` **1.9984** (≤2.0) · `m1_p10_min` **0.2547** (≥τ 0.2543) · `m2_max_dq` **0.4916** (≤0.5) · `m1_min_flag_count` 35 · overdraw **1.2506** (≤2.5) · attempts min/med/max 10/12/25 · shaders over 50 % rejection: **none** · all six hard invariants true. Plus per-clip pre-render gate-2 (endpoint identity at the op's params, `max(d0,d1) ≤ 0.5`). **A16 annotation: render acceptance covers 7,990 on disk; the root consumes 7,961 per the A16 disposition; evidence = the manifest drop record.** |
 | **Blind audit (`AUDIT_RESULT.json`, PASS)** | n=64 shader-stratified, two independent blind raters + operator adjudication, bar ≤3 consensus-BAD. rater1 [30,40] · rater2 [41,45] · **consensus []** · adjudicated **2 BAD** (`PuzzleRight` s2_0229_c06, `Slides` s2_0270_c08) · agreement 60/64 = 93.8 %. |
 | **Holdouts** | 10 shader families never rendered (§7). **8 inline-OOD ops pre-registered and excluded at assembly** — `PREREG_inline_ood_ops_s2a.json`, seed 42, 8 distinct shaders, 80 clips (~1 % of S2a); their encodes stay on disk for the inline lane. §11.4. |
-| **Captions** | PENDING. **333 distinct caption strings** from **454 (clip, role) descriptions** over 291 clips (163 clips occupy both roles). §11.3 corrects the dossier's 666/582. |
-| **Encode state** | `outputs/ctt_v2/encodes/S2a/` — roster frozen at 7,990, `nshards=16`; 922 latents written at 02:56, jobs running. |
+| **Captions** | ✅ done — **333 distinct caption strings** from **454 (clip, role) descriptions** over 291 clips (163 dual-role); locked in the 1,403-caption store (`data/CAPTIONS.md`). §11.3 corrects the dossier's 666/582. |
+| **Encode state** | ✅ done — 7,990 latents + 7,990 cond_clean, `encode_strata.py verify` ALL CHECKS PASS; store now at `datasets/ctt_v2/encodes/S2a/`. Consumed: **7,577 clips / 791 ops / 22,731 pairs** (drops: 8 inline-OOD ops, role-scoped exclusions, A16 dispositions, <2-clip groups). |
 | **Accepted risk** | The full-occlusion family, 870/7,990 = 10.89 % (§8.3). |
 
 ### 5.5 S2b — procedural transitions, union-bank endpoints
@@ -375,7 +400,7 @@ Identical machinery, new operators, new contents. `experiments/exp_082_s2_humanv
 | **Gates (`S2_ACCEPTANCE.json`, verdict PASS)** | `pure_phase_max_abs_diff` **0.0** · `seam_max` **2.0** (bar ≤2.0 — passes, but this is the one number with **no headroom**) · `m1_p10_min` **0.255** · `m2_max_dq` **0.4996** · `m1_min_flag_count` 13 · overdraw **1.1549** (better than S2a's 1.2506) · attempts 10/11/25 · shaders over 50 % rejection: **none**. Policy v2 did its job: S2a needed a 78-op retirement and an 87-op backfill; S2b needed neither. |
 | **Blind audit** | n=64, same protocol, two independent blind raters (fresh Claude agents — Gemini was credit-blocked; for a *rater* the relevant independence is from each other and from the campaign's expectations, both preserved). **rater1 1 BAD (#055) · rater2 0 BAD · consensus 0** ⇒ **PASS** (bar ≤3). Worst case, adjudicating the single disputed clip against us gives 1/64. ⚠ Recorded in DOSSIER §10.6; **no `AUDIT_RESULT.json` on disk** (§11.7). |
 | **Reference pairing** | Recorded in the plan as *dynamic at train time*: ref ≠ target drawn from the same `op_id`'s 10 clips. Within-op endpoint disjointness (20 distinct endpoint clips per op, asserted) guarantees ref shares **no content** with target. The assembler realizes this as the same ring-offset rule. |
-| **Encode state** | roster frozen at 7,990, `nshards=16`; encoding in flight. |
+| **Encode state** | ✅ done — 7,990 latents + 7,990 cond_clean, verify PASS; store now at `datasets/ctt_v2/encodes/S2b/`. Consumed: **7,859 clips / 799 ops / 23,577 pairs**. |
 | **Accepted risk** | Full-occlusion family 860/7,990 = 10.76 % (§8.3); person-only semantic coverage in the humanvid half (§8.5). |
 
 ### 5.6 S4 — refVFX I2V real-VFX effects
@@ -397,10 +422,10 @@ excluding S4 leaves the central claim with **zero** VFX-domain anti-copy signal.
 | **Caption-leak evidence (the decisive measurement)** | Blind-guess attack — give a judge only the caption plus the 41-way effect menu, score against a 20,000-draw label-permutation null, n=150 each: input image **2.0 %** vs null 2.67 % (0.75×, below chance) · output frame 0 **2.7 %** vs 2.30 % (n.s.) · **frames 0–8 4.0 %** vs 2.55 % (1.57×, **p=0.18, n.s.**) · real-footage floor 1.3 % · **⟨positive control⟩ LAST frame 71.3 %** vs 2.81 % (**25.4×, p=5e-5**). The positive control is what makes the null interpretable: the attack finds the effect at 25× chance when it is genuinely there. Named-effect judge: **0/150** on all three prefix conditions, 58 % on last-frame. |
 | **Withdrawn** | DOSSIER §5's onset-audit argument. It does not reproduce (65.0 % → **56.0 %** same seed; control 2.5 % → **0.0 %**; n=200 seed 43 → 53.8 %), its config was never archived, and — the real error — it measured *"do the pixels show an onset"* and **inferred caption leak from pixel onset**. The direct measurement refutes the inference. |
 | **Rejected alternatives** | Frame-0 captioning is statistically identical to frames 0–8 (144/150 clips wrong under both, paired) and discards 8/9 of the evidence for no measurable gain. Clean-subset filtering would cost **≈925 of 2,000 clips (CI 789–1,063)** *non-uniformly*, wiping out five effect classes entirely (pirate / electricity / baby / squish / princess, all 100 % onset) — a silent re-weighting of the stratum. |
-| **Its own caption gates (A9; A5 Ruling 5's premise broke)** | S4's frames 0–8 are another model's outputs, not byte-pure source, so: the **full 12-gate battery including gate #8 run on S4 captions separately, not pooled**; a **blind-guess gate** (fresh seed 44, n=150, bar = permutation p ≥ 0.05 **AND** top-1 ≤ null + 3 pp, **with a mandatory last-frame positive control at ≥10× null to prove power**); and the Layer-2 named-effect judge on **100 %** of S4 captions as a tripwire. Blind-guess does **not** subsume gate #8 — blind-guess tests *reader* identifiability, gate #8 tests *encoder-exploitable statistical association*. **Keep both.** All PENDING (blocked: Gemini credits). |
-| **Mandatory before S4 trains** | The mixed-format smoke gate: mini-root of ~20 corpus + ~20 native-S4 samples, 100–200 steps, asserting (i) no silent skipping — per-format consumed counts logged and exact; (ii) finite, comparable per-format loss; (iii) shapes flow through RoPE in bf16 for both; (iv) one train==inference equivalence probe. **Additionally: the corrected two-clause shift assert — §9 D3** (pin check at t ∈ {1820, 4800} → {1.2350, 2.3021} within 1e-3, **plus** a realized check against the observed token counts). A9's `{1.120, 2.302}` is struck. ~1–2 GPU-h. Placeholder captions suffice. **Credit-independent — should run as soon as a GPU frees.** |
+| **Its own caption gates (A9; A5 Ruling 5's premise broke)** | S4's frames 0–8 are another model's outputs, not byte-pure source, so: the **full 12-gate battery including gate #8 run on S4 captions separately, not pooled**; a **blind-guess gate** (fresh seed 44, n=150, bar = permutation p ≥ 0.05 **AND** top-1 ≤ null + 3 pp, **with a mandatory last-frame positive control at ≥10× null to prove power**); and the Layer-2 named-effect judge on **100 %** of S4 captions as a tripwire. Blind-guess does **not** subsume gate #8 — blind-guess tests *reader* identifiability, gate #8 tests *encoder-exploitable statistical association*. **Keep both.** ✅ EXECUTED 2026-07-29: blind-guess **PASS** (row in §1.1: 2.03 % vs null 2.89 %, p=0.815; positive control 26.17×, p=5e-5); Layer-2 tripwire on 100 % — **7/2,000 flagged, recorded not acted on** (owner item); the separate 12-gate battery ran **MIXED — gate 8a FAIL 0.8849 vs bar ≤0.73 (+ gate 2 FAIL); owner declined the remedy, directed ship-as-is, countersign PENDING** (C3; stamp S.6b / DOSSIER). |
+| **Mandatory before S4 trains** | The mixed-format smoke gate: mini-root of ~20 corpus + ~20 native-S4 samples, 100–200 steps, asserting (i) no silent skipping — per-format consumed counts logged and exact; (ii) finite, comparable per-format loss; (iii) shapes flow through RoPE in bf16 for both; (iv) one train==inference equivalence probe. **Additionally: the corrected two-clause shift assert — §9 D3** (pin check at t ∈ {1820, 4800} → {1.2350, 2.3021} within 1e-3, **plus** a realized check against the observed token counts). A9's `{1.120, 2.302}` is struck. ~1–2 GPU-h. Placeholder captions suffice. **Credit-independent.** ✅ **RAN: PASS 13/13** (2026-07-28, §1.1) — probe 6/6 + real trainer 7/7, realized shifts exactly {1.235026, 2.302083}. |
 | **Masks** | `(5, 14, 26)` = **1,820 elements** (A9's `(5,20,15)`/1,500 prose was the corpus-grid conflation and is **struck**; disk already agrees). Regenerated for the S4 shape, **never reused** (a reused 16-frame mask is a loud `RuntimeError` at `flexible.py:533`, which is the good failure mode). `assemble_root.ensure_mask` keys the store on `(f,h,w,sided)`, so it adapts automatically. |
-| **Schedule ruling — S4 rides for free or not at all** | The launch is **NEVER** held for S4. Cutoff pre-registered at **root-assembly time**: when every other stratum's captions and encodes are done and asserts pass, if S4's caption lane has not passed its gates, **assemble without S4** under the branch weights (§6.1). No slip, no debate. |
+| **Schedule ruling — S4 rides for free or not at all** | The launch is **NEVER** held for S4. Cutoff pre-registered at **root-assembly time**: when every other stratum's captions and encodes are done and asserts pass, if S4's caption lane has not passed its gates, **assemble without S4** under the branch weights (§6.1). No slip, no debate. ⚠ **Recorded deviation:** v2.1.0 includes S4 on the owner's ship-as-is direction over the gate-8a/-2 failures, countersign pending — an owner sign-off item in the STAMP block. |
 | **Accepted risks** | The bimodal noise schedule (§8.2) and A3's format/latent-grid stratum signature — the two objections that survive; the caption leg is refuted. |
 
 ---
@@ -544,10 +569,12 @@ symlink — exactly as the S0 root already shares 139 condition embeds across 38
   are fine)"*. Nothing targeting `while` or any other coefficient — that would be mimicry. B-role
   untouched. **Pre-committed: round 3 need not and will not reach 0.65**; report the number for the
   record.
-- **Caption paths — PENDING (blocked: Gemini credits).** When the store lands it goes to
-  `outputs/ctt_v2/captions/<round>/` with `descriptions.json`, `records.json`, `run_meta.json`,
-  `raw_generation_responses.jsonl`, `raw_audit_responses.jsonl`, `gate_report.json`. **Store hash,
-  model version strings and archive paths must be written into §1.1 before the stamp.**
+- **Caption paths — LANDED.** The store and its full battery are governed by `data/CAPTIONS.md`
+  (authority): 1,403/1,403 locked, content hash `c8e2d95b…`, plus the separate S4 store
+  (2,000/2,000, hash `34534e47…`). Archives under `outputs/ctt_v2/captions/`. Consumed by the
+  dataset as 3,592 distinct text embeds (`datasets/ctt_v2/conditions/`). The store-shape table
+  above is the plan-of-record; S1's final shape differs from it (1,225 clips captioned 1:1 after
+  the s0cf layer and the owner reject pass — §15.1).
 
 ---
 
@@ -651,6 +678,10 @@ Source of record: `misc/ctt_v2_final/artefacts/sigma/SIGMA_SCHEDULE.{md,json,txt
 `F_lat·H_lat·W_lat` at patch size 1; **the IC-LoRA reference is concatenated *after* the σ draw**, so
 it does not enter the token count. **The trainer was NOT modified.**
 
+*(mix % below is the pre-A12 placeholder even split; the final split is derived pro-rata —
+S2a 33.8697 / S2b 35.1303 (§15.2). The σ columns are unaffected: S2a and S2b share identical
+geometry, so every distribution and the pooled row are byte-for-byte the same.)*
+
 | stratum | mix % | pixels (W×H×F) | latent (F,H,W) | fps | tokens | shift | E[σ] | sd | p10 | p50 | p90 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | S0 | 15.0 | 480×640×121 | (16,20,15) | 24 | 4,800 | **2.3021** | 0.7614 | 0.2145 | 0.4438 | 0.8325 | 0.9584 |
@@ -726,8 +757,9 @@ from the mask rule rather than tabulated (`root_common.loss_bearing_tokens`):
 
 **S4's 10 % nominal is ≈ 3 % effective.** Measured on the two-shape fixture root by
 `assert_root.py:A15`: ⚠ the 3.04 % figure below is PRE-frame-0 and stale. With a 1-latent prefix S4 keeps 1,456 of 1,820 tokens instead of 1,092, so its effective share rises by the ratio 1456/1092 = **1.333×** — roughly **3.9–4.0 %** at 10 % nominal, to be re-recorded from the real assembly. A15 is a `b.check(..., True, ...)` RECORDING, not a gated band, so nothing fails on the stale number; it just has to stop being quoted. Original text: nominal 10.17 % → effective 3.04 % (i.e. 2.99 % at exactly 10.00 % nominal —
-inside the ruling's 2.8–3.0 % expectation). The weights themselves are **unchanged**: 15 / 6 / 34.5 /
-34.5 / 10, and all three branches unchanged.
+inside the ruling's 2.8–3.0 % expectation). The stratum-level weights themselves are **unchanged**: 15 / 6 / S2-total 69 / 10 (the per-half
+34.5/34.5 was later superseded by A12's derived pro-rata split — 33.8697/35.1303 as finalized),
+and all three contingency branches unchanged.
 
 **A3's format/latent-grid signature objection also survives** and is accepted on the ground that
 
@@ -862,7 +894,17 @@ with n=3 disclosed**. The frozen selection is **not re-opened**. §12.2 closed.
 
 ---
 
-## 9. The pre-launch assert suite
+## 9. The pre-launch assert suite — RETIRED WITH THE PHYSICAL ROOT (historical record)
+
+> ⚠ **This section describes the v2.0.0 physical-root machinery.** The battery WAS executed
+> against the real root on 2026-07-28 (records archived at
+> `$LAB/misc/ctt_v2_final/artefacts/retired_roots/ctt_v2_mix/`), and the root was then retired
+> and deleted. In v2.1.0 the load-bearing checks are: the **builder verify** (every referenced
+> file stat'd, counts hard-asserted against expectations), **`SampleListDataset`** (missing file
+> = hard error at startup, never a silent skip), and the **stratified sampler** (fails closed on
+> weight/data mismatch; logs per-epoch consumed counts — the A3 replacement). §15.2 records the
+> executed v2.1.0 verification. The suite below remains the reference for what the physical form
+> proved and for any future physical assembly.
 
 A5 Ruling 9. **Every check is a hard failure.** There is no warnings-only mode, no `--skip`, no
 severity flag: `assert_root.py` exits non-zero if a single check fails and the launch scripts gate on
@@ -1045,7 +1087,7 @@ thing that makes the mix **countable**, would never be exercised.
 | C1 | corpus-139 Layer-2 leak audit (anchors ready, `corpus_anchors/`) | ☑ **DONE — 0/171 `leak=YES`**; 4/171 `inaccurate` ESCALATED to the owner, captions byte-identical |
 | C2 | caption round 3 passes the re-pinned 12-gate battery | ☑ **DONE — 1,403/1,403 locked, `hard_fail: []`** on the full store (`GATE_BATTERY_FULL_1403.json`) |
 | C3 | S4's separate 12-gate battery + blind-guess gate + 100 % Layer-2 tripwire | **ALL THREE RUN — MIXED**: battery ☒ **gate 8a FAIL 0.8849 vs bar ≤0.73** (+ gate 2 FAIL), owner declined the remedy and directed ship-as-is, countersign PENDING · blind-guess ☑ **PASS** (2.03 % vs null 2.89 %, p=0.815; control 26.17×) · Layer-2 100 % tripwire ☑ **RUN — 7/2,000 (0.35 %) named-effect YES**, RECORDED not acted on. ⚠ the blind-guess and Layer-2 components had NEVER been run before 2026-07-29 (operator omission, not credits) |
-| C4 | S1 pilot batch gate (blind 11-way Gemini + control arm) | ☐ **NOT RUN** — ⚠ credits are NOT the blocker (restored and used for S4 captioning + both S4 gates); this component has simply not been executed |
+| C4 | S1 pilot batch gate (blind 11-way Gemini + control arm) | ☐ **NOT RUN — SUPERSEDED 2026-07-29** by the owner's exhaustive visual labelling of all 1,417 S1 clips (192 rejected; §15.1). ⚠ credits were never the blocker; recorded as a deviation from A5 Ruling 3(i) |
 | C5 | `eval_ladder/prompts.py` diff resolved | ☑ committed `3bed923` |
 | C6 | certified instrument hygiene — `reference_v4.npz` sha matches the pin | ☑ restored; sha `e6ea4011…a8ad2818` matches |
 
@@ -1201,7 +1243,29 @@ $PY scripts/ctt_v2/assert_root.py  --root outputs/ctt_v2/roots/ctt_v2_mix
 $PY scripts/ctt_v2/dryrun_epoch.py --root outputs/ctt_v2/roots/ctt_v2_mix
 ```
 `assemble_root.py` is idempotent: it computes the desired `(path → target)` map, deletes anything not
-in it, creates only what is missing. Re-running is a no-op.
+in it, creates only what is missing. Re-running is a no-op. ⚠ **The two `assemble_root`/`assert_root`
+lines above built the retired v2.0.0 physical root** — kept for the record; v2.1.0 replaces them
+with §10.11.
+
+### 10.11 Final assembly — v2.1.0 (the executed path)
+
+```bash
+cd $W
+# S1 owner reject pass: applied at the SPEC so every downstream artifact derives from survivors
+$PY scripts/ctt_v2/s1/build_s1_spec.py --rejects outputs/viewers/s1_label/rejects.json \
+    --out outputs/ctt_v2/inventories/S1_spec.json          # 192/1,417 rejected -> 12 groups
+# rebuild the S1 inventory + attach captions/conditions (all five strata)
+$PY scripts/ctt_v2/build_inventories.py spec --spec outputs/ctt_v2/inventories/S1_spec.json ...
+$PY scripts/ctt_v2/attach_captions.py && $PY scripts/ctt_v2/attach_conditions.py
+# build the dataset of record: list-based, NO symlink root; verifies every referenced file
+$PY scripts/ctt_v2/build_dataset.py \
+    --expect S0=385,S1=3675,S2a=22731,S2b=23577,S4=6000 --execute   # -> datasets/ctt_v2/
+$PY scripts/ctt_v2/materialize_clips.py --execute          # clip mp4s become real files inside
+```
+
+Training consumes `datasets/ctt_v2/samples.jsonl` via `ltx_trainer`'s `SampleListDataset` +
+`StratifiedEpochSampler` (`data.sample_list` + `data.stratum_weights_pct`, batch_size 1);
+`assert_root.py`/`dryrun_epoch.py` have no v2.1.0 role.
 
 ---
 
@@ -1475,19 +1539,25 @@ Two things are versioned, differently and on purpose.
 | **MINOR** | a stratum's contents change (re-render, count change, holdout change); a new gate; a weight change. |
 | **PATCH** | corrections, documentation, reproduction commands — nothing that changes a byte the trainer reads. |
 
-`0.9.0-DRAFT` = the design is complete and the data is two-thirds built; the `-DRAFT` suffix drops
-only at the stamp.
+Version chain: `0.9.0-DRAFT` (design complete, data two-thirds built) → `2.0.0` (the physical
+symlink-root form — assembled, verified, then retired and deleted 2026-07-29) → **`2.1.0` (current,
+final)** — list-based form after the S1 owner reject pass; this file's header carries it. The jump
+past 1.0.0 mirrors the campaign name (ctt **v2**); MAJOR/MINOR semantics above still govern from
+2.1.0 onward.
 
-### 13.2 A build — `ROOT_MANIFEST.json`
+### 13.2 A build — the build manifest
 
-Each assembled root carries its own manifest with the strata present, the inventories and their
-sha256, the counted realized mix, the drop record with reasons, the mask store, and the filesystem
-result. **A build never bumps the design version.** The design is what is versioned; a root is an
-instance of it.
+v2.1.0's build record is **`datasets/ctt_v2/MANIFEST.json`**: version, per-stratum counts, sha256
+of samples.jsonl / captions.json / mix.json, source-inventory hashes, the S1 reject-pass record,
+move/copy/relocation provenance and the verify results. (v2.0.0's equivalent was
+`ROOT_MANIFEST.json` per assembled root — archived with the retired roots.) **A build never bumps
+the design version.** The design is what is versioned; a build is an instance of it.
 
-### 13.3 What "stamped" will mean
+### 13.3 What "stamped" means
 
-`ctt-v2-dataset/1.0.0` requires, in this order:
+**Status 2026-07-29: items 1–7 are discharged** (item 4 in its v2.0.0 form, replaced per §9's
+banner; the executed records live in §15, the STAMP block and `datasets/ctt_v2/MANIFEST.json`).
+**Item 8 — owner sign-off — is the open one.** The original requirements, verbatim:
 
 1. Every PENDING row in §1.1 resolved or explicitly ruled out of scope.
 2. Every item in §12 answered by a recorded ruling.
@@ -1509,7 +1579,8 @@ instance of it.
   Certified, and the incumbent D0 this round is measured against. Its defect is not a bug but a
   correlation: reference class == target class, so copying the demo's appearance was approximately
   correct for three years of gradient.
-- **ctt v2 (this design)** — five strata, 1,677 groups, ≈55.5k samples. The lever is **task count**
+- **ctt v2 (this design)** — five strata; as finalized (v2.1.0): **1,670 groups, 56,368 pairs
+  from 18,800 clips**. The lever is **task count**
   (Raventós pressure: ~1,600 S2 operators at 4–5 exposures each is unmemorizable, forcing a
   read-manner policy) plus **content/operator decorrelation** (reference = same operator, different
   content, enforced structurally by within-op endpoint disjointness).

@@ -1,5 +1,15 @@
 ## 2026-07-29
 
+- **13:10** — **DATASET.md fully reconciled with the final v2.1.0 state** — 37 anchored corrections
+  across §1 (all PENDING rows closed with how each resolved; "why not stampable" → all five gaps
+  closed), §3 (sample contract rewritten to the samples.jsonl row; silent-drop hazard marked
+  ELIMINATED with the record kept), §5 (final counted table: 18,800 clips / 1,670 groups / 56,368
+  pairs; S1 AS-LANDED block — 1,417 rendered in two layers, owner reject pass superseding the
+  never-run batch gate), §6.4/§9/§10 (captions LANDED; assert suite marked RETIRED with its
+  replacements named; §10.11 documents the executed v2.1.0 assembly path), §13/§14 (version chain
+  0.9.0-DRAFT → 2.0.0 retired → 2.1.0). Gate-8a mentions aligned to the C3 record (FAIL 0.8849,
+  owner ship-as-is, countersign pending). Historical rulings and measurements untouched.
+
 - **12:45** — **CTT v2 dataset promoted to top-level `datasets/ctt_v2/` (gitignored; public-repo
   safe) and the three retired symlink roots DELETED.** Dataset verified intact post-move (56,368
   rows, 41,195 files, 0 missing, 4 s); compat symlink left at `outputs/ctt_v2/dataset` so every
