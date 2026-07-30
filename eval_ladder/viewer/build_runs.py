@@ -117,6 +117,11 @@ EXTERNAL = [
 #: carries that set's id in `instr` so the page can badge it. `primary` is the comparison-valid
 #: instrument: ic_gen and ctt_v2 were both rescored under it on eps, which is the only reason a
 #: cross-run comparison is meaningful at all.
+#:
+#: `path` is one directory; `paths` is a list of them, merged in order, for a set that lives in one
+#: directory PER ARM. That is the shape the DeltaAI re-score of ic_gen/ctt_v2 lands in, so pointing
+#: the run columns at it is a single new entry here — see misc/refvfx_baseline/VIEWER_NOTES.md.
+#: Paths may be repo-relative or absolute; `../misc/...` reaches $LAB.
 SCORE_SETS = [
     {"id": "rebuilt222", "primary": True,
      "path": "outputs/eval/ctt_v2_compare", "corpus": "dc2e139a",
@@ -255,6 +260,68 @@ def video_paths(row: dict) -> dict[str, str]:
     return out
 
 
+# ------------------------------------------------------------------------ scoring provenance
+def score_paths(ss: dict) -> list[Path]:
+    """Every directory a score set is spread over, in preference order."""
+    raw = ss.get("paths") or [ss["path"]]
+    return [(REPO_ROOT / p).resolve() for p in raw]
+
+
+def score_env(paths: list[Path]) -> dict:
+    """The MACHINE a score set was produced on, read out of the harness's own results.json.
+
+    Same discipline the page already applies to `certified` and the corpus hash: report what the
+    artifact says, never what this file believes. It is load-bearing here — a cross-machine probe
+    (misc/refvfx_baseline/probe/PROBE.md) FAILED the project's pre-registered reproduction bar, so
+    two columns scored on different boxes are not automatically like-for-like."""
+    for base in paths:
+        for f in sorted(base.glob("*/results.json")) + sorted(base.glob("results.json")):
+            e = json.loads(f.read_text()).get("provenance", {}).get("env", {}) or {}
+            plat = e.get("platform") or ""
+            return {"platform": plat, "python": e.get("python"),
+                    "torch": (e.get("packages") or {}).get("torch"),
+                    "arch": ("aarch64" if "aarch64" in plat else
+                             "x86_64" if "x86_64" in plat else "?")}
+    return {}
+
+
+#: The measured cost of putting columns from two machines in one table. Numbers are quoted from
+#: PROBE.md §"Delta table" and §"BIAS or NOISE?" — not re-derived here.
+PROBE = {
+    "doc": "misc/refvfx_baseline/probe/PROBE.md",
+    "text": "A cross-machine probe of this same v4 instrument (identical reference_v4, identical "
+            "222-clip corpus dc2e139a, 178 rows) <b>FAILED</b> the project's pre-registered "
+            "reproduction bar of max |Δ| &lt; 0.005: per-row max |Δ| reached <b>0.046</b> on "
+            "app_ref and 0.073 on copy_max. The disagreement is unbiased numerical noise, not a "
+            "calibratable offset — aggregate shifts are of order <b>0.001–0.004</b> (mean |Δ| "
+            "0.002–0.008, signed means ≤0.002), and there were <b>zero</b> gate flips at τ=0.858 "
+            "and zero core_degenerate or tier changes. So the ~40pp pool-% gap between the "
+            "external arms and the runs is far larger than the machine term and the qualitative "
+            "reading is safe — but these columns are <b>not</b> like-for-like, and a difference of "
+            "a few thousandths between them means nothing.",
+}
+
+#: `core_degenerate` (and, more weakly, `copy_max`) are measured against ABSOLUTE frame counts, so
+#: they are not comparable between a 121f arm and a 33f one. Marked on the page, never silently
+#: averaged into a model difference.
+WINDOW_CAVEAT = {
+    "mark": "†",
+    "tiers": [a["id"] for a in EXTERNAL],
+    "flags": ["core_degenerate"],
+    "metrics": ["copy_max"],
+    "text": "<b>not comparable across clip lengths.</b> "
+            "<span class='mono'>FALLBACK_MIN_FRAMES = 8</span> (s_structure.py:23) is an "
+            "<b>absolute</b> frame count, and <span class='mono'>mid_mask</span> "
+            "(m2_integrity.py:33) excludes a fixed 9-frame prefix and 8-frame suffix whatever the "
+            "clip length. A refVFX clip is 33 frames, so its scored window is <b>24 frames "
+            "(one-sided) or 16 (two-sided)</b> against <b>112 / 104</b> on our 121-frame arms — "
+            "the same 8-frame bar is 4–7× harder to clear there. Read a raised "
+            "<span class='mono'>core_degen</span> rate on the external columns as clip length, "
+            "not as a model difference. <span class='mono'>copy_max</span> carries a weaker form "
+            "of the same effect: it searches a 16/24-frame window instead of a 104/112-frame one.",
+}
+
+
 # --------------------------------------------------------------------------- external arms
 def ensure_external_media() -> None:
     """Point outputs/videos/refvfx_baseline/<arm> at each arm's finished output directory.
@@ -328,7 +395,8 @@ def load_external_scores(path: Path, registry: dict, ceil: dict) -> tuple[dict, 
         prov = {"harness": p.get("harness"), "certified": bool(p.get("certified")),
                 "corpus": (p.get("corpus_sha256") or "")[:8],
                 "spec": (p.get("spec_sha256") or "")[:8],
-                "reasons": p.get("uncertified_reasons") or []}
+                "reasons": p.get("uncertified_reasons") or [],
+                "env": score_env([path])}
         prov["same_corpus_as_primary"] = prov["corpus"] == SCORE_SETS[0].get("corpus")
     return {item: {m: rf.mean_or_nan(v) for m, v in d.items()} for item, d in acc.items()}, prov
 
@@ -443,13 +511,18 @@ def load_all_scores() -> tuple[dict, dict]:
     per_set_counts: dict[str, collections.Counter] = {}
 
     for ss in SCORE_SETS:
-        path = (REPO_ROOT / ss["path"]).resolve()
-        if not path.is_dir():
-            raise SystemExit(f"score set '{ss['id']}' missing: {path}")
-        run_eval.SCORES = path
-        rf.SCORES = path                       # module-level and hardcoded — must be overridden
-        assert rf.SCORES == path, "report_full.SCORES did not take the override"
-        scored = rf.load_scored()
+        paths = score_paths(ss)
+        for path in paths:
+            if not path.is_dir():
+                raise SystemExit(f"score set '{ss['id']}' missing: {path}")
+        ss["env"] = score_env(paths)           # which MACHINE produced these numbers
+        scored: dict = {}
+        for path in paths:                     # a set may live in one directory per arm
+            run_eval.SCORES = path
+            rf.SCORES = path                   # module-level and hardcoded — must be overridden
+            assert rf.SCORES == path, "report_full.SCORES did not take the override"
+            for k, v in rf.load_scored().items():
+                scored.setdefault(k, []).extend(v)
 
         acc: dict[str, dict[str, list]] = {}
         counts = collections.Counter()
@@ -469,6 +542,7 @@ def load_all_scores() -> tuple[dict, dict]:
             instr[item] = ss["id"]
             counts[registry[item]["arm"]] += 1
         per_set_counts[ss["id"]] = counts
+        ss["arms"] = sorted(counts)            # which columns actually took numbers from this set
 
     print("\n[scores] which instrument supplied each arm (first set wins):")
     for ss in SCORE_SETS:
@@ -507,9 +581,9 @@ def control_floors(registry: dict) -> dict:
     treatment row and again against its base twin — deduped here on (kind, item, seed) via the
     accumulator key, with `base:`-prefixed cells dropped so a floor is never counted twice."""
     ceil = run_eval.ceilings()
-    path = (REPO_ROOT / SCORE_SETS[0]["path"]).resolve()      # floors are primary-instrument only
     acc: dict[str, dict[tuple, list]] = {k: {} for k in FLOORS}
-    for f in sorted(path.glob("*/items.jsonl")):
+    # floors are primary-instrument only, so they follow the primary set wherever it lives
+    for f in sorted(g for p in score_paths(SCORE_SETS[0]) for g in p.glob("*/items.jsonl")):
         for line in f.read_text().splitlines():
             if not line.strip():
                 continue
@@ -549,18 +623,18 @@ def instrument_delta(registry: dict) -> dict:
     ceil = run_eval.ceilings()
     per: dict[str, dict] = {}
     for ss in SCORE_SETS:
-        path = (REPO_ROOT / ss["path"]).resolve()
-        run_eval.SCORES = path
-        rf.SCORES = path
         out = {}
-        for (item, seed), rows in rf.load_scored().items():
-            r = registry.get(item)
-            if r is None or r["arm"] != "ic_gen":
-                continue
-            c = rf.collapse(rows)
-            cls = r["gt_pool_class"]
-            if cls in ceil and "app_ref" in c:
-                out[(item, seed)] = c["app_ref"] / ceil[cls]
+        for path in score_paths(ss):
+            run_eval.SCORES = path
+            rf.SCORES = path
+            for (item, seed), rows in rf.load_scored().items():
+                r = registry.get(item)
+                if r is None or r["arm"] != "ic_gen":
+                    continue
+                c = rf.collapse(rows)
+                cls = r["gt_pool_class"]
+                if cls in ceil and "app_ref" in c:
+                    out[(item, seed)] = c["app_ref"] / ceil[cls]
         per[ss["id"]] = out
     a, b = per[SCORE_SETS[1]["id"]], per[SCORE_SETS[0]["id"]]     # stale, rebuilt
     shared = [k for k in a if k in b]
@@ -710,6 +784,23 @@ def build() -> dict:
     for i, r in enumerate(RUNS):
         tier_label[RUN_TIER[r["arm"]]] = [f"{'④⑤⑥⑦'[i]} {r['label'].upper()}", r["sub"]]
 
+    # which MACHINE produced each column's numbers, grouped — the pool-% table puts these side by
+    # side, and PROBE.md says a cross-machine comparison is not free
+    def set_who(ss: dict) -> str:
+        arms = ss.get("arms") or []
+        shown = ", ".join(arms[:3]) + (f" +{len(arms) - 3} more" if len(arms) > 3 else "")
+        return f"{ss['id']} ({shown or 'no arms'})"
+
+    by_machine: dict[tuple, dict] = {}
+    for who, e in ([(set_who(ss), ss.get("env")) for ss in SCORE_SETS]
+                   + [(a["id"], (a.get("prov") or {}).get("env")) for a in ext]):
+        if not e:
+            continue
+        m = by_machine.setdefault((e["arch"], e["torch"], e["python"]),
+                                  {**e, "cols": []})
+        m["cols"].append(who)
+    machines = list(by_machine.values())
+
     return {
         "meta": {
             "title": "IC-LoRA trainings — results",
@@ -734,6 +825,7 @@ def build() -> dict:
             "tiers": all_tiers, "run_tiers": run_tiers,
             "context_before": CONTEXT_TIERS_BEFORE, "context_after": CONTEXT_TIERS_AFTER,
             "spec_cards": n_spec,
+            "machines": machines, "probe": PROBE, "window_caveat": WINDOW_CAVEAT,
             "external": ext, "external_tiers": ext_tiers,
             "external_note":
                 "Two external arms, one prior-work model (refVFX, arXiv:2601.07833, unofficial CMU "
@@ -875,6 +967,13 @@ def check(data: dict) -> None:
     print(f"   ✓ every run scored, card sets 1:1, every scored arm declares its instrument")
     print(f"   ✓ specialists join {nspec}/{len(cards)} cards "
           f"({len(cards) - nspec} without — zero-shot donors have no specialist by design)")
+    print("\n[machine] which box produced each column's numbers (from results.json, not asserted)")
+    for mm in m["machines"]:
+        print(f"   {mm['arch']:8s} torch {str(mm['torch']):12s} py {str(mm['python']):8s} "
+              f"← {', '.join(mm['cols'])}")
+    if len(m["machines"]) > 1:
+        print(f"   ⚠ {len(m['machines'])} machines on one page — PROBE.md FAILED the reproduction "
+              f"bar (per-row max |Δ| 0.046 app_ref); the page states this by the pool-% table")
     f = m.get("floors") or {}
     for k, v in f.items():
         print(f"   floor {v['label']:10s} {v['global']:5.1f}%  n={v['n']:4d}  "

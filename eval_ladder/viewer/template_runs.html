@@ -217,6 +217,8 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
 .dbadge.neg{color:var(--bad);border-color:#5c2426;background:#210f11}
 .dbadge.nil{color:var(--dim);border-color:var(--edge2);background:#15181d}
 .floorline{font-size:11px;color:var(--dim2);padding:6px 2px 0}
+/* † — this cell's bar is an absolute frame count, so it is not comparable across clip lengths */
+.wc{color:var(--warn);font-weight:700;margin-left:2px;cursor:help}
 .gap{margin-top:8px;padding:7px 10px;border:1px dashed var(--edge2);border-radius:6px;
   font-size:12px;color:var(--dim);background:#121519}
 </style>
@@ -406,8 +408,21 @@ function headlineTable(entries){
     runs answer the identical input); the sign test's unit is the donor class, consistent at ≥80%
     positive.</div>`;
   h += floorLines(rows.map(r=>r.cell));
+  h += machineNote();
   h += `<div class="gap"><b>No baseline column, and that is deliberate.</b> ${D.meta.no_baseline_note}</div>`;
   return h;
+}
+
+/** This table puts columns from more than one box side by side. Say so where the numbers are —
+ *  the machine each column came from is read from its own results.json, never hardcoded. */
+function machineNote(){
+  const M = D.meta.machines || [];
+  if(M.length < 2) return "";
+  return `<div class="gap"><b>Scored on ${M.length} different machines.</b> ` +
+    M.map(m=>`<span class="mono">${m.arch} · torch ${m.torch} · py ${m.python}</span> →
+              ${m.cols.join(", ")}`).join(" &nbsp;·&nbsp; ") +
+    `<div style="margin-top:5px">${D.meta.probe.text}
+       <span class="mono">${D.meta.probe.doc}</span></div></div>`;
 }
 
 /** The two degenerate references, recomputed from THIS page's score set and roster (not quoted
@@ -435,6 +450,17 @@ function armCell(gs){
   return `${gs[0].arm}${bad.length?` <span class="badge">${bad.join("/")}</span>`:""}`;
 }
 
+// `core_degenerate` and `copy_max` are measured against ABSOLUTE frame counts, so a 33f external
+// clip and a 121f arm are not on the same bar. Mark those cells rather than let the table read as
+// a model difference; the footnote carries the mechanism.
+const WC = D.meta.window_caveat || {};
+const wcMark = (arm, key, kind) =>
+  (WC.tiers||[]).includes(arm) && (WC[kind]||[]).includes(key)
+    ? `<span class="wc" title="not comparable across clip lengths — see the footnote">${WC.mark}</span>`
+    : "";
+const wcFoot = gens => (WC.tiers||[]).some(t => gens.some(g=>g.arm===t))
+  ? `<div class="note"><span class="wc">${WC.mark}</span> ${WC.text}</div>` : "";
+
 function metricTable(gens, group){
   const ms = D.metrics.filter(m=>m.group===group);
   const by = {};
@@ -447,11 +473,11 @@ function metricTable(gens, group){
     h += `<tr><td class="l">${cell}</td><td class="l mut">${armCell(gs)}</td><td class="num">${gs.length}</td>`;
     for(const m of ms){
       const v = mean(gs.map(g=>g.m[m.k]));
-      h += `<td class="num">${fmt(v,m.dp)}</td>`;
+      h += `<td class="num">${fmt(v,m.dp)}${wcMark(gs[0].arm, m.k, "metrics")}</td>`;
     }
     h += "</tr>";
   }
-  return h + "</tbody></table></div>";
+  return h + "</tbody></table></div>" + wcFoot(gens);
 }
 
 function flagTable(gens){
@@ -463,10 +489,11 @@ function flagTable(gens){
   for(const k of Object.keys(by).sort()){
     const gs = by[k], [cell] = k.split(" ");
     h += `<tr><td class="l">${cell}</td><td class="l mut">${armCell(gs)}</td><td class="num">${gs.length}</td>`;
-    for(const f of D.flags) h += `<td class="num">${fmt(mean(gs.map(g=>g.f[f.k])),3)}</td>`;
+    for(const f of D.flags)
+      h += `<td class="num">${fmt(mean(gs.map(g=>g.f[f.k])),3)}${wcMark(gs[0].arm, f.k, "flags")}</td>`;
     h += "</tr>";
   }
-  return h + "</tbody></table></div>";
+  return h + "</tbody></table></div>" + wcFoot(gens);
 }
 
 function armRollup(gens){
@@ -480,12 +507,12 @@ function armRollup(gens){
     h += `<tr><td class="l">${armCell(gs)}</td><td class="num">${gs.length}</td>
       <td class="num">${fmt(mean(gs.map(g=>g.m.app_ref)),4)}</td>
       <td class="num">${pct(mean(gs.map(g=>g.pct)))}</td>
-      <td class="num">${fmt(mean(gs.map(g=>g.m.copy_max)),3)}</td>
+      <td class="num">${fmt(mean(gs.map(g=>g.m.copy_max)),3)}${wcMark(a,"copy_max","metrics")}</td>
       <td class="num">${fmt(mean(gs.map(g=>g.f.near_copy)),3)}</td>
       <td class="num">${fmt(mean(gs.map(g=>g.m.prefix_dino)),3)}</td>
       <td class="num">${fmt(mean(gs.map(g=>g.m.max_seam_z)),2)}</td></tr>`;
   }
-  return h + "</tbody></table></div>";
+  return h + "</tbody></table></div>" + wcFoot(gens);
 }
 
 function drawStats(){

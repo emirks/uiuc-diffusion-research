@@ -1,5 +1,25 @@
 ## 2026-07-30
 
+- **14:41** — **`iclora_runs`: the page now states which MACHINE scored each column, and marks the
+  two metrics that are not comparable across clip lengths.** Both were correctness gaps in what the
+  page *claimed*, not in the wiring. (1) The run columns and the external refVFX columns share an
+  instrument, a `reference_v4` and the corpus `dc2e139a` but were scored on **three different
+  boxes** — eps x86_64/torch 2.9.1 (ic_gen, ctt_v2, copier), Campus Cluster x86_64/torch 2.5.1
+  (specialists), DeltaAI aarch64/torch 2.10.0 (refvfx_A/B). Each column's box is read from its own
+  `results.json` `provenance.env`, never hardcoded, and stated directly under the pool-% table with
+  the measured cost from `misc/refvfx_baseline/probe/PROBE.md`: that probe FAILED the pre-registered
+  `max |Δ| < 0.005` bar at per-row max |Δ| **0.046** on `app_ref`, with aggregate shifts of order
+  0.001–0.004, zero gate flips and zero `core_degenerate`/`tier` changes — so the ~40pp refVFX gap
+  is far larger than the machine term, but a few thousandths between these columns means nothing.
+  (2) `FALLBACK_MIN_FRAMES = 8` is an **absolute** frame count and `mid_mask` excludes a fixed 9/8
+  frame conditioning window, so a 33f refVFX clip is scored over 24 (one-sided) / 16 (two-sided)
+  frames against our 112 / 104 — a 4–7× harder bar. Measured `core_degen` is 0.520 / 0.342 on the
+  external arms vs 0.053 / 0.056 on the runs, which would read as a model difference; every such
+  cell now carries a **†** and a footnote, and `copy_max` is marked for the weaker form of the same
+  effect. `SCORE_SETS` entries also accept `paths` (a list) so the pending DeltaAI re-score of
+  ic_gen/ctt_v2 — landing one directory per arm — is a single new entry; procedure in
+  `misc/refvfx_baseline/VIEWER_NOTES.md`.
+
 - **14:17** — **`iclora_runs` viewer: the two external refVFX baseline arms, on the same cards.**
   Both arms of the refVFX prior-work baseline (`$LAB/misc/refvfx_baseline`) now appear on the
   IC-LoRA trainings page beside `ic_gen` and `ctt_v2`: **Ⓐ** refVFX in its own prompt convention
