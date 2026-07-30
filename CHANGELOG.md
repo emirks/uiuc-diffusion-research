@@ -1,5 +1,16 @@
 ## 2026-07-29
 
+- **19:07** — **`run_gen.py` reference-attention defect fixed, and the `ctt_v2` arm registered.**
+  `build_sample` constructed `ReferenceConditionConfig` without passing `attention`, so it silently
+  took the schema default `bidirectional`. Harmless until now — every arm through `b1`/`b1r`/`m1lite`
+  was trained bidirectionally — but the CTT v2 IC-LoRA is the first adapter trained with **one-way**
+  reference attention, and generating it bidirectionally is a train/inference mismatch that the
+  config's own docstring warns about. Attention is now read per-arm from `arms.yaml`
+  (`build_sample.ref_attention`, same pattern as `ref_downscale`) and defaults to `bidirectional`,
+  so every existing arm is byte-identical. Added the `ctt_v2` arm (attn_ffn, step 10000,
+  `attention: one_way`); note its rank/alpha are **256**, and `run_gen.py`'s `--rank/--alpha` flags
+  still default to 32, so they must be passed explicitly.
+
 - **13:10** — **DATASET.md fully reconciled with the final v2.1.0 state** — 37 anchored corrections
   across §1 (all PENDING rows closed with how each resolved; "why not stampable" → all five gaps
   closed), §3 (sample contract rewritten to the samples.jsonl row; silent-drop hazard marked

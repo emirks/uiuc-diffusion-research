@@ -113,5 +113,22 @@ arms:
     step: 5000
     ref_downscale: 5
     adapter_template: outputs/training/bneck/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
+
+  # ---- CTT v2 IC-LoRA (campaign `ctt_v2`, trained on eps 8xH100 2026-07-29). Uses the global
+  # adapter_template, so 05_gen.sh symlinks the checkpoint into
+  # outputs/training/ladder2/ctt_v2/checkpoints/.
+  # `attention: one_way` is REQUIRED, not cosmetic: this adapter is the first one trained with
+  # one-way reference attention, and ReferenceConditionConfig defaults to bidirectional. Running
+  # it bidirectionally is a train/inference mismatch. Every earlier arm omits the key and so
+  # keeps the bidirectional default it was trained with.
+  # rank/alpha are 256 — pass --rank 256 --alpha 256 (run_gen.py's flags default to 32).
+  ctt_v2:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    note: "IC-LoRA on the CTT v2 dataset (56,368 pairs, 1,670 operators, 5 strata). rank 256,
+      lr 1e-4, one-way reference attention, mix S0 5 / S1 12 / S2a 34.36 / S2b 35.64 / S4 13."
+
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
 

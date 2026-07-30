@@ -72,8 +72,14 @@ def build_sample(row: dict) -> ValidationSample:
         # authoritative clip -> class (clip names do NOT reliably encode the class)
         ref_path = STD / prompts.clip_class(row["reference"]) / f"{row['reference']}.mp4"
         assert ref_path.exists(), f"reference clip not found: {ref_path}"
+        # `attention` MUST match what the adapter was TRAINED with. ReferenceConditionConfig
+        # defaults to "bidirectional", so omitting it silently runs a one-way-trained adapter
+        # bidirectionally — a train/inference mismatch the config's own docstring warns about.
+        # Every arm through b1/m1lite was trained bidirectionally, so the default keeps them
+        # byte-identical; ctt_v2 sets `attention: one_way` in arms.yaml.
         conds.append(ReferenceConditionConfig(video=str(ref_path),
                                               downscale_factor=build_sample.ref_downscale,
+                                              attention=build_sample.ref_attention,
                                               temporal_scale_factor=1, include_in_output=False))
     return ValidationSample(prompt=row["prompt"], conditions=conds)
 
@@ -143,6 +149,7 @@ def main() -> None:
     arms_cfg = yaml.safe_load(ARMS.read_text())
     assert args.seed in arms_cfg["seeds"], f"seed {args.seed} is not a registered seed"
     build_sample.ref_downscale = arms_cfg['arms'][args.arm].get('ref_downscale', 1)
+    build_sample.ref_attention = arms_cfg['arms'][args.arm].get('attention', 'bidirectional')
     rows = load_rows(args.arm, args.priority, args.cells, args.extra_registry)
 
     def out_path(r: dict) -> Path:
