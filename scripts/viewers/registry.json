@@ -1,7 +1,6 @@
 {
   "_comment": "The tracked source of truth for the viewer dashboard. outputs/ is gitignored and disposable; this file is not. Every viewer worth keeping has an entry here. Rebuild with: python3 scripts/viewers/viewerctl.py hub",
   "schema_version": 1,
-
   "groups": [
     {
       "id": "datasets",
@@ -24,9 +23,7 @@
       "blurb": "Written-up results, presentation material, and standalone instruments."
     }
   ],
-
   "servers": [],
-
   "viewers": [
     {
       "slug": "ctt_v2_corpora",
@@ -39,8 +36,17 @@
       "path": "outputs/viewers/ctt_v2_corpora/index.html",
       "generator": "scripts/viewers/build_ctt_v2_corpora.py",
       "notes": "Static port of the app-server viewer on branch ctt-v2 (scripts/ctt_v2/dataset_viewer/, port 8799), verified at parity: identical sample counts, axis groups, group membership and row fields. The grouping serve.py did in memory is precomputed into range-addressable files; media URLs are range fetches into the shards. Page source is scripts/viewers/ctt_v2_corpora.html, linked in as index.html. Rebuild after data changes: python3 scripts/viewers/build_ctt_v2_corpora.py",
-      "check_files": ["meta.json", "rows_code.jsonl", "rowoff_code.bin", "ids_code_effect.bin",
-                      "rows_lora.jsonl", "rows_vfx.jsonl", "shards_code", "shards_lora", "vfx_h264"]
+      "check_files": [
+        "meta.json",
+        "rows_code.jsonl",
+        "rowoff_code.bin",
+        "ids_code_effect.bin",
+        "rows_lora.jsonl",
+        "rows_vfx.jsonl",
+        "shards_code",
+        "shards_lora",
+        "vfx_h264"
+      ]
     },
     {
       "slug": "s2_dataset",
@@ -52,8 +58,14 @@
       "date": "2026-07-27",
       "path": "outputs/viewers/s2_dataset/index.html",
       "pages": [
-        {"label": "browse all operators", "path": "outputs/viewers/s2_dataset/browse.html"},
-        {"label": "retired / blacklisted", "path": "outputs/viewers/s2_dataset/retired.html"}
+        {
+          "label": "browse all operators",
+          "path": "outputs/viewers/s2_dataset/browse.html"
+        },
+        {
+          "label": "retired / blacklisted",
+          "path": "outputs/viewers/s2_dataset/retired.html"
+        }
       ]
     },
     {
@@ -83,7 +95,10 @@
       "date": "2026-07-24",
       "path": "outputs/viewers/d2_dataset/index.html",
       "supersedes": [
-        {"label": "D1 synthetic pilot (2026-07-24)", "path": "outputs/viewers/d1_dataset/index.html"}
+        {
+          "label": "D1 synthetic pilot (2026-07-24)",
+          "path": "outputs/viewers/d1_dataset/index.html"
+        }
       ]
     },
     {
@@ -94,7 +109,6 @@
       "date": "2026-07-27",
       "path": "outputs/viewers/humanvid_real/index.html"
     },
-
     {
       "slug": "ladder2_reference",
       "title": "ladder2 — single reference of truth",
@@ -104,7 +118,10 @@
       "date": "2026-07-23",
       "path": "outputs/viewers/ladder2_reference/index.html",
       "pages": [
-        {"label": "DAVIS (foreign) generations", "path": "outputs/viewers/ladder2_reference/davis.html"}
+        {
+          "label": "DAVIS (foreign) generations",
+          "path": "outputs/viewers/ladder2_reference/davis.html"
+        }
       ],
       "mount": {
         "_why": "eval_ladder/REFERENCE.html and DAVIS_SAMPLES.html climb ../../ for media, which overshoots the repo root by one level. The originals are the authoritative ladder2 record and stay untouched; these derived copies are re-made from source on every mount/serve, with the climb corrected.",
@@ -113,16 +130,25 @@
           {
             "name": "index.html",
             "target": "eval_ladder/REFERENCE.html",
-            "rewrite_abs": {"../../data/": "../../../data/", "../../outputs/": "../../../outputs/"}
+            "rewrite_abs": {
+              "../../data/": "../../../data/",
+              "../../outputs/": "../../../outputs/"
+            }
           },
           {
             "name": "davis.html",
             "target": "eval_ladder/DAVIS_SAMPLES.html",
-            "rewrite_abs": {"../../data/": "../../../data/", "../../outputs/": "../../../outputs/"}
+            "rewrite_abs": {
+              "../../data/": "../../../data/",
+              "../../outputs/": "../../../outputs/"
+            }
           }
         ],
         "links": [
-          {"name": "assets", "target": "eval_ladder/assets"}
+          {
+            "name": "assets",
+            "target": "eval_ladder/assets"
+          }
         ]
       }
     },
@@ -138,17 +164,74 @@
       "mount": {
         "dir": "outputs/viewers/ladder2_results",
         "pages": [
-          {"name": "index.html", "target": "outputs/reports/ladder_viewer/index.html"}
+          {
+            "name": "index.html",
+            "target": "outputs/reports/ladder_viewer/index.html"
+          }
         ],
         "links": [
-          {"name": "eval_ladder", "target": "eval_ladder"},
-          {"name": "outputs", "target": "outputs"},
-          {"name": "data", "target": "data"}
+          {
+            "name": "eval_ladder",
+            "target": "eval_ladder"
+          },
+          {
+            "name": "outputs",
+            "target": "outputs"
+          },
+          {
+            "name": "data",
+            "target": "data"
+          }
         ]
       },
       "supersedes": [
-        {"label": "ladder2 build, 13:10 (2026-07-23)", "path": "outputs/reports/ladder2/index.html"},
-        {"label": "eval_ladder v2.0.0-R1, 15:39 (2026-07-23)", "path": "outputs/eval_ladder/v2.0.0-R1/viewer.html"}
+        {
+          "label": "ladder2 build, 13:10 (2026-07-23)",
+          "path": "outputs/reports/ladder2/index.html"
+        },
+        {
+          "label": "eval_ladder v2.0.0-R1, 15:39 (2026-07-23)",
+          "path": "outputs/eval_ladder/v2.0.0-R1/viewer.html"
+        }
+      ]
+    },
+    {
+      "slug": "iclora_runs",
+      "title": "IC-LoRA trainings — results",
+      "blurb": "Every IC-LoRA training on one page, with a chip per run. ctt_v2 @ step 10,000 vs the ladder2 IC-LoRA generalist on 139 identical inputs, both rescored under the rebuilt 222-clip reference_v4, with the specialist and copier tiers alongside.",
+      "group": "eval",
+      "featured": true,
+      "latest_of": "iclora trainings",
+      "date": "2026-07-30",
+      "path": "outputs/viewers/iclora_runs/index.html",
+      "mount": {
+        "_why": "Generated by eval_ladder/viewer/build_runs.py into outputs/reports/iclora_runs/. The page emits repo-root-relative media paths prefixed with meta.rel, and this mount sits at the same depth, so the prefix resolves identically. The links below make the same paths resolve from inside the viewer dir as well, matching the ladder2_results mount.",
+        "dir": "outputs/viewers/iclora_runs",
+        "pages": [
+          {
+            "name": "index.html",
+            "target": "outputs/reports/iclora_runs/index.html"
+          }
+        ],
+        "links": [
+          {
+            "name": "eval_ladder",
+            "target": "eval_ladder"
+          },
+          {
+            "name": "outputs",
+            "target": "outputs"
+          },
+          {
+            "name": "data",
+            "target": "data"
+          }
+        ]
+      },
+      "check_files": [
+        "outputs/videos/ladder2/ctt_v2__ck10000",
+        "outputs/videos/ladder2/ic_gen",
+        "outputs/eval/ctt_v2_compare"
       ]
     },
     {
@@ -168,18 +251,30 @@
       "date": "2026-07-14",
       "path": "outputs/viewers/cert_v3_draft8/index.html",
       "pages": [
-        {"label": "results explorer", "path": "outputs/viewers/cert_v3_draft8/explorer.html"}
+        {
+          "label": "results explorer",
+          "path": "outputs/viewers/cert_v3_draft8/explorer.html"
+        }
       ],
       "mount": {
         "dir": "outputs/viewers/cert_v3_draft8",
         "pages": [
-          {"name": "index.html", "target": "outputs/eval/certification/3.0.0-draft.8/viewer.html"},
-          {"name": "explorer.html", "target": "outputs/eval/certification/3.0.0-draft.8/results_explorer.html"}
+          {
+            "name": "index.html",
+            "target": "outputs/eval/certification/3.0.0-draft.8/viewer.html"
+          },
+          {
+            "name": "explorer.html",
+            "target": "outputs/eval/certification/3.0.0-draft.8/results_explorer.html"
+          }
         ],
         "links_from": "data/processed/transitions_std121"
       },
       "supersedes": [
-        {"label": "3.0.0-draft.7 record (2026-07-13)", "path": "outputs/eval/certification/3.0.0-draft.7/viewer.html"}
+        {
+          "label": "3.0.0-draft.7 record (2026-07-13)",
+          "path": "outputs/eval/certification/3.0.0-draft.7/viewer.html"
+        }
       ]
     },
     {
@@ -191,9 +286,18 @@
       "date": "2026-07-07",
       "path": "outputs/eval/exp_058/viewer/index.html",
       "supersedes": [
-        {"label": "exp_057 run (2026-07-07)", "path": "outputs/eval/exp_057/viewer/index.html"},
-        {"label": "exp_056 run (2026-07-07)", "path": "outputs/eval/exp_056/viewer/index.html"},
-        {"label": "exp_053 run (2026-07-07)", "path": "outputs/eval/exp_053/viewer/index.html"}
+        {
+          "label": "exp_057 run (2026-07-07)",
+          "path": "outputs/eval/exp_057/viewer/index.html"
+        },
+        {
+          "label": "exp_056 run (2026-07-07)",
+          "path": "outputs/eval/exp_056/viewer/index.html"
+        },
+        {
+          "label": "exp_053 run (2026-07-07)",
+          "path": "outputs/eval/exp_053/viewer/index.html"
+        }
       ]
     },
     {
@@ -204,7 +308,6 @@
       "date": "2026-07-16",
       "path": "outputs/taxonomy/viewer.html"
     },
-
     {
       "slug": "exp_083_d3_pilot",
       "title": "exp_083 — D3 pilot: depth-parallax 3D transitions",
@@ -215,9 +318,18 @@
       "date": "2026-07-27",
       "path": "outputs/videos/exp_083_d3_pilot/run_0001/viewer.html",
       "supersedes": [
-        {"label": "exp_080 — 121 frames, real streams (2026-07-25)", "path": "outputs/videos/exp_080_depth3d_realstream_121/run_0001/viewer.html"},
-        {"label": "exp_076 run_0005 (2026-07-22)", "path": "outputs/videos/exp_076_depth3d_transitions/run_0005/viewer.html"},
-        {"label": "exp_076 run_0004 (2026-07-22)", "path": "outputs/videos/exp_076_depth3d_transitions/run_0004/viewer.html"}
+        {
+          "label": "exp_080 — 121 frames, real streams (2026-07-25)",
+          "path": "outputs/videos/exp_080_depth3d_realstream_121/run_0001/viewer.html"
+        },
+        {
+          "label": "exp_076 run_0005 (2026-07-22)",
+          "path": "outputs/videos/exp_076_depth3d_transitions/run_0005/viewer.html"
+        },
+        {
+          "label": "exp_076 run_0004 (2026-07-22)",
+          "path": "outputs/videos/exp_076_depth3d_transitions/run_0004/viewer.html"
+        }
       ]
     },
     {
@@ -229,7 +341,6 @@
       "date": "2026-07-22",
       "path": "outputs/videos/exp_075_procedural_transition_engine/run_0003/viewer.html"
     },
-
     {
       "slug": "two_week_report",
       "title": "Two weeks: from latent tricks to a certified instrument",
@@ -259,11 +370,16 @@
           {
             "name": "index.html",
             "target": "../misc/advised_method_impl/2afc/index.html",
-            "rewrite_abs": {"/diffusion-research/": "../../../"}
+            "rewrite_abs": {
+              "/diffusion-research/": "../../../"
+            }
           }
         ],
         "links": [
-          {"name": "media", "target": "../misc/advised_method_impl/2afc/media"}
+          {
+            "name": "media",
+            "target": "../misc/advised_method_impl/2afc/media"
+          }
         ]
       }
     },
@@ -275,7 +391,6 @@
       "date": "2026-05-26",
       "path": "outputs/analysis/transition_hardness/run_0004/playground.html"
     },
-
     {
       "slug": "d1_dataset",
       "title": "D1 synthetic dataset (pilot)",

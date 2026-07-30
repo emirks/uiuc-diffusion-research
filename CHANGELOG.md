@@ -1,5 +1,25 @@
 ## 2026-07-30
 
+- **11:28** — **New viewer: `iclora_runs` — every IC-LoRA training on one page, one chip per run.**
+  `eval_ladder/viewer/build_runs.py` + `template_runs.html`, forked from the ladder2 results viewer
+  (which is the published ladder2 record and is left untouched). ctt_v2 @ step 10,000 sits beside the
+  ladder2 IC-LoRA generalist on **139 identical inputs** — the two registries share `input_key`
+  field-for-field, so both runs land in the same card with no view-time join — plus the specialist
+  and copier tiers. Adding the next training is one entry in `RUNS`. Three things the build enforces
+  that the old one could not: (1) every score set is loaded **by explicit path** and every generation
+  carries the artifact that scored it — `report_full.SCORES` is a module constant that ignores
+  `$LADDER_SCORES`, so importing it silently reads the stale-artifact scores, which is exactly the
+  cross-instrument trap this campaign was bitten by; (2) the run columns come only from the rebuilt
+  222-clip rescore, and stale-scored tiers (specialists) are badged and never merged into a run's row;
+  (3) `check()` refuses to emit unless every run is fully scored, the runs' card sets are 1:1, and
+  every scored arm declares its instrument. Measured and stated on the page: the cross-build error,
+  from the 304 ic_gen generations that exist under *both* artifacts, is **0.09pp mean / 0.31pp max at
+  cell level** against a 0.4–15.9pp effect. No prompt+endpoint baseline column — `base_prompt`/
+  `base_cond` were never scored under either artifact and the two candidate substitutes are different
+  rosters that disagree by ~19pp, more than the effect itself; the gap is stated on the page instead
+  of being papered over. Crossfade/freeze floors are recomputed from this roster's own eps control
+  rows (**30.3% / 17.5%**, vs POOL_YARDSTICK's 48%/22% headline — a roster-composition difference,
+  this roster being far heavier on the hard cross/foreign cells).
 - **09:05** — **`run_gen.py` no longer hardcodes `LAB`.** `MODEL`/`GEMMA` were derived from a
   hardcoded campus-cluster path, so on any other machine they resolved to files that do not exist and
   generation died at model load. `LAB` now reads the environment (default unchanged, so CC behaviour
