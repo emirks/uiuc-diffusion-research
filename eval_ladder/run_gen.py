@@ -46,9 +46,13 @@ sys.path.insert(0, str(HERE))
 import encode_conditioning as ec  # noqa: E402
 import prompts  # noqa: E402
 
-LAB = Path("/projects/illinois/eng/cs/jrehg/users/emirkisa")
-MODEL = LAB / "cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors"
-GEMMA = LAB / "cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"
+# LAB was hardcoded, which silently breaks this script on any machine that is not the campus
+# cluster: MODEL/GEMMA resolved to CC paths and model loading failed at run time. The defaults are
+# unchanged, so CC behaviour is byte-identical; LTX_MODEL / LTX_GEMMA additionally allow pointing at
+# weights that do not sit under `cache/huggingface/...` (on the eps box they live in $MODELS).
+LAB = Path(os.environ.get("LAB", "/projects/illinois/eng/cs/jrehg/users/emirkisa"))
+MODEL = Path(os.environ.get("LTX_MODEL", LAB / "cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors"))
+GEMMA = Path(os.environ.get("LTX_GEMMA", LAB / "cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"))
 STD = REPO_ROOT / "data/processed/transitions_std121"
 REGISTRY = HERE / "registry.jsonl"
 ARMS = HERE / "arms.yaml"

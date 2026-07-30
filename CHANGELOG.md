@@ -1,3 +1,13 @@
+## 2026-07-30
+
+- **09:05** — **`run_gen.py` no longer hardcodes `LAB`.** `MODEL`/`GEMMA` were derived from a
+  hardcoded campus-cluster path, so on any other machine they resolved to files that do not exist and
+  generation died at model load. `LAB` now reads the environment (default unchanged, so CC behaviour
+  is byte-identical) and `LTX_MODEL`/`LTX_GEMMA` allow weights that do not live under
+  `cache/huggingface/...`. Found by dry-checking path resolution on the eps box *before* the
+  post-training window rather than during it. Also corrected the `ctt_v2` arm note to rank 128
+  (the run was valve-demoted from 256).
+
 ## 2026-07-29
 
 - **19:07** — **`run_gen.py` reference-attention defect fixed, and the `ctt_v2` arm registered.**
