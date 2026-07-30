@@ -131,6 +131,11 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
 .cellbox.out.runtier.r3 h4{color:#f0a5e0}
 .cellbox.out.copier{background:#21131400;border:1px dashed #5c2426;opacity:.7}
 .cellbox.out.copier h4{color:#e79aa0}
+/* external prior-work arms: one hue, two shades — same model, different prompt */
+.cellbox.out.ext{background:#1b1710;border-color:#5a4a22}
+.cellbox.out.ext h4{color:#e8d49a}
+.cellbox.out.ext.x1{background:#161811;border-color:#47552a}
+.cellbox.out.ext.x1 h4{color:#cfe0a0}
 .demo{margin-top:2px;border-top:1px solid var(--edge);padding-top:4px}
 .demo .dl{display:block;color:var(--ref);font-size:9px;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
 .demo video{aspect-ratio:3/4;width:100%;border-radius:4px}
@@ -143,6 +148,17 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
  background:#0b0d10;border-radius:5px;font-size:11px}
 .cellbox .fn{color:var(--dim2);font-size:10px;word-break:break-all;line-height:1.35}
 .ptext{font-size:11px;color:#c7d0da;line-height:1.5;max-height:170px;overflow:auto}
+/* the clause an arm's prompt does NOT share with ours — the Ⓐ/Ⓑ contrast, in one colour */
+.ptext mark,.pbar mark{background:#3a2f10;color:#f6d488;border-radius:3px;padding:0 2px}
+.cellbox.in.alt{background:#1a1710;border-color:#4a3f1e}
+.cellbox.in.alt h4{color:#e8d49a}
+.pkind{font-size:9.5px;color:var(--dim2);line-height:1.4;border-top:1px solid var(--edge);
+ padding-top:4px}
+/* on the clip itself: the prompt that actually produced THIS video */
+.pbar{font-size:9.5px;line-height:1.45;color:#9aa4b0;background:#0b0d10;border:1px solid var(--edge);
+ border-radius:5px;padding:4px 6px;max-height:56px;overflow:auto}
+.pbar .pl{display:block;color:var(--dim2);text-transform:uppercase;letter-spacing:.05em;
+ font-size:8.5px;margin-bottom:2px}
 
 /* ------------------------------------------------- CONDITIONING BAR */
 .cond{border:1px solid var(--edge);border-radius:5px;overflow:hidden;background:#0b0d10}
@@ -504,6 +520,13 @@ function condBar(g, card){
     bar = `<div class="track"><div class="seg-n"></div></div>
            <div class="cap"><span class="none">prompt only — no conditioning</span>
              <span class="g">${F}f generated</span></div>`;
+  } else if(g.cond === "external"){
+    // an external arm conditions on ITS OWN contract, so state it rather than redraw our
+    // prefix/suffix bar as though the geometry were the same
+    bar = `<div class="track"><div class="seg-n"></div></div>
+           <div class="cap" title="external model, its own geometry — duration-matched to our
+             ${F}f @ 24fps, not frame-matched"><span class="none">their contract</span>
+             <span class="g">${g.cond_note}</span></div>`;
   } else if(g.cond === "prefix"){
     bar = `<div class="track">
              <div class="seg-p" style="width:${100*P/F}%"></div><div class="seg-g"></div></div>
@@ -535,9 +558,19 @@ function vid(src, cls=""){
 // column with no template change. Fixed left→right, so a model is always the same column.
 const TIER_LABEL = D.tier_label;
 const RUN_IDX = Object.fromEntries(RUN_TIERS.map((t,i)=>[t,i]));
+const EXT_IDX = Object.fromEntries((D.meta.external_tiers||[]).map((t,i)=>[t,i]));
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+/** A prompt with the clause that differs from OUR rendered prompt marked. `hi` is [start,end)
+ *  character offsets, computed once in the generator against the card's own prompt. */
+function markPrompt(text, hi){
+  if(!hi || hi[1] <= hi[0]) return esc(text);
+  return esc(text.slice(0,hi[0])) + "<mark>" + esc(text.slice(hi[0],hi[1])) + "</mark>"
+       + esc(text.slice(hi[1]));
+}
 function outBox(tier, list, card){
   const [name, sub] = TIER_LABEL[tier];
-  const cls = `${tier}${tier in RUN_IDX ? " runtier r"+RUN_IDX[tier] : ""}`;
+  const cls = `${tier}${tier in RUN_IDX ? " runtier r"+RUN_IDX[tier] : ""}`
+            + `${tier in EXT_IDX ? " ext x"+EXT_IDX[tier] : ""}`;
   if(!list.length){
     const why = tier==="copier" ? "no copier<br>for this task"
       : tier==="specialist"
@@ -556,11 +589,16 @@ function outBox(tier, list, card){
     if(g.scored && g.f.near_copy>0) chips.push(`<span class="chip r">near_copy ${fmt(g.f.near_copy,2)}</span>`);
     const lbl = `${g.cell} · ${g.novelty}`;
     if(g.instr && g.instr!==PRIMARY) chips.push(`<span class="badge">${g.instr}</span>`);
+    // Our arms all share the card's prompt, so only an arm that used a DIFFERENT one carries it
+    // here — bound to this clip, at this seed, straight off that arm's manifest.
+    const pb = g.prompt ? `<div class="pbar" title="${esc(g.prompt)}">
+        <span class="pl">prompt used by this arm</span>${markPrompt(g.prompt, g.prompt_hi)}</div>` : "";
     // the box only INDICATES its inputs (bar + ribbon); the demo clip itself lives in INPUTS
     return `<div class="cellbox out ${cls}">
       <h4>${name}<span class="arm">${sub} · ${lbl}</span></h4>
       ${condBar(g,card)}
       ${vid(g.videos[seed] || Object.values(g.videos)[0])}
+      ${pb}
       <div class="chips">${chips.join("")}</div></div>`;
   }).join("");
 }
@@ -574,12 +612,22 @@ function cardHtml(entry){
   const refBoxes = (c.refs||[]).map(r=>
     `<div class="cellbox in" style="border-color:${r.mismatched?'#5c2426':'#3b3163'};background:${r.mismatched?'#1c1113':'#141127'}">
        <h4>${r.mismatched?"✕ MISMATCHED DEMO":"◧ IC DEMO"} · ${r.cls||"?"}
-         <span class="arm">input to ${r.tiers.map(t=>t==="generalist"?"④ generalist":"⚠ base+demo").join(" + ")} only</span></h4>
+         <span class="arm">input to ${r.tiers.map(t=>(TIER_LABEL[t]||[t])[0]).join(" + ")} only</span></h4>
        ${vid(r.video)}
        <div class="fn">${r.clip}</div></div>`).join("");
+  // Prompts are per-ARM once external baselines are on the page: one box per convention, side by
+  // side, with the clause that differs from ours marked. That contrast IS why two refVFX arms exist.
+  const alts = c.alt_prompts || [];
+  const altBoxes = alts.map(p=>
+    `<div class="cellbox in wide alt"><h4>PROMPT · ${(TIER_LABEL[p.tier]||[p.tier])[0]}
+       <span class="arm">${alts.filter(q=>q.tier===p.tier).length>1?`demo ${p.ref} · `:``}differs from ours in the marked clause</span></h4>
+       <div class="ptext">${markPrompt(p.text, p.hi)}</div>
+       <div class="pkind">${p.kind}</div></div>`).join("");
   const inputs =
-    `<div class="cellbox in wide"><h4>PROMPT<span class="arm">identical for every tier</span></h4>
-       <div class="ptext">${c.prompt.replace(/</g,"&lt;")}</div></div>` +
+    `<div class="cellbox in wide"><h4>PROMPT<span class="arm">${alts.length
+        ? "our arms (② ④ ⑤ ⚠) — external arms below use their own"
+        : "identical for every tier"}</span></h4>
+       <div class="ptext">${esc(c.prompt)}</div></div>` + altBoxes +
     `<div class="cellbox in"><h4>PREFIX · ${D.meta.px_prefix}f<span class="arm">start anchor</span></h4>
        ${vid(c.prefix_video)}</div>` +
     (c.sided==="two"
@@ -721,7 +769,10 @@ document.getElementById("sub").innerHTML =
      r.checkpoint?`, step ${r.checkpoint.toLocaleString()}`:""})</span>`).join(" · ")}
    <br>specialists appear on <b>${m.spec_cards}</b> of ${m.cards} tasks — the other
    ${m.cards - m.spec_cards} are held-out (zero-shot) donor classes, for which a specialist cannot
-   exist by design, so an empty ② column there is the design, not a gap.`;
+   exist by design, so an empty ② column there is the design, not a gap.` +
+   (m.external.length ? `<br>external baselines: ${m.external.map(a=>
+     `<b>${a.label}</b> <span class="mono">(${a.gens} gens, ${a.videos} videos, ${
+       a.scored ? `${a.scored} scored` : `<span class="badge">unscored</span>`})</span>`).join(" · ")}` : ``);
 
 // Both registers at once. A page showing only the favourable Δ table would misrepresent this run;
 // one leading with "GATE: FAIL" would misrepresent it the other way.
@@ -745,7 +796,22 @@ document.getElementById("instrument").innerHTML =
    cell-level mean |Δ| <b>${idl.cell_mean_abs}pp</b>, max <b>${idl.cell_max_abs}pp</b>;
    per-generation mean |Δ| ${idl.gen_mean_abs}pp, ${idl.gen_over_1pp}/${idl.n} exceed 1pp,
    max ${idl.gen_max_abs}pp. Measured on ic_gen and assumed to transfer to same-corpus arms.` : ``) +
-  `<br><b>Not on this page:</b> ` + m.absent_tiers.map(([k,why])=>`${k} — ${why}`).join(" &nbsp;·&nbsp; ");
+  `<br><b>Not on this page:</b> ` + m.absent_tiers.map(([k,why])=>`${k} — ${why}`).join(" &nbsp;·&nbsp; ") +
+  (m.external.length ? `<br><b>External baselines.</b> ${m.external_note} ` +
+    m.external.map(a=> a.scored
+      ? `<b>${a.label}</b>: ${a.scored}/${a.gens} scored, badged
+         <span class="badge">${a.score_id}</span> —
+         <span class="mono">${a.prov.harness || "instrument not declared"}</span>,
+         corpus <span class="mono">${a.prov.corpus || "not declared"}</span>${a.prov.same_corpus_as_primary
+           ? `, the <b>same reference_v4 build the run columns use</b>, so the levels are
+              comparable` : `, which is <b>NOT</b> the build the run columns use — read the levels
+              as that arm's own, not against a run`}${a.prov.certified ? `` :
+           `; the run is <b>uncertified</b> (${(a.prov.reasons||[]).join("; ") || "reason not declared"}).`
+         } It is still a separate scoring run, so it never enters the paired Δ or the sign test.`
+      : `<b>${a.label}</b>: <b>not scored yet</b> — videos only. Every number for this arm reads
+         "—" and it contributes to no aggregate; nothing here is estimated or borrowed. Its scores
+         drop into <span class="mono">$LAB/${a.scores_slot}/</span>
+         (harness <span class="mono">*/items.jsonl</span>), then rebuild the page.`).join(" ") : ``);
 
 selAll(1);
 </script>

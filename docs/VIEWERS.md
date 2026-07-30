@@ -65,6 +65,18 @@ Run-scoped viewers may stay next to their run
 artifacts it describes. Register it by path; promote it into `outputs/viewers/`
 with a mount only if it needs media wiring it does not already have.
 
+### Media that lives outside the repo
+
+Finished campaign data under `$LAB/misc/<campaign>/` is **never moved or copied**
+into `outputs/` — other work reads it in place. The generator symlinks it in
+instead, `outputs/videos/<campaign>/<arm> -> $LAB/misc/<campaign>/<dir>`, and the
+page keeps emitting ordinary repo-relative paths. Rebuilding the link is part of
+the generator, so a wiped `outputs/` costs one rerun and the source stays
+byte-identical. List the link paths in the viewer's `check_files` so
+`viewerctl check` says so loudly if the campaign directory ever moves.
+Worked example: the two refVFX arms on the IC-LoRA trainings viewer
+(`ensure_external_media()` in `eval_ladder/viewer/build_runs.py`).
+
 ---
 
 ## Creating a viewer
@@ -202,7 +214,8 @@ are what the dashboard shows.
 
 ## Current inventory
 
-18 current viewers, all static, all resolving; 4 archived.
+19 current viewers, all static; 4 archived. All resolve except the 2AFC study, whose
+media set is only partly present on DeltaAI (62 of 93 clips).
 Generated view: `outputs/viewers/index.html`.
 
 ### Dataset strata & sources
@@ -218,6 +231,7 @@ Generated view: `outputs/viewers/index.html`.
 ### Eval instrument & ladder
 | Viewer | What it shows |
 |---|---|
+| **IC-LoRA trainings — results** ★ | every IC-LoRA training on one page, a chip per run, over 139 identical inputs; plus the specialist/copier context tiers and the two external refVFX baseline arms (Ⓐ their prompt convention · Ⓑ our text budget). Rebuild: `eval_ladder/viewer/build_runs.py`. Adding a training is one entry in its `RUNS`; adding an external baseline is one entry in its `EXTERNAL` |
 | **ladder2 — single reference of truth** ★ | the clean campaign: design, seatbelts, prompt rendering; + DAVIS foreign generations |
 | **eval ladder — results viewer** ★ | 1,902 generated transitions with scores, filterable by cell/tier/ontology |
 | **Ladder v3 — paired side-by-side** | certified v3.0.0 rows, GT/demo/floors colour-coded, 1,800 clips |

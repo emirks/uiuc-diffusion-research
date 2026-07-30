@@ -1,5 +1,37 @@
 ## 2026-07-30
 
+- **14:17** — **`iclora_runs` viewer: the two external refVFX baseline arms, on the same cards.**
+  Both arms of the refVFX prior-work baseline (`$LAB/misc/refvfx_baseline`) now appear on the
+  IC-LoRA trainings page beside `ic_gen` and `ctt_v2`: **Ⓐ** refVFX in its own prompt convention
+  (the prompt describes the effect) and **Ⓑ** refVFX under our text budget (no transition
+  information in text). 152 rows × 2 seeds each, joined to the existing 139 cards by `item_id`, all
+  608 clips live. They are wired as **context tiers**, the mechanism the page already had for
+  `specialist`/`copier` — so they get a column and enter the per-arm aggregate tables but never the
+  run chips, the paired per-card Δ or the donor-class sign test, which keeps those meaning what they
+  meant. Adding the next external baseline is one entry in the new `EXTERNAL` list.
+  The genuinely new requirement was the **prompt**: unlike our arms, which all share the registry
+  prompt, these two differ from it and from each other on every row, and that contrast is the point
+  of running both. Each clip's output box now carries the exact prompt from that arm's manifest row
+  for that item and seed, the inputs band shows all three conventions side by side, and
+  `diff_span()` marks the clause that differs from ours — against one baseline, so Ⓐ's effect
+  description and Ⓑ's class-agnostic clause land in the same place. Their conditioning bar states
+  refVFX's own contract (first-frame anchor, 33f, duration-matched) rather than redrawing our
+  prefix/suffix geometry over it. Videos are **symlinked**, never copied: `ensure_external_media()`
+  rebuilds `outputs/videos/refvfx_baseline/<arm>` on every build, and the convention is written up
+  in `docs/VIEWERS.md` → *Media that lives outside the repo*. Scores are read from the harness's own
+  output at `$LAB/misc/refvfx_baseline/eval/scores/<arm>/*/items.jsonl` with the same
+  pool-refs→seeds collapse the runs use; an absent directory renders the arm as "unscored — video
+  only" with no placeholder numbers anywhere. Landed scored: `transition-eval/4.0.0`, corpus
+  `dc2e139a` — the same reference_v4 build the run columns use, read out of the scorer's
+  `results.json` rather than asserted — pool-% **41.7%** (Ⓐ) and **29.2%** (Ⓑ) against ic_gen 70.3%
+  / ctt_v2 72.9%, near_copy 0 at τ=0.858. Notes: `misc/refvfx_baseline/VIEWER_NOTES.md`.
+
+- **14:17** — **Repaired 25 dangling `/projects` symlinks under `outputs/` after the DeltaAI move.**
+  `outputs/videos/ladder2/ctt_v2__ck10000` and every shard of `outputs/eval/ctt_v2_compare` still
+  pointed at the Campus-Cluster path, which is not mounted on DeltaAI — the ctt_v2 column had no
+  videos and no scores, and `build_runs.py` could not run at all. Repointed to the `/taiga` twins
+  (same files). The only remaining dangling link is the already-archived `humanvid_sample`.
+
 - **11:28** — **New viewer: `iclora_runs` — every IC-LoRA training on one page, one chip per run.**
   `eval_ladder/viewer/build_runs.py` + `template_runs.html`, forked from the ladder2 results viewer
   (which is the published ladder2 record and is left untouched). ctt_v2 @ step 10,000 sits beside the

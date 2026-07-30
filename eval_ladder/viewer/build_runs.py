@@ -34,6 +34,7 @@ from __future__ import annotations
 import argparse
 import collections
 import json
+import os
 import statistics as st
 import sys
 from pathlib import Path
@@ -69,6 +70,48 @@ RUNS = [
 RUN_BY_ARM = {r["arm"]: r for r in RUNS}
 RUN_TIER = {r["arm"]: f"run_{r['id']}" for r in RUNS}
 
+# ------------------------------------------------------------------- external baseline arms
+#: PRIOR-WORK arms run over THIS page's grid. They are not IC-LoRA trainings, so — exactly like
+#: `specialist` and `copier` — they are CONTEXT tiers: they get a column and they enter the
+#: per-arm aggregate tables, but they never join the run chips, the paired Δ or the sign test.
+#: Adding the next external baseline is one entry here and nothing else.
+#:
+#: They join on `item_id`: these arms ran the ctt_v2 registry's own 152 rows at the same two
+#: seeds, so a manifest row names a registry row and the card follows from it. An external arm
+#: never creates a card — this page is about the trainings.
+#:
+#: THE ONE THING THEY NEED THAT OUR ARMS DO NOT. Every arm above shares the registry prompt; each
+#: of these carries its OWN prompt, per row, and the difference between the two is the reason both
+#: exist. So an external arm brings its manifest, and the page shows the prompt that produced the
+#: clip it is showing (`prompt`/`prompt_hi` on the generation, `alt_prompts` on the card).
+#:
+#: `scores` is a SLOT. It is scored separately, later; until that directory holds harness output
+#: the arm renders as "unscored — video only" and contributes no numbers anywhere. Nothing is
+#: estimated, borrowed from the other arm, or filled in.
+EXTERNAL = [
+    {"id": "refvfx_A", "score_id": "refvfx_v4",
+     "label": "Ⓐ refVFX · their prompt",
+     "sub": "external baseline · prompt describes the effect",
+     "src": LAB / "misc/refvfx_baseline/out",
+     "media": "outputs/videos/refvfx_baseline/refvfx_A",
+     "manifest": LAB / "misc/refvfx_baseline/manifest_all.jsonl",
+     "scores": LAB / "misc/refvfx_baseline/eval/scores/refvfx_A",
+     "prompt_kind": "refVFX's own convention — the prompt NAMES the effect the demo shows, so "
+                    "text and demo agree. Their model at its strongest; NOT text-matched to ours.",
+     "doc": "misc/refvfx_baseline/RECORD.md"},
+    {"id": "refvfx_B", "score_id": "refvfx_v4",
+     "label": "Ⓑ refVFX · our text budget",
+     "sub": "external baseline · no transition information in text",
+     "src": LAB / "misc/refvfx_baseline/out_ours",
+     "media": "outputs/videos/refvfx_baseline/refvfx_B",
+     "manifest": LAB / "misc/refvfx_baseline/manifest_ours.jsonl",
+     "scores": LAB / "misc/refvfx_baseline/eval/scores/refvfx_B",
+     "prompt_kind": "our arms' text budget, in their vocabulary — a class-agnostic effect clause "
+                    "in place of our `sksz`. Same weights, same seeds, same geometry as Ⓐ; the "
+                    "prompt is the only field that differs.",
+     "doc": "misc/refvfx_baseline/PROMPT_DESIGN_ours.md"},
+]
+
 # --------------------------------------------------------------------------- the score sets
 #: Ordered by preference. A generation takes its numbers from the FIRST set that scored it, and
 #: carries that set's id in `instr` so the page can badge it. `primary` is the comparison-valid
@@ -76,12 +119,12 @@ RUN_TIER = {r["arm"]: f"run_{r['id']}" for r in RUNS}
 #: cross-run comparison is meaningful at all.
 SCORE_SETS = [
     {"id": "rebuilt222", "primary": True,
-     "path": "outputs/eval/ctt_v2_compare",
+     "path": "outputs/eval/ctt_v2_compare", "corpus": "dc2e139a",
      "short": "rebuilt reference_v4 · 222-clip corpus dc2e139a",
      "label": "reference_v4 rebuilt on the pinned 222-clip corpus (dc2e139a); both adapters "
               "rescored together on eps, 2026-07-30"},
     {"id": "stale223", "primary": False,
-     "path": "outputs/eval/ladder2",
+     "path": "outputs/eval/ladder2", "corpus": "aa28c6d5",
      "short": "as-published ladder2 · 223-clip reference_v4",
      "label": "the as-published ladder2 scores, computed under the superseded 223-clip "
               "reference_v4 (aa28c6d5) before live_concert_2 was quarantined"},
@@ -150,11 +193,14 @@ CONTENT_LABEL = {"same": "same<br><span>test sample from reference's class</span
 #: its rows carry `endpoint: None` — it is a per-DONOR-CLASS floor (prompt with no anchors at all),
 #: not a per-card row, so it cannot join a (donor, endpoint, sided) card. It joined 0/139 and was
 #: dropped on the advisor's pre-stated condition. Its numbers live in the ladder2 results viewer.
+#: External baselines sit between the runs and the copier: they are the comparison of interest, so
+#: they read next to the trainings, and the copier stays the right-hand warning rail.
 CONTEXT_TIERS_BEFORE = ["specialist"]
-CONTEXT_TIERS_AFTER = ["copier"]
+CONTEXT_TIERS_AFTER = [a["id"] for a in EXTERNAL] + ["copier"]
 TIER_LABEL = {
     "specialist": ["② SPECIALIST", "transition baked into the weights"],
     "copier": ["⚠ BASE + DEMO", "NOT a baseline — it copies the demo"],
+    **{a["id"]: [a["label"].upper(), a["sub"]] for a in EXTERNAL},
 }
 #: tiers whose numbers come from the superseded artifact (no eps rescore exists)
 BADGED_TIERS = {"specialist"}
@@ -207,6 +253,181 @@ def video_paths(row: dict) -> dict[str, str]:
         if p.exists():
             out[str(s)] = rel(p)
     return out
+
+
+# --------------------------------------------------------------------------- external arms
+def ensure_external_media() -> None:
+    """Point outputs/videos/refvfx_baseline/<arm> at each arm's finished output directory.
+
+    The sources are finished experimental data that other work reads: they are never moved,
+    copied or written to. A symlink is enough — the page's paths are repo-root-relative and the
+    viewer's static server follows links — and rebuilding it here means a wiped `outputs/` costs
+    one rerun of this script, which is the repo's rule for anything under `outputs/`."""
+    for a in EXTERNAL:
+        src, link = a["src"], REPO_ROOT / a["media"]
+        if not src.is_dir():
+            raise SystemExit(f"external arm '{a['id']}': no video directory at {src}")
+        link.parent.mkdir(parents=True, exist_ok=True)
+        if link.is_symlink():
+            if os.readlink(link) == str(src):
+                continue
+            link.unlink()
+        elif link.exists():
+            raise SystemExit(f"external arm '{a['id']}': {a['media']} exists and is not a symlink")
+        link.symlink_to(src)
+        print(f"[media] {a['media']} -> {src}")
+
+
+def load_external_scores(path: Path, registry: dict, ceil: dict) -> tuple[dict, dict]:
+    """(item_id -> seed-averaged metrics, provenance) for one external arm; ({}, {}) if unscored.
+
+    Same shape and the same `rf.collapse` the runs use, so an external column means exactly what a
+    run column means. The harness writes `<dir>/*/items.jsonl` (a flat `items.jsonl` is accepted
+    too) with ids `<registry item_id>__s<seed>__ref_<pool clip>` — that is the whole contract; drop
+    a scored directory in and rerun this script. An absent directory returns nothing and the arm
+    renders as unscored: no placeholder, no borrowed number.
+
+    Rows that do not name a registry item (the harness scores control_lerp / control_hold twins
+    into the same file) fall out on the registry join, so no floor row is ever read as an arm's."""
+    if not path.is_dir():
+        return {}, {}
+    files = sorted(path.glob("*/items.jsonl")) + sorted(path.glob("items.jsonl"))
+    seen: set[str] = set()
+    per: dict[tuple[str, int], list[dict]] = collections.defaultdict(list)
+    for f in files:
+        for line in f.read_text().splitlines():
+            if not line.strip():
+                continue
+            r = json.loads(line)
+            if r["item_id"] in seen:
+                continue
+            seen.add(r["item_id"])
+            head, _, _ref = r["item_id"].rpartition("__ref_")
+            item, _, seed = head.rpartition("__s")
+            if not seed.isdigit():
+                continue
+            per[(item, int(seed))].append(r)
+    acc: dict[str, dict[str, list]] = {}
+    for (item, _seed), rows in per.items():
+        t = registry.get(item)
+        if t is None:
+            continue
+        d = acc.setdefault(item, collections.defaultdict(list))
+        c = rf.collapse(rows)
+        for k, v in c.items():
+            d[k].append(v)
+        cls = t["gt_pool_class"]
+        if cls in ceil and "app_ref" in c:
+            d["pct"].append(c["app_ref"] / ceil[cls])
+    # a column that carries numbers declares which artifact produced them — for an external arm
+    # that declaration comes out of the harness's own results.json, not out of this file
+    prov: dict = {}
+    rj = sorted(path.glob("*/results.json")) + sorted(path.glob("results.json"))
+    if rj:
+        p = json.loads(rj[0].read_text()).get("provenance", {})
+        prov = {"harness": p.get("harness"), "certified": bool(p.get("certified")),
+                "corpus": (p.get("corpus_sha256") or "")[:8],
+                "spec": (p.get("spec_sha256") or "")[:8],
+                "reasons": p.get("uncertified_reasons") or []}
+        prov["same_corpus_as_primary"] = prov["corpus"] == SCORE_SETS[0].get("corpus")
+    return {item: {m: rf.mean_or_nan(v) for m, v in d.items()} for item, d in acc.items()}, prov
+
+
+def diff_span(base: str, other: str) -> list[int]:
+    """[start, end) of the stretch of `other` that differs from `base`, snapped to word edges.
+
+    Both external arms differ from our rendered prompt in one clause, and from each other in the
+    same clause — so highlighting that stretch against ONE baseline (our prompt) puts Ⓐ's and Ⓑ's
+    difference in the same place on the page, which is what makes the contrast readable."""
+    if base == other:
+        return [0, 0]
+    n, i = min(len(base), len(other)), 0
+    while i < n and base[i] == other[i]:
+        i += 1
+    j = 0
+    while j < n - i and base[len(base) - 1 - j] == other[len(other) - 1 - j]:
+        j += 1
+    s, e = i, len(other) - j
+    while s > 0 and other[s - 1] not in " \n":
+        s -= 1
+    while e < len(other) and other[e] not in " \n":
+        e += 1
+    return [s, min(e, len(other))]
+
+
+def external_gen(a: dict, r: dict, per_seed: dict, m: dict | None, ceil: dict,
+                 our_prompt: str) -> dict:
+    """One external arm's answer to one registry row — same entry shape as a run's."""
+    vids = {}
+    for s in SEEDS:
+        row = per_seed.get(s)
+        if row and (REPO_ROOT / a["media"] / row["out_name"]).exists():
+            vids[str(s)] = f"{a['media']}/{row['out_name']}"
+    row = per_seed.get(SEEDS[0]) or next(iter(per_seed.values()))
+    m = m or {}
+    e = {
+        "id": r["item_id"], "arm": a["id"], "cell": r["cell"], "videos": vids,
+        "novelty": novelty_view(r), "content": r["content"], "donor": r["donor_class"],
+        "pct_type": r["pct_type"], "cond": "external", "ref": r.get("reference"),
+        "mismatched_ref": bool(r.get("mismatched_reference")),
+        "ceil": ceil.get(r["gt_pool_class"]), "tier": a["id"],
+        "scored": bool(m), "instr": a["score_id"] if m else None, "stat": False,
+        # their contract, stated rather than drawn as our prefix/suffix bar: a single anchor
+        # FRAME (plus a last frame on two-sided rows) and their native 33f, duration-matched
+        "cond_note": ("1st+last frame" if row.get("end_image") else "1st frame")
+                     + f" + demo → {row.get('num_frames', '?')}f",
+        "prompt": row["prompt"], "prompt_hi": diff_span(our_prompt, row["prompt"]),
+    }
+    e["m"] = {k: (None if m.get(k) is None or m.get(k) != m.get(k) else round(m[k], 6))
+              for k, _l, _d, _dp, _g in METRICS}
+    e["f"] = {k: (None if m.get(k) is None or m.get(k) != m.get(k) else round(m[k], 4))
+              for k, _l in FLAGS}
+    e["pct"] = (None if m.get("pct") is None or m.get("pct") != m.get("pct")
+                else round(m["pct"], 6))
+    if e["ref"]:
+        e["ref_class"] = prompts.clip_class(e["ref"])
+        e["ref_video"] = clip_video(e["ref"])
+    return e
+
+
+def attach_external(cards: dict, registry: dict, ceil: dict) -> list[dict]:
+    """Hang every external arm's clips on the cards the runs already built, and collect each
+    card's per-arm prompts so the page can show them side by side with ours."""
+    stats = []
+    for a in EXTERNAL:
+        by_item: dict[str, dict[int, dict]] = {}
+        for line in a["manifest"].read_text().splitlines():
+            if line.strip():
+                row = json.loads(line)
+                by_item.setdefault(row["item_id"], {})[int(row["seed"])] = row
+        metrics, prov = load_external_scores(a["scores"], registry, ceil)
+        joined = vids = scored = off_grid = 0
+        for item, per_seed in sorted(by_item.items()):
+            r = registry.get(item)
+            if r is None:
+                off_grid += 1
+                continue
+            card = cards.get(f"{r['donor_class']}|{r['endpoint']}|{r['sided']}")
+            if card is None:                      # a row of the grid no run answers — not a card
+                continue
+            g = external_gen(a, r, per_seed, metrics.get(item), ceil, card["prompt"])
+            card["slots"][a["id"]].append(g)
+            # the prompt belongs to (arm, reference): two rows can share a card with different
+            # demos, and arm Ⓐ's prompt is written from the demo, so it differs between them
+            card.setdefault("alt_prompts", []).append(
+                {"tier": a["id"], "label": a["label"], "kind": a["prompt_kind"],
+                 "ref": r.get("reference"), "text": g["prompt"], "hi": g["prompt_hi"]})
+            joined += 1
+            vids += len(g["videos"])
+            scored += bool(g["scored"])
+        stats.append({"id": a["id"], "label": a["label"], "sub": a["sub"],
+                      "score_id": a["score_id"], "prov": prov,
+                      "prompt_kind": a["prompt_kind"], "doc": a["doc"],
+                      "media": a["media"], "manifest": str(a["manifest"].relative_to(LAB)),
+                      "scores_slot": str(a["scores"].relative_to(LAB)),
+                      "rows": len(by_item), "gens": joined, "videos": vids, "scored": scored,
+                      "off_grid": off_grid})
+    return stats
 
 
 # ------------------------------------------------------------------------------- score loading
@@ -360,6 +581,7 @@ def instrument_delta(registry: dict) -> dict:
 
 # ------------------------------------------------------------------------------------- build
 def build() -> dict:
+    ensure_external_media()
     run_eval.EXTRA_REGISTRY = None
     extras = [r["registry"] for r in RUNS if r["registry"]]
     if extras:
@@ -438,10 +660,14 @@ def build() -> dict:
     run_tiers = [RUN_TIER[r["arm"]] for r in RUNS]
     cards = {k: c for k, c in cards.items() if any(c["slots"][t] for t in run_tiers)}
 
+    # the external baselines hang on the cards that already exist; they never make one
+    ext = attach_external(cards, registry, ceil)
+    ext_tiers = [a["id"] for a in EXTERNAL]
+
     # INPUTS band owns every input; output boxes only INDICATE what they received
     for card in cards.values():
         refs: dict[str, dict] = {}
-        for slot in run_tiers + ["copier"]:
+        for slot in run_tiers + ext_tiers + ["copier"]:
             for g in card["slots"][slot]:
                 if not g.get("ref"):
                     continue
@@ -451,6 +677,12 @@ def build() -> dict:
                 if slot not in e["tiers"]:
                     e["tiers"].append(slot)
         card["refs"] = sorted(refs.values(), key=lambda e: e["clip"])
+        # per-arm prompts, deduped on (arm, text): two registry rows can share a card, and arm Ⓐ's
+        # prompt is written from the demo, so those two rows do not always agree
+        seen_p: set[tuple] = set()
+        card["alt_prompts"] = [p for p in card.get("alt_prompts", [])
+                               if not (p["tier"], p["text"]) in seen_p
+                               and not seen_p.add((p["tier"], p["text"]))]
 
     # per-card head-to-head: the LAST run minus the FIRST, in pool-% points
     a_t, b_t = run_tiers[0], run_tiers[-1]
@@ -502,6 +734,16 @@ def build() -> dict:
             "tiers": all_tiers, "run_tiers": run_tiers,
             "context_before": CONTEXT_TIERS_BEFORE, "context_after": CONTEXT_TIERS_AFTER,
             "spec_cards": n_spec,
+            "external": ext, "external_tiers": ext_tiers,
+            "external_note":
+                "Two external arms, one prior-work model (refVFX, arXiv:2601.07833, unofficial CMU "
+                "reimplementation), over this page's own 152 rows at the same two seeds. They share "
+                "every weight, input, hyper-parameter and seed and differ in exactly one manifest "
+                "field — the PROMPT — so Ⓐ vs Ⓑ isolates what the text budget is worth to them. "
+                "They are context, not runs: they never enter the run chips, the paired Δ or the "
+                "sign test. Their geometry is their own (a first-frame anchor, 33f, "
+                "duration-matched to our 121f@24fps), so the prefix/suffix bar is replaced by a "
+                "statement of their contract rather than redrawn as if it were ours.",
             "record": "misc/ctt_v2_training/RUN_RECORD.md §19",
             "absent_tiers": [
                 ["prompt + endpoint baseline",
@@ -589,6 +831,8 @@ def check(data: dict) -> None:
         gs = [g for c in cards for g in c["slots"][t]]
         nc = sum(1 for c in cards if c["slots"][t])
         badge = "  ← badged (stale223)" if t in m["badged_tiers"] else ""
+        if t in m["external_tiers"]:
+            badge = "  ← external baseline"
         print(f"   {t:10s} {len(gs):6d} {nc:7d} {sum(1 for g in gs if g['scored']):7d} "
               f"{sum(1 for g in gs if g['stat']):9d}{badge}")
         # the owner asked to SEE the specialists; an empty specialist join is the failure that
@@ -597,6 +841,26 @@ def check(data: dict) -> None:
             bad.append("specialist tier joined ZERO cards — the owner asked to see these")
     if not cards:
         bad.append("ZERO cards")
+    # An external arm with no clips looks exactly like a working page, so say it out loud. Being
+    # UNSCORED is not a failure — the scoring runs separately and lands later.
+    print("\n[external] prior-work arms — videos now, numbers when the scoring lands")
+    for a in m["external"]:
+        p = a.get("prov") or {}
+        state = (f"scored {a['scored']}/{a['gens']} · {p.get('harness')} · corpus {p.get('corpus')}"
+                 f"{' (same as the runs)' if p.get('same_corpus_as_primary') else ' ⚠ DIFFERENT CORPUS'}"
+                 f"{'' if p.get('certified') else ' · uncertified run'}" if a["scored"]
+                 else f"UNSCORED — drop harness output in $LAB/{a['scores_slot']}/ and rebuild")
+        print(f"   {a['id']:10s} {a['gens']:4d} gens · {a['videos']:4d} videos · "
+              f"{a['rows']} manifest rows · {state}")
+        if a["scored"] and a["scored"] != a["gens"]:
+            print(f"              ⚠ {a['gens'] - a['scored']} of {a['gens']} rows have no score")
+        if not a["gens"]:
+            bad.append(f"external '{a['id']}' joined ZERO cards — check item_id against the registry")
+        if a["videos"] != a["gens"] * len(SEEDS):
+            bad.append(f"external '{a['id']}': {a['gens'] * len(SEEDS) - a['videos']} of "
+                       f"{a['gens'] * len(SEEDS)} mp4 are missing on disk")
+        if a["off_grid"]:
+            bad.append(f"external '{a['id']}': {a['off_grid']} manifest rows are not in the registry")
     # every column that carries numbers must declare which artifact produced them, or a future run
     # silently inherits 'eps' without saying so
     undeclared = {g["arm"] for c in cards for s in c["slots"].values() for g in s
@@ -635,7 +899,8 @@ def main() -> None:
     emit(data, out)
     m = data["meta"]
     print(f"\n[viewer] {m['cards']} cards · {m['generations']} videos · "
-          f"{len(data['runs'])} runs -> {args.out} ({out.stat().st_size / 1e6:.1f} MB)")
+          f"{len(data['runs'])} runs + {len(m['external'])} external arms "
+          f"-> {args.out} ({out.stat().st_size / 1e6:.1f} MB)")
     print(f"[viewer] serve:  python3 scripts/viewers/viewerctl.py serve   (port 8017)")
 
 

@@ -198,7 +198,7 @@
     {
       "slug": "iclora_runs",
       "title": "IC-LoRA trainings — results",
-      "blurb": "Every IC-LoRA training on one page, with a chip per run. ctt_v2 @ step 10,000 vs the ladder2 IC-LoRA generalist on 139 identical inputs, both rescored under the rebuilt 222-clip reference_v4, with the specialist and copier tiers alongside.",
+      "blurb": "Every IC-LoRA training on one page, with a chip per run. ctt_v2 @ step 10,000 vs the ladder2 IC-LoRA generalist on 139 identical inputs, both rescored under the rebuilt 222-clip reference_v4, with the specialist and copier tiers alongside — plus the two external refVFX baseline arms (Ⓐ their prompt convention, Ⓑ our text budget) over the same grid, videos live and scores pending.",
       "group": "eval",
       "featured": true,
       "latest_of": "iclora trainings",
@@ -231,8 +231,11 @@
       "check_files": [
         "outputs/videos/ladder2/ctt_v2__ck10000",
         "outputs/videos/ladder2/ic_gen",
-        "outputs/eval/ctt_v2_compare"
-      ]
+        "outputs/eval/ctt_v2_compare",
+        "outputs/videos/refvfx_baseline/refvfx_A",
+        "outputs/videos/refvfx_baseline/refvfx_B"
+      ],
+      "_media": "The two refvfx_baseline paths are symlinks into $LAB/misc/refvfx_baseline/{out,out_ours} — finished experimental data that is never moved or copied. build_runs.py recreates them on every run, so a wiped outputs/ costs one rerun. Scores for those arms land in $LAB/misc/refvfx_baseline/eval/<arm>/ and are picked up by the next rebuild."
     },
     {
       "slug": "ladder_v3_pairs",
