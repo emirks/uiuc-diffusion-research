@@ -260,19 +260,31 @@ def load_all_scores() -> tuple[dict, dict]:
 
 
 #: the two degenerate references every transition must beat, as scored pseudo-arms
-FLOORS = {"control_lerp": ("crossfade", "a linear dissolve between the endpoints"),
+FLOORS = {"control_lerp": ("crossfade", "a linear dissolve between this card's own endpoints"),
           "control_hold": ("freeze", "hold the first frame — no motion at all")}
+#: shown under the floor line so nobody equates these with POOL_YARDSTICK's headline
+FLOOR_NOTE = ("Recomputed from this campaign's own ladder2 control rows, where each control is "
+              "built from the card's own endpoints. Not comparable to POOL_YARDSTICK's 48% / 22%, "
+              "which are exp_072's separately-constructed control arms (that lane re-aggregates "
+              "to 43.6% / 18.9%). Roster is not the difference — the lane is. See RUN_RECORD §20.")
 
 
 def control_floors(registry: dict) -> dict:
-    """Recompute the crossfade / freeze floors FROM THIS PAGE'S OWN SCORE SET AND ROSTER.
+    """Recompute the crossfade / freeze floors FROM THIS PAGE'S OWN LANE.
 
-    POOL_YARDSTICK.md's headline 48% / 22% are not quoted: they were computed over a different
-    roster, and roster composition moves this number more than any effect on this page does (the
-    G-* roster is far heavier on cross/foreign cells, which are the hard ones). A control is
-    derived from the INPUT clips, so the same control content is scored once against a treatment
-    row and again against its base twin — deduped here on (kind, item, seed) via the accumulator
-    key, and `base:`-prefixed cells are dropped so a floor is never counted twice."""
+    POOL_YARDSTICK.md's headline 48% / 22% are NOT quoted, and the reason is stronger than a
+    roster difference — it is a DIFFERENT LANE. Those figures come from exp_072
+    (outputs/eval/exp_072_pool_v4/), which builds its own control_lerp/control_hold arms over its
+    own pairing; re-aggregating that lane reproduces them (43.6% / 18.9%). ladder2's control_lerp
+    is instead constructed per-card from that card's own endpoints, and gives 30.3% / 17.5% here.
+    Both are correct for their own lane; they are different quantities and must never be quoted
+    against each other. Checked before concluding: roster does NOT explain the gap — the same eps
+    control rows on the SP-* roster give 31.7% / 21.3%, and no roster × score-set combination
+    reaches 48% (max 32.6%). See RUN_RECORD.md §20.
+
+    A control is derived from the INPUT clips, so the same control content is scored once against a
+    treatment row and again against its base twin — deduped here on (kind, item, seed) via the
+    accumulator key, with `base:`-prefixed cells dropped so a floor is never counted twice."""
     ceil = run_eval.ceilings()
     path = (REPO_ROOT / SCORE_SETS[0]["path"]).resolve()      # floors are primary-instrument only
     acc: dict[str, dict[tuple, list]] = {k: {} for k in FLOORS}
@@ -474,7 +486,7 @@ def build() -> dict:
             "score_sets": SCORE_SETS,
             "primary_set": SCORE_SETS[0]["id"],
             "instrument_delta": idelta,
-            "floors": floors,
+            "floors": floors, "floor_note": FLOOR_NOTE,
             "badged_tiers": sorted(BADGED_TIERS),
             "no_baseline_note":
                 "No same-instrument, same-roster prompt+endpoint baseline exists for this roster. "

@@ -408,7 +408,7 @@ function floorLines(cells){
     const n = per.length ? per.reduce((s,x)=>s+x.n,0) : f.n;
     return `<b>${f.label} floor</b> ${v.toFixed(1)}% <span class="mut">(${f.blurb}; n=${n}${
       per.length?`, over the selected cells`:`, global — no per-cell value at n≥8`})</span>`;
-  }).join(" &nbsp;·&nbsp; ") + `</div>`;
+  }).join(" &nbsp;·&nbsp; ") + `<div style="margin-top:4px">${D.meta.floor_note}</div></div>`;
 }
 
 // Every column that carries numbers declares which artifact produced them. A stale-scored arm is

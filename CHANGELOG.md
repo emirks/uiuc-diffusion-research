@@ -18,8 +18,12 @@
   `base_cond` were never scored under either artifact and the two candidate substitutes are different
   rosters that disagree by ~19pp, more than the effect itself; the gap is stated on the page instead
   of being papered over. Crossfade/freeze floors are recomputed from this roster's own eps control
-  rows (**30.3% / 17.5%**, vs POOL_YARDSTICK's 48%/22% headline — a roster-composition difference,
-  this roster being far heavier on the hard cross/foreign cells).
+  rows (**30.3% / 17.5%**, vs POOL_YARDSTICK's 48%/22%). Those two numbers are **different lanes, not a
+  roster difference**: the doc's figures come from exp_072's separately-constructed control arms,
+  which re-aggregate to 43.6%/18.9%; roster was tested and ruled out (no roster x score-set
+  combination exceeds 32.6%). Both are correct for their own lane and must never be quoted against
+  each other — see `RUN_RECORD.md` §20, which also appends a dated correction to the ic_gen
+  comparison column reported earlier (G-zs-same is **-15.9pp, not -11.9pp**, on n=8).
 - **09:05** — **`run_gen.py` no longer hardcodes `LAB`.** `MODEL`/`GEMMA` were derived from a
   hardcoded campus-cluster path, so on any other machine they resolved to files that do not exist and
   generation died at model load. `LAB` now reads the environment (default unchanged, so CC behaviour
