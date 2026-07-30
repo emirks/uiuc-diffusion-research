@@ -1,5 +1,41 @@
 ## 2026-07-30
 
+- **15:44** — **`iclora_runs`: all four scored arms on ONE machine, a fifth arm (`ctt_v2_leaky`),
+  and every arm now toggleable.** Three changes to `eval_ladder/viewer/build_runs.py` +
+  `template_runs.html`, no restructuring.
+  (1) **Single machine.** A new primary `SCORE_SETS` entry `dai222` points the run columns at the
+  DeltaAI re-score (`$LAB/misc/refvfx_baseline/eval/scores/{ic_gen,ctt_v2}`), so `ic_gen`,
+  `ctt_v2`, `ctt_v2_leaky`, `refvfx_A` and `refvfx_B` are all aarch64 / torch 2.10.0+cu129 /
+  corpus `dc2e139a`. `rebuilt222` (eps) still supplies the copier and `stale223` still supplies the
+  never-rescored specialists, so their badge stays and the machine note narrows rather than
+  disappears. Two consequences handled deliberately: `instrument_delta()` is now pinned **by id**
+  (`IDELTA_PAIR = ("stale223","rebuilt222")`) so inserting a primary set cannot silently turn a
+  cross-*build* number into a cross-*machine* one; and the control floors, which follow
+  `SCORE_SETS[0]`, moved **crossfade 30.33% → 30.13%** and **freeze 17.46% → 17.45%** on identical
+  n (160 / 448) — the machine term, not a roster change.
+  (2) **New arm `ctt_v2_leaky`** (⑥): our own ctt_v2 adapter re-run with prompts that also describe
+  the transition, 304 clips at 121f/24fps, joined to the same 139 cards. It is a context tier, and
+  because it has **no base twin by design** it contributes a *level, never a margin* — enforced
+  structurally (never a run tier, so it cannot reach the per-card Δ, the Δpp column or the sign
+  test) and marked with a new `‡` caveat that works like the existing `†`: on the chip, the column
+  header, every arm cell, every clip and a footnote under each table. `WINDOW_CAVEAT` now derives
+  its arms from a declared `frames`, so ⑥ correctly escapes refVFX's 33-frame `†`.
+  (3) **Every arm toggles**, owner request — the same `tiers` Set the trainings already used,
+  extended from `run_tiers` to `arm_tiers` and driven by one data list (`meta.arm_chips`). Any
+  subset shows side by side; `② specialist` and `⚠ copier` stay as the yardstick. Toggling controls
+  visibility only: the Δpp/sign-test columns remain trainings-only, the per-card Δ badge is
+  suppressed unless both trainings are visible, and `†`/`‡`/`stale223` hold regardless.
+  Also folded in: **pool-% is split by `pct_type`, never blended** (%_same 83.1 / 82.5 / 91.3 /
+  42.4 / 33.0 · %_proxy ranking-only 62.0 / 66.7 / 86.4 / 41.3 / 26.7 for ic_gen / ctt_v2 / leaky /
+  refvfx_A / refvfx_B), and **both `item_id` join traps are now asserted at build time** — measured:
+  `ic_gen`'s ids embed its arm so a raw join returns zero rows, while `ctt_v2`, `ctt_v2_leaky`,
+  `refvfx_A` and `refvfx_B` share **1,842 of 1,842 ids** so a raw join silently merges. New
+  `assert_arms()` checks the harness `arm` stamp at every read, the multi-path merge refuses
+  duplicate eval ids instead of concatenating them, and `check()` prints an `[ids]` block asserting
+  `(arm, item_id)` uniqueness plus zero shared clips / metric vectors between colliding arms. All
+  three seatbelts negative-tested. `docs/VIEWERS.md` gained the generalised rules;
+  `misc/refvfx_baseline/VIEWER_NOTES.md` has the full write-up.
+
 - **14:27** — **`iclora_runs`: the page now states which MACHINE scored each column, and marks the
   two metrics that are not comparable across clip lengths.** Both were correctness gaps in what the
   page *claimed*, not in the wiring. (1) The run columns and the external refVFX columns share an

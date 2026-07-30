@@ -198,7 +198,7 @@
     {
       "slug": "iclora_runs",
       "title": "IC-LoRA trainings — results",
-      "blurb": "Every IC-LoRA training on one page, with a chip per run. ctt_v2 @ step 10,000 vs the ladder2 IC-LoRA generalist on 139 identical inputs, both rescored under the rebuilt 222-clip reference_v4, with the specialist and copier tiers alongside — plus the two external refVFX baseline arms (Ⓐ their prompt convention, Ⓑ our text budget) over the same grid, videos live and scores pending.",
+      "blurb": "Five arms on one page, every one toggleable, so any subset reads side by side: ④ the ladder2 IC-LoRA generalist · ⑤ ctt_v2 @ step 10,000 · ⑥ ctt_v2 re-run with a leaky prompt that also describes the transition (no base twin — a level, never a margin) · Ⓐ/Ⓑ the two external refVFX baseline arms, over 139 identical inputs, with the specialist and copier tiers as the yardstick. All four scored arms now come off ONE machine (DeltaAI, reference_v4 on corpus dc2e139a); only the never-rescored specialists still carry the stale223 badge.",
       "group": "eval",
       "featured": true,
       "latest_of": "iclora trainings",
@@ -232,10 +232,11 @@
         "outputs/videos/ladder2/ctt_v2__ck10000",
         "outputs/videos/ladder2/ic_gen",
         "outputs/eval/ctt_v2_compare",
+        "outputs/videos/ctt_v2_leaky/clips",
         "outputs/videos/refvfx_baseline/refvfx_A",
         "outputs/videos/refvfx_baseline/refvfx_B"
       ],
-      "_media": "The two refvfx_baseline paths are symlinks into $LAB/misc/refvfx_baseline/{out,out_ours} — finished experimental data that is never moved or copied. build_runs.py recreates them on every run, so a wiped outputs/ costs one rerun. Scores for those arms land in $LAB/misc/refvfx_baseline/eval/<arm>/ and are picked up by the next rebuild."
+      "_media": "The refvfx_baseline and ctt_v2_leaky paths are symlinks into $LAB/misc/refvfx_baseline/{out,out_ours} and $LAB/misc/ctt_v2_leaky/videos/ctt_v2_leaky — finished experimental data that is never moved or copied. build_runs.py :: ensure_external_media() recreates them on every run, so a wiped outputs/ costs one rerun. Scores for those arms land in $LAB/misc/refvfx_baseline/eval/scores/<arm>/ and are picked up by the next rebuild with no viewer edit."
     },
     {
       "slug": "ladder_v3_pairs",

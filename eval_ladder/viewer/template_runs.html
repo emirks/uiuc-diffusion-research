@@ -131,11 +131,17 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
 .cellbox.out.runtier.r3 h4{color:#f0a5e0}
 .cellbox.out.copier{background:#21131400;border:1px dashed #5c2426;opacity:.7}
 .cellbox.out.copier h4{color:#e79aa0}
-/* external prior-work arms: one hue, two shades — same model, different prompt */
+/* arms that carry their own prompt. Tinted BY TIER ID, not by position, so inserting an arm never
+   silently repaints the others. Prior-work: one hue, two shades — same model, different prompt.
+   Ours: kept in the ctt_v2 run's blue-green family, because it IS the ctt_v2 adapter. */
 .cellbox.out.ext{background:#1b1710;border-color:#5a4a22}
 .cellbox.out.ext h4{color:#e8d49a}
-.cellbox.out.ext.x1{background:#161811;border-color:#47552a}
-.cellbox.out.ext.x1 h4{color:#cfe0a0}
+.cellbox.out.refvfx_B{background:#161811;border-color:#47552a}
+.cellbox.out.refvfx_B h4{color:#cfe0a0}
+.cellbox.out.ctt_v2_leaky{background:#0d2420;border-color:#1f6152}
+.cellbox.out.ctt_v2_leaky h4{color:#8fe3c8}
+.cellbox.in.alt.ctt_v2_leaky{background:#101f1c;border-color:#1f5348}
+.cellbox.in.alt.ctt_v2_leaky h4{color:#8fe3c8}
 .demo{margin-top:2px;border-top:1px solid var(--edge);padding-top:4px}
 .demo .dl{display:block;color:var(--ref);font-size:9px;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
 .demo video{aspect-ratio:3/4;width:100%;border-radius:4px}
@@ -217,8 +223,10 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
 .dbadge.neg{color:var(--bad);border-color:#5c2426;background:#210f11}
 .dbadge.nil{color:var(--dim);border-color:var(--edge2);background:#15181d}
 .floorline{font-size:11px;color:var(--dim2);padding:6px 2px 0}
-/* † — this cell's bar is an absolute frame count, so it is not comparable across clip lengths */
+/* † — this cell's bar is an absolute frame count, so it is not comparable across clip lengths.
+   ‡ — this arm has no base twin: the number is a level and is never differenced. */
 .wc{color:var(--warn);font-weight:700;margin-left:2px;cursor:help}
+.tc{color:#8fe3c8;font-weight:700;margin-left:2px;cursor:help}
 .gap{margin-top:8px;padding:7px 10px;border:1px dashed var(--edge2);border-radius:6px;
   font-size:12px;color:var(--dim);background:#121519}
 </style>
@@ -243,7 +251,7 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
   <div class="mxbar">
     <button class="btn" onclick="selAll(1)">select all</button>
     <button class="btn" onclick="selAll(0)">clear</button>
-    <span class="lbl" style="margin-left:8px">trainings</span>
+    <span class="lbl" style="margin-left:8px">arms</span>
     <span class="seg" id="tiers"></span>
     <span class="lbl" style="margin-left:8px">seed</span>
     <span class="seg" id="seeds"></span>
@@ -273,10 +281,14 @@ let shown = PAGE;
 
 // ---------------------------------------------------------------- selection state
 const sel = new Set();                       // "novelty|content"
-// Run chips are MULTI-select and every run starts ON, so the default view IS the comparison —
-// there is no separate "compare mode" to discover.
+// Arm chips are MULTI-select and EVERY arm starts ON, so the default view IS the comparison —
+// there is no separate "compare mode" to discover. Owner request 2026-07-30: every arm toggles the
+// same way, not just the trainings, so any subset can be put side by side. The chip controls
+// VISIBILITY only — which arms may enter the paired Δ (runs only), the † absolute-frame caveat and
+// the ‡ no-base-twin caveat are properties of the arm and hold whether or not it is shown.
 const RUN_TIERS = D.meta.run_tiers;
-let tiers = new Set(RUN_TIERS);
+const ARM_TIERS = D.meta.arm_tiers;          // every toggleable column, in page order
+let tiers = new Set(ARM_TIERS);
 let seed = String(D.meta.seeds[0]);
 let donor = "";
 
@@ -323,16 +335,19 @@ function selAll(on){
 }
 
 // ---------------------------------------------------------------- filtering
-const TIERS = D.meta.tiers;                                   // context + one per run, in order
-const flat  = card => TIERS.flatMap(t => card.slots[t]||[]);            // every gen in a card
-// "treatments" are the RUNS. Specialists are context here: they are a different instrument's
-// numbers and they exist on only 39 of 139 cards, so they cannot drive card selection.
-const treatmentsOf = card => RUN_TIERS.flatMap(t => card.slots[t]||[]);
+const TIERS = D.meta.tiers;                                   // context + one per arm, in order
+// The columns actually on screen: an arm column only when its chip is on; specialist and copier
+// are the invariant yardstick this page brackets everything with and are always drawn.
+const visTiers = () => TIERS.filter(t => !ARM_TIERS.includes(t) || tiers.has(t));
+const flat  = card => visTiers().flatMap(t => card.slots[t]||[]);   // every VISIBLE gen in a card
+// The arms drive card selection. Specialists do not: they are a different instrument's numbers and
+// exist on only 39 of 139 cards, so they cannot decide which cards a selection contains.
+const armsOf = card => ARM_TIERS.flatMap(t => card.slots[t]||[]);
 
-/** A card matches the selection if one of the ENABLED RUNS answers it in a selected ontology
+/** A card matches the selection if one of the ENABLED ARMS answers it in a selected ontology
  *  cell, for (if set) the chosen donor. */
 function cardMatches(card){
-  const t = treatmentsOf(card).filter(g =>
+  const t = armsOf(card).filter(g =>
     tiers.has(g.tier) &&
     (!sel.size || sel.has(keyOf(g.novelty,g.content))) &&
     (!donor || g.donor===donor));
@@ -343,31 +358,34 @@ function selectedCards(){
   for(const card of D.cards){ const hit = cardMatches(card); if(hit) out.push({card, hit}); }
   return out;
 }
-function selectedGens(){ return selectedCards().flatMap(e => e.hit); }   // matching treatments
+function selectedGens(){ return selectedCards().flatMap(e => e.hit); }   // matching arm gens
 function shownGens(){ return selectedCards().flatMap(e => flat(e.card)); } // + baselines/copier
 
 // ---------------------------------------------------------------- statistics
-/** THE HEAD-TO-HEAD. Per cell, one pool-% column per enabled run plus the paired Δ between the
- *  first and last enabled run. Δ is paired PER CARD — both runs answer the identical input, which
- *  is the whole reason this page can put them in one row — and the sign test's unit is the donor
- *  class, matching run_eval.report(). There is no baseline column: see the gap note below. */
+/** THE HEAD-TO-HEAD. Per cell, one pool-% LEVEL column per enabled arm, plus the paired Δ between
+ *  the first and last enabled TRAINING. Δ is paired PER CARD — both runs answer the identical
+ *  input, which is the whole reason this page can put them in one row — and the sign test's unit
+ *  is the donor class, matching run_eval.report(). Only the trainings are ever differenced: an arm
+ *  with its own prompt answers a different input, and ⑥ has no base twin at all (‡), so those
+ *  columns are levels and nothing more. There is no baseline column: see the gap note below. */
 function runCellStats(entries){
-  const on = TIERS.filter(t => RUN_TIERS.includes(t) && tiers.has(t));
+  const on   = visTiers().filter(t => ARM_TIERS.includes(t));     // level columns, page order
+  const runs = on.filter(t => RUN_TIERS.includes(t));             // Δ / sign test: trainings only
   const by = {};
   for(const {card} of entries){
     for(const t of on) for(const g of card.slots[t]||[]){
       const e = (by[g.cell] = by[g.cell] || {type:g.pct_type, per:{}, pairs:[]});
       (e.per[t] = e.per[t] || []).push(g);
     }
-    if(on.length>1){
-      const a = (card.slots[on[0]]||[])[0], b = (card.slots[on[on.length-1]]||[])[0];
+    if(runs.length>1){
+      const a = (card.slots[runs[0]]||[])[0], b = (card.slots[runs[runs.length-1]]||[])[0];
       if(a && b && a.pct!=null && b.pct!=null){
         const e = (by[a.cell] = by[a.cell] || {type:a.pct_type, per:{}, pairs:[]});
         e.pairs.push({donor:a.donor, d:(b.pct-a.pct)*100});
       }
     }
   }
-  return {on, rows: Object.entries(by).map(([cell,e])=>{
+  return {on, runs, rows: Object.entries(by).map(([cell,e])=>{
     const perDonor = {};
     for(const p of e.pairs) (perDonor[p.donor] = perDonor[p.donor]||[]).push(p.d);
     const dn = Object.keys(perDonor).length;
@@ -380,21 +398,22 @@ function runCellStats(entries){
 }
 
 function headlineTable(entries){
-  const {on, rows} = runCellStats(entries);
+  const {on, runs, rows} = runCellStats(entries);
   if(!rows.length) return "<div class='empty'>nothing selected</div>";
-  rows.sort((a,b)=>(b.lv[on[0]]==null?-Infinity:b.lv[on[0]]) - (a.lv[on[0]]==null?-Infinity:a.lv[on[0]]));
-  const lbl = t => (D.runs.find(r=>r.tier===t)||{}).label || t;
-  const two = on.length>1;
+  const sk = on[0];
+  rows.sort((a,b)=>(b.lv[sk]==null?-Infinity:b.lv[sk]) - (a.lv[sk]==null?-Infinity:a.lv[sk]));
+  const two = runs.length>1;
   let h = `<div class="tw"><table class="d"><thead><tr>
     <th class="l">cell</th><th>%type</th>` +
-    on.map(t=>`<th>${lbl(t)}<br><span class="mut" style="font-size:9px">pool-% · n</span></th>`).join("") +
-    (two?`<th>Δpp<br><span class="mut" style="font-size:9px">${lbl(on[on.length-1])} − ${lbl(on[0])}</span></th>
+    on.map(t=>`<th>${armLabel(t)}${tcMark(t)}<br><span class="mut" style="font-size:9px">${
+      RUN_TIERS.includes(t)?"pool-%":"pool-% · level only"} · n</span></th>`).join("") +
+    (two?`<th>Δpp<br><span class="mut" style="font-size:9px">${armLabel(runs[runs.length-1])} − ${armLabel(runs[0])}</span></th>
           <th>donors +</th><th class="l">paired sign test</th>`:``) +
     `</tr></thead><tbody>`;
   for(const r of rows){
     const show = v => v==null?"—":(r.type==="same"?pct(v):"("+pct(v)+")");
     h += `<tr><td class="l">${r.cell}</td><td class="num mut">${r.type}</td>` +
-      on.map(t=>`<td class="num"><b>${show(r.lv[t])}</b> <span class="mut">· ${r.n[t]}</span></td>`).join("");
+      on.map(t=>`<td class="num"><b>${show(r.lv[t])}</b> <span class="mut">· ${r.n[t]||0}</span></td>`).join("");
     if(two) h += `<td class="num ${r.d==null?"":(r.d>0?"pos":"neg")}"><b>${r.d==null?"—":(r.d>0?"+":"")+r.d.toFixed(1)}</b></td>
       <td class="num">${r.dn?r.pos+"/"+r.dn:"—"}</td>
       <td class="l">${r.dn===0?`<span class="tag floor">unpaired</span>`
@@ -404,9 +423,13 @@ function headlineTable(entries){
   }
   h += "</tbody></table></div>";
   h += `<div class="note"><b>%_same</b> is cross-class comparable; <b>(%_proxy)</b> is
-    content-capped — for those cells the Δ, not the level, is the claim. Δ is paired per card (both
-    runs answer the identical input); the sign test's unit is the donor class, consistent at ≥80%
-    positive.</div>`;
+    content-capped — for those cells the Δ, not the level, is the claim. ${two
+      ? `Δ is paired per card between the <b>trainings only</b> (both answer the identical input);
+         the sign test's unit is the donor class, consistent at ≥80% positive.`
+      : `<b>No Δ column</b> — fewer than two trainings are enabled, and Δ is only ever drawn
+         between trainings.`} Every other column is a <b>level</b>: an arm with its own prompt
+    answers a different input, so it is never differenced here.</div>`;
+  h += tcFoot(on);
   h += floorLines(rows.map(r=>r.cell));
   h += machineNote();
   h += `<div class="gap"><b>No baseline column, and that is deliberate.</b> ${D.meta.no_baseline_note}</div>`;
@@ -418,10 +441,14 @@ function headlineTable(entries){
 function machineNote(){
   const M = D.meta.machines || [];
   if(M.length < 2) return "";
-  return `<div class="gap"><b>Scored on ${M.length} different machines.</b> ` +
-    M.map(m=>`<span class="mono">${m.arch} · torch ${m.torch} · py ${m.python}</span> →
+  const prim = M.filter(m=>m.primary), rest = M.filter(m=>!m.primary);
+  return `<div class="gap"><b>Which box scored what.</b>
+    <b class="pos">The comparison this table is for is single-machine</b> — ` +
+    prim.map(m=>`<span class="mono">${m.arch} · torch ${m.torch}</span> → ${m.cols.join(", ")}`).join("; ") +
+    `. The remaining context columns were not rescored and still come off other boxes: ` +
+    rest.map(m=>`<span class="mono">${m.arch} · torch ${m.torch} · py ${m.python}</span> →
               ${m.cols.join(", ")}`).join(" &nbsp;·&nbsp; ") +
-    `<div style="margin-top:5px">${D.meta.probe.text}
+    `.<div style="margin-top:5px">${D.meta.probe.text}
        <span class="mono">${D.meta.probe.doc}</span></div></div>`;
 }
 
@@ -447,7 +474,7 @@ function floorLines(cells){
 const PRIMARY = D.meta.primary_set;
 function armCell(gs){
   const bad = [...new Set(gs.map(g=>g.instr).filter(i=>i && i!==PRIMARY))];
-  return `${gs[0].arm}${bad.length?` <span class="badge">${bad.join("/")}</span>`:""}`;
+  return `${gs[0].arm}${tcMark(gs[0].arm)}${bad.length?` <span class="badge">${bad.join("/")}</span>`:""}`;
 }
 
 // `core_degenerate` and `copy_max` are measured against ABSOLUTE frame counts, so a 33f external
@@ -460,6 +487,18 @@ const wcMark = (arm, key, kind) =>
     : "";
 const wcFoot = gens => (WC.tiers||[]).some(t => gens.some(g=>g.arm===t))
   ? `<div class="note"><span class="wc">${WC.mark}</span> ${WC.text}</div>` : "";
+
+// ‡ — this arm has NO base twin, so every number of its is a level and is never differenced. Like
+// †, it is a property of the ARM: hiding the column with its chip does not retire the caveat.
+const TC = D.meta.twin_caveat || {};
+const tcMark = arm => (TC.tiers||[]).includes(arm)
+  ? `<span class="tc" title="no base twin — a level, never a margin; see the footnote">${TC.mark}</span>` : "";
+const tcFoot = arms => (TC.tiers||[]).some(t => arms.includes(t))
+  ? `<div class="note"><span class="tc">${TC.mark}</span> ${TC.text}</div>` : "";
+// Chip/column names live in the data, one entry per toggleable arm, so a new arm needs no template
+// edit. Falls back to the tier label for anything not in that list.
+const ARM_CHIP = Object.fromEntries((D.meta.arm_chips||[]).map(c=>[c.tier,c]));
+const armLabel = t => (ARM_CHIP[t]||{}).label || (D.tier_label[t]||[t])[0];
 
 function metricTable(gens, group){
   const ms = D.metrics.filter(m=>m.group===group);
@@ -477,7 +516,7 @@ function metricTable(gens, group){
     }
     h += "</tr>";
   }
-  return h + "</tbody></table></div>" + wcFoot(gens);
+  return h + "</tbody></table></div>" + tcFoot([...new Set(gens.map(g=>g.arm))]) + wcFoot(gens);
 }
 
 function flagTable(gens){
@@ -493,26 +532,43 @@ function flagTable(gens){
       h += `<td class="num">${fmt(mean(gs.map(g=>g.f[f.k])),3)}${wcMark(gs[0].arm, f.k, "flags")}</td>`;
     h += "</tr>";
   }
-  return h + "</tbody></table></div>" + wcFoot(gens);
+  return h + "</tbody></table></div>" + tcFoot([...new Set(gens.map(g=>g.arm))]) + wcFoot(gens);
 }
 
+// Pool-% is NEVER blended across pct_type. %_same is cross-class comparable; %_proxy is capped by
+// a donor-class proxy ceiling and is RANKING-ONLY (standing owner directive), so one mixed number
+// is not a quantity at all — it just reports the roster's same/proxy split.
 function armRollup(gens){
   const by = {};
   for(const g of gens) (by[g.arm] = by[g.arm]||[]).push(g);
+  const pctOf = (gs, type) => {
+    const v = gs.filter(g=>g.pct_type===type).map(g=>g.pct);
+    const m = mean(v);
+    return m==null ? `<span class="mut">—</span>`
+                   : `${type==="same"?pct(m):"("+pct(m)+")"} <span class="mut">· ${v.filter(x=>x!=null).length}</span>`;
+  };
   let h = `<div class="tw"><table class="d"><thead><tr><th class="l">arm</th><th>items</th>
-    <th>raw app_ref</th><th>pool-%</th><th>copy_max ↓</th><th>near_copy ↓</th>
+    <th>raw app_ref</th><th>%_same<br><span class="mut" style="font-size:9px">comparable · n</span></th>
+    <th>(%_proxy)<br><span class="mut" style="font-size:9px">ranking only · n</span></th>
+    <th>copy_max ↓</th><th>near_copy ↓</th>
     <th>prefix_dino ↑</th><th>seam_z ↓</th></tr></thead><tbody>`;
   for(const a of Object.keys(by).sort()){
     const gs = by[a];
     h += `<tr><td class="l">${armCell(gs)}</td><td class="num">${gs.length}</td>
       <td class="num">${fmt(mean(gs.map(g=>g.m.app_ref)),4)}</td>
-      <td class="num">${pct(mean(gs.map(g=>g.pct)))}</td>
+      <td class="num"><b>${pctOf(gs,"same")}</b></td>
+      <td class="num">${pctOf(gs,"proxy")}</td>
       <td class="num">${fmt(mean(gs.map(g=>g.m.copy_max)),3)}${wcMark(a,"copy_max","metrics")}</td>
       <td class="num">${fmt(mean(gs.map(g=>g.f.near_copy)),3)}</td>
       <td class="num">${fmt(mean(gs.map(g=>g.m.prefix_dino)),3)}</td>
       <td class="num">${fmt(mean(gs.map(g=>g.m.max_seam_z)),2)}</td></tr>`;
   }
-  return h + "</tbody></table></div>" + wcFoot(gens);
+  return h + "</tbody></table></div>" +
+    `<div class="note"><b>Pool-% is split, never blended.</b> <b>%_same</b> is measured against the
+     endpoint's own class ceiling and is cross-class comparable. <b>(%_proxy)</b> is capped by a
+     donor-class <i>proxy</i> ceiling — <b>ranking only</b>, never a level, and never averaged
+     together with %_same: a single blended pool-% mostly reports the roster's same/proxy mix.</div>`
+    + tcFoot([...new Set(gens.map(g=>g.arm))]) + wcFoot(gens);
 }
 
 function drawStats(){
@@ -585,7 +641,7 @@ function vid(src, cls=""){
 // column with no template change. Fixed left→right, so a model is always the same column.
 const TIER_LABEL = D.tier_label;
 const RUN_IDX = Object.fromEntries(RUN_TIERS.map((t,i)=>[t,i]));
-const EXT_IDX = Object.fromEntries((D.meta.external_tiers||[]).map((t,i)=>[t,i]));
+const EXT_TIERS = D.meta.external_tiers||[];   // arms that carry their own prompt; tinted by tier id
 const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
 /** A prompt with the clause that differs from OUR rendered prompt marked. `hi` is [start,end)
  *  character offsets, computed once in the generator against the card's own prompt. */
@@ -597,7 +653,7 @@ function markPrompt(text, hi){
 function outBox(tier, list, card){
   const [name, sub] = TIER_LABEL[tier];
   const cls = `${tier}${tier in RUN_IDX ? " runtier r"+RUN_IDX[tier] : ""}`
-            + `${tier in EXT_IDX ? " ext x"+EXT_IDX[tier] : ""}`;
+            + `${EXT_TIERS.includes(tier) ? " ext" : ""}`;
   if(!list.length){
     const why = tier==="copier" ? "no copier<br>for this task"
       : tier==="specialist"
@@ -616,6 +672,10 @@ function outBox(tier, list, card){
     if(g.scored && g.f.near_copy>0) chips.push(`<span class="chip r">near_copy ${fmt(g.f.near_copy,2)}</span>`);
     const lbl = `${g.cell} · ${g.novelty}`;
     if(g.instr && g.instr!==PRIMARY) chips.push(`<span class="badge">${g.instr}</span>`);
+    // the no-base-twin guard travels with the clip, not only with the aggregate tables
+    if((TC.tiers||[]).includes(tier))
+      chips.push(`<span class="chip a" title="${esc(String(TC.text).replace(/<[^>]+>/g,""))}"
+        >${TC.mark} level — no base twin</span>`);
     // Our arms all share the card's prompt, so only an arm that used a DIFFERENT one carries it
     // here — bound to this clip, at this seed, straight off that arm's manifest.
     const pb = g.prompt ? `<div class="pbar" title="${esc(g.prompt)}">
@@ -644,15 +704,16 @@ function cardHtml(entry){
        <div class="fn">${r.clip}</div></div>`).join("");
   // Prompts are per-ARM once external baselines are on the page: one box per convention, side by
   // side, with the clause that differs from ours marked. That contrast IS why two refVFX arms exist.
-  const alts = c.alt_prompts || [];
+  const alts = (c.alt_prompts || []).filter(p => tiers.has(p.tier));
   const altBoxes = alts.map(p=>
-    `<div class="cellbox in wide alt"><h4>PROMPT · ${(TIER_LABEL[p.tier]||[p.tier])[0]}
+    `<div class="cellbox in wide alt ${p.tier}"><h4>PROMPT · ${(TIER_LABEL[p.tier]||[p.tier])[0]}
        <span class="arm">${alts.filter(q=>q.tier===p.tier).length>1?`demo ${p.ref} · `:``}differs from ours in the marked clause</span></h4>
        <div class="ptext">${markPrompt(p.text, p.hi)}</div>
        <div class="pkind">${p.kind}</div></div>`).join("");
   const inputs =
     `<div class="cellbox in wide"><h4>PROMPT<span class="arm">${alts.length
-        ? "our arms (② ④ ⑤ ⚠) — external arms below use their own"
+        ? `shared by ${TIERS.filter(t=>!EXT_TIERS.includes(t)).map(t=>(TIER_LABEL[t]||[t])[0].split(" ")[0]).join(" ")}
+           — the boxes below carry each arm's own`
         : "identical for every tier"}</span></h4>
        <div class="ptext">${esc(c.prompt)}</div></div>` + altBoxes +
     `<div class="cellbox in"><h4>PREFIX · ${D.meta.px_prefix}f<span class="arm">start anchor</span></h4>
@@ -665,14 +726,17 @@ function cardHtml(entry){
        ${c.endpoint_video?vid(c.endpoint_video):`<div class="miss">DAVIS — off-distribution</div>`}
        <div class="fn">${c.endpoint} · ${c.endpoint_class||"davis"}</div></div>`;
 
-  const outs = TIERS.map(t => outBox(t, c.slots[t]||[], c)).join("");
+  const outs = visTiers().map(t => outBox(t, c.slots[t]||[], c)).join("");
 
-  const tags = [...new Set(treatmentsOf(c).map(g=>g.novelty+" · "+g.content))];
+  const tags = [...new Set(armsOf(c).map(g=>g.novelty+" · "+g.content))];
   // Δ is drawn ONLY between the two runs — both scored under the same artifact on this identical
   // input. No specialist-vs-run badge: that comparison crosses instruments, and while the CELL-level
   // cross-build error is 0.09pp, the PER-GENERATION tail reaches 8.3pp — which is exactly the
   // regime a single-card badge lives in. Specialists compare in the aggregate panel instead.
-  const dl = c.delta==null ? "" :
+  // …and only while BOTH of those trainings are on screen: the badge names two columns, so it must
+  // not survive one of them being toggled off. An own-prompt arm never appears in it at all.
+  const bothRuns = tiers.has(RUN_TIERS[0]) && tiers.has(RUN_TIERS[RUN_TIERS.length-1]);
+  const dl = (c.delta==null || !bothRuns) ? "" :
     `<span class="dbadge ${c.delta>0.05?"pos":c.delta<-0.05?"neg":"nil"}"
        title="${D.runs[D.runs.length-1].label} − ${D.runs[0].label}, pool-% points, this input">
        ${c.delta>0?"+":""}${c.delta.toFixed(1)} pp</span>`;
@@ -727,9 +791,11 @@ function playAll(btn){
 
 // ---------------------------------------------------------------- chrome
 function drawControls(){
-  document.getElementById("tiers").innerHTML = D.runs.map(r=>
-      `<button class="${tiers.has(r.tier)?"on":""}" onclick="togTier('${r.tier}')"
-        title="${r.sub}">${r.label}</button>`).join("");
+  // one chip per ARM, in column order — trainings and own-prompt arms alike, same mechanism
+  document.getElementById("tiers").innerHTML = (D.meta.arm_chips||[]).map(c=>
+      `<button class="${tiers.has(c.tier)?"on":""}" onclick="togTier('${c.tier}')"
+        title="${esc(c.sub)}${c.run?"":" · context arm: level only, never differenced"}"
+        >${c.label}${c.no_twin?TC.mark:""}</button>`).join("");
   document.getElementById("seeds").innerHTML = D.meta.seeds.map(s=>
     `<button class="${String(s)===seed?"on":""}" onclick="setSeed('${s}')">${s}</button>`).join("");
   const donors = [...new Set(D.cards.map(c=>c.donor))].filter(Boolean).sort();
@@ -740,6 +806,8 @@ function drawControls(){
     d.onchange = e => { donor = e.target.value; shown = PAGE; render(); };
   }
 }
+// Any subset of the arms may be shown, down to one — a card exists because SOME arm answers it.
+// The last one on cannot be switched off, or the page would have nothing to show.
 function togTier(t){
   if(tiers.has(t)){ if(tiers.size<2) return; tiers.delete(t); } else tiers.add(t);
   shown=PAGE; render();
@@ -797,9 +865,13 @@ document.getElementById("sub").innerHTML =
    <br>specialists appear on <b>${m.spec_cards}</b> of ${m.cards} tasks — the other
    ${m.cards - m.spec_cards} are held-out (zero-shot) donor classes, for which a specialist cannot
    exist by design, so an empty ② column there is the design, not a gap.` +
-   (m.external.length ? `<br>external baselines: ${m.external.map(a=>
-     `<b>${a.label}</b> <span class="mono">(${a.gens} gens, ${a.videos} videos, ${
-       a.scored ? `${a.scored} scored` : `<span class="badge">unscored</span>`})</span>`).join(" · ")}` : ``);
+   (m.external.length ? `<br>arms with their own prompt: ${m.external.map(a=>
+     `<b>${a.label}</b> <span class="mono">(${a.gens} gens, ${a.videos} videos, ${a.frames}f, ${
+       !a.scored ? `<span class="badge">unscored</span>`
+       : a.scored < a.gens ? `<span class="badge">scoring in flight ${a.scored}/${a.gens}</span>`
+       : `${a.scored} scored`})</span>`).join(" · ")}
+     <br>every arm toggles — <b>${m.arm_tiers.length}</b> chips above, any subset side by side;
+     ② specialist and ⚠ copier are always drawn as the yardstick` : ``);
 
 // Both registers at once. A page showing only the favourable Δ table would misrepresent this run;
 // one leading with "GATE: FAIL" would misrepresent it the other way.
@@ -816,29 +888,41 @@ const idl = m.instrument_delta || {};
 document.getElementById("instrument").innerHTML =
   `<b>Instrument.</b> Every number on the run columns comes from ${primary.label}. That single
    rescore is the only reason these runs are comparable at all.` +
-  (m.badged_tiers.length ? ` Tiers marked <span class="badge">stale223</span>
+  (m.badged_tiers.length ? ` Tiers marked
+   ${m.badged_sets.map(s=>`<span class="badge">${s}</span>`).join(" ")}
    (${m.badged_tiers.join(", ")}) were never rescored — their numbers come from
-   ${m.score_sets.find(x=>x.id!==m.primary_set).short}. <b>Measured cross-build error</b>, from the
+   ${(m.score_sets.find(x=>x.id===m.badged_sets[0])||{}).short}. <b>Measured cross-build error</b>
+   (<span class="mono">${(idl.pair||[]).join(" vs ")}</span> — a build difference, held apart from
+   the machine difference stated by the table above), from the
    ${idl.n} ic_gen generations that exist under BOTH artifacts (identical video files):
    cell-level mean |Δ| <b>${idl.cell_mean_abs}pp</b>, max <b>${idl.cell_max_abs}pp</b>;
    per-generation mean |Δ| ${idl.gen_mean_abs}pp, ${idl.gen_over_1pp}/${idl.n} exceed 1pp,
    max ${idl.gen_max_abs}pp. Measured on ic_gen and assumed to transfer to same-corpus arms.` : ``) +
   `<br><b>Not on this page:</b> ` + m.absent_tiers.map(([k,why])=>`${k} — ${why}`).join(" &nbsp;·&nbsp; ") +
-  (m.external.length ? `<br><b>External baselines.</b> ${m.external_note} ` +
-    m.external.map(a=> a.scored
-      ? `<b>${a.label}</b>: ${a.scored}/${a.gens} scored, badged
+  // one paragraph per KIND of own-prompt arm, then that kind's arms — a single paragraph covering
+  // both would have to be vague about which caveat belongs to which column
+  (m.arm_kinds||[]).map(k => `<br><b>${k.title}</b> ${k.note} They are context, not runs: they
+     never enter the paired Δ or the sign test. ` +
+    m.external.filter(a=>a.kind===k.id).map(a=> a.scored
+      ? `<b>${a.label}</b>: ${a.scored}/${a.gens} scored${a.scored < a.gens
+           ? ` — <b>scoring is still in flight</b>, so this column's aggregates are over a
+              <b>partial roster</b>; rebuild when it completes` : ``}, badged
          <span class="badge">${a.score_id}</span> —
          <span class="mono">${a.prov.harness || "instrument not declared"}</span>,
          corpus <span class="mono">${a.prov.corpus || "not declared"}</span>${a.prov.same_corpus_as_primary
-           ? `, the <b>same reference_v4 build the run columns use</b>, so the levels are
-              comparable` : `, which is <b>NOT</b> the build the run columns use — read the levels
-              as that arm's own, not against a run`}${a.prov.certified ? `` :
+           ? `, the <b>same reference_v4 build the run columns use</b>${a.prov.same_machine_as_primary
+              ? `, <b>on the same machine</b> — so the badge means "a separate scoring run", not a
+                 different instrument, and the levels are comparable`
+              : `, but on a <b>different machine</b> from the run columns — see the note by the
+                 pool-% table`}` : `, which is <b>NOT</b> the build the run columns use — read the
+              levels as that arm's own, not against a run`}${a.prov.certified ? `` :
            `; the run is <b>uncertified</b> (${(a.prov.reasons||[]).join("; ") || "reason not declared"}).`
          } It is still a separate scoring run, so it never enters the paired Δ or the sign test.`
       : `<b>${a.label}</b>: <b>not scored yet</b> — videos only. Every number for this arm reads
          "—" and it contributes to no aggregate; nothing here is estimated or borrowed. Its scores
          drop into <span class="mono">$LAB/${a.scores_slot}/</span>
-         (harness <span class="mono">*/items.jsonl</span>), then rebuild the page.`).join(" ") : ``);
+         (harness <span class="mono">*/items.jsonl</span>), then rebuild the page.`).join(" ")
+    ).join("");
 
 selAll(1);
 </script>

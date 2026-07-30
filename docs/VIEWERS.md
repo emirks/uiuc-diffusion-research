@@ -74,8 +74,46 @@ page keeps emitting ordinary repo-relative paths. Rebuilding the link is part of
 the generator, so a wiped `outputs/` costs one rerun and the source stays
 byte-identical. List the link paths in the viewer's `check_files` so
 `viewerctl check` says so loudly if the campaign directory ever moves.
-Worked example: the two refVFX arms on the IC-LoRA trainings viewer
-(`ensure_external_media()` in `eval_ladder/viewer/build_runs.py`).
+Worked example: the three own-prompt arms on the IC-LoRA trainings viewer
+(`ensure_external_media()` in `eval_ladder/viewer/build_runs.py`) — two refVFX
+directories and `$LAB/misc/ctt_v2_leaky/videos/ctt_v2_leaky`.
+
+### Arms on a comparison page: toggles, caveats, and colliding ids
+
+`iclora_runs` is the reference implementation of a multi-arm comparison page, and
+three of its rules generalise. Read them before adding an arm to any viewer.
+
+**Toggles control visibility, never semantics.** Every arm — trainings and
+context arms alike — gets one chip, built from one data list (`meta.arm_chips`)
+in column order, driving one `Set`. Hiding a column must not change what the
+numbers mean: which arms may be *differenced* (trainings only), whether a caveat
+applies, and which instrument a column was scored under all hold whether or not
+the column is on screen. Anything that names two columns — a per-card Δ badge, a
+Δpp header — is suppressed when either of them is hidden, rather than left
+pointing at something invisible.
+
+**A structural caveat is marked on the number, not only in a paragraph.** The
+page carries two, both as generator-side dicts (`WINDOW_CAVEAT`, `TWIN_CAVEAT`)
+that emit a mark, a per-cell `title`, and a footnote under every table the marked
+arm appears in: `†` = the metric is measured against an *absolute* frame count so
+it is not comparable across clip lengths (refVFX's 33f vs our 121f), `‡` = the
+arm has *no base twin*, so its number is a **level and is never differenced**.
+Derive which arms carry a mark from a declared property (`frames`, `no_twin`) —
+never from "is it external", which is a category, not a mechanism.
+
+**Assert both join traps; they are opposite and both exit 0.** Registry
+`item_id`s may or may not embed the arm name, and a page can host both cases at
+once. On `iclora_runs`: `ic_gen`'s ids embed its arm, so a raw `item_id` join
+against any other arm returns **zero rows**; `ctt_v2`, `ctt_v2_leaky`,
+`refvfx_A` and `refvfx_B` all ran the same registry, so their ids are
+**1,842 of 1,842 identical** and a raw `item_id` join **silently merges two arms
+into one column**. Only the harness's own `arm` stamp separates them. So: join
+cross-arm on an arm-free key (`cell, endpoint, reference, sided[, seed]`) and
+assert it is non-empty; key any map that can see two arms on `(arm, item_id)`;
+assert at build time that `(arm, item_id)` is unique across everything rendered
+and that colliding arms still carry distinct clips and distinct metric vectors.
+`build_runs.py :: assert_arms()` and the `[ids]` / `[join-key]` blocks in
+`check()` are the worked example.
 
 ---
 
