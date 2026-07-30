@@ -1,6 +1,6 @@
 ## 2026-07-30
 
-- **14:41** — **`iclora_runs`: the page now states which MACHINE scored each column, and marks the
+- **14:27** — **`iclora_runs`: the page now states which MACHINE scored each column, and marks the
   two metrics that are not comparable across clip lengths.** Both were correctness gaps in what the
   page *claimed*, not in the wiring. (1) The run columns and the external refVFX columns share an
   instrument, a `reference_v4` and the corpus `dc2e139a` but were scored on **three different
