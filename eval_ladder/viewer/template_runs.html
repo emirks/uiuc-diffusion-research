@@ -86,6 +86,17 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
 .chead{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#13161b;
  border-bottom:1px solid var(--edge);flex-wrap:wrap}
 .chead b{font-size:13px}
+/* row picker: a tick box, not a checkbox element, so it can carry the card key and restyle on
+   re-render without the browser's own checkbox state fighting the redraw */
+.pick{width:20px;height:20px;flex:0 0 20px;border-radius:5px;cursor:pointer;font-size:11px;
+ background:var(--card2);border:1px solid var(--edge2);color:transparent;font-family:inherit;
+ padding:0;line-height:1;transition:.12s}
+.pick:hover{border-color:var(--sel);color:var(--dim2)}
+.pick.on{background:var(--sel);border-color:var(--sel);color:#fff}
+.dlbar{margin:0 0 12px 0;padding:8px 10px;background:var(--card);border:1px solid var(--edge);
+ border-radius:8px}
+.dlbar .dlgo:disabled{opacity:.4;cursor:default}
+.dlbar .dlgo:not(:disabled){background:#132b4d;border-color:var(--sel);color:#cfe2fb}
 .chead .dim{color:var(--dim);font-size:11px}
 .chead .pill{margin-left:auto;display:flex;gap:6px;align-items:center}
 .grp{padding:10px 12px;border-bottom:1px solid #20242b}
@@ -129,8 +140,7 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
 .cellbox.out.runtier.r2 h4{color:#f0d5a5}
 .cellbox.out.runtier.r3{background:#22101c;border-color:#66235a}
 .cellbox.out.runtier.r3 h4{color:#f0a5e0}
-.cellbox.out.copier{background:#21131400;border:1px dashed #5c2426;opacity:.7}
-.cellbox.out.copier h4{color:#e79aa0}
+/* the ⚠ BASE+DEMO copier column was removed 2026-07-31 — the page's baselines are ⓪/① below */
 /* arms that carry their own prompt. Tinted BY TIER ID, not by position, so inserting an arm never
    silently repaints the others. Prior-work: one hue, two shades — same model, different prompt.
    Ours: kept in the ctt_v2 run's blue-green family, because it IS the ctt_v2 adapter. */
@@ -142,6 +152,15 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
 .cellbox.out.ctt_v2_leaky h4{color:#8fe3c8}
 .cellbox.in.alt.ctt_v2_leaky{background:#101f1c;border-color:#1f5348}
 .cellbox.in.alt.ctt_v2_leaky h4{color:#8fe3c8}
+/* the two baselines: deliberately the most neutral pair on the page — they are the floor every
+   other column is read against, so they must not look like a treatment. ① carries the same hue
+   one step warmer, because the only thing separating it from ⓪ is the endpoint conditioning. */
+.cellbox.out.base_prompt_ctt{background:#15171a;border-color:#3d444d}
+.cellbox.out.base_prompt_ctt h4{color:#aeb8c4}
+.cellbox.out.base_cond_ctt{background:#171a1e;border-color:#4a4f42}
+.cellbox.out.base_cond_ctt h4{color:#c3c8b4}
+.cellbox.in.alt.base_prompt_ctt,.cellbox.in.alt.base_cond_ctt{background:#15181b;border-color:#3d444d}
+.cellbox.in.alt.base_prompt_ctt h4,.cellbox.in.alt.base_cond_ctt h4{color:#aeb8c4}
 .demo{margin-top:2px;border-top:1px solid var(--edge);padding-top:4px}
 .demo .dl{display:block;color:var(--ref);font-size:9px;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
 .demo video{aspect-ratio:3/4;width:100%;border-radius:4px}
@@ -269,6 +288,15 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
 <div class="panel">
   <h2 style="display:flex;align-items:center;gap:10px">generations
     <span class="lbl" id="cardinfo" style="text-transform:none;letter-spacing:0"></span></h2>
+  <!-- Row picking is INDEPENDENT of the matrix filter: tick rows across several filter settings
+       and they all stay picked, so a bundle can span cells the matrix cannot select at once. -->
+  <div class="mxbar dlbar">
+    <span class="lbl">download</span>
+    <button class="btn" onclick="pickAllShown()">pick all shown</button>
+    <button class="btn" onclick="pickClear()">clear picks</button>
+    <button class="btn dlgo" id="dlgo" onclick="dlSelected(this)">⬇ download picked rows</button>
+    <span class="lbl" id="dlinfo" style="margin-left:auto"></span>
+  </div>
   <div id="cards"></div>
   <div class="more" id="more"></div>
 </div>
@@ -576,7 +604,7 @@ function drawStats(){
   const el = document.getElementById("stats");
   if(!entries.length){ el.innerHTML = "<div class='empty'>no rows match — select a matrix cell</div>"; return; }
   const gens = entries.flatMap(e => e.hit);      // treatments
-  const all  = entries.flatMap(e => flat(e.card)); // + baselines + copier
+  const all  = entries.flatMap(e => flat(e.card)); // + the baselines and the other context arms
   el.innerHTML =
     `<details class="tbl" open><summary>head-to-head — pool-% per training, paired per input
        <span class="hint">${gens.length} run generations across ${entries.length} inputs</span></summary>
@@ -655,8 +683,7 @@ function outBox(tier, list, card){
   const cls = `${tier}${tier in RUN_IDX ? " runtier r"+RUN_IDX[tier] : ""}`
             + `${EXT_TIERS.includes(tier) ? " ext" : ""}`;
   if(!list.length){
-    const why = tier==="copier" ? "no copier<br>for this task"
-      : tier==="specialist"
+    const why = tier==="specialist"
         ? "no specialist<br>for this class<br>(held-out by design)"
       : "not run<br>for this task";
     return `<div class="cellbox out ${cls} blank"><div class="bl"><b>${name}</b>${why}</div></div>`;
@@ -741,10 +768,17 @@ function cardHtml(entry){
        title="${D.runs[D.runs.length-1].label} − ${D.runs[0].label}, pool-% points, this input">
        ${c.delta>0?"+":""}${c.delta.toFixed(1)} pp</span>`;
   return `<div class="card">
-    <div class="chead"><b>${c.endpoint}</b>
+    <div class="chead"><button class="pick ${picks.has(c.key)?"on":""}" data-key="${esc(c.key)}"
+        onclick="pickToggle('${esc(c.key)}')"
+        title="pick this row for the bundle download — picks survive filter changes">✓</button>
+      <b>${c.endpoint}</b>
       <span class="dim">transition <b class="hl">${c.donor}</b> · ${c.sided}-sided · ${tags.join(" | ")}</span>
       ${dl}
-      <span class="pill"><button class="pbtn" onclick="playAll(this)">↻ restart row synced</button></span></div>
+      <span class="pill"><button class="pbtn" onclick="playAll(this)">↻ restart row synced</button></span>
+      <span class="pill"><button class="pbtn" onclick="dlRow(this,'${esc(c.key)}')"
+        title="Download this row as a zip: its inputs, every arm's clip at both seeds, each arm's
+          prompt, and the scored numbers. Always the FULL row — the arm chips hide columns, they
+          do not shrink the archive.">⬇ download row</button></span></div>
     <div class="grp all"><div class="row">
       <div class="band in-band">${inputs}</div>
       <div class="band out-band">${outs}</div>
@@ -789,6 +823,294 @@ function playAll(btn){
     ()=>{ if(--left === 0) go(); }, {once:true}));
 }
 
+// ---------------------------------------------------------------- row download
+// A ZIP writer, store-mode (no compression), in ~40 lines. Everything heavy in a bundle is an
+// already-compressed mp4, so deflate would burn CPU for nothing — and store-mode needs no library,
+// which is what matters here: this page is opened from a local static server with no network, so a
+// CDN dependency would simply not load. No zip64: a row is ~25 MB.
+const CRC_T = (()=>{ const t = new Uint32Array(256);
+  for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c = (c&1) ? (0xEDB88320 ^ (c>>>1)) : (c>>>1); t[n]=c>>>0; }
+  return t; })();
+function crc32(u8){ let c = 0xFFFFFFFF;
+  for(let i=0;i<u8.length;i++) c = CRC_T[(c ^ u8[i]) & 0xFF] ^ (c>>>8);
+  return (c ^ 0xFFFFFFFF) >>> 0; }
+function zip(files){                       // [{name, data:Uint8Array}] -> Blob
+  const enc = new TextEncoder(), parts = [], central = [];
+  const u16 = v => [v&255, (v>>8)&255], u32 = v => [v&255, (v>>8)&255, (v>>16)&255, (v>>>24)&255];
+  let off = 0;
+  for(const f of files){
+    const name = enc.encode(f.name), crc = crc32(f.data), n = f.data.length;
+    // local file header: sig, version, flags, method=0(store), time, date, crc, csize, usize, namelen, extralen
+    const lfh = new Uint8Array([...u32(0x04034b50), ...u16(20), ...u16(0), ...u16(0),
+      ...u16(0), ...u16(0x21), ...u32(crc), ...u32(n), ...u32(n), ...u16(name.length), ...u16(0)]);
+    parts.push(lfh, name, f.data);
+    central.push(new Uint8Array([...u32(0x02014b50), ...u16(20), ...u16(20), ...u16(0), ...u16(0),
+      ...u16(0), ...u16(0x21), ...u32(crc), ...u32(n), ...u32(n), ...u16(name.length),
+      ...u16(0), ...u16(0), ...u16(0), ...u16(0), ...u32(0), ...u32(off)]), name);
+    off += lfh.length + name.length + n;
+  }
+  let cdLen = 0; for(const c of central) cdLen += c.length;
+  const eocd = new Uint8Array([...u32(0x06054b50), ...u16(0), ...u16(0),
+    ...u16(files.length), ...u16(files.length), ...u32(cdLen), ...u32(off), ...u16(0)]);
+  return new Blob([...parts, ...central, eocd], {type:"application/zip"});
+}
+
+const CARD_BY_KEY = Object.fromEntries(D.cards.map(c => [c.key, c]));
+const safe = s => String(s).replace(/[^A-Za-z0-9._-]+/g, "_");
+const csvEsc = v => { const s = String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s; };
+
+// ---- picked rows. Independent of the matrix filter ON PURPOSE: a bundle can then span cells the
+// matrix cannot select at once (tick some zero-shot rows, switch cell, tick some seen rows).
+const picks = new Set();
+const NOV_ABBR = {seen:"sn", unseen:"un", zero_shot:"zs"};
+
+/** The folder a row lands in: its hardest novelty × content, ranked exactly the way the generator
+ *  ranks cards for page order, so the archive's layout matches the order they appear in. */
+function groupOf(c){
+  const gs = ARM_TIERS.flatMap(t => c.slots[t]||[]);
+  let bn = -1, bc = -1;
+  for(const g of gs){
+    bn = Math.max(bn, D.novelty_order.indexOf(g.novelty));
+    bc = Math.max(bc, D.content_order.indexOf(g.content));
+  }
+  const nov = D.novelty_order[bn] || "unclassified", con = D.content_order[bc] || "unclassified";
+  return `${NOV_ABBR[nov] || nov}-${con}`;
+}
+const rowDirOf = c => `${safe(c.endpoint)}__${safe(c.donor)}${c.sided==="two"?"__2sided":""}`;
+
+function pickToggle(key){ picks.has(key) ? picks.delete(key) : picks.add(key); drawPicks(); }
+function pickAllShown(){ selectedCards().forEach(e => picks.add(e.card.key)); render(); }
+function pickClear(){ picks.clear(); render(); }
+function drawPicks(){
+  const n = picks.size;
+  document.getElementById("dlinfo").textContent = n
+    ? `${n} row${n>1?"s":""} picked · ~${(estBytes()/1e6).toFixed(0)} MB`
+    : "tick rows to build a bundle — or use ⬇ on a single row";
+  document.getElementById("dlgo").disabled = !n;
+  document.querySelectorAll(".pick").forEach(b =>
+    b.classList.toggle("on", picks.has(b.dataset.key)));
+}
+/** Rough, and honest about it: mp4s dominate and average ~1.1 MB at our geometry. It exists so a
+ *  40-row pick announces itself as ~1 GB BEFORE the browser tries to hold that in memory. */
+function estBytes(){
+  let n = 0;
+  for(const k of picks){
+    const c = CARD_BY_KEY[k]; if(!c) continue;
+    n += TIERS.reduce((s,t) => s + (c.slots[t]||[]).reduce((q,g)=>q+Object.keys(g.videos).length,0), 0);
+    n += 2 + (c.refs||[]).length + (c.sided==="two"?1:0);
+  }
+  return n * 1.1e6;
+}
+
+/** Fetch everything one row is made of into `files`, under `prefix`. Deliberately NOT filtered by
+ *  the arm chips — a chip hides a column, it does not make the clip stop existing, and an archive
+ *  that silently dropped the toggled-off arms would be a trap. */
+async function collectRow(c, prefix, files, missing, tick){
+  const grab = async (path, name) => {
+    if(!path) return false;
+    try{
+      const r = await fetch(D.meta.rel + path);
+      if(!r.ok) throw new Error(r.status);
+      files.push({name: prefix + name, data: new Uint8Array(await r.arrayBuffer())});
+      return true;
+    }catch(e){ missing.push(`${prefix}${name}  <- ${path}  (${e.message})`); return false; }
+  };
+  // ---- inputs: exactly what was handed to the models, named for what it is
+  await grab(c.prefix_video, `inputs/prefix_${safe(c.endpoint)}_${D.meta.px_prefix}f.mp4`);
+  if(c.sided === "two")
+    await grab(c.suffix_video, `inputs/suffix_${safe(c.endpoint)}_${D.meta.px_prefix}f.mp4`);
+  await grab(c.endpoint_video, `inputs/endpoint_source_${safe(c.endpoint)}.mp4`);
+  for(const r of (c.refs||[]))
+    await grab(r.video, `inputs/demo_${safe(r.clip)}${r.mismatched?"_MISMATCHED":""}.mp4`);
+
+  // ---- generations: every arm, every seed
+  const gens = TIERS.flatMap(t => (c.slots[t]||[]).map(g => [t, g]));
+  for(const [t, g] of gens)
+    for(const [s, path] of Object.entries(g.videos)){
+      if(tick) tick();
+      await grab(path, `gens/${safe(t)}__s${s}.mp4`);
+    }
+
+  // ---- the numbers, in both a machine and a human shape
+  const rows = [["arm","label","scored","instrument","cell","novelty","content","pct_of_ceiling",
+                 ...D.metrics.map(m=>m.k), ...D.flags.map(f=>f.k)]];
+  for(const [t, g] of gens)
+    rows.push([t, (TIER_LABEL[t]||[t])[0], g.scored, g.instr||"", g.cell, g.novelty, g.content,
+               g.pct==null?"":g.pct, ...D.metrics.map(m=>g.m[m.k]==null?"":g.m[m.k]),
+               ...D.flags.map(f=>g.f[f.k]==null?"":g.f[f.k])]);
+  const csv = rows.map(r => r.map(csvEsc).join(",")).join("\n") + "\n";
+
+  const enc = new TextEncoder();
+  const alt = Object.fromEntries((c.alt_prompts||[]).map(p => [p.tier, p.text]));
+  const readme =
+`row: ${c.key}
+endpoint      : ${c.endpoint}  (${c.endpoint_class||"davis"}, ${c.endpoint_split||"?"})
+transition    : ${c.donor}
+sidedness     : ${c.sided}-sided
+geometry      : ${D.meta.frames}f @ 24fps, prefix ${D.meta.px_prefix}f${
+  c.sided==="two" ? `, suffix ${D.meta.suffix_gen_frames}f consumed` : ", no end anchor"}
+seeds         : ${D.meta.seeds.join(", ")}
+instrument    : ${D.meta.instrument} — primary score set ${D.meta.primary_set}
+built         : ${D.meta.title}, design ${D.meta.design_version}
+
+PROMPTS
+  shared (the trainings, rendered by eval_ladder/prompts.py):
+    ${c.prompt}
+${(c.alt_prompts||[]).map(p => `  ${(TIER_LABEL[p.tier]||[p.tier])[0]} — its own:\n    ${p.text}`).join("\n")}
+
+ARMS ON THIS ROW
+${gens.map(([t,g]) => `  ${(TIER_LABEL[t]||[t])[0]}  ${g.scored
+    ? `%ceil ${g.pct==null?"—":(g.pct*100).toFixed(1)+"%"}  app_ref ${fmt(g.m.app_ref,3)}  margin ${fmt(g.m.margin,3)}  copy_max ${fmt(g.m.copy_max,3)}`
+    : "unscored — video only"}`).join("\n")}
+
+CONTENTS
+  inputs/   what the models were given (the demo is an input to the IC-LoRA arms ONLY —
+            the two BASE arms never receive it, which is what makes them baselines)
+  gens/     one clip per arm per seed, named <arm>__s<seed>.mp4
+  scores.csv  seed-averaged metrics per arm, pool-% in the pct_of_ceiling column
+  manifest.json  the full row record this page rendered from
+
+CAVEATS THAT TRAVEL WITH THESE NUMBERS
+  * pool-% is comparable across classes only where pct_type is "same"; a "proxy" level is
+    content-capped and is ranking-only.
+  * core_degenerate and copy_max are measured over ABSOLUTE frame windows, so they are not
+    comparable between the 121f arms and a 33f external arm.
+  * arms marked "no base twin" contribute a level, never a paired margin.
+`;
+
+  files.push({name: prefix + "README.txt", data: enc.encode(readme)});
+  files.push({name: prefix + "scores.csv", data: enc.encode(csv)});
+  files.push({name: prefix + "manifest.json", data: enc.encode(JSON.stringify({
+    card: c, meta: {title: D.meta.title, instrument: D.meta.instrument,
+      primary_set: D.meta.primary_set, score_sets: D.meta.score_sets, seeds: D.meta.seeds,
+      frames: D.meta.frames, px_prefix: D.meta.px_prefix,
+      suffix_gen_frames: D.meta.suffix_gen_frames,
+      ceiling: D.ceilings[c.donor], design_version: D.meta.design_version},
+    arms: gens.map(([t,g]) => ({tier: t, label: (TIER_LABEL[t]||[t])[0], prompt: alt[t] || c.prompt,
+      scored: g.scored, instrument: g.instr, pct: g.pct, metrics: g.m, flags: g.f})),
+  }, null, 1))});
+  return gens;
+}
+
+function saveZip(files, name){
+  const url = URL.createObjectURL(zip(files));
+  const a = document.createElement("a");
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 60000);
+}
+
+/** One row, one click — the same bundle a pick of size 1 would produce, without the ticking. */
+async function dlRow(btn, key){
+  const c = CARD_BY_KEY[key];
+  if(!c) return;
+  const label = btn.textContent, files = [], missing = [];
+  btn.disabled = true;
+  try{
+    let n = 0;
+    btn.textContent = "⬇ fetching…";
+    await collectRow(c, "", files, missing, () => { btn.textContent = `⬇ ${++n} files…`; });
+    if(missing.length) files.push({name: "MISSING.txt",
+      data: new TextEncoder().encode(missing.join("\n") + "\n")});
+    btn.textContent = "⬇ zipping…";
+    saveZip(files, `row_${rowDirOf(c)}.zip`);
+    btn.textContent = missing.length ? `⬇ done (${missing.length} missing)` : "⬇ done";
+  }catch(e){
+    btn.textContent = "⬇ failed — see console";
+    console.error("row download failed", e);
+  }finally{
+    btn.disabled = false;
+    setTimeout(()=>{ btn.textContent = label; }, 4000);
+  }
+}
+
+/** Every picked row in one zip, grouped by novelty×content:
+ *
+ *      zs-cross/<endpoint>__<donor>/{README.txt, manifest.json, scores.csv, inputs/, gens/}
+ *      un-same/...
+ *      INDEX.csv          one line per row: group, folder, arms, and each arm's pool-%
+ *      README.txt         what the bundle is, and the caveats, stated once
+ *
+ * The whole thing is assembled in memory, so the size estimate is checked with the user first —
+ * a 40-row pick is ~1 GB and a browser tab will not survive being surprised by that. */
+async function dlSelected(btn){
+  if(!picks.size) return;
+  const order = D.cards.filter(c => picks.has(c.key));   // page order, not click order
+  const mb = estBytes()/1e6;
+  if(order.length > 8 && !confirm(
+      `Bundle ${order.length} rows (~${mb.toFixed(0)} MB)?\n\n` +
+      `The zip is built in this tab's memory before it downloads, so a very large pick can ` +
+      `exhaust it. If in doubt, download in a few smaller batches.`)) return;
+
+  const label = btn.textContent, files = [], missing = [];
+  const index = [["group","folder","endpoint","donor_class","sided","novelty","content","cell",
+                  "arm","label","scored","pct_of_ceiling","app_ref","margin","copy_max"]];
+  btn.disabled = true;
+  const seen = new Set();
+  try{
+    let done = 0, files_n = 0;
+    for(const c of order){
+      const grp = groupOf(c);
+      let dir = `${grp}/${rowDirOf(c)}`;
+      while(seen.has(dir)) dir += "_";      // two rows can only collide via `safe()`; keep both
+      seen.add(dir);
+      btn.textContent = `⬇ row ${++done}/${order.length}…`;
+      const gens = await collectRow(c, dir + "/", files, missing,
+                                   () => { btn.textContent = `⬇ row ${done}/${order.length} · ${++files_n} files…`; });
+      for(const [t, g] of gens)
+        index.push([grp, dir, c.endpoint, c.donor, c.sided, g.novelty, g.content, g.cell,
+                    t, (TIER_LABEL[t]||[t])[0], g.scored, g.pct==null?"":g.pct,
+                    g.m.app_ref==null?"":g.m.app_ref, g.m.margin==null?"":g.m.margin,
+                    g.m.copy_max==null?"":g.m.copy_max]);
+    }
+    const enc = new TextEncoder();
+    const groups = {};
+    for(const c of order) groups[groupOf(c)] = (groups[groupOf(c)]||0) + 1;
+    files.push({name: "INDEX.csv", data: enc.encode(index.map(r=>r.map(csvEsc).join(",")).join("\n")+"\n")});
+    files.push({name: "README.txt", data: enc.encode(
+`${D.meta.title} — ${order.length} picked row${order.length>1?"s":""}
+design ${D.meta.design_version} · instrument ${D.meta.instrument} · primary score set ${D.meta.primary_set}
+seeds ${D.meta.seeds.join(", ")} · our geometry ${D.meta.frames}f @ 24fps
+
+LAYOUT
+${Object.entries(groups).sort().map(([g,n]) => `  ${g}/   ${n} row${n>1?"s":""}`).join("\n")}
+
+  <group>/<endpoint>__<donor_class>/
+      README.txt      this row in prose: prompts per arm, level per arm
+      manifest.json   the full row record the page rendered from
+      scores.csv      seed-averaged metrics per arm
+      inputs/         prefix / suffix / endpoint source / in-context demo(s)
+      gens/           one clip per arm per seed, <arm>__s<seed>.mp4
+
+  Group names are <novelty>-<content>: novelty is sn=seen / un=unseen / zs=zero-shot (how novel the
+  demo's class is to the adapter), content is same / cross / foreign (where the endpoint comes
+  from). A row is filed under its HARDEST class, which is also how the page orders it.
+
+  INDEX.csv is one line per (row, arm) — the flat table to load somewhere else.
+
+READ THESE NUMBERS THE WAY THE PAGE DOES
+  * pool-% is cross-class comparable only where the row's %type is "same". A "proxy" level is
+    content-capped and is ranking-only; the claim there is the margin, not the level.
+  * core_degenerate and copy_max are measured over ABSOLUTE frame windows, so they do not compare
+    between the 121f arms and a 33f external arm.
+  * arms marked "no base twin" (the two BASE arms and the leaky arm) contribute a LEVEL, never a
+    paired margin. The paired Δ and the sign test are between the two trainings only.
+  * every arm is included whether or not its column was toggled on when you clicked.
+${missing.length ? `\nNOT INCLUDED (${missing.length} file(s) absent on the server) — see MISSING.txt\n` : ""}`)});
+    if(missing.length) files.push({name: "MISSING.txt", data: enc.encode(missing.join("\n")+"\n")});
+
+    btn.textContent = "⬇ zipping…";
+    saveZip(files, `rows_${order.length}__${Object.keys(groups).sort().join("_")}.zip`);
+    btn.textContent = missing.length ? `⬇ done (${missing.length} missing)` : "⬇ done";
+  }catch(e){
+    btn.textContent = "⬇ failed — see console";
+    console.error("bundle download failed", e);
+  }finally{
+    btn.disabled = false;
+    setTimeout(()=>{ btn.textContent = label; drawPicks(); }, 4000);
+  }
+}
+
 // ---------------------------------------------------------------- chrome
 function drawControls(){
   // one chip per ARM, in column order — trainings and own-prompt arms alike, same mechanism
@@ -816,7 +1138,7 @@ function setSeed(s){ seed = s; render(); }
 
 function render(){
   shown = Math.max(shown, PAGE);
-  drawMatrix(); drawControls(); drawStats(); drawCards();
+  drawMatrix(); drawControls(); drawStats(); drawCards(); drawPicks();
   const n = selectedGens().length;
   document.getElementById("selinfo").textContent =
     sel.size ? `${sel.size} ontology cells · ${n} generations` : `all ontology cells · ${n} generations`;
@@ -871,7 +1193,7 @@ document.getElementById("sub").innerHTML =
        : a.scored < a.gens ? `<span class="badge">scoring in flight ${a.scored}/${a.gens}</span>`
        : `${a.scored} scored`})</span>`).join(" · ")}
      <br>every arm toggles — <b>${m.arm_tiers.length}</b> chips above, any subset side by side;
-     ② specialist and ⚠ copier are always drawn as the yardstick` : ``);
+     ② specialist is always drawn as the upper yardstick` : ``);
 
 // Both registers at once. A page showing only the favourable Δ table would misrepresent this run;
 // one leading with "GATE: FAIL" would misrepresent it the other way.

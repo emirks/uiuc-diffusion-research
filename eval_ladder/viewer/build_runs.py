@@ -97,6 +97,46 @@ RUN_TIER = {r["arm"]: f"run_{r['id']}" for r in RUNS}
 #: the arm renders as "unscored — video only" and contributes no numbers anywhere. Nothing is
 #: estimated, borrowed from another arm, or filled in.
 EXTERNAL = [
+    #: 2026-07-31 — THE PAGE'S TWO BASELINES, and the only two. Both are the LTX-2 base weights
+    #: with no adapter, over this page's own 152 rows at the same two seeds and the same
+    #: 480x640x121f geometry, so they are per-card comparable with every column here. They are
+    #: what the `no_baseline_note` used to say did not exist.
+    #:
+    #: Their prompt is the leaky prompt with the trained `sksz.` token REMOVED: the token means
+    #: nothing to weights that never saw it, and a baseline handed a nonsense string in the exact
+    #: slot where the treatment arms carry their learned behaviour is a strawman. What is left
+    #: states the transition in plain language — the only channel a no-reference model has.
+    #:
+    #: NEITHER IS SHOWN THE DEMO (`use_reference: false` on the row). The reference still sits on
+    #: the row because `run_eval.pool_refs()` bans it from the GT pool, so removing it would hand
+    #: these arms a different pool than the arms they are read against. That is also why `ref` is
+    #: cleared in external_gen rather than here: it is scoring identity, not an input.
+    {"id": "base_prompt_ctt", "score_id": "base_v4", "kind": "baseline", "frames": 121,
+     "no_twin": True,
+     "label": "⓪ BASE · prompt only",
+     "sub": "no adapter, no anchors, no demo · the floor",
+     "src": REPO_ROOT / "store/gens/006_base_prompt_ctt/videos",
+     "media": "outputs/videos/base_arms/base_prompt_ctt",
+     "rows": ("registry", REPO_ROOT / "store/gens/006_base_prompt_ctt/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/002_base_arms__dai__2026-07-31/base_prompt_ctt",
+     "prompt_kind": "base weights, text only. The transition is described in plain language (the "
+                    "leaky arm's effect clause, with the trained <span class='mono'>sksz</span> "
+                    "token removed) and nothing else is given — no prefix, no suffix, no demo. "
+                    "This is what the prompt alone is worth.",
+     "doc": "misc/base_arms/README.md"},
+    {"id": "base_cond_ctt", "score_id": "base_v4", "kind": "baseline", "frames": 121,
+     "no_twin": True,
+     "label": "① BASE · prompt + endpoints",
+     "sub": "no adapter, our anchors, no demo · the honest no-adapter twin",
+     "src": REPO_ROOT / "store/gens/007_base_cond_ctt/videos",
+     "media": "outputs/videos/base_arms/base_cond_ctt",
+     "rows": ("registry", REPO_ROOT / "store/gens/007_base_cond_ctt/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/002_base_arms__dai__2026-07-31/base_cond_ctt",
+     "prompt_kind": "the same text-only prompt as ⓪, plus the endpoint conditioning every "
+                    "training arm receives (prefix 9f, and suffix on two-sided rows). Still no "
+                    "demo — a base model handed a reference is a copier, not a baseline (owner "
+                    "ruling 2026-07-23). This is the level an adapter has to beat.",
+     "doc": "misc/base_arms/README.md"},
     {"id": "ctt_v2_leaky", "score_id": "leaky_v4", "kind": "ours", "frames": 121, "no_twin": True,
      "label": "⑥ CTT v2 · leaky prompt",
      "sub": "our adapter, prompt also describes the transition · level, not a margin",
@@ -135,6 +175,20 @@ EXTERNAL = [
 #: this order, above that kind's arms — a single paragraph covering both would have to be vague
 #: about which caveat belongs to which arm.
 ARM_KINDS = [
+    ("baseline",
+     "The two baselines.",
+     "⓪ and ① are the LTX-2 base weights — <b>no adapter</b> — over these same 152 rows, seeds "
+     "and geometry (480×640×121f @ 24fps). They differ from each other in exactly one field: ① "
+     "receives the endpoint conditioning (prefix 9f, suffix 8f on two-sided rows) and ⓪ receives "
+     "nothing but text, so <b>⓪ vs ① prices the anchors</b> and either against a training prices "
+     "the adapter. Both are handed the transition <b>in the prompt</b>, since a model with no "
+     "demo and no adapter has no other way to know what to produce; the clause is the same one ⑥ "
+     "and Ⓐ carry, with the trained <span class='mono'>sksz</span> token removed. <b>Neither is "
+     "ever shown the in-context demo</b> — a base model handed a reference copies it, which is "
+     "why the old BASE+DEMO column was a warning rail and not a baseline, and why it is no longer "
+     "on this page. They are read as <b>levels</b>: the page's paired Δ and sign test remain "
+     "between the two trainings, which are the only columns that answer an identical input.",
+     ),
     ("ours",
      "Our leaky-prompt arm.",
      "⑥ is the SAME ctt_v2 adapter as ⑤ — same weights, references, endpoint conditioning, "
@@ -249,30 +303,31 @@ CONTENT_LABEL = {"same": "same<br><span>test sample from reference's class</span
                  "cross": "cross<br><span>test sample from other class</span>",
                  "foreign": "foreign<br><span>DAVIS endpoints</span>"}
 
-#: Context tiers bracket the runs and do NOT participate in the run chips — they are the invariant
-#: yardstick. `copier` keeps the owner's 2026-07-23 ruling in its label: a no-adapter model handed a
-#: reference is never a baseline, it is a copier.
+#: Context tiers bracket the runs. `specialist` does not participate in the run chips — it is the
+#: invariant upper yardstick, and its numbers come from a superseded artifact besides.
 #:
-#: 🔴 THERE IS NO PROMPT+ENDPOINT BASELINE TIER ON THIS PAGE, and that is a ruling, not an omission.
-#: `base_prompt`/`base_cond` were never scored under EITHER artifact (their generation lane was
-#: stopped by owner call; base_cond has zero mp4 on disk). The two candidate substitutes are both
-#: roster-confounded: the eps no-reference base rows are all `base:SP-*` cells (56.6%, and zero of
-#: them land on a scored ctt_v2 card), and exp_072's base·PE is a separate 48-generation roster
-#: (75.1%). Those differ by ~19pp from roster composition ALONE — larger than the entire
-#: ctt_v2−ic_gen effect this page exists to show. A horizontal line from either would manufacture
-#: the exact false comparison the page is built to avoid. The gap is stated on the page instead.
+#: 🔴 THE PAGE HAS EXACTLY TWO BASELINES, `base_prompt_ctt` and `base_cond_ctt` (owner call
+#: 2026-07-31), and they are EXTERNAL entries above, so they toggle like every other arm. Three
+#: things that used to stand in for a baseline are deliberately gone:
+#:   * `copier` (⚠ BASE + DEMO) — a no-adapter model handed a reference copies it; that was the
+#:     owner's 2026-07-23 ruling and the column carried the warning in its own label. With real
+#:     baselines on the page a column that is not one, sitting where one would sit, is worse than
+#:     absent, so it was REMOVED rather than relabelled.
+#:   * the old `base_prompt`/`base_cond` rows in registry.jsonl — a different (ladder2) roster,
+#:     never generated. The new arms deliberately carry different names; see arms.yaml.
+#:   * the two roster-confounded substitutes (eps `base:SP-*` rows, exp_072's base·PE) that
+#:     differed from each other by ~19pp on composition alone — more than the effect this page
+#:     shows. Neither is drawn, and now neither is needed.
 #:
-#: `text_floor` is likewise absent, and for a structural reason rather than a policy one: all 12 of
-#: its rows carry `endpoint: None` — it is a per-DONOR-CLASS floor (prompt with no anchors at all),
+#: `text_floor` is still absent, for a structural reason rather than a policy one: all 12 of its
+#: rows carry `endpoint: None` — it is a per-DONOR-CLASS floor (prompt with no anchors at all),
 #: not a per-card row, so it cannot join a (donor, endpoint, sided) card. It joined 0/139 and was
 #: dropped on the advisor's pre-stated condition. Its numbers live in the ladder2 results viewer.
-#: External baselines sit between the runs and the copier: they are the comparison of interest, so
-#: they read next to the trainings, and the copier stays the right-hand warning rail.
+#: ⓪/① replace what it was reached for: they ARE the per-card prompt-only floor.
 CONTEXT_TIERS_BEFORE = ["specialist"]
-CONTEXT_TIERS_AFTER = [a["id"] for a in EXTERNAL] + ["copier"]
+CONTEXT_TIERS_AFTER = [a["id"] for a in EXTERNAL]
 TIER_LABEL = {
     "specialist": ["② SPECIALIST", "transition baked into the weights"],
-    "copier": ["⚠ BASE + DEMO", "NOT a baseline — it copies the demo"],
     **{a["id"]: [a["label"].upper(), a["sub"]] for a in EXTERNAL},
 }
 #: tiers whose numbers come from the superseded artifact (no eps rescore exists)
@@ -289,10 +344,10 @@ def tier_of(r: dict) -> str | None:
     arm = r["arm"]
     if arm in RUN_TIER:
         return RUN_TIER[arm]
-    if arm in ("base_prompt", "base_cond", "text_floor"):
-        return None                         # see the two notes above
-    if arm == "base":
-        return "copier" if r.get("reference") else None
+    # The old ladder2 baseline rows and `base` (the removed BASE+DEMO copier tier) get no column:
+    # this page's baselines are the two `base_*_ctt` arms, which arrive through EXTERNAL.
+    if arm in ("base", "base_prompt", "base_cond", "text_floor"):
+        return None                         # see the tier note above
     if arm.startswith("spec_"):
         return "specialist"
     return None
@@ -403,19 +458,23 @@ WINDOW_CAVEAT = {
 TWIN_CAVEAT = {
     "mark": "‡",
     "tiers": [a["id"] for a in EXTERNAL if a.get("no_twin")],
-    "text": "<b>no base twin — a LEVEL, never a margin.</b> This arm's <span class='mono'>"
-            "input_key</span> is deliberately new (the prompt changed, so the input changed; the "
-            "original hash is kept as <span class='mono'>input_key_base</span>), so <b>0 of its "
-            "152 rows have a base twin</b>. The honest control is the base model handed the SAME "
-            "leaky prompt and that generation does not exist — pairing it against a base video "
-            "rendered from the plain prompt would silently attribute the prompt change to the "
-            "adapter. It therefore contributes a level, exactly like "
-            "<span class='mono'>base_prompt</span>/<span class='mono'>base_cond</span>, and never "
-            "enters the paired Δ, the per-card Δ badge or the donor-class sign test. "
-            "<span class='mono'>M2b margin</span> is unaffected and is shown: it is app(target) − "
-            "best other class, computed from the generation alone, with no twin in it. "
-            "Toggling the column changes visibility only — the caveat holds either way. "
-            "See <span class='mono'>misc/ctt_v2_leaky/DOSSIER.md</span> "
+    "text": "<b>no per-row base twin — a LEVEL, never a margin.</b> These arms carry a deliberately "
+            "new <span class='mono'>input_key</span> (the prompt changed, so the input changed; "
+            "the original hash is kept as <span class='mono'>input_key_base</span>), so none of "
+            "their 152 rows resolves a <span class='mono'>twin_of</span> in the harness. For ⓪ "
+            "and ① that is definitional — they <i>are</i> the baselines, and a baseline is not "
+            "joined to one. For ⑥ it is by construction: the honest control is the base model "
+            "handed the same effect-describing prompt, and pairing it instead against a base "
+            "video rendered from the PLAIN prompt would silently attribute the prompt change to "
+            "the adapter. (⓪/① are that control as a <b>column</b> — same clause, minus the "
+            "trained token — which is why they are on the page; they are still not a per-row "
+            "twin, because the token differs.) So these columns never enter the paired Δ, the "
+            "per-card Δ badge or the donor-class sign test, all of which stay between the two "
+            "trainings. <span class='mono'>M2b margin</span> is unaffected and is shown: it is "
+            "app(target) − best other class, computed from the generation alone, with no twin in "
+            "it. Toggling a column changes visibility only — the caveat holds either way. "
+            "See <span class='mono'>misc/base_arms/README.md</span> and "
+            "<span class='mono'>misc/ctt_v2_leaky/DOSSIER.md</span> "
             "§“READ BEFORE SCORING THIS ARM”.",
 }
 
@@ -598,10 +657,20 @@ def external_gen(a: dict, r: dict, per_seed: dict, m: dict | None, ceil: dict,
         "prompt": row["prompt"], "prompt_hi": diff_span(our_prompt, row["prompt"]),
     }
     # an arm of OURS conditions the way our runs do, so it gets the real prefix/suffix bar — the
-    # "their contract" box is for a model whose geometry is not ours
-    if a.get("kind") == "ours":
-        e["cond"] = "prefix+suffix" if r["sided"] == "two" else "prefix"
+    # "their contract" box is for a model whose geometry is not ours. Which conditioning it
+    # actually got is read off the ARM'S OWN row (`row`), never off the registry row `r`: ⓪ and ①
+    # share every field of `r` and differ only here, so taking it from `r` would draw the prefix
+    # bar on the prompt-only baseline.
+    if a.get("kind") in ("ours", "baseline"):
+        e["cond"] = ("none" if row.get("conditioning") == "none"
+                     else "prefix+suffix" if r["sided"] == "two" else "prefix")
         e.pop("cond_note")
+    # `use_reference: false` means the demo was never given to this arm. The reference stays on the
+    # row as SCORING identity (pool_refs bans it), so it must be cleared here or the baselines
+    # would draw the in-context-demo ribbon and claim an input they never received.
+    if row.get("use_reference") is False:
+        e["ref"] = None
+        e["mismatched_ref"] = False
     e["m"] = {k: (None if m.get(k) is None or m.get(k) != m.get(k) else round(m[k], 6))
               for k, _l, _d, _dp, _g in METRICS}
     e["f"] = {k: (None if m.get(k) is None or m.get(k) != m.get(k) else round(m[k], 4))
@@ -915,7 +984,7 @@ def build() -> dict:
     # INPUTS band owns every input; output boxes only INDICATE what they received
     for card in cards.values():
         refs: dict[str, dict] = {}
-        for slot in run_tiers + ext_tiers + ["copier"]:
+        for slot in run_tiers + ext_tiers:
             for g in card["slots"][slot]:
                 if not g.get("ref"):
                     continue
@@ -960,7 +1029,7 @@ def build() -> dict:
 
     #: Owner request 2026-07-30: EVERY arm toggles, not just the trainings, so any subset can be
     #: put side by side. One list, in column order — the chips are built from it, and so is the
-    #: set of columns a toggle may hide. `specialist` and `copier` stay out: they are the invariant
+    #: set of columns a toggle may hide. `specialist` stays out: it is the invariant
     #: yardstick the page brackets everything with, not arms under comparison. A toggle controls
     #: VISIBILITY only; `run` is what decides whether an arm may enter the paired Δ / sign test,
     #: and `no_twin` / the 33f `†` hold whether the column is shown or not.
@@ -1006,13 +1075,14 @@ def build() -> dict:
             "badged_sets": sorted({g["instr"] for c in ordered for t in BADGED_TIERS
                                    for g in c["slots"].get(t, []) if g.get("instr")}),
             "no_baseline_note":
-                "No same-instrument, same-roster prompt+endpoint baseline exists for this roster. "
-                "base_prompt / base_cond were never scored under either artifact (lane stopped "
-                "2026-07-23); the eps no-reference base rows belong to the specialist roster and "
-                "none land on a card here; exp_072's base·PE is a different 48-generation roster. "
-                "Those two candidates differ by ~19pp on roster composition alone — more than the "
-                "effect this page shows — so neither is drawn. Producing a real one requires new "
-                "scoring, which is currently barred.",
+                "This page now has a same-roster, same-geometry baseline: ⓪ BASE · prompt only "
+                "and ① BASE · prompt + endpoints, generated 2026-07-31 on these exact 152 rows at "
+                "seeds 42/43 and scored on the same machine as the run columns. They replace the "
+                "three things that used to stand in for one — the BASE+DEMO copier column (a "
+                "copier, not a baseline), the ungenerated ladder2 base_prompt/base_cond rows, and "
+                "the two roster-confounded candidates that differed from each other by ~19pp on "
+                "composition alone. They are read as levels; the paired Δ and the sign test "
+                "remain between the two trainings.",
             "registry_rows": len(rows), "generations": n_vid, "cards": len(ordered),
             "seeds": list(SEEDS), "px_prefix": ec.PX_PREFIX,
             "suffix_gen_frames": ec.SUFFIX_GEN_FRAMES, "frames": 121,
@@ -1027,9 +1097,10 @@ def build() -> dict:
                           if any(a["kind"] == k for a in ext)],
             "record": "misc/ctt_v2_training/RUN_RECORD.md §19",
             "absent_tiers": [
-                ["prompt + endpoint baseline",
-                 "never scored under either artifact (lane stopped 2026-07-23); the two candidate "
-                 "substitutes are different rosters and differ from each other by ~19pp"],
+                ["base + demo (the old ⚠ copier column)",
+                 "removed 2026-07-31 — a no-adapter model handed a reference copies it, so it was "
+                 "never a baseline; ⓪/① are, and a non-baseline sitting in a baseline's place is "
+                 "worse than an absent one"],
                 ["text floor (prompt only)",
                  "all 12 rows have no endpoint — a per-donor-class floor, not a per-card row, so "
                  "it joins 0 of these cards. It is in the ladder2 results viewer."],
