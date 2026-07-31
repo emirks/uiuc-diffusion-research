@@ -1,5 +1,23 @@
 ## 2026-07-30
 
+**22:21 — bneck_v2 closed: a transition-operator encoder, qualified certificate with two stated exceptions.**
+Retried the bottleneck branch on CTTv2 as an operator/advisor campaign (9 fresh advisor rulings, verbatim in
+`misc/bneck_v2/advisors/`). Trained an 8.6M Perceiver standalone on precomputed latents with a single SupCon
+loss over 1,368 operator identities — no generator in the loop. **Certified on all 3 seeds:** same-operator
+retrieval on *never-trained* operators 0.896–0.916 (chance 0.009, best corpse 0.332), holding at 12.1–12.2×
+chance inside timing-matched galleries; semantic-manner retrieval 0.772–0.843, above the raw-latent content
+oracle. Endpoint identity is absent from the code geometry (endpoint-pair AUROC 0.500–0.507 vs corpses
+0.91–0.97); unseen-shader-family retrieval 0.571–0.655 (~100× chance); real→synthetic manner transfer
+2.47–2.56× chance. **Two exceptions:** the endpoint-appearance leak gate failed (11–17% of oracle after
+byte-pure frame masking cut it 3–4×), and graded similarity missed 0.72 by ≤0.03 — the latter resolved by a
+pre-committed diagnostic showing 0.851–0.898 at matched timing, i.e. dilution by a timing axis rather than
+lost family knowledge. Generator usability is explicitly NOT certified; the frozen-encoder trial is next.
+Two instrument lessons recorded: corpse-relative bars must be frozen to numerics once corpses are measured
+(they had silently inflated to 0.766/0.906), and a single-λ ridge is an unsafe leak probe (a pre-committed
+λ-sweep voided an already-drafted certificate). Viewer live at `outputs/viewers/bneck_v2_encoder/`.
+Report: `misc/bneck_v2/RESULTS.md`; record: `misc/bneck_v2/DOSSIER.md`.
+
+
 - **20:25** — **Bridges retired; `/taiga` is the canonical absolute prefix.** The five `$LAB`-level
   compatibility symlinks (`misc`, `LTX-2-*`) are parked at `$LAB/.retired-bridges/` (reversible).
   Enablers: rewrote the venvs' editable path files (`envs-aarch64/ltx2` ltx_core/ltx_pipelines/
