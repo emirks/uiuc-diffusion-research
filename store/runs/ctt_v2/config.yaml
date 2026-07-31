@@ -1,0 +1,352 @@
+# =============================================================================
+# CTT v2 — IC-LoRA transition-transfer training config
+# =============================================================================
+# THE RULING of the 2026-07-29 advised campaign (3 fable advisors: prior art,
+# system reasoning, synthesis). Rationale for every value is in
+# $LAB/misc/ctt_v2_training/DOSSIER.md; advisor returns verbatim in advisors/.
+#
+# Requires the MERGED trainer branch: cherry-pick 811d045 (SampleListDataset +
+# StratifiedEpochSampler) onto `bneck` (one-way reference attention).
+# Operator-verified 2026-07-29: applies cleanly; tree-identical to the reverse
+# whole-branch merge; 14 one-way gates pass on the result.
+#
+# This file was VALIDATED against the merged branch's Pydantic model
+# (LtxTrainerConfig) — it parses. Substitute ${...} placeholders for the box.
+#
+# NOTE on directory names: with `data.sample_list`, every *_dir below is a KEY
+# into each sample row's `paths` object, not a filesystem directory. The valid
+# keys in this dataset are: latents · reference_latents · cond_clean_latents ·
+# conditions · masks. ("conditions" is wired in automatically.)
+# =============================================================================
+
+model:
+  model_path: "${MODELS}/ltx-2-19b-dev.safetensors"
+  text_encoder_path: "${MODELS}/gemma-3-12b-it-qat-q4_0-unquantized"
+  training_mode: "lora"
+  load_checkpoint: null
+
+# -----------------------------------------------------------------------------
+# LoRA — rank 256 (REVISED 2026-07-29 after the owner surfaced RefVFX's released
+# adapter: rank 1024, lr 1e-4, on Wan 14B).
+#
+# The first ruling said rank 32 because "capacity feeds copying." The advisor
+# retracted that as a wrong mechanism: copying is the ZERO-capacity default — the
+# base model copies at leak 0.95-0.98 with no adapter at all, because the
+# pretrained circuit already routes reference tokens. Capacity is what the CURE
+# needs: suppressing that default across contexts, and learning to RENDER effect
+# families (melt, fire, morphs) the base cannot synthesize natively.
+#
+# With that flipped, the precedent stack is one-directional: RefVFX adapts at
+# ~27-35% of base capacity, VFXMaster full-fine-tunes its attention layers, and
+# DisMo's rank-64-on-2B stops looking like an outlier.
+#
+# 256 is the feasible frontier WITH MARGIN on 8xH100 80GB, measured-anchored on
+# exp_056's 49.45 GB peak at rank 32:
+#     rank  LoRA params   %of 19B   projected DDP peak
+#      32     164 M        0.86%      49.5 GB (measured)
+#     128     654 M        3.44%      55.3 GB
+#     256    1.31 B        6.89%      63.2 GB  <- here
+#     512    2.62 B       13.77%      78.9 GB  (no room for the VAE at validation)
+#    1024    5.23 B       27.55%     110.3 GB  (impossible)
+# Cost from 64 to 256 is nearly flat (+0.5 h), so sitting mid-curve would
+# surrender most of the capacity for risk-reduction the smoke valves and the
+# checkpoint ladder already provide.
+#
+# ⚠ RefVFX's own 1024 is NOT reachable here: they had 8x Blackwell (~180 GB) plus
+# DeepSpeed ZeRO-1 optimizer sharding. This trainer has NO DeepSpeed support, and
+# its only sharding path (FSDP) force-casts the 19B transformer to fp32
+# (trainer.py:653) — an unproven dependency for a one-shot run.
+#
+# 🔒 PRE-COMMITTED FEASIBILITY VALVES, evaluated during the §5a smoke (which now
+#    runs at rank 256): if peak VRAM > 72 GB **or** steady-state step time
+#    > 3.2 s/step, drop to **rank 128** and restart pre-flight. The numbers
+#    decide — no judgement calls mid-run. If 128 also fails, go to 64 (not 32).
+# -----------------------------------------------------------------------------
+lora:
+  rank: 128
+  alpha: 128                  # alpha = rank, scale 1.0 (RefVFX's alpha is unstated)
+  dropout: 0.0
+  target_modules:
+    # video self-attention — the ONLY reference→target path (reference latents are
+    # concatenated into the same token sequence, so the demo is read through attn1)
+    - "attn1.to_k"
+    - "attn1.to_q"
+    - "attn1.to_v"
+    - "attn1.to_out.0"
+    # video cross-attention — sees only text; must relearn `sksz` as the slot marker
+    - "attn2.to_k"
+    - "attn2.to_q"
+    - "attn2.to_v"
+    - "attn2.to_out.0"
+    # video feed-forward — executes the per-token transformation
+    - "ff.net.0.proj"
+    - "ff.net.2"
+
+training_strategy:
+  name: "flexible"
+  video:
+    is_generated: true
+    latents_dir: "latents"
+    # causal-VAE endpoint-bleed fix: intrinsic (mask) conditioning reads its clean
+    # latents from the isolated encode, not from the full-video encode whose last
+    # latent frame reaches backward into the clip middle.
+    cond_clean_latents_dir: "cond_clean_latents"
+    conditions:
+      - type: reference
+        latents_dir: "reference_latents"
+        # probability 1.0 = NO reference dropout. Its only consumer would be a
+        # per-condition CFG dial (lambda_ref) at inference, which does not exist
+        # and is out of scope. A knob without its consumer is not a knob.
+        probability: 1.0
+        # ONE-WAY reference attention: target→reference stays open, reference→target
+        # closes, making the reference a read-only context bank instead of something
+        # the noisy target rewrites at every layer. Implemented as two UNMASKED
+        # attention calls (flash stays available), sliced AFTER RoPE so positions
+        # stay shared. Measured 0.81x the cost of bidirectional — it is FASTER,
+        # because the reference-over-target quadrant is never computed.
+        # ⚠ Inference MUST match: wrap reference conditioning in
+        #   ConditioningItemOneWayWrapper.
+        attention: "one_way"
+      # per-sample endpoint conditioning via the dataset's 3 mask tensors
+      - type: mask
+        mask_dir: "masks"
+        probability: 1.0
+
+optimization:
+  learning_rate: 1.0e-4        # DRAGGED DOWN BY THE RANK CHANGE. 2e-4 was our
+                               # measured point at rank 32; at 256 it no longer
+                               # applies. Every comparable high-capacity system
+                               # sits at 1e-4 (RefVFX verbatim, VFXMaster, DisMo,
+                               # ContextAnyone), and RefVFX's SHIPPED checkpoint is
+                               # exactly 10K steps at 1e-4 — direct evidence that
+                               # 10K suffices at this lr in this task family.
+  steps: 10000                 # RefVFX's published operating point (10K steps x
+                               # batch 8 on one 8-GPU node) = 1.42 epochs here,
+                               # ≥1.2 passes over S2's 1,590 operators
+  batch_size: 1                # trainer-enforced: two latent shapes coexist
+  gradient_accumulation_steps: 1   # effective batch 8 via 8 DP ranks; g=1 maximizes
+                                   # optimizer updates per wall-hour
+  max_grad_norm: 1.0
+  optimizer_type: "adamw"
+  scheduler_type: "linear"     # start_factor 1.0 -> end_factor 0.1. NO warmup:
+  scheduler_params: {}         # verified absent from _create_scheduler, and adding
+                               # it would be new code. LoRA-B is zero-init, so the
+                               # adapter already starts at identity.
+  enable_gradient_checkpointing: true
+
+acceleration:
+  mixed_precision_mode: "bf16"
+  quantization: null
+  load_text_encoder_in_8bit: false
+  # TRUE at rank 256: buys back ~10.5 GB of fp32 Adam state during validation, when
+  # the VAE decoder also needs to be resident. At rank 32 this was unnecessary.
+  offload_optimizer_during_validation: true
+
+# -----------------------------------------------------------------------------
+# Data — the mix is the campaign's main judgment call.
+#   S0 15 -> 5   : 385 pairs replayed ~22x/epoch buys repetition, not operator
+#                  diversity, and concentrates memorization on the eval's home
+#                  classes. At 5% it is 7.3 passes/epoch, 10.4 over the run.
+#   S1  6 -> 12  : the diversity-bearing carrier of the real-VFX manner that S0's
+#                  cut removes; still only 2.6 passes over the whole run.
+#   S4 10 -> 13  : largest real-VFX operator bank (42 ops, 2,000 distinct clips);
+#                  its 1,820-token shape means 13% nominal is only ~5% effective
+#                  loss-bearing-token share. Not 15 — the equal-mixing precedent
+#                  behind that number has no ablation under it.
+#   S2 69 -> 70  : pro-rata to base counts 22,731:23,577 by the standing rule.
+# Macro VFX:procedural = 30:70 (ruled was 31:69). Two-sided share of the stream
+# moves 72.82% -> 72.06%, so the sidedness detector's baseline does not move.
+#
+# VERIFIED at these weights (real sampler, real samples.jsonl, 8-way shard sim):
+#   realized mix S0 5.0011 · S1 11.9997 · S2a 34.3599 · S2b 35.6390 · S4 13.0003
+#   per-rank counts 7,046 each · zero cross-rank duplicate consumption
+# CHANGING THE MIX IS A CONFIG EDIT — the dataset never needs rebuilding.
+# -----------------------------------------------------------------------------
+data:
+  sample_list: "${CTT_ROOT}/samples.jsonl"
+  stratum_weights_pct:
+    S0: 5.0
+    S1: 12.0
+    S2a: 34.36059
+    S2b: 35.63941
+    S4: 13.0
+  sampler_seed: 42
+  sampler_epoch_size: null      # default = 56,368 rows
+  verify_sample_files: true     # stats all 41,195 files at startup; fail-closed on
+                                # a freshly-staged box is exactly what we want
+  num_dataloader_workers: 4
+
+# -----------------------------------------------------------------------------
+# Checkpoints — the deliverable is the BEST checkpoint under the gate, never
+# "the last one". 20 x 192 MiB ~ 4 GB; keep them all.
+# -----------------------------------------------------------------------------
+checkpoints:
+  interval: 500
+  keep_last_n: -1
+  precision: "bfloat16"
+
+# -----------------------------------------------------------------------------
+# Inline validation — 8 samples, one per rank (ValidationRunner distributes
+# round-robin, verified at trainer.py:845-847), so a stop costs ~one generation
+# of wall time, not eight. Fixed seed and fixed sample set so checkpoints stay
+# comparable. Satisfies the standing ID + OOD + control directive.
+#
+#   1  ID one-sided     — trained S0 class, unseen demo clip, foreign endpoint
+#   2  ID two-sided     — trained S0 class
+#   3  OOD one-sided    — held-out zero-shot class demo (e.g. melt_transition)
+#   4  OOD two-sided    — one of the 5 two-sided zero-shot classes
+#   5  CONTROL          — same endpoint as #3, different-class demo.
+#                         #3 and #5 identical  =>  dead reference channel
+#   6  COPY-CANARY A    — S0/S1 demo, maximally distinctive scenery, unrelated
+#                         endpoint. Demo scenery in the output = copying
+#   7  COPY-CANARY B    — S2 held-out-shader-family demo (known A/B content)
+#   8  S4 shape         — held-out S4 trigger demo at 832x448x33 (per-sample dims)
+#
+# skip_initial_validation MUST stay false: the step-0 generations are the
+# base-model near-copy control point (measured leak 0.95-0.98).
+# WATCH: canary demo-scenery should FADE by ~2k-4k while demo manner persists.
+# Scenery still present at 4k+ is the copy alarm, and predicts gate failure on
+# clause (a) hours before eval runs.
+# -----------------------------------------------------------------------------
+validation:
+  # ---- the 8 inline validation samples (built by build_validation_samples.py) ----
+  # Round-robin one per rank across 8 ranks, so a stop costs ~one generation of wall time.
+  # FIXED for the whole run — changing the set mid-run makes checkpoints incomparable.
+  # attention: one_way on every reference — the config default is bidirectional, which
+  # would be a train/inference mismatch for this adapter.
+  samples:
+    # 1 · ID one-sided · demo=animalization_0 (animalization) · endpoint=davis_hike (davis)
+    - prompt: "A hiker in a light purple shirt and olive trousers carrying a large black backpack walks across a bright rocky mountain slope. sksz."
+      conditions:
+        - type: "prefix"
+          video: "/storage/ozgur/ctt_v2/repo/eval_ladder/conds/davis_hike_start9.mp4"
+          num_frames: 9
+        - type: "reference"
+          video: "/storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/animalization/animalization_0.mp4"
+          downscale_factor: 1
+          temporal_scale_factor: 1
+          include_in_output: false
+          attention: "one_way"
+    # 2 · ID two-sided · demo=hero_flight_5 (hero_flight) · endpoint=hero_flight_6
+    - prompt: "A man in a green sweater and pink beanie stands outside a Parisian café holding a shopping bag and a pink jacket. sksz. a first-person aerial view above a narrow European street, a green-sleeved arm stretched out ahead."
+      conditions:
+        - type: "prefix"
+          video: "/storage/ozgur/ctt_v2/repo/eval_ladder/conds/hero_flight_6_start9.mp4"
+          num_frames: 9
+        - type: "suffix"
+          video: "/storage/ozgur/ctt_v2/repo/eval_ladder/conds/hero_flight_6_end9.mp4"
+          num_frames: 8
+        - type: "reference"
+          video: "/storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/hero_flight/hero_flight_5.mp4"
+          downscale_factor: 1
+          temporal_scale_factor: 1
+          include_in_output: false
+          attention: "one_way"
+    # 3 · OOD one-sided · demo=cotton_cloud_1 (cotton_cloud, zero-shot) · endpoint=animalization_0
+    - prompt: "A woman in a red bomber jacket poses against a blue studio backdrop, hands on hips. sksz."
+      conditions:
+        - type: "prefix"
+          video: "/storage/ozgur/ctt_v2/repo/eval_ladder/conds/animalization_0_start9.mp4"
+          num_frames: 9
+        - type: "reference"
+          video: "/storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/cotton_cloud/cotton_cloud_1.mp4"
+          downscale_factor: 1
+          temporal_scale_factor: 1
+          include_in_output: false
+          attention: "one_way"
+    # 4 · OOD two-sided · demo=raven_transition_0 (raven_transition, zero-shot) · endpoint=air_bending_1
+    - prompt: "A figure in a white knit balaclava and bright red hoodie leans against the hood of a blue car in a dusky parking lot, cradling a black motorcycle helmet in red-gloved hands. sksz. a young man with dark hair in an oversized brown shirt smoking a cigarette against a white railing inside a green-lit pedestrian tunnel at night."
+      conditions:
+        - type: "prefix"
+          video: "/storage/ozgur/ctt_v2/repo/eval_ladder/conds/air_bending_1_start9.mp4"
+          num_frames: 9
+        - type: "suffix"
+          video: "/storage/ozgur/ctt_v2/repo/eval_ladder/conds/air_bending_1_end9.mp4"
+          num_frames: 8
+        - type: "reference"
+          video: "/storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/raven_transition/raven_transition_0.mp4"
+          downscale_factor: 1
+          temporal_scale_factor: 1
+          include_in_output: false
+          attention: "one_way"
+    # 5 · CONTROL for #3 · demo=raven_transition_0 (raven_transition) · SAME endpoint as #3 (animalization_0) — identical output to #3 means a DEAD REFERENCE
+    - prompt: "A woman in a red bomber jacket poses against a blue studio backdrop, hands on hips. sksz."
+      conditions:
+        - type: "prefix"
+          video: "/storage/ozgur/ctt_v2/repo/eval_ladder/conds/animalization_0_start9.mp4"
+          num_frames: 9
+        - type: "reference"
+          video: "/storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/raven_transition/raven_transition_0.mp4"
+          downscale_factor: 1
+          temporal_scale_factor: 1
+          include_in_output: false
+          attention: "one_way"
+    # 6 · COPY-CANARY A · demo=animalization_0 (animalization) · unrelated endpoint=color_rain_0 — watch for demo SCENERY in the output
+    - prompt: "A woman with long black hair and large sunglasses stands in a warm-lit kitchen, wearing a brown leather jacket, a light blue button-down shirt, and a brown skirt while holding a white telephone receiver to her ear. sksz."
+      conditions:
+        - type: "prefix"
+          video: "/storage/ozgur/ctt_v2/repo/eval_ladder/conds/color_rain_0_start9.mp4"
+          num_frames: 9
+        - type: "reference"
+          video: "/storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/animalization/animalization_0.mp4"
+          downscale_factor: 1
+          temporal_scale_factor: 1
+          include_in_output: false
+          attention: "one_way"
+    # 7 · COPY-CANARY B · demo=s2_0023_c00 (S2a op BowTieWithParameter_d8b50f918c, PRE-REGISTERED inline-OOD, unseen at op level) · same endpoint as #6
+    - prompt: "A woman with long black hair and large sunglasses stands in a warm-lit kitchen, wearing a brown leather jacket, a light blue button-down shirt, and a brown skirt while holding a white telephone receiver to her ear. sksz."
+      conditions:
+        - type: "prefix"
+          video: "/storage/ozgur/ctt_v2/repo/eval_ladder/conds/color_rain_0_start9.mp4"
+          num_frames: 9
+        - type: "reference"
+          video: "/storage/ozgur/ctt_v2/datasets/ctt_v2/encodes/S2a/clips/s2_0023_c00.mp4"
+          downscale_factor: 1
+          temporal_scale_factor: 1
+          include_in_output: false
+          attention: "one_way"
+    # 8 · S4 shape (ID trigger, novel pairing) · demo=000032 (trigger 0rb4it_360_degree_orbit) · endpoint=000461 (trigger 3p1c_epic_transformation) · 832x448x33 @16fps — NOT OOD evidence
+    - prompt: "A middle-aged man with short dark hair, dark eyebrows, and a mustache, wearing a white shirt collar, stares forward outdoors against a blurred background illuminated by warm orange sunlight. sksz."
+      video_dims: [832, 448, 33]
+      conditions:
+        - type: "prefix"
+          video: "/storage/ozgur/ctt_v2/datasets/ctt_v2/encodes/S4/clips/000461.mp4"
+          num_frames: 1
+        - type: "reference"
+          video: "/storage/ozgur/ctt_v2/datasets/ctt_v2/encodes/S4/clips/000032.mp4"
+          downscale_factor: 1
+          temporal_scale_factor: 1
+          include_in_output: false
+          attention: "one_way"
+  negative_prompt: "worst quality, inconsistent motion, distorted, jittery"
+  video_dims: [480, 640, 121]
+  frame_rate: 24.0
+  seed: 42
+  inference_steps: 30
+  interval: 1000
+  guidance_scale: 4.0
+  stg_scale: 1.0
+  stg_blocks: [29]
+  stg_mode: "stg_v"
+  generate_audio: false
+  skip_initial_validation: false
+
+flow_matching:
+  # The per-stratum sigma distribution is a BINDING INVARIANT stamped in
+  # DATASET.md §8.2.1. Do not patch the sampler, do not resample.
+  timestep_sampling_mode: "shifted_logit_normal"
+  timestep_sampling_params: {}
+
+hub:
+  push_to_hub: false
+  hub_model_id: null
+
+wandb:
+  enabled: true
+  project: "ctt-v2"
+  entity: null
+  tags: ["ctt_v2", "ic-lora", "one_way", "rank256", "lr1e-4", "mix-5-12-70-13"]
+  log_validation_videos: true
+
+seed: 42
+output_dir: "outputs/training/ctt_v2_main"

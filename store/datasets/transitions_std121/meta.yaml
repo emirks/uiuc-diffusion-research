@@ -1,0 +1,8 @@
+id: transitions_std121
+shelf: datasets
+created: 2026-07-30 (stub; corpus predates the store)
+source: data/processed/transitions_std121 (git-LFS mp4s + corpus_manifest.json)
+root: symlink -> ../../../data/processed/transitions_std121
+contents: the 222-clip eval corpus behind transition-eval v4
+corpus_sha256: 5a7a8be9f8a0ba70de9d3c77aaec77801a59170255d5fcb425d80a364afd3652
+consumers: [evals/five_arm__dai__2026-07-30]

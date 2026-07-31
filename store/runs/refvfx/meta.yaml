@@ -1,0 +1,14 @@
+id: refvfx
+shelf: runs
+external: true
+created: 2026-07-30
+machine: n/a (not trained by us)
+source: maxwelljones14/refVFX-lora — UNOFFICIAL CMU reimplementation of arXiv:2601.07833 (disclose in writeups)
+inputs: {}
+model: Wan2.1-FLF2V-14B-720P (base) + refVFX LoRA step-10000 (rank 1024, 9,814,768,056 B) + CausVid LoRA rank 32
+steps_trained: 40000 (per model card)
+checkpoints: symlink -> $LAB/cache/refvfx/weights (87 GB, durable copy)
+notes: >
+  A second full 87 GB copy sits at /work/nvme/bgms/emirkisa/refvfx/weights (the gen-time read
+  path); an abandoned third at eps /storage/ozgur/refvfx/weights per RECORD.md. Reference
+  conditioning is width-wise latent concat (refvfx_pipeline.py:343), mask 1=preserve / 0.5=modify.

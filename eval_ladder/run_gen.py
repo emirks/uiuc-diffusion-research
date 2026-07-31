@@ -249,7 +249,10 @@ def main() -> None:
     for idx, path in saved:
         dst = out_path(todo[idx])
         Path(path).rename(dst)
-        print(f"[done] {todo[idx]['item_id']} s{args.seed} -> {dst.relative_to(REPO_ROOT)}")
+        # dst may live outside the repo (LADDER_OUT_ROOT/--out-root); relative_to would raise
+        # ValueError here and kill the job after the first rename, orphaning the rest in _runner/.
+        rel = dst.relative_to(REPO_ROOT) if dst.is_relative_to(REPO_ROOT) else dst
+        print(f"[done] {todo[idx]['item_id']} s{args.seed} -> {rel}")
 
 
 if __name__ == "__main__":

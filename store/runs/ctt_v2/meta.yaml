@@ -1,0 +1,27 @@
+id: ctt_v2
+shelf: runs
+created: 2026-07-30          # store entry date; trained 2026-07 on an offsite 8xH100 box
+machine: offsite 8xH100 (checkpoints returned to taiga; misc/ctt_v2_training/RUN_RECORD.md is the run authority)
+source: misc/ctt_v2_training campaign (config copied here as config.yaml)
+inputs:
+  dataset: datasets/ctt_v2   # store/datasets/ctt_v2 stub -> repo datasets/ctt_v2
+model: LTX-2 19B dev
+adapter: IC-LoRA
+rank: 128                    # NOT 256 — arms.yaml's comment is stale; verified from checkpoint header
+alpha: 128
+target_modules: attn_ffn (10 modules, 654,311,424 LoRA params = 3.44% of base)
+reference_attention: one_way
+reference_dropout: "off (p=1.0)"
+lr: 1e-4 linear 1.0->0.1, no warmup
+timesteps: shifted_logit_normal
+seed: 42
+effective_batch: 8           # 8 DDP x bs1 x accum1
+steps_trained: 10000
+shipped_step: 10000
+checkpoint_sha256:
+  lora_weights_step_10000.safetensors: b85c994b7b472e4707a5aa18fd64efd39e3c43e64f43a57ecb2db1f6a1947128
+training_data: 56,368 pairs, 1,670 operators; mix S0 5.0 / S1 12.0 / S2a 34.36059 / S2b 35.63941 / S4 13.0
+notes: >
+  run_gen.py defaults --rank to 32 — pass --rank 128 --alpha 128 explicitly or the adapter loads
+  mismatched. Intermediates (steps 500-9500, ~24 GB) remain in misc/ctt_v2_training/checkpoints/;
+  candidates for deletion at next cleanup (no downstream consumer).

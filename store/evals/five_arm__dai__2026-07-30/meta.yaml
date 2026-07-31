@@ -1,0 +1,21 @@
+id: five_arm__dai__2026-07-30
+shelf: evals
+created: 2026-07-30
+machine: DeltaAI GH200 (aarch64, torch 2.10.0) — ALL arms on this one machine per the cross-machine rule
+source: misc/refvfx_baseline/eval (build_eval_manifest.py -> 36 shards/arm -> aggregate.py)
+inputs:
+  gens: [ic_gen, ctt_v2, ctt_v2_leaky, refvfx_A, refvfx_B]
+harness: transition-eval 4.0.0 (v4)
+scorer_import: .claude/worktrees/eval-v4-cert/src via PYTHONPATH — never stamp-certified (versioning.stamp() -> certified False)
+corpus: data/processed/transitions_std121/corpus_manifest.json (222 clips)
+corpus_sha256: 5a7a8be9f8a0ba70de9d3c77aaec77801a59170255d5fcb425d80a364afd3652
+reference_artifact_sha256: 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8   # measured, rebuilt-222
+tau_copy: 0.858
+items_per_arm: 1842 scored + 1842 control_* rows in items.jsonl; 0 error rows
+layout: <arm>/c{0..35}/{items.jsonl,results.json}; headline table = five_arm_table.md
+eval_input_manifests: ../../misc/refvfx_baseline/eval/manifests/<arm>/
+caveats:
+  - never mix with eps-scored numbers (measured eps<->DeltaAI drift breaches the 0.005 bar)
+  - core_degenerate/copy_max not comparable 33f vs 121f arms
+  - foreign-tier pool-% ceilings are proxies: ranking-only, never blended with %_same
+  - item_id collides across all arms except ic_gen; key on (arm, item_id)

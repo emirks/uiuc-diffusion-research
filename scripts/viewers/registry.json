@@ -225,18 +225,23 @@
           {
             "name": "data",
             "target": "data"
+          },
+          {
+            "name": "store",
+            "target": "store"
           }
         ]
       },
       "check_files": [
-        "outputs/videos/ladder2/ctt_v2__ck10000",
-        "outputs/videos/ladder2/ic_gen",
-        "outputs/eval/ctt_v2_compare",
-        "outputs/videos/ctt_v2_leaky/clips",
-        "outputs/videos/refvfx_baseline/refvfx_A",
-        "outputs/videos/refvfx_baseline/refvfx_B"
+        "store/gens/ic_gen/videos",
+        "store/gens/ctt_v2/videos",
+        "store/gens/ctt_v2_leaky/videos",
+        "store/gens/refvfx_A/videos",
+        "store/gens/refvfx_B/videos",
+        "store/evals/five_arm__dai__2026-07-30",
+        "outputs/eval/ctt_v2_compare"
       ],
-      "_media": "The refvfx_baseline and ctt_v2_leaky paths are symlinks into $LAB/misc/refvfx_baseline/{out,out_ours} and $LAB/misc/ctt_v2_leaky/videos/ctt_v2_leaky — finished experimental data that is never moved or copied. build_runs.py :: ensure_external_media() recreates them on every run, so a wiped outputs/ costs one rerun. Scores for those arms land in $LAB/misc/refvfx_baseline/eval/scores/<arm>/ and are picked up by the next rebuild with no viewer edit."
+      "_media": "2026-07-30 reorg: all five arms' videos live in the artifact store (store/gens/<id>/videos), scores in store/evals/five_arm__dai__2026-07-30/<arm>/, and the old outputs/videos/... paths are symlinks build_runs.py :: ensure_external_media() recreates on every run — a wiped outputs/ costs one rerun. See store/README.md for the contract."
     },
     {
       "slug": "ladder_v3_pairs",

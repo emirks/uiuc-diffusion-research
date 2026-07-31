@@ -1,0 +1,7 @@
+id: ctt_v2
+shelf: datasets
+created: 2026-07-30 (stub; dataset finalized earlier in misc/ctt_v2_final campaign)
+source: scripts/ctt_v2 pipeline; misc/ctt_v2_final campaign
+root: symlink -> ../../../datasets/ctt_v2 (152 GB: encodes, masks, conditions, captions)
+contents: 56,368 training pairs, 1,670 operators; strata S0/S1/S2a/S2b/S4
+consumers: [runs/ctt_v2]

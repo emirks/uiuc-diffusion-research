@@ -1,5 +1,22 @@
 ## 2026-07-30
 
+- **20:02** — **The artifact store (`store/`) + the $LAB reorg.** One structured home for the
+  train → generate → evaluate chain: `store/{runs,gens,evals,datasets}/<id>/` with a `meta.yaml`
+  per entry, `README.md` as the contract, `INDEX.md` as the ledger. Seeded with the five-arm
+  refVFX comparison: runs `ic_gen` (step 5000, sha recorded) / `ctt_v2` (step 10000, sha
+  recorded) / `refvfx` (external stub → `$LAB/cache/refvfx/weights`); five gens (304 mp4 each,
+  moved, with `grid.jsonl` prompt rows); eval `five_arm__dai__2026-07-30` (36 shards × 5 arms,
+  measured corpus + reference-artifact sha256s in its meta). Every prior location now holds a
+  symlink to the store, so old paths keep resolving. Same reorg moved `$LAB/misc` and the four
+  `LTX-2-*` trainer checkouts INSIDE this repo dir (gitignored), leaving symlink bridges at
+  `$LAB` — bridges are load-bearing: `envs-aarch64/{ltx2,refvfx}` editable installs point through
+  them (import-verified). Viewer re-pointed: `build_runs.py` RUNS/EXTERNAL/SCORE_SETS now read
+  `store/...`, mount gained a `store` link (`scripts/viewers/registry.json`), page rebuilt — all
+  seatbelts green, single-machine check intact. Also fixed `run_gen.py:252` (`relative_to` crash
+  that killed jobs writing to an out-of-repo `--out-root` after the first clip). Store metadata
+  (README/INDEX/meta.yaml/grid.jsonl) is git-tracked via `.gitignore` negations; artifacts stay
+  out.
+
 - **15:44** — **`iclora_runs`: all four scored arms on ONE machine, a fifth arm (`ctt_v2_leaky`),
   and every arm now toggleable.** Three changes to `eval_ladder/viewer/build_runs.py` +
   `template_runs.html`, no restructuring.

@@ -67,3 +67,21 @@ experiments/exp_079_standalone_operator_encoder/dataset/
 
 # finalized datasets are data, never git (public repo)
 datasets/
+
+# --- 2026-07-30 reorg: research trees relocated from $LAB into the repo dir ---
+# campaign scratch dirs (dossiers, vendored code, artifacts) — never git
+/misc/
+# trainer fork checkouts (each has its own .git)
+/LTX-2-official/
+/LTX-2-cond-bleed-fix/
+/LTX-2-ctt-v2-train/
+/LTX-2-bneck/
+
+# artifact store: git tracks metadata only; artifacts (videos/ckpts/scores) stay out
+/store/**
+!/store/**/
+!/store/README.md
+!/store/INDEX.md
+!/store/**/meta.yaml
+!/store/**/grid.jsonl
+!/store/**/config.yaml

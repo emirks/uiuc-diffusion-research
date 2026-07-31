@@ -1,0 +1,14 @@
+id: ic_gen
+shelf: gens
+created: 2026-07-30          # migrated into store; generated earlier in the ladder2 campaign
+machine: campus-cluster
+source: eval_ladder/run_gen.py
+inputs:
+  run: ic_gen
+  step: 5000
+  adapter_sha256: 6e37fca7f6336656e8d600265e42c2799d25ce5c8e9836df556ed6941a97b6f0
+grid: grid.jsonl (152 rows x seeds [42,43] = 304 clips)
+prompt_rule: '"{S1}. sksz." one-sided / "{S1}. sksz. {S2}." two-sided — no transition info; sksz is the trained slot token'
+resolution: 480x640x121f @ 24 fps
+inference: steps 30, guidance_scale 4.0, stg_scale 1.0, stg_blocks [29], stg_mode stg_v
+conditioning: prefix 9f (+ suffix 8f if two-sided) + reference clip

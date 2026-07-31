@@ -1,0 +1,17 @@
+id: ctt_v2_leaky
+shelf: gens
+created: 2026-07-30
+machine: DeltaAI GH200
+source: misc/ctt_v2_leaky campaign (eval_ladder/run_gen.py)
+inputs:
+  run: ctt_v2                # SAME checkpoint file as gens/ctt_v2 — prompt is the only variable
+  step: 10000
+  adapter_sha256: b85c994b7b472e4707a5aa18fd64efd39e3c43e64f43a57ecb2db1f6a1947128
+grid: grid.jsonl (152 rows x seeds [42,43] = 304 clips; registry_ctt_v2_leaky.jsonl)
+prompt_rule: '"{S1}. sksz. {EFFECT}. [{S2}.]" — effect clause AFTER the token; clauses from misc/refvfx_baseline/reference_effects.json'
+resolution: 480x640x121f @ 24 fps
+inference: steps 30, guidance_scale 4.0, stg_scale 1.0, stg_blocks [29], stg_mode stg_v; --rank 128 --alpha 128; attention one_way
+conditioning: prefix 9f (+ suffix 8f if two-sided) + reference clip
+caveats:
+  - no base twin by design (input_key deliberately new; input_key_base preserved) -> contributes a level, not a margin
+  - prompt form is OOD for the adapter (no training caption contained an effect name)

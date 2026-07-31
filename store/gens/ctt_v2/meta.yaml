@@ -1,0 +1,14 @@
+id: ctt_v2
+shelf: gens
+created: 2026-07-30          # migrated into store; generated on the training box (ship/bin/05_gen.sh)
+machine: offsite 8xH100
+source: eval_ladder/run_gen.py via misc/ctt_v2_training/ship/bin/05_gen.sh
+inputs:
+  run: ctt_v2
+  step: 10000
+  adapter_sha256: b85c994b7b472e4707a5aa18fd64efd39e3c43e64f43a57ecb2db1f6a1947128
+grid: grid.jsonl (152 rows x seeds [42,43] = 304 clips; registry_ctt_v2.jsonl)
+prompt_rule: '"{S1}. sksz." one-sided / "{S1}. sksz. {S2}." two-sided — no transition info; sksz is the trained slot token'
+resolution: 480x640x121f @ 24 fps
+inference: steps 30, guidance_scale 4.0, stg_scale 1.0, stg_blocks [29], stg_mode stg_v; --rank 128 --alpha 128; attention one_way
+conditioning: prefix 9f (+ suffix 8f if two-sided) + reference clip

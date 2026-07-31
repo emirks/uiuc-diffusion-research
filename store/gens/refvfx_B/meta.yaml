@@ -1,0 +1,16 @@
+id: refvfx_B
+shelf: gens
+created: 2026-07-30
+machine: DeltaAI GH200
+source: misc/refvfx_baseline campaign (gen_worker.py / gen_ours.sbatch)
+inputs:
+  run: refvfx
+  adapter: step-10000.safetensors (rank 1024) + CausVid rank 32
+grid: grid.jsonl (304 per-clip rows incl. seed; manifest_ours.jsonl)
+prompt_rule: '"{S1}. {TOKEN}. [{S2}.]" with fixed TOKEN "Make it so that the beginning of the scene is unchanged, but during the video the visual effect is applied" — our text budget; prompt varies with the reference for 0/62 endpoints (leak-free)'
+resolution: 480x640x33f @ 6.5455 fps (holds duration at 5.0417 s to match the 121f@24fps arms)
+inference: 6 steps (CausVid), cfg_scale 6.0, cfg_scale_ref 2.0, cfg_scale_input 0.0, sigma_shift 5.0, strict_end_image on, empty_context_for_ref off
+conditioning: input_image = frame 0 (+ end_image = frame 120 if two-sided) + reference clip; NO control_video (would leak GT)
+caveats:
+  - the text-information-matched refVFX arm; differs from refvfx_A in prompt ONLY
+  - core_degenerate not comparable to 121f arms (33f window vs FALLBACK_MIN_FRAMES)

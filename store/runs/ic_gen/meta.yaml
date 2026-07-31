@@ -1,0 +1,21 @@
+id: ic_gen
+shelf: runs
+created: 2026-07-30          # store entry date; trained earlier in the ladder2 campaign (2026-07)
+machine: campus-cluster (ladder2 campaign)
+source: eval_ladder/train (job_train.sbatch + configs/ic_gen.yaml; config copied here as config.yaml)
+inputs:
+  dataset: eval_ladder/dataset/roots/ic_gen   # preprocessed latents, held-in classes only (gitignored)
+model: LTX-2 19B dev
+adapter: IC-LoRA
+rank: 32
+alpha: 32
+target_modules: attn_ffn
+reference_attention: bidirectional   # schema default at the time
+lr: 2e-4
+steps_trained: 5000
+shipped_step: 5000
+checkpoint_sha256:
+  lora_weights_step_05000.safetensors: 6e37fca7f6336656e8d600265e42c2799d25ce5c8e9836df556ed6941a97b6f0
+notes: >
+  The S0-only generalist arm. Intermediate checkpoints (steps 500-4500, ~3 GB) remain in
+  outputs/training/ladder2/ic_gen/checkpoints/ under the retention rule (shipped+final only here).
