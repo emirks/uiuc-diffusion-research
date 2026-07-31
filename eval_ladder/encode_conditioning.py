@@ -87,7 +87,7 @@ def _trainer_bits():
 
     tr = os.environ.get(
         "LTX_TRAINER_SRC",
-        "/projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix/packages/ltx-trainer/src",
+        "/taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/src/LTX-2-cond-bleed-fix/packages/ltx-trainer/src",
     )
     if tr not in sys.path:
         sys.path.insert(0, tr)

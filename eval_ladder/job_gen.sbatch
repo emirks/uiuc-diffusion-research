@@ -7,7 +7,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --requeue
 #SBATCH --time=03:30:00
-#SBATCH --output=/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/logs/slurm/%x-%A_%a.out
+#SBATCH --output=/taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/logs/slurm/%x-%A_%a.out
 # ladder2 generation. One job = one arm x one seed x one chunk; skip-if-exists makes it
 # requeue-safe on preemptible queues.
 #   sbatch --array=0-3 --partition=secondary --account=campusclusterusers --gres=gpu:H100:1 \
@@ -15,9 +15,9 @@
 #          eval_ladder/job_gen.sbatch
 set -eo pipefail
 source ~/.bashrc || true
-LAB=/projects/illinois/eng/cs/jrehg/users/emirkisa
+LAB=/taiga/illinois/eng/cs/jrehg/users/emirkisa
 DR=$LAB/diffusion-research
-TRAINER=$LAB/LTX-2-official/packages/ltx-trainer
+TRAINER=$LAB/diffusion-research/src/LTX-2-official/packages/ltx-trainer
 ARM="${ARM:?set ARM=<registry arm>}"
 SEED="${SEED:?set SEED=42|43}"
 NCHUNKS="${NCHUNKS:-1}"

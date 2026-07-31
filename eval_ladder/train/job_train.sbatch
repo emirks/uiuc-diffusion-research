@@ -6,7 +6,7 @@
 #SBATCH --mem=96g
 #SBATCH --gres=gpu:1
 #SBATCH --requeue
-#SBATCH --output=/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/logs/slurm/%x-%j.out
+#SBATCH --output=/taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/logs/slurm/%x-%j.out
 # ladder2 LoRA training. Resume is ENABLED in every config (checkpoints.no_resume: false) so a
 # `secondary` preemption + requeue continues from the last checkpoint (interval 250/500 steps).
 #   sbatch --job-name=ladder2_spec_color_rain --partition=secondary \
@@ -14,10 +14,10 @@
 #          --export=ALL,MODEL=spec_color_rain eval_ladder/train/job_train.sbatch
 set -eo pipefail
 source ~/.bashrc || true
-LAB=/projects/illinois/eng/cs/jrehg/users/emirkisa
+LAB=/taiga/illinois/eng/cs/jrehg/users/emirkisa
 DR=$LAB/diffusion-research
-WT=$LAB/LTX-2-cond-bleed-fix          # branch cond-bleed-fix = plain recipe + isolation-encode fix
-VENV=$LAB/LTX-2-official/.venv
+WT=$LAB/diffusion-research/src/LTX-2-cond-bleed-fix          # branch cond-bleed-fix = plain recipe + isolation-encode fix
+VENV=$LAB/diffusion-research/src/LTX-2-official/.venv
 TR="$WT/packages/ltx-trainer"
 MODEL="${MODEL:?set MODEL=<arm name, e.g. spec_color_rain>}"
 CONFIG="$DR/eval_ladder/train/configs/$MODEL.yaml"
@@ -29,9 +29,9 @@ nvidia-smi -L || true
 PYTHONPATH="$DR/eval_ladder" "$VENV/bin/python" - "$MODEL" <<'PY'
 import sys
 from pathlib import Path
-sys.path.insert(0, "/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder")
+sys.path.insert(0, "/taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder")
 import encode_conditioning as ec
-L2 = Path("/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder")
+L2 = Path("/taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder")
 # sidedness is decided per SAMPLE inside smoke_assert (the generalist root mixes both)
 print(ec.smoke_assert(L2 / "dataset/roots" / sys.argv[1]))
 PY

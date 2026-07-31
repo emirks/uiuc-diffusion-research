@@ -1,5 +1,17 @@
 ## 2026-07-30
 
+- **20:25** — **Bridges retired; `/taiga` is the canonical absolute prefix.** The five `$LAB`-level
+  compatibility symlinks (`misc`, `LTX-2-*`) are parked at `$LAB/.retired-bridges/` (reversible).
+  Enablers: rewrote the venvs' editable path files (`envs-aarch64/ltx2` ltx_core/ltx_pipelines/
+  ltx_trainer `.pth` + `direct_url.json`; `envs-aarch64/refvfx` DiffSynth `.pth`) to the in-repo
+  paths — both venvs import-verified WITHOUT bridges; updated `job_train.sbatch`,
+  `job_precompute.sbatch`, `job_gen.sbatch` and `encode_conditioning.py:90` from dead `/projects`
+  (+ bridge) paths to `/taiga` + `src/LTX-2-*`. Prefix rule (per cc-cluster-layout): one Taiga fs,
+  `/taiga/illinois/...` resolves on BOTH clusters; `/projects/illinois/...` is CC-only and means
+  Delta-project space on DeltaAI — so absolute paths use `/taiga`. Also pinned
+  `explorer.excludeGitIgnore: false` in `.vscode/` so the newly-gitignored `misc/`, `store/`,
+  `src/LTX-2-*` stay visible in the Cursor/VS Code explorer.
+
 - **20:12** — **LTX-2 checkouts moved under `src/`, worktree git repaired, trainer pins recorded.**
   `src/LTX-2-official` (branch `transition-strategy` @ f062984) + linked worktrees
   `src/LTX-2-cond-bleed-fix` (811d045, ic_gen's trainer), `src/LTX-2-ctt-v2-train` (db69ca7 — the

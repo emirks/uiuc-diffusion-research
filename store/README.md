@@ -75,11 +75,15 @@ hand-edited viewer lists. The five arms of the refVFX comparison (`ic_gen`, `ctt
 before that stay where they are, frozen.
 
 Same reorg moved `misc/` (repo root) and the four `LTX-2-*` trainer checkouts (under `src/`)
-from `$LAB` into this repo dir, with **symlinks left at the old `$LAB` locations** — those
-bridges are load-bearing: the `envs-aarch64/ltx2` and `envs-aarch64/refvfx` venvs hold editable
-installs pointing at `$LAB/LTX-2-official/packages/*` and
-`$LAB/misc/refvfx_baseline/code/refVFX_trainer`, and `eval_ladder`'s sbatch scripts reference
-`$LAB/LTX-2-*`. Do not delete the bridges without re-installing/re-pointing those. The three
+from `$LAB` into this repo dir. The `$LAB`-level bridge symlinks that initially kept old paths
+alive were **RETIRED later the same day**: the venvs' editable path files
+(`envs-aarch64/{ltx2,refvfx}` `.pth` + `direct_url.json`) and the eval_ladder sbatch scripts +
+`encode_conditioning.py` were rewritten to the canonical in-repo paths, import-verified, and the
+five bridges parked at `$LAB/.retired-bridges/` (restore = move them back). The three
 non-official `LTX-2-*` dirs are **linked git worktrees** of `src/LTX-2-official`; their gitdir
-wiring was repaired to absolute `/taiga` paths on 2026-07-30 (it had pointed at dead `/projects`
-paths since the migration).
+wiring was repaired on 2026-07-30 (it had pointed at dead `/projects` paths since the migration).
+
+**Path prefix rule (both clusters, one Taiga filesystem):** use `/taiga/illinois/...` in anything
+absolute — it resolves on CC *and* DeltaAI. `/projects/illinois/...` is CC-only, and on DeltaAI
+`/projects/<code>` is a *different* filesystem (Delta project space). See the `deltaai` skill and
+the cc-cluster-layout memory.

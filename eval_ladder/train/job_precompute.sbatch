@@ -7,7 +7,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --time=01:30:00
 #SBATCH --requeue
-#SBATCH --output=/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/logs/slurm/%x-%j.out
+#SBATCH --output=/taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/logs/slurm/%x-%j.out
 # ladder2 training precompute. Idempotent + requeue-safe (skip-if-exists per clip).
 #   sbatch --partition=secondary --account=campusclusterusers --gres=gpu:H100:1 \
 #          --export=ALL,MODE=cond-clean eval_ladder/train/job_precompute.sbatch
@@ -15,9 +15,9 @@
 #   MODE=text        render + encode the leak-free training captions (needs the token verdict)
 set -eo pipefail
 source ~/.bashrc || true
-DR=/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research
-WT=/projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-cond-bleed-fix
-VENV=/projects/illinois/eng/cs/jrehg/users/emirkisa/LTX-2-official/.venv
+DR=/taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research
+WT=/taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/src/LTX-2-cond-bleed-fix
+VENV=/taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/src/LTX-2-official/.venv
 mkdir -p "$DR/outputs/logs/slurm"
 cd "$DR"
 echo "[job] host=$(hostname) mode=${MODE:?set MODE=cond-clean|text} $(date)"
