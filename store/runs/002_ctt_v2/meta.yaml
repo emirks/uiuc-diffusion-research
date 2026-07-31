@@ -1,10 +1,11 @@
-id: ctt_v2
+id: 002_ctt_v2
+seq: 2
 shelf: runs
 created: 2026-07-30          # store entry date; trained 2026-07 on an offsite 8xH100 box
 machine: offsite 8xH100 (checkpoints returned to taiga; misc/ctt_v2_training/RUN_RECORD.md is the run authority)
 source: misc/ctt_v2_training campaign (config copied here as config.yaml)
 inputs:
-  dataset: datasets/ctt_v2   # store/datasets/ctt_v2 stub -> repo datasets/ctt_v2
+  dataset: datasets/002_ctt_v2   # store/datasets/002_ctt_v2 stub -> repo datasets/ctt_v2
 trainer:
   checkout: src/LTX-2-ctt-v2-train            # linked worktree of src/LTX-2-official
   branch: ctt-v2-train

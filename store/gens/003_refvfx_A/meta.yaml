@@ -1,11 +1,12 @@
-id: refvfx_A
+id: 003_refvfx_A
+seq: 3
 shelf: gens
 created: 2026-07-30
 machine: DeltaAI GH200
 source: misc/refvfx_baseline campaign (gen_worker.py / gen.sbatch)
 code: vendored misc/refvfx_baseline/code (refVFX_trainer + DiffSynth) via envs-aarch64/refvfx editable install
 inputs:
-  run: refvfx
+  run: 003_refvfx
   adapter: step-10000.safetensors (rank 1024) + CausVid rank 32
 grid: grid.jsonl (304 per-clip rows incl. seed; manifest_all.jsonl)
 prompt_rule: '"{S1}. Make it so that the beginning of the scene is unchanged, but during the video {EFFECT}." — their own convention; prompt varies with the reference for 35/62 endpoints (text leak)'

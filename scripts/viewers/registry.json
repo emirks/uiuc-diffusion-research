@@ -233,12 +233,12 @@
         ]
       },
       "check_files": [
-        "store/gens/ic_gen/videos",
-        "store/gens/ctt_v2/videos",
-        "store/gens/ctt_v2_leaky/videos",
-        "store/gens/refvfx_A/videos",
-        "store/gens/refvfx_B/videos",
-        "store/evals/five_arm__dai__2026-07-30",
+        "store/gens/001_ic_gen/videos",
+        "store/gens/002_ctt_v2/videos",
+        "store/gens/005_ctt_v2_leaky/videos",
+        "store/gens/003_refvfx_A/videos",
+        "store/gens/004_refvfx_B/videos",
+        "store/evals/001_five_arm__dai__2026-07-30",
         "outputs/eval/ctt_v2_compare"
       ],
       "_media": "2026-07-30 reorg: all five arms' videos live in the artifact store (store/gens/<id>/videos), scores in store/evals/five_arm__dai__2026-07-30/<arm>/, and the old outputs/videos/... paths are symlinks build_runs.py :: ensure_external_media() recreates on every run — a wiped outputs/ costs one rerun. See store/README.md for the contract."

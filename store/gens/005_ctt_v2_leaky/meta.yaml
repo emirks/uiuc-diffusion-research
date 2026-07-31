@@ -1,11 +1,12 @@
-id: ctt_v2_leaky
+id: 005_ctt_v2_leaky
+seq: 5
 shelf: gens
 created: 2026-07-30
 machine: DeltaAI GH200
 source: misc/ctt_v2_leaky campaign (eval_ladder/run_gen.py)
 code: envs-aarch64/ltx2 editable installs -> src/LTX-2-official packages (HEAD f062984 at store-entry time)
 inputs:
-  run: ctt_v2                # SAME checkpoint file as gens/ctt_v2 — prompt is the only variable
+  run: 002_ctt_v2                # SAME checkpoint file as gens/002_ctt_v2 — prompt is the only variable
   step: 10000
   adapter_sha256: b85c994b7b472e4707a5aa18fd64efd39e3c43e64f43a57ecb2db1f6a1947128
 grid: grid.jsonl (152 rows x seeds [42,43] = 304 clips; registry_ctt_v2_leaky.jsonl)

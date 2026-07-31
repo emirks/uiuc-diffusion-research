@@ -9,11 +9,11 @@ and score files are gitignored like the rest of `outputs/`.
 
 ```
 store/
-  INDEX.md            ← the ledger: one line per entry below. Update it when you add an entry.
-  datasets/<id>/      immutable dataset roots (or a symlink stub to a legacy location) + meta.yaml
-  runs/<run_id>/      one training run:  meta.yaml · config.yaml · checkpoints/ · NOTES.md?
-  gens/<gen_id>/      one generation batch:  meta.yaml · grid.jsonl · videos/*.mp4
-  evals/<eval_id>/    one scoring pass:  meta.yaml · <arm>/<label>/{items.jsonl,results.json}
+  INDEX.md               ← the ledger: one line per entry below. Update it when you add an entry.
+  datasets/NNN_<slug>/   immutable dataset roots (or a symlink stub to a legacy location) + meta.yaml
+  runs/NNN_<slug>/       one training run:  meta.yaml · config.yaml · checkpoints/ · NOTES.md?
+  gens/NNN_<slug>/       one generation batch:  meta.yaml · grid.jsonl · videos/*.mp4
+  evals/NNN_<slug>/      one scoring pass:  meta.yaml · <arm>/<label>/{items.jsonl,results.json}
 ```
 
 ## The contract (all of it)
@@ -21,9 +21,10 @@ store/
 1. **Every entry is a directory with a `meta.yaml`.** Minimum keys: `id`, `created`, `machine`,
    `inputs` (the upstream store ids this was made from), `source` (campaign/script that made it).
    Everything else is per-shelf (see the seeded entries for live examples).
-2. **IDs are snake_case slugs, unique per shelf, chosen at creation.** A gen is named after its
-   arm (`ctt_v2_leaky`); suffix with `__<grid>` only if the same arm is generated again on another
-   grid. Evals: `<name>__<machine>__<YYYY-MM-DD>`.
+2. **Entry dirs are numbered: `NNN_<slug>`** — `NNN` = zero-padded seq (max on the shelf + 1,
+   never reused), slug snake_case. A gen's slug is its arm (`005_ctt_v2_leaky`); an eval's is
+   `<name>__<machine>__<YYYY-MM-DD>`. **`ls` IS the timeline — the highest number is the
+   latest**, no separate pointer.
 3. **An eval is scored on ONE machine, recorded in `meta.yaml`.** Never merge rows from two
    machines into one eval entry — measured 2026-07-30: v4 does not reproduce eps↔DeltaAI at the
    0.005 bar. Record the *measured* sha256 of the reference artifact, not the declared constant.
@@ -40,6 +41,9 @@ store/
    them is a stub: `meta.yaml` + `checkpoints/` symlink into the cache, `external: true`.
 7. **Wiring, not copying.** The viewer, repo `outputs/`, and campaign dirs reach store content via
    symlinks. If you find yourself `cp`-ing out of the store, stop.
+8. **Entries are immutable.** `meta.yaml` carries `seq: N` matching the dir prefix. Registering
+   = numbered dir + meta + INDEX row + CHANGELOG, one commit. A re-run/re-score/fix is a NEW
+   entry with the next number — never overwrite written artifacts or numbers.
 
 ## How new work flows through it
 

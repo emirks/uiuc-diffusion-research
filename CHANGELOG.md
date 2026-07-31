@@ -18,6 +18,19 @@ Two instrument lessons recorded: corpse-relative bars must be frozen to numerics
 Report: `misc/bneck_v2/RESULTS.md`; record: `misc/bneck_v2/DOSSIER.md`.
 
 
+- **20:59** — **`lora-flow` skill + numbered store entries — "what ran latest" is now readable from
+  `ls`.** The `lora-train` skill became **`lora-flow`**, widened from training-only to the whole
+  pipeline (dataset → train → generate → evaluate → view → record); the mandatory
+  ID+OOD+control inline-validation directive is preserved verbatim in §4. It carries the platform
+  banner and is the thing to check before ANY of those stages. Store entries renamed to
+  **`NNN_<slug>`** (zero-padded seq, monotonic per shelf, never reused, matching `seq:` in each
+  meta) — `ls $STORE/evals` IS the timeline and the highest number is the latest, no pointer files
+  or `latest` symlinks. Now: runs 001_ic_gen/002_ctt_v2/003_refvfx · gens 001_ic_gen/002_ctt_v2/
+  003_refvfx_A/004_refvfx_B/005_ctt_v2_leaky · evals 001_five_arm__dai__2026-07-30 · datasets
+  001_transitions_std121/002_ctt_v2. Registering an entry = numbered dir + meta, INDEX row,
+  CHANGELOG line, one commit; entries are immutable, a re-run gets the next number. Viewer
+  (`build_runs.py`, `registry.json`) and `CLAUDE.md` repointed at the numbered paths.
+
 - **20:25** — **Bridges retired; `/taiga` is the canonical absolute prefix.** The five `$LAB`-level
   compatibility symlinks (`misc`, `LTX-2-*`) are parked at `$LAB/.retired-bridges/` (reversible).
   Enablers: rewrote the venvs' editable path files (`envs-aarch64/ltx2` ltx_core/ltx_pipelines/

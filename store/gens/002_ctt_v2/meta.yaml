@@ -1,11 +1,12 @@
-id: ctt_v2
+id: 002_ctt_v2
+seq: 2
 shelf: gens
 created: 2026-07-30          # migrated into store; generated on the training box (ship/bin/05_gen.sh)
 machine: offsite 8xH100
 source: eval_ladder/run_gen.py via misc/ctt_v2_training/ship/bin/05_gen.sh
 code: shipped trainer copy @ db69ca7 (packages/ltx-trainer), same pin as the training
 inputs:
-  run: ctt_v2
+  run: 002_ctt_v2
   step: 10000
   adapter_sha256: b85c994b7b472e4707a5aa18fd64efd39e3c43e64f43a57ecb2db1f6a1947128
 grid: grid.jsonl (152 rows x seeds [42,43] = 304 clips; registry_ctt_v2.jsonl)

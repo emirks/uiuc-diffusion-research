@@ -163,6 +163,16 @@ skill first — they are the source of truth for this workflow:**
   transition-eval harness (`eval/v3.0.0`): certified-checkout rule,
   plan→infer→score, trust map, certification protocol; SPEC.md in
   `src/diffusion/transition_eval/` is the authority
+- `lora-flow` — the END-TO-END LoRA/IC-LoRA pipeline: dataset → train →
+  generate → evaluate (v4 default) → viewer → artifact-store bookkeeping.
+  Check it before ANY of those stages. Storage contract: `store/README.md`;
+  ledger: `store/INDEX.md` — entries are `NNN_<slug>` dirs, highest number
+  = latest.
+
+Since 2026-07-22 the project also runs on **NCSA DeltaAI** (`gh-login*`,
+aarch64 GH200) — load the `deltaai` skill there (+ `deltaai-throughput` for
+queueing). One Taiga filesystem serves both clusters: `/taiga/illinois/...`
+resolves on BOTH; `/projects/illinois/...` is Campus-Cluster-only.
 
 Hard rules: long runs go through `sbatch` (never park `srun ... bash`);
 `-high` queues require a `#cluster_high_priority` Slack announcement;

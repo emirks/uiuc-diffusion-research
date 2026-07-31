@@ -61,10 +61,10 @@ SEEDS = (42, 43)
 RUNS = [
     {"id": "ic_gen", "arm": "ic_gen", "checkpoint": None,
      "label": "IC-LoRA generalist", "sub": "ladder2 · the incumbent",
-     "gen_dir": "store/gens/ic_gen/videos", "registry": None},
+     "gen_dir": "store/gens/001_ic_gen/videos", "registry": None},
     {"id": "ctt_v2", "arm": "ctt_v2", "checkpoint": 10000,
      "label": "CTT v2", "sub": "step 10,000 · rank 128 · one-way ref attention",
-     "gen_dir": "store/gens/ctt_v2/videos",
+     "gen_dir": "store/gens/002_ctt_v2/videos",
      "registry": "eval_ladder/registry_ctt_v2.jsonl"},
 ]
 RUN_BY_ARM = {r["arm"]: r for r in RUNS}
@@ -100,10 +100,10 @@ EXTERNAL = [
     {"id": "ctt_v2_leaky", "score_id": "leaky_v4", "kind": "ours", "frames": 121, "no_twin": True,
      "label": "⑥ CTT v2 · leaky prompt",
      "sub": "our adapter, prompt also describes the transition · level, not a margin",
-     "src": REPO_ROOT / "store/gens/ctt_v2_leaky/videos",
+     "src": REPO_ROOT / "store/gens/005_ctt_v2_leaky/videos",
      "media": "outputs/videos/ctt_v2_leaky/clips",
-     "rows": ("registry", REPO_ROOT / "store/gens/ctt_v2_leaky/grid.jsonl"),
-     "scores": REPO_ROOT / "store/evals/five_arm__dai__2026-07-30/ctt_v2_leaky",
+     "rows": ("registry", REPO_ROOT / "store/gens/005_ctt_v2_leaky/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/001_five_arm__dai__2026-07-30/ctt_v2_leaky",
      "prompt_kind": "our own ctt_v2 adapter, same weights / references / endpoint conditioning / "
                     "geometry / seeds — the ONLY change is the prompt, which now also describes "
                     "the transition (the effect clause is inserted after the trained `sksz.` "
@@ -112,20 +112,20 @@ EXTERNAL = [
     {"id": "refvfx_A", "score_id": "refvfx_v4", "kind": "prior-work", "frames": 33,
      "label": "Ⓐ refVFX · their prompt",
      "sub": "external baseline · prompt describes the effect",
-     "src": REPO_ROOT / "store/gens/refvfx_A/videos",
+     "src": REPO_ROOT / "store/gens/003_refvfx_A/videos",
      "media": "outputs/videos/refvfx_baseline/refvfx_A",
-     "rows": ("manifest", REPO_ROOT / "store/gens/refvfx_A/grid.jsonl"),
-     "scores": REPO_ROOT / "store/evals/five_arm__dai__2026-07-30/refvfx_A",
+     "rows": ("manifest", REPO_ROOT / "store/gens/003_refvfx_A/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/001_five_arm__dai__2026-07-30/refvfx_A",
      "prompt_kind": "refVFX's own convention — the prompt NAMES the effect the demo shows, so "
                     "text and demo agree. Their model at its strongest; NOT text-matched to ours.",
      "doc": "misc/refvfx_baseline/RECORD.md"},
     {"id": "refvfx_B", "score_id": "refvfx_v4", "kind": "prior-work", "frames": 33,
      "label": "Ⓑ refVFX · our text budget",
      "sub": "external baseline · no transition information in text",
-     "src": REPO_ROOT / "store/gens/refvfx_B/videos",
+     "src": REPO_ROOT / "store/gens/004_refvfx_B/videos",
      "media": "outputs/videos/refvfx_baseline/refvfx_B",
-     "rows": ("manifest", REPO_ROOT / "store/gens/refvfx_B/grid.jsonl"),
-     "scores": REPO_ROOT / "store/evals/five_arm__dai__2026-07-30/refvfx_B",
+     "rows": ("manifest", REPO_ROOT / "store/gens/004_refvfx_B/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/001_five_arm__dai__2026-07-30/refvfx_B",
      "prompt_kind": "our arms' text budget, in their vocabulary — a class-agnostic effect clause "
                     "in place of our `sksz`. Same weights, same seeds, same geometry as Ⓐ; the "
                     "prompt is the only field that differs.",
@@ -185,8 +185,8 @@ SCORE_SETS = [
     #: below now makes that fail loudly, and this comment says why it exists. Those arms load
     #: through EXTERNAL, each into its own dict, which is what keeps the columns separate.
     {"id": "dai222", "primary": True, "corpus": "dc2e139a",
-     "paths": ["store/evals/five_arm__dai__2026-07-30/ic_gen",
-               "store/evals/five_arm__dai__2026-07-30/ctt_v2"],
+     "paths": ["store/evals/001_five_arm__dai__2026-07-30/ic_gen",
+               "store/evals/001_five_arm__dai__2026-07-30/ctt_v2"],
      "short": "reference_v4 · 222-clip corpus dc2e139a · rescored on DeltaAI",
      "label": "reference_v4 on the pinned 222-clip corpus (dc2e139a), both adapters rescored on "
               "DeltaAI alongside the refVFX arms, 2026-07-30 — run and external columns therefore "

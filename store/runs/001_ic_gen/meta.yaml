@@ -1,4 +1,5 @@
-id: ic_gen
+id: 001_ic_gen
+seq: 1
 shelf: runs
 created: 2026-07-30          # store entry date; trained earlier in the ladder2 campaign (2026-07)
 machine: campus-cluster (ladder2 campaign)

@@ -1,11 +1,12 @@
-id: ic_gen
+id: 001_ic_gen
+seq: 1
 shelf: gens
 created: 2026-07-30          # migrated into store; generated earlier in the ladder2 campaign
 machine: campus-cluster
 source: eval_ladder/run_gen.py
 code: eval_ladder/job_gen.sbatch -> $LAB/LTX-2-official/packages/ltx-trainer (bridge -> src/LTX-2-official)
 inputs:
-  run: ic_gen
+  run: 001_ic_gen
   step: 5000
   adapter_sha256: 6e37fca7f6336656e8d600265e42c2799d25ce5c8e9836df556ed6941a97b6f0
 grid: grid.jsonl (152 rows x seeds [42,43] = 304 clips)
