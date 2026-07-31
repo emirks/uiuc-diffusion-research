@@ -5,6 +5,11 @@ machine: offsite 8xH100 (checkpoints returned to taiga; misc/ctt_v2_training/RUN
 source: misc/ctt_v2_training campaign (config copied here as config.yaml)
 inputs:
   dataset: datasets/ctt_v2   # store/datasets/ctt_v2 stub -> repo datasets/ctt_v2
+trainer:
+  checkout: src/LTX-2-ctt-v2-train            # linked worktree of src/LTX-2-official
+  branch: ctt-v2-train
+  commit: db69ca7cd00f6c8e34cd0e8673ba36c948463362   # RUN_RECORD "integrated trainer SHA"
+  entry: shipped offsite as a copy (ship/stage_to_eps.sh); train via ship/bin/, 8xH100
 model: LTX-2 19B dev
 adapter: IC-LoRA
 rank: 128                    # NOT 256 — arms.yaml's comment is stale; verified from checkpoint header

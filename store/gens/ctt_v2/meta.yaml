@@ -3,6 +3,7 @@ shelf: gens
 created: 2026-07-30          # migrated into store; generated on the training box (ship/bin/05_gen.sh)
 machine: offsite 8xH100
 source: eval_ladder/run_gen.py via misc/ctt_v2_training/ship/bin/05_gen.sh
+code: shipped trainer copy @ db69ca7 (packages/ltx-trainer), same pin as the training
 inputs:
   run: ctt_v2
   step: 10000

@@ -3,6 +3,7 @@ shelf: gens
 created: 2026-07-30
 machine: DeltaAI GH200
 source: misc/ctt_v2_leaky campaign (eval_ladder/run_gen.py)
+code: envs-aarch64/ltx2 editable installs -> src/LTX-2-official packages (HEAD f062984 at store-entry time)
 inputs:
   run: ctt_v2                # SAME checkpoint file as gens/ctt_v2 — prompt is the only variable
   step: 10000

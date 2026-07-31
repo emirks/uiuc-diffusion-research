@@ -3,6 +3,7 @@ shelf: gens
 created: 2026-07-30          # migrated into store; generated earlier in the ladder2 campaign
 machine: campus-cluster
 source: eval_ladder/run_gen.py
+code: eval_ladder/job_gen.sbatch -> $LAB/LTX-2-official/packages/ltx-trainer (bridge -> src/LTX-2-official)
 inputs:
   run: ic_gen
   step: 5000

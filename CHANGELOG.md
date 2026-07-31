@@ -1,5 +1,15 @@
 ## 2026-07-30
 
+- **20:12** — **LTX-2 checkouts moved under `src/`, worktree git repaired, trainer pins recorded.**
+  `src/LTX-2-official` (branch `transition-strategy` @ f062984) + linked worktrees
+  `src/LTX-2-cond-bleed-fix` (811d045, ic_gen's trainer), `src/LTX-2-ctt-v2-train` (db69ca7 — the
+  RUN_RECORD "integrated trainer SHA" for ctt_v2), `src/LTX-2-bneck` (f252c52). Their worktree
+  gitdir wiring had pointed at dead `/projects` paths since the DeltaAI migration — repaired to
+  absolute `/taiga` paths; `git worktree list` clean again. `$LAB` bridges re-pointed
+  (import-verified). Store: `runs/*` meta now carries a `trainer:` pin (checkout·branch·commit·
+  entry), `gens/*` a `code:` line; README gains "What the store is NOT" (artifacts + provenance;
+  tools stay in git, pinned by commit — entry + checkout = reproduction recipe).
+
 - **20:02** — **The artifact store (`store/`) + the $LAB reorg.** One structured home for the
   train → generate → evaluate chain: `store/{runs,gens,evals,datasets}/<id>/` with a `meta.yaml`
   per entry, `README.md` as the contract, `INDEX.md` as the ledger. Seeded with the five-arm

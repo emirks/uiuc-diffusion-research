@@ -3,6 +3,7 @@ shelf: gens
 created: 2026-07-30
 machine: DeltaAI GH200
 source: misc/refvfx_baseline campaign (gen_worker.py / gen_ours.sbatch)
+code: vendored misc/refvfx_baseline/code (refVFX_trainer + DiffSynth) via envs-aarch64/refvfx editable install
 inputs:
   run: refvfx
   adapter: step-10000.safetensors (rank 1024) + CausVid rank 32

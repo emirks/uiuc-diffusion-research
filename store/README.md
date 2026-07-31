@@ -30,7 +30,9 @@ store/
 4. **A gen pins its adapter by `run_id` + `step` (+ sha256 of the checkpoint file)** and carries
    the exact rendered rows it used in `grid.jsonl` (prompt text included). Arm identity must never
    live only in a parent directory name — that is how the four identically-named 304-clip sets
-   almost got merged.
+   almost got merged. **Code is pinned the same way**: a run's `meta.yaml` carries a `trainer:`
+   block (checkout · branch · commit · entry script) and a gen's carries a `code:` line naming the
+   stack that rendered it.
 5. **Checkpoint retention:** `runs/<id>/checkpoints/` holds the *shipped* step(s) and the final
    step only. Intermediates stay in the training scratch dir and die when the campaign closes,
    unless `meta.yaml` lists a reason to keep them.
@@ -53,6 +55,16 @@ store/
   `ensure_external_media()` symlink machinery serves them.
 - **Record** → one line in `INDEX.md`, and the campaign dossier references store ids.
 
+## What the store is NOT
+
+It is **artifacts + provenance, not tooling**. The tools live in the repo, versioned by git:
+trainers in `src/LTX-2-official` (+ its linked worktrees `src/LTX-2-{cond-bleed-fix,ctt-v2-train,
+bneck}` — one branch each), generation in `eval_ladder/run_gen.py` (+ `job_gen.sbatch`), scoring
+in `src/diffusion/transition_eval` (imported from the `eval-v4-cert` worktree), the viewer in
+`eval_ladder/viewer/`. A store entry's `meta.yaml` names the code and commit that produced it, so
+**entry + git checkout = the full reproduction recipe** — that is the self-containment contract,
+and it is why tools are never copied into entries (copies rot; pins don't).
+
 ## What this replaces (context)
 
 Before 2026-07-30 artifacts were scattered: checkpoints in `misc/ctt_v2_training/` and repo
@@ -62,8 +74,12 @@ hand-edited viewer lists. The five arms of the refVFX comparison (`ic_gen`, `ctt
 `ctt_v2_leaky`, `refvfx_A`, `refvfx_B`) were migrated in as the seed content; legacy campaigns
 before that stay where they are, frozen.
 
-Same reorg moved `misc/` and the four `LTX-2-*` trainer checkouts from `$LAB` into this repo dir,
-with **symlinks left at the old `$LAB` locations** — those bridges are load-bearing: the
-`envs-aarch64/ltx2` and `envs-aarch64/refvfx` venvs hold editable installs pointing at
-`$LAB/LTX-2-official/packages/*` and `$LAB/misc/refvfx_baseline/code/refVFX_trainer`. Do not
-delete the bridges without re-installing those packages.
+Same reorg moved `misc/` (repo root) and the four `LTX-2-*` trainer checkouts (under `src/`)
+from `$LAB` into this repo dir, with **symlinks left at the old `$LAB` locations** — those
+bridges are load-bearing: the `envs-aarch64/ltx2` and `envs-aarch64/refvfx` venvs hold editable
+installs pointing at `$LAB/LTX-2-official/packages/*` and
+`$LAB/misc/refvfx_baseline/code/refVFX_trainer`, and `eval_ladder`'s sbatch scripts reference
+`$LAB/LTX-2-*`. Do not delete the bridges without re-installing/re-pointing those. The three
+non-official `LTX-2-*` dirs are **linked git worktrees** of `src/LTX-2-official`; their gitdir
+wiring was repaired to absolute `/taiga` paths on 2026-07-30 (it had pointed at dead `/projects`
+paths since the migration).

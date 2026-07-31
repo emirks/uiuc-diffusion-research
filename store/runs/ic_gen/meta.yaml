@@ -5,6 +5,11 @@ machine: campus-cluster (ladder2 campaign)
 source: eval_ladder/train (job_train.sbatch + configs/ic_gen.yaml; config copied here as config.yaml)
 inputs:
   dataset: eval_ladder/dataset/roots/ic_gen   # preprocessed latents, held-in classes only (gitignored)
+trainer:
+  checkout: src/LTX-2-cond-bleed-fix          # linked worktree of src/LTX-2-official
+  branch: cond-bleed-fix
+  commit: 811d045
+  entry: eval_ladder/train/job_train.sbatch
 model: LTX-2 19B dev
 adapter: IC-LoRA
 rank: 32
