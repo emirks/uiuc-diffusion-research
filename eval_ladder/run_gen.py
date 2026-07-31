@@ -77,8 +77,17 @@ def build_sample(row: dict) -> ValidationSample:
     # run_eval.pool_refs() bans the row's reference from the GT pool, so dropping the field would
     # hand them a different pool than the arms they are compared against — a silently unfair join.
     if row.get("reference") and row.get("use_reference", True):
+        # `code_source_reference` (campaign `bneck_coupling`) names a DIFFERENT clip to feed the
+        # model, while `reference` — the row's identity — is left untouched. That separation is
+        # load-bearing, not cosmetic: run_eval.pool_refs() excludes the row's own `reference` from
+        # the GT pool, so swapping `reference` to build the shuffled-code corpse would change pool
+        # COMPOSITION between the matched and shuffled twins and contaminate every paired Δ — the
+        # same class of keyed-join defect that flipped two cells in the ladder audit. With this
+        # field the two arms are scored against byte-identical pools and differ only in what the
+        # encoder saw. The eval side never reads it.
+        model_ref = row.get("code_source_reference") or row["reference"]
         # authoritative clip -> class (clip names do NOT reliably encode the class)
-        ref_path = STD / prompts.clip_class(row["reference"]) / f"{row['reference']}.mp4"
+        ref_path = STD / prompts.clip_class(model_ref) / f"{model_ref}.mp4"
         assert ref_path.exists(), f"reference clip not found: {ref_path}"
         # `attention` MUST match what the adapter was TRAINED with. ReferenceConditionConfig
         # defaults to "bidirectional", so omitting it silently runs a one-way-trained adapter
@@ -231,7 +240,12 @@ def main() -> None:
         raw = load_file(str(adapter))
         enc_sd = {k[len("operator_encoder."):]: v for k, v in raw.items() if k.startswith("operator_encoder.")}
         missing, unexpected = encoder.load_state_dict(enc_sd, strict=True), None
-        encoder = encoder.to(device=device, dtype=torch.bfloat16).eval()
+        # fp32, NOT bf16 (campaign `bneck_coupling`, design lock A5 §1): every certified capability
+        # number came from the fp32 featurization path, and `bneck_contract.encode_reference`
+        # disables autocast around the call so the arithmetic actually stays fp32. Casting to bf16
+        # here — as this line used to — silently makes the coupled artifact a different one from
+        # the certificate's, and the G1 contract gate rejects bf16 for exactly that reason.
+        encoder = encoder.to(device=device, dtype=torch.float32).eval()
         # Scale factors MUST match what training derived from the token shape, or the K tokens
         # land on the wrong positional grid (silently — nothing raises).
         th, tw, tf = vh // 32, vw // 32, (vf - 1) // 8 + 1
