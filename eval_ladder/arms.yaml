@@ -154,5 +154,63 @@ arms:
     note: "IC-LoRA on the CTT v2 dataset (56,368 pairs, 1,670 operators, 5 strata). rank 128,
       lr 1e-4, one-way reference attention, mix S0 5 / S1 12 / S2a 34.36 / S2b 35.64 / S4 13."
 
+  # ---- campaign `bneck_coupling` (2026-07-31). The certified transition encoder, FROZEN, coupled
+  # into the same CTT v2 IC-LoRA recipe as `ctt_v2` above. The ONLY delta versus `ctt_v2` is the
+  # content of the reference channel: the raw full-resolution demo latents are replaced by the
+  # encoder's 72 operator tokens (BottleneckConfig REPLACES the raw reference; it does not augment
+  # it), so any operator signal that survives must have travelled through those 72 tokens.
+  # Everything else — rank 128/alpha 128, attn_ffn, lr 1e-4, one_way, stratum mix, prompts — is held
+  # byte-identical, which is what makes the ctt_v2 comparison a controlled contrast.
+  # Design lock: misc/bneck_coupling/advisors/A5_SYNTHESIS_DESIGN_LOCK_VERBATIM.md.
+  #
+  # rank/alpha 128 — pass --rank 128 --alpha 128 (run_gen.py defaults to 32).
+  # `attention: one_way` is REQUIRED for the same reason as ctt_v2: trained one-way, and
+  # ReferenceConditionConfig defaults to bidirectional.
+  # The `bottleneck` block is what makes run_gen reconstruct and attach the encoder; run_gen
+  # REFUSES to generate under this arm name if the checkpoint carries no operator_encoder.* tensors,
+  # which is the provenance guard that stops raw-reference videos being labelled bottleneck ones.
+  bneck_frozen:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    bottleneck:
+      token_shape: [6, 4, 3]        # K = 72 tokens; the certified shape. NOT free — the reference
+                                    # path requires target_h//H == target_w//W and (F-1)%(f-1)==0.
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2       # the CERTIFIED segment marking, fixed (2,1) for EVERY clip
+      suffix_latent_frames: 1       # regardless of sidedness — see bneck_contract.py term 3.
+      skip_scale: 0.0               # pinned: >0 injects a raw pooled demo thumbnail, i.e. exactly
+                                    # the appearance residue the mandated import check polices.
+    note: "Frozen certified transition encoder (armPm_seed42, sha d2b22693) replacing the raw
+      reference. Same recipe as ctt_v2 in every other respect."
+
+  # The load-bearing corpse: the SAME adapter file, the same rows, the same seeds — only the clip
+  # fed to the encoder changes, via each row's `code_source_reference` (a class-level derangement).
+  # The row's own `reference` is untouched, so run_eval.pool_refs() builds a byte-identical GT pool
+  # for both twins and the paired delta is uncontaminated. This is a GENERATION-only arm: it pins
+  # bneck_frozen's checkpoint and is never trained.
+  bneck_frozen_shufcode:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    # Points at the TREATMENT's checkpoint via the supported per-arm adapter_template override
+    # (run_gen.py:138). The arm name must still be distinct — run_gen.load_rows filters the
+    # registries by arm, so sharing a name would pull the treatment's rows in too.
+    adapter_template: outputs/training/ladder2/bneck_frozen/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      skip_scale: 0.0
+    note: "Shuffled-code corpse of bneck_frozen. Same adapter, deranged code source. Its PASSING
+      (scoring ~= bneck_frozen) is what proves the channel is dead."
+
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
 
