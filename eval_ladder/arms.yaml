@@ -52,6 +52,27 @@ arms:
       honest no-adapter twin of specialist/generalist (base+reference is a copier, never a
       baseline)."
 
+  # ---- v3: the two CLEAN baselines ON THE CTT GRID (owner call 2026-07-31). Same 152 rows,
+  # seeds and geometry as ctt_v2 / ctt_v2_leaky / the refVFX arms, so they are per-card
+  # comparable with every column on the IC-LoRA trainings page — which `base_prompt`/`base_cond`
+  # above never were (those are the old ladder2 roster and were never generated).
+  # Distinct arm NAMES are load-bearing: run_gen.load_rows filters registry.jsonl + the extra
+  # registry by arm, so reusing the old names would silently pull the old roster's rows in too.
+  # Prompt = the leaky prompt with the trained `sksz.` token removed (a base model has no
+  # trigger token); rows carry `use_reference: false`, so neither arm is ever shown the demo.
+  base_prompt_ctt:
+    kind: base
+    adapter: null
+    targets: null
+    conditioning: none
+    note: "prompt only (transition described in text), no prefix/suffix, no reference. Baseline 1."
+  base_cond_ctt:
+    kind: base
+    adapter: null
+    targets: null
+    note: "prompt + endpoint conditioning (prefix, and suffix if two-sided), no reference.
+      Baseline 2 — the honest no-adapter twin of the IC-LoRA arms."
+
   spec_animalization:      {kind: specialist, class: animalization,      targets: attn, step: 2000}
   spec_color_rain:         {kind: specialist, class: color_rain,         targets: attn, step: 2000}
   spec_gas_transformation: {kind: specialist, class: gas_transformation, targets: attn, step: 2000}
@@ -121,13 +142,16 @@ arms:
   # one-way reference attention, and ReferenceConditionConfig defaults to bidirectional. Running
   # it bidirectionally is a train/inference mismatch. Every earlier arm omits the key and so
   # keeps the bidirectional default it was trained with.
-  # rank/alpha are 256 — pass --rank 256 --alpha 256 (run_gen.py's flags default to 32).
+  # rank/alpha are 128 — pass --rank 128 --alpha 128 (run_gen.py's flags default to 32). This
+  # line said 256 until 2026-07-31; the run was valve-demoted to 128 before it started
+  # (ctt_v2_training/RUN_RECORD.md §2 and §7) and the shipped checkpoint's lora_A tensors
+  # measure 128, so 256 was never true of the weights anyone generated with.
   ctt_v2:
     kind: generalist
     targets: attn_ffn
     step: 10000
     attention: one_way
-    note: "IC-LoRA on the CTT v2 dataset (56,368 pairs, 1,670 operators, 5 strata). rank 256,
+    note: "IC-LoRA on the CTT v2 dataset (56,368 pairs, 1,670 operators, 5 strata). rank 128,
       lr 1e-4, one-way reference attention, mix S0 5 / S1 12 / S2a 34.36 / S2b 35.64 / S4 13."
 
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors

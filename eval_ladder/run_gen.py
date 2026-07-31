@@ -72,7 +72,11 @@ def build_sample(row: dict) -> ValidationSample:
         if row["sided"] == "two":
             conds.append(SuffixConditionConfig(video=str(paths["suffix"]),
                                                num_frames=ec.SUFFIX_GEN_FRAMES))
-    if row.get("reference"):
+    # `use_reference: false` (default true, so every pre-existing row is unaffected) keeps the
+    # reference OFF the model while leaving it ON the row. The baseline arms need exactly that:
+    # run_eval.pool_refs() bans the row's reference from the GT pool, so dropping the field would
+    # hand them a different pool than the arms they are compared against — a silently unfair join.
+    if row.get("reference") and row.get("use_reference", True):
         # authoritative clip -> class (clip names do NOT reliably encode the class)
         ref_path = STD / prompts.clip_class(row["reference"]) / f"{row['reference']}.mp4"
         assert ref_path.exists(), f"reference clip not found: {ref_path}"

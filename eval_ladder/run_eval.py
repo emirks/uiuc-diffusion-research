@@ -131,7 +131,10 @@ def plan(seeds: list[int], chunks: int, arms: set[str] | None = None) -> None:
             # base, text_floor and the two v2.1.0 clean baselines are un-twinned by design —
             # they ARE baselines, not treatments joined to one.
             twin = None
-            if row["arm"] not in ("base", "text_floor", "base_prompt", "base_cond"):
+            # `no_twin: true` on the row says the same thing structurally, so a new baseline arm
+            # does not have to be added to the tuple below to be planned correctly.
+            if not row.get("no_twin") and row["arm"] not in (
+                    "base", "text_floor", "base_prompt", "base_cond"):
                 base = by_key.get(row["input_key"])
                 if base is None:
                     missing_twin.append(row["item_id"])
