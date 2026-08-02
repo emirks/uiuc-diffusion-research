@@ -1,3 +1,23 @@
+## 2026-08-01
+
+**20:45 — bneck_coupling: the frozen-encoder IC-LoRA trained and accepted; generation running, liveness gate pre-registered.**
+Trained `bneck_frozen` (`store/runs/004`) — runs/002's recipe with the reference channel REPLACED by the certified
+transition encoder's 72 operator tokens, encoder held FROZEN. 10,000/10,000 steps, 0 exceptions; **G2 verified the
+freeze bitwise at the final step (50/50 encoder tensors exactly the bf16 cast of the certified weights)**, and G1
+verified the ported input contract on BOTH architectures with all three must-fail calibrators rejected.
+Two advisors closed the open forks: **A9** accepted the run rather than re-running it (every training-side delta is
+*common-mode* — both twins score the same checkpoint — so it can shift the test's power but not its validity), and
+**A10** ruled that G5 subsumes the now-moot G4, adding a must-DEAD constant-code calibrator and promoting the
+design lock's never-measured alive anchor to a must-ALIVE calibrator.
+Settled `N27` by measurement instead of argument: the LR schedule decays `num_processes`x faster in *both* runs
+(`ctt_v2` floored at ~step 1,250, this run at ~2,506), so the defect is inherited and this run got *twice* the
+incumbent's high-LR exposure. Recorded as pre-registered caveat C1.
+Three of my own claims were corrected in the record: the fallback-log-fired-once argument didn't follow (the line is
+deduplicated — re-settled on arithmetic), G5 was already fully specified in the design lock, and the existing
+`ctt_v2` clips could not serve the must-ALIVE calibrator because they were generated on eps, not DeltaAI.
+Now generating 812 clips on DeltaAI (both arms + both calibrators + a copier-guard repeat lane); scoring stays
+unarmed until P3 is green, enforced in code rather than by discipline.
+
 ## 2026-07-30
 
 **22:21 — bneck_v2 closed: a transition-operator encoder, qualified certificate with two stated exceptions.**

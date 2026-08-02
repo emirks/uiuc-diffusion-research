@@ -212,5 +212,22 @@ arms:
     note: "Shuffled-code corpse of bneck_frozen. Same adapter, deranged code source. Its PASSING
       (scoring ~= bneck_frozen) is what proves the channel is dead."
 
+  # ---- CALIBRATOR B, the must-ALIVE anchor (design lock line 67, specified by A10; never measured
+  # until now). The incumbent `ctt_v2` with its RAW reference deranged by the SAME map the corpse
+  # arm uses. A raw-demo swap is KNOWN to move the output, so an instrument that cannot see this
+  # move cannot be trusted to call the bottleneck DEAD. Requirement: R_pos >= 0.5.
+  # These clips are PIXEL-MEASURED ONLY and are never scored, never registered in `store/evals`,
+  # and never joined to a GT pool — which is why re-pointing the reference is harmless here and
+  # forbidden everywhere else. No `bottleneck` block: this arm feeds the full-resolution demo, and
+  # that is the entire point of it.
+  ctt_v2_shufref:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way          # ctt_v2 was trained one-way; the default is bidirectional.
+    adapter_template: outputs/training/ladder2/ctt_v2/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "Calibrator B / must-ALIVE anchor. ctt_v2's own adapter, raw reference deranged. Pixel
+      measurement only — never scored."
+
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
 

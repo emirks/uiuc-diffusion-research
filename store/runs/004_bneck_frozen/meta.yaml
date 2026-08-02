@@ -1,0 +1,82 @@
+id: 004_bneck_frozen
+seq: 4
+shelf: runs
+created: 2026-08-02          # store entry date; trained 2026-08-01 on the offsite 8xH100 box
+machine: offsite 8xH100 (eps, GPUs 4-7 only; GPUs 0-3 belong to another user and were untouched)
+source: misc/bneck_coupling campaign — DOSSIER.md is the run authority
+  (design lock advisors/A5, geometry Amendment-1 A6/A7/A8, run acceptance A9/N28)
+inputs:
+  dataset: datasets/002_ctt_v2        # the SAME 56,368-pair set as runs/002; not rebuilt
+  encoder: misc/bneck_v2 armPm_seed42/ckpt_08000.pt   # the certified transition encoder, FROZEN
+trainer:
+  checkout: src/LTX-2-bneck-coupling   # linked worktree; runs/002's worktree is pinned and untouched
+  branch: bneck-coupling
+  commit: 5d6a31cbea1668c4861b67c905ca90a1b44aa457
+  entry: accelerate launch --num_processes 4 scripts/train.py (tmux on eps; no scheduler, no resume)
+model: LTX-2 19B dev
+adapter: IC-LoRA
+rank: 128
+alpha: 128
+target_modules: attn_ffn
+reference_attention: one_way
+lr: 1e-4 linear 1.0->0.1, no warmup      # see CAVEAT C1 — the REALIZED schedule differs, as it did for runs/002
+timesteps: shifted_logit_normal
+seed: 42
+effective_batch: 8           # 4 DDP x bs1 x accum2 — A5's compute lock; runs/002 used 8 x 1
+steps_trained: 10000
+shipped_step: 10000
+checkpoint_sha256:
+  lora_weights_step_10000.safetensors: 8e1c3a09d175955820e4f732e0cf58328778e9e8e793da8b58c60bced31bf815
+training_data: 56,368 pairs; mix S0 5.0 / S1 12.0 / S2a 34.36059 / S2b 35.63941 / S4 13.0
+  # BYTE-IDENTICAL to runs/002's mix. An earlier amendment had dropped S4 to 0.0; it was overturned
+  # before this run and S4 trains via a per-sample positional fallback instead (Caveat C2).
+
+# ---------------------------------------------------------------------------- the intervention
+intervention: >
+  The ONLY content delta versus runs/002 is the reference channel: the raw full-resolution demo
+  latents are REPLACED (not augmented) by 72 operator tokens, shape (6,4,3)x128, emitted by the
+  certified transition encoder held FROZEN. skip_scale pinned 0.0 so no raw pooled demo can leak in.
+frozen_encoder:
+  params: 8,606,336 (50 tensors)
+  source_sha256_of_module: fd25835e...   # misc/bneck_v2/operator_encoder.AS_CERTIFIED.py, ported byte-identically
+  verified: >
+    G2 at step 10000 — all 50 encoder tensors in the final checkpoint are EXACTLY the bf16 cast of
+    the certified weights. The encoder provably did not move across 10,000 DDP steps.
+input_contract: >
+  The certified artifact is weights + featurization, so both are ported (bneck_contract.py, read by
+  trainer AND generator): per-clip per-channel standardization (ddof=0) -> fp32 forward with autocast
+  DISABLED -> prefix/suffix fixed at (2,1) for every clip -> S2 frame_keep_mask at train time,
+  maskless at generation. G1 verified this on BOTH architectures (aarch64 GH200 and x86 H100):
+  max |delta| 2.6e-6 - 9.3e-6 against a 1e-3 x code-RMS bar, with all three must-fail calibrators
+  rejected on both (old encoder source; standardization omitted; bf16 autocast on).
+
+# ---------------------------------------------------------------------------- caveats (pre-registered)
+# Recorded BEFORE any coupled result existed. Full text: misc/bneck_coupling/advisors/A9_*.md
+caveats:
+  C1_realized_lr_schedule: >
+    The written schedule (LinearLR 1e-4 -> 1e-5 over 10,000 steps) was NOT the realized schedule in
+    either run: Accelerate's AcceleratedScheduler steps once per rank, so decay completes in
+    10000/num_ranks steps. Measured from each run's own log, both match
+    LR = 1e-4 x (1 - 0.9 x ranks x step / 10000) exactly: runs/002 (8 ranks) floored at ~step 1,250
+    (~87.5% of the run at 1e-5); this run (4 ranks) floored at ~2,506 (~75%), i.e. roughly TWICE the
+    incumbent's high-LR exposure. The defect is inherited, not introduced. Consequently this run
+    supports NO matched-training-budget or channel-efficiency claim relative to runs/002.
+  C2_s4_positional_factors: >
+    No positional factorization of the frozen (6,4,3) geometry is valid for both CTT-v2 latent grids
+    (exhaustively verified: only 8 shapes work on both, all f=2 with >=308 tokens). So S4-shaped
+    references (13% of the mix, grid (5,14,26)) use operator-pinned RoPE factors (3,1) via a
+    per-sample fallback, while 121-frame references keep the incumbent-validated INFERRED (5,3).
+    Verified on arithmetic, not on a log count: the 121f grid never enters the fallback branch.
+    The evaluation grid is 100% 121-frame, so the pinned geometry affects training signal only.
+health:
+  exceptions: 0
+  checkpoints: 40 (every 250 steps), all mirrored to durable storage
+  final_loss_line: "Step 10000/10000 - Loss: 0.4740, LR: 1.00e-05"
+  inline_validation: 77 videos, routed THROUGH the bottleneck (the trainer previously never attached
+    the encoder to its validation runner — fixed before this run; see DOSSIER)
+notes: >
+  run_gen.py defaults --rank to 32 — pass --rank 128 --alpha 128 explicitly.
+  This checkpoint carries 50 operator_encoder.* tensors alongside 960 LoRA tensors; run_gen REFUSES
+  to generate a bottleneck arm from a checkpoint lacking them (the provenance guard).
+  The same file serves BOTH gens/008 (matched) and gens/009 (shuffled-code corpse) — the corpse is a
+  generation-only arm and is never trained.

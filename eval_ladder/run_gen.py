@@ -85,7 +85,14 @@ def build_sample(row: dict) -> ValidationSample:
         # same class of keyed-join defect that flipped two cells in the ladder audit. With this
         # field the two arms are scored against byte-identical pools and differ only in what the
         # encoder saw. The eval side never reads it.
-        model_ref = row.get("code_source_reference") or row["reference"]
+        # Calibrator A (campaign `bneck_coupling`, advisor A10): force EVERY row's code source to
+        # one fixed clip. The encoder is frozen and deterministic, so a constant input clip yields a
+        # constant 72-token code — which makes the matched and shuffled registries carry IDENTICAL
+        # effective conditioning. Any distance measured between them is then nondeterminism floor
+        # plus hidden leak, i.e. a channel that MUST read DEAD. Default None keeps every other
+        # campaign's behaviour byte-identical.
+        model_ref = (build_sample.const_code_clip
+                     or row.get("code_source_reference") or row["reference"])
         # authoritative clip -> class (clip names do NOT reliably encode the class)
         ref_path = STD / prompts.clip_class(model_ref) / f"{model_ref}.mp4"
         assert ref_path.exists(), f"reference clip not found: {ref_path}"
@@ -157,6 +164,10 @@ def main() -> None:
                     help="additional jsonl of registry rows, appended to the frozen registry")
     ap.add_argument("--out-root", default=None,
                     help="override outputs/videos/ladder2 (side lanes write their own tree)")
+    ap.add_argument("--const-code-clip", default=None,
+                    help="Calibrator A (bneck_coupling/A10): force every row's code source to this "
+                         "ONE clip, making matched and shuffled registries identical by "
+                         "construction — the must-DEAD control. Use with --out-root.")
     args = ap.parse_args()
 
     global OUT_ROOT
@@ -167,6 +178,11 @@ def main() -> None:
     assert args.seed in arms_cfg["seeds"], f"seed {args.seed} is not a registered seed"
     build_sample.ref_downscale = arms_cfg['arms'][args.arm].get('ref_downscale', 1)
     build_sample.ref_attention = arms_cfg['arms'][args.arm].get('attention', 'bidirectional')
+    build_sample.const_code_clip = args.const_code_clip
+    if args.const_code_clip:
+        assert args.out_root, "--const-code-clip must write to its own --out-root (it is a " \
+                              "calibrator, not a scored arm) or it would overwrite real videos"
+        print(f"[gen] CALIBRATOR A: code source forced to '{args.const_code_clip}' for EVERY row")
     rows = load_rows(args.arm, args.priority, args.cells, args.extra_registry)
 
     def out_path(r: dict) -> Path:
@@ -249,8 +265,16 @@ def main() -> None:
         # Scale factors MUST match what training derived from the token shape, or the K tokens
         # land on the wrong positional grid (silently — nothing raises).
         th, tw, tf = vh // 32, vw // 32, (vf - 1) // 8 + 1
-        dsf, tsf = th // h, (tf - 1) // (f - 1)
-        assert th // h == tw // w, f"non-uniform spatial scale: {th}//{h} vs {tw}//{w}"
+        # `positional_mode` MUST match what the adapter was trained with (bneck_contract / the
+        # trainer's flexible.py). 'fixed' pins both factors to 1 so the code's placement is
+        # target-independent; 'commensurate' infers them and needs a uniform scale. A mismatch here
+        # is silent and would corrupt every generation — gate PP-1 exists to catch it.
+        pos_mode = bspec.get("positional_mode", "commensurate")
+        if pos_mode == "fixed":
+            dsf, tsf = 1, 1
+        else:
+            dsf, tsf = th // h, (tf - 1) // (f - 1)
+            assert th // h == tw // w, f"non-uniform spatial scale: {th}//{h} vs {tw}//{w}"
         if not enc_sd:
             raise RuntimeError(f"arm '{args.arm}' declares a bottleneck but the checkpoint "
                                f"{adapter} has no operator_encoder.* tensors — refusing to generate "
