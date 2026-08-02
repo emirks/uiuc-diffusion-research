@@ -1,0 +1,46 @@
+id: 008_bneck_frozen
+seq: 8
+shelf: gens
+created: 2026-08-02
+machine: DeltaAI GH200 (ghx4)   # SAME box as gens 001-007's scoring lane and as gens/009
+source: misc/bneck_coupling campaign (eval_ladder/run_gen.py via build/job_gen_dai.sbatch)
+code: >
+  envs-aarch64 + PYTHONPATH -> src/LTX-2-bneck-coupling/packages (branch bneck-coupling,
+  commit 5d6a31cbea1668c4861b67c905ca90a1b44aa457). NOT src/LTX-2-official: this checkout carries
+  the certified operator_encoder source and bneck_contract.py. Generating from the official
+  checkout would silently use the OLD encoder, which G1's calibrator C1 exists to reject.
+inputs:
+  run: 004_bneck_frozen
+  step: 10000
+  adapter_sha256: 8e1c3a09d175955820e4f732e0cf58328778e9e8e793da8b58c60bced31bf815
+grid: grid.jsonl (152 rows x seeds [42,43] = 304 clips; registry_bneck_frozen.jsonl)
+prompt_rule: '"{S1}. sksz. [{S2}.]" — byte-identical to gens/002_ctt_v2; item_id, reference and input_key are byte-identical to registry_ctt_v2'
+resolution: 480x640x121f @ 24 fps
+inference: steps 30, guidance_scale 4.0, stg_scale 1.0, stg_blocks [29], stg_mode stg_v; --rank 128 --alpha 128; attention one_way
+conditioning: prefix 9f (+ suffix 8f if two-sided) + the reference clip COMPRESSED TO 72 OPERATOR TOKENS
+
+bottleneck:
+  token_shape: [6, 4, 3]        # K = 72
+  encoder: the certified transition encoder, FROZEN; reconstructed from THIS checkpoint's own
+    operator_encoder.* tensors (50 of them) and loaded in fp32
+  positional_scale: spatial 5, temporal 3     # inferred from the 121f grid — the SAME factors training used
+  skip_scale: 0.0               # no raw pooled demo may leak in
+  provenance_guard: run_gen REFUSES to generate under this arm name if the checkpoint carries no
+    operator_encoder.* tensors, so a raw-reference video can never be labelled a bottleneck one
+
+twin: 009_bneck_frozen_shufcode   # the paired corpse; same adapter file, deranged code source
+caveats:
+  - >-
+    The row's `reference` is what the encoder sees here. Its twin (gens/009) overrides ONLY the
+    model-facing clip via `code_source_reference`, leaving `reference` untouched — so run_eval's
+    pool_refs() builds a BYTE-IDENTICAL GT pool for both, and every paired delta is uncontaminated.
+  - >-
+    Inherits runs/004's pre-registered caveats C1 (realized LR schedule, measured as inherited from
+    runs/002) and C2 (S4 positional factors). No matched-training-budget or channel-efficiency claim
+    is supported against gens/002_ctt_v2.
+liveness: >
+  G5 / P3 GREEN, measured on these clips before any scoring: R_full 0.4916 and R_first48 0.4537
+  against a 0.10 bar, both claim cells >= 0.43. Bracketed by Calibrator A 0.000 (constant code, dead
+  by construction, bitwise-identical output => zero leak) and Calibrator B 1.129 (the incumbent's raw
+  demo, known live). The 72-token code therefore carries ~44% of the raw demo's effect on the output.
+health: 304/304 clips, 0 failed jobs; completeness gate 812/812 across the whole batch (all exactly 121 frames)

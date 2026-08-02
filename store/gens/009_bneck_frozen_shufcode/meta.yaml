@@ -1,0 +1,51 @@
+id: 009_bneck_frozen_shufcode
+seq: 9
+shelf: gens
+created: 2026-08-02
+machine: DeltaAI GH200 (ghx4)   # SAME box, env and code revision as gens/008 — required: this is a PAIRED contrast
+source: misc/bneck_coupling campaign (eval_ladder/run_gen.py via build/job_gen_dai.sbatch)
+code: >
+  envs-aarch64 + PYTHONPATH -> src/LTX-2-bneck-coupling/packages (branch bneck-coupling,
+  commit 5d6a31cbea1668c4861b67c905ca90a1b44aa457) — identical to gens/008.
+inputs:
+  run: 004_bneck_frozen         # THE SAME adapter file as gens/008. This arm is never trained.
+  step: 10000
+  adapter_sha256: 8e1c3a09d175955820e4f732e0cf58328778e9e8e793da8b58c60bced31bf815
+grid: grid.jsonl (152 rows x seeds [42,43] = 304 clips; registry_bneck_frozen_shufcode.jsonl)
+prompt_rule: 'byte-identical to gens/008 — item_id, reference, input_key and prompt are all unchanged'
+resolution: 480x640x121f @ 24 fps
+inference: steps 30, guidance_scale 4.0, stg_scale 1.0, stg_blocks [29], stg_mode stg_v; --rank 128 --alpha 128; attention one_way
+conditioning: prefix 9f (+ suffix 8f if two-sided) + a DELIBERATELY WRONG reference, compressed to 72 tokens
+
+# ------------------------------------------------------------------ what makes this a valid corpse
+the_intervention: >
+  THE ONLY DIFFERENCE from gens/008 is which clip the frozen encoder sees. The mismatch travels in a
+  NEW field, `code_source_reference`; the row's own `reference` is left untouched. That separation is
+  load-bearing, not cosmetic: run_eval.pool_refs() EXCLUDES the row's own `reference` from the GT
+  pool, so swapping `reference` to build the corpse would change pool COMPOSITION between the twins
+  and contaminate every paired delta — the same class of keyed-join defect that flipped two cells in
+  the earlier ladder audit.
+derangement:
+  rule: deterministic within-cell derangement over the reference clip's authoritative class
+    (prompts.clip_class), never over the row's donor_class
+  verified: 152/152 rows mapped, 0 fixed points, 0 same-donor-class assignments
+  why_not_donor_class: >
+    deranging by donor_class handed 26 rows a code of their OWN class — an accidentally CORRECT code
+    inside the corpse — because on G-ref-control the demo is deliberately mismatched. Caught by the
+    builder's own assert.
+  fallback: >
+    2 rows (G-ref-control, two-sided) where the +1 shift necessarily lands on the donor class use a
+    documented widened pool — same-sidedness references grid-wide, excluding the donor class and the
+    row's own reference. Both recorded by name in the build output.
+
+twin_of: 008_bneck_frozen
+role: >
+  This arm PASSING — i.e. scoring the same as gens/008 — is what would prove the channel is dead.
+  Its measured separation from gens/008 is the campaign's evidence. G5 measured that separation in
+  pixel space BEFORE any scoring: R_full 0.4916 against a 0.10 bar, with a constant-code control
+  returning exactly 0.000, so the separation cannot be a leak or a nondeterminism artifact.
+caveats:
+  - generation-only arm; it has no run entry of its own and no training ever occurred for it
+  - inherits runs/004's caveats C1 and C2 identically to gens/008 — being common to both twins, they
+    are common-mode and cannot bias the paired delta in either direction
+health: 304/304 clips, 0 failed jobs

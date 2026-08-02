@@ -1,0 +1,82 @@
+id: 003_bneck_coupling__dai__2026-08-02
+seq: 3
+shelf: evals
+created: 2026-08-02
+machine: DeltaAI GH200 (ghx4) — Linux aarch64, torch 2.10.0+cu129, python 3.12
+source: misc/bneck_coupling (eval_ladder/run_eval.py --mode plan + build/job_score_dai.sbatch)
+harness: transition-eval/4.0.0 (m1a_S3 kernel)
+instrument:
+  # MEASURED with sha256sum, not the declared constant — identical to evals/001 and 002, which is
+  # what makes these arms readable next to the five comparators.
+  reference_artifact: .claude/worktrees/eval-v4-cert/src/diffusion/transition_eval/reference_v4.npz
+  reference_artifact_sha256: 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8
+  corpus: data/processed/transitions_std121/corpus_manifest.json   # the 222-clip manifest
+  corpus_sha256: 5a7a8be9f8a0ba70de9d3c77aaec77801a59170255d5fcb425d80a364afd3652
+  certified: false
+  uncertified_reasons:                       # identical to evals/001 and 002
+    - "instrument files modified since HEAD: ['src/diffusion/transition_eval/reference_v4.npz']"
+    - "HEAD tag is None, expected 'eval/v4.0.0'"
+inputs:
+  gens: [008_bneck_frozen, 009_bneck_frozen_shufcode]
+arms:
+  bneck_frozen:
+    items: 1842          # 152 rows x 2 seeds x <=8 copy-guarded GT-pool refs
+    nulls: 0
+    shards: 8
+  bneck_frozen_shufcode:
+    items: 1842
+    nulls: 0
+    shards: 10          # 8 first-pass + 2 sweep shards (sweep0/sweep1)
+pool_rule: >-
+  run_eval.pool_refs() semantics, unchanged. The two arms are TWINS: item_id, reference and
+  input_key are byte-identical between their registries, so both are scored against a
+  byte-identical GT pool for every item. That identity is the whole point — it is why the corpse's
+  wrong code travels in a separate `code_source_reference` field and never by swapping `reference`.
+
+# ---------------------------------------------------------------------------- the result
+verdict: >
+  THE PRIMARY CLAIMS FAILED. The frozen-coupling line is DEAD as a pre-registered publishable
+  negative (design lock line 80; advisor ruling A11). See misc/bneck_coupling/DOSSIER.md.
+primary_claims:
+  P1_bar: ">=80% of donor classes (>=11/13) with positive class-median Δapp_ref, in each claim cell"
+  P1_G_unseen_same: "6/13 (0.462) — FAIL"
+  P1_G_unseen_cross: "7/13 (0.538) — FAIL"
+  P2_bar: "pooled median Δapp_ref >= +0.05"
+  P2_measured: "-0.00197 (n=78) — FAIL"
+  P2_ci95: "[-0.01470, +0.00652] — the CI UPPER bound lies below the bar, so the design could have
+    detected the effect it was built to detect. A null, not an underpowered study."
+  cross_cell_sign_concordance: "6/13 concordant vs 6.5 expected by chance (p=1.0) — noise, not a
+    weak-but-consistent effect"
+  calibration: "the identical paired construction measures the incumbent's raw-demo channel at
+    Δ = 0.174"
+liveness_P3: >
+  GREEN and unaffected by the above. Pixel-space paired R = 0.4916 (bar 0.10), bracketed by a
+  must-DEAD constant-code calibrator at bitwise 0.000 (zero leak) and a must-ALIVE raw-demo
+  calibrator at 1.129. The channel transmits; the model did not learn to decode.
+appearance_import_check: >
+  NO FLAG in any of 9 cells; pooled median percentile 0.500 (exactly chance), B=10,000 within-cell
+  permutation null. No donor appearance travels through the 72 tokens.
+validity_gates:
+  G1_input_contract: "green on BOTH architectures, all three must-fail calibrators rejected"
+  G2_freeze: "green BITWISE at step 10000 (50/50 encoder tensors)"
+  code_stats_ratio: "1.9216 (code-token RMS / raw-latent RMS over 200 corpus refs); band [1/3, 3];
+    IN BAND, no affine required"
+caveats:
+  - >-
+    ONE MACHINE. Generated AND scored on DeltaAI, the same box as evals/001 and 002, with an
+    identical instrument sha. eps and DeltaAI do not reproduce each other row-by-row on this
+    instrument, so never mix rows across boxes.
+  - >-
+    Inherits runs/004's pre-registered caveats C1 (realized LR schedule — measured as INHERITED,
+    the incumbent floored harder) and C2 (S4 positional factors — 0% of the eval grid). Per advisor
+    A11 these are recorded as power caveats and are explicitly NOT offered as an explanation of the
+    null, because the incumbent trained under a worse C1 and still shows Δ = 0.174.
+  - >-
+    Levels carry NO pass/fail bar (A5 dropped them: the metric is text-saturated and a no-demo
+    baseline outscores the trained incumbent). In particular the G-unseen-same level gap
+    (matched 0.6114 < shufcode 0.6301) must NOT be reported as "shuffled codes help".
+  - >-
+    The first scoring pass was cancelled wholesale on an operator error (manifest cond paths are
+    relative to REPO_ROOT; the job ran from the instrument worktree). No rows from it survive. A
+    later cache-race left 79 corpse rows unscored — an ASYMMETRIC hole, closed by a serial sweep;
+    final coverage is 1,842/1,842 in BOTH arms with zero nulls.

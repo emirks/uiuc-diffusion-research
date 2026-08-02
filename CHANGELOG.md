@@ -1,3 +1,25 @@
+## 2026-08-02
+
+**04:00 — bneck_coupling CLOSED: the generator does NOT read the frozen transition code. A pre-registered publishable negative.**
+Full cycle delivered (train → generate → eval → viewer → store). The campaign answered the one thing the
+bneck_v2 certificate explicitly refused to claim, and the answer is negative — but informative, because two
+measurements together *localize* the failure rather than just recording it.
+**The channel is live:** deranging the code moves generated pixels at **R = 0.492** (bar 0.10), bracketed by a
+must-DEAD constant-code calibrator at **bitwise 0.000** (proving zero leak outside the 72 tokens) and a
+must-ALIVE raw-demo calibrator at **1.129** — so the code carries ~44% of a full demo's leverage.
+**The read claim fails at chance:** P1 = 6/13 and 7/13 donor classes positive against a ≥11/13 bar; P2 pooled
+median Δapp_ref = **−0.002** against +0.05, 95% CI **[−0.015, +0.007]** whose upper bound sits *below* the bar —
+a null, not an underpowered study. Cross-cell class-sign concordance 6/13 vs 6.5 by chance, with per-class
+effects reversing sign between cells.
+**Conclusion (advisor A11): the coupling transmits but does not instruct** — information provably enters and is
+provably present in the code, so the failure is in the *decode* step.
+Validity is not in question: G1 green on both architectures with all three must-fail calibrators rejected, G2
+freeze bitwise at step 10,000, code-stats ratio 1.9216 inside the pre-registered [1/3,3] band, appearance-import
+check no-FLAG at pooled percentile 0.500, and scoring symmetric at 1,842/1,842 items per arm with zero nulls.
+Store: `runs/004_bneck_frozen`, `gens/008`+`009`, `evals/003_bneck_coupling__dai__2026-08-02`. Both arms are
+toggleable on the runs page (9 arms, was 7). The input-adapter reserve's pre-declared trigger is now formally
+met and is proposed to the owner in `misc/bneck_coupling/OWNER_MEMO.md` — not started.
+
 ## 2026-08-01
 
 **20:45 — bneck_coupling: the frozen-encoder IC-LoRA trained and accepted; generation running, liveness gate pre-registered.**

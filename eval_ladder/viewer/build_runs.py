@@ -149,6 +149,38 @@ EXTERNAL = [
                     "the transition (the effect clause is inserted after the trained `sksz.` "
                     "token). The mirror of Ⓐ: our model handed the same text budget.",
      "doc": "misc/ctt_v2_leaky/DOSSIER.md"},
+    #: 2026-08-02 — campaign `bneck_coupling`. THESE TWO ARE A PAIR AND ARE ONLY MEANINGFUL AS ONE.
+    #: Same adapter file, same rows, same seeds, byte-identical GT pool; the ONLY difference is
+    #: which clip the FROZEN certified encoder saw. Their paired difference is the campaign's
+    #: measurement; their LEVELS carry no bar (advisor A11 forbids level claims here, including
+    #: reading ⑧'s higher G-unseen-same level as "shuffled codes help").
+    {"id": "bneck_frozen", "score_id": "bneck_v4", "kind": "bottleneck", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "⑦ BNECK · frozen code (matched)",
+     "sub": "raw demo REPLACED by 72 frozen operator tokens · treatment",
+     "src": REPO_ROOT / "store/gens/008_bneck_frozen/videos",
+     "media": "outputs/videos/bneck_coupling/bneck_frozen",
+     "rows": ("registry", REPO_ROOT / "store/gens/008_bneck_frozen/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/003_bneck_coupling__dai__2026-08-02/bneck_frozen",
+     "prompt_kind": "the ctt_v2 recipe with ONE content change: the reference channel carries 72 "
+                    "operator tokens from the certified transition encoder, held FROZEN (verified "
+                    "bitwise at step 10,000), instead of the raw full-resolution demo. Same prompt "
+                    "as ctt_v2. Compare ONLY against ⑧, its shuffled-code twin.",
+     "doc": "misc/bneck_coupling/DOSSIER.md"},
+    {"id": "bneck_frozen_shufcode", "score_id": "bneck_v4", "kind": "bottleneck", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "⑧ BNECK · shuffled code (corpse)",
+     "sub": "SAME adapter file, deliberately WRONG code · the control",
+     "src": REPO_ROOT / "store/gens/009_bneck_frozen_shufcode/videos",
+     "media": "outputs/videos/bneck_coupling/bneck_frozen_shufcode",
+     "rows": ("registry", REPO_ROOT / "store/gens/009_bneck_frozen_shufcode/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/003_bneck_coupling__dai__2026-08-02/bneck_frozen_shufcode",
+     "prompt_kind": "byte-identical to ⑦ in every field — same adapter file, same prompt, same "
+                    "reference, same seeds — except that the encoder is fed a DIFFERENT clip via "
+                    "`code_source_reference` (a class-level derangement; 152/152 mapped, 0 fixed "
+                    "points). The row's own `reference` is untouched, so both twins are scored "
+                    "against a byte-identical GT pool. ⑧ scoring the same as ⑦ is the finding.",
+     "doc": "misc/bneck_coupling/DOSSIER.md"},
     {"id": "refvfx_A", "score_id": "refvfx_v4", "kind": "prior-work", "frames": 33,
      "label": "Ⓐ refVFX · their prompt",
      "sub": "external baseline · prompt describes the effect",
@@ -202,6 +234,24 @@ ARM_KINDS = [
      "column is marked ‡. Read it knowing this prompt shape is <b>out of distribution</b> for the "
      "adapter: no training caption ever named an effect, so a drop is as consistent with OOD "
      "prompt shape as with the description being unhelpful.",
+     ),
+    ("bottleneck",
+     "The operator-token bottleneck pair — a measured NEGATIVE.",
+     "⑦ and ⑧ are <b>one experiment, not two arms</b>, and neither number means anything alone. "
+     "Both are generated from the <b>same adapter file</b> over the same 152 rows and seeds; the "
+     "only difference is which clip the <b>frozen</b> certified transition encoder was shown. In "
+     "⑦ it sees the row's own demo; in ⑧ a deliberately wrong one, delivered through a separate "
+     "<span class='mono'>code_source_reference</span> field so the row's own reference — and "
+     "therefore the GT pool both are scored against — stays byte-identical. <b>The measurement is "
+     "their paired difference, and it came out at chance</b>: 6/13 and 7/13 donor classes positive "
+     "against a pre-registered bar of ≥11/13, pooled median Δapp_ref −0.002 against a bar of "
+     "+0.05, with a 95% CI whose upper bound (+0.007) sits <b>below</b> the bar — so the design "
+     "could have detected the effect and did not. This is a <b>null, not an underpowered study</b>. "
+     "Separately measured and also true: the channel is <b>causally live</b> — swapping the code "
+     "moves the generated pixels at ~44% of a raw demo's leverage, against a constant-code floor of "
+     "exactly zero. <b>The coupling transmits but does not instruct.</b> Read ⑦ and ⑧ only against "
+     "each other: their <b>levels carry no bar</b>, and ⑧'s slightly higher level on G-unseen-same "
+     "must <b>not</b> be read as “shuffled codes help”.",
      ),
     ("prior-work",
      "External baselines.",
@@ -718,7 +768,10 @@ def attach_external(cards: dict, registry: dict, ceil: dict) -> list[dict]:
                       "media": a["media"], "manifest": str(a["rows"][1].relative_to(LAB)),
                       "scores_slot": str(a["scores"].relative_to(LAB)),
                       "rows": len(by_item), "gens": joined, "videos": vids, "scored": scored,
-                      "off_grid": off_grid, "same_as_ours": same_as_ours})
+                      "off_grid": off_grid, "same_as_ours": same_as_ours,
+                      # carried through so the prompt-identity seatbelt can exempt the arms whose
+                      # claim REQUIRES an identical prompt (the ⑦/⑧ bottleneck pair)
+                      "same_prompt_by_design": a.get("same_prompt_by_design", False)})
     return stats
 
 
@@ -1244,7 +1297,12 @@ def check(data: dict) -> None:
             bad.append(f"arm '{a['id']}': {a['off_grid']} source rows are not in the registry")
         # the whole reason these arms carry their own prompt is that it DIFFERS from ours. A row
         # whose prompt equals the card's is either the wrong source file or a silently plain re-run
-        if a["same_as_ours"]:
+        # — EXCEPT for arms that declare `same_prompt_by_design`. The bottleneck pair (⑦/⑧) holds
+        # the prompt byte-identical to ctt_v2 on purpose: its whole claim is that the ONLY change is
+        # the content of the reference channel, so an identical prompt is the controlled contrast,
+        # not a mis-wire. Those two are still separated from ctt_v2 and from each other by the
+        # clip-identity check above (measured: 0 shared clips across all 152 rows).
+        if a["same_as_ours"] and not a.get("same_prompt_by_design"):
             bad.append(f"arm '{a['id']}': {a['same_as_ours']} of {a['gens']} rows carry a prompt "
                        f"IDENTICAL to ours — that arm is not the arm it claims to be")
     print(f"   † absolute-frame caveat on {m['window_caveat']['tiers'] or '—'} · "
