@@ -353,5 +353,40 @@ arms:
     note: "Shuffled-code corpse of vjepa_coupling. SAME adapter + projector; code source deranged via
       code_source_reference (same GT-pool-preserving map). reference untouched."
 
+  # ---- campaign `bneck_redesign` ROUND-4 NON-RESIDUAL control (2026-08-05). V-JEPA-RAW = the owner's
+  # literal idea 3: raw pretrained features (raw_canon pools X directly, NO residual subtraction) ->
+  # projector -> IC-LoRA. SINGLE-DELTA ablation of vjepa_coupling above: byte-identical in every respect
+  # EXCEPT the feature canon (residual->raw). Backbone-free gen like the residual arm — the trained
+  # projector (operator_encoder.projector.*) runs on PRECOMPUTED RAW eval-reference features
+  # (gen_feats_raw.pt). Adapter pinned at step 10000 (filled once the raw coupling finishes — the
+  # launch is operator-gated on the residual vjepa coupling reaching step 10000 healthy).
+  vjepa_raw_coupling:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/vjepa_raw_coupling/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: vjepa
+      token_shape: [16, 3, 3]
+      spanning_positions: true
+      vjepa_gen_feats: store/runs/005_vjepa_stageA_idea3/gen_feats_raw.pt
+    note: "Idea 3 V-JEPA-RAW coupling MATCHED (single-delta ablation of vjepa_coupling; raw_canon, no
+      residual). Trained raw projector from the checkpoint + precomputed RAW eval-ref features. Row's own reference."
+
+  vjepa_raw_coupling_shufcode:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/vjepa_raw_coupling/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: vjepa
+      token_shape: [16, 3, 3]
+      spanning_positions: true
+      vjepa_gen_feats: store/runs/005_vjepa_stageA_idea3/gen_feats_raw.pt
+    note: "Shuffled-code corpse of vjepa_raw_coupling. SAME adapter + raw projector; code source deranged
+      via code_source_reference (same GT-pool-preserving map). reference untouched."
+
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
 

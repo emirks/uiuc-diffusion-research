@@ -1,3 +1,19 @@
+## 2026-08-05
+
+**12:25 — bneck_redesign: built the V-JEPA-raw control arm (Round-4 non-residual ablation, owner's literal idea 3).**
+Single-delta clone of the running V-JEPA (residual) arm: the ONLY change is the feature canon —
+`raw_canon` pools the frozen V-JEPA-2 features X directly to (16,3,3) with NO residual/interpolation
+subtraction (added to `vjepa_residual.py` in both the idea3 scratch copy and the trainer fork, kept
+byte-identical; CPU test proves residual≈0 but raw≉0 on a pure-interpolation clip). `extract_features.py`,
+`precompute_gen_feats.py`, `precompute_val_feats.py`, and `stageA_train.py` gained a `--canon
+{residual,raw}` flag (residual stays byte-identical) writing to `feats_raw/`, `gen_feats_raw.pt`,
+`val_feats_raw.pt`, `projector_stageA_raw.pt`. Submitted on DeltaAI (account bgjg-dtai-gh, freshest
+fairshare): smoke→extraction array (0-39)→raw Stage-A, plus gen/val-feats precompute. Prepared
+`coupling_vjepa_raw.yaml` (byte-identical to `coupling_vjepa.yaml` except feats→raw, projector→raw, val→raw,
+name; ref prob STAYS 0.9), added `vjepa_raw_coupling(+_shufcode)` to `eval_ladder/arms.yaml`, and built the
+two gen registries (copy of the vjepa registries, arm renamed only, derangement preserved). Coupling NOT
+launched — operator-gated on the residual V-JEPA coupling reaching step 10000 healthy.
+
 ## 2026-08-02
 
 **04:00 — bneck_coupling CLOSED: the generator does NOT read the frozen transition code. A pre-registered publishable negative.**
