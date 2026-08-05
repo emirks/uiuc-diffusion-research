@@ -229,5 +229,129 @@ arms:
     note: "Calibrator B / must-ALIVE anchor. ctt_v2's own adapter, raw reference deranged. Pixel
       measurement only — never scored."
 
+  # ---- campaign `bneck_redesign` RIDE-ALONGS (advisors/DESIGN_LOCK.md §3). All three pin an
+  # EXISTING checkpoint via a per-arm adapter_template override and are GENERATION-only (never
+  # trained). rank/alpha 128 — pass --rank 128 --alpha 128 (run_gen.py defaults to 32).
+
+  # RAW-reference paired-read control — the BAND-SETTER. The incumbent ctt_v2 IC-LoRA with its
+  # NORMAL raw reference. MATCHED = the row's own reference. The deranged twin is a separate arm
+  # (below) that re-points ONLY the model-fed clip via `code_source_reference`, leaving `reference`
+  # (the GT-pool key run_eval.pool_refs() bans) untouched, so both twins score against a
+  # byte-identical pool. No `bottleneck` block: full-resolution demo path, exactly like ctt_v2.
+  ctt_v2_rawpair:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way          # ctt_v2 was trained one-way; the default is bidirectional.
+    adapter_template: outputs/training/ladder2/ctt_v2/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "RAW-reference control MATCHED. ctt_v2 adapter, row's own reference. Band-setter for the
+      redesign's P1/P2 bars (DESIGN_LOCK §3)."
+
+  ctt_v2_rawpair_shufref:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/ladder2/ctt_v2/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "RAW-reference control DERANGED. Same ctt_v2 adapter; each row's raw reference is
+      class-deranged via `code_source_reference` (the SAME shufcode_map table the bneck corpse
+      used). `reference` untouched -> byte-identical GT pool. The matched twin's corpse."
+
+  # D3 RoPE position-shuffle rider. The existing 004_bneck_frozen bottleneck LoRA in its normal
+  # reference/RoPE path; run_gen's --posshuf-seed 1234 permutes the 72 operator tokens' grid-cell
+  # assignment BEFORE RoPE positions are stamped (content otherwise identical). Pixel-measured only,
+  # never scored. The `bottleneck` block is byte-identical to bneck_frozen — run_gen rebuilds and
+  # attaches the same frozen encoder, then the position-shuffle hook reorders the 72 cells.
+  bneck_frozen_posshuf:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/ladder2/bneck_frozen/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      skip_scale: 0.0
+    note: "D3 rider. bneck_frozen's adapter+encoder; positional shuffle applied at gen via
+      --posshuf-seed 1234. Pixel measurement only, never scored."
+
+  # ---- campaign `bneck_redesign` COUPLING ARMS (Ideas 2 & 3), 2026-08-04. Each is a MATCHED +
+  # DERANGED-code twin sharing one adapter; the twin differs ONLY in the registry (code_source_
+  # reference re-points the model-fed clip while `reference` — the GT-pool key — is untouched, so
+  # both score against a byte-identical pool). rank/alpha 128 — pass --rank 128 --alpha 128.
+  # attention one_way (trained one-way). Adapters pinned at step 10000 (filled once the runs finish).
+
+  # Idea 2 HRC "Storyboard Code": standard bottleneck gen (VAE-encode reference -> encode_reference
+  # on the HRC encoder rebuilt from THIS checkpoint's operator_encoder.*).
+  hrc_coupling:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/hrc_coupling/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: hrc
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      spanning_positions: true
+    note: "Idea 2 HRC coupling MATCHED (hrc_l10 encoder rebuilt from the checkpoint). Row's own reference."
+
+  hrc_coupling_shufcode:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/hrc_coupling/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: hrc
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      spanning_positions: true
+    note: "Shuffled-code corpse of hrc_coupling. SAME adapter + encoder; code source deranged via
+      code_source_reference. Its PASSING (~= hrc_coupling) would prove the channel dead."
+
+  # Idea 3 V-JEPA-2 residual + trainable projector: BACKBONE-FREE gen. run_gen's vjepa branch loads
+  # the TRAINED projector from operator_encoder.projector.* and runs it on PRECOMPUTED eval-reference
+  # features (vjepa_gen_feats, keyed by cond.video). Reference probability 0.9 at TRAIN (code dropout).
+  vjepa_coupling:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/vjepa_coupling/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: vjepa
+      token_shape: [16, 3, 3]
+      spanning_positions: true
+      vjepa_gen_feats: store/runs/005_vjepa_stageA_idea3/gen_feats.pt
+    note: "Idea 3 vjepa coupling MATCHED. Trained projector from the checkpoint + precomputed eval-ref
+      features. Row's own reference."
+
+  vjepa_coupling_shufcode:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/vjepa_coupling/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: vjepa
+      token_shape: [16, 3, 3]
+      spanning_positions: true
+      vjepa_gen_feats: store/runs/005_vjepa_stageA_idea3/gen_feats.pt
+    note: "Shuffled-code corpse of vjepa_coupling. SAME adapter + projector; code source deranged via
+      code_source_reference (same GT-pool-preserving map). reference untouched."
+
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
 

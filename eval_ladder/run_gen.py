@@ -248,7 +248,34 @@ def main() -> None:
     # SAME checkpoint file (saved under its own prefix) and attach it, so inference mirrors
     # training: the demo is compressed to K tokens before it ever enters the sequence.
     bspec = arms_cfg["arms"][args.arm].get("bottleneck")
-    if bspec is not None:
+    if bspec is not None and bspec.get("encoder_class") == "vjepa":
+        # Campaign `bneck_redesign`, Idea 3: vjepa gen is backbone-free — the trained projector
+        # (loaded from the coupling checkpoint's operator_encoder.projector.*) runs on PRECOMPUTED
+        # eval-reference V-JEPA residual features (bspec['vjepa_gen_feats'], keyed by the reference
+        # mp4 path validation_runner passes as cond.video). Mirrors the training/validation vjepa path.
+        from ltx_trainer.vjepa_projector_encoder import VJEPAProjectorEncoder  # noqa: PLC0415
+        from ltx_trainer.bneck_contract import compute_spanning_factors  # noqa: PLC0415
+        f, h, w = bspec["token_shape"]
+        gf = bspec["vjepa_gen_feats"]
+        gen_feats = Path(gf) if os.path.isabs(gf) else REPO_ROOT / gf
+        encoder = VJEPAProjectorEncoder(val_feats_path=str(gen_feats))  # gen mode: no training bank
+        raw = load_file(str(adapter))
+        enc_sd = {k[len("operator_encoder."):]: v for k, v in raw.items() if k.startswith("operator_encoder.")}
+        if "projector.fc1.weight" not in enc_sd:
+            raise RuntimeError(f"arm '{args.arm}' declares a vjepa bottleneck but checkpoint "
+                               f"{adapter} has no operator_encoder.projector.* tensors — refusing "
+                               "to generate without the trained projector")
+        encoder.load_state_dict(enc_sd, strict=False)  # loads the trained projector.*
+        encoder = encoder.to(device=device, dtype=torch.float32).eval()
+        th, tw, tf = vh // 32, vw // 32, (vf - 1) // 8 + 1
+        dsf, tsf = compute_spanning_factors((f, h, w), tf, th, tw)  # 5.7735 / 1.0 on the 121f grid
+        if not encoder._val_feats:
+            raise RuntimeError(f"vjepa_gen_feats {gen_feats} loaded 0 features — precompute them first")
+        runner.attach_operator_encoder(encoder, downscale_factor=dsf, temporal_scale_factor=tsf)
+        print(f"[gen] vjepa projector bottleneck ATTACHED: K={f*h*w} shape=({f},{h},{w}) "
+              f"scale=(spatial {dsf:.4f}, temporal {tsf:.4f}), {len(enc_sd)} projector tensors, "
+              f"{len(encoder._val_feats)} precomputed gen-ref features", flush=True)
+    elif bspec is not None:
         # Campaign `bneck_redesign`, Idea 2: 'hrc' reconstructs the HRCEncoder; default the certified
         # OperatorTokenEncoder. Same kwargs, same encode_reference contract.
         if bspec.get("encoder_class", "operator") == "hrc":
