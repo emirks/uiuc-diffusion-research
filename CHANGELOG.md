@@ -1,5 +1,22 @@
 ## 2026-08-05
 
+**13:06 — bneck_redesign: built the HRC-raw control arm (Round-4 non-residual ablation = Arm C, owner-confirmed).**
+Single-delta clone of the running HRC (residual) arm: the ONLY change is the L_local target — `hrc_targets.py`
+gained `residual: bool=True`; `residual=False` makes the target the RAW pooled region `x_std` (skip
+`endpoint_crossfade` subtraction). `hrc_train.py` gained `--raw-target` (default keeps residual, running arm
+byte-identical); new CPU test `test_raw_target_is_pooled_region` (all 7 pass). Retrained the encoder
+byte-identical to hrc_l10 (λ=1.0 LITERAL, arm P, seed 42, 8000 steps) via `job_hrc_raw.sbatch` on DeltaAI
+(1-GPU backfill, account bgjg-dtai-gh) → `runs/hrc_raw/ckpt_08000.pt` (job 2879794, COMPLETED 18 min, sha256
+f109af4e…). Pre-registered gate (`gate_hrc_raw.py`, OPS_HELDOUT 977 ops) PASSED: held-out same-op retrieval
+**0.906** (≥0.5 → couple), locality R² **0.837** (cell-shuffled floor 0.069), endpoint-leak R² **0.411**
+(floor −0.089) vs the residual baseline's 0.716/0.443/0.474 — raw leaks slightly LESS than residual, so the
+residual subtraction was not the endpoint-invariance lever it was assumed to be. Prepared
+`coupling_hrc_raw.yaml` (clone of `coupling_hrc.yaml`: load_encoder→hrc_raw ckpt + its sha256,
+output_dir→hrc_raw_coupling, wandb enabled → project bneck_redesign; all functional config byte-identical),
+gen registries `registry_hrc_raw_coupling{,_shufcode}.jsonl` (arm renamed only; item_ids + derangement
+preserved), and `hrc_raw_coupling(+_shufcode)` in `eval_ladder/arms.yaml`. NOT launched — the coupling runs
+on eps via a separate agent.
+
 **12:25 — bneck_redesign: built the V-JEPA-raw control arm (Round-4 non-residual ablation, owner's literal idea 3).**
 Single-delta clone of the running V-JEPA (residual) arm: the ONLY change is the feature canon —
 `raw_canon` pools the frozen V-JEPA-2 features X directly to (16,3,3) with NO residual/interpolation

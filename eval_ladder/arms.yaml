@@ -322,6 +322,45 @@ arms:
     note: "Shuffled-code corpse of hrc_coupling. SAME adapter + encoder; code source deranged via
       code_source_reference. Its PASSING (~= hrc_coupling) would prove the channel dead."
 
+  # Idea 2 HRC-RAW control (bneck_redesign ROUND 4): single-delta ablation of hrc_coupling — L_local
+  # target = the RAW pooled region x_std (no residual/endpoint-crossfade subtraction). Encoder from
+  # runs/hrc_raw/ckpt_08000.pt (gate: same-op retrieval 0.906, locality R^2 0.837, leak 0.411).
+  # Identical bottleneck geometry to hrc_coupling. Couples on eps (separate launch agent).
+  hrc_raw_coupling:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/hrc_raw_coupling/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: hrc
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      spanning_positions: true
+    note: "Idea 2 HRC-RAW coupling MATCHED (raw-target encoder rebuilt from the checkpoint). Row's own reference."
+
+  hrc_raw_coupling_shufcode:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/hrc_raw_coupling/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: hrc
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      spanning_positions: true
+    note: "Shuffled-code corpse of hrc_raw_coupling. SAME adapter + encoder; code source deranged via
+      code_source_reference. Its PASSING (~= hrc_raw_coupling) would prove the channel dead."
+
   # Idea 3 V-JEPA-2 residual + trainable projector: BACKBONE-FREE gen. run_gen's vjepa branch loads
   # the TRAINED projector from operator_encoder.projector.* and runs it on PRECOMPUTED eval-reference
   # features (vjepa_gen_feats, keyed by cond.video). Reference probability 0.9 at TRAIN (code dropout).
