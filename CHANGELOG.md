@@ -1,3 +1,12 @@
+## 2026-08-05
+
+**11:51 — docs: Project Proposal v2 — the training-branch reframe, self-contained for the PI group.**
+New `docs/PROPOSAL_v2.md` supersedes the June proposal: task → why-hard (collapse + entanglement) → three
+questions (measure / ceiling / transfer) → refVFX positioning → one-paragraph training-free pivot → CTT v2
+strata table → plain-language v4 metric table with pool-% mechanics and the F-001 ref-swap validation →
+specialist ladder (99.7% of ceiling) and the 7-arm generalist grid (G2+text 91.3%/86.4%, margin +0.044).
+In-flight bottleneck work deliberately excluded (owner call).
+
 ## 2026-07-30
 
 **22:21 — bneck_v2 closed: a transition-operator encoder, qualified certificate with two stated exceptions.**
