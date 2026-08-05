@@ -168,6 +168,11 @@ def main() -> None:
                     help="Calibrator A (bneck_coupling/A10): force every row's code source to this "
                          "ONE clip, making matched and shuffled registries identical by "
                          "construction — the must-DEAD control. Use with --out-root.")
+    ap.add_argument("--posshuf-seed", type=int, default=None,
+                    help="D3 rider (bneck_redesign, DESIGN_LOCK §3): for a bottleneck arm, apply ONE "
+                         "fixed permutation (torch.randperm with this seed) of the K operator "
+                         "tokens' grid-cell assignment BEFORE RoPE positions are stamped. Content "
+                         "otherwise identical. Diagnostic ONLY — use with --out-root.")
     args = ap.parse_args()
 
     global OUT_ROOT
@@ -244,9 +249,14 @@ def main() -> None:
     # training: the demo is compressed to K tokens before it ever enters the sequence.
     bspec = arms_cfg["arms"][args.arm].get("bottleneck")
     if bspec is not None:
-        from ltx_trainer.operator_encoder import OperatorTokenEncoder
+        # Campaign `bneck_redesign`, Idea 2: 'hrc' reconstructs the HRCEncoder; default the certified
+        # OperatorTokenEncoder. Same kwargs, same encode_reference contract.
+        if bspec.get("encoder_class", "operator") == "hrc":
+            from ltx_trainer.hrc_encoder import HRCEncoder as _EncoderClass
+        else:
+            from ltx_trainer.operator_encoder import OperatorTokenEncoder as _EncoderClass
         f, h, w = bspec["token_shape"]
-        encoder = OperatorTokenEncoder(
+        encoder = _EncoderClass(
             token_shape=(f, h, w), width=bspec.get("width", 512), depth=bspec.get("depth", 2),
             num_heads=bspec.get("num_heads", 8),
             prefix_latent_frames=bspec.get("prefix_latent_frames", 2),
@@ -270,7 +280,12 @@ def main() -> None:
         # target-independent; 'commensurate' infers them and needs a uniform scale. A mismatch here
         # is silent and would corrupt every generation — gate PP-1 exists to catch it.
         pos_mode = bspec.get("positional_mode", "commensurate")
-        if pos_mode == "fixed":
+        if bspec.get("spanning_positions", False):
+            # Campaign `bneck_redesign`, Idea 2 §3: FLOAT spanning factors, identical to the training
+            # path (bneck_contract.compute_spanning_factors). Valid for any grid.
+            from ltx_trainer.bneck_contract import compute_spanning_factors
+            dsf, tsf = compute_spanning_factors((f, h, w), tf, th, tw)
+        elif pos_mode == "fixed":
             dsf, tsf = 1, 1
         else:
             dsf, tsf = th // h, (tf - 1) // (f - 1)
@@ -284,6 +299,51 @@ def main() -> None:
         # until process exit — and it is the record that proves the videos are bottleneck-generated.
         print(f"[gen] operator-token bottleneck ATTACHED: K={f*h*w} shape=({f},{h},{w}) "
               f"scale=(spatial {dsf}, temporal {tsf}), {len(enc_sd)} encoder tensors", flush=True)
+
+        # D3 rider (campaign `bneck_redesign`): one fixed permutation of the K=f*h*w token->cell
+        # assignment before RoPE stamping. Seeded here so the permutation is identical across every
+        # array task and every seed of the sweep; the runner reorders ref_latent's cells (see
+        # ValidationRunner.attach_position_shuffle). Diagnostic only — refuses to write into a
+        # scored tree by requiring --out-root, exactly like the calibrator flags.
+        if args.posshuf_seed is not None:
+            assert args.out_root, "--posshuf-seed must write to its own --out-root (it is a " \
+                                  "positional-diagnostic arm, not a scored one)"
+            k_tokens = f * h * w
+            g = torch.Generator().manual_seed(args.posshuf_seed)
+            perm = torch.randperm(k_tokens, generator=g)
+            runner.attach_position_shuffle(perm)
+            n_fixed = int((perm == torch.arange(k_tokens)).sum())
+            print(f"[gen] D3 POSITION-SHUFFLE armed: seed={args.posshuf_seed} K={k_tokens} "
+                  f"fixed_points={n_fixed} perm={perm.tolist()}", flush=True)
+
+        # Idea 1 (campaign `bneck_redesign`): inject='context' routes the code through a trained
+        # ContextAdapter into the CROSS-attention context stream instead of the latent sequence. The
+        # encoder above still runs (it produces the code); the adapter, loaded from the SAME
+        # checkpoint under its own prefix, maps that code to K' context tokens. d_ctx / width / K' are
+        # READ from the saved tensors, so no model dim is hardcoded and a shape drift fails loudly.
+        if bspec.get("inject", "reference") == "context":
+            from ltx_trainer.context_adapter import ContextAdapter
+            adapter_sd = {k[len("context_adapter."):]: v
+                          for k, v in raw.items() if k.startswith("context_adapter.")}
+            if not adapter_sd:
+                raise RuntimeError(f"arm '{args.arm}' declares inject='context' but the checkpoint "
+                                   f"{adapter} has no context_adapter.* tensors — refusing to "
+                                   "generate with an empty context port")
+            d_ctx = adapter_sd["output_proj.weight"].shape[0]
+            adapter_width = adapter_sd["output_proj.weight"].shape[1]
+            context_tokens = adapter_sd["queries"].shape[0]
+            adapter_mod = ContextAdapter(
+                d_ctx=d_ctx, token_shape=(f, h, w), context_tokens=context_tokens,
+                width=adapter_width, num_heads=bspec.get("num_heads", 8),
+                zero_init_output=False,  # weights are loaded next.
+            )
+            adapter_mod.load_state_dict(adapter_sd, strict=True)
+            # fp32 island (as at training): bneck_contract keeps autocast off around encode_reference,
+            # and the adapter forces fp32 internally, so the code path stays fp32 end to end.
+            adapter_mod = adapter_mod.to(device=device, dtype=torch.float32).eval()
+            runner.attach_context_adapter(adapter_mod)
+            print(f"[gen] context port ATTACHED (Idea 1): K'={context_tokens} width={adapter_width} "
+                  f"d_ctx={d_ctx}, {len(adapter_sd)} adapter tensors", flush=True)
 
     tmp = OUT_ROOT / "_runner" / f"{args.arm}_s{args.seed}_c{args.chunk}"
     saved = runner.run(transformer=transformer, step=0, output_dir=tmp, device=device,
