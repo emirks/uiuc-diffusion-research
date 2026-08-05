@@ -83,64 +83,45 @@ No composite score; every threshold pre-registered and calibrated against a case
 
 **Validation: the reference-swap test.** Scoring every real clip against every *other* same-class clip as reference: same-class 0.870 vs wrong-class 0.494 (d′ = 1.71), while swapping *which* same-class clip serves as reference moves the score only ±0.044 (±0.017 for a pool of ~7); the class is identifiable from the score alone 86% of the time. The metric tracks the transition *concept*, not the particular reference: not strict proof, but a strong signal.
 
-### 6.3 Model Arms
+### 6.3 Experimental Arms
 
-- **Specialist**: knows *one operator*. One LoRA per class, trained on that class's real clips (11 exist). Cannot transfer by design; it answers whether the operator is expressible at the quality we need, and doubles as the data engine behind S1.
-- **Generalist**: knows *the mechanism*. One in-context LoRA over all operators; at inference it must read the operator from the reference. The deliverable. **G1** is trained only on S0's corpus; **G2** on the whole CTT v2 dataset; **G2+text** is G2 with the effect additionally named in one clause of $c$, a probe of how much headroom sits in operator-reading itself.
-- **Base controls**: the untrained base model with the effect described in words (⓪ prompt only; ① plus endpoints), strong controls that receive in text what the generalists must read from the reference.
-- **External**: refVFX A/B (§4).
+- **Specialist** (×11): a LoRA per transition class, trained on that class's own clips (split v1). Rank 32, 2,000 steps, endpoint-conditioned. Knows one operator, cannot transfer by design; answers whether the operator is expressible at the quality we need, and generates stratum S1.
+- **Generalist 1 (G1)**: an IC-LoRA trained on S0's corpus (split v1): the reference clip is prepended in context (loss-masked), and the adapter must read the operator from it. Rank 32, bidirectional reference attention, 5,000 steps.
+- **Generalist 2 (G2)**: the same in-context recipe trained on the whole CTT v2 dataset (56,368 pairs, 1,670 operators; strata mix set in the trainer config). Rank 128, one-way reference attention, 10,000 steps. **G2+text**: the same trained adapter, with the effect additionally named in one clause of $c$ at inference; probes how much headroom sits in operator-reading itself.
+- **Base controls**: the untrained base model with the effect described in words (⓪ prompt only; ① plus endpoints). They receive in text what the generalists must read from the reference.
+- **refVFX** (external, §4): **A** in its own text config, **B** under our text budget.
+- **Bottleneck branch (running now)**: three reference-encoding implementations: a trained bottleneck operator encoder, a causal-VAE encoding, and a pretrained V-JEPA embedder. Goal: a reference signal that encodes, represents, and *isolates* the operator better than raw reference latents do.
 
-All arms generate one frozen 152-row grid × 2 seeds: unseen endpoints, cross-class endpoints, zero-shot classes, out-of-corpus footage, plus controls, including rows with a deliberately *mismatched* reference that reveal whether a model treats the reference as an instruction or as decoration.
+All arms are evaluated on one frozen 152-row grid × 2 seeds: unseen endpoints, cross-class endpoints, zero-shot classes, out-of-corpus footage, plus controls, including rows with a deliberately *mismatched* reference that reveal whether a model treats the reference as an instruction or as decoration.
 
-## 7. Cornerstone Experiments
+## 7. Current Results
 
-One grid, one machine, one instrument (v4). Across all trained arms, zero generations trip the copy guard: no score below is earned by replaying the reference.
-
-### 7.1 Specialists: the ceiling is reachable
-
-| endpoints given to the specialist | % of ceiling | vs base twin |
-| --- | --- | --- |
-| from training (fit anchor) | 100.4% | +39.5 pp |
-| **unseen, own-class content** | **99.7%** | **+40.0 pp** |
-| borrowed from another class | 94.9%* | +39.2 pp |
-| out-of-corpus footage (DAVIS) | 63.1%* | +18.9 pp |
-
-*Starred cells are content-capped (endpoint content can never fully resemble the class): the level is ranking-only, the claim is the gap vs the base twin.*
-
-With per-style training, the base model performs a creative operator on new content at ground-truth level. Whatever limits the generalists below, it is not the base model's capacity.
-
-### 7.2 Baseline generalist: G1, trained only on S0
-
-The remaining cornerstones read off one comparison table:
+One grid, one machine, one instrument (v4). Zero trained-arm generations trip the copy guard: no score below is earned by replaying the reference.
 
 | arm | same-class cells | cross/foreign cells* | style margin |
 | --- | --- | --- | --- |
+| **Specialist** (×11) | **99.7%**ᵃ | 94.9% / 63.1%ᵃ | – |
 | base ⓪ · prompt only (effect described) | 80.0% | 81.4% | −0.000 |
 | base ① · plus endpoints (effect described) | 84.9% | 83.0% | +0.001 |
 | **G1** · reference only | 83.1% | 62.0% | −0.029 |
-| **G2** · reference only, CTT-v2-trained | 82.5% | 66.7% | −0.011 |
+| **G2** · reference only | 82.5% | 66.7% | −0.011 |
 | **G2+text** · reference + effect described | **91.3%** | **86.4%** | **+0.044** |
 | refVFX A · its own config (text) | 42.4% | 41.3% | −0.032 |
 | refVFX B · our text budget | 33.0% | 26.7% | −0.064 |
 
-*152 rows × 2 seeds per arm; shared same-class ceiling 0.872; starred column is content-capped, ranking-only.*
+*Shared same-class ceiling 0.872. Starred column is content-capped (endpoint content can never fully resemble the class): ranking-only. ᵃ Specialists are scored on their own ladder grid (same instrument, cell means differ by <0.4 pp); cross and foreign shown separately; their claim channel is the paired gap vs the base twin: **+40.0 pp** on same-class unseen endpoints.*
 
-G1 holds up on familiar territory (83.1%) but falls exactly where transfer is tested: 62.0% on cross/foreign cells, with a negative style margin, meaning some *other* class matches its output better than the intended one. It does read the reference: on mismatched-reference control rows it follows the reference at 68.8%, clearly above the base model's 56.3% / 61.0% when the same instruction is given in words. The in-context mechanism works; the generalization does not.
+Findings, in order:
 
-### 7.3 CTT v2 generalist: G2, trained on the whole dataset
+1. **The ceiling is reachable.** Specialists perform their operator on new own-class content at ground-truth level (99.7%, +40 pp over the base twin). Whatever limits the generalists, it is not the base model's capacity.
+2. **G1 reads the reference but does not generalize.** On mismatched-reference control rows it follows the reference at 68.8%, clearly above the base model's 56.3% / 61.0% given the same instruction in words; yet it falls exactly where transfer is tested (62.0% cross/foreign, negative margin: some *other* class matches its output better than the intended one).
+3. **G2 moves all four generalization cells the right way** (margin +0.04 mean, +0.066 best) against a pre-committed +0.10 target: directional progress, not success. **G2+text is best everywhere** (91.3% / 86.4%, margin +0.044), with the largest gains on the hardest cells.
+4. **refVFX sits well below** (42.4% / 33.0%) and, consistent with its text-routed design, loses ~9 points without its effect description. Indicative rather than apples-to-apples (different base model, 33-frame output, community reimplementation).
 
-G2 moves all four generalization cells in the right direction (style margin +0.04 mean, +0.066 best) against a pre-committed +0.10 target: directional progress, not success. (Corpus, capacity and schedule changed together, so this is a systems comparison, not an ablation.) The **G2+text** probe is the sharpest datum: naming the effect in one clause makes it the best arm everywhere (91.3% / 86.4%, margin +0.044), with the largest gains on the hardest cells (zero-shot, foreign). **Diagnosis:** the generator can already *use* an operator specified in words; it cannot yet *extract* an equally usable operator from the raw reference video. That is a representation problem: the specialists rule out capacity, the instrument rules out measurement.
-
-### 7.4 External baseline: refVFX
-
-Well below all our arms on this benchmark (42.4% / 33.0% same-class), and consistent with its text-routed design: removing the effect description costs it ~9 points. Indicative rather than apples-to-apples: different base model, 33-frame native output, community reimplementation.
-
-### 7.5 In progress: bottleneck reference encoding
-
-Experimentation continues with bottleneck implementations. Following the §7.3 diagnosis, the current goal is a better reference signal: an encoding that represents and *isolates* the transition operator, instead of handing the generator the raw reference video.
+**Diagnosis:** the generator can already *use* an operator specified in words; it cannot yet *extract* an equally usable operator from the raw reference video. That is a representation problem (the specialists rule out capacity, the instrument rules out measurement), and the bottleneck branch (§6.3) is the direct attack on it.
 
 ## 8. Next Steps
 
-1. **Bottleneck reference encoding**: a compact operator code the generator can natively read (in flight).
+1. **Bottleneck branch**: land and evaluate the three reference encodings (bottleneck operator encoder, causal VAE, V-JEPA) on the same grid.
 2. **Close the pre-committed +0.10 margin target** on the claim cells, reference-only; re-measure seed noise under v4 so every delta carries a minimum-detectable-effect bar.
 3. **Consolidated ladder report**, mid-August.
