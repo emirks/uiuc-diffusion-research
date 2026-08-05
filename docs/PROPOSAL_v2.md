@@ -83,6 +83,16 @@ No composite score; every threshold pre-registered and calibrated against a case
 
 **Validation: the reference-swap test.** Scoring every real clip against every *other* same-class clip as reference: same-class 0.870 vs wrong-class 0.494 (d′ = 1.71), while swapping *which* same-class clip serves as reference moves the score only ±0.044 (±0.017 for a pool of ~7); the class is identifiable from the score alone 86% of the time. The metric tracks the transition *concept*, not the particular reference: not strict proof, but a strong signal.
 
+**Test tiers.** Every evaluation row sits in one cell of a 3×3 grid: the **reference tier** (is the reference's operator *seen* in training, an *unseen* instance of a trained class, or a *zero-shot* class never trained on?) crossed with the **endpoint tier** (endpoints from the operator's own class: *same*; from another corpus class: *cross*; off-distribution footage: *foreign*).
+
+| reference \ endpoints | same | cross | foreign |
+| --- | --- | --- | --- |
+| **seen** (training items) | anchors: fit, memorization probe | – | – |
+| **unseen** (trained class, new instance) | ✓ | ✓ **target** | ✓ |
+| **zero-shot** (class never trained) | ✓ | ✓ **target** | ✓ |
+
+The claims target the **unseen and zero-shot reference rows**, cross endpoints above all: there the reference shows an operator the model cannot have memorized, applied to content from elsewhere. Seen-reference cells are anchors, never claims; a mismatched-reference control row completes the grid.
+
 ### 6.3 Experimental Arms
 
 - **Specialist** (×11): a LoRA per transition class, trained on that class's own clips (split v1). Rank 32, 2,000 steps, endpoint-conditioned. Knows one operator, cannot transfer by design; answers whether the operator is expressible at the quality we need, and generates stratum S1.
@@ -92,31 +102,31 @@ No composite score; every threshold pre-registered and calibrated against a case
 - **refVFX** (external, §4): **A** in its own text config, **B** under our text budget.
 - **Bottleneck branch (running now)**: three reference-encoding implementations: a trained bottleneck operator encoder, a causal-VAE encoding, and a pretrained V-JEPA embedder. Goal: a reference signal that encodes, represents, and *isolates* the operator better than raw reference latents do.
 
-All arms are evaluated on one frozen 152-row grid × 2 seeds: unseen endpoints, cross-class endpoints, zero-shot classes, out-of-corpus footage, plus controls, including rows with a deliberately *mismatched* reference that reveal whether a model treats the reference as an instruction or as decoration.
+All arms are evaluated on one frozen 152-row grid × 2 seeds covering the §6.2 tiers, plus controls, including rows with a deliberately *mismatched* reference that reveal whether a model treats the reference as an instruction or as decoration.
 
 ## 7. Current Results
 
-One grid, one machine, one instrument (v4). Zero trained-arm generations trip the copy guard: no score below is earned by replaying the reference.
+One grid, one machine, one instrument (v4). Zero trained-arm generations trip the copy guard: no score below is earned by replaying the reference. Columns follow the §6.2 tier grid: **uns** = unseen reference, **zs** = zero-shot reference, each split by endpoint tier (% of ceiling; margin = M2b over all rows).
 
-| arm | same-class cells | cross/foreign cells* | style margin |
-| --- | --- | --- | --- |
-| **Specialist** (×11) | **99.7%**ᵃ | 94.9% / 63.1%ᵃ | – |
-| base ⓪ · prompt only (effect described) | 80.0% | 81.4% | −0.000 |
-| base ① · plus endpoints (effect described) | 84.9% | 83.0% | +0.001 |
-| **G1** · reference only | 83.1% | 62.0% | −0.029 |
-| **G2** · reference only | 82.5% | 66.7% | −0.011 |
-| **G2+text** · reference + effect described | **91.3%** | **86.4%** | **+0.044** |
-| refVFX A · its own config (text) | 42.4% | 41.3% | −0.032 |
-| refVFX B · our text budget | 33.0% | 26.7% | −0.064 |
+| arm | uns·same | uns·cross* | uns·foreign* | zs·same | zs·cross* | zs·foreign* | margin |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| **Specialist** (×11) | **99.7**ᵃ | 94.9ᵃ | 63.1ᵃ | – | – | – | – |
+| base ⓪ · prompt only (effect described) | 83.0 | 87.2 | 79.4 | 81.5 | 80.1 | 74.2 | −0.000 |
+| base ① · plus endpoints (effect described) | 87.0 | 88.8 | 78.6 | 89.6 | 89.3 | 76.5 | +0.001 |
+| **G1** · reference only | 89.1 | 73.1 | 56.9 | 91.1 | 72.2 | 44.1 | −0.029 |
+| **G2** · reference only | 90.5 | 74.1 | 59.8 | 74.9 | 78.5 | 54.0 | −0.011 |
+| **G2+text** · reference + effect described | **98.3** | **94.3** | **86.1** | **91.6** | **91.0** | **71.9** | **+0.044** |
+| refVFX A · its own config (text) | 47.8 | 40.4 | 38.7 | 52.3 | 41.8 | 45.3 | −0.032 |
+| refVFX B · our text budget | 35.0 | 25.2 | 28.7 | 31.6 | 28.5 | 24.3 | −0.064 |
 
-*Shared same-class ceiling 0.872. Starred column is content-capped (endpoint content can never fully resemble the class): ranking-only. ᵃ Specialists are scored on their own ladder grid (same instrument, cell means differ by <0.4 pp); cross and foreign shown separately; their claim channel is the paired gap vs the base twin: **+40.0 pp** on same-class unseen endpoints.*
+*All values % of ceiling; cell sizes 13/26/26/8/20/20 rows × 2 seeds. Starred columns are content-capped (endpoint content can never fully resemble the class): ranking-only. Zero-shot is undefined for specialists (a class with no training data has no specialist). ᵃ Specialists are scored on their own ladder grid (same instrument, cell means differ by <0.4 pp); their claim channel is the paired gap vs the base twin: **+40.0 pp** on uns·same.*
 
 Findings, in order:
 
 1. **The ceiling is reachable.** Specialists perform their operator on new own-class content at ground-truth level (99.7%, +40 pp over the base twin). Whatever limits the generalists, it is not the base model's capacity.
-2. **G1 reads the reference but does not generalize.** On mismatched-reference control rows it follows the reference at 68.8%, clearly above the base model's 56.3% / 61.0% given the same instruction in words; yet it falls exactly where transfer is tested (62.0% cross/foreign, negative margin: some *other* class matches its output better than the intended one).
-3. **G2 moves all four generalization cells the right way** (margin +0.04 mean, +0.066 best) against a pre-committed +0.10 target: directional progress, not success. **G2+text is best everywhere** (91.3% / 86.4%, margin +0.044), with the largest gains on the hardest cells.
-4. **refVFX sits well below** (42.4% / 33.0%) and, consistent with its text-routed design, loses ~9 points without its effect description. Indicative rather than apples-to-apples (different base model, 33-frame output, community reimplementation).
+2. **G1 reads the reference but does not generalize.** On mismatched-reference control rows it follows the reference at 68.8%, clearly above the base model's 56.3% / 61.0% given the same instruction in words; yet it falls exactly where transfer is tested: cross and foreign cells sink to 73.1 / 56.9 (unseen) and 72.2 / 44.1 (zero-shot), with a negative margin, meaning some *other* class matches its output better than the intended one.
+3. **G2 moves the target cells the right way.** Margin improves on all four cross/foreign claim cells (+0.04 mean, +0.066 best) against a pre-committed +0.10 target, clearest on zero-shot and foreign (44.1 → 54.0): directional progress, not success. **G2+text is best in every cell** (94.3 / 86.1 unseen cross/foreign, 91.0 / 71.9 zero-shot; margin +0.044): naming the effect closes most of the remaining gap.
+4. **refVFX sits well below in every cell** and, consistent with its text-routed design, loses ~9 points without its effect description. Indicative rather than apples-to-apples (different base model, 33-frame output, community reimplementation).
 
 **Diagnosis:** the generator can already *use* an operator specified in words; it cannot yet *extract* an equally usable operator from the raw reference video. That is a representation problem (the specialists rule out capacity, the instrument rules out measurement), and the bottleneck branch (§6.3) is the direct attack on it.
 
