@@ -1,5 +1,15 @@
 ## 2026-08-05
 
+**14:14 — bneck_redesign: LAUNCHED the HRC-raw coupling on DeltaAI (eps was full of the owner's other campaigns).**
+`job_coupling_hrc_raw.sbatch` (clone of `job_coupling_hrc.sbatch`: CFG→`coupling_hrc_raw.yaml`, job-name
+`hrc_raw_couple`, `WANDB_MODE=offline` + run-specific `WANDB_DIR` since DeltaAI compute nodes have no internet;
+config keeps wandb.enabled:true project bneck_redesign for a later `wandb sync`). Submitted 8 resumable
+singleton chunks on `--account=bgms-dtai-gh` (bgjg nearly out of credits): jobs 2880286, 2880287,
+2880301–2880306 — 1h walltime each (short, for backfill; fairshare drained → priority-limited, est. start
+~18:15 but 1h jobs backfill into gaps). `resume_wrapper.py` cold-starts the first chunk fresh and each later
+chunk resumes from the newest checkpoint until step 10000, then no-ops. Runs in parallel with V-JEPA-raw +
+the residual arms; `bneck_ctx_train` and eps untouched. First-step confirmation pending (chunk PENDING).
+
 **13:06 — bneck_redesign: built the HRC-raw control arm (Round-4 non-residual ablation = Arm C, owner-confirmed).**
 Single-delta clone of the running HRC (residual) arm: the ONLY change is the L_local target — `hrc_targets.py`
 gained `residual: bool=True`; `residual=False` makes the target the RAW pooled region `x_std` (skip
