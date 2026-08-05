@@ -14,19 +14,31 @@ Let the start and end clips be
 
 $$V_S = (I_t)_{t=1}^{N_S}, \qquad V_E = (I_t)_{t=1}^{N_E},$$
 
-with frames $I_t \in \mathbb{R}^{H \times W \times 3}$, shared resolution and frame rate. A **transition operator** $\mathcal{T}$ is the reusable part of a transition, *what it does* (smoke swallows the scene, the world folds into a portal), independent of the clips it connects. A **reference video** $V_R$ is one demonstration of $\mathcal{T}$, applied to $V_R$'s own endpoints.
+with frames $I_t \in \mathbb{R}^{H \times W \times 3}$, shared resolution and frame rate.
 
-Given $V_S$, $V_E$ (two-sided; one-sided omits $V_E$), the reference $V_R$, and an optional text prompt $c$, generate $V = (I_t)_{t=1}^{N}$ such that:
+A **transition operator** is a mapping
+
+$$\mathcal{T}: (V_S, V_E) \mapsto V,$$
+
+taking an endpoint pair to the connecting video with that transition type applied: *what the transition does* (smoke swallows the scene, the world folds into a portal), independent of the endpoints it is applied to. (A type admits many valid realizations; $\mathcal{T}$ stands for their shared behavior.) A **reference video** is one evaluation of the operator, on its own endpoints:
+
+$$V_R = \mathcal{T}(V_R^S, V_R^E).$$
+
+Given new endpoints $V_S$, $V_E$ (two-sided; one-sided omits $V_E$), the reference $V_R$, and an optional text prompt $c$, the task is to generate
+
+$$V = (I_t)_{t=1}^{N} \approx \mathcal{T}(V_S, V_E),$$
+
+i.e. read $\mathcal{T}$ from its single demonstration and apply it to the new pair, such that:
 
 1. **Boundary constraints:** $V_{1:N_S} \approx V_S$ and $V_{N-N_E+1:N} \approx V_E$.
-2. **Operator constraint:** the middle of $V$ realizes the operator demonstrated by $V_R$: its appearance and dynamics, not its content.
-3. **No per-style training:** one model serves every operator; $\mathcal{T}$ is specified through $V_R$ at inference time.
+2. **Operator constraint:** the middle of $V$ realizes the same $\mathcal{T}$ that produced $V_R$: its appearance and dynamics, not $V_R$'s content.
+3. **No per-style training:** one model serves every $\mathcal{T}$; the operator is specified only through $V_R$, at inference time.
 
 ### 1.2 Why It Is Hard
 
 **(a) Lerp Collapse.** Endpoint-conditioned flow models connect distant shots with a dissolve, a near-straight path in latent space (we verified early that generated dissolves sit visually next to a literal latent crossfade). The cheapest valid in-between is never a creative one; any method must first beat this default.
 
-**(b) Entanglement.** $V_R$ shows the operator only as applied to its own content. Transfer requires separating *what it does* from *what it contains*, a separation nothing in standard video training rewards, and one that does not fall out of the model's raw features (§5).
+**(b) Entanglement.** $V_R = \mathcal{T}(V_R^S, V_R^E)$ shows the operator only evaluated on its own endpoints. Transfer requires separating *what it does* from *what it contains*, a separation nothing in standard video training rewards, and one that does not fall out of the model's raw features (§5).
 
 ## 2. Assumptions & Scope
 
