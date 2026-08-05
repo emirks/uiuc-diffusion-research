@@ -1,5 +1,18 @@
 ## 2026-08-05
 
+**17:53 — bneck_redesign eval: HRC-residual scored (v4, DeltaAI) = CLEAN NULL; integrated into iclora_runs viewer.**
+Scored `hrc_coupling` (matched) + `hrc_coupling_shufcode` (deranged), 304+304 gens, on DeltaAI (`--account=bgms-dtai-gh`),
+v4 instrument sha `459fd9a7` (UNCERTIFIED by design for v4). Manifests derived from the raw-control band-setter template
+(`derive_arm_manifests.py`). Paired read vs recalibrated bars (9/13, 8/13, P2 +0.10): P1 = 6/13 & 4/13, P2 pooled
+median Δapp_ref = −0.003 (bootstrap 95% CI [−0.027,+0.007] includes 0), claim cells sign-disagree, 48.7% units positive
+→ arm FAILS all three bars (clean null, `p1p2_arm.py`). Secondary reads: liveness R 0.578 (live); temporal matched-vs-
+deranged motion-curve r 0.818 with band-setter calibrator r 0.283 (≤0.65 ⇒ metric discriminates ⇒ confirmed no motion
+read) and demo-headroom r 0.374 (<0.7 ⇒ transmittable signal exists); appearance-import pooled 0.50 (one marginal
+G-unseen-cross flag, not corroborated by matched arm). Hygiene: same machine, same sha, error-rows symmetric (95/97).
+Added both arms to `eval_ladder/viewer/build_runs.py` EXTERNAL (kind bottleneck, score_id `redesign_v4`) — joins assert
+clean 152/152 matched↔deranged, media+scores curl 200; iclora_runs blurb updated to name the 2×2. Campaign eval scripts
+live under `misc/bneck_redesign/build/` (gitignored). V-JEPA-residual + both raw arms pending their gens.
+
 **14:14 — bneck_redesign: LAUNCHED the HRC-raw coupling on DeltaAI (eps was full of the owner's other campaigns).**
 `job_coupling_hrc_raw.sbatch` (clone of `job_coupling_hrc.sbatch`: CFG→`coupling_hrc_raw.yaml`, job-name
 `hrc_raw_couple`, `WANDB_MODE=offline` + run-specific `WANDB_DIR` since DeltaAI compute nodes have no internet;

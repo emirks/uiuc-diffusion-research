@@ -1,440 +1,462 @@
 {
-  "_comment": "The tracked source of truth for the viewer dashboard. outputs/ is gitignored and disposable; this file is not. Every viewer worth keeping has an entry here. Rebuild with: python3 scripts/viewers/viewerctl.py hub",
-  "schema_version": 1,
-  "groups": [
+ "_comment": "The tracked source of truth for the viewer dashboard. outputs/ is gitignored and disposable; this file is not. Every viewer worth keeping has an entry here. Rebuild with: python3 scripts/viewers/viewerctl.py hub",
+ "schema_version": 1,
+ "groups": [
+  {
+   "id": "datasets",
+   "title": "Dataset strata & sources",
+   "blurb": "What the model trains and evaluates on \u2014 one viewer per stratum, showing the clips as they actually are."
+  },
+  {
+   "id": "eval",
+   "title": "Eval instrument & ladder",
+   "blurb": "The certified transition-eval harness, its certification records, and the ladder campaigns run through it."
+  },
+  {
+   "id": "runs",
+   "title": "Experiment runs",
+   "blurb": "Per-run viewers generated next to their outputs. Only the newest run of each family is promoted here."
+  },
+  {
+   "id": "reports",
+   "title": "Reports, decks & studies",
+   "blurb": "Written-up results, presentation material, and standalone instruments."
+  }
+ ],
+ "servers": [],
+ "viewers": [
+  {
+   "slug": "ctt_v2_corpora",
+   "title": "ctt_v2 corpora \u2014 refVFX + VFXMaster",
+   "blurb": "Both external corpora along their counterfactual axes \u2014 same operator \u00d7 many contents, same content \u00d7 many operators. 153,758 samples, video read straight out of the WebDataset tars by byte range; nothing is extracted or copied.",
+   "group": "datasets",
+   "featured": true,
+   "latest_of": "external corpora",
+   "date": "2026-07-28",
+   "path": "outputs/viewers/ctt_v2_corpora/index.html",
+   "generator": "scripts/viewers/build_ctt_v2_corpora.py",
+   "notes": "Static port of the app-server viewer on branch ctt-v2 (scripts/ctt_v2/dataset_viewer/, port 8799), verified at parity: identical sample counts, axis groups, group membership and row fields. The grouping serve.py did in memory is precomputed into range-addressable files; media URLs are range fetches into the shards. Page source is scripts/viewers/ctt_v2_corpora.html, linked in as index.html. Rebuild after data changes: python3 scripts/viewers/build_ctt_v2_corpora.py",
+   "check_files": [
+    "meta.json",
+    "rows_code.jsonl",
+    "rowoff_code.bin",
+    "ids_code_effect.bin",
+    "rows_lora.jsonl",
+    "rows_vfx.jsonl",
+    "shards_code",
+    "shards_lora",
+    "vfx_h264"
+   ]
+  },
+  {
+   "slug": "s2_dataset",
+   "title": "S2 \u2014 procedural transition operators",
+   "blurb": "The synthetic stratum of CTT v2: 7,990 clips from 42 shader operators. Landing page samples 42; browse walks every operator; retired shows the 420 blacklisted clips and why they went.",
+   "group": "datasets",
+   "featured": true,
+   "latest_of": "S2 stratum",
+   "date": "2026-07-27",
+   "path": "outputs/viewers/s2_dataset/index.html",
+   "pages": [
     {
-      "id": "datasets",
-      "title": "Dataset strata & sources",
-      "blurb": "What the model trains and evaluates on — one viewer per stratum, showing the clips as they actually are."
+     "label": "browse all operators",
+     "path": "outputs/viewers/s2_dataset/browse.html"
     },
     {
-      "id": "eval",
-      "title": "Eval instrument & ladder",
-      "blurb": "The certified transition-eval harness, its certification records, and the ladder campaigns run through it."
-    },
-    {
-      "id": "runs",
-      "title": "Experiment runs",
-      "blurb": "Per-run viewers generated next to their outputs. Only the newest run of each family is promoted here."
-    },
-    {
-      "id": "reports",
-      "title": "Reports, decks & studies",
-      "blurb": "Written-up results, presentation material, and standalone instruments."
+     "label": "retired / blacklisted",
+     "path": "outputs/viewers/s2_dataset/retired.html"
     }
-  ],
-  "servers": [],
-  "viewers": [
+   ]
+  },
+  {
+   "slug": "s3_dataset",
+   "title": "S3 \u2014 3D depth-parallax transitions",
+   "blurb": "All 203 depth-transition clips with the three generation mechanisms side by side, so the mechanism differences are visible rather than argued.",
+   "group": "datasets",
+   "featured": true,
+   "latest_of": "S3 stratum",
+   "date": "2026-07-27",
+   "path": "outputs/viewers/s3_dataset/index.html"
+  },
+  {
+   "slug": "luma_matte",
+   "title": "Luma-matte transitions \u2014 the map or the step()?",
+   "blurb": "114 clips isolating whether luma-matte behaviour comes from the matte source or from thresholding, with the maps shown next to the results.",
+   "group": "datasets",
+   "date": "2026-07-27",
+   "path": "outputs/viewers/luma_matte/index.html"
+  },
+  {
+   "slug": "d2_dataset",
+   "title": "D2 \u2014 final synthetic transition dataset",
+   "blurb": "exp_077's D2 stratum: 252 ref/target pairs with filmstrips. Supersedes the D1 pilot.",
+   "group": "datasets",
+   "latest_of": "D-series dataset",
+   "date": "2026-07-24",
+   "path": "outputs/viewers/d2_dataset/index.html",
+   "supersedes": [
     {
-      "slug": "ctt_v2_corpora",
-      "title": "ctt_v2 corpora — refVFX + VFXMaster",
-      "blurb": "Both external corpora along their counterfactual axes — same operator × many contents, same content × many operators. 153,758 samples, video read straight out of the WebDataset tars by byte range; nothing is extracted or copied.",
-      "group": "datasets",
-      "featured": true,
-      "latest_of": "external corpora",
-      "date": "2026-07-28",
-      "path": "outputs/viewers/ctt_v2_corpora/index.html",
-      "generator": "scripts/viewers/build_ctt_v2_corpora.py",
-      "notes": "Static port of the app-server viewer on branch ctt-v2 (scripts/ctt_v2/dataset_viewer/, port 8799), verified at parity: identical sample counts, axis groups, group membership and row fields. The grouping serve.py did in memory is precomputed into range-addressable files; media URLs are range fetches into the shards. Page source is scripts/viewers/ctt_v2_corpora.html, linked in as index.html. Rebuild after data changes: python3 scripts/viewers/build_ctt_v2_corpora.py",
-      "check_files": [
-        "meta.json",
-        "rows_code.jsonl",
-        "rowoff_code.bin",
-        "ids_code_effect.bin",
-        "rows_lora.jsonl",
-        "rows_vfx.jsonl",
-        "shards_code",
-        "shards_lora",
-        "vfx_h264"
-      ]
-    },
-    {
-      "slug": "s2_dataset",
-      "title": "S2 — procedural transition operators",
-      "blurb": "The synthetic stratum of CTT v2: 7,990 clips from 42 shader operators. Landing page samples 42; browse walks every operator; retired shows the 420 blacklisted clips and why they went.",
-      "group": "datasets",
-      "featured": true,
-      "latest_of": "S2 stratum",
-      "date": "2026-07-27",
-      "path": "outputs/viewers/s2_dataset/index.html",
-      "pages": [
-        {
-          "label": "browse all operators",
-          "path": "outputs/viewers/s2_dataset/browse.html"
-        },
-        {
-          "label": "retired / blacklisted",
-          "path": "outputs/viewers/s2_dataset/retired.html"
-        }
-      ]
-    },
-    {
-      "slug": "s3_dataset",
-      "title": "S3 — 3D depth-parallax transitions",
-      "blurb": "All 203 depth-transition clips with the three generation mechanisms side by side, so the mechanism differences are visible rather than argued.",
-      "group": "datasets",
-      "featured": true,
-      "latest_of": "S3 stratum",
-      "date": "2026-07-27",
-      "path": "outputs/viewers/s3_dataset/index.html"
-    },
-    {
-      "slug": "luma_matte",
-      "title": "Luma-matte transitions — the map or the step()?",
-      "blurb": "114 clips isolating whether luma-matte behaviour comes from the matte source or from thresholding, with the maps shown next to the results.",
-      "group": "datasets",
-      "date": "2026-07-27",
-      "path": "outputs/viewers/luma_matte/index.html"
-    },
-    {
-      "slug": "d2_dataset",
-      "title": "D2 — final synthetic transition dataset",
-      "blurb": "exp_077's D2 stratum: 252 ref/target pairs with filmstrips. Supersedes the D1 pilot.",
-      "group": "datasets",
-      "latest_of": "D-series dataset",
-      "date": "2026-07-24",
-      "path": "outputs/viewers/d2_dataset/index.html",
-      "supersedes": [
-        {
-          "label": "D1 synthetic pilot (2026-07-24)",
-          "path": "outputs/viewers/d1_dataset/index.html"
-        }
-      ]
-    },
-    {
-      "slug": "humanvid_real",
-      "title": "HumanVid REAL (Pexels) — 60-clip sample",
-      "blurb": "The real-footage subset, streamed straight from Pexels with source links. Needs internet in the browser; nothing is stored locally.",
-      "group": "datasets",
-      "date": "2026-07-27",
-      "path": "outputs/viewers/humanvid_real/index.html"
-    },
-    {
-      "slug": "ladder2_reference",
-      "title": "ladder2 — single reference of truth",
-      "blurb": "The clean transition-eval campaign in one page: design, the seven seatbelts, leak-free prompt rendering, with inline examples. Authoritative over anything said in chat.",
-      "group": "eval",
-      "featured": true,
-      "date": "2026-07-23",
-      "path": "outputs/viewers/ladder2_reference/index.html",
-      "pages": [
-        {
-          "label": "DAVIS (foreign) generations",
-          "path": "outputs/viewers/ladder2_reference/davis.html"
-        }
-      ],
-      "mount": {
-        "_why": "eval_ladder/REFERENCE.html and DAVIS_SAMPLES.html climb ../../ for media, which overshoots the repo root by one level. The originals are the authoritative ladder2 record and stay untouched; these derived copies are re-made from source on every mount/serve, with the climb corrected.",
-        "dir": "outputs/viewers/ladder2_reference",
-        "pages": [
-          {
-            "name": "index.html",
-            "target": "eval_ladder/REFERENCE.html",
-            "rewrite_abs": {
-              "../../data/": "../../../data/",
-              "../../outputs/": "../../../outputs/"
-            }
-          },
-          {
-            "name": "davis.html",
-            "target": "eval_ladder/DAVIS_SAMPLES.html",
-            "rewrite_abs": {
-              "../../data/": "../../../data/",
-              "../../outputs/": "../../../outputs/"
-            }
-          }
-        ],
-        "links": [
-          {
-            "name": "assets",
-            "target": "eval_ladder/assets"
-          }
-        ]
-      }
-    },
-    {
-      "slug": "ladder2_results",
-      "title": "eval ladder — results viewer",
-      "blurb": "Every generated transition in the ladder2 campaign with its scores, filterable by cell, tier and ontology (1,902 clips).",
-      "group": "eval",
-      "featured": true,
-      "latest_of": "ladder results",
-      "date": "2026-07-23",
-      "path": "outputs/viewers/ladder2_results/index.html",
-      "mount": {
-        "dir": "outputs/viewers/ladder2_results",
-        "pages": [
-          {
-            "name": "index.html",
-            "target": "outputs/reports/ladder_viewer/index.html"
-          }
-        ],
-        "links": [
-          {
-            "name": "eval_ladder",
-            "target": "eval_ladder"
-          },
-          {
-            "name": "outputs",
-            "target": "outputs"
-          },
-          {
-            "name": "data",
-            "target": "data"
-          }
-        ]
-      },
-      "supersedes": [
-        {
-          "label": "ladder2 build, 13:10 (2026-07-23)",
-          "path": "outputs/reports/ladder2/index.html"
-        },
-        {
-          "label": "eval_ladder v2.0.0-R1, 15:39 (2026-07-23)",
-          "path": "outputs/eval_ladder/v2.0.0-R1/viewer.html"
-        }
-      ]
-    },
-    {
-      "slug": "iclora_runs",
-      "title": "IC-LoRA trainings — results",
-      "blurb": "Five arms on one page, every one toggleable, so any subset reads side by side: ④ the ladder2 IC-LoRA generalist · ⑤ ctt_v2 @ step 10,000 · ⑥ ctt_v2 re-run with a leaky prompt that also describes the transition (no base twin — a level, never a margin) · Ⓐ/Ⓑ the two external refVFX baseline arms, over 139 identical inputs, with the specialist and copier tiers as the yardstick. All four scored arms now come off ONE machine (DeltaAI, reference_v4 on corpus dc2e139a); only the never-rescored specialists still carry the stale223 badge.",
-      "group": "eval",
-      "featured": true,
-      "latest_of": "iclora trainings",
-      "date": "2026-07-30",
-      "path": "outputs/viewers/iclora_runs/index.html",
-      "mount": {
-        "_why": "Generated by eval_ladder/viewer/build_runs.py into outputs/reports/iclora_runs/. The page emits repo-root-relative media paths prefixed with meta.rel, and this mount sits at the same depth, so the prefix resolves identically. The links below make the same paths resolve from inside the viewer dir as well, matching the ladder2_results mount.",
-        "dir": "outputs/viewers/iclora_runs",
-        "pages": [
-          {
-            "name": "index.html",
-            "target": "outputs/reports/iclora_runs/index.html"
-          }
-        ],
-        "links": [
-          {
-            "name": "eval_ladder",
-            "target": "eval_ladder"
-          },
-          {
-            "name": "outputs",
-            "target": "outputs"
-          },
-          {
-            "name": "data",
-            "target": "data"
-          },
-          {
-            "name": "store",
-            "target": "store"
-          }
-        ]
-      },
-      "check_files": [
-        "store/gens/001_ic_gen/videos",
-        "store/gens/002_ctt_v2/videos",
-        "store/gens/005_ctt_v2_leaky/videos",
-        "store/gens/003_refvfx_A/videos",
-        "store/gens/004_refvfx_B/videos",
-        "store/evals/001_five_arm__dai__2026-07-30",
-        "outputs/eval/ctt_v2_compare"
-      ],
-      "_media": "2026-07-30 reorg: all five arms' videos live in the artifact store (store/gens/<id>/videos), scores in store/evals/five_arm__dai__2026-07-30/<arm>/, and the old outputs/videos/... paths are symlinks build_runs.py :: ensure_external_media() recreates on every run — a wiped outputs/ costs one rerun. See store/README.md for the contract."
-    },
-    {
-      "slug": "ladder_v3_pairs",
-      "title": "Ladder v3 — paired side-by-side viewer",
-      "blurb": "Certified v3.0.0 rows played in pairs, colour-coded GT / demo / floors, so a scored row can be checked against what it actually looks like (1,800 clips).",
-      "group": "eval",
-      "date": "2026-07-20",
-      "path": "outputs/eval/ladder_v3/_viewer/index.html"
-    },
-    {
-      "slug": "cert_v3_draft8",
-      "title": "Certification record — transition-eval 3.0.0-draft.8",
-      "blurb": "The certification run's own record (verdict, probes, siblings) plus the results explorer where six metrics sit the same exam over 3,174 clips.",
-      "group": "eval",
-      "latest_of": "certification record",
-      "date": "2026-07-14",
-      "path": "outputs/viewers/cert_v3_draft8/index.html",
-      "pages": [
-        {
-          "label": "results explorer",
-          "path": "outputs/viewers/cert_v3_draft8/explorer.html"
-        }
-      ],
-      "mount": {
-        "dir": "outputs/viewers/cert_v3_draft8",
-        "pages": [
-          {
-            "name": "index.html",
-            "target": "outputs/eval/certification/3.0.0-draft.8/viewer.html"
-          },
-          {
-            "name": "explorer.html",
-            "target": "outputs/eval/certification/3.0.0-draft.8/results_explorer.html"
-          }
-        ],
-        "links_from": "data/processed/transitions_std121"
-      },
-      "supersedes": [
-        {
-          "label": "3.0.0-draft.7 record (2026-07-13)",
-          "path": "outputs/eval/certification/3.0.0-draft.7/viewer.html"
-        }
-      ]
-    },
-    {
-      "slug": "eval_harness_viewer",
-      "title": "Transition-eval harness · per-run viewer",
-      "blurb": "The viewer the harness ships with every eval run — reads data.json from its own directory. Shown here on exp_058's quads.",
-      "group": "eval",
-      "latest_of": "harness run viewer",
-      "date": "2026-07-07",
-      "path": "outputs/eval/exp_058/viewer/index.html",
-      "supersedes": [
-        {
-          "label": "exp_057 run (2026-07-07)",
-          "path": "outputs/eval/exp_057/viewer/index.html"
-        },
-        {
-          "label": "exp_056 run (2026-07-07)",
-          "path": "outputs/eval/exp_056/viewer/index.html"
-        },
-        {
-          "label": "exp_053 run (2026-07-07)",
-          "path": "outputs/eval/exp_053/viewer/index.html"
-        }
-      ]
-    },
-    {
-      "slug": "taxonomy_validate",
-      "title": "Transition taxonomy v2 — validate",
-      "blurb": "Click through 107 clips to confirm or reject their class assignment. The gating step for taxonomy work.",
-      "group": "eval",
-      "date": "2026-07-16",
-      "path": "outputs/taxonomy/viewer.html"
-    },
-    {
-      "slug": "exp_083_d3_pilot",
-      "title": "exp_083 — D3 pilot: depth-parallax 3D transitions",
-      "blurb": "109 clips with filmstrips from the D3 pilot. Newest run in the depth-3D line; earlier runs kept for comparison.",
-      "group": "runs",
-      "featured": true,
-      "latest_of": "depth-3D transitions",
-      "date": "2026-07-27",
-      "path": "outputs/videos/exp_083_d3_pilot/run_0001/viewer.html",
-      "supersedes": [
-        {
-          "label": "exp_080 — 121 frames, real streams (2026-07-25)",
-          "path": "outputs/videos/exp_080_depth3d_realstream_121/run_0001/viewer.html"
-        },
-        {
-          "label": "exp_076 run_0005 (2026-07-22)",
-          "path": "outputs/videos/exp_076_depth3d_transitions/run_0005/viewer.html"
-        },
-        {
-          "label": "exp_076 run_0004 (2026-07-22)",
-          "path": "outputs/videos/exp_076_depth3d_transitions/run_0004/viewer.html"
-        }
-      ]
-    },
-    {
-      "slug": "exp_075_engine",
-      "title": "exp_075 — procedural transition operator engine",
-      "blurb": "73 operator demos with filmstrips: the engine that generates the S2 stratum, one card per operator.",
-      "group": "runs",
-      "latest_of": "procedural engine",
-      "date": "2026-07-22",
-      "path": "outputs/videos/exp_075_procedural_transition_engine/run_0003/viewer.html"
-    },
-    {
-      "slug": "two_week_report",
-      "title": "Two weeks: from latent tricks to a certified instrument",
-      "blurb": "The written progress report covering transition generation and the eval instrument. Self-contained — no media dependencies.",
-      "group": "reports",
-      "date": "2026-07-15",
-      "path": "outputs/reports/two_week_report.html"
-    },
-    {
-      "slug": "week2_cross_deck",
-      "title": "Week 2 — cross-ontology transition examples",
-      "blurb": "Five-row deck of unseen and zero-shot cross-ontology cases, each with its inputs, its reference, and outputs at two seeds.",
-      "group": "reports",
-      "date": "2026-07-24",
-      "path": "outputs/presentation/05_week2_ladder2_cross/index.html"
-    },
-    {
-      "slug": "2afc_study",
-      "title": "Blind 2AFC transition-comparison study",
-      "blurb": "The frozen forced-choice instrument from the advised method-impl campaign (93 clips). Mounted read-only from misc/ — the original stays untouched so the blinding key holds.",
-      "group": "reports",
-      "date": "2026-07-20",
-      "path": "outputs/viewers/2afc_study/index.html",
-      "mount": {
-        "dir": "outputs/viewers/2afc_study",
-        "pages": [
-          {
-            "name": "index.html",
-            "target": "../misc/advised_method_impl/2afc/index.html",
-            "rewrite_abs": {
-              "/diffusion-research/": "../../../"
-            }
-          }
-        ],
-        "links": [
-          {
-            "name": "media",
-            "target": "../misc/advised_method_impl/2afc/media"
-          }
-        ]
-      }
-    },
-    {
-      "slug": "transition_playground",
-      "title": "Transition-hardness playground",
-      "blurb": "Interactive scatter over the transition-hardness signals for shadow_smoke. Loads Plotly from a CDN, so it needs internet in the browser.",
-      "group": "reports",
-      "date": "2026-05-26",
-      "path": "outputs/analysis/transition_hardness/run_0004/playground.html"
-    },
-    {
-      "slug": "d1_dataset",
-      "title": "D1 synthetic dataset (pilot)",
-      "blurb": "First synthetic stratum pilot.",
-      "group": "datasets",
-      "archived": "superseded by D2",
-      "date": "2026-07-24",
-      "path": "outputs/viewers/d1_dataset/index.html"
-    },
-    {
-      "slug": "humanvid_sample",
-      "title": "HumanVid sample — 40 clips",
-      "blurb": "Early 40-clip HumanVid sample.",
-      "group": "datasets",
-      "archived": "clips gone — data/raw/humanvid_sample was cleaned; only the filmstrips still resolve",
-      "date": "2026-07-27",
-      "path": "outputs/viewers/humanvid_sample/index.html"
-    },
-    {
-      "slug": "vc_dissolve_exp021",
-      "title": "VC Dissolve Viewer — exp_021 / run_0002",
-      "blurb": "The original dissolve viewer.",
-      "group": "runs",
-      "archived": "stale — exp_021 run_0002 outputs no longer exist (only run_0004 survives)",
-      "date": "2026-04-07",
-      "path": "outputs/viewer.html"
-    },
-    {
-      "slug": "eval_ladder_v1_onepager",
-      "title": "eval ladder v1 — one-pager",
-      "blurb": "The v1 ladder design one-pager, kept in docs/archive.",
-      "group": "eval",
-      "archived": "superseded by ladder2 REFERENCE.html",
-      "date": "2026-07-17",
-      "path": "docs/archive/eval_ladder_v1/onepager.html"
+     "label": "D1 synthetic pilot (2026-07-24)",
+     "path": "outputs/viewers/d1_dataset/index.html"
     }
-  ]
+   ]
+  },
+  {
+   "slug": "humanvid_real",
+   "title": "HumanVid REAL (Pexels) \u2014 60-clip sample",
+   "blurb": "The real-footage subset, streamed straight from Pexels with source links. Needs internet in the browser; nothing is stored locally.",
+   "group": "datasets",
+   "date": "2026-07-27",
+   "path": "outputs/viewers/humanvid_real/index.html"
+  },
+  {
+   "slug": "ladder2_reference",
+   "title": "ladder2 \u2014 single reference of truth",
+   "blurb": "The clean transition-eval campaign in one page: design, the seven seatbelts, leak-free prompt rendering, with inline examples. Authoritative over anything said in chat.",
+   "group": "eval",
+   "featured": true,
+   "date": "2026-07-23",
+   "path": "outputs/viewers/ladder2_reference/index.html",
+   "pages": [
+    {
+     "label": "DAVIS (foreign) generations",
+     "path": "outputs/viewers/ladder2_reference/davis.html"
+    }
+   ],
+   "mount": {
+    "_why": "eval_ladder/REFERENCE.html and DAVIS_SAMPLES.html climb ../../ for media, which overshoots the repo root by one level. The originals are the authoritative ladder2 record and stay untouched; these derived copies are re-made from source on every mount/serve, with the climb corrected.",
+    "dir": "outputs/viewers/ladder2_reference",
+    "pages": [
+     {
+      "name": "index.html",
+      "target": "eval_ladder/REFERENCE.html",
+      "rewrite_abs": {
+       "../../data/": "../../../data/",
+       "../../outputs/": "../../../outputs/"
+      }
+     },
+     {
+      "name": "davis.html",
+      "target": "eval_ladder/DAVIS_SAMPLES.html",
+      "rewrite_abs": {
+       "../../data/": "../../../data/",
+       "../../outputs/": "../../../outputs/"
+      }
+     }
+    ],
+    "links": [
+     {
+      "name": "assets",
+      "target": "eval_ladder/assets"
+     }
+    ]
+   }
+  },
+  {
+   "slug": "ladder2_results",
+   "title": "eval ladder \u2014 results viewer",
+   "blurb": "Every generated transition in the ladder2 campaign with its scores, filterable by cell, tier and ontology (1,902 clips).",
+   "group": "eval",
+   "featured": true,
+   "latest_of": "ladder results",
+   "date": "2026-07-23",
+   "path": "outputs/viewers/ladder2_results/index.html",
+   "mount": {
+    "dir": "outputs/viewers/ladder2_results",
+    "pages": [
+     {
+      "name": "index.html",
+      "target": "outputs/reports/ladder_viewer/index.html"
+     }
+    ],
+    "links": [
+     {
+      "name": "eval_ladder",
+      "target": "eval_ladder"
+     },
+     {
+      "name": "outputs",
+      "target": "outputs"
+     },
+     {
+      "name": "data",
+      "target": "data"
+     }
+    ]
+   },
+   "supersedes": [
+    {
+     "label": "ladder2 build, 13:10 (2026-07-23)",
+     "path": "outputs/reports/ladder2/index.html"
+    },
+    {
+     "label": "eval_ladder v2.0.0-R1, 15:39 (2026-07-23)",
+     "path": "outputs/eval_ladder/v2.0.0-R1/viewer.html"
+    }
+   ]
+  },
+  {
+   "slug": "iclora_runs",
+   "title": "IC-LoRA trainings \u2014 results",
+   "blurb": "Every IC-LoRA training and control on one toggleable page, any subset side by side over 139 identical inputs: the ladder2 generalist and ctt_v2 trainings, the base (no-adapter) and leaky-prompt levels, the refVFX externals, the bneck_coupling operator-token negative pair (matched vs shuffled code), and now the bneck_redesign 2x2 (HRC / V-JEPA x residual / raw) -- each arm a matched-vs-deranged-code pair read on paired delta-app_ref against the recalibrated bars 9/13, 8/13, P2 +0.10. HRC-residual landed first as a clean null (P2 -0.003, both cells short of bar); the other three arms join as they score. All columns come off ONE machine (DeltaAI, reference_v4 sha 459fd9a7, corpus dc2e139a); only the never-rescored specialists carry the stale223 badge.",
+   "group": "eval",
+   "featured": true,
+   "latest_of": "iclora trainings",
+   "date": "2026-07-30",
+   "path": "outputs/viewers/iclora_runs/index.html",
+   "mount": {
+    "_why": "Generated by eval_ladder/viewer/build_runs.py into outputs/reports/iclora_runs/. The page emits repo-root-relative media paths prefixed with meta.rel, and this mount sits at the same depth, so the prefix resolves identically. The links below make the same paths resolve from inside the viewer dir as well, matching the ladder2_results mount.",
+    "dir": "outputs/viewers/iclora_runs",
+    "pages": [
+     {
+      "name": "index.html",
+      "target": "outputs/reports/iclora_runs/index.html"
+     }
+    ],
+    "links": [
+     {
+      "name": "eval_ladder",
+      "target": "eval_ladder"
+     },
+     {
+      "name": "outputs",
+      "target": "outputs"
+     },
+     {
+      "name": "data",
+      "target": "data"
+     },
+     {
+      "name": "store",
+      "target": "store"
+     }
+    ]
+   },
+   "check_files": [
+    "store/gens/001_ic_gen/videos",
+    "store/gens/002_ctt_v2/videos",
+    "store/gens/005_ctt_v2_leaky/videos",
+    "store/gens/003_refvfx_A/videos",
+    "store/gens/004_refvfx_B/videos",
+    "store/evals/001_five_arm__dai__2026-07-30",
+    "outputs/eval/ctt_v2_compare"
+   ],
+   "_media": "2026-07-30 reorg: all five arms' videos live in the artifact store (store/gens/<id>/videos), scores in store/evals/five_arm__dai__2026-07-30/<arm>/, and the old outputs/videos/... paths are symlinks build_runs.py :: ensure_external_media() recreates on every run \u2014 a wiped outputs/ costs one rerun. See store/README.md for the contract."
+  },
+  {
+   "slug": "ladder_v3_pairs",
+   "title": "Ladder v3 \u2014 paired side-by-side viewer",
+   "blurb": "Certified v3.0.0 rows played in pairs, colour-coded GT / demo / floors, so a scored row can be checked against what it actually looks like (1,800 clips).",
+   "group": "eval",
+   "date": "2026-07-20",
+   "path": "outputs/eval/ladder_v3/_viewer/index.html"
+  },
+  {
+   "slug": "cert_v3_draft8",
+   "title": "Certification record \u2014 transition-eval 3.0.0-draft.8",
+   "blurb": "The certification run's own record (verdict, probes, siblings) plus the results explorer where six metrics sit the same exam over 3,174 clips.",
+   "group": "eval",
+   "latest_of": "certification record",
+   "date": "2026-07-14",
+   "path": "outputs/viewers/cert_v3_draft8/index.html",
+   "pages": [
+    {
+     "label": "results explorer",
+     "path": "outputs/viewers/cert_v3_draft8/explorer.html"
+    }
+   ],
+   "mount": {
+    "dir": "outputs/viewers/cert_v3_draft8",
+    "pages": [
+     {
+      "name": "index.html",
+      "target": "outputs/eval/certification/3.0.0-draft.8/viewer.html"
+     },
+     {
+      "name": "explorer.html",
+      "target": "outputs/eval/certification/3.0.0-draft.8/results_explorer.html"
+     }
+    ],
+    "links_from": "data/processed/transitions_std121"
+   },
+   "supersedes": [
+    {
+     "label": "3.0.0-draft.7 record (2026-07-13)",
+     "path": "outputs/eval/certification/3.0.0-draft.7/viewer.html"
+    }
+   ]
+  },
+  {
+   "slug": "eval_harness_viewer",
+   "title": "Transition-eval harness \u00b7 per-run viewer",
+   "blurb": "The viewer the harness ships with every eval run \u2014 reads data.json from its own directory. Shown here on exp_058's quads.",
+   "group": "eval",
+   "latest_of": "harness run viewer",
+   "date": "2026-07-07",
+   "path": "outputs/eval/exp_058/viewer/index.html",
+   "supersedes": [
+    {
+     "label": "exp_057 run (2026-07-07)",
+     "path": "outputs/eval/exp_057/viewer/index.html"
+    },
+    {
+     "label": "exp_056 run (2026-07-07)",
+     "path": "outputs/eval/exp_056/viewer/index.html"
+    },
+    {
+     "label": "exp_053 run (2026-07-07)",
+     "path": "outputs/eval/exp_053/viewer/index.html"
+    }
+   ]
+  },
+  {
+   "slug": "taxonomy_validate",
+   "title": "Transition taxonomy v2 \u2014 validate",
+   "blurb": "Click through 107 clips to confirm or reject their class assignment. The gating step for taxonomy work.",
+   "group": "eval",
+   "date": "2026-07-16",
+   "path": "outputs/taxonomy/viewer.html"
+  },
+  {
+   "slug": "exp_083_d3_pilot",
+   "title": "exp_083 \u2014 D3 pilot: depth-parallax 3D transitions",
+   "blurb": "109 clips with filmstrips from the D3 pilot. Newest run in the depth-3D line; earlier runs kept for comparison.",
+   "group": "runs",
+   "featured": true,
+   "latest_of": "depth-3D transitions",
+   "date": "2026-07-27",
+   "path": "outputs/videos/exp_083_d3_pilot/run_0001/viewer.html",
+   "supersedes": [
+    {
+     "label": "exp_080 \u2014 121 frames, real streams (2026-07-25)",
+     "path": "outputs/videos/exp_080_depth3d_realstream_121/run_0001/viewer.html"
+    },
+    {
+     "label": "exp_076 run_0005 (2026-07-22)",
+     "path": "outputs/videos/exp_076_depth3d_transitions/run_0005/viewer.html"
+    },
+    {
+     "label": "exp_076 run_0004 (2026-07-22)",
+     "path": "outputs/videos/exp_076_depth3d_transitions/run_0004/viewer.html"
+    }
+   ]
+  },
+  {
+   "slug": "exp_075_engine",
+   "title": "exp_075 \u2014 procedural transition operator engine",
+   "blurb": "73 operator demos with filmstrips: the engine that generates the S2 stratum, one card per operator.",
+   "group": "runs",
+   "latest_of": "procedural engine",
+   "date": "2026-07-22",
+   "path": "outputs/videos/exp_075_procedural_transition_engine/run_0003/viewer.html"
+  },
+  {
+   "slug": "two_week_report",
+   "title": "Two weeks: from latent tricks to a certified instrument",
+   "blurb": "The written progress report covering transition generation and the eval instrument. Self-contained \u2014 no media dependencies.",
+   "group": "reports",
+   "date": "2026-07-15",
+   "path": "outputs/reports/two_week_report.html"
+  },
+  {
+   "slug": "week2_cross_deck",
+   "title": "Week 2 \u2014 cross-ontology transition examples",
+   "blurb": "Five-row deck of unseen and zero-shot cross-ontology cases, each with its inputs, its reference, and outputs at two seeds.",
+   "group": "reports",
+   "date": "2026-07-24",
+   "path": "outputs/presentation/05_week2_ladder2_cross/index.html"
+  },
+  {
+   "slug": "2afc_study",
+   "title": "Blind 2AFC transition-comparison study",
+   "blurb": "The frozen forced-choice instrument from the advised method-impl campaign (93 clips). Mounted read-only from misc/ \u2014 the original stays untouched so the blinding key holds.",
+   "group": "reports",
+   "date": "2026-07-20",
+   "path": "outputs/viewers/2afc_study/index.html",
+   "mount": {
+    "dir": "outputs/viewers/2afc_study",
+    "pages": [
+     {
+      "name": "index.html",
+      "target": "../misc/advised_method_impl/2afc/index.html",
+      "rewrite_abs": {
+       "/diffusion-research/": "../../../"
+      }
+     }
+    ],
+    "links": [
+     {
+      "name": "media",
+      "target": "../misc/advised_method_impl/2afc/media"
+     }
+    ]
+   }
+  },
+  {
+   "slug": "transition_playground",
+   "title": "Transition-hardness playground",
+   "blurb": "Interactive scatter over the transition-hardness signals for shadow_smoke. Loads Plotly from a CDN, so it needs internet in the browser.",
+   "group": "reports",
+   "date": "2026-05-26",
+   "path": "outputs/analysis/transition_hardness/run_0004/playground.html"
+  },
+  {
+   "slug": "d1_dataset",
+   "title": "D1 synthetic dataset (pilot)",
+   "blurb": "First synthetic stratum pilot.",
+   "group": "datasets",
+   "archived": "superseded by D2",
+   "date": "2026-07-24",
+   "path": "outputs/viewers/d1_dataset/index.html"
+  },
+  {
+   "slug": "humanvid_sample",
+   "title": "HumanVid sample \u2014 40 clips",
+   "blurb": "Early 40-clip HumanVid sample.",
+   "group": "datasets",
+   "archived": "clips gone \u2014 data/raw/humanvid_sample was cleaned; only the filmstrips still resolve",
+   "date": "2026-07-27",
+   "path": "outputs/viewers/humanvid_sample/index.html"
+  },
+  {
+   "slug": "vc_dissolve_exp021",
+   "title": "VC Dissolve Viewer \u2014 exp_021 / run_0002",
+   "blurb": "The original dissolve viewer.",
+   "group": "runs",
+   "archived": "stale \u2014 exp_021 run_0002 outputs no longer exist (only run_0004 survives)",
+   "date": "2026-04-07",
+   "path": "outputs/viewer.html"
+  },
+  {
+   "slug": "eval_ladder_v1_onepager",
+   "title": "eval ladder v1 \u2014 one-pager",
+   "blurb": "The v1 ladder design one-pager, kept in docs/archive.",
+   "group": "eval",
+   "archived": "superseded by ladder2 REFERENCE.html",
+   "date": "2026-07-17",
+   "path": "docs/archive/eval_ladder_v1/onepager.html"
+  },
+  {
+   "slug": "bneck_redesign_hrc",
+   "title": "bneck_redesign \u2014 HRC-residual (Idea 2): matched vs deranged",
+   "blurb": "HRC-residual arm \u2014 152 eval rows, matched operator-code vs deranged-code side by side. Result: NULL (6/13, 4/13, \u0394app_ref\u22480). Regen: scripts/viewers/gen_bneck_hrc.py",
+   "group": "eval",
+   "featured": true,
+   "date": "2026-08-05",
+   "path": "outputs/viewers/bneck_redesign_hrc/index.html",
+   "mount": {
+    "dir": "outputs/viewers/bneck_redesign_hrc",
+    "links": [
+     {
+      "name": "matched",
+      "target": "outputs/videos/bneck_redesign/hrc_coupling__ck10000"
+     },
+     {
+      "name": "deranged",
+      "target": "outputs/videos/bneck_redesign/hrc_coupling_shufcode__ck10000"
+     }
+    ]
+   }
+  }
+ ]
 }

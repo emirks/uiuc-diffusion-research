@@ -181,6 +181,41 @@ EXTERNAL = [
                     "points). The row's own `reference` is untouched, so both twins are scored "
                     "against a byte-identical GT pool. ⑧ scoring the same as ⑦ is the finding.",
      "doc": "misc/bneck_coupling/DOSSIER.md"},
+    #: 2026-08-05 — campaign `bneck_redesign`, the operator-token REDESIGN 2x2 (rep x residual/raw).
+    #: Each arm is a matched/deranged PAIR read exactly like ⑦/⑧: same adapter file, same rows, same
+    #: seeds, byte-identical GT pool, the ONLY difference being which clip the code encoder saw
+    #: (152/152 class-level derangement reused verbatim from bneck_coupling). Their paired Δapp_ref is
+    #: the measurement; LEVELS carry no bar. Recalibrated arm bars (band-setter): G-unseen-same ≥9/13,
+    #: G-unseen-cross ≥8/13, P2 ≥ +0.10. Scored on DeltaAI, v4 instrument sha 459fd9a7 (UNCERTIFIED
+    #: by design for v4). Added as they score; HRC-residual first.
+    {"id": "hrc_coupling", "score_id": "redesign_v4", "kind": "bottleneck", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓗ HRC-resid · matched code",
+     "sub": "raw demo REPLACED by 72 HRC residual operator tokens · treatment",
+     "src": REPO_ROOT / "outputs/videos/bneck_redesign/hrc_coupling__ck10000",
+     "media": "outputs/videos/bneck_redesign_arms/hrc_coupling",
+     "rows": ("registry", REPO_ROOT / "misc/bneck_redesign/build/registry_hrc_coupling.jsonl"),
+     "scores": REPO_ROOT / "misc/bneck_redesign/eval/scores/hrc_coupling",
+     "prompt_kind": "the ctt_v2 recipe with ONE content change: the reference channel carries 72 "
+                    "residual operator tokens from the from-scratch native-basis HRC encoder "
+                    "(trained on the endpoint-subtracted residual, λ=1.0), coupled at step 10,000, "
+                    "instead of the raw full-resolution demo. Same prompt / endpoints / seeds as "
+                    "ctt_v2. Compare ONLY against its deranged-code twin.",
+     "doc": "misc/bneck_redesign/DOSSIER.md"},
+    {"id": "hrc_coupling_shufcode", "score_id": "redesign_v4", "kind": "bottleneck", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓗ HRC-resid · deranged code",
+     "sub": "SAME adapter file, deliberately WRONG code · the control",
+     "src": REPO_ROOT / "outputs/videos/bneck_redesign/hrc_coupling_shufcode__ck10000",
+     "media": "outputs/videos/bneck_redesign_arms/hrc_coupling_shufcode",
+     "rows": ("registry", REPO_ROOT / "misc/bneck_redesign/build/registry_hrc_coupling_shufcode.jsonl"),
+     "scores": REPO_ROOT / "misc/bneck_redesign/eval/scores/hrc_coupling_shufcode",
+     "prompt_kind": "byte-identical to the matched HRC arm in every field except the encoder is fed "
+                    "a DIFFERENT clip via `code_source_reference` (the same 152/152 class-level "
+                    "derangement, 0 fixed points, reused from bneck_coupling). The row's own "
+                    "`reference` is untouched, so both twins score against a byte-identical GT pool. "
+                    "Scoring the same as the matched arm is the finding (clean null: P2 −0.003).",
+     "doc": "misc/bneck_redesign/DOSSIER.md"},
     {"id": "refvfx_A", "score_id": "refvfx_v4", "kind": "prior-work", "frames": 33,
      "label": "Ⓐ refVFX · their prompt",
      "sub": "external baseline · prompt describes the effect",
