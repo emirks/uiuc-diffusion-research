@@ -10,11 +10,7 @@
 
 ### 1.1 Task Definition
 
-Let the start and end clips be
-
-$$V_S = (I_t)_{t=1}^{N_S}, \qquad V_E = (I_t)_{t=1}^{N_E},$$
-
-with frames $I_t \in \mathbb{R}^{H \times W \times 3}$, shared resolution and frame rate.
+Let the start and end clips be $V_S \in \mathbb{R}^{N_S \times H \times W \times 3}$ and $V_E \in \mathbb{R}^{N_E \times H \times W \times 3}$: frame sequences of length $N_S$ and $N_E$, shared resolution and frame rate.
 
 A **transition operator** is a mapping
 
@@ -26,7 +22,7 @@ $$V_R = \mathcal{T}(V_R^S, V_R^E).$$
 
 Given new endpoints $V_S$, $V_E$ (two-sided; one-sided omits $V_E$), the reference $V_R$, and an optional text prompt $c$, the task is to generate
 
-$$V = (I_t)_{t=1}^{N} \approx \mathcal{T}(V_S, V_E),$$
+$$V \approx \mathcal{T}(V_S, V_E), \qquad V \in \mathbb{R}^{N \times H \times W \times 3},$$
 
 i.e. read $\mathcal{T}$ from its single demonstration and apply it to the new pair, such that:
 
@@ -38,7 +34,7 @@ i.e. read $\mathcal{T}$ from its single demonstration and apply it to the new pa
 
 **(a) Lerp Collapse.** Endpoint-conditioned flow models connect distant shots with a dissolve, a near-straight path in latent space (we verified early that generated dissolves sit visually next to a literal latent crossfade). The cheapest valid in-between is never a creative one; any method must first beat this default.
 
-**(b) Entanglement.** $V_R = \mathcal{T}(V_R^S, V_R^E)$ shows the operator only evaluated on its own endpoints. Transfer requires separating *what it does* from *what it contains*, a separation nothing in standard video training rewards, and one that does not fall out of the model's raw features (§5).
+**(b) Entanglement.** $V_R$ shows the operator only as applied to its own content. Transfer requires separating *what it does* from *what it contains*, a separation nothing in standard video training rewards, and one that does not fall out of the model's raw features (§5).
 
 ## 2. Assumptions & Scope
 
@@ -55,7 +51,7 @@ i.e. read $\mathcal{T}$ from its single demonstration and apply it to the new pa
 
 ## 4. Related Work
 
-**refVFX** (*Tuning-free Visual Effect Transfer across Videos*, arXiv:2601.07833) is the strongest published neighbor: a LoRA on a 14B first/last-frame video model (Wan 2.1 FLF2V) that transfers a reference effect to a new clip. It routes effect identity largely through **text** (per-effect triggers and descriptions), with the reference as support; our focus is the reverse, making the reference video itself carry the operator. We run it as an external baseline in two arms (**A**: its own config, effect described in text; **B**: under our text budget), via its public community reimplementation; its released dataset also contributes one training stratum (§6.1).
+**refVFX** [5] (*Tuning-free Visual Effect Transfer across Videos*) is the strongest published neighbor: a LoRA on a 14B first/last-frame video model (Wan 2.1 FLF2V) that transfers a reference effect to a new clip. It routes effect identity largely through **text** (per-effect triggers and descriptions), with the reference as support; our focus is the reverse, making the reference video itself carry the operator. We run it as an external baseline in two arms (**A**: its own config, effect described in text; **B**: under our text budget), via its public community reimplementation; its released dataset also contributes one training stratum (§6.1).
 
 ## 5. Trajectory
 
@@ -67,27 +63,31 @@ The project's first branch was **training-free**: invert $V_R$ through the froze
 
 One row = (target clip, reference clip of the **same** operator) + endpoint conditioning + content-only caption. The reference is always a *different* clip of the operator group, so the operator is the only consistent signal linking reference to target.
 
-| stratum | source | clips | operators | rows |
-| --- | --- | --- | --- | --- |
-| **S0** · curated real | hand-curated real VFX transitions, 26 classes: the ground-truth corpus | 139 | 26 | 385 |
-| **S1** · specialist-generated | the 11 specialists (§6.3) applied to unfamiliar endpoints, then hand-screened (13.5% rejected) | 1,225 | 12 | 3,675 |
-| **S2** · procedural | shader transitions (*gl-transitions*) rendered between pairs of real clips: exact labels, operator diversity at scale | 15,436 | 1,590 | 46,308 |
-| **S4** · external real | real-VFX clips from the refVFX release, 42 effects | 2,000 | 42 | 6,000 |
-| | **total** | **18,800** | **1,670** | **56,368** |
 
-152 GB precomputed, endpoint-disjoint from every eval set; the strata mix is a training-time knob. Design bet: S0/S1/S4 supply *creative* operators, S2 supplies operator *variety*; together they force the in-context mechanism to bind to the reference rather than memorize styles.
+| stratum                       | source                                                                                                                | clips      | operators | rows       |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------- | --------- | ---------- |
+| **S0** · curated real         | hand-curated real VFX transitions, 26 classes: the ground-truth corpus                                                | 139        | 26        | 385        |
+| **S1** · specialist-generated | the 11 specialists (§6.3) applied to unfamiliar endpoints, then hand-screened (13.5% rejected)                        | 1,225      | 12        | 3,675      |
+| **S2** · procedural           | shader transitions (*gl-transitions*) rendered between pairs of real clips: exact labels, operator diversity at scale | 15,436     | 1,590     | 46,308     |
+| **S4** · external real        | real-VFX clips from the refVFX release, 42 effects                                                                    | 2,000      | 42        | 6,000      |
+|                               | **total**                                                                                                             | **18,800** | **1,670** | **56,368** |
+
+
+152 GB precomputed, endpoint-disjoint from every eval set; the strata mix is a training-time knob. Design bet: S0/S1/S4 supply *creative* operators, S2 supplies operator *variety*; together they force the in-context mechanism to bind to the reference rather than memorize styles. The corpus also supplies **counterfactual examples** spanning both axes of the operator × endpoint grid: the same endpoint pair connected by *different* operators, and the same operator applied across *different* endpoint pairs. This is the paired variation disentanglement theory calls for: fully unsupervised factor separation is provably impossible without such structure [1], while pairs varying along one axis at a time come with identifiability guarantees [2, 3, 4].
 
 ### 6.2 Evaluation Instrument (v4, certified)
 
-| | the question it answers | reading |
-| --- | --- | --- |
-| **M1a** · appearance & dynamics | Does the generated middle look, and evolve, like real examples of the intended transition? | 0–1, higher · **headline** |
-| M1b · camera motion | Does the camera move as in the reference? | distance, lower |
-| M1c · object motion | Camera removed, do subjects move as in the reference? | distance, lower |
-| M2a · copy guard | Did it just replay the reference clip? | flag over calibrated threshold |
-| **M2b** · style margin | Closer to the *intended* style than to any other? | positive = intended wins |
-| M3a · endpoint fidelity | Does $V$ truly begin/end on $V_S$/$V_E$? | similarity, higher |
-| M3b · seam flag | Visible snap where generation meets given frames? | flag |
+
+|                                 | the question it answers                                                                    | reading                        |
+| ------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------ |
+| **M1a** · appearance & dynamics | Does the generated middle look, and evolve, like real examples of the intended transition? | 0–1, higher · **headline**     |
+| M1b · camera motion             | Does the camera move as in the reference?                                                  | distance, lower                |
+| M1c · object motion             | Camera removed, do subjects move as in the reference?                                      | distance, lower                |
+| M2a · copy guard                | Did it just replay the reference clip?                                                     | flag over calibrated threshold |
+| **M2b** · style margin          | Closer to the *intended* style than to any other?                                          | positive = intended wins       |
+| M3a · endpoint fidelity         | Does $V$ truly begin/end on $V_S$/$V_E$?                                                   | similarity, higher             |
+| M3b · seam flag                 | Visible snap where generation meets given frames?                                          | flag                           |
+
 
 No composite score; every threshold pre-registered and calibrated against a case that must fail it.
 
@@ -97,11 +97,13 @@ No composite score; every threshold pre-registered and calibrated against a case
 
 **Test tiers.** Every evaluation row sits in one cell of a 3×3 grid: the **reference tier** (is the reference's operator *seen* in training, an *unseen* instance of a trained class, or a *zero-shot* class never trained on?) crossed with the **endpoint tier** (endpoints from the operator's own class: *same*; from another corpus class: *cross*; off-distribution footage: *foreign*).
 
-| reference \ endpoints | same | cross | foreign |
-| --- | --- | --- | --- |
-| **seen** (training items) | anchors: fit, memorization probe | – | – |
-| **unseen** (trained class, new instance) | ✓ | ✓ **target** | ✓ |
-| **zero-shot** (class never trained) | ✓ | ✓ **target** | ✓ |
+
+| reference \ endpoints                    | same                             | cross        | foreign |
+| ---------------------------------------- | -------------------------------- | ------------ | ------- |
+| **seen** (training items)                | anchors: fit, memorization probe | –            | –       |
+| **unseen** (trained class, new instance) | ✓                                | ✓ **target** | ✓       |
+| **zero-shot** (class never trained)      | ✓                                | ✓ **target** | ✓       |
+
 
 The claims target the **unseen and zero-shot reference rows**, cross endpoints above all: there the reference shows an operator the model cannot have memorized, applied to content from elsewhere. Seen-reference cells are anchors, never claims; a mismatched-reference control row completes the grid.
 
@@ -120,16 +122,18 @@ All arms are evaluated on one frozen 152-row grid × 2 seeds covering the §6.2 
 
 One grid, one machine, one instrument (v4). Zero trained-arm generations trip the copy guard: no score below is earned by replaying the reference. Columns follow the §6.2 tier grid: **uns** = unseen reference, **zs** = zero-shot reference, each split by endpoint tier (% of ceiling; margin = M2b over all rows).
 
-| arm | uns·same | uns·cross* | uns·foreign* | zs·same | zs·cross* | zs·foreign* | margin |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| **Specialist** (×11) | **99.7**ᵃ | 94.9ᵃ | 63.1ᵃ | – | – | – | – |
-| base ⓪ · prompt only (effect described) | 83.0 | 87.2 | 79.4 | 81.5 | 80.1 | 74.2 | −0.000 |
-| base ① · plus endpoints (effect described) | 87.0 | 88.8 | 78.6 | 89.6 | 89.3 | 76.5 | +0.001 |
-| **G1** · reference only | 89.1 | 73.1 | 56.9 | 91.1 | 72.2 | 44.1 | −0.029 |
-| **G2** · reference only | 90.5 | 74.1 | 59.8 | 74.9 | 78.5 | 54.0 | −0.011 |
-| **G2+text** · reference + effect described | **98.3** | **94.3** | **86.1** | **91.6** | **91.0** | **71.9** | **+0.044** |
-| refVFX A · its own config (text) | 47.8 | 40.4 | 38.7 | 52.3 | 41.8 | 45.3 | −0.032 |
-| refVFX B · our text budget | 35.0 | 25.2 | 28.7 | 31.6 | 28.5 | 24.3 | −0.064 |
+
+| arm                                        | uns·same  | uns·cross* | uns·foreign* | zs·same  | zs·cross* | zs·foreign* | margin     |
+| ------------------------------------------ | --------- | ---------- | ------------ | -------- | --------- | ----------- | ---------- |
+| **Specialist** (×11)                       | **99.7**ᵃ | 94.9ᵃ      | 63.1ᵃ        | –        | –         | –           | –          |
+| base ⓪ · prompt only (effect described)    | 83.0      | 87.2       | 79.4         | 81.5     | 80.1      | 74.2        | −0.000     |
+| base ① · plus endpoints (effect described) | 87.0      | 88.8       | 78.6         | 89.6     | 89.3      | 76.5        | +0.001     |
+| **G1** · reference only                    | 89.1      | 73.1       | 56.9         | 91.1     | 72.2      | 44.1        | −0.029     |
+| **G2** · reference only                    | 90.5      | 74.1       | 59.8         | 74.9     | 78.5      | 54.0        | −0.011     |
+| **G2+text** · reference + effect described | **98.3**  | **94.3**   | **86.1**     | **91.6** | **91.0**  | **71.9**    | **+0.044** |
+| refVFX A · its own config (text)           | 47.8      | 40.4       | 38.7         | 52.3     | 41.8      | 45.3        | −0.032     |
+| refVFX B · our text budget                 | 35.0      | 25.2       | 28.7         | 31.6     | 28.5      | 24.3        | −0.064     |
+
 
 *All values % of ceiling; cell sizes 13/26/26/8/20/20 rows × 2 seeds. Starred columns are content-capped (endpoint content can never fully resemble the class): ranking-only. Zero-shot is undefined for specialists (a class with no training data has no specialist). ᵃ Specialists are scored on their own ladder grid (same instrument, cell means differ by <0.4 pp); their claim channel is the paired gap vs the base twin: **+40.0 pp** on uns·same.*
 
@@ -147,3 +151,12 @@ Findings, in order:
 1. **Bottleneck branch**: land and evaluate the three reference encodings (bottleneck operator encoder, causal VAE, V-JEPA) on the same grid.
 2. **Close the pre-committed +0.10 margin target** on the claim cells, reference-only; re-measure seed noise under v4 so every delta carries a minimum-detectable-effect bar.
 3. **Consolidated ladder report**, mid-August.
+
+## References
+
+1. Locatello et al. *Challenging Common Assumptions in the Unsupervised Learning of Disentangled Representations.* ICML 2019. arXiv:1811.12359
+2. Locatello et al. *Weakly-Supervised Disentanglement Without Compromises.* ICML 2020. arXiv:2002.02886
+3. Shu et al. *Weakly Supervised Disentanglement with Guarantees.* ICLR 2020. arXiv:1910.09772
+4. von Kügelgen et al. *Self-Supervised Learning with Data Augmentations Provably Isolates Content from Style.* NeurIPS 2021. arXiv:2106.04619
+5. *Tuning-free Visual Effect Transfer across Videos* (refVFX). arXiv:2601.07833
+
