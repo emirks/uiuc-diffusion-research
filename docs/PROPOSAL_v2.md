@@ -1,152 +1,135 @@
 # Creative Transition Transfer — Project Proposal v2
 
-*2026-08-05 · supersedes the June proposal (`docs/Project proposal.md`) · self-contained — every term is defined where it first appears.*
+*2026-08-05 · supersedes the June proposal · self-contained*
 
----
+## 0. Thesis
 
-## In one paragraph
+**Creative Transition Transfer (CTT):** given a reference video demonstrating a transition between two clips, transfer that transition *operator* to new, unseen endpoint pairs — without per-style training. Our approach is a reference-conditioned adapter (in-context LoRA) on a frozen video flow model, judged by a pre-registered evaluation instrument. Current state: instrument certified, dataset final, and per-style *specialists* prove the ceiling is reachable (≈100% of ground-truth level); the *generalist* adapter demonstrably reads the reference but does not yet fully apply it. The gap is precisely localized: the model can already apply an operator described in **words** — extracting an equally usable operator from the **reference video** is the open front.
 
-**Creative Transition Transfer (CTT):** given one reference video demonstrating a creative transition — a smoke morph, a portal, a whip-pan — re-perform *that* transition between a new pair of shots, with no training for the specific style. The project is organized around three questions: can we **measure** the task, is the **ceiling reachable**, and can one model **transfer**. Where they stand: measurement is solved for our purposes (a calibrated, pre-registered instrument); the ceiling is reached (per-style *specialist* models score ≈100% of ground-truth level); and transfer — a single *generalist* model that reads the operator from the demo — is partially solved: training on our new 56k-pair corpus improves every generalization cell, and naming the effect in words closes most of the remaining gap. That localizes the open problem precisely: **the model can already exploit an operator it is told about in words; it cannot yet extract the same operator from the demo video.** Closing that gap is the current front.
+## 1. Problem Statement
 
----
+### 1.1 Task Definition
 
-## 1 · The task
+Let the start and end clips be
 
-A *transition* connects the last moments of shot A to the first moments of shot B. Professional VFX transitions are not cuts or crossfades: something happens in the middle — smoke swallows the scene, the world folds into a portal — and that *something* is a reusable style, independent of what A and B contain. We call it the **transition operator**.
+$$V_S = \{I_t\}_{t=1}^{N_S}, \qquad V_E = \{I_t\}_{t=1}^{N_E},$$
 
-The task: **given endpoints (A, B) and one reference video demonstrating an operator, generate the in-between video that connects A to B using that operator.** One model, any operator, no per-style training at test time.
+with frames $I_t \in \mathbb{R}^{H \times W \times 3}$, shared resolution and frame rate. A **transition operator** $\mathcal{T}$ is the reusable part of a transition — *what it does* (smoke swallows the scene, the world folds into a portal), independent of the clips it connects. A **reference video** $V_R$ is one demonstration of $\mathcal{T}$, applied to $V_R$'s own endpoints.
 
-Concretely, the base generator is an endpoint-conditioned video model: it receives prefix frames from A — and, for two-sided transitions, suffix frames from B — plus the reference video in its context, and must synthesize the middle.
+Given $V_S$, $V_E$ (two-sided; one-sided omits $V_E$), the reference $V_R$, and a content-only prompt $c$, generate $V = \{I_t\}_{t=1}^{N}$ such that:
 
-## 2 · Why it is hard
+1. **Boundary constraints:** $V_{1:N_S} \approx V_S$ and $V_{N-N_E+1:N} \approx V_E$.
+2. **Operator constraint:** the middle of $V$ realizes the operator demonstrated by $V_R$ — its appearance and dynamics, not its content.
+3. **No per-style training:** one model serves every operator; $\mathcal{T}$ is specified only through $V_R$, at inference time.
 
-Two difficulties — one shallow, one deep.
+### 1.2 Why It Is Hard
 
-**Collapse.** Ask an endpoint-conditioned video model to connect two contextually distant shots and it produces a dissolve: the frames drift along a near-straight path in the model's latent space between the endpoints (early on we verified that these generated dissolves are visually close to a literal latent-space crossfade). The model is not wrong — a dissolve *is* the cheapest valid in-between — it is just never creative. Any method must first beat this default.
+**(a) Collapse.** Endpoint-conditioned flow models connect distant shots with a dissolve — a near-straight path in latent space (we verified early that generated dissolves sit visually next to a literal latent crossfade). The cheapest valid in-between is never a creative one; any method must first beat this default.
 
-**Entanglement.** The reference video shows the operator only as applied to *its own* content. To transfer it, a model must separate *what the transition does* from *what these particular clips contain* — keep the operator, discard the content. Nothing in standard video-model training rewards that separation, and (§6) it does not fall out of the model's internal features for free.
+**(b) Entanglement.** $V_R$ shows the operator only as applied to its own content. Transfer requires separating *what it does* from *what it contains* — a separation nothing in standard video training rewards, and one that does not fall out of the model's raw features (§5).
 
-## 3 · Scope and assumptions
+## 2. Assumptions & Scope
 
-- **Frozen base model.** LTX-2 19B, an endpoint-conditionable video generator. We train only small adapters (LoRA); the base is never updated.
-- **The demo is the only operator channel.** Training captions are deliberately *content-only*: they describe the endpoint shots and mark where the transition goes with a neutral trigger token — never *which* transition. If captions named the effect, the model could route operator identity through text and ignore the demo; the closest prior work does exactly this (§5), and avoiding it is a design principle here — a text route caps the method at effects that already have names.
-- **Endpoints are given** as conditioning frames (one- or two-sided).
-- **Success is what the instrument says.** Every claim rides on a pre-registered metric with calibrated thresholds (§7.1), not on visual inspection.
-- **Per-style training is not the product.** We do train per-style models — but only as a ceiling measurement and as a data engine (§7.3), never as the deliverable.
+- **Frozen base generator** — LTX-2 19B, endpoint-conditionable; we train only small adapters (LoRA).
+- **The reference video is the only operator channel.** Captions are deliberately content-only; a neutral trigger token marks *where* the transition goes, never *which*. Routing effect identity through text would let the model bypass the reference (§4) and caps a method at effects that already have names.
+- **Per-style training is out of scope** by definition of the task — specialists exist only as a ceiling measurement and a data engine (§6.3).
+- **Success is defined by a pre-registered instrument** (§6.2), not inspection: thresholds fixed before results exist, each calibrated against a case that must fail it.
 
-## 4 · The three questions
+## 3. Research Questions
 
-- **Q1 — Measurement.** Can we score "the intended transition happened here" reliably enough to steer research? Without this, nothing else is knowable.
-- **Q2 — Ceiling.** Can the base generator express these operators at all? If even a model trained on a single style cannot perform it, the task is hopeless.
-- **Q3 — Transfer** (the goal). Can one adapter read the operator from the reference video and apply it to new endpoints?
+- **RQ1 — Transfer.** Can an adapter read an operator from a reference video and apply it to unseen endpoints?
+- **RQ2 — Disentanglement / compression.** Can the operator be carried by a compact learned code rather than the raw reference? *(in flight; no results claimed in this document)*
+- **RQ3 — Measurement.** How do you score "the right transition happened" credibly enough to bet training decisions on?
 
-The rest of the document follows this order: what we built for each question (§7) and where each stands (§8). Status up front: **Q1 yes · Q2 yes · Q3 partially.**
+## 4. Related Work
 
-## 5 · Closest prior work: refVFX
+**refVFX** (*Tuning-free Visual Effect Transfer across Videos*, arXiv:2601.07833) is the strongest published neighbor: a LoRA on a 14B first/last-frame video model (Wan 2.1 FLF2V) that transfers a reference effect to a new clip — but it routes effect identity largely through **text** (per-effect triggers and descriptions), the route our task forbids. We run it as an external baseline in two arms — **A**, its own config with the effect described; **B**, under our content-only text budget — via its public community reimplementation; its released dataset also contributes one training stratum (§6.1). It behaves as designed: removing the text costs it ~9 points (§7).
 
-refVFX (*Tuning-free Visual Effect Transfer across Videos*, arXiv 2601.07833) is the nearest published system: a large LoRA on a 14B first/last-frame video model (Wan 2.1 FLF2V) that transfers a reference effect to a new clip. The essential difference is the routing: refVFX carries effect identity substantially through **text** — per-effect triggers and effect descriptions in the prompt — with the reference video as support. Our task definition forbids that route (§3).
+## 5. Trajectory
 
-We run refVFX as an external baseline on our own benchmark (via its public community reimplementation), in two configurations: **A**, its intended setup with the effect described in text; **B**, restricted to our content-only text budget. Its released dataset also contributes one training stratum (§7.2). Empirically it behaves as designed: removing the text description costs it ~9 points (§8.3) — its operator identity does ride on text.
+The project's first branch was **training-free**: invert $V_R$ through the frozen model, extract internal features along the reconstruction path (attention K/V, velocity fields), and re-inject them while generating between new endpoints. Implemented end-to-end, now closed: injection fidelity plateaued (~9 dB PSNR against a pre-set 14 dB milestone), and — decisively — operator and content proved inseparable in raw features: steering transferred the reference's content along with its operator. That is §1.2(b) in concrete form; the separation must be *learned*. Everything since is the training branch.
 
-## 6 · The first branch, and the pivot
+## 6. Methodology & Current State
 
-The project's first branch was **training-free**: invert the reference video through the frozen model, extract internal features along the reconstruction path (attention K/V, velocity fields), and re-inject them while generating between new endpoints. It was implemented end-to-end, and it is closed. Three reasons: injection fidelity plateaued well below usable reconstruction (attention-feature injection stalled near its ~9 dB PSNR baseline against a pre-set 14 dB milestone); every new sample needed its own fragile inversion pipeline; and — decisively — operator and content proved inseparable in raw internal features: steering with them dragged the demo's content along with its operator. That is the entanglement problem of §2 in concrete form, and it convinced us the separation must be **learned**. Everything below is the training branch.
+### 6.1 Dataset — CTT v2 (v2.1.0, frozen)
 
-## 7 · What we built
+One row = (target clip, reference clip of the **same** operator) + endpoint conditioning + content-only caption. The reference is always a *different* clip of the operator group, so the operator is the only consistent signal linking reference to target.
 
-### 7.1 The instrument (Q1)
-
-The idea: a transition class has many real examples, so a generation claiming that class should resemble the real examples of the class — in its middle frames, where the transition lives — while genuinely connecting its own endpoints and not merely replaying the demo. Each aspect is one plainly-stated metric:
-
-| | the question it answers | reading |
-|---|---|---|
-| **M1a** · appearance & dynamics | Does the generated middle look — and evolve — like real examples of the intended transition? | 0–1, higher better · **the headline** |
-| M1b · camera motion | Does the camera move the way it moves in the reference? | distance, lower better |
-| M1c · object motion | With camera motion removed, do the subjects move like in the reference? | distance, lower better |
-| M2a · copy guard | Did the model just replay the demo clip? | flags above a calibrated threshold |
-| **M2b** · style margin | Is the output closer to the *intended* style than to any other style in the corpus? | positive = intended style wins |
-| M3a · endpoint fidelity | Does the video truly begin (and end) on the given endpoint frames? | similarity, higher better |
-| M3b · seam flag | Is there a visible snap where generation meets the given frames? | flags |
-
-Discipline, in one sentence: every threshold is pre-registered before any result exists and calibrated against a case that must fail it; there is no composite score; and the instrument is versioned and certified before any model claim is read off it (current version: v4).
-
-**The headline scale — "% of ceiling."** M1a is reported on an interpretable scale. For each generation: score it against a pool of real clips of the intended class — never including the demo itself or the item's own endpoints, so copying cannot inflate it — giving the **raw** score. Score the real clips of that class against *each other* the same way, giving the **ceiling**: what a perfect generation would get. Report **raw ÷ ceiling** as a percentage. Anchors for intuition: a real clip of the class ≈ 100% · a plain crossfade 48% · a frozen frame 22%.
-
-**Does it measure the concept, not the clip?** The validation we lean on: score every real clip's middle against every *other* same-class clip as its reference, all pairs. Same-class pairs score 0.870 on average versus 0.494 for wrong-class (a large clean gap, d′ = 1.71) — while *swapping which same-class clip serves as the reference* moves the score by only ±0.044 (±0.017 when averaging a pool of ~7). Identifying a clip's class from its score alone succeeds 86% of the time. So M1a responds to the transition concept and is nearly indifferent to the particular demo chosen to represent it — not a strict proof, but a strong signal, and it is what licenses pool scoring and the ceiling definition above. (Each metric also had to earn its place on a label-free retrieval exam over the 223-clip real corpus; the appearance metric's exam accuracy rose 0.67 → 0.81 during that selection.)
-
-### 7.2 The dataset — CTT v2 (v2.1.0, frozen)
-
-One training row = (target clip, reference clip demonstrating the **same** operator) + endpoint conditioning + a content-only caption. Rows are grouped by operator; the reference is always a *different* clip of the same operator group — so the only consistent signal linking reference to target is the operator itself.
-
-| stratum | what it is | clips | operators | rows |
+| stratum | source | clips | operators | rows |
 |---|---|---|---|---|
-| **S0** · curated real | hand-curated real VFX transitions, 26 classes — the project's ground-truth corpus | 139 | 26 | 385 |
-| **S1** · specialist-generated | produced by the 11 specialists (§7.3) applying their operator to unfamiliar endpoints, then hand-screened clip-by-clip (13.5% rejected) | 1,225 | 12 | 3,675 |
-| **S2** · procedural | shader transitions (the open *gl-transitions* family) rendered between pairs of real clips — exact operator labels, operator diversity at scale | 15,436 | 1,590 | 46,308 |
+| **S0** · curated real | hand-curated real VFX transitions, 26 classes — the ground-truth corpus | 139 | 26 | 385 |
+| **S1** · specialist-generated | the 11 specialists (§6.3) applied to unfamiliar endpoints, then hand-screened (13.5% rejected) | 1,225 | 12 | 3,675 |
+| **S2** · procedural | shader transitions (*gl-transitions*) rendered between pairs of real clips — exact labels, operator diversity at scale | 15,436 | 1,590 | 46,308 |
 | **S4** · external real | real-VFX clips from the refVFX release, 42 effects | 2,000 | 42 | 6,000 |
 | | **total** | **18,800** | **1,670** | **56,368** |
 
-152 GB precomputed (latents + text embeddings), endpoint-disjoint from every evaluation set; the sampling mix across strata is a training-time knob, not baked into the data. The design bet: S0/S1/S4 supply *creative* operators, S2 supplies operator *variety* at scale — together forcing the in-context mechanism to bind to the demo rather than memorize a catalogue of styles.
+152 GB precomputed, endpoint-disjoint from every eval set; the strata mix is a training-time knob. Design bet: S0/S1/S4 supply *creative* operators, S2 supplies operator *variety* — together forcing the in-context mechanism to bind to the reference rather than memorize styles.
 
-### 7.3 The models — specialists and generalists
+### 6.2 Evaluation Instrument (v4, certified)
 
-The arms, in the order the logic requires:
+| | the question it answers | reading |
+|---|---|---|
+| **M1a** · appearance & dynamics | Does the generated middle look — and evolve — like real examples of the intended transition? | 0–1, higher · **headline** |
+| M1b · camera motion | Does the camera move as in the reference? | distance, lower |
+| M1c · object motion | Camera removed, do subjects move as in the reference? | distance, lower |
+| M2a · copy guard | Did it just replay the reference clip? | flag over calibrated threshold |
+| **M2b** · style margin | Closer to the *intended* style than to any other? | positive = intended wins |
+| M3a · endpoint fidelity | Does $V$ truly begin/end on $V_S$/$V_E$? | similarity, higher |
+| M3b · seam flag | Visible snap where generation meets given frames? | flag |
 
-- A **specialist** knows *one operator*. One LoRA per transition class, trained on that class's real clips (11 exist). A specialist cannot transfer — it is exactly the per-style training the task forbids — but it answers Q2 (*is the operator expressible at the quality we need?*) and doubles as a **data engine**: applying a specialist to content its class never touches manufactures new, clean examples of the operator (stratum S1).
-- A **generalist** knows *the mechanism*. One in-context LoRA over all operators: at inference it receives the reference video in context and must read the operator out of it. This is the deliverable of the task (Q3). Two exist — **G1**, trained on the original curated corpus only, and **G2**, trained on CTT v2. A third arm, **G2+text**, additionally names the effect in one clause after the trigger token — deliberately breaking the content-only rule as a *probe*: it measures how much headroom sits in operator-reading itself.
-- **Base controls.** The untrained base model given the *same* effect described in words — ⓪ prompt only, ① prompt + endpoint conditioning. Deliberately strong controls: they are told in text what the generalists must read from the demo.
-- **External baseline:** refVFX A/B (§5).
+No composite score; every threshold pre-registered and calibrated against a case that must fail it.
 
-All arms generate the same frozen 152-row evaluation grid (× 2 seeds): trained classes on unseen endpoints, endpoints borrowed from other classes, zero-shot classes never trained on, out-of-corpus footage, and control rows — including one whose demo is deliberately *mismatched*, the cell that reveals whether a model treats the demo as an instruction or as decoration.
+**Headline scale — % of ceiling.** Score a generation against a pool of real clips of the intended class (never the reference itself, never the item's endpoints — copying cannot inflate it) → **raw**. Score the class's real clips against *each other* the same way → **ceiling**: what a perfect generation would get. Report raw ÷ ceiling. Anchors: real clip ≈ 100% · plain crossfade 48% · frozen frame 22%.
 
-## 8 · Where we stand
+**Validation — the reference-swap test.** Scoring every real clip against every *other* same-class clip as reference: same-class 0.870 vs wrong-class 0.494 (d′ = 1.71), while swapping *which* same-class clip serves as reference moves the score only ±0.044 (±0.017 for a pool of ~7); class is identifiable from the score alone 86% of the time. The metric tracks the transition *concept*, not the particular reference — not strict proof, a strong signal.
 
-### 8.1 Q1 — Measurement: solved for our purposes
+### 6.3 Model Arms
 
-Instrument certified (v4); the reference-swap validation above; copy guard calibrated. One fact from practice worth stating: across all trained arms below, **zero** generations trip the copy guard — no score in this section is earned by replaying the demo.
+- **Specialist** — knows *one operator*: one LoRA per class, trained on that class's real clips (11 exist). Cannot transfer by design; it answers *"is the operator expressible at the quality we need?"* and doubles as the data engine behind S1.
+- **Generalist** — knows *the mechanism*: one in-context LoRA over all operators; at inference it must read the operator from the reference. The deliverable. **G1** = trained on the curated corpus only; **G2** = trained on CTT v2; **G2+text** = G2 with the effect additionally named in one clause — a deliberate probe of how much headroom sits in operator-reading itself.
+- **Base controls** — the untrained base model *told the effect in words* (⓪ prompt only; ① + endpoints): strong controls that receive in text what the generalists must read from the reference.
+- **External** — refVFX A/B (§4).
 
-### 8.2 Q2 — Ceiling: reached
+All arms generate one frozen 152-row grid × 2 seeds: unseen endpoints, cross-class endpoints, zero-shot classes, out-of-corpus footage, plus controls — including rows with a deliberately *mismatched* reference, which reveal whether a model treats the reference as an instruction or as decoration.
 
-Specialists perform their operator at ground-truth level:
+## 7. Current Results
+
+**RQ3 — solved for our purposes.** Instrument certified (v4); reference-swap validation above; zero trained-arm generations trip the copy guard — no score below is earned by replaying the reference.
+
+**RQ1, the ceiling — reached.** Specialists perform their operator at ground-truth level:
 
 | endpoints given to the specialist | % of ceiling | vs base twin |
 |---|---|---|
-| endpoints from training (fit anchor) | 100.4% | +39.5 pp |
-| **unseen endpoints, own-class content** | **99.7%** | **+40.0 pp** |
-| endpoints borrowed from another class | 94.9%* | +39.2 pp |
+| from training (fit anchor) | 100.4% | +39.5 pp |
+| **unseen, own-class content** | **99.7%** | **+40.0 pp** |
+| borrowed from another class | 94.9%* | +39.2 pp |
 | out-of-corpus footage (DAVIS) | 63.1%* | +18.9 pp |
 
-*11 specialists pooled; class ceilings for this grid average 0.863 (raw = % × ceiling). Starred cells are content-capped: the endpoints' content can never fully resemble the class, so the absolute level is ranking-only and the honest claim is the gap over the base twin. Anchors: crossfade 48% · prompt-only base 67%.*
+*Starred cells are content-capped (endpoint content can never fully resemble the class): level is ranking-only, the claim is the gap vs the base twin. Whatever limits the generalists, it is not the base model's capacity.*
 
-Reading: with training, the base model performs a creative operator on new content at essentially ground-truth level — **the ceiling exists and is reachable**, and whatever limits the generalists, it is not the base model's capacity. The drop on far-out-of-corpus footage is real and expected: the operator is being asked to bind to radically unfamiliar content.
-
-### 8.3 Q3 — Transfer: real progress, honest gap
-
-Same instrument, same grid, all arms (1,842 scored items per arm, one machine). Same-class cells are the fair headline; cross/foreign cells are content-capped (ranking-only); the style margin is M2b — positive means the intended style beats every other.
+**RQ1, the transfer — real progress, honest gap.**
 
 | arm | same-class cells | cross/foreign cells* | style margin |
 |---|---|---|---|
 | base ⓪ · prompt only (effect described) | 80.0% | 81.4% | −0.000 |
-| base ① · prompt + endpoints (effect described) | 84.9% | 83.0% | +0.001 |
-| **G1** · generalist, demo only | 83.1% | 62.0% | −0.029 |
-| **G2** · generalist on CTT v2, demo only | 82.5% | 66.7% | −0.011 |
-| **G2+text** · demo + effect described | **91.3%** | **86.4%** | **+0.044** |
+| base ① · + endpoints (effect described) | 84.9% | 83.0% | +0.001 |
+| **G1** · reference only | 83.1% | 62.0% | −0.029 |
+| **G2** · reference only, CTT-v2-trained | 82.5% | 66.7% | −0.011 |
+| **G2+text** · reference + effect described | **91.3%** | **86.4%** | **+0.044** |
 | refVFX A · its own config (text) | 42.4% | 41.3% | −0.032 |
 | refVFX B · our text budget | 33.0% | 26.7% | −0.064 |
 
-*Shared same-class ceiling 0.872 (raw = % × ceiling). refVFX rows are indicative rather than apples-to-apples: different base model, 33-frame native output, community reimplementation.*
+*152 rows × 2 seeds per arm, one machine, one instrument; shared same-class ceiling 0.872. refVFX is indicative, not apples-to-apples (different base model, 33-frame output, community reimplementation).*
 
-Four findings, in order:
+1. **Generalists do read the reference.** On mismatched-reference control rows they follow the reference at 68.8% / 69.2% (G1/G2) — clearly above the base model's 56.3% / 61.0% given the same instruction in words.
+2. **G1 falls exactly where transfer is tested** — 62.0% on cross/foreign cells, negative style margin: some *other* class matches its output better than the intended one.
+3. **CTT-v2 training moves all four generalization cells the right way** (margin +0.04 mean, +0.066 best) but short of the pre-committed +0.10 — directional progress, not success. (Corpus, capacity and schedule changed together: a systems comparison, not an ablation.)
+4. **Naming the effect closes most of the rest.** G2+text is best everywhere, with the largest gains on the hardest cells (zero-shot, foreign); symmetrically, refVFX loses ~9 pp without its text.
 
-1. **Generalists do read the demo.** On the control rows whose demo is deliberately mismatched, the generalists follow the demo at 68.8% / 69.2% (G1/G2) — clearly above the base model's 56.3% / 61.0% when the same mismatched instruction is given in words. The in-context mechanism works *as a mechanism*.
-2. **G1 is not good enough.** Trained on the 26 curated classes alone, it holds up on familiar territory (83.1%) but drops hard exactly where transfer is tested — cross-content and foreign cells (62.0%) — and its style margin is negative: on average some *other* class matches its output better than the intended one.
-3. **CTT-v2 training moves everything the right way — modestly.** G2 improves the style margin on **all four** cross/foreign generalization cells (mean +0.04, best cell +0.066) against a pre-committed target of +0.10 — recorded as directional progress, not success. (Kept honest: corpus, adapter capacity and schedule changed together, so this is a systems comparison, not a clean ablation.)
-4. **Naming the effect closes most of the remaining gap.** One clause of text on top of G2 gives the best arm across the board (91.3% / 86.4%, margin +0.044), with the largest gains precisely on the hardest cells (zero-shot classes, foreign footage). Symmetrically, taking text *away* from refVFX costs it ~9 pp.
+**Diagnosis:** the generator can already *use* an operator specified in words; it cannot yet *extract* an equally usable operator from the reference video. The G2 → G2+text gap is the unsolved part of RQ1 — a *representation* problem (specialists rule out capacity; RQ3 rules out measurement) — and RQ2 is the direct attack on it.
 
-Finding 4 is the diagnosis the project now runs on: **the generator can already *use* an operator specified in words; it cannot yet *extract* an equally usable operator from the demo video.** The G2 → G2+text gap is, precisely, the unsolved part of Q3 — and the specialists (Q2) prove it is a *representation* problem (how the demo is encoded and delivered to the generator), not a capacity problem, and Q1 ensures it is not a measurement problem.
+## 8. Next Steps
 
-## 9 · Next steps
-
-1. **Make the demo channel as instructive as the text channel.** In flight: redesigning how the reference is represented to the generator — compressing the demo into a compact operator code the generator can natively read. This is the direct attack on the §8.3 diagnosis.
-2. **Close the pre-committed margin target** (+0.10 on the cross/foreign claim cells) with the demo-only generalist, and re-measure seed noise under the current instrument so every reported delta carries a minimum-detectable-effect bar.
-3. **Consolidated report** of the full ladder — mid-August.
+1. **RQ2:** compress the reference into a compact operator code the generator can natively read (in flight).
+2. **Close the pre-committed +0.10 margin target** on the claim cells, reference-only; re-measure seed noise under v4 so every delta carries a minimum-detectable-effect bar.
+3. **Consolidated ladder report** — mid-August.
