@@ -47,9 +47,9 @@ parts = []
 for folder, title, names in SECTIONS:
     cards = []
     for n in names:
-        p = os.path.join(PACK, folder, n + ".mp4")
+        p = os.path.join(PACK, folder, f"{folder}__{n}.mp4")
         if os.path.exists(p):
-            cards.append(card(f"media/{folder}/{n}.mp4", n))
+            cards.append(card(f"media/{folder}/{folder}__{n}.mp4", n))
     parts.append(f'<section><h2>{html.escape(title)}</h2><div class="grid">{"".join(cards)}</div></section>')
 
 for folder, title, rows in [("12_iid", "12 · IID generalization — unseen reference classes", ROWS_IID),
@@ -58,9 +58,9 @@ for folder, title, rows in [("12_iid", "12 · IID generalization — unseen refe
     for row, desc in rows:
         cards = []
         for c in COLS:
-            p = os.path.join(PACK, folder, f"{row}_{c}.mp4")
+            p = os.path.join(PACK, folder, f"{folder}__{row}_{c}.mp4")
             if os.path.exists(p):
-                cards.append(card(f"media/{folder}/{row}_{c}.mp4", c))
+                cards.append(card(f"media/{folder}/{folder}__{row}_{c}.mp4", c))
         blocks.append(f'<h3>{row} — {html.escape(desc)}</h3><div class="grid">{"".join(cards)}</div>')
     parts.append(f'<section><h2>{html.escape(title)}</h2>{"".join(blocks)}</section>')
 

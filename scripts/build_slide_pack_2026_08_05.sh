@@ -35,39 +35,39 @@ davis_head() { # first 24 frames of a DAVIS sequence, portrait crop, 24fps
 mkdir -p $P/{02_coldopen,03_lerp,04_refvfx,06_dataset,07_counterfactual,12_iid,13_zeroshot}
 
 # ---------------- 02_coldopen ----------------
-cpv "$TD/endpoints/start_9f.mp4"   $P/02_coldopen/start.mp4
-cpv "$TD/endpoints/end_24f.mp4"    $P/02_coldopen/end.mp4
-cpv "$TD/reference_full.mp4"       $P/02_coldopen/reference.mp4
-cpv "$G/002_ctt_v2/videos/G-memo-probe__ctt_v2__shadow_smoke_0__ref_shadow_smoke_1__s42.mp4" $P/02_coldopen/ctt_v2.mp4
+cpv "$TD/endpoints/start_9f.mp4"   $P/02_coldopen/02_coldopen__start.mp4
+cpv "$TD/endpoints/end_24f.mp4"    $P/02_coldopen/02_coldopen__end.mp4
+cpv "$TD/reference_full.mp4"       $P/02_coldopen/02_coldopen__reference.mp4
+cpv "$G/002_ctt_v2/videos/G-memo-probe__ctt_v2__shadow_smoke_0__ref_shadow_smoke_1__s42.mp4" $P/02_coldopen/02_coldopen__ctt_v2.mp4
 
 # ---------------- 03_lerp ----------------
-cpv "$G/007_base_cond_ctt/videos/G-zs-cross__ctt_v2__water_bending_3__ref_firelava_0__s42.mp4"                 $P/03_lerp/dissolve_1.mp4
-cpv "$G/007_base_cond_ctt/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_raven_transition_0__s42.mp4" $P/03_lerp/dissolve_2.mp4
+cpv "$G/007_base_cond_ctt/videos/G-zs-cross__ctt_v2__water_bending_3__ref_firelava_0__s42.mp4"                 $P/03_lerp/03_lerp__dissolve_1.mp4
+cpv "$G/007_base_cond_ctt/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_raven_transition_0__s42.mp4" $P/03_lerp/03_lerp__dissolve_2.mp4
 
 # ---------------- 04_refvfx ----------------
 IT=G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_firelava_0
-cpv "$G/004_refvfx_B/videos/${IT}__seed42.mp4"   $P/04_refvfx/refvfx_promptA.mp4
-cpv "$G/003_refvfx_A/videos/${IT}__seed43.mp4"   $P/04_refvfx/refvfx_promptB.mp4
-cpv "$G/002_ctt_v2/videos/${IT}__s42.mp4"        $P/04_refvfx/cttv2_promptA.mp4
-cpv "$G/005_ctt_v2_leaky/videos/${IT}__s43.mp4"  $P/04_refvfx/cttv2_promptB.mp4
+cpv "$G/004_refvfx_B/videos/${IT}__seed42.mp4"   $P/04_refvfx/04_refvfx__refvfx_promptA.mp4
+cpv "$G/003_refvfx_A/videos/${IT}__seed43.mp4"   $P/04_refvfx/04_refvfx__refvfx_promptB.mp4
+cpv "$G/002_ctt_v2/videos/${IT}__s42.mp4"        $P/04_refvfx/04_refvfx__cttv2_promptA.mp4
+cpv "$G/005_ctt_v2_leaky/videos/${IT}__s43.mp4"  $P/04_refvfx/04_refvfx__cttv2_promptB.mp4
 
 # ---------------- 06_dataset ----------------
-cpv "$E/S0/clips/sakura_petals/sakura_petals_0.mp4"           $P/06_dataset/s0_1.mp4
-cpv "$E/S0/clips/water_bending/water_bending_1.mp4"           $P/06_dataset/s0_2.mp4
-cpv "$E/S0/clips/illustration_scene/illustration_scene_0.mp4" $P/06_dataset/s0_3.mp4
-cpv "$E/S0/clips/giant_grab/giant_grab_0.mp4"                 $P/06_dataset/s0_4.mp4
-cpv "$E/S1/clips/spec_portal__humanvid_7712292__s42.mp4"                        $P/06_dataset/s1_1.mp4
-cpv "$E/S1/clips/spec_wireframe__vcbench_teacher_33674801_2160x3840__s42.mp4"   $P/06_dataset/s1_2.mp4
-cpv "$E/S1/clips/spec_gas_transformation__humanvid_8117113__s42.mp4"            $P/06_dataset/s1_3.mp4
-cpv "$E/S1/clips/spec_super_fast_run__davis_car-roundabout__s42.mp4"            $P/06_dataset/s1_4.mp4
-cpv "$E/S2a/clips/s2_0693_c06.mp4" $P/06_dataset/s2_1.mp4
-cpv "$E/S2b/clips/s2_0165_c04.mp4" $P/06_dataset/s2_2.mp4
-cpv "$E/S2b/clips/s2_0620_c06.mp4" $P/06_dataset/s2_3.mp4
-cpv "$E/S2b/clips/s2_0114_c08.mp4" $P/06_dataset/s2_4.mp4
-cpv "$E/S4/clips/005860.mp4" $P/06_dataset/s4_1.mp4
-cpv "$E/S4/clips/006099.mp4" $P/06_dataset/s4_2.mp4
-cpv "$E/S4/clips/000060.mp4" $P/06_dataset/s4_3.mp4
-cpv "$E/S4/clips/001117.mp4" $P/06_dataset/s4_4.mp4
+cpv "$E/S0/clips/sakura_petals/sakura_petals_0.mp4"           $P/06_dataset/06_dataset__s0_1.mp4
+cpv "$E/S0/clips/water_bending/water_bending_1.mp4"           $P/06_dataset/06_dataset__s0_2.mp4
+cpv "$E/S0/clips/illustration_scene/illustration_scene_0.mp4" $P/06_dataset/06_dataset__s0_3.mp4
+cpv "$E/S0/clips/giant_grab/giant_grab_0.mp4"                 $P/06_dataset/06_dataset__s0_4.mp4
+cpv "$E/S1/clips/spec_portal__humanvid_7712292__s42.mp4"                        $P/06_dataset/06_dataset__s1_1.mp4
+cpv "$E/S1/clips/spec_wireframe__vcbench_teacher_33674801_2160x3840__s42.mp4"   $P/06_dataset/06_dataset__s1_2.mp4
+cpv "$E/S1/clips/spec_gas_transformation__humanvid_8117113__s42.mp4"            $P/06_dataset/06_dataset__s1_3.mp4
+cpv "$E/S1/clips/spec_super_fast_run__davis_car-roundabout__s42.mp4"            $P/06_dataset/06_dataset__s1_4.mp4
+cpv "$E/S2a/clips/s2_0693_c06.mp4" $P/06_dataset/06_dataset__s2_1.mp4
+cpv "$E/S2b/clips/s2_0165_c04.mp4" $P/06_dataset/06_dataset__s2_2.mp4
+cpv "$E/S2b/clips/s2_0620_c06.mp4" $P/06_dataset/06_dataset__s2_3.mp4
+cpv "$E/S2b/clips/s2_0114_c08.mp4" $P/06_dataset/06_dataset__s2_4.mp4
+cpv "$E/S4/clips/005860.mp4" $P/06_dataset/06_dataset__s4_1.mp4
+cpv "$E/S4/clips/006099.mp4" $P/06_dataset/06_dataset__s4_2.mp4
+cpv "$E/S4/clips/000060.mp4" $P/06_dataset/06_dataset__s4_3.mp4
+cpv "$E/S4/clips/001117.mp4" $P/06_dataset/06_dataset__s4_4.mp4
 
 # ---------------- 07_counterfactual ----------------
 # opA=animalization  opB=shadow_smoke  opC=polygon
@@ -75,7 +75,7 @@ cpv "$E/S4/clips/001117.mp4" $P/06_dataset/s4_4.mp4
 ops=(animalization shadow_smoke polygon); opl=(opA opB opC)
 eps=(humanvid_7925405 openvid__waJ6mAouN0_32_77to252 vcbench_teacher_33674801_2160x3840); epl=(ep1 ep2 ep3)
 for i in 0 1 2; do for j in 0 1 2; do
-  cpv "$E/S1/clips/spec_${ops[$i]}__${eps[$j]}__s42.mp4" "$P/07_counterfactual/${opl[$i]}_${epl[$j]}.mp4"
+  cpv "$E/S1/clips/spec_${ops[$i]}__${eps[$j]}__s42.mp4" "$P/07_counterfactual/07_counterfactual__${opl[$i]}_${epl[$j]}.mp4"
 done; done
 
 # ---------------- shared endpoint cuts ----------------
@@ -87,92 +87,92 @@ davis_head mallard-water $TMP/mallard24.mp4
 # ---------------- 12_iid ----------------
 I=$P/12_iid
 # row1: davis_tennis_snowboard <- shadow_smoke (two-sided, unseen-foreign)
-cp $TMP/tennis24.mp4    $I/row1_start.mp4
-cp $TMP/snowboard24.mp4 $I/row1_end.mp4
-cpv "$T/shadow_smoke/shadow_smoke_0.mp4" $I/row1_reference.mp4
-cpv "$G/007_base_cond_ctt/videos/G-unseen-foreign__ctt_v2__davis_tennis_snowboard__ref_shadow_smoke_0__s42.mp4" $I/row1_base.mp4
-cpv "$G/004_refvfx_B/videos/G-unseen-foreign__ctt_v2__davis_tennis_snowboard__ref_shadow_smoke_0__seed42.mp4"   $I/row1_refvfx.mp4
-cpv "$G/002_ctt_v2/videos/G-unseen-foreign__ctt_v2__davis_tennis_snowboard__ref_shadow_smoke_0__s42.mp4"        $I/row1_cttv2.mp4
+cp $TMP/tennis24.mp4    $I/12_iid__row1_start.mp4
+cp $TMP/snowboard24.mp4 $I/12_iid__row1_end.mp4
+cpv "$T/shadow_smoke/shadow_smoke_0.mp4" $I/12_iid__row1_reference.mp4
+cpv "$G/007_base_cond_ctt/videos/G-unseen-foreign__ctt_v2__davis_tennis_snowboard__ref_shadow_smoke_0__s42.mp4" $I/12_iid__row1_base.mp4
+cpv "$G/004_refvfx_B/videos/G-unseen-foreign__ctt_v2__davis_tennis_snowboard__ref_shadow_smoke_0__seed42.mp4"   $I/12_iid__row1_refvfx.mp4
+cpv "$G/002_ctt_v2/videos/G-unseen-foreign__ctt_v2__davis_tennis_snowboard__ref_shadow_smoke_0__s42.mp4"        $I/12_iid__row1_cttv2.mp4
 # row2: davis_lucia <- animalization (one-sided, unseen-foreign)
-cp $TMP/lucia24.mp4 $I/row2_start.mp4
-cpv "$T/animalization/animalization_0.mp4" $I/row2_reference.mp4
-cpv "$G/007_base_cond_ctt/videos/G-unseen-foreign__ctt_v2__davis_lucia__ref_animalization_0__s42.mp4" $I/row2_base.mp4
-cpv "$G/004_refvfx_B/videos/G-unseen-foreign__ctt_v2__davis_lucia__ref_animalization_0__seed42.mp4"   $I/row2_refvfx.mp4
-cpv "$G/002_ctt_v2/videos/G-unseen-foreign__ctt_v2__davis_lucia__ref_animalization_0__s42.mp4"        $I/row2_cttv2.mp4
+cp $TMP/lucia24.mp4 $I/12_iid__row2_start.mp4
+cpv "$T/animalization/animalization_0.mp4" $I/12_iid__row2_reference.mp4
+cpv "$G/007_base_cond_ctt/videos/G-unseen-foreign__ctt_v2__davis_lucia__ref_animalization_0__s42.mp4" $I/12_iid__row2_base.mp4
+cpv "$G/004_refvfx_B/videos/G-unseen-foreign__ctt_v2__davis_lucia__ref_animalization_0__seed42.mp4"   $I/12_iid__row2_refvfx.mp4
+cpv "$G/002_ctt_v2/videos/G-unseen-foreign__ctt_v2__davis_lucia__ref_animalization_0__s42.mp4"        $I/12_iid__row2_cttv2.mp4
 # row3: davis_mallard_water <- super_fast_run (one-sided, unseen-foreign)
-cp $TMP/mallard24.mp4 $I/row3_start.mp4
-cpv "$T/super_fast_run/super_fast_run_0.mp4" $I/row3_reference.mp4
-cpv "$G/007_base_cond_ctt/videos/G-unseen-foreign__ctt_v2__davis_mallard_water__ref_super_fast_run_0__s42.mp4" $I/row3_base.mp4
-cpv "$G/004_refvfx_B/videos/G-unseen-foreign__ctt_v2__davis_mallard_water__ref_super_fast_run_0__seed42.mp4"   $I/row3_refvfx.mp4
-cpv "$G/002_ctt_v2/videos/G-unseen-foreign__ctt_v2__davis_mallard_water__ref_super_fast_run_0__s42.mp4"        $I/row3_cttv2.mp4
+cp $TMP/mallard24.mp4 $I/12_iid__row3_start.mp4
+cpv "$T/super_fast_run/super_fast_run_0.mp4" $I/12_iid__row3_reference.mp4
+cpv "$G/007_base_cond_ctt/videos/G-unseen-foreign__ctt_v2__davis_mallard_water__ref_super_fast_run_0__s42.mp4" $I/12_iid__row3_base.mp4
+cpv "$G/004_refvfx_B/videos/G-unseen-foreign__ctt_v2__davis_mallard_water__ref_super_fast_run_0__seed42.mp4"   $I/12_iid__row3_refvfx.mp4
+cpv "$G/002_ctt_v2/videos/G-unseen-foreign__ctt_v2__davis_mallard_water__ref_super_fast_run_0__s42.mp4"        $I/12_iid__row3_cttv2.mp4
 # row4: gas_transformation_6 <- earth_element (one-sided, unseen-cross)
-cut_head "$T/gas_transformation/gas_transformation_6.mp4" $I/row4_start.mp4 24
-cpv "$T/earth_element/earth_element_4.mp4" $I/row4_reference.mp4
-cpv "$G/007_base_cond_ctt/videos/G-unseen-cross__ctt_v2__gas_transformation_6__ref_earth_element_4__s42.mp4" $I/row4_base.mp4
-cpv "$G/004_refvfx_B/videos/G-unseen-cross__ctt_v2__gas_transformation_6__ref_earth_element_4__seed42.mp4"   $I/row4_refvfx.mp4
-cpv "$G/002_ctt_v2/videos/G-unseen-cross__ctt_v2__gas_transformation_6__ref_earth_element_4__s42.mp4"        $I/row4_cttv2.mp4
+cut_head "$T/gas_transformation/gas_transformation_6.mp4" $I/12_iid__row4_start.mp4 24
+cpv "$T/earth_element/earth_element_4.mp4" $I/12_iid__row4_reference.mp4
+cpv "$G/007_base_cond_ctt/videos/G-unseen-cross__ctt_v2__gas_transformation_6__ref_earth_element_4__s42.mp4" $I/12_iid__row4_base.mp4
+cpv "$G/004_refvfx_B/videos/G-unseen-cross__ctt_v2__gas_transformation_6__ref_earth_element_4__seed42.mp4"   $I/12_iid__row4_refvfx.mp4
+cpv "$G/002_ctt_v2/videos/G-unseen-cross__ctt_v2__gas_transformation_6__ref_earth_element_4__s42.mp4"        $I/12_iid__row4_cttv2.mp4
 # row5: davis_lucia <- earth_element (one-sided, unseen-foreign)
-cp $TMP/lucia24.mp4 $I/row5_start.mp4
-cpv "$T/earth_element/earth_element_4.mp4" $I/row5_reference.mp4
-cpv "$G/007_base_cond_ctt/videos/G-unseen-foreign__ctt_v2__davis_lucia__ref_earth_element_4__s42.mp4" $I/row5_base.mp4
-cpv "$G/004_refvfx_B/videos/G-unseen-foreign__ctt_v2__davis_lucia__ref_earth_element_4__seed42.mp4"   $I/row5_refvfx.mp4
-cpv "$G/002_ctt_v2/videos/G-unseen-foreign__ctt_v2__davis_lucia__ref_earth_element_4__s43.mp4"        $I/row5_cttv2.mp4
+cp $TMP/lucia24.mp4 $I/12_iid__row5_start.mp4
+cpv "$T/earth_element/earth_element_4.mp4" $I/12_iid__row5_reference.mp4
+cpv "$G/007_base_cond_ctt/videos/G-unseen-foreign__ctt_v2__davis_lucia__ref_earth_element_4__s42.mp4" $I/12_iid__row5_base.mp4
+cpv "$G/004_refvfx_B/videos/G-unseen-foreign__ctt_v2__davis_lucia__ref_earth_element_4__seed42.mp4"   $I/12_iid__row5_refvfx.mp4
+cpv "$G/002_ctt_v2/videos/G-unseen-foreign__ctt_v2__davis_lucia__ref_earth_element_4__s43.mp4"        $I/12_iid__row5_cttv2.mp4
 # row6: earth_element_6 <- earth_element (one-sided, unseen-SAME)
-cut_head "$T/earth_element/earth_element_6.mp4" $I/row6_start.mp4 24
-cpv "$T/earth_element/earth_element_4.mp4" $I/row6_reference.mp4
-cpv "$G/007_base_cond_ctt/videos/G-unseen-same__ctt_v2__earth_element_6__ref_earth_element_4__s42.mp4" $I/row6_base.mp4
-cpv "$G/004_refvfx_B/videos/G-unseen-same__ctt_v2__earth_element_6__ref_earth_element_4__seed42.mp4"   $I/row6_refvfx.mp4
-cpv "$G/002_ctt_v2/videos/G-unseen-same__ctt_v2__earth_element_6__ref_earth_element_4__s42.mp4"        $I/row6_cttv2.mp4
+cut_head "$T/earth_element/earth_element_6.mp4" $I/12_iid__row6_start.mp4 24
+cpv "$T/earth_element/earth_element_4.mp4" $I/12_iid__row6_reference.mp4
+cpv "$G/007_base_cond_ctt/videos/G-unseen-same__ctt_v2__earth_element_6__ref_earth_element_4__s42.mp4" $I/12_iid__row6_base.mp4
+cpv "$G/004_refvfx_B/videos/G-unseen-same__ctt_v2__earth_element_6__ref_earth_element_4__seed42.mp4"   $I/12_iid__row6_refvfx.mp4
+cpv "$G/002_ctt_v2/videos/G-unseen-same__ctt_v2__earth_element_6__ref_earth_element_4__s42.mp4"        $I/12_iid__row6_cttv2.mp4
 
 # ---------------- 13_zeroshot ----------------
 Z=$P/13_zeroshot
 # row1: davis_tennis_snowboard <- firelava (two-sided, zs-foreign)
-cp $TMP/tennis24.mp4    $Z/row1_start.mp4
-cp $TMP/snowboard24.mp4 $Z/row1_end.mp4
-cpv "$T/firelava/firelava_0.mp4" $Z/row1_reference.mp4
-cpv "$G/007_base_cond_ctt/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_firelava_0__s42.mp4" $Z/row1_base.mp4
-cpv "$G/004_refvfx_B/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_firelava_0__seed42.mp4"   $Z/row1_refvfx.mp4
-cpv "$G/002_ctt_v2/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_firelava_0__s42.mp4"        $Z/row1_cttv2.mp4
+cp $TMP/tennis24.mp4    $Z/13_zeroshot__row1_start.mp4
+cp $TMP/snowboard24.mp4 $Z/13_zeroshot__row1_end.mp4
+cpv "$T/firelava/firelava_0.mp4" $Z/13_zeroshot__row1_reference.mp4
+cpv "$G/007_base_cond_ctt/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_firelava_0__s42.mp4" $Z/13_zeroshot__row1_base.mp4
+cpv "$G/004_refvfx_B/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_firelava_0__seed42.mp4"   $Z/13_zeroshot__row1_refvfx.mp4
+cpv "$G/002_ctt_v2/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_firelava_0__s42.mp4"        $Z/13_zeroshot__row1_cttv2.mp4
 # row2: shadow_smoke_7 <- firelava (two-sided, zs-cross)
-cut_head "$T/shadow_smoke/shadow_smoke_7.mp4" $Z/row2_start.mp4 24
-cut_tail "$T/shadow_smoke/shadow_smoke_7.mp4" $Z/row2_end.mp4 24
-cpv "$T/firelava/firelava_0.mp4" $Z/row2_reference.mp4
-cpv "$G/007_base_cond_ctt/videos/G-zs-cross__ctt_v2__shadow_smoke_7__ref_firelava_0__s42.mp4" $Z/row2_base.mp4
-cpv "$G/004_refvfx_B/videos/G-zs-cross__ctt_v2__shadow_smoke_7__ref_firelava_0__seed42.mp4"   $Z/row2_refvfx.mp4
-cpv "$G/002_ctt_v2/videos/G-zs-cross__ctt_v2__shadow_smoke_7__ref_firelava_0__s43.mp4"        $Z/row2_cttv2.mp4
+cut_head "$T/shadow_smoke/shadow_smoke_7.mp4" $Z/13_zeroshot__row2_start.mp4 16  # 24f leaks the smoke onset
+cut_tail "$T/shadow_smoke/shadow_smoke_7.mp4" $Z/13_zeroshot__row2_end.mp4 24
+cpv "$T/firelava/firelava_0.mp4" $Z/13_zeroshot__row2_reference.mp4
+cpv "$G/007_base_cond_ctt/videos/G-zs-cross__ctt_v2__shadow_smoke_7__ref_firelava_0__s42.mp4" $Z/13_zeroshot__row2_base.mp4
+cpv "$G/004_refvfx_B/videos/G-zs-cross__ctt_v2__shadow_smoke_7__ref_firelava_0__seed42.mp4"   $Z/13_zeroshot__row2_refvfx.mp4
+cpv "$G/002_ctt_v2/videos/G-zs-cross__ctt_v2__shadow_smoke_7__ref_firelava_0__s43.mp4"        $Z/13_zeroshot__row2_cttv2.mp4
 # row3: davis_lucia <- saint_glow (one-sided, zs-foreign)
-cp $TMP/lucia24.mp4 $Z/row3_start.mp4
-cpv "$T/saint_glow/saint_glow_0.mp4" $Z/row3_reference.mp4
-cpv "$G/007_base_cond_ctt/videos/G-zs-foreign__ctt_v2__davis_lucia__ref_saint_glow_0__s42.mp4" $Z/row3_base.mp4
-cpv "$G/004_refvfx_B/videos/G-zs-foreign__ctt_v2__davis_lucia__ref_saint_glow_0__seed42.mp4"   $Z/row3_refvfx.mp4
-cpv "$G/002_ctt_v2/videos/G-zs-foreign__ctt_v2__davis_lucia__ref_saint_glow_0__s42.mp4"        $Z/row3_cttv2.mp4
+cp $TMP/lucia24.mp4 $Z/13_zeroshot__row3_start.mp4
+cpv "$T/saint_glow/saint_glow_0.mp4" $Z/13_zeroshot__row3_reference.mp4
+cpv "$G/007_base_cond_ctt/videos/G-zs-foreign__ctt_v2__davis_lucia__ref_saint_glow_0__s42.mp4" $Z/13_zeroshot__row3_base.mp4
+cpv "$G/004_refvfx_B/videos/G-zs-foreign__ctt_v2__davis_lucia__ref_saint_glow_0__seed42.mp4"   $Z/13_zeroshot__row3_refvfx.mp4
+cpv "$G/002_ctt_v2/videos/G-zs-foreign__ctt_v2__davis_lucia__ref_saint_glow_0__s42.mp4"        $Z/13_zeroshot__row3_cttv2.mp4
 # row4: davis_tennis_snowboard <- display_transition (two-sided, zs-foreign)
-cp $TMP/tennis24.mp4    $Z/row4_start.mp4
-cp $TMP/snowboard24.mp4 $Z/row4_end.mp4
-cpv "$T/display_transition/display_transition_1.mp4" $Z/row4_reference.mp4
-cpv "$G/007_base_cond_ctt/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_display_transition_1__s42.mp4" $Z/row4_base.mp4
-cpv "$G/004_refvfx_B/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_display_transition_1__seed42.mp4"   $Z/row4_refvfx.mp4
-cpv "$G/002_ctt_v2/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_display_transition_1__s42.mp4"        $Z/row4_cttv2.mp4
+cp $TMP/tennis24.mp4    $Z/13_zeroshot__row4_start.mp4
+cp $TMP/snowboard24.mp4 $Z/13_zeroshot__row4_end.mp4
+cpv "$T/display_transition/display_transition_1.mp4" $Z/13_zeroshot__row4_reference.mp4
+cpv "$G/007_base_cond_ctt/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_display_transition_1__s42.mp4" $Z/13_zeroshot__row4_base.mp4
+cpv "$G/004_refvfx_B/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_display_transition_1__seed42.mp4"   $Z/13_zeroshot__row4_refvfx.mp4
+cpv "$G/002_ctt_v2/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_display_transition_1__s42.mp4"        $Z/13_zeroshot__row4_cttv2.mp4
 # row5: davis_tennis_snowboard <- raven_transition (two-sided, zs-foreign)
-cp $TMP/tennis24.mp4    $Z/row5_start.mp4
-cp $TMP/snowboard24.mp4 $Z/row5_end.mp4
-cpv "$T/raven_transition/raven_transition_0.mp4" $Z/row5_reference.mp4
-cpv "$G/007_base_cond_ctt/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_raven_transition_0__s42.mp4" $Z/row5_base.mp4
-cpv "$G/004_refvfx_B/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_raven_transition_0__seed42.mp4"   $Z/row5_refvfx.mp4
-cpv "$G/002_ctt_v2/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_raven_transition_0__s43.mp4"        $Z/row5_cttv2.mp4
+cp $TMP/tennis24.mp4    $Z/13_zeroshot__row5_start.mp4
+cp $TMP/snowboard24.mp4 $Z/13_zeroshot__row5_end.mp4
+cpv "$T/raven_transition/raven_transition_0.mp4" $Z/13_zeroshot__row5_reference.mp4
+cpv "$G/007_base_cond_ctt/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_raven_transition_0__s42.mp4" $Z/13_zeroshot__row5_base.mp4
+cpv "$G/004_refvfx_B/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_raven_transition_0__seed42.mp4"   $Z/13_zeroshot__row5_refvfx.mp4
+cpv "$G/002_ctt_v2/videos/G-zs-foreign__ctt_v2__davis_tennis_snowboard__ref_raven_transition_0__s43.mp4"        $Z/13_zeroshot__row5_cttv2.mp4
 # row6: hero_flight_5 <- display_transition (two-sided, zs-cross)
-cut_head "$T/hero_flight/hero_flight_5.mp4" $Z/row6_start.mp4 24
-cut_tail "$T/hero_flight/hero_flight_5.mp4" $Z/row6_end.mp4 24
-cpv "$T/display_transition/display_transition_1.mp4" $Z/row6_reference.mp4
-cpv "$G/007_base_cond_ctt/videos/G-zs-cross__ctt_v2__hero_flight_5__ref_display_transition_1__s42.mp4" $Z/row6_base.mp4
-cpv "$G/004_refvfx_B/videos/G-zs-cross__ctt_v2__hero_flight_5__ref_display_transition_1__seed42.mp4"   $Z/row6_refvfx.mp4
-cpv "$G/002_ctt_v2/videos/G-zs-cross__ctt_v2__hero_flight_5__ref_display_transition_1__s42.mp4"        $Z/row6_cttv2.mp4
+cut_head "$T/hero_flight/hero_flight_5.mp4" $Z/13_zeroshot__row6_start.mp4 24
+cut_tail "$T/hero_flight/hero_flight_5.mp4" $Z/13_zeroshot__row6_end.mp4 24
+cpv "$T/display_transition/display_transition_1.mp4" $Z/13_zeroshot__row6_reference.mp4
+cpv "$G/007_base_cond_ctt/videos/G-zs-cross__ctt_v2__hero_flight_5__ref_display_transition_1__s42.mp4" $Z/13_zeroshot__row6_base.mp4
+cpv "$G/004_refvfx_B/videos/G-zs-cross__ctt_v2__hero_flight_5__ref_display_transition_1__seed42.mp4"   $Z/13_zeroshot__row6_refvfx.mp4
+cpv "$G/002_ctt_v2/videos/G-zs-cross__ctt_v2__hero_flight_5__ref_display_transition_1__s42.mp4"        $Z/13_zeroshot__row6_cttv2.mp4
 # row7: money_rain_3 <- live_concert (one-sided, zs-cross)
-cut_head "$T/money_rain/money_rain_3.mp4" $Z/row7_start.mp4 24
-cpv "$T/live_concert/live_concert_1.mp4" $Z/row7_reference.mp4
-cpv "$G/007_base_cond_ctt/videos/G-zs-cross__ctt_v2__money_rain_3__ref_live_concert_1__s42.mp4" $Z/row7_base.mp4
-cpv "$G/004_refvfx_B/videos/G-zs-cross__ctt_v2__money_rain_3__ref_live_concert_1__seed42.mp4"   $Z/row7_refvfx.mp4
-cpv "$G/002_ctt_v2/videos/G-zs-cross__ctt_v2__money_rain_3__ref_live_concert_1__s42.mp4"        $Z/row7_cttv2.mp4
+cut_head "$T/money_rain/money_rain_3.mp4" $Z/13_zeroshot__row7_start.mp4 24
+cpv "$T/live_concert/live_concert_1.mp4" $Z/13_zeroshot__row7_reference.mp4
+cpv "$G/007_base_cond_ctt/videos/G-zs-cross__ctt_v2__money_rain_3__ref_live_concert_1__s42.mp4" $Z/13_zeroshot__row7_base.mp4
+cpv "$G/004_refvfx_B/videos/G-zs-cross__ctt_v2__money_rain_3__ref_live_concert_1__seed42.mp4"   $Z/13_zeroshot__row7_refvfx.mp4
+cpv "$G/002_ctt_v2/videos/G-zs-cross__ctt_v2__money_rain_3__ref_live_concert_1__s42.mp4"        $Z/13_zeroshot__row7_cttv2.mp4
 
 echo "=== file count per folder ==="
 for d in $P/*/; do echo "$(basename $d): $(ls $d | wc -l)"; done
