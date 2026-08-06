@@ -1,4 +1,5 @@
 ## 2026-08-05
+- 20:05 presentation: built `outputs/presentation/slide_pack_2026-08-05/` + upload zip (161M, 106 clips) — per-slide deck media: cold open (shadow_smoke_0 memo-probe), lerp collapse (2 base dissolves), refVFX 4-arm row (tennis→snowboard ← firelava_0, promptA/B twins from gens 002/003/004/005), 16 dataset stratum samples, 3×3 counterfactual grid (animalization/shadow_smoke/polygon × 3 S1 endpoints, reject-list checked), 6 iid + 7 zero-shot six-file rows (seeds picked frame-by-frame). Rebuildable via `scripts/build_slide_pack_2026_08_05.sh`; browsable at viewer `slide_pack_2026_08_05` (gen: `scripts/viewers/gen_slide_pack_viewer_2026_08_05.py`); provenance + prompt strings in the pack's MANIFEST.md.
 
 **17:53 — bneck_redesign eval: HRC-residual scored (v4, DeltaAI) = CLEAN NULL; integrated into iclora_runs viewer.**
 Scored `hrc_coupling` (matched) + `hrc_coupling_shufcode` (deranged), 304+304 gens, on DeltaAI (`--account=bgms-dtai-gh`),
