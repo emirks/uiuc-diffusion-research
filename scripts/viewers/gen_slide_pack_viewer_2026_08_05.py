@@ -15,7 +15,7 @@ SECTIONS = [
      ["refvfx_promptA", "refvfx_promptB", "cttv2_promptA", "cttv2_promptB"]),
     ("06_dataset", "06 · Dataset strata — 4 samples each of S0 / S1 / S2 / S4",
      [f"s{k}_{i}" for k in (0, 1, 2, 4) for i in (1, 2, 3, 4)]),
-    ("07_counterfactual", "07 · Counterfactual 3×3 — opA animalization · opB shadow_smoke · opC polygon × ep1 bench-man · ep2 cook · ep3 pottery",
+    ("07_counterfactual", "07 · Counterfactual 3×3 — S3 depth-parallax shared ops: opA roll_crossfade_fog · opB orbit_depth_wipe_sphere_focus · opC crane_crossfade × ep1 park→stage · ep2 car→night-run · ep3 shop→comic",
      [f"op{o}_ep{e}" for o in "ABC" for e in (1, 2, 3)]),
 ]
 
@@ -24,16 +24,16 @@ ROWS_IID = [
     ("row2", "davis_lucia ← animalization_0 · unseen-foreign · one-sided"),
     ("row3", "davis_mallard_water ← super_fast_run_0 · unseen-foreign · one-sided"),
     ("row4", "gas_transformation_6 ← earth_element_4 · unseen-cross · one-sided"),
-    ("row5", "davis_lucia ← earth_element_4 · unseen-foreign · one-sided (cttv2 s43)"),
+    ("row5", "davis_lucia ← earth_element_4 · unseen-foreign · one-sided"),
     ("row6", "earth_element_6 ← earth_element_4 · unseen-SAME · one-sided"),
 ]
 ROWS_ZS = [
-    ("row1", "davis_tennis_snowboard ← firelava_0 · zs-foreign · two-sided"),
-    ("row2", "shadow_smoke_7 ← firelava_0 · zs-cross · two-sided (cttv2 s43)"),
+    ("row1", "davis_tennis_snowboard ← firelava_0 · zs-foreign · two-sided (cttv2 s43, refvfx s43)"),
+    ("row2", "shadow_smoke_7 ← firelava_0 · zs-cross · two-sided"),
     ("row3", "davis_lucia ← saint_glow_0 · zs-foreign · one-sided"),
     ("row4", "davis_tennis_snowboard ← display_transition_1 · zs-foreign · two-sided"),
     ("row5", "davis_tennis_snowboard ← raven_transition_0 · zs-foreign · two-sided (cttv2 s43)"),
-    ("row6", "hero_flight_5 ← display_transition_1 · zs-cross · two-sided"),
+    ("row6", "hero_flight_5 ← display_transition_1 · zs-cross · two-sided (refvfx s43)"),
     ("row7", "money_rain_3 ← live_concert_1 · zs-cross · one-sided"),
 ]
 COLS = ["start", "end", "reference", "base", "refvfx", "cttv2"]
@@ -80,7 +80,7 @@ figure video{width:180px;border-radius:6px;background:#000;display:block;cursor:
 figcaption{font-size:12px;color:#8b96a5;margin-top:4px;text-align:center;word-break:break-all}
 </style></head><body>
 <h1>Slide pack 2026-08-05 — deck media</h1>
-<p class="sub">Mirrors the upload zip (outputs/presentation/slide_pack_2026-08-05). Videos play while visible; click one to restart it. Provenance and prompt strings: MANIFEST.md next to the media.</p>
+<p class="sub">Mirrors the upload zip (outputs/presentation/slide_pack_2026-08-05). Row columns: base = no adapter + effect prompt + anchors · refvfx = their text budget (effect described) · cttv2 = ctt_v2_leaky (sksz + effect clause). Counterfactual grid = S3 depth-parallax (exp_076). Videos play while visible; click to restart. Provenance and prompts: MANIFEST.md next to the media.</p>
 """ + "\n".join(parts) + """
 <script>
 const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;
