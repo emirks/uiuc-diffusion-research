@@ -216,6 +216,35 @@ EXTERNAL = [
                     "`reference` is untouched, so both twins score against a byte-identical GT pool. "
                     "Scoring the same as the matched arm is the finding (clean null: P2 −0.003).",
      "doc": "misc/bneck_redesign/DOSSIER.md"},
+    {"id": "vjepa_coupling", "score_id": "redesign_v4", "kind": "bottleneck", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓥ V-JEPA-resid · matched code",
+     "sub": "raw demo REPLACED by 144 V-JEPA2 residual tokens · treatment",
+     "src": REPO_ROOT / "outputs/videos/bneck_redesign/vjepa_coupling__ck10000",
+     "media": "outputs/videos/bneck_redesign_arms/vjepa_coupling",
+     "rows": ("registry", REPO_ROOT / "misc/bneck_redesign/build/registry_vjepa_coupling.jsonl"),
+     "scores": REPO_ROOT / "misc/bneck_redesign/eval/scores/vjepa_coupling",
+     "prompt_kind": "the ctt_v2 recipe with the reference channel replaced by 144 residual operator "
+                    "tokens from a FROZEN pretrained V-JEPA2-ViT-L backbone (bitwise-frozen) through "
+                    "a trainable projector into the DiT's 128-ch latent basis, trained on the "
+                    "endpoint-subtracted residual trajectory and jointly coupled with the LoRA "
+                    "(reference probability 0.9), instead of the raw demo. Same prompt / endpoints / "
+                    "seeds as ctt_v2. Compare ONLY against its deranged-code twin.",
+     "doc": "misc/bneck_redesign/DOSSIER.md"},
+    {"id": "vjepa_coupling_shufcode", "score_id": "redesign_v4", "kind": "bottleneck", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓥ V-JEPA-resid · deranged code",
+     "sub": "SAME adapter file, deliberately WRONG code · the control",
+     "src": REPO_ROOT / "outputs/videos/bneck_redesign/vjepa_coupling_shufcode__ck10000",
+     "media": "outputs/videos/bneck_redesign_arms/vjepa_coupling_shufcode",
+     "rows": ("registry", REPO_ROOT / "misc/bneck_redesign/build/registry_vjepa_coupling_shufcode.jsonl"),
+     "scores": REPO_ROOT / "misc/bneck_redesign/eval/scores/vjepa_coupling_shufcode",
+     "prompt_kind": "byte-identical to the matched V-JEPA arm in every field except the encoder is "
+                    "fed a DIFFERENT clip via `code_source_reference` (the same 152/152 class-level "
+                    "derangement, 0 fixed points). The row's own `reference` is untouched, so both "
+                    "twins score against a byte-identical GT pool. Scoring the same as the matched "
+                    "arm is the finding (clean null: P2 +0.011, both claim cells below bar).",
+     "doc": "misc/bneck_redesign/DOSSIER.md"},
     {"id": "refvfx_A", "score_id": "refvfx_v4", "kind": "prior-work", "frames": 33,
      "label": "Ⓐ refVFX · their prompt",
      "sub": "external baseline · prompt describes the effect",
