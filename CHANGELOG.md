@@ -1,3 +1,22 @@
+## 2026-08-07
+**16:37 — metric_eval adapter×text arms: certified v4-lane scores registered as `store/evals/005_ic_effect_neutral__dai__2026-08-07` + gen bookkeeping fixed.**
+Scored three already-generated arms on the certified transition-eval **v4** lane, all on DeltaAI GH200 (one machine, same
+instrument sha as evals/001-004: `reference_v4.npz` file sha `459fd9a7…`, echoed by all 108 task verify blocks; corpus 222-clip
+`5a7a8be9…`; τ_copy 0.858). Coverage 1,842 items / 36 shards / arm, **0 errors, 0 nulls, all rc=0**. Manifests: `ic_gen_effect`'s
+were REUSED from the campaign's ladder plan after independent verification (222-corpus membership, pool identity 0/152, all 304
+gens present, per-shard disjoint by generated_video); the two neutral arms' manifests were REBUILT fresh by
+`build_eval_manifest_v4lane.py` (verbatim descendant of misc/base_arms/eval), pool identity asserted 0/152 against the
+ic_gen_effect registry. Scored into a campaign-private tree `misc/2026-08-06_metric_eval/gen_eval/scores_v4lane/` and wired into
+the store by relative SYMLINK (full items.jsonl+results.json present — no provenance lost, unlike evals/004). Headline **%_same**
+(app_ref pool mean ÷ GT-class ceiling, m1a_S3; report_v4lane.py, calibrated to reproduce evals/001 ic_gen 83.1% exactly):
+**ic_gen_effect 89.1 %**, base_cond_neutral 60.4 %, base_prompt_neutral 58.1 % (%_proxy 84.4 / 47.0 / 44.9, content-capped
+ranking-only, never blended). ic_gen_effect is a TREATMENT (LEVEL only here — its ic_gen base twins are not scored in this entry,
+so its plan `twin_of` values dangle); the two neutrals are V-neutral no-demo baselines and are NOT the effect-clause base arms of
+evals/002. Also fixed the incomplete gen bookkeeping for `gens/010_ic_gen_effect` (adapter = runs/001_ic_gen@5000, sha `6e37fca7…`,
+ctt-v2-train `db69ca7` bidirectional), `gens/011_base_cond_neutral`, `gens/012_base_prompt_neutral` (base weights, no adapter):
+populated meta.yaml + grid.jsonl (152 exact registry rows each) and added the three missing INDEX gens rows. Campaign scripts under
+`misc/` (gitignored). Accounts bgms (primary) + bhwp (second); never bgjg; no existing job touched.
+
 ## 2026-08-05
 - 20:33 presentation: slide pack revised per owner — 12_iid/13_zeroshot row arms are now each method's native-prompting best (cttv2 column = 005_ctt_v2_leaky, refvfx column = 003_refvfx_A, seeds re-picked frame-by-frame on those arms); 07_counterfactual rebuilt from the S3 depth-parallax family (exp_076 sharedop rows — roll_crossfade_fog / orbit_depth_wipe_sphere_focus / crane_crossfade × 3 seed-matched endpoint pairs); filenames globally unique (`<slide>__<name>.mp4`); pack re-zipped as 16 parts, all <20 MB.
 - 20:05 presentation: built `outputs/presentation/slide_pack_2026-08-05/` + upload zip (161M, 106 clips) — per-slide deck media: cold open (shadow_smoke_0 memo-probe), lerp collapse (2 base dissolves), refVFX 4-arm row (tennis→snowboard ← firelava_0, promptA/B twins from gens 002/003/004/005), 16 dataset stratum samples, 3×3 counterfactual grid (animalization/shadow_smoke/polygon × 3 S1 endpoints, reject-list checked), 6 iid + 7 zero-shot six-file rows (seeds picked frame-by-frame). Rebuildable via `scripts/build_slide_pack_2026_08_05.sh`; browsable at viewer `slide_pack_2026_08_05` (gen: `scripts/viewers/gen_slide_pack_viewer_2026_08_05.py`); provenance + prompt strings in the pack's MANIFEST.md.

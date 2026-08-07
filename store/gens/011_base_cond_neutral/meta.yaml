@@ -1,0 +1,37 @@
+id: 011_base_cond_neutral
+seq: 11
+shelf: gens
+created: 2026-08-06
+machine: DeltaAI GH200 (ghx4)
+source: misc/2026-08-06_metric_eval/gen campaign (eval_ladder/run_gen.py, arm base_cond_neutral, via job_gen_neutral.sbatch)
+code: envs-aarch64/activate (ltx2 env) -> src/LTX-2-official packages (standard; NO reference => no ReferenceConditionConfig => no attention-kwarg issue, no PYTHONPATH override)
+inputs:
+  run: null                      # NO adapter — the LTX-2 19B base model
+  base_model: cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors
+  adapter_sha256: null
+grid: grid.jsonl (152 rows x seeds [42,43] = 304 clips; = misc/2026-08-06_metric_eval/gen/registry_base_cond_neutral.jsonl)
+prompt_rule: >-
+  V-NEUTRAL: the start-scene sentence ONLY ("{S1}."). Both the trained " sksz." token AND the effect
+  clause are removed (prompt_base carries the sksz; the effect clause travels in a separate field and
+  is not rendered). No transition is described and no demo is shown — the specificity ZERO anchor and
+  the caption V-neutral probe. Differs from gens/007_base_cond_ctt, whose prompt STATES the effect;
+  the two are NOT interchangeable.
+resolution: 480x640x121f @ 24 fps
+inference: steps 30, guidance_scale 4.0, stg_scale 1.0, stg_blocks [29], stg_mode stg_v; no adapter
+conditioning: prefix 9f (+ suffix 8f if two-sided) — the same endpoint windows every trained arm receives. NO reference (base + demo is a copier, not a baseline; owner ruling 2026-07-23).
+role: >
+  Neutral no-demo control 1 of 2 (metric_eval). Paired with gens/012_base_prompt_neutral, which
+  differs in exactly one field (the endpoint conditioning), so 011 vs 012 prices the anchors under a
+  V-neutral prompt. Read against the treatment gens/010_ic_gen_effect.
+caveats:
+  - >-
+    rows keep `reference` and set `use_reference: false`. The model never sees the demo; the field is
+    SCORING identity — run_eval.pool_refs() bans the row's reference from the GT pool, so dropping it
+    would give this arm a different pool than the arms it is read against.
+  - >-
+    un-twinned by design (`no_twin: true`): it IS a baseline, contributes a LEVEL, never a paired margin.
+  - >-
+    item_ids are byte-identical to gens/010 + gens/012 (share the ladder2 CTT grid) but do NOT collide
+    with eval_ladder/registry.jsonl (0/152). Key on (arm, item_id).
+health: 304/304 clips present (152 rows x 2 seeds). Decode health: 0 error / 0 null rows across all 36 v4 scoring shards (evals/005).
+runner_note: _runner/ holds run_gen's per-shard validation-sample scratch; kept in place, not part of the deliverable.
