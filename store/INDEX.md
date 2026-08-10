@@ -30,6 +30,8 @@ Contract: README.md · flow: `lora-flow` skill.
 14. `014_bneck_ctx_v2_shufcode` — SAME adapter file as 013, code source deranged via `code_source_reference` (row's own `reference` untouched, so both twins share a byte-identical GT pool). The load-bearing corpse
 
 ## evals
+> **Baseline reference scores** (the comparison scale for any coupling/treatment arm; all v4 · DeltaAI · reference sha `459fd9a7`, so mutually comparable). No-demo **floors**: `002` `base_prompt_ctt` / `base_cond_ctt` (CTT prompts) + `005` `base_cond_neutral` / `base_prompt_neutral` (V-neutral). Trained **reference levels**: `001` `ic_gen` 83.1 / `ctt_v2` 82.5, `005` `ic_gen_effect` 89.1. The two `005` neutrals are the V-neutral siblings of `002`'s base_ctt arms (`ic_gen_effect` is a treatment, not a floor).
+
 1. `001_five_arm__dai__2026-07-30` — v4 on DeltaAI, all five gens, 1,842 items/arm, 0 errors; headline: %_same ic_gen 83.1 / ctt_v2 82.5 / ctt_v2_leaky 91.3 / refvfx_A 42.4 / refvfx_B 33.0
 
 2. `002_base_arms__dai__2026-07-31` — v4 on DeltaAI, gens 006+007, 1,842 items/arm; the trainings page's baselines
