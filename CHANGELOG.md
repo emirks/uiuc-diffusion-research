@@ -1,4 +1,23 @@
 ## 2026-08-10
+**22:20 — SURG-1 FINALIZED to the E1-greenlight ruling (ROUND4); fork `src/LTX-2-surg` ready to launch, still not submitted.**
+E1 greenlit SURG-1 (`advisors/ROUND4_E1_RULING.md`), so the fork was upgraded to the exact ruling params and re-smoked.
+Implemented: **§9.1 deranged-only detach** (vjepa `encode_train._surg_detach_code` flag → `L_deranged` never gradient-updates
+the projector; grad-isolation smoke: projector grad matched **0.435** / deranged **exactly 0.0**, LoRA-deranged 0.114 —
+closes the demo-ID-watermark Goodhart channel); **§5c band-mixture sampler** (`BandMixtureSampler`: 60% [0.90,σ_max] / 15%
+[0.70,0.90) / 25% base; **σ_max=1.0 measured**); **§5a/b hinge ONLY at σ≥0.90** with **δ=0.007** (=2.1% of E1's σ=0.95 matched
+loss; single-bin file + override hook for the δ-transfer check); **§5c per-σ Min-SNR normalization** on the PRIMARY FM term only
+(the hinge always consumes RAW losses so δ stays on-scale; data-anchored weights from E1 per-bin means); **§5d λ_target=10** (was
+0.1 — ~50× too small; `surgery/gap_frac_of_total` smoke-measured **0.149**, in the 10–20% band); **§5e/§9.1.3 mid-training Goodhart
+probe** (`surgery_probe.py`: per-target top-band Δcross/Δsame under LIVE vs FROZEN launch-cached codes; main-process forward-only,
+barrier-safe). **BLOCKING §9.2 temporal-RoPE check PASSED** (`rope_verify.py`): code temporal positions strictly increasing,
+offset matches the ctt_v2 raw band-setter, span matches the core; `temporal=1.0` is the extent, not a pinned point. **Re-smoke
+(job 2924698, 1×GH200): equivalence STILL bitwise-0** (cross-fork + off-block 0.000e+00 — every new op gated behind
+`surgery.enabled`), functional all pass. Two sbatch PREPARED not submitted: `job_surg_ddp_smoke.sbatch` (4-rank DDP double-forward
+× checkpointing × probe — fire first) and `job_surg_launch.sbatch` (10k-step chunked, resume_wrapper, surg output_dir). Fork
+committed local on branch `surg` (77e27ab, not pushed). DATA-ALIGNMENT FLAG: E1 held-out triples reference a different roster
+(0/1065 resolve in the vjepa manifest) → probe uses a vjepa-aligned triple set. Launch gated on the E1 negative control + δ-transfer
+check (orchestrator runs those). Notes: `misc/2026-08-10_encoder_branch_redteam/SURG1_IMPL_NOTES.md` §R4 (gitignored).
+
 **21:26 — SURG-1 (objective surgery) IMPLEMENTED + SMOKED in a new trainer fork `src/LTX-2-surg`; no training launched.**
 Forked the V-JEPA-raw coupling trainer (`src/LTX-2-bneck-coupling`, branch `bneck_redesign`) into a new git worktree
 `src/LTX-2-surg` on branch `surg`, and implemented the three SURG-1 levers from
