@@ -1,3 +1,22 @@
+## 2026-08-11
+**00:41 — SURG-1 full launch crashed at step 0 (native "Aborted."); diagnosed + fixed a multi-rank file race in the probe cache; full-config smoke now green.**
+The first full 10k launch chunk (2924995, 4×GH200) got through all setup then printed a bare `Aborted.` (native SIGABRT, no
+Python traceback) and died before step 0 — the reduced ddp smoke had passed because it used a smoke config. **Root cause
+(confirmed by log localization + code inspection + the partial-write artifact on disk):** `SurgeryProbe.cache_frozen_codes`
+had NO rank gating — all 4 ranks ran `if is_file(): torch.load else: compute + torch.save` on the SAME shared
+`{output_dir}/probe_frozen_codes.pt`. wandb (main-process only) delays rank 0, so ranks 1-3 took the write branch (concurrent
+`torch.save` to one path) while rank 0 hit `is_file()==True` and `torch.load`ed a PARTIALLY-WRITTEN file → native abort in the
+zip reader. The reduced smoke had wandb OFF → all ranks synchronized on the write branch (none read) → never triggered. (This
+also ruled out the batched-2-OOM / derangement-OOB / per-σ suspects — those are step-0 forward faults, but the crash is BEFORE
+step 0.) **Fix (commit 9aed151):** `cache_frozen_codes` is now multi-rank safe — branch on `resume_step` (not `is_file`, which
+races); FRESH → every rank recomputes the SAME launch-time codes in-memory (no reads → no partial-read race), ONLY rank 0
+persists via atomic tmp→rename (single writer), then a barrier; RESUME → all ranks read the complete chunk-1 file (recompute
+fallback). **Verification gap closed:** the multi-GPU smoke now runs the ACTUAL launch config (`surg_fullsmoke.yaml` =
+`surg_launch.yaml`, steps=3, ckpt@2, probe@2, **wandb ON**, real dataset, 64-target probe) with `PYTHONFAULTHANDLER=1` +
+`CUDA_LAUNCH_BLOCKING=1`. **Full-config smoke 2925157 COMPLETED ExitCode 0:0**: "cached 192 frozen" (no abort), 3 steps, gap
+active (grads finite), `SURG-1 PROBE @ step 2 n=64` fired clean, checkpoints `lora_weights_step_00002/00003.safetensors`
+(1.3 GB each) written, clean exit. Notes §R4.13–R4.14. The full 10k launch remains the orchestrator's to fire (not resubmitted).
+
 ## 2026-08-10
 **23:30 — SURG-1 last two gates cleared: (c) cross-transition-manner derangement + the DDP double-forward fix; both smoke-green, still not launched.**
 Two coordinator-blocking fixes on `src/LTX-2-surg`. **(c) Derangement granularity:** the gap-loss derangement keyed on the
