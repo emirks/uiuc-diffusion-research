@@ -1,4 +1,14 @@
 ## 2026-08-11
+**15:14 — SURG-1 WSD training COMPLETE (4500 steps, 8×H100 on eps); registered as store/runs/007_surg1_wsd.**
+The `num_processes`-correct WSD-schedule redo of the V-JEPA-raw objective-surgery arm finished cleanly (`train exit=0`). A real,
+manner-dominant, ROBUST (frozen≥live) reader formed — final probe Δcross 0.042, manner-share 0.031, **no H-rule fired** — but at
+~4× the natural full-video reader gap (0.0104) with a mild appearance creep (ratio 0.166→0.264 over the last 3 probes). The
+magnitude question (strong genuine reader vs content-axis over-forcing) is NOT resolvable from the forward-loss probe; Gate A
+(held-out 1065 triples) then Gate B (paired v4 video) adjudicate. Trained on **eps** (offsite 8×H100, no queue — ghx4 and HCESC
+were both jammed) via the `src/LTX-2-surg` fork (commit a4033230, the num_processes-correct WSD scheduler) shadowed over the eps
+uv env. Checkpoint (sha cdc36bbb) backed off eps to /taiga and registered `store/runs/007`. Gate A (`build/ablation_loss_vjepa.py`,
+run on DeltaAI to match the E1/ROUND4 calibration) is next.
+
 **00:41 — SURG-1 full launch crashed at step 0 (native "Aborted."); diagnosed + fixed a multi-rank file race in the probe cache; full-config smoke now green.**
 The first full 10k launch chunk (2924995, 4×GH200) got through all setup then printed a bare `Aborted.` (native SIGABRT, no
 Python traceback) and died before step 0 — the reduced ddp smoke had passed because it used a smoke config. **Root cause

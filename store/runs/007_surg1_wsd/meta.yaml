@@ -1,0 +1,84 @@
+id: 007_surg1_wsd
+seq: 7
+shelf: runs
+created: 2026-08-11          # store entry date; trained on the offsite GCP box (eps), 8xH100
+machine: eps — offsite GCP (fal-h100), 8xH100 80GB (DDP num_processes=8)
+source: misc/2026-08-10_encoder_branch_redteam campaign — DOSSIER.md is the run authority.
+  SURG-1 = OBJECTIVE SURGERY on the V-JEPA-raw cell (Idea-3): a high-noise-leaning timestep mixture
+  + a code-swap contrastive gap loss, to force the frozen 19B DiT to build a READER for the compact
+  144-token code. Same encoder/adapter as the failed arms — only the training OBJECTIVE changes.
+inputs:
+  dataset: datasets/002_ctt_v2        # the SAME 56,368-pair set as runs/002/004/006; not rebuilt
+  encoder: runs/005_vjepa_stageA_idea3/projector_stageA_raw.pt   # frozen V-JEPA-2 raw feats + trained projector (warm-started)
+  encoder_sha256: 6f0c10ffac86421954149eeef582fdb43842c06b53524540876c32d95be7cb03
+  config: surg_wsd_eps.yaml            # eps-path config (path-remap of surg_wsd.yaml); stored as config.yaml
+trainer:
+  checkout: src/LTX-2-surg             # ISOLATED fork (git worktree, branch surg); ctt_v2/ic_gen untouched
+  branch: surg
+  commit: a4033230c24901fb0a3becc81885d222067de7fb   # num_processes-correct WSD scheduler. LOCAL (origin=Lightricks, NOT pushed)
+  entry: uv run --no-sync accelerate launch --num_processes 8 packages/ltx-trainer/scripts/train.py (surg_wsd_eps.yaml)
+  env: eps bneck-coupling uv env (torch 2.9.1+cu128) + PYTHONPATH shadow to src/LTX-2-surg
+model: LTX-2 19B dev (frozen)
+adapter: IC-LoRA r128/a128 + trainable V-JEPA projector; one-way reference attention; reference channel is a 144-token V-JEPA code (bottleneck), NOT raw latents
+rank: 128
+alpha: 128
+reference_attention: one_way
+bottleneck:
+  encoder_class: vjepa
+  token_shape: [16, 3, 3]              # F=16,H=3,W=3 = 144-token code
+  spanning_positions: true
+  freeze_encoder: false                # the projector trains (warm-started from Stage-A raw)
+  code_dropout: 0.10                   # reference probability 0.9
+lr: >
+  WSD (warmup-stable-decay), num_processes-CORRECT (verified P=1==P=8, max diff 0.0):
+  warmup 0->100 (1e-6->1e-4), stable 1e-4 on [100,3375), linear decay to 1e-5 on [3375,4500].
+  Contrast: runs/002/004/006 used `linear` whose decay length silently scaled with GPU count
+  (accelerate steps the scheduler x num_processes) and floored at 1e-5 — see commit a4033230.
+timesteps: >
+  high-sigma mixture (surgery): 60% U[0.90,1.0] / 15% U[0.70,0.90) / 25% shifted_logit_normal
+seed: 42
+effective_batch: 8                     # 8 DDP x bs1 x accum1
+steps_trained: 4500
+shipped_step: 4500
+checkpoint_sha256:
+  lora_weights_step_04500.safetensors: cdc36bbb2c1df3d0f7cc5e0261f72d3a1687b209568106225e7ab869bffc5d1a
+
+# ---------------------------------------------------------------------------- the intervention
+surgery:
+  gap_loss: >
+    hinge  L_gap = lambda * max(0, delta - (L_deranged - L_matched)),  delta=0.007 (sigma>=0.9 band; 0 below),
+    lambda ramped 0->10 over the first 1000 steps. Deranged (wrong) code is DETACHED (no projector grad).
+    derange_policy: cross_class over 124 manner groups. Both losses are the standard FM velocity-MSE on
+    the SAME target; only the conditioning code differs. delta anchored to 0.7x the E1-measured
+    real-reader gap (0.0104) ~= its manner component (0.00775).
+  per_sigma_loss_norm: Min-SNR-style, PRIMARY FM term only (the hinge consumes raw losses)
+  probe: SurgeryProbe every 500 steps (64 top-band triples; live vs frozen codes)
+
+# ---------------------------------------------------------------------------- what training showed
+probe_trajectory_delta_cross_live:    # deranged_cross - matched loss elevation
+  s500: 0.0011
+  s1000: 0.0065
+  s1500: 0.0020                        # probe noise (recovered)
+  s2000: 0.0087
+  s2500: 0.0095
+  s3000: 0.0303
+  s3500: 0.0363
+  s4000: 0.0397
+  s4500: 0.0416
+final_probe_step4500:
+  delta_cross_live: 0.0416
+  delta_cross_frozen: 0.0478           # frozen >= live throughout = ROBUST reader, not overfit to the live projector
+  delta_same_live: 0.0110
+  manner_share: 0.0306                 # content component; held ~0.031 from step 3000
+  ratio_dsame_over_dcross: 0.264       # appearance fraction crept up 0.166->0.214->0.264 over the last 3 probes
+  h_rule_fired: none                   # no H-rule fired across the whole run; flag=1 = Δsame/SE>3 watch only
+verdict_status: PENDING_GATE_A         # Gate A (held-out 1065 triples) -> advisor -> Gate B (paired v4 video)
+notes: >
+  A real, MANNER-DOMINANT, ROBUST (frozen>=live) reader formed at Δcross ~0.04 — but that is ~4x the
+  natural full-video reader gap (0.0104), with a growing-but-minority appearance component. The
+  magnitude question (STRONG GENUINE READER vs CONTENT-AXIS OVER-FORCING) is NOT resolvable from the
+  forward-loss probe; only Gate A (build/ablation_loss_vjepa.py, 1065 held-out triples) and especially
+  Gate B (paired v4 video eval, P1/P2 vs the failed arms' P1 6/13, P2 -0.002) adjudicate. The prior
+  linear-schedule attempt reached Δcross 0.033 by step 2000 (earlier, possibly over-forced); this
+  WSD run is the num_processes-correct redo. Trainer commit a4033230 is LOCAL (fork origin=Lightricks).
+  Gate A must run on ONE machine matched to the E1/ROUND4 calibration (DeltaAI).
