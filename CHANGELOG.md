@@ -1,3 +1,23 @@
+## 2026-08-10
+**21:26 — SURG-1 (objective surgery) IMPLEMENTED + SMOKED in a new trainer fork `src/LTX-2-surg`; no training launched.**
+Forked the V-JEPA-raw coupling trainer (`src/LTX-2-bneck-coupling`, branch `bneck_redesign`) into a new git worktree
+`src/LTX-2-surg` on branch `surg`, and implemented the three SURG-1 levers from
+`misc/2026-08-10_encoder_branch_redteam/advisors/ROUND2_OBJECTIVE_SURGERY.md` (§A.1 high-σ timestep mixture, §B.1 code-swap
+contrastive gap loss, §C.4 temporal-RoPE check) behind a `surgery` config block that **defaults OFF → flags-off is BITWISE the
+coupling baseline**. New/changed in the fork: `config.py` (SurgeryConfig/HighSigmaMixtureConfig/GapLossConfig + validators),
+`timestep_samplers.py` (`HighSigmaMixtureSampler` wrapper), `surgery.py` (new: `DeltaMargins` per-σ-bin margins, cross-class
+`DerangementSampler` with a dedicated RNG generator, `lambda_ramp`), `trainer.py` (`_init_surgery`, high-σ sampler wrap,
+`_surgery_gap_loss` — the RNG-snapshot/restore code-swap second forward, no-detach ΔFM, gated metrics). Also synced the coupling
+working-tree baseline the fork's committed ref lacked (`resume_data_position` + `ResumeOffsetSampler` + `ContextAdapter`). Import
+isolation = PYTHONPATH-prepend (shared venv `.pth` untouched; verified `import ltx_trainer` → surg fork under the prepend, →
+official by default). Smoke on 1 GH200 (jobs 2924473/2924549): **equivalence bitwise-0** (max|Δloss| 0.000e+00 cross-fork AND
+off-block), high-σ histogram (base P(σ≥0.83)=0.505 → realized band 0.851 vs analytic 0.851), gap-loss shapes/finiteness,
+**identity-derangement gap==0.0 exactly**, hinge==λ·δ==0.02, backprop (966/966 finite grads), RNG invariant true. σ*=0.83 and
+λ_target flagged for owner confirmation; δ margins load from an external E1 file (placeholders used for smoke). Fork commit is
+local on branch `surg` (not pushed — origin is Lightricks upstream). Notes + build scripts in
+`misc/2026-08-10_encoder_branch_redteam/` (`SURG1_IMPL_NOTES.md`, gitignored). No multi-GPU training submitted — that waits on
+the E1 gate + real δ margins.
+
 ## 2026-08-07
 **16:37 — metric_eval adapter×text arms: certified v4-lane scores registered as `store/evals/005_ic_effect_neutral__dai__2026-08-07` + gen bookkeeping fixed.**
 Scored three already-generated arms on the certified transition-eval **v4** lane, all on DeltaAI GH200 (one machine, same
@@ -17,9 +37,44 @@ ctt-v2-train `db69ca7` bidirectional), `gens/011_base_cond_neutral`, `gens/012_b
 populated meta.yaml + grid.jsonl (152 exact registry rows each) and added the three missing INDEX gens rows. Campaign scripts under
 `misc/` (gitignored). Accounts bgms (primary) + bhwp (second); never bgjg; no existing job touched.
 
+## 2026-08-06
+**16:33 — bneck_redesign Idea-1 (`bneck_ctx_v2`): CLEAN arm registered into the artifact store + iclora_runs viewer (closeout bookkeeping).**
+Registered the concluded negative-result arm as four immutable store entries: `runs/006_bneck_ctx_v2` (real config.yaml +
+meta; checkpoint a SYMLINK to the eps training scratch — sha256 `844ee248…`, 1041 tensors = 31 ContextAdapter + 960 LoRA +
+50 frozen operator_encoder; trainer src/LTX-2-bneck-coupling @ bneck_redesign `7ffbe95`), `gens/013_bneck_ctx_v2` (matched,
+304 mp4) + `gens/014_bneck_ctx_v2_shufcode` (deranged twin, 304 mp4) — grid.jsonl real, videos symlinked, pool-identity
+verified TRUE, and `evals/004_bneck_ctx_v2__dai__2026-08-06` (v4 on DeltaAI, gens 013+014, 1,842 items/arm, 0 nulls;
+**ARM_PASS=false** — P1 6/13 & 6/13 vs bars ≥9/≥8, P2 −0.008 vs +0.10, CI [−0.024,+0.013]; dead-channel bitwise-PASS,
+liveness R 0.584). Deviations from the sibling pattern: (1) the eval arm dirs are whole-dir SYMLINKS into
+`misc/bneck_redesign/eval/scores_clean/<arm>` (filesystem at 99% quota) — scores_clean carries only `merged/items.jsonl`
+(no results.json), so full instrument provenance lives in the eval meta and the viewer's per-column corpus badge for these
+two arms renders empty (cosmetic); (2) the two arms went into `build_runs.py`'s `EXTERNAL` list as a matched/deranged
+bottleneck pair (like ⑦/⑧), NOT `RUNS`/`SCORE_SETS` — a third RUNS entry would silently repoint the page's core paired-Δ
+comparison. Viewer rebuilt + mounted; all seatbelts PASS (152 gens / 304 videos / scored 152/152 per arm, `[ids]` MATCH,
+0 shared clips or metric vectors vs every other arm); live on gh-login01:8017 (iclora_runs, health LIVE 7/7). 2&3-campaign
+(`hrc_*`/`vjepa_*`) rows untouched. No git commit (owner controls commits).
+
+**14:38 — bneck_redesign Idea-1 (context-port injection): CLEAN NULL — DONE (negative), verdict by fresh advisor vs frozen bars.**
+Idea-1 routed the frozen 72-token operator code through the DiT's positionless cross-attention CONTEXT stream (skipping the
+RoPE reference path) via a co-trained 6.51M-param `ContextAdapter` + rank-128 LoRA, to test the owner's hypothesis that the
+coupling campaign's read-failure was a RoPE position mismatch. Clean full-coverage retrain on eps (`bneck_ctx_v2`, single
+continuous run, `resume_data_position:true`, step 10000); 608 gens + v4 score on DeltaAI (one machine, sha `459fd9a7`).
+Paired read matched-code vs class-deranged-code (`p1p2_arm.py`, `arm_results/p1p2_bneck_ctx_v2.json`) vs frozen bars
+(BANDS.json: G-unseen-same ≥9/13, G-unseen-cross ≥8/13, P2 ≥0.1016): **6/13, 6/13, P2 pooled median Δ = −0.0078,
+95% CI [−0.0245,+0.0126] (excludes the bar), ARM_PASS=false**, 304/304 units paired. Calibrators confirm the null is
+interpretable, not an artifact: dead-channel `ALL_BITWISE_IDENTICAL` (code reaches gen only via the adapter), liveness
+**R=0.584** (channel emphatically live in both claim cells), band-setter positive control 12/13,10/13,Δ=0.203 (instrument
+detects reading when present). Second independent "transmits but does not instruct" null after coupling — RoPE-mismatch
+premise refuted (both routes live & unread). Discriminator for future Ideas 2/3: training captions are class-blind (0/3453
+mention a transition verb) and the raw reference is skipped, so the code was the SOLE transition-identity carrier yet unread
+→ text-redundancy ruled out; endpoint-inferability vs geometric-unreadability remain. Fixed an 8-shard v4-scoring
+feature-cache write race (73/65 truncated-`.pt` rows, incl. barred cells) via serial re-score before finalizing. Campaign
+scripts under `misc/bneck_redesign/build/` (gitignored).
+
 ## 2026-08-05
 - 20:33 presentation: slide pack revised per owner — 12_iid/13_zeroshot row arms are now each method's native-prompting best (cttv2 column = 005_ctt_v2_leaky, refvfx column = 003_refvfx_A, seeds re-picked frame-by-frame on those arms); 07_counterfactual rebuilt from the S3 depth-parallax family (exp_076 sharedop rows — roll_crossfade_fog / orbit_depth_wipe_sphere_focus / crane_crossfade × 3 seed-matched endpoint pairs); filenames globally unique (`<slide>__<name>.mp4`); pack re-zipped as 16 parts, all <20 MB.
 - 20:05 presentation: built `outputs/presentation/slide_pack_2026-08-05/` + upload zip (161M, 106 clips) — per-slide deck media: cold open (shadow_smoke_0 memo-probe), lerp collapse (2 base dissolves), refVFX 4-arm row (tennis→snowboard ← firelava_0, promptA/B twins from gens 002/003/004/005), 16 dataset stratum samples, 3×3 counterfactual grid (animalization/shadow_smoke/polygon × 3 S1 endpoints, reject-list checked), 6 iid + 7 zero-shot six-file rows (seeds picked frame-by-frame). Rebuildable via `scripts/build_slide_pack_2026_08_05.sh`; browsable at viewer `slide_pack_2026_08_05` (gen: `scripts/viewers/gen_slide_pack_viewer_2026_08_05.py`); provenance + prompt strings in the pack's MANIFEST.md.
+- 18:32 bneck_redesign: found + fixed a chunked-resume data-coverage defect in the LTX trainer. On resume the dataloader rebuilt the StratifiedEpochSampler at epoch 0 (trainer.py `_init_dataloader`, no sampler-state restore), so short chunks only ever trained on the first `chunk_steps*8` of 56,368 samples (hrc_raw saw ~11%, residual arms ~28% — different subsets). Root of the spurious hrc_raw loss dip (memorization, not code-read). Fix: gated `data.resume_data_position` (default off) fast-forwards the sampler to the resume (epoch,offset) — verified bitwise-identical to a continuous run (misc/bneck_redesign/build/test_resume_fix.py). Both raw arms relaunched from step 0 with the fix. NOTE: src/LTX-2-bneck-coupling is git-untracked, so this fix is working-tree only.
 
 **17:53 — bneck_redesign eval: HRC-residual scored (v4, DeltaAI) = CLEAN NULL; integrated into iclora_runs viewer.**
 Scored `hrc_coupling` (matched) + `hrc_coupling_shufcode` (deranged), 304+304 gens, on DeltaAI (`--account=bgms-dtai-gh`),
