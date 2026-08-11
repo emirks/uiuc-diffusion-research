@@ -1,0 +1,29 @@
+id: 016_surg1_wsd_shufcode
+seq: 16
+shelf: gens
+created: 2026-08-11
+machine: DeltaAI ghx4 (aarch64 GH200)
+source: misc/2026-08-10_encoder_branch_redteam — SURG-1 Gate B. DERANGED-CODE TWIN (must-fail leakage control).
+inputs:
+  run: runs/007_surg1_wsd            # SAME adapter as gens/015 (twin pins the treatment's checkpoint)
+  step: 4500
+  adapter_sha256: cdc36bbb2c1df3d0f7cc5e0261f72d3a1687b209568106225e7ab869bffc5d1a
+code: >
+  src/LTX-2-surg @ a4033230 — same vjepa bottleneck gen path as gens/015; the ONLY difference is the
+  V-JEPA code source: each row's code_source_reference points to a DIFFERENT manner class
+  (cross-class derangement). The row's own `reference` is untouched, so run_eval builds a
+  byte-identical GT pool for both twins → the paired matched−twin Δ is uncontaminated.
+arm: surg1_wsd_shufcode
+twin_of: gens/015_surg1_wsd
+rank: 128
+alpha: 128
+geometry: [480, 640, 121]
+seeds: [42, 43]
+n_videos: 304
+video_layout: surg1_wsd_shufcode__ck4500/<item_id>__s<seed>.mp4
+grid: grid.jsonl                     # = registry_surg1_wsd_shufcode.jsonl (152 rows w/ code_source_reference)
+scored_in: evals/006_surg1_wsd__dai__2026-08-11
+notes: >
+  Generation-only control (never trained). Its scores are LOWER than surg1_wsd in both claim cells,
+  which is what makes the paired Δ a real code-reading signal (P1_cross 9/13). A PASSING twin
+  (twin ≈ matched) would have meant a dead channel; it did not.

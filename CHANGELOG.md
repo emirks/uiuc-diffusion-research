@@ -1,4 +1,15 @@
 ## 2026-08-11
+**18:34 — SURG-1 Gate B SCORED → CLOSED as a publishable negative; registered gens/015+016 + evals/006.**
+Generated 304 clips/arm through the V-JEPA-code path (matched `surg1_wsd` + deranged-twin `surg1_wsd_shufcode`)
+and scored v4 on DeltaAI. Result: **reads-but-weakly-instructs** — P1 same 7/13 & cross 9/13 (bars 9/8), P2
+pooled median **+0.0199** vs bar 0.1016; 0/304 copy-flagged; clearly ABOVE the dead encoder arms (6/13, −0.002)
+with genuine matched−twin separation. A fresh advisor CLOSED SURG-1: the failure is forward-read→sampling
+**conversion** (trained-row ceiling +0.053), NOT channel-deadness (bneck_coupling) nor reader-absence (Gate A
+proved a held-out reader) — a strictly sharper negative. One-retry budget left unspent (a generalization retry
+can't beat the conversion ceiling). Registered store/gens/015_surg1_wsd, gens/016_surg1_wsd_shufcode,
+evals/006_surg1_wsd__dai__2026-08-11 (P1/P2 headline + caveats). Remaining are paper-completeness only (a
+labeled CFG-w2 exploratory arm, the free DisMo pre-check, cache-error forensics) — they cannot change the close.
+
 **15:14 — SURG-1 WSD training COMPLETE (4500 steps, 8×H100 on eps); registered as store/runs/007_surg1_wsd.**
 The `num_processes`-correct WSD-schedule redo of the V-JEPA-raw objective-surgery arm finished cleanly (`train exit=0`). A real,
 manner-dominant, ROBUST (frozen≥live) reader formed — final probe Δcross 0.042, manner-share 0.031, **no H-rule fired** — but at

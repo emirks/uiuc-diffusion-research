@@ -29,6 +29,8 @@ Contract: README.md · flow: `lora-flow` skill.
 12. `012_base_prompt_neutral` — NO adapter, V-neutral prompt only, no conditioning, no demo. The cleanest zero; 011 vs 012 prices the anchors. Scored in evals/005
 13. `013_bneck_ctx_v2` — runs/006@10000; the raw reference REPLACED by the frozen 72-token code injected as 16 CONTEXT tokens (`inject=context`). Twin of 014
 14. `014_bneck_ctx_v2_shufcode` — SAME adapter file as 013, code source deranged via `code_source_reference` (row's own `reference` untouched, so both twins share a byte-identical GT pool). The load-bearing corpse
+15. `015_surg1_wsd` — **SURG-1 Gate B MATCHED**: runs/007 @ step4500, V-JEPA 144-tok code reference (backbone-free gen, trained projector from ckpt), 152×2. Twin of 016. Reads-but-weakly (see evals/006)
+16. `016_surg1_wsd_shufcode` — SAME adapter as 015, code source cross-class deranged (`code_source_reference`), reference untouched → byte-identical GT pool. The must-fail twin (it scored LOWER → the channel reads)
 
 ## evals
 > **Baseline reference scores** (the comparison scale for any coupling/treatment arm; all v4 · DeltaAI · reference sha `459fd9a7`, so mutually comparable). No-demo **floors**: `002` `base_prompt_ctt` / `base_cond_ctt` (CTT prompts) + `005` `base_cond_neutral` / `base_prompt_neutral` (V-neutral). Trained **reference levels**: `001` `ic_gen` 83.1 / `ctt_v2` 82.5, `005` `ic_gen_effect` 89.1. The two `005` neutrals are the V-neutral siblings of `002`'s base_ctt arms (`ic_gen_effect` is a treatment, not a floor).
@@ -42,6 +44,8 @@ Contract: README.md · flow: `lora-flow` skill.
 4. `004_bneck_ctx_v2__dai__2026-08-06` — v4 on DeltaAI, gens 013+014, 1,842 items/arm, 0 nulls. **The context-inject Idea-1 NEGATIVE**: P1 6/13 and 6/13 vs bars ≥9/13 & ≥8/13; P2 −0.008 vs +0.10 (95% CI [−0.024,+0.013] includes 0). Dead-channel PASS (bitwise-identical), liveness P3 GREEN (R 0.584) — transmits but does not instruct. Scores symlinked from `scores_clean` (quota); recovered from a shared-cache write race (73/65 rows)
 
 5. `005_ic_effect_neutral__dai__2026-08-07` — v4 on DeltaAI, gens 010+011+012, 1,842 items/arm, 0 errors/0 nulls. The metric_eval adapter×text arms. headline %_same: ic_gen_effect **89.1** / base_cond_neutral **60.4** / base_prompt_neutral **58.1** (%_proxy 84.4 / 47.0 / 44.9, ranking-only). ic_gen_effect is a TREATMENT (LEVEL only — its base twins aren't scored here); the two neutrals are V-neutral no-demo baselines (NOT the effect-clause base arms of evals/002). ic_gen_effect manifests reused+verified, neutral manifests rebuilt; scores symlinked from `scores_v4lane` (campaign-private v4 lane)
+
+6. `006_surg1_wsd__dai__2026-08-11` — v4 on DeltaAI, gens 015 (matched) + 016 (deranged twin), 304 paired units, 0 copy. **SURG-1 Gate B — READS-BUT-WEAKLY-INSTRUCTS**: P1 same 7/13 & cross 9/13 (bars 9/8); P2 pooled median **+0.0199** vs bar 0.1016 (raw·ceiling·% = +0.020·+0.203·9.8%). ABOVE the dead encoder arms (6/13, −0.002) with genuine twin separation, but far under the win bar. Advisor CLOSED SURG-1 as a **publishable negative** — failure = forward-read→sampling **conversion** (G-fit ceiling +0.053), not channel-deadness (bneck) nor reader-absence (Gate A cleared both); retry budget unspent. Caveats: 484 symmetric pool-ref EOFErrors (paired Δ unbiased), [UNCERTIFIED]=branch-not-tagged (reference matches evals/001-004)
 
 ## datasets
 1. `001_transitions_std121` — 222-clip eval corpus (stub → data/processed/transitions_std121)

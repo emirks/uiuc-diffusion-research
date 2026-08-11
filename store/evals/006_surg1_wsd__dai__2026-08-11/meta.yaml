@@ -1,0 +1,37 @@
+id: 006_surg1_wsd__dai__2026-08-11
+seq: 6
+shelf: evals
+created: 2026-08-11
+machine: DeltaAI ghx4 (aarch64 GH200)   # SAME machine as evals/001-004 (eps↔DeltaAI does NOT reproduce at 0.005)
+instrument: transition-eval v4 (eval-v4-cert worktree)
+reference_v4_file_sha256: 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8  # reference_v4.npz file, verified in-job
+comparability: >
+  the internal reference_v4_sha256 field was verified IDENTICAL across all of evals/001-006 (8/8
+  results.json), so these arms are directly comparable to the five-arm / bneck comparators. The
+  [UNCERTIFIED] tag reflects branch-not-tagged only, not a different reference.
+corpus: data/processed/transitions_std121/corpus_manifest.json   # 222-clip (NOT the worktree's stale 223)
+gens:
+  matched: gens/015_surg1_wsd
+  twin: gens/016_surg1_wsd_shufcode
+headline: p1p2_headline.json
+metric: >
+  P1 (per-donor-class median Δapp_ref matched−twin on G-unseen-same/cross) + P2 (pooled median Δ).
+  raw · ceiling · % = +0.020 · +0.203 · 9.8%  (ceiling = the raw-video-reference adapter, ctt_v2, on
+  the same grid+instrument — a cross-run context number, NOT a within-run pair).
+result:
+  P1_same: {positive: 7, of: 13, bar: 9, pass: false}
+  P1_cross: {positive: 9, of: 13, bar: 8, pass: true}
+  P2_pooled_median_delta: {value: 0.0199, bar: 0.1016, pass: false}
+  copy_flag_near_copy: 0
+  paired_units: 304
+  vs_dead_arms: "old encoder arms P1 6/13, P2 -0.002; SURG-1 ABOVE them (cross passes, Δ>0 both cells, no copying)"
+  G-fit_trained_row_delta: 0.053     # the forward→sampling CONVERSION ceiling — even perfect generalization can't reach 0.1016
+verdict: >
+  GATE_B_READS_WEAKLY → CLOSE SURG-1 as a PUBLISHABLE NEGATIVE (advisor afaee136). The reader is
+  genuine (Gate A held-out) and affects generation (above dead arms) but only WEAKLY INSTRUCTS
+  sampling. The bottleneck is forward-read→sampling CONVERSION, not channel-deadness (bneck) nor
+  reader-absence (Gate A cleared both) — a strictly sharper negative than bneck_coupling. One-retry
+  budget UNSPENT (a generalization retry can't beat the +0.053 conversion ceiling).
+caveats:
+  - 484 pool-ref cache-read EOFErrors, SYMMETRIC across matched/twin (shared GT pool) → paired Δ unbiased; 304/304 twins paired. Forensics (recompute-vs-skip) pending; the close is insensitive either way.
+  - instrument [UNCERTIFIED] = eval-v4-cert branch not tagged; reference matches evals/001-004.
