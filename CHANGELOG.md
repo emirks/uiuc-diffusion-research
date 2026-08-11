@@ -1,4 +1,24 @@
 ## 2026-08-10
+**23:30 — SURG-1 last two gates cleared: (c) cross-transition-manner derangement + the DDP double-forward fix; both smoke-green, still not launched.**
+Two coordinator-blocking fixes on `src/LTX-2-surg`. **(c) Derangement granularity:** the gap-loss derangement keyed on the
+manifest's 136 `base_idx`, but those SPLIT each transition manner into appearance variants (`animalization`=5 vs
+`spec animalization`=109, etc.) — a cross-`base_idx` draw could land in the SAME manner → the hinge would penalize a same-manner
+pair = appearance-detection Goodhart. E1 (and the eval) define cross/same at the transition-MANNER level (verified: 0 same-group
+cross-refs / 0 cross-group same-refs over 1065 triples, 23 classes). Fix: `demo_class_map` now keys on the transition manner =
+`base` normalized (strip `spec `/` 1sided`) → **124 groups; base_idx NESTS** (0 orthogonal); 11 groups merge the spec-pairs.
+`DerangementSampler` was already cross-class-by-construction, so this is a class-map data change (gitignored `misc/`); real-roster
+smoke: **0 fixed points, 0 same-manner collisions**. **DDP double-forward (flag #9):** the two SEQUENTIAL forwards through the
+DDP-wrapped LoRA broke DDP two ways — default reducer "marked ready twice" (2924787), then `static_graph=True` → the
+static_graph×non-reentrant-checkpoint `expect_autograd_hooks_` assert (2924856); `use_reentrant=True` is DISQUALIFIED (silently
+drops the deranged branch's block-0 LoRA grads — its inputs all lack requires_grad). Fix (coordinator + fable-advisor concur): a
+single BATCHED forward — matched prepared first to learn σ, then on a high-band step (σ≥0.90) the deranged code (detached, §9.1) is
+batched in (batch-2, one forward, split into L_matched/L_deranged); low-band steps run plain batch-1 (gap=0). ONE forward CALL per
+step → LoRA marked ready once → baseline DDP config restored (`find_unused_parameters=True`, `use_reentrant=False`). Same
+losses/gradients; commit 7ba93c6. **Verified:** 1-GPU 2924925 equivalence STILL bitwise-0 + functional all pass (detach isolation
+projector deranged=**0.0**, identity gap_raw=**0 bitwise**, low-band batch-1 path, probe frozen==live); **4-GPU DDP 2924926
+COMPLETED ExitCode 0:0 on all 4 ranks** (backward completes, finite grads, 64-target probe fired clean at step 2, Δsame/SE=1.44
+flag=0, 4.44s/step). Both fixes are the last two launch gates; the orchestrator owns the launch (not submitted). Notes §R4.10–R4.12.
+
 **22:20 — SURG-1 FINALIZED to the E1-greenlight ruling (ROUND4); fork `src/LTX-2-surg` ready to launch, still not submitted.**
 E1 greenlit SURG-1 (`advisors/ROUND4_E1_RULING.md`), so the fork was upgraded to the exact ruling params and re-smoked.
 Implemented: **§9.1 deranged-only detach** (vjepa `encode_train._surg_detach_code` flag → `L_deranged` never gradient-updates
