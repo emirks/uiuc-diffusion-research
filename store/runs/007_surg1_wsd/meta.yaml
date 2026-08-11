@@ -72,7 +72,7 @@ final_probe_step4500:
   manner_share: 0.0306                 # content component; held ~0.031 from step 3000
   ratio_dsame_over_dcross: 0.264       # appearance fraction crept up 0.166->0.214->0.264 over the last 3 probes
   h_rule_fired: none                   # no H-rule fired across the whole run; flag=1 = Δsame/SE>3 watch only
-verdict_status: PENDING_GATE_A         # Gate A (held-out 1065 triples) -> advisor -> Gate B (paired v4 video)
+verdict_status: GATE_A_RESOLVED_PASS_CONSULT   # Gate A: per-triple 5.81σ, paired-surgery +5.33σ, Δsame negative (manner-class), dose-response σ0.95 → advisor resolved the 3.0-4.0 consult band as PASS. Held-out Δcross 0.00294 = 11.5× the (corrected) null floor, 0.42δ, ~28% of the raw full-video reader. Reader is DETECT-flavored (transfer-weak) → Gate B (video) tests instruct-vs-detect. Odds 0.15 (0.20 w/ CFG-rescue w=2).
 notes: >
   A real, MANNER-DOMINANT, ROBUST (frozen>=live) reader formed at Δcross ~0.04 — but that is ~4x the
   natural full-video reader gap (0.0104), with a growing-but-minority appearance component. The
