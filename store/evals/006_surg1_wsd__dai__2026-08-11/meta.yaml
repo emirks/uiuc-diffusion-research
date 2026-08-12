@@ -21,7 +21,7 @@ metric: >
 result:
   P1_same: {positive: 7, of: 13, bar: 9, pass: false}
   P1_cross: {positive: 9, of: 13, bar: 8, pass: true}
-  P2_pooled_median_delta: {value: 0.0199, bar: 0.1016, pass: false}
+  P2_pooled_median_delta: {value: 0.0257, bar: 0.1016, pass: false}   # complete-data re-score (was 0.0199 pre-recovery); still ~4x under
   copy_flag_near_copy: 0
   paired_units: 304
   vs_dead_arms: "old encoder arms P1 6/13, P2 -0.002; SURG-1 ABOVE them (cross passes, Δ>0 both cells, no copying)"
@@ -33,5 +33,5 @@ verdict: >
   reader-absence (Gate A cleared both) — a strictly sharper negative than bneck_coupling. One-retry
   budget UNSPENT (a generalization retry can't beat the +0.053 conversion ceiling).
 caveats:
-  - 484 pool-ref cache-read EOFErrors, SYMMETRIC across matched/twin (shared GT pool) → paired Δ unbiased; 304/304 twins paired. Forensics (recompute-vs-skip) pending; the close is insensitive either way.
+  - 484 pool-ref EOFErrors were TRANSIENT concurrent-cache-write races during the 8-shard parallel pass (cache scan: 0 corrupt of 76,118). RESOLVED: warm-cache re-score recovered them with 0 error-rows; P2 moved 0.0199→0.0257 (still ~4× under bar), P1 & pool-% unchanged — close CONFIRMED on complete data. The paired Δ was unbiased throughout (symmetric drops).
   - instrument [UNCERTIFIED] = eval-v4-cert branch not tagged; reference matches evals/001-004.
