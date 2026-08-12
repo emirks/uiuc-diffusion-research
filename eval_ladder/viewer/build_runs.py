@@ -63,7 +63,7 @@ RUNS = [
      "label": "IC-LoRA generalist", "sub": "ladder2 · the incumbent",
      "gen_dir": "store/gens/001_ic_gen/videos", "registry": None},
     {"id": "ctt_v2", "arm": "ctt_v2", "checkpoint": 10000,
-     "label": "CTT v2", "sub": "step 10,000 · rank 128 · one-way ref attention",
+     "label": "CTT v2 · neutral prompt", "sub": "step 10,000 · rank 128 · one-way ref attention",
      "gen_dir": "store/gens/002_ctt_v2/videos",
      "registry": "eval_ladder/registry_ctt_v2.jsonl"},
 ]
@@ -120,7 +120,7 @@ EXTERNAL = [
      "rows": ("registry", REPO_ROOT / "store/gens/006_base_prompt_ctt/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/002_base_arms__dai__2026-07-31/base_prompt_ctt",
      "prompt_kind": "base weights, text only. The transition is described in plain language (the "
-                    "leaky arm's effect clause, with the trained <span class='mono'>sksz</span> "
+                    "effect-prompt arm's effect clause, with the trained <span class='mono'>sksz</span> "
                     "token removed) and nothing else is given — no prefix, no suffix, no demo. "
                     "This is what the prompt alone is worth.",
      "doc": "misc/base_arms/README.md"},
@@ -138,7 +138,7 @@ EXTERNAL = [
                     "ruling 2026-07-23). This is the level an adapter has to beat.",
      "doc": "misc/base_arms/README.md"},
     {"id": "ctt_v2_leaky", "score_id": "leaky_v4", "kind": "ours", "frames": 121, "no_twin": True,
-     "label": "⑥ CTT v2 · leaky prompt",
+     "label": "⑥ CTT v2 · effect prompt",
      "sub": "our adapter, prompt also describes the transition · level, not a margin",
      "src": REPO_ROOT / "store/gens/005_ctt_v2_leaky/videos",
      "media": "outputs/videos/ctt_v2_leaky/clips",
@@ -245,8 +245,74 @@ EXTERNAL = [
                     "twins score against a byte-identical GT pool. Scoring the same as the matched "
                     "arm is the finding (clean null: P2 +0.011, both claim cells below bar).",
      "doc": "misc/bneck_redesign/DOSSIER.md"},
+    #: 2026-08-06 — campaign `bneck_redesign`, the CLEAN Idea-1 arm. Registered in the STORE
+    #: (runs/006, gens/013+014, evals/004) — src/rows/scores are store paths, exactly like ⑦/⑧.
+    #: Read like every other bottleneck pair: same adapter file, same rows, same seeds,
+    #: byte-identical GT pool (measured pool-identity TRUE), the ONLY difference being which clip the
+    #: frozen code encoder saw (the same 152/152 class-level derangement reused from bneck_coupling).
+    #: The redesign vs ⑦: the 72 operator tokens are compressed by a co-trained ContextAdapter to
+    #: K'=16 tokens and injected as cross-attention CONTEXT (inject=context), not concatenated as
+    #: reference tokens. Their paired Δapp_ref is the measurement; LEVELS carry no bar. Band-setter
+    #: bars: G-unseen-same ≥9/13, G-unseen-cross ≥8/13, P2 ≥ +0.10. Scored on DeltaAI, v4 sha
+    #: 459fd9a7 (UNCERTIFIED by design for v4). MEASURED NULL: 6/13 & 6/13, P2 −0.008.
+    {"id": "bneck_ctx_v2", "score_id": "redesign_v4", "kind": "bottleneck", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓒ CTX-v2 · matched code",
+     "sub": "raw demo REPLACED by 16 frozen context tokens (K'=16) · treatment",
+     "src": REPO_ROOT / "store/gens/013_bneck_ctx_v2/videos",
+     "media": "outputs/videos/bneck_redesign_arms/bneck_ctx_v2",
+     "rows": ("registry", REPO_ROOT / "store/gens/013_bneck_ctx_v2/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/004_bneck_ctx_v2__dai__2026-08-06/bneck_ctx_v2",
+     "prompt_kind": "the ctt_v2 recipe with ONE content change: the reference channel carries the "
+                    "certified transition encoder's 72 operator tokens, held FROZEN, compressed by a "
+                    "co-trained ContextAdapter to 16 context tokens and injected as cross-attention "
+                    "CONTEXT (inject=context) rather than concatenated as reference tokens (⑦). Same "
+                    "prompt / endpoints / seeds as ctt_v2. Compare ONLY against its deranged-code twin.",
+     "doc": "misc/bneck_redesign/DOSSIER.md"},
+    {"id": "bneck_ctx_v2_shufcode", "score_id": "redesign_v4", "kind": "bottleneck", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓒ CTX-v2 · deranged code",
+     "sub": "SAME adapter file, deliberately WRONG code · the control",
+     "src": REPO_ROOT / "store/gens/014_bneck_ctx_v2_shufcode/videos",
+     "media": "outputs/videos/bneck_redesign_arms/bneck_ctx_v2_shufcode",
+     "rows": ("registry", REPO_ROOT / "store/gens/014_bneck_ctx_v2_shufcode/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/004_bneck_ctx_v2__dai__2026-08-06/bneck_ctx_v2_shufcode",
+     "prompt_kind": "byte-identical to the matched CTX-v2 arm in every field except the encoder is "
+                    "fed a DIFFERENT clip via `code_source_reference` (the same 152/152 class-level "
+                    "derangement, 0 fixed points, reused from bneck_coupling). The row's own "
+                    "`reference` is untouched, so both twins score against a byte-identical GT pool. "
+                    "Scoring the same as the matched arm is the finding (clean null: P2 −0.008, both "
+                    "claim cells below bar).",
+     "doc": "misc/bneck_redesign/DOSSIER.md"},
+    {"id": "surg1_wsd", "score_id": "redesign_v4", "kind": "bottleneck", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓢ SURG-1 · matched code",
+     "sub": "V-JEPA 144-tok code · objective surgery (WSD) · treatment",
+     "src": REPO_ROOT / "store/gens/015_surg1_wsd/surg1_wsd__ck4500",
+     "media": "outputs/videos/surg1_arms/surg1_wsd",
+     "rows": ("registry", REPO_ROOT / "store/gens/015_surg1_wsd/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/006_surg1_wsd__dai__2026-08-11/surg1_wsd",
+     "prompt_kind": "the ctt_v2 recipe with the reference channel REPLACED by a compact 144-token "
+                    "V-JEPA transition code (one-way, backbone-free gen: trained projector from the "
+                    "step-4500 checkpoint). Objective surgery = high-sigma timestep mixture + code-swap "
+                    "contrastive gap loss. Same prompt/endpoints/seeds. Gate B: reads-but-weakly "
+                    "(matched > twin, P1 cross 9/13, P2 +0.020 << 0.1016). Compare ONLY vs its twin.",
+     "doc": "misc/2026-08-10_encoder_branch_redteam/DOSSIER.md"},
+    {"id": "surg1_wsd_shufcode", "score_id": "redesign_v4", "kind": "bottleneck", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓢ SURG-1 · deranged code",
+     "sub": "SAME adapter, cross-class WRONG code · the must-fail control",
+     "src": REPO_ROOT / "store/gens/016_surg1_wsd_shufcode/surg1_wsd_shufcode__ck4500",
+     "media": "outputs/videos/surg1_arms/surg1_wsd_shufcode",
+     "rows": ("registry", REPO_ROOT / "store/gens/016_surg1_wsd_shufcode/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/006_surg1_wsd__dai__2026-08-11/surg1_wsd_shufcode",
+     "prompt_kind": "byte-identical to the matched SURG-1 arm except the V-JEPA code source is a "
+                    "DIFFERENT manner class via `code_source_reference`; the row's own `reference` is "
+                    "untouched (byte-identical GT pool). It scored LOWER than matched in both claim "
+                    "cells — that IS the read signal (pool-% Δpp +2.7 same, +2.8 cross).",
+     "doc": "misc/2026-08-10_encoder_branch_redteam/DOSSIER.md"},
     {"id": "refvfx_A", "score_id": "refvfx_v4", "kind": "prior-work", "frames": 33,
-     "label": "Ⓐ refVFX · their prompt",
+     "label": "Ⓐ refVFX · effect prompt",
      "sub": "external baseline · prompt describes the effect",
      "src": REPO_ROOT / "store/gens/003_refvfx_A/videos",
      "media": "outputs/videos/refvfx_baseline/refvfx_A",
@@ -256,7 +322,7 @@ EXTERNAL = [
                     "text and demo agree. Their model at its strongest; NOT text-matched to ours.",
      "doc": "misc/refvfx_baseline/RECORD.md"},
     {"id": "refvfx_B", "score_id": "refvfx_v4", "kind": "prior-work", "frames": 33,
-     "label": "Ⓑ refVFX · our text budget",
+     "label": "Ⓑ refVFX · neutral prompt",
      "sub": "external baseline · no transition information in text",
      "src": REPO_ROOT / "store/gens/004_refvfx_B/videos",
      "media": "outputs/videos/refvfx_baseline/refvfx_B",
@@ -286,13 +352,13 @@ ARM_KINDS = [
      "between the two trainings, which are the only columns that answer an identical input.",
      ),
     ("ours",
-     "Our leaky-prompt arm.",
+     "Our effect-prompt arm.",
      "⑥ is the SAME ctt_v2 adapter as ⑤ — same weights, references, endpoint conditioning, "
      "geometry (480×640×121f @ 24fps) and seeds. One field changed: the prompt now also describes "
      "the transition, the effect clause inserted straight after the trained <span class='mono'>"
      "sksz.</span> token. It is the mirror of Ⓐ, and the comparison it was built for is <b>⑥ vs ⑤ "
      "as levels</b>, joined on the registry row. <b>It has no base twin, by design</b> — the "
-     "honest control would be the base model handed the leaky prompt, and that generation does "
+     "honest control would be the base model handed the effect prompt, and that generation does "
      "not exist; pairing it against a base video rendered from the PLAIN prompt would attribute "
      "the prompt change to the adapter. So it never enters the paired Δ or the sign test, and its "
      "column is marked ‡. Read it knowing this prompt shape is <b>out of distribution</b> for the "
