@@ -20,7 +20,7 @@ resolve via `gens/_legacy/`.
 ## gens  (arm-first since v2; all on the 152-row CTT grid × seeds 42/43 = 304 clips unless noted)
 
 1. `001_ic_gen` — runs/001@5000 (IC-LoRA generalist) · `01_neutral__cc` 83.1 · `02_effect__dai` 89.1
-2. `002_ctt_v2` — runs/002@10000 (CTT v2, superseded) · `01_neutral__eps` 82.5 · `02_effect__dai` (leaky) 91.3 · `03_effect__dai` regen 90.21 · `04_neutral__dai` regen 82.95
+2. `002_ctt_v2` — runs/002@10000 (CTT v2, superseded) · `01_neutral__eps` 82.5 · `02_effect__dai` (leaky) 91.3 · `03_effect__dai` regen 90.21 · `04_neutral__dai` regen 82.95 · `05_probe_dcg__dai` (300-row DCG cycle-0 probe, off-CTT grid)
 3. `003_refvfx` — runs/003 (EXTERNAL Wan2.1-FLF2V; 33f@6.5455fps) · `01_effect__dai` (their convention, leak 35/62) 42.4 · `02_neutral__dai` (our budget, leak-free) 33.0
 4. `004_base_prompt` — NO adapter, no anchors · `01_effect__dai` (clause, no sksz) · `02_neutral__dai` (V-neutral) 58.1
 5. `005_base_cond` — NO adapter + endpoint conditioning · `01_effect__dai` · `02_neutral__dai` (V-neutral) 60.4; vs 004 prices the anchors

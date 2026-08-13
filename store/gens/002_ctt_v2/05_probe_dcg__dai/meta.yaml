@@ -1,0 +1,19 @@
+id: gens/002_ctt_v2/05_probe_dcg__dai
+seq: 5
+shelf: gens
+arm: ctt_v2
+harness_arm: A0..A13 (DCG cycle-0 probe cells — per-row `arm` field; not a CTT-grid arm)
+variant: probe_dcg
+machine: dai
+created: 2026-08-12
+inputs: {run: runs/002_ctt_v2, step: 10000}
+code: misc/2026-08-12_method_novelty/dcg_grid.py via dcg_grid.sbatch (ctt_method_novelty campaign, cycle-0)
+prompt_family: none (probe/custom rows — prompts derived per-row by dcg_grid.py, not a prompts/ family)
+prompt_sha: n/a
+grid_rows: 300
+videos: 288
+source: registered retroactively 2026-08-13 (contract-v2 remediation — this gen ran off-store and unregistered)
+notes: DCG (demonstration-dependence) cycle-0 grid over derangement cells A0-A13; own filename
+  grammar <op>__<endpoint>__s<seed>__<Ak>.mp4; 300 manifest rows vs 288 clips = gate-skipped rows
+  (see dcg_grid/_gate in the campaign dir). Campaign artifacts (cartography, gate, runner logs)
+  stay in misc/2026-08-12_method_novelty/.

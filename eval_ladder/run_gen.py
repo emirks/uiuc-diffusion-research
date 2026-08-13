@@ -164,6 +164,9 @@ def main() -> None:
                     help="additional jsonl of registry rows, appended to the frozen registry")
     ap.add_argument("--out-root", default=None,
                     help="override outputs/videos/ladder2 (side lanes write their own tree)")
+    ap.add_argument("--videos-dir", action="store_true",
+                    help="contract v2: --out-root is a store gen subentry; write clips flat "
+                         "into <out-root>/videos/ (no <arm>__ck<step> dir — step lives in meta)")
     ap.add_argument("--const-code-clip", default=None,
                     help="Calibrator A (bneck_coupling/A10): force every row's code source to this "
                          "ONE clip, making matched and shuffled registries identical by "
@@ -204,6 +207,10 @@ def main() -> None:
         vk = r.get("video_key")
         d, name = vk.split("/", 1) if vk else (r["arm"], r["item_id"])
         suffix = f"__ck{args.step}" if args.step else ""
+        if args.videos_dir:
+            # contract v2: --out-root IS a store gen subentry — clips land flat in
+            # videos/, the step lives in meta.yaml, never in a path
+            return OUT_ROOT / "videos" / f"{name}__s{args.seed}.mp4"
         return OUT_ROOT / (d + suffix) / f"{name}__s{args.seed}.mp4"
 
     # dedup by canonical path BEFORE chunk slicing, so two array tasks can never race on the

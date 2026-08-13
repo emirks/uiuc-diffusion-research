@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+"""stamp_rows — derive an arm-stamped registry from a canonical prompt family (contract v2).
+
+The prompts/ shelf holds ARM-FREE rows; this is the ONLY sanctioned way to turn a family
+into a per-arm registry (hand-writing one is a contract violation — store/README.md §5).
+
+  python eval_ladder/stamp_rows.py --family 002_ctt152_effect --arm ctt_v4_effect \
+      --out eval_ladder/registry_ctt_v4_effect.jsonl [--set conditioning=prefix] [--set use_reference=false]
+
+- `arm` should be the new harness_arm grammar `<arm>_<variant>` (single underscore).
+- item_id is rendered with the frozen grammar: <cell>__<arm>__<endpoint>[__ref_<reference>]
+  (same as eval_ladder/build_registry.py) so old and new artifacts stay shape-compatible.
+- The family's prompt_corpus_sha is re-verified before stamping; print it, pin it in the
+  gen's meta.yaml as prompt_sha.
+"""
+import argparse, hashlib, json
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+PROMPTS = REPO_ROOT / "store/prompts"
+
+
+def key(r):
+    return (r["cell"], r["endpoint"], r.get("reference") or "", r["sided"])
+
+
+def corpus_sha(rows):
+    uniq = {key(r): r for r in rows}
+    blob = "".join(r["prompt"] for r in sorted(uniq.values(), key=key))
+    return hashlib.sha256(blob.encode()).hexdigest()[:12]
+
+
+def parse_val(v: str):
+    if v in ("true", "false"):
+        return v == "true"
+    return v
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--family", required=True, help="prompts/ entry, e.g. 002_ctt152_effect")
+    ap.add_argument("--arm", required=True, help="harness_arm to stamp (grammar: <arm>_<variant>)")
+    ap.add_argument("--out", required=True)
+    ap.add_argument("--set", action="append", default=[], metavar="K=V",
+                    help="arm-contract field applied to every row (conditioning=prefix, use_reference=false, no_twin=true, ...)")
+    args = ap.parse_args()
+
+    fam = PROMPTS / args.family
+    rows = [json.loads(l) for l in (fam / "grid.jsonl").read_text().splitlines() if l.strip()]
+    declared = next((l.split(":", 1)[1].split("#")[0].strip()
+                     for l in (fam / "meta.yaml").read_text().splitlines()
+                     if l.startswith("prompt_corpus_sha:")), None)
+    sha = corpus_sha(rows)
+    assert sha == declared, f"family sha drifted: computed {sha} != declared {declared}"
+
+    extra = dict(kv.split("=", 1) for kv in args.set)
+    out = Path(args.out)
+    with out.open("w") as f:
+        for r in sorted(rows, key=key):
+            s = dict(r)
+            s["arm"] = args.arm
+            ref = s.get("reference")
+            s["item_id"] = f"{s['cell']}__{args.arm}__{s['endpoint']}" + (f"__ref_{ref}" if ref else "")
+            for k, v in extra.items():
+                s[k] = parse_val(v)
+            f.write(json.dumps(s, sort_keys=True) + "\n")
+    print(f"[stamp] {len(rows)} rows -> {out}  arm={args.arm}  prompt_sha={sha} (pin this in the gen meta)")
+
+
+main()
