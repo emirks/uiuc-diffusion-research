@@ -89,6 +89,27 @@ arms:
     conditioning: none
     note: "V-neutral prompt only, no conditioning, no demo. Cleanest zero."
 
+  # --- controllability probe (misc/2026-08-13_controllability, pre-registered) ---
+  ctt_v3_ctl:
+    kind: generalist
+    targets: attn_ffn
+    step: 6000
+    attention: one_way
+    adapter_template: store/runs/008_ctt_v3_wsd/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "champion, controllability probe rows (registry_ctl_ctt_v3). rank/alpha 128."
+  ctt_v2_ctl:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: store/runs/002_ctt_v2/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "ctt_v2 comparison arm, controllability probe rows. rank/alpha 128."
+  base_ctl:
+    kind: base
+    adapter: null
+    targets: null
+    note: "base LTX-2, controllability probe rows (effect prompts + endpoint conditioning, NO demo)."
+
   spec_animalization:      {kind: specialist, class: animalization,      targets: attn, step: 2000}
   spec_color_rain:         {kind: specialist, class: color_rain,         targets: attn, step: 2000}
   spec_gas_transformation: {kind: specialist, class: gas_transformation, targets: attn, step: 2000}
