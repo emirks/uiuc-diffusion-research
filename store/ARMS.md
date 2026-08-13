@@ -30,3 +30,4 @@ hand-write a registry.
 
 Adding an arm = one row here + `eval_ladder/arms.yaml` entry + `stamp_rows.py` for its registry.
 Campaign nicknames (pushA/pushB…) never become directory names — canonical slugs only.
+Probe stamps (new-artifact grammar): `ctt_v3_ctl` · `ctt_v2_ctl` · `base_ctl` (controllability probe, gens */probe_ctl, evals/009).

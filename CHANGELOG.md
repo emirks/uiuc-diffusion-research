@@ -1,4 +1,19 @@
 ## 2026-08-13
+**21:35 — Controllability campaign EXECUTED + CLOSED (pending owner adjudication): the champion pays NO attribute-control penalty; controllability is axis-stratified by the BASE model.**
+Advised campaign (misc/2026-08-13_controllability, pre-registered before generation): 412-clip contradiction probe —
+can OOD attribute text override a demo-shown attribute? 3 arms (base / ctt_v2 / ctt_v3) × 5 axes on G-fit rows +
+unseen replication + congruent controls + graft probe. Gen 24/24 clean (~55min, DAI). Verdict instrument (Gemini VQA,
+temp 0) hit its pre-registered demotion clause (calibration 70% < 85%) → tables descriptive; color rescued by the
+pre-registered hue corroborator (99% FP-check). RESULTS: confirmatory NOT declared — v2 ≈ v3 at color override
+(paired p=0.50; objective hue instrument: v3 87.5% vs v2 81.2%, base 97.9%). Appearance attributes text-controllable
+everywhere; dynamics (density/speed/direction) text-INERT on all arms incl. base (= base-model limitation, not adapter
+cost), except measurable sub-categorical shadow_smoke thinning (12/12 pixel-drop). GRAFT: attribute sentence with NO
+effect clause transfers onto the demo effect (v3 6/6, hue-corroborated) — the product recipe is "decorate the demo,
+don't contradict it". Unseen-row replication 87.5% > held-in 58.3%. Fixed-gist re-VQA: gas integrity artifact confirmed
+(61→98%); earth_element_0 fragile at ROW level (anchors 17%) — quarantined by the failed congruent gate. Registered:
+gens {009_ctt_v3/05,002_ctt_v2/06,005_base_cond/03}_probe_ctl + evals/009_ctl_vqa + prompts/007; fsck PASS. Owner
+adjudication set (41 clips) at outputs/reports/ctl_probe/adjudicate.html — the pre-registered verdict authority.
+
 **17:20 — Store contract-v2 migration EXECUTED: arm-first gens, prompts shelf, tooling, viewer rewire — fsck PASS.**
 Owner approved all 4 decisions (migrate-with-shims, ctt_v3/ctt_v3_hs, pass-shaped evals, full cleanup bundle).
 Executed: (1) catch-up registration commit (metas untracked since ~Aug 6); (2) prompts/ shelf seeded — 6 sha-pinned

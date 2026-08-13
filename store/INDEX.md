@@ -20,14 +20,14 @@ resolve via `gens/_legacy/`.
 ## gens  (arm-first since v2; all on the 152-row CTT grid × seeds 42/43 = 304 clips unless noted)
 
 1. `001_ic_gen` — runs/001@5000 (IC-LoRA generalist) · `01_neutral__cc` 83.1 · `02_effect__dai` 89.1
-2. `002_ctt_v2` — runs/002@10000 (CTT v2, superseded) · `01_neutral__eps` 82.5 · `02_effect__dai` (leaky) 91.3 · `03_effect__dai` regen 90.21 · `04_neutral__dai` regen 82.95 · `05_probe_dcg__dai` (300-row DCG cycle-0 probe, off-CTT grid)
+2. `002_ctt_v2` — runs/002@10000 (CTT v2, superseded) · `01_neutral__eps` 82.5 · `02_effect__dai` (leaky) 91.3 · `03_effect__dai` regen 90.21 · `04_neutral__dai` regen 82.95 · `05_probe_dcg__dai` (300-row DCG cycle-0 probe, off-CTT grid) · `06_probe_ctl__dai` (controllability probe, 136 clips)
 3. `003_refvfx` — runs/003 (EXTERNAL Wan2.1-FLF2V; 33f@6.5455fps) · `01_effect__dai` (their convention, leak 35/62) 42.4 · `02_neutral__dai` (our budget, leak-free) 33.0
 4. `004_base_prompt` — NO adapter, no anchors · `01_effect__dai` (clause, no sksz) · `02_neutral__dai` (V-neutral) 58.1
-5. `005_base_cond` — NO adapter + endpoint conditioning · `01_effect__dai` · `02_neutral__dai` (V-neutral) 60.4; vs 004 prices the anchors
+5. `005_base_cond` — NO adapter + endpoint conditioning · `01_effect__dai` · `02_neutral__dai` (V-neutral) 60.4; vs 004 prices the anchors · `03_probe_ctl__dai` (controllability probe, 124 clips)
 6. `006_bneck_frozen` — runs/004@10000 (72 frozen operator tokens) · `01_neutral__dai` · `02_neutral_shufcode__dai` (load-bearing corpse)
 7. `007_bneck_ctx` — runs/006@10000 (16 context tokens) · `01_neutral__dai` · `02_neutral_shufcode__dai`
 8. `008_surg1` — runs/007@4500 (V-JEPA 144-tok code, SURG-1) · `01_neutral__dai` · `02_neutral_shufcode__dai` (must-fail twin, scored lower → reads)
-9. `009_ctt_v3` — runs/008@6000 (THE CHAMPION, provisional) · `01_neutral__eps` 87.98 · `02_neutral_shufref__eps` VOID (39 clips) · `03_effect__dai` 91.54 · `04_neutral__dai` 88.57
+9. `009_ctt_v3` — runs/008@6000 (THE CHAMPION, provisional) · `01_neutral__eps` 87.98 · `02_neutral_shufref__eps` VOID (39 clips) · `03_effect__dai` 91.54 · `04_neutral__dai` 88.57 · `05_probe_ctl__dai` (controllability probe, 152 clips)
 10. `010_ctt_v3_hs` — runs/009@6000 (high-σ negative, retired) · `01_neutral__eps` · `02_neutral_shufref__eps` VOID · `03_effect__dai` 90.00
 
 ## prompts  (the TWO sources — everything else is a stamp_rows transform, verified 152/152 exact)
@@ -54,6 +54,8 @@ resolve via `gens/_legacy/`.
 7. `007_ctt_v2_push__dai__2026-08-12` — v4 on DeltaAI, arms `ctt_v2_pushA` + `ctt_v2_pushB` vs the ctt_v2=82.5 baseline (evals/001, bit-identical eps-gen → clean paired Δ, ZERO gen-machine term). Analysis reproduced ctt_v2=82.49 first. **Arm A (runs/008 ctt_v3) = MEASURABLE WIN**: paired Δ%same **+4.99pp ALL-152 [+2.38,+7.63] / +5.49pp same-60 [+1.88,+9.38]**, headline **87.98**, COPY-GUARD PASS (near_copy 0/0, copy_max 0.269 vs 0.255). Arm B wins on 152 not same-60; **B−A ≈0 (high-σ inert, Arm C not fired)**. Shufref controls VOID (eps run_gen too old). **The win = the LR-schedule fix, not high-σ.** Advisor a38825fa: provisional champion pending blind A/B. [UNCERTIFIED]=branch-not-tagged
 
 8. `008_ctt_v2_effect_2x2__dai__2026-08-12` — the EFFECT-prompt follow-on: a CO-LOCATED adapter×prompt 2×2 on DeltaAI (gens/021-025) to decontaminate the never-co-located "+8.8 text gain". **Verdict (advisor afefa334): the pre-registered NULL fires — "the text channel SATURATES the adapter gain."** Under the effect prompt the champion's edge washes out (pushA_effect 91.54 ≈ leaky_regen 90.21; primary Δ −0.22pp [−1.94,+1.45]); all effect arms sit at the ~91 regen-consistency ceiling. The champion's text gain is significantly SMALLER than v2's (DiD −4.62pp [−7.54,−1.67]) — the corrected adapter reads from the reference what text otherwise supplies. B retired (null). Copy-guard clean (near_copy 0, copy_max 0.322). Co-located v2 text gain = +7.3pp (vs published +8.8; baselines drift ≤1.1pp). **Champion stays 88.0-PLAIN — effect numbers are text-assisted characterization only.** F-block = addendum to the plain-campaign block. [UNCERTIFIED]
+
+9. `009_ctl_vqa__dai__2026-08-13` — **controllability probe (VQA, NOT the v4 harness — pre-registered deviation)**: 412 clips, 3 arms × 5 axes. Calibration 70% < 85% bar → VQA DEMOTED per pre-registration; color rescued by the hue corroborator (99% FP-check). **Confirmatory NOT declared** — champion ≈ ctt_v2 at attribute override (paired p=0.50; hue instrument even puts v3 ahead 87.5 vs 81.2). Color controllable on all arms; density/speed/direction text-inert everywhere (except sub-categorical shadow_smoke thinning 12/12); GRAFT works v3 6/6; unseen-row replication 87.5%. Owner adjudication pending (adjudicate.html). [DESCRIPTIVE-CORROBORATED]
 
 ## datasets
 1. `001_transitions_std121` — 222-clip eval corpus (stub → data/processed/transitions_std121)
