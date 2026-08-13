@@ -4,7 +4,7 @@ set -euo pipefail
 FF=/u/emirkisa/.local/bin/ffmpeg
 REPO=/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research
 P=$REPO/outputs/presentation/slide_pack_2026-08-05
-G=$REPO/store/gens
+G=$REPO/store/gens/_legacy   # v2 migration 2026-08-13: legacy shims resolve the old flat ids
 T=$REPO/data/processed/transitions_std121
 E=$REPO/datasets/ctt_v2/encodes
 DAV=$REPO/data/raw/DAVIS/JPEGImages/480p

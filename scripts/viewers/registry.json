@@ -233,11 +233,11 @@
         ]
       },
       "check_files": [
-        "store/gens/001_ic_gen/videos",
-        "store/gens/002_ctt_v2/videos",
-        "store/gens/005_ctt_v2_leaky/videos",
-        "store/gens/003_refvfx_A/videos",
-        "store/gens/004_refvfx_B/videos",
+        "store/gens/001_ic_gen/01_neutral__cc/videos",
+        "store/gens/002_ctt_v2/01_neutral__eps/videos",
+        "store/gens/002_ctt_v2/02_effect__dai/videos",
+        "store/gens/003_refvfx/01_effect__dai/videos",
+        "store/gens/003_refvfx/02_neutral__dai/videos",
         "store/evals/001_five_arm__dai__2026-07-30",
         "outputs/eval/ctt_v2_compare"
       ],
@@ -280,9 +280,9 @@
         ]
       },
       "check_files": [
-        "store/gens/010_ic_gen_effect/videos",
-        "store/gens/011_base_cond_neutral/videos",
-        "store/gens/012_base_prompt_neutral/videos",
+        "store/gens/001_ic_gen/02_effect__dai/videos",
+        "store/gens/005_base_cond/02_neutral__dai/videos",
+        "store/gens/004_base_prompt/02_neutral__dai/videos",
         "store/evals/005_ic_effect_neutral__dai__2026-08-07"
       ]
     },

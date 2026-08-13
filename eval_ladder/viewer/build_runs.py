@@ -61,10 +61,10 @@ SEEDS = (42, 43)
 RUNS = [
     {"id": "ic_gen", "arm": "ic_gen", "checkpoint": None,
      "label": "IC-LoRA generalist", "sub": "ladder2 · the incumbent",
-     "gen_dir": "store/gens/001_ic_gen/videos", "registry": None},
+     "gen_dir": "store/gens/001_ic_gen/01_neutral__cc/videos", "registry": None},
     {"id": "ctt_v2", "arm": "ctt_v2", "checkpoint": 10000,
      "label": "CTT v2 · neutral prompt", "sub": "step 10,000 · rank 128 · one-way ref attention",
-     "gen_dir": "store/gens/002_ctt_v2/videos",
+     "gen_dir": "store/gens/002_ctt_v2/01_neutral__eps/videos",
      "registry": "eval_ladder/registry_ctt_v2.jsonl"},
 ]
 RUN_BY_ARM = {r["arm"]: r for r in RUNS}
@@ -115,9 +115,9 @@ EXTERNAL = [
      "no_twin": True,
      "label": "⓪ BASE · prompt only",
      "sub": "no adapter, no anchors, no demo · the floor",
-     "src": REPO_ROOT / "store/gens/006_base_prompt_ctt/videos",
+     "src": REPO_ROOT / "store/gens/004_base_prompt/01_effect__dai/videos",
      "media": "outputs/videos/base_arms/base_prompt_ctt",
-     "rows": ("registry", REPO_ROOT / "store/gens/006_base_prompt_ctt/grid.jsonl"),
+     "rows": ("registry", REPO_ROOT / "store/gens/004_base_prompt/01_effect__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/002_base_arms__dai__2026-07-31/base_prompt_ctt",
      "prompt_kind": "base weights, text only. The transition is described in plain language (the "
                     "effect-prompt arm's effect clause, with the trained <span class='mono'>sksz</span> "
@@ -128,9 +128,9 @@ EXTERNAL = [
      "no_twin": True,
      "label": "① BASE · prompt + endpoints",
      "sub": "no adapter, our anchors, no demo · the honest no-adapter twin",
-     "src": REPO_ROOT / "store/gens/007_base_cond_ctt/videos",
+     "src": REPO_ROOT / "store/gens/005_base_cond/01_effect__dai/videos",
      "media": "outputs/videos/base_arms/base_cond_ctt",
-     "rows": ("registry", REPO_ROOT / "store/gens/007_base_cond_ctt/grid.jsonl"),
+     "rows": ("registry", REPO_ROOT / "store/gens/005_base_cond/01_effect__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/002_base_arms__dai__2026-07-31/base_cond_ctt",
      "prompt_kind": "the same text-only prompt as ⓪, plus the endpoint conditioning every "
                     "training arm receives (prefix 9f, and suffix on two-sided rows). Still no "
@@ -140,9 +140,9 @@ EXTERNAL = [
     {"id": "ctt_v2_leaky", "score_id": "leaky_v4", "kind": "ours", "frames": 121, "no_twin": True,
      "label": "⑥ CTT v2 · effect prompt",
      "sub": "our adapter, prompt also describes the transition · level, not a margin",
-     "src": REPO_ROOT / "store/gens/005_ctt_v2_leaky/videos",
+     "src": REPO_ROOT / "store/gens/002_ctt_v2/02_effect__dai/videos",
      "media": "outputs/videos/ctt_v2_leaky/clips",
-     "rows": ("registry", REPO_ROOT / "store/gens/005_ctt_v2_leaky/grid.jsonl"),
+     "rows": ("registry", REPO_ROOT / "store/gens/002_ctt_v2/02_effect__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/001_five_arm__dai__2026-07-30/ctt_v2_leaky",
      "prompt_kind": "our own ctt_v2 adapter, same weights / references / endpoint conditioning / "
                     "geometry / seeds — the ONLY change is the prompt, which now also describes "
@@ -158,9 +158,9 @@ EXTERNAL = [
      "no_twin": True, "same_prompt_by_design": True,
      "label": "⑦ BNECK · frozen code (matched)",
      "sub": "raw demo REPLACED by 72 frozen operator tokens · treatment",
-     "src": REPO_ROOT / "store/gens/008_bneck_frozen/videos",
+     "src": REPO_ROOT / "store/gens/006_bneck_frozen/01_neutral__dai/videos",
      "media": "outputs/videos/bneck_coupling/bneck_frozen",
-     "rows": ("registry", REPO_ROOT / "store/gens/008_bneck_frozen/grid.jsonl"),
+     "rows": ("registry", REPO_ROOT / "store/gens/006_bneck_frozen/01_neutral__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/003_bneck_coupling__dai__2026-08-02/bneck_frozen",
      "prompt_kind": "the ctt_v2 recipe with ONE content change: the reference channel carries 72 "
                     "operator tokens from the certified transition encoder, held FROZEN (verified "
@@ -171,9 +171,9 @@ EXTERNAL = [
      "no_twin": True, "same_prompt_by_design": True,
      "label": "⑧ BNECK · shuffled code (corpse)",
      "sub": "SAME adapter file, deliberately WRONG code · the control",
-     "src": REPO_ROOT / "store/gens/009_bneck_frozen_shufcode/videos",
+     "src": REPO_ROOT / "store/gens/006_bneck_frozen/02_neutral_shufcode__dai/videos",
      "media": "outputs/videos/bneck_coupling/bneck_frozen_shufcode",
-     "rows": ("registry", REPO_ROOT / "store/gens/009_bneck_frozen_shufcode/grid.jsonl"),
+     "rows": ("registry", REPO_ROOT / "store/gens/006_bneck_frozen/02_neutral_shufcode__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/003_bneck_coupling__dai__2026-08-02/bneck_frozen_shufcode",
      "prompt_kind": "byte-identical to ⑦ in every field — same adapter file, same prompt, same "
                     "reference, same seeds — except that the encoder is fed a DIFFERENT clip via "
@@ -259,9 +259,9 @@ EXTERNAL = [
      "no_twin": True, "same_prompt_by_design": True,
      "label": "Ⓒ CTX-v2 · matched code",
      "sub": "raw demo REPLACED by 16 frozen context tokens (K'=16) · treatment",
-     "src": REPO_ROOT / "store/gens/013_bneck_ctx_v2/videos",
+     "src": REPO_ROOT / "store/gens/007_bneck_ctx/01_neutral__dai/videos",
      "media": "outputs/videos/bneck_redesign_arms/bneck_ctx_v2",
-     "rows": ("registry", REPO_ROOT / "store/gens/013_bneck_ctx_v2/grid.jsonl"),
+     "rows": ("registry", REPO_ROOT / "store/gens/007_bneck_ctx/01_neutral__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/004_bneck_ctx_v2__dai__2026-08-06/bneck_ctx_v2",
      "prompt_kind": "the ctt_v2 recipe with ONE content change: the reference channel carries the "
                     "certified transition encoder's 72 operator tokens, held FROZEN, compressed by a "
@@ -273,9 +273,9 @@ EXTERNAL = [
      "no_twin": True, "same_prompt_by_design": True,
      "label": "Ⓒ CTX-v2 · deranged code",
      "sub": "SAME adapter file, deliberately WRONG code · the control",
-     "src": REPO_ROOT / "store/gens/014_bneck_ctx_v2_shufcode/videos",
+     "src": REPO_ROOT / "store/gens/007_bneck_ctx/02_neutral_shufcode__dai/videos",
      "media": "outputs/videos/bneck_redesign_arms/bneck_ctx_v2_shufcode",
-     "rows": ("registry", REPO_ROOT / "store/gens/014_bneck_ctx_v2_shufcode/grid.jsonl"),
+     "rows": ("registry", REPO_ROOT / "store/gens/007_bneck_ctx/02_neutral_shufcode__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/004_bneck_ctx_v2__dai__2026-08-06/bneck_ctx_v2_shufcode",
      "prompt_kind": "byte-identical to the matched CTX-v2 arm in every field except the encoder is "
                     "fed a DIFFERENT clip via `code_source_reference` (the same 152/152 class-level "
@@ -288,9 +288,9 @@ EXTERNAL = [
      "no_twin": True, "same_prompt_by_design": True,
      "label": "Ⓢ SURG-1 · matched code",
      "sub": "V-JEPA 144-tok code · objective surgery (WSD) · treatment",
-     "src": REPO_ROOT / "store/gens/015_surg1_wsd/surg1_wsd__ck4500",
+     "src": REPO_ROOT / "store/gens/008_surg1/01_neutral__dai/videos",
      "media": "outputs/videos/surg1_arms/surg1_wsd",
-     "rows": ("registry", REPO_ROOT / "store/gens/015_surg1_wsd/grid.jsonl"),
+     "rows": ("registry", REPO_ROOT / "store/gens/008_surg1/01_neutral__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/006_surg1_wsd__dai__2026-08-11/surg1_wsd",
      "prompt_kind": "the ctt_v2 recipe with the reference channel REPLACED by a compact 144-token "
                     "V-JEPA transition code (one-way, backbone-free gen: trained projector from the "
@@ -302,9 +302,9 @@ EXTERNAL = [
      "no_twin": True, "same_prompt_by_design": True,
      "label": "Ⓢ SURG-1 · deranged code",
      "sub": "SAME adapter, cross-class WRONG code · the must-fail control",
-     "src": REPO_ROOT / "store/gens/016_surg1_wsd_shufcode/surg1_wsd_shufcode__ck4500",
+     "src": REPO_ROOT / "store/gens/008_surg1/02_neutral_shufcode__dai/videos",
      "media": "outputs/videos/surg1_arms/surg1_wsd_shufcode",
-     "rows": ("registry", REPO_ROOT / "store/gens/016_surg1_wsd_shufcode/grid.jsonl"),
+     "rows": ("registry", REPO_ROOT / "store/gens/008_surg1/02_neutral_shufcode__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/006_surg1_wsd__dai__2026-08-11/surg1_wsd_shufcode",
      "prompt_kind": "byte-identical to the matched SURG-1 arm except the V-JEPA code source is a "
                     "DIFFERENT manner class via `code_source_reference`; the row's own `reference` is "
@@ -315,9 +315,9 @@ EXTERNAL = [
      "no_twin": True, "same_prompt_by_design": True,
      "label": "Ⓝ ctt_v3 · corrected WSD (NEW CHAMPION)",
      "sub": "ctt_v2 recipe + num_processes-correct WSD schedule, 6000 steps · raw ref",
-     "src": REPO_ROOT / "outputs/videos/bneck_redesign/ctt_v2_pushA__ck6000",
+     "src": REPO_ROOT / "store/gens/009_ctt_v3/01_neutral__eps/videos",
      "media": "outputs/videos/push_arms/ctt_v2_pushA",
-     "rows": ("registry", REPO_ROOT / "misc/2026-08-11_ctt_v2_perf_push/build/registry_ctt_v2_pushA.jsonl"),
+     "rows": ("registry", REPO_ROOT / "store/gens/009_ctt_v3/01_neutral__eps/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/007_ctt_v2_push__dai__2026-08-12/ctt_v2_pushA",
      "prompt_kind": "the ctt_v2 champion recipe (rank128, one-way RAW video reference, plain sksz "
                     "prompt — SAME as ctt_v2) with ONE change: the LR schedule is corrected. ctt_v2 "
@@ -330,9 +330,9 @@ EXTERNAL = [
      "no_twin": True, "same_prompt_by_design": True,
      "label": "Ⓝ ctt_v3 + high-σ (the negative)",
      "sub": "Arm A + gentle high-sigma 30/20/50 timestep lean · owner's seed idea",
-     "src": REPO_ROOT / "outputs/videos/bneck_redesign/ctt_v2_pushB__ck6000",
+     "src": REPO_ROOT / "store/gens/010_ctt_v3_hs/01_neutral__eps/videos",
      "media": "outputs/videos/push_arms/ctt_v2_pushB",
-     "rows": ("registry", REPO_ROOT / "misc/2026-08-11_ctt_v2_perf_push/build/registry_ctt_v2_pushB.jsonl"),
+     "rows": ("registry", REPO_ROOT / "store/gens/010_ctt_v3_hs/01_neutral__eps/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/007_ctt_v2_push__dai__2026-08-12/ctt_v2_pushB",
      "prompt_kind": "Arm A + SURG-1's high-σ timestep lean (30% U[0.9,1.0] / 20% U[0.7,0.9) / 50% "
                     "base). Beats ctt_v2 on ALL-152 (+4.6pp) but not same-60, and adds NOTHING over "
@@ -343,9 +343,9 @@ EXTERNAL = [
      "no_twin": True, "same_prompt_by_design": True,
      "label": "Ⓔ ctt_v3 · EFFECT prompt",
      "sub": "champion adapter + effect clause · co-located 2×2 · headline 91.54 (text-assisted)",
-     "src": REPO_ROOT / "outputs/videos/ctt_v2_push_effect/ctt_v2_pushA_effect__ck6000",
+     "src": REPO_ROOT / "store/gens/009_ctt_v3/03_effect__dai/videos",
      "media": "outputs/videos/push_effect_arms/ctt_v2_pushA_effect",
-     "rows": ("registry", REPO_ROOT / "eval_ladder/registry_ctt_v2_pushA_effect.jsonl"),
+     "rows": ("registry", REPO_ROOT / "store/gens/009_ctt_v3/03_effect__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/008_ctt_v2_effect_2x2__dai__2026-08-12/ctt_v2_pushA_effect",
      "prompt_kind": "the ctt_v3 champion adapter with the EFFECT prompt (effect clause after sksz). "
                     "Under this prompt the schedule-fix edge WASHES OUT vs ctt_v2 (91.54≈90.21, primary "
@@ -356,9 +356,9 @@ EXTERNAL = [
      "no_twin": True, "same_prompt_by_design": True,
      "label": "Ⓔ ctt_v2 · EFFECT (co-located)",
      "sub": "ctt_v2 adapter + effect clause · DeltaAI regen baseline · 90.21 (published 91.3)",
-     "src": REPO_ROOT / "outputs/videos/ctt_v2_push_effect/ctt_v2_leaky_regen__ck10000",
+     "src": REPO_ROOT / "store/gens/002_ctt_v2/03_effect__dai/videos",
      "media": "outputs/videos/push_effect_arms/ctt_v2_leaky_regen",
-     "rows": ("registry", REPO_ROOT / "eval_ladder/registry_ctt_v2_leaky_regen.jsonl"),
+     "rows": ("registry", REPO_ROOT / "store/gens/002_ctt_v2/03_effect__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/008_ctt_v2_effect_2x2__dai__2026-08-12/ctt_v2_leaky_regen",
      "prompt_kind": "the ctt_v2 champion adapter with the effect prompt, REGENERATED on DeltaAI-today so "
                     "the effect 2×2 is co-located (the published 91.3 was DeltaAI-gen, 82.5 eps-gen — the "
@@ -368,9 +368,9 @@ EXTERNAL = [
      "no_twin": True, "same_prompt_by_design": True,
      "label": "Ⓔ ctt_v3 · plain (DeltaAI regen)",
      "sub": "champion adapter + plain prompt · 2×2 cell · 88.57 (≈88.0 eps)",
-     "src": REPO_ROOT / "outputs/videos/ctt_v2_push_effect/ctt_v2_pushA_plain__ck6000",
+     "src": REPO_ROOT / "store/gens/009_ctt_v3/04_neutral__dai/videos",
      "media": "outputs/videos/push_effect_arms/ctt_v2_pushA_plain",
-     "rows": ("registry", REPO_ROOT / "eval_ladder/registry_ctt_v2_pushA_plain.jsonl"),
+     "rows": ("registry", REPO_ROOT / "store/gens/009_ctt_v3/04_neutral__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/008_ctt_v2_effect_2x2__dai__2026-08-12/ctt_v2_pushA_plain",
      "prompt_kind": "the ctt_v3 champion, PLAIN prompt, DeltaAI regen — the plain cell of the co-located 2×2.",
      "doc": "misc/2026-08-11_ctt_v2_perf_push/DOSSIER.md"},
@@ -378,9 +378,9 @@ EXTERNAL = [
      "no_twin": True, "same_prompt_by_design": True,
      "label": "Ⓔ ctt_v2 · plain (DeltaAI regen)",
      "sub": "ctt_v2 adapter + plain prompt · 2×2 cell · 82.95 (≈82.5 eps)",
-     "src": REPO_ROOT / "outputs/videos/ctt_v2_push_effect/ctt_v2_plain_regen__ck10000",
+     "src": REPO_ROOT / "store/gens/002_ctt_v2/04_neutral__dai/videos",
      "media": "outputs/videos/push_effect_arms/ctt_v2_plain_regen",
-     "rows": ("registry", REPO_ROOT / "eval_ladder/registry_ctt_v2_plain_regen.jsonl"),
+     "rows": ("registry", REPO_ROOT / "store/gens/002_ctt_v2/04_neutral__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/008_ctt_v2_effect_2x2__dai__2026-08-12/ctt_v2_plain_regen",
      "prompt_kind": "ctt_v2, PLAIN prompt, DeltaAI regen — the base cell of the co-located 2×2 (drift +0.45pp vs published 82.5).",
      "doc": "misc/2026-08-11_ctt_v2_perf_push/DOSSIER.md"},
@@ -388,18 +388,18 @@ EXTERNAL = [
      "no_twin": True, "same_prompt_by_design": True,
      "label": "Ⓔ Arm B · EFFECT (retired)",
      "sub": "high-σ arm + effect clause · 90.00 · inert (B−A null)",
-     "src": REPO_ROOT / "outputs/videos/ctt_v2_push_effect/ctt_v2_pushB_effect__ck6000",
+     "src": REPO_ROOT / "store/gens/010_ctt_v3_hs/03_effect__dai/videos",
      "media": "outputs/videos/push_effect_arms/ctt_v2_pushB_effect",
-     "rows": ("registry", REPO_ROOT / "eval_ladder/registry_ctt_v2_pushB_effect.jsonl"),
+     "rows": ("registry", REPO_ROOT / "store/gens/010_ctt_v3_hs/03_effect__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/008_ctt_v2_effect_2x2__dai__2026-08-12/ctt_v2_pushB_effect",
      "prompt_kind": "Arm B (+high-σ) with the effect prompt. B−A effect null on both populations → high-σ inert under effect too; retired.",
      "doc": "misc/2026-08-11_ctt_v2_perf_push/DOSSIER.md"},
     {"id": "refvfx_A", "score_id": "refvfx_v4", "kind": "prior-work", "frames": 33,
      "label": "Ⓐ refVFX · effect prompt",
      "sub": "external baseline · prompt describes the effect",
-     "src": REPO_ROOT / "store/gens/003_refvfx_A/videos",
+     "src": REPO_ROOT / "store/gens/003_refvfx/01_effect__dai/videos",
      "media": "outputs/videos/refvfx_baseline/refvfx_A",
-     "rows": ("manifest", REPO_ROOT / "store/gens/003_refvfx_A/grid.jsonl"),
+     "rows": ("manifest", REPO_ROOT / "store/gens/003_refvfx/01_effect__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/001_five_arm__dai__2026-07-30/refvfx_A",
      "prompt_kind": "refVFX's own convention — the prompt NAMES the effect the demo shows, so "
                     "text and demo agree. Their model at its strongest; NOT text-matched to ours.",
@@ -407,9 +407,9 @@ EXTERNAL = [
     {"id": "refvfx_B", "score_id": "refvfx_v4", "kind": "prior-work", "frames": 33,
      "label": "Ⓑ refVFX · neutral prompt",
      "sub": "external baseline · no transition information in text",
-     "src": REPO_ROOT / "store/gens/004_refvfx_B/videos",
+     "src": REPO_ROOT / "store/gens/003_refvfx/02_neutral__dai/videos",
      "media": "outputs/videos/refvfx_baseline/refvfx_B",
-     "rows": ("manifest", REPO_ROOT / "store/gens/004_refvfx_B/grid.jsonl"),
+     "rows": ("manifest", REPO_ROOT / "store/gens/003_refvfx/02_neutral__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/001_five_arm__dai__2026-07-30/refvfx_B",
      "prompt_kind": "our arms' text budget, in their vocabulary — a class-agnostic effect clause "
                     "in place of our `sksz`. Same weights, same seeds, same geometry as Ⓐ; the "
