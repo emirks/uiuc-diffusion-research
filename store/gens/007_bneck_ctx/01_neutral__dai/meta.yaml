@@ -1,0 +1,14 @@
+id: gens/007_bneck_ctx/01_neutral__dai
+seq: 1
+shelf: gens
+arm: bneck_ctx
+harness_arm: bneck_ctx_v2   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral
+machine: dai
+created: 2026-08-06
+migrated: 2026-08-13 from gens/013_bneck_ctx_v2 (contract v2 — store/MIGRATION.md; full v1 provenance in meta.v1.yaml)
+inputs: {run: runs/006_bneck_ctx_v2, step: 10000}
+prompt_family: prompts/001_ctt152_neutral
+prompt_sha: 0d708175fbfe
+grid_rows: 152
+videos: 304

@@ -1,0 +1,14 @@
+id: gens/003_refvfx/02_neutral__dai
+seq: 2
+shelf: gens
+arm: refvfx
+harness_arm: refvfx_B   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral
+machine: dai
+created: 2026-07-30
+migrated: 2026-08-13 from gens/004_refvfx_B (contract v2 — store/MIGRATION.md; full v1 provenance in meta.v1.yaml)
+inputs: {run: runs/003_refvfx (external)}
+prompt_family: prompts/006_refvfx_neutral
+prompt_sha: 11a50d24645a
+grid_rows: 304
+videos: 304

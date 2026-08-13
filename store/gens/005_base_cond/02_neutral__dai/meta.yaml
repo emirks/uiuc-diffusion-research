@@ -1,0 +1,14 @@
+id: gens/005_base_cond/02_neutral__dai
+seq: 2
+shelf: gens
+arm: base_cond
+harness_arm: base_cond_neutral   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral
+machine: dai
+created: 2026-08-06
+migrated: 2026-08-13 from gens/011_base_cond_neutral (contract v2 — store/MIGRATION.md; full v1 provenance in meta.v1.yaml)
+inputs: {run: base weights (no adapter)}
+prompt_family: prompts/003_ctt152_vneutral
+prompt_sha: f2ebeedf2187
+grid_rows: 152
+videos: 304

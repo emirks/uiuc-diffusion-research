@@ -1,93 +1,100 @@
-# The artifact store — `$LAB/diffusion-research/store`
+# The artifact store — `$LAB/diffusion-research/store` (contract v2)
 
-**One place, three shelves: `runs/` (training) → `gens/` (generation) → `evals/` (scoring).**
-Created 2026-07-30. `STORE=$LAB/diffusion-research/store`. Code lives in git; artifacts live here;
-campaign narrative stays in `misc/<campaign>/` (also inside the repo since the 2026-07-30 reorg).
-The store is the source of truth — other locations may symlink INTO it, never hold copies.
-Git tracks the store's *metadata* (README, INDEX, `meta.yaml`, `grid.jsonl`); videos, checkpoints,
-and score files are gitignored like the rest of `outputs/`.
+**One place, five shelves: `runs/` (training) → `gens/` (generation) → `evals/` (scoring), fed by
+`datasets/` and `prompts/`.** Created 2026-07-30; contract v2 since the 2026-08-13 migration
+(`MIGRATION.md` — old gen ids resolve forever via `gens/_legacy/`). `STORE=$LAB/diffusion-research/store`.
+Code lives in git; artifacts live here; campaign narrative stays in `misc/<campaign>/`.
+The store is the source of truth — other locations symlink INTO it, never hold copies.
+Git tracks the store's *metadata* (README, INDEX, ARMS, MIGRATION, `meta.yaml`, `meta.v1.yaml`,
+`grid.jsonl`, `config.yaml`); videos, checkpoints, and score files are gitignored.
 
 ```
 store/
-  INDEX.md               ← the ledger: one line per entry below. Update it when you add an entry.
-  datasets/NNN_<slug>/   immutable dataset roots (or a symlink stub to a legacy location) + meta.yaml
+  INDEX.md               ← the ledger: one line per entry. Update it when you add an entry.
+  ARMS.md                ← canonical arm registry: slugs, variants, harness_arm aliases, prompt families
+  MIGRATION.md           ← the frozen v1→v2 map (2026-08-13)
+  datasets/NNN_<slug>/   immutable dataset roots (or symlink stub) + meta.yaml
+  prompts/NNN_<slug>/    canonical rendered prompt families: ARM-FREE grid.jsonl + meta.yaml (sha-pinned)
   runs/NNN_<slug>/       one training run:  meta.yaml · config.yaml · checkpoints/ · NOTES.md?
-  gens/NNN_<slug>/       one generation batch:  meta.yaml · grid.jsonl · videos/*.mp4
-  evals/NNN_<slug>/      one scoring pass:  meta.yaml · <arm>/<label>/{items.jsonl,results.json}
+  gens/NNN_<arm>/KK_<variant>__<machine>/   one generation batch of one arm-variant:
+                         meta.yaml · meta.v1.yaml? · grid.jsonl · videos/*.mp4 (flat, REAL files)
+  evals/NNN_<name>__<machine>__<date>/      one scoring pass:
+                         meta.yaml · <harness_arm>/<label>/{items.jsonl,results.json}  (label = --label shard, c0..c7)
 ```
+
+## Naming (v2)
+
+- **Arm** = model/adapter lineage, canonical slug per `ARMS.md` (`ctt_v3`, not a campaign nickname).
+- **Variant** = prompt setting: **`neutral`** (the arm's leak-free prompt) or **`effect`** (+ the
+  shared clause); controls suffix it (`neutral_shufcode`). **Machine** always suffixes the subentry
+  (`__cc`/`__eps`/`__dai`) — cross-machine drift is measured and identity-bearing.
+- **`harness_arm`** is the frozen stamp inside scored artifacts (item_ids, `items.jsonl` `arm`
+  field). Never renamed without re-scoring; joins use it, humans use canonical. New arms stamp
+  `<arm>_<variant>` so the two coincide.
+- `KK` = 2-digit inner seq in creation order (never reused): the arm dir's `ls` is its variant
+  timeline, the shelf's `ls` is the arm timeline.
 
 ## The contract (all of it)
 
-1. **Every entry is a directory with a `meta.yaml`.** Minimum keys: `id`, `created`, `machine`,
-   `inputs` (the upstream store ids this was made from), `source` (campaign/script that made it).
-   Everything else is per-shelf (see the seeded entries for live examples).
-2. **Entry dirs are numbered: `NNN_<slug>`** — `NNN` = zero-padded seq (max on the shelf + 1,
-   never reused), slug snake_case. A gen's slug is its arm (`005_ctt_v2_leaky`); an eval's is
-   `<name>__<machine>__<YYYY-MM-DD>`. **`ls` IS the timeline — the highest number is the
-   latest**, no separate pointer.
-3. **An eval is scored on ONE machine, recorded in `meta.yaml`.** Never merge rows from two
-   machines into one eval entry — measured 2026-07-30: v4 does not reproduce eps↔DeltaAI at the
-   0.005 bar. Record the *measured* sha256 of the reference artifact, not the declared constant.
-4. **A gen pins its adapter by `run_id` + `step` (+ sha256 of the checkpoint file)** and carries
-   the exact rendered rows it used in `grid.jsonl` (prompt text included). Arm identity must never
-   live only in a parent directory name — that is how the four identically-named 304-clip sets
-   almost got merged. **Code is pinned the same way**: a run's `meta.yaml` carries a `trainer:`
-   block (checkout · branch · commit · entry script) and a gen's carries a `code:` line naming the
-   stack that rendered it.
-5. **Checkpoint retention:** `runs/<id>/checkpoints/` holds the *shipped* step(s) and the final
-   step only. Intermediates stay in the training scratch dir and die when the campaign closes,
-   unless `meta.yaml` lists a reason to keep them.
-6. **External models** (base weights, third-party adapters) stay in `$LAB/cache/`; a run entry for
-   them is a stub: `meta.yaml` + `checkpoints/` symlink into the cache, `external: true`.
-7. **Wiring, not copying.** The viewer, repo `outputs/`, and campaign dirs reach store content via
-   symlinks. If you find yourself `cp`-ing out of the store, stop.
-8. **Entries are immutable.** `meta.yaml` carries `seq: N` matching the dir prefix. Registering
-   = numbered dir + meta + INDEX row + CHANGELOG, one commit. A re-run/re-score/fix is a NEW
-   entry with the next number — never overwrite written artifacts or numbers.
+1. **Every entry is a directory with a `meta.yaml`.** Gen subentries carry: `id, seq, shelf, arm,
+   harness_arm, variant, machine, created, inputs {run, step}, prompt_family, prompt_sha, grid_rows,
+   videos` (+ `void:` where a control is unusable). Migrated ones keep the v1 meta as `meta.v1.yaml`.
+2. **Entry dirs are numbered, numbers never reused; `ls` IS the timeline** — arm level and variant
+   level. An eval's slug is `<name>__<machine>__<YYYY-MM-DD>`.
+3. **An eval is scored on ONE machine, recorded in `meta.yaml`**, with a REQUIRED `arms_scored:`
+   block mapping each arm subdir → `{gen: <gen id>, run: <run id>, rows: N}`. Record the *measured*
+   sha256 of the reference artifact, not the declared constant.
+4. **A gen pins everything**: adapter by `run_id` + `step` (+ checkpoint sha256), code by a
+   `trainer:`/`code:` line (checkout · commit), prompts by `prompt_family` + `prompt_sha`, and the
+   exact rendered rows in `grid.jsonl`. Arm identity lives in meta (`harness_arm`), never only in a
+   path.
+5. **Prompts have ONE source.** `prompts/` families are sha-pinned and arm-free;
+   `eval_ladder/stamp_rows.py` derives an arm-stamped registry from a family — hand-written
+   registries are a contract violation. `eval_ladder/prompts.py` remains the only renderer.
+6. **Checkpoint retention:** shipped step(s) + final only; intermediates and training-state blobs
+   die when the campaign closes. After close-out sha-verify, offsite/misc duplicate copies are
+   DELETED in the same step.
+7. **External models** stay in `$LAB/cache/`; their run entry is a stub (`external: true`).
+8. **Wiring, not copying — and media lives HERE.** `videos/` holds real flat files
+   (`<item_id>__s<seed>.mp4`); `outputs/`, viewers, and campaign dirs reach them via symlinks INTO
+   the store. If you find yourself `cp`-ing out of the store, stop.
+9. **Entries are immutable.** Registering = numbered dir + meta + INDEX row + CHANGELOG, **one
+   commit, at close — not days later**. A re-run/re-score/fix is a NEW subentry with the next KK.
+   (The 2026-08-13 migration was a one-time versioned event, not precedent.)
 
 ## How new work flows through it
 
-- **Train** → point the trainer's `output_dir` at scratch as usual; at campaign close, `mkdir
-  $STORE/runs/<id>`, move the kept checkpoint(s) + the exact `config.yaml` in, write `meta.yaml`,
-  symlink the old location back if anything references it.
-- **Generate** → `LADDER_OUT_ROOT=$STORE/gens/<id>/videos python eval_ladder/run_gen.py …`
-  (the `relative_to` crash for out-of-repo roots was fixed 2026-07-30); drop `grid.jsonl` +
-  `meta.yaml` beside it.
-- **Score** → `LADDER_SCORES=$STORE/evals/<id>` (or `--out-root`); the scorer's native
-  `<label>/{items.jsonl,results.json}` layout is stored as-is, one subdir per arm.
-- **View** → `eval_ladder/viewer/build_runs.py` entries point at store paths; its existing
-  `ensure_external_media()` symlink machinery serves them.
-- **Record** → one line in `INDEX.md`, and the campaign dossier references store ids.
+- **Train** → scratch/offsite as usual; at close: `mkdir $STORE/runs/<id>`, move kept checkpoint(s)
+  + exact `config.yaml`, write meta (trainer pin), sha-verify, delete duplicates, symlink the old
+  location back if referenced.
+- **Generate** → registry from `stamp_rows.py`; run with
+  `--out-root $STORE/gens/NNN_<arm>/KK_<variant>__<machine>` (videos land flat in `videos/`);
+  at close `scripts/store_register.py gen <subentry>` writes `grid.jsonl` + autofilled meta + the
+  INDEX row.
+- **Score** → scorer `--out-root $STORE/evals/<id>/<harness_arm>` per arm (per-arm out-roots — the
+  shared-outroot collision is a known failure), `--label c<K>` shards.
+- **View** → `eval_ladder/viewer/build_runs.py` entries point at store paths; `ensure_external_media()`
+  symlinks serve them.
+- **Record** → one INDEX line; campaign dossiers reference store ids.
+- **Check** → `scripts/store_fsck.py` validates schema, counts, and prompt shas; run it at every
+  registration.
 
 ## What the store is NOT
 
-It is **artifacts + provenance, not tooling**. The tools live in the repo, versioned by git:
-trainers in `src/LTX-2-official` (+ its linked worktrees `src/LTX-2-{cond-bleed-fix,ctt-v2-train,
-bneck}` — one branch each), generation in `eval_ladder/run_gen.py` (+ `job_gen.sbatch`), scoring
-in `src/diffusion/transition_eval` (imported from the `eval-v4-cert` worktree), the viewer in
-`eval_ladder/viewer/`. A store entry's `meta.yaml` names the code and commit that produced it, so
-**entry + git checkout = the full reproduction recipe** — that is the self-containment contract,
-and it is why tools are never copied into entries (copies rot; pins don't).
-
-## What this replaces (context)
-
-Before 2026-07-30 artifacts were scattered: checkpoints in `misc/ctt_v2_training/` and repo
-`outputs/training/ladder2/`, videos across repo `outputs/videos/*` and three `misc/` campaign
-dirs, scores in `misc/refvfx_baseline/eval/scores/`, with identity carried by parent paths and
-hand-edited viewer lists. The five arms of the refVFX comparison (`ic_gen`, `ctt_v2`,
-`ctt_v2_leaky`, `refvfx_A`, `refvfx_B`) were migrated in as the seed content; legacy campaigns
-before that stay where they are, frozen.
-
-Same reorg moved `misc/` (repo root) and the four `LTX-2-*` trainer checkouts (under `src/`)
-from `$LAB` into this repo dir. The `$LAB`-level bridge symlinks that initially kept old paths
-alive were **RETIRED later the same day**: the venvs' editable path files
-(`envs-aarch64/{ltx2,refvfx}` `.pth` + `direct_url.json`) and the eval_ladder sbatch scripts +
-`encode_conditioning.py` were rewritten to the canonical in-repo paths, import-verified, and the
-five bridges parked at `$LAB/.retired-bridges/` (restore = move them back). The three
-non-official `LTX-2-*` dirs are **linked git worktrees** of `src/LTX-2-official`; their gitdir
-wiring was repaired on 2026-07-30 (it had pointed at dead `/projects` paths since the migration).
+Artifacts + provenance, not tooling. Tools live in git: trainers in `src/LTX-2-official` (+ linked
+worktrees, one branch each), generation in `eval_ladder/run_gen.py` (+ `job_gen.sbatch`), scoring in
+`src/diffusion/transition_eval` (v4 via the `eval-v4-cert` worktree), the viewer in
+`eval_ladder/viewer/`. A store entry's meta names the code and commit that produced it, so
+**entry + git checkout = the full reproduction recipe**.
 
 **Path prefix rule (both clusters, one Taiga filesystem):** use `/taiga/illinois/...` in anything
-absolute — it resolves on CC *and* DeltaAI. `/projects/illinois/...` is CC-only, and on DeltaAI
-`/projects/<code>` is a *different* filesystem (Delta project space). See the `deltaai` skill and
-the cc-cluster-layout memory.
+absolute — it resolves on CC *and* DeltaAI. `/projects/illinois/...` is CC-only. See the `deltaai`
+skill and the cc-cluster-layout memory.
+
+## History
+
+v1 (2026-07-30) seeded the five-arm refVFX comparison and retired the `$LAB`-level bridges (parked
+at `$LAB/.retired-bridges/`). v2 (2026-08-13) restructured `gens/` arm-first, added `prompts/` +
+`ARMS.md`, backfilled the nine stub gens, and remediated the drift documented in
+`misc/2026-08-13_store_restructure/PROPOSAL.md`. Legacy campaigns before the store stay where they
+are, frozen.

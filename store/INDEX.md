@@ -1,9 +1,10 @@
 # Store ledger
 
-One line per entry, in seq order. Entry dirs are named `NNN_<slug>` — **the highest number IS the
-latest**, on disk and here; numbers are never reused. Registering an entry = numbered dir +
-meta.yaml (matching `seq:`) + a row here + CHANGELOG, in one commit.
-Contract: README.md · flow: `lora-flow` skill.
+One line per entry, in seq order — **the highest number IS the latest**, on disk and here; numbers
+are never reused. Registering an entry = numbered dir + meta.yaml (matching `seq:`) + a row here +
+CHANGELOG, in one commit. Contract v2: README.md · arms: ARMS.md · v1→v2 map: MIGRATION.md ·
+flow: `lora-flow` skill. Gens are `NNN_<arm>/KK_<variant>__<machine>` since 2026-08-13; old ids
+resolve via `gens/_legacy/`.
 
 ## runs
 1. `001_ic_gen` — LTX-2 19B IC-LoRA r32/α32 bidir, step 5000 shipped (ladder2 generalist)
@@ -16,32 +17,26 @@ Contract: README.md · flow: `lora-flow` skill.
 8. `008_ctt_v3_wsd` — **NEW CHAMPION candidate ("ctt_v3")**: runs/002_ctt_v2 recipe (r128, one-way RAW ref, plain sksz prompt) with the LR schedule CORRECTED — ctt_v2 shipped a num_processes-mis-scaled `linear` schedule that floored LR at 1e-5 for **87.5%** of its 10k steps; this num_processes-correct **WSD** retrain (**6000 steps, 40% cheaper**) is a **MEASURABLE WIN**: paired same-seed Δ%same vs ctt_v2 **+5.0pp ALL-152 [+2.4,+7.6] / +5.5pp same-60**, headline **82.5→88.0**, copy-guard clean. Gen on eps co-located (repro gate BIT-IDENTICAL). src/LTX-2-surg @ a4033230 (surgery OFF); ckpt sha aa263cba. **PROVISIONAL** pending blind A/B.
 9. `009_pushB_wsd_hs302050` — **the NEGATIVE**: runs/008 + SURG-1's high-σ timestep lean (30/20/50). Beats ctt_v2 on ALL-152 (+4.6pp) but NOT same-60; adds NOTHING over runs/008 (B−A −0.4pp [−2.9,+2.1], point-est negative). **High-σ lever CLOSED for raw readers** (it transfers to a bottleneck code, not a raw ref). ckpt sha 76a0f66d
 
-## gens  (all on the 152-row CTT grid × seeds 42/43 = 304 clips)
-1. `001_ic_gen` — runs/001_ic_gen@5000, plain sksz prompts, 121f@24fps
-2. `002_ctt_v2` — runs/002_ctt_v2@10000, plain sksz prompts, 121f@24fps
-3. `003_refvfx_A` — runs/003_refvfx, their prompt convention (describes effect; text leak 35/62), 33f@6.5455fps
-4. `004_refvfx_B` — runs/003_refvfx, our text budget (fixed token; leak-free 0/62), 33f@6.5455fps
-5. `005_ctt_v2_leaky` — runs/002_ctt_v2@10000 (same file), prompts + effect clause; leaky mirror, no base twin
-6. `006_base_prompt_ctt` — NO adapter (base weights), prompt only (effect clause, no `sksz`), no anchors, no demo
-7. `007_base_cond_ctt` — NO adapter, same prompt + endpoint conditioning, still no demo; 006 vs 007 prices the anchors
-8. `008_bneck_frozen` — runs/004@10000; the raw reference REPLACED by 72 frozen operator tokens (certified encoder, G2 bitwise). Twin of 009
-9. `009_bneck_frozen_shufcode` — SAME adapter file as 008, code source deranged via `code_source_reference` (row's own `reference` untouched, so both twins share a byte-identical GT pool). The load-bearing corpse
-10. `010_ic_gen_effect` — runs/001_ic_gen@5000 (SAME adapter as gens/001), effect clause after the `sksz` token (leaky convention); the missing adapter×text 2×2 cell, twin of gens/001_ic_gen. Scored in evals/005
-11. `011_base_cond_neutral` — NO adapter (base weights), V-neutral prompt (start scene only; `sksz` + effect clause both removed) + endpoint conditioning, no demo. The specificity-zero anchor. Scored in evals/005
-12. `012_base_prompt_neutral` — NO adapter, V-neutral prompt only, no conditioning, no demo. The cleanest zero; 011 vs 012 prices the anchors. Scored in evals/005
-13. `013_bneck_ctx_v2` — runs/006@10000; the raw reference REPLACED by the frozen 72-token code injected as 16 CONTEXT tokens (`inject=context`). Twin of 014
-14. `014_bneck_ctx_v2_shufcode` — SAME adapter file as 013, code source deranged via `code_source_reference` (row's own `reference` untouched, so both twins share a byte-identical GT pool). The load-bearing corpse
-15. `015_surg1_wsd` — **SURG-1 Gate B MATCHED**: runs/007 @ step4500, V-JEPA 144-tok code reference (backbone-free gen, trained projector from ckpt), 152×2. Twin of 016. Reads-but-weakly (see evals/006)
-16. `016_surg1_wsd_shufcode` — SAME adapter as 015, code source cross-class deranged (`code_source_reference`), reference untouched → byte-identical GT pool. The must-fail twin (it scored LOWER → the channel reads)
-17. `017_ctt_v2_pushA` — runs/008 (ctt_v3) @6000, plain sksz, 152×2=304 on eps (co-located w/ ctt_v2 gens/002, repro gate bit-identical). The CHAMPION's clips. Scored evals/007. In the iclora_runs viewer.
-18. `018_ctt_v2_pushB` — runs/009 @6000, 304 clips. The high-σ negative arm. Scored evals/007
-19. `019_ctt_v2_pushA_shufref` — wrong-ref control, **VOID**: eps run_gen (Jul-30 copy) ignores `code_source_reference` on the raw path → byte-identical to 017 (mechanism control unusable; verdict unaffected)
-20. `020_ctt_v2_pushB_shufref` — same VOID as 019
-21. `021_ctt_v2_pushA_effect` — ctt_v3 champion × EFFECT prompt (DeltaAI co-located 2×2), headline 91.54. Scored evals/008
-22. `022_ctt_v2_pushB_effect` — Arm B × effect, 90.00 (B retired)
-23. `023_ctt_v2_pushA_plain` — ctt_v3 champion × PLAIN, DeltaAI regen (2×2 cell), 88.57
-24. `024_ctt_v2_leaky_regen` — ctt_v2 × EFFECT, DeltaAI co-located leaky baseline, 90.21 (vs published 91.3)
-25. `025_ctt_v2_plain_regen` — ctt_v2 × PLAIN, DeltaAI regen, 82.95 (vs published 82.5; drift +0.45)
+## gens  (arm-first since v2; all on the 152-row CTT grid × seeds 42/43 = 304 clips unless noted)
+
+1. `001_ic_gen` — runs/001@5000 (IC-LoRA generalist) · `01_neutral__cc` 83.1 · `02_effect__dai` 89.1
+2. `002_ctt_v2` — runs/002@10000 (CTT v2, superseded) · `01_neutral__eps` 82.5 · `02_effect__dai` (leaky) 91.3 · `03_effect__dai` regen 90.21 · `04_neutral__dai` regen 82.95
+3. `003_refvfx` — runs/003 (EXTERNAL Wan2.1-FLF2V; 33f@6.5455fps) · `01_effect__dai` (their convention, leak 35/62) 42.4 · `02_neutral__dai` (our budget, leak-free) 33.0
+4. `004_base_prompt` — NO adapter, no anchors · `01_effect__dai` (clause, no sksz) · `02_neutral__dai` (V-neutral) 58.1
+5. `005_base_cond` — NO adapter + endpoint conditioning · `01_effect__dai` · `02_neutral__dai` (V-neutral) 60.4; vs 004 prices the anchors
+6. `006_bneck_frozen` — runs/004@10000 (72 frozen operator tokens) · `01_neutral__dai` · `02_neutral_shufcode__dai` (load-bearing corpse)
+7. `007_bneck_ctx` — runs/006@10000 (16 context tokens) · `01_neutral__dai` · `02_neutral_shufcode__dai`
+8. `008_surg1` — runs/007@4500 (V-JEPA 144-tok code, SURG-1) · `01_neutral__dai` · `02_neutral_shufcode__dai` (must-fail twin, scored lower → reads)
+9. `009_ctt_v3` — runs/008@6000 (THE CHAMPION, provisional) · `01_neutral__eps` 87.98 · `02_neutral_shufref__eps` VOID (39 clips) · `03_effect__dai` 91.54 · `04_neutral__dai` 88.57
+10. `010_ctt_v3_hs` — runs/009@6000 (high-σ negative, retired) · `01_neutral__eps` · `02_neutral_shufref__eps` VOID · `03_effect__dai` 90.00
+
+## prompts
+1. `001_ctt152_neutral` — family A `{S1}. sksz.` · sha 0d708175fbfe · neutral for adapter arms
+2. `002_ctt152_effect` — family B `{S1}. sksz. {EFFECT}.` · sha 35930d7d7453 · effect for adapter arms
+3. `003_ctt152_vneutral` — family C `{S1}.` · sha f2ebeedf2187 · neutral for base arms
+4. `004_ctt152_base_effect` — family D `{S1}. {EFFECT}.` · sha d0460eaace93 · effect for base arms
+5. `005_refvfx_effect` — refVFX arm-A rows (their template + shared clauses) · sha b88a248dfafc
+6. `006_refvfx_neutral` — refVFX arm-B rows (fixed-token render) · sha 11a50d24645a
 
 ## evals
 > **Baseline reference scores** (the comparison scale for any coupling/treatment arm; all v4 · DeltaAI · reference sha `459fd9a7`, so mutually comparable). No-demo **floors**: `002` `base_prompt_ctt` / `base_cond_ctt` (CTT prompts) + `005` `base_cond_neutral` / `base_prompt_neutral` (V-neutral). Trained **reference levels**: `001` `ic_gen` 83.1 / `ctt_v2` 82.5, `005` `ic_gen_effect` 89.1. The two `005` neutrals are the V-neutral siblings of `002`'s base_ctt arms (`ic_gen_effect` is a treatment, not a floor).

@@ -1,0 +1,13 @@
+id: prompts/002_ctt152_effect
+seq: 2
+shelf: prompts
+created: 2026-08-13
+family: B
+grammar: "{S1}. sksz. {EFFECT}. [{S2}.]"
+role: effect for adapter arms
+rows: 152
+prompt_corpus_sha: 35930d7d7453   # sha256[:12] over prompts concatenated in (cell,endpoint,reference,sided) order, unique items
+renderer: eval_ladder/prompts.py::render_prompt (single source; families B/D/refvfx splice clauses from misc/refvfx_baseline/reference_effects.json)
+derived_from: store/gens/005_ctt_v2_leaky/grid.jsonl (sha256[:12] 67593f330024; audited byte-identical across all copies 2026-08-13)
+source: misc/2026-08-13_store_restructure/seed_prompts.py
+notes: rows are ARM-FREE — arm/item_id/video_key + arm-contract fields stripped; stamp_rows.py re-adds them per arm.

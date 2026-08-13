@@ -1,0 +1,14 @@
+id: gens/004_base_prompt/01_effect__dai
+seq: 1
+shelf: gens
+arm: base_prompt
+harness_arm: base_prompt_ctt   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: effect
+machine: dai
+created: 2026-07-31
+migrated: 2026-08-13 from gens/006_base_prompt_ctt (contract v2 — store/MIGRATION.md; full v1 provenance in meta.v1.yaml)
+inputs: {run: base weights (no adapter)}
+prompt_family: prompts/004_ctt152_base_effect
+prompt_sha: d0460eaace93
+grid_rows: 152
+videos: 304

@@ -1,0 +1,14 @@
+id: gens/003_refvfx/01_effect__dai
+seq: 1
+shelf: gens
+arm: refvfx
+harness_arm: refvfx_A   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: effect
+machine: dai
+created: 2026-07-30
+migrated: 2026-08-13 from gens/003_refvfx_A (contract v2 — store/MIGRATION.md; full v1 provenance in meta.v1.yaml)
+inputs: {run: runs/003_refvfx (external)}
+prompt_family: prompts/005_refvfx_effect
+prompt_sha: b88a248dfafc
+grid_rows: 304
+videos: 304

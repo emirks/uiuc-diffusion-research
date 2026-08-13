@@ -1,0 +1,15 @@
+id: gens/009_ctt_v3/02_neutral_shufref__eps
+seq: 2
+shelf: gens
+arm: ctt_v3
+harness_arm: ctt_v2_pushA_shufref   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral_shufref
+machine: eps
+created: 2026-08-12
+migrated: 2026-08-13 from gens/019_ctt_v2_pushA_shufref (contract v2 — store/MIGRATION.md; full v1 provenance in meta.v1.yaml)
+inputs: {run: runs/008_ctt_v3_wsd, step: 6000}
+prompt_family: prompts/001_ctt152_neutral
+prompt_sha: 0d708175fbfe
+grid_rows: 152
+videos: 39
+void: true   # shufref control VOID — eps run_gen ignored code_source_reference; partial media kept for the record

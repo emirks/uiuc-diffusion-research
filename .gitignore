@@ -82,6 +82,9 @@ datasets/
 !/store/**/
 !/store/README.md
 !/store/INDEX.md
+!/store/ARMS.md
+!/store/MIGRATION.md
+!/store/**/meta.v1.yaml
 !/store/**/meta.yaml
 !/store/**/grid.jsonl
 !/store/**/config.yaml
