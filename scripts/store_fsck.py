@@ -55,6 +55,9 @@ def check_gens():
                 fails.append(f"{tag}: no videos/")
             elif str(n) != meta_val(meta, "videos:"):
                 fails.append(f"{tag}: videos {meta_val(meta,'videos:')} != actual {n}")
+            sc = sub / "scores"
+            if sc.is_symlink() and not sc.resolve().is_dir():
+                fails.append(f"{tag}: broken scores link")
             fam = meta_val(meta, "prompt_family:")
             if fam and fam.startswith("prompts/") and all("prompt" in r for r in rows):
                 sha = corpus_sha(rows)

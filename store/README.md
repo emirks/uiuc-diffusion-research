@@ -17,7 +17,7 @@ store/
   prompts/NNN_<slug>/    canonical rendered prompt families: ARM-FREE grid.jsonl + meta.yaml (sha-pinned)
   runs/NNN_<slug>/       one training run:  meta.yaml · config.yaml · checkpoints/ · NOTES.md?
   gens/NNN_<arm>/KK_<variant>__<machine>/   one generation batch of one arm-variant:
-                         meta.yaml · meta.v1.yaml? · grid.jsonl · videos/*.mp4 (flat, REAL files)
+                         meta.yaml · meta.v1.yaml? · grid.jsonl · videos/*.mp4 (flat, REAL files) · scores -> its eval arm-dir
   evals/NNN_<name>__<machine>__<date>/      one scoring pass:
                          meta.yaml · <harness_arm>/<label>/{items.jsonl,results.json}  (label = --label shard, c0..c7)
 ```
@@ -72,7 +72,10 @@ store/
   at close `scripts/store_register.py gen <subentry>` writes `grid.jsonl` + autofilled meta + the
   INDEX row.
 - **Score** → scorer `--out-root $STORE/evals/<id>/<harness_arm>` per arm (per-arm out-roots — the
-  shared-outroot collision is a known failure), `--label c<K>` shards.
+  shared-outroot collision is a known failure), `--label c<K>` shards. At close, materialize the
+  eval↔gen 1:1: `ln -sfn <eval arm-dir> <gen subentry>/scores` (latest scoring wins; history in
+  `arms_scored:`). Prompts: the shelf has exactly TWO sources — base/external variants are
+  `stamp_rows.py` transforms with derived shas recorded in the family metas.
 - **View** → `eval_ladder/viewer/build_runs.py` entries point at store paths; `ensure_external_media()`
   symlinks serve them.
 - **Record** → one INDEX line; campaign dossiers reference store ids.

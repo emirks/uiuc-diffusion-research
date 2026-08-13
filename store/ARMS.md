@@ -10,16 +10,18 @@ append-only). Controls suffix the variant (`_shufcode`, `_shufref`); machine suf
 **Canonical vs frozen:** `harness_arm` is the stamp inside already-scored `items.jsonl`/item_ids —
 it can never be renamed without re-scoring. Joins (viewer, analysis) use `harness_arm`; directories,
 the ledger, and humans use canonical names. New arms stamp `harness_arm = <arm>_<variant>` so the
-two converge. Prompt families live in `prompts/` (sha-pinned); a gen must pin `prompt_family` +
-`prompt_sha`, and `stamp_rows.py` derives its registry from the family — never hand-write one.
+two converge. Prompts have exactly TWO sources in `prompts/` (001 neutral, 002 effect — sha-pinned); base-arm
+and external variants are `stamp_rows.py` transforms (`--strip-token`, `--token`), each with a
+recorded derived sha in the family meta. A gen pins `prompt_family` + `prompt_sha` — never
+hand-write a registry.
 
 | arm | status | run | neutral family | effect family | harness_arm aliases (frozen) |
 |---|---|---|---|---|---|
 | `ic_gen` | active | runs/001 | prompts/001 | prompts/002 | ic_gen · ic_gen_effect |
 | `ctt_v2` | superseded by ctt_v3 | runs/002 | prompts/001 | prompts/002 | ctt_v2 · ctt_v2_leaky · ctt_v2_leaky_regen · ctt_v2_plain_regen |
-| `refvfx` | external baseline | runs/003 | prompts/006 | prompts/005 | refvfx_A (=effect) · refvfx_B (=neutral) |
-| `base_prompt` | floor (no adapter) | — | prompts/003 | prompts/004 | base_prompt_ctt (=effect) · base_prompt_neutral |
-| `base_cond` | floor (no adapter) | — | prompts/003 | prompts/004 | base_cond_ctt (=effect) · base_cond_neutral |
+| `refvfx` | external baseline | runs/003 | prompts/001 ·token-swap | prompts/002 ·template | refvfx_A (=effect) · refvfx_B (=neutral) |
+| `base_prompt` | floor (no adapter) | — | prompts/001 ·strip | prompts/002 ·strip | base_prompt_ctt (=effect) · base_prompt_neutral |
+| `base_cond` | floor (no adapter) | — | prompts/001 ·strip | prompts/002 ·strip | base_cond_ctt (=effect) · base_cond_neutral |
 | `bneck_frozen` | closed negative | runs/004 | prompts/001 | — | bneck_frozen · bneck_frozen_shufcode |
 | `bneck_ctx` | closed negative | runs/006 | prompts/001 | — | bneck_ctx_v2 · bneck_ctx_v2_shufcode |
 | `surg1` | closed refined negative | runs/007 | prompts/001 | — | surg1_wsd · surg1_wsd_shufcode |

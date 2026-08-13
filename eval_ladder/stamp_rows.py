@@ -43,7 +43,12 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--set", action="append", default=[], metavar="K=V",
                     help="arm-contract field applied to every row (conditioning=prefix, use_reference=false, no_twin=true, ...)")
+    ap.add_argument("--strip-token", action="store_true",
+                    help="base-arm transform: remove ' sksz.' from prompts (sksz means nothing to base weights)")
+    ap.add_argument("--token", default=None, metavar="TEXT",
+                    help="replace the literal 'sksz' with TEXT (external-model text budget, refvfx-B precedent)")
     args = ap.parse_args()
+    assert not (args.strip_token and args.token), "--strip-token and --token are mutually exclusive"
 
     fam = PROMPTS / args.family
     rows = [json.loads(l) for l in (fam / "grid.jsonl").read_text().splitlines() if l.strip()]
@@ -52,6 +57,19 @@ def main():
                      if l.startswith("prompt_corpus_sha:")), None)
     sha = corpus_sha(rows)
     assert sha == declared, f"family sha drifted: computed {sha} != declared {declared}"
+
+    def transform(text):
+        if args.strip_token:
+            return text.replace(" sksz.", "", 1)
+        if args.token:
+            return text.replace("sksz", args.token)
+        return text
+    if args.strip_token or args.token:
+        for r in rows:
+            r["prompt"] = transform(r["prompt"])
+            if "prompt_base" in r:
+                r["prompt_base"] = transform(r["prompt_base"])
+        sha = corpus_sha(rows)  # the DERIVED sha — pin THIS in the gen meta
 
     extra = dict(kv.split("=", 1) for kv in args.set)
     out = Path(args.out)

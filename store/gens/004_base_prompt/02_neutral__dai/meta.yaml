@@ -8,7 +8,7 @@ machine: dai
 created: 2026-08-06
 migrated: 2026-08-13 from gens/012_base_prompt_neutral (contract v2 — store/MIGRATION.md; full v1 provenance in meta.v1.yaml)
 inputs: {run: base weights (no adapter)}
-prompt_family: prompts/003_ctt152_vneutral
+prompt_family: prompts/001_ctt152_neutral (strip_sksz)
 prompt_sha: f2ebeedf2187
 grid_rows: 152
 videos: 304

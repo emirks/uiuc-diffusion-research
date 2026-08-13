@@ -31,7 +31,7 @@ def corpus_sha(rows):
 def family_of(sha):
     for fam in sorted((STORE / "prompts").iterdir()):
         meta = fam / "meta.yaml"
-        if meta.exists() and f"prompt_corpus_sha: {sha}" in meta.read_text():
+        if meta.exists() and sha in meta.read_text():  # matches prompt_corpus_sha OR a derived: transform sha
             return f"prompts/{fam.name}"
     return None
 

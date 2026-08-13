@@ -71,3 +71,11 @@ arm-stamped registry is the misc/ one. Corrected here; v1 meta preserved as-is.)
   (no clause is rendered; the prompt is S1-only). v2 metas + `prompts/003_ctt152_vneutral` say `v_neutral`.
 - 019/020: VOID (eps run_gen build ignored `code_source_reference` on the raw path — byte-identical
   to their matched twins; mechanism control unusable). Marked `void: true`.
+
+## Same-day amendment: prompts shelf simplified to the 2 true sources
+
+Owner observation (2026-08-13, verified 152/152 byte-exact): families C/D/E/F are deterministic
+transforms of A/B — C = A−sksz, D = B−sksz, refvfx-neutral = A with sksz→token, refvfx-effect =
+their template over (S1, clause). Entries `prompts/003-006` retired (numbers never reused); the
+transforms live in `stamp_rows.py` (`--strip-token`, `--token`) and the derived shas in the two
+family metas' `derived:` blocks. The six affected gen metas now cite `prompts/001|002 (<transform>)`.

@@ -8,7 +8,7 @@ machine: dai
 created: 2026-07-30
 migrated: 2026-08-13 from gens/003_refvfx_A (contract v2 — store/MIGRATION.md; full v1 provenance in meta.v1.yaml)
 inputs: {run: runs/003_refvfx (external)}
-prompt_family: prompts/005_refvfx_effect
+prompt_family: prompts/002_ctt152_effect (template_refvfx)
 prompt_sha: b88a248dfafc
 grid_rows: 304
 videos: 304

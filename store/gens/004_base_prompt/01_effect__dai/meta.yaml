@@ -8,7 +8,7 @@ machine: dai
 created: 2026-07-31
 migrated: 2026-08-13 from gens/006_base_prompt_ctt (contract v2 — store/MIGRATION.md; full v1 provenance in meta.v1.yaml)
 inputs: {run: base weights (no adapter)}
-prompt_family: prompts/004_ctt152_base_effect
+prompt_family: prompts/002_ctt152_effect (strip_sksz)
 prompt_sha: d0460eaace93
 grid_rows: 152
 videos: 304

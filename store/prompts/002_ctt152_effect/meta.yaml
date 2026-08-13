@@ -11,3 +11,6 @@ renderer: eval_ladder/prompts.py::render_prompt (single source; families B/D/ref
 derived_from: store/gens/005_ctt_v2_leaky/grid.jsonl (sha256[:12] 67593f330024; audited byte-identical across all copies 2026-08-13)
 source: misc/2026-08-13_store_restructure/seed_prompts.py
 notes: rows are ARM-FREE — arm/item_id/video_key + arm-contract fields stripped; stamp_rows.py re-adds them per arm.
+derived:   # deterministic transforms (stamp_rows.py flags); shelf entries 003-006 retired 2026-08-13, numbers never reused
+  strip_sksz: d0460eaace93        # base-effect for base arms (was 004_ctt152_base_effect) — 152/152 exact
+  template_refvfx: b88a248dfafc   # refvfx arm-A effect, their template over (S1, clause) (was 005) — 152/152 exact

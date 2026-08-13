@@ -30,13 +30,10 @@ resolve via `gens/_legacy/`.
 9. `009_ctt_v3` — runs/008@6000 (THE CHAMPION, provisional) · `01_neutral__eps` 87.98 · `02_neutral_shufref__eps` VOID (39 clips) · `03_effect__dai` 91.54 · `04_neutral__dai` 88.57
 10. `010_ctt_v3_hs` — runs/009@6000 (high-σ negative, retired) · `01_neutral__eps` · `02_neutral_shufref__eps` VOID · `03_effect__dai` 90.00
 
-## prompts
-1. `001_ctt152_neutral` — family A `{S1}. sksz.` · sha 0d708175fbfe · neutral for adapter arms
-2. `002_ctt152_effect` — family B `{S1}. sksz. {EFFECT}.` · sha 35930d7d7453 · effect for adapter arms
-3. `003_ctt152_vneutral` — family C `{S1}.` · sha f2ebeedf2187 · neutral for base arms
-4. `004_ctt152_base_effect` — family D `{S1}. {EFFECT}.` · sha d0460eaace93 · effect for base arms
-5. `005_refvfx_effect` — refVFX arm-A rows (their template + shared clauses) · sha b88a248dfafc
-6. `006_refvfx_neutral` — refVFX arm-B rows (fixed-token render) · sha 11a50d24645a
+## prompts  (the TWO sources — everything else is a stamp_rows transform, verified 152/152 exact)
+1. `001_ctt152_neutral` — `{S1}. sksz. [{S2}.]` · sha 0d708175fbfe · derived: strip_sksz f2ebeedf2187 (base V-neutral) · swap_token_refvfx 11a50d24645a
+2. `002_ctt152_effect` — `{S1}. sksz. {EFFECT}. [{S2}.]` · sha 35930d7d7453 · derived: strip_sksz d0460eaace93 (base effect) · template_refvfx b88a248dfafc
+   (003–006 retired 2026-08-13 — they were exact transforms; numbers never reused)
 
 ## evals
 > **Baseline reference scores** (the comparison scale for any coupling/treatment arm; all v4 · DeltaAI · reference sha `459fd9a7`, so mutually comparable). No-demo **floors**: `002` `base_prompt_ctt` / `base_cond_ctt` (CTT prompts) + `005` `base_cond_neutral` / `base_prompt_neutral` (V-neutral). Trained **reference levels**: `001` `ic_gen` 83.1 / `ctt_v2` 82.5, `005` `ic_gen_effect` 89.1. The two `005` neutrals are the V-neutral siblings of `002`'s base_ctt arms (`ic_gen_effect` is a treatment, not a floor).

@@ -11,3 +11,6 @@ renderer: eval_ladder/prompts.py::render_prompt (single source; families B/D/ref
 derived_from: eval_ladder/registry_ctt_v2.jsonl (sha256[:12] 442f1007fdf5; audited byte-identical across all copies 2026-08-13)
 source: misc/2026-08-13_store_restructure/seed_prompts.py
 notes: rows are ARM-FREE — arm/item_id/video_key + arm-contract fields stripped; stamp_rows.py re-adds them per arm.
+derived:   # deterministic transforms (stamp_rows.py flags); shelf entries 003-006 retired 2026-08-13, numbers never reused
+  strip_sksz: f2ebeedf2187        # V-neutral for base arms (was 003_ctt152_vneutral) — verified 152/152 exact
+  swap_token_refvfx: 11a50d24645a # refvfx arm-B neutral, sksz -> their fixed token (was 006) — 152/152 exact
