@@ -34,6 +34,7 @@ resolve via `gens/_legacy/`.
 1. `001_ctt152_neutral` — `{S1}. sksz. [{S2}.]` · sha 0d708175fbfe · derived: strip_sksz f2ebeedf2187 (base V-neutral) · swap_token_refvfx 11a50d24645a
 2. `002_ctt152_effect` — `{S1}. sksz. {EFFECT}. [{S2}.]` · sha 35930d7d7453 · derived: strip_sksz d0460eaace93 (base effect) · template_refvfx b88a248dfafc
    (003–006 retired 2026-08-13 — they were exact transforms; numbers never reused)
+7. `007_ctl_probe` — controllability-probe rows (13 rows × conditions, arm-free; file sha dfcbb07b926a; frozen phrase table in the campaign dossier)
 
 ## evals
 > **Baseline reference scores** (the comparison scale for any coupling/treatment arm; all v4 · DeltaAI · reference sha `459fd9a7`, so mutually comparable). No-demo **floors**: `002` `base_prompt_ctt` / `base_cond_ctt` (CTT prompts) + `005` `base_cond_neutral` / `base_prompt_neutral` (V-neutral). Trained **reference levels**: `001` `ic_gen` 83.1 / `ctt_v2` 82.5, `005` `ic_gen_effect` 89.1. The two `005` neutrals are the V-neutral siblings of `002`'s base_ctt arms (`ic_gen_effect` is a treatment, not a floor).

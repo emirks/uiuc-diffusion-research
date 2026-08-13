@@ -38,7 +38,11 @@ def check_gens():
             tag = f"gens/{arm_dir.name}/{sub.name}"
             meta_p = sub / "meta.yaml"
             if not meta_p.exists():
-                fails.append(f"{tag}: no meta.yaml"); continue
+                if (sub / ".inflight").exists():
+                    warns.append(f"{tag}: in-flight (generation running, not yet registered)")
+                else:
+                    fails.append(f"{tag}: no meta.yaml")
+                continue
             meta = meta_p.read_text()
             for k in REQ_GEN_KEYS:
                 if k not in meta:
@@ -68,6 +72,8 @@ def check_gens():
 def check_prompts():
     for fam in sorted((STORE / "prompts").iterdir()):
         meta = (fam / "meta.yaml").read_text()
+        if "probe" in (meta_val(meta, "family:") or ""):
+            continue  # probe sets share row keys across conditions; pinned by file sha in meta
         rows = [json.loads(l) for l in (fam / "grid.jsonl").read_text().splitlines() if l.strip()]
         sha = corpus_sha(rows)
         if sha != meta_val(meta, "prompt_corpus_sha:"):

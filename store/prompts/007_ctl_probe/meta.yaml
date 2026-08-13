@@ -1,0 +1,11 @@
+id: prompts/007_ctl_probe
+seq: 7
+shelf: prompts
+created: 2026-08-13
+family: probe (controllability)
+role: attribute-modification probe rows — NOT a grid-wide family; 13 rows x conditions (color/shape/density/speed/direction/graft + anchors/congruent)
+rows: 76
+prompt_corpus_sha: n/a (probe — conditions share row keys; pin = file sha256[:12] dfcbb07b926a)
+derived_from: prompts/002_ctt152_effect rows via the FROZEN phrase table in misc/2026-08-13_controllability/DOSSIER.md Round 1 (span-scoped clause edits / appended modifier sentences / sksz-grafts); builder build_ctl_registry.py
+source: misc/2026-08-13_controllability/build_ctl_registry.py (advised campaign, pre-registered)
+notes: rows are ARM-FREE and carry ctl_cond/ctl_axis; per-arm registries stamp arm+item_id and (base arm) the base contract fields. Consumed by gens 009_ctt_v3/05, 002_ctt_v2/06, 005_base_cond/03.
