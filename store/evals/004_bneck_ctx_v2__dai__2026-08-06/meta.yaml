@@ -1,0 +1,84 @@
+id: 004_bneck_ctx_v2__dai__2026-08-06
+seq: 4
+shelf: evals
+created: 2026-08-06
+machine: DeltaAI GH200 (ghx4) — Linux aarch64, torch 2.10.0+cu129, python 3.12.9
+source: misc/bneck_redesign (eval_ladder/run_eval.py --mode plan + build/job_score_dai.sbatch)
+harness: transition-eval/4.0.0 (m1a_S3 kernel)
+instrument:
+  # reference_v4 sha MEASURED from the scorer's own verify block
+  # (misc/bneck_redesign/logs/score_redes_score_2890105_1.out:18); identical to evals/001-003.
+  reference_artifact: .claude/worktrees/eval-v4-cert/src/diffusion/transition_eval/reference_v4.npz
+  reference_artifact_sha256: 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8
+  # TWO corpus quantities, both recorded to avoid the evals/003 ambiguity:
+  corpus_manifest: data/processed/transitions_std121/corpus_manifest.json   # the 222-clip manifest
+  corpus_manifest_sha256: 5a7a8be9f8a0ba70de9d3c77aaec77801a59170255d5fcb425d80a364afd3652   # MEASURED sha256sum of the file; matches evals/003
+  harness_corpus_sha256: dc2e139a2a829403939ae43855b0fc985d5c128647c99ac0d634fd4fb20e0952   # the CONTENT hash the harness records in results.json (provenance.corpus_sha256)
+  spec_sha256: a7d921881e29fc3ce235f206bfb762453cb533f8615e652d63786c9ad63379c2
+  certified: false
+  uncertified_reasons:                       # verbatim from the scorer's results.json provenance
+    - "instrument files modified since HEAD: ['src/diffusion/transition_eval/reference_v4.npz']"
+    - "HEAD tag is None, expected 'eval/v4.0.0'"
+inputs:
+  gens: [013_bneck_ctx_v2, 014_bneck_ctx_v2_shufcode]
+arms:
+  bneck_ctx_v2:
+    items: 1842          # treatment rows (152 rows x 2 seeds x <=8 copy-guarded GT-pool refs)
+    nulls: 0
+  bneck_ctx_v2_shufcode:
+    items: 1842
+    nulls: 0
+# NOTE: the symlinked scores_clean/<arm>/merged/items.jsonl carry 3589 (matched) / 3627 (corpse)
+# TOTAL rows = 1842 treatment + control_hold + control_lerp twins scored into the same file; the
+# controls fall out on the registry join (matched 3589-1747=1842; corpse 3627-1785=1842).
+storage:
+  layout_deviation: >
+    Each arm dir here is a SYMLINK to misc/bneck_redesign/eval/scores_clean/<arm> rather than a
+    copied <arm>/<shard>/{items.jsonl,results.json} tree (siblings evals/001-003 copy). The
+    filesystem was at 99% quota, so the deduped scorer output is symlinked, not duplicated.
+    Consequence: scores_clean/<arm>/ holds only merged/items.jsonl (no results.json), so the viewer's
+    per-column corpus/harness badge for these two arms renders empty — full provenance is HERE.
+pool_rule: >-
+  run_eval.pool_refs() semantics, unchanged. The two arms are TWINS: item_id, reference and
+  input_key are byte-identical between their registries (measured), so both are scored against a
+  byte-identical GT pool for every item. The corpse's wrong code travels in a separate
+  `code_source_reference` field and never by swapping `reference`.
+
+# ---------------------------------------------------------------------------- the result
+verdict: >
+  ARM_PASS: false. THE PRIMARY CLAIMS FAILED. The CLEAN Idea-1 arm — the operator-token bottleneck
+  injected as cross-attention CONTEXT (ContextAdapter K'=16) — is a pre-registered publishable
+  NEGATIVE, like the runs/004 concat-reference variant before it. See misc/bneck_redesign/DOSSIER.md.
+primary_claims:
+  # bars are the band-setter-recalibrated bneck_redesign bars (p1p2 frozen_bars), NOT evals/003's >=11/13
+  P1_G_unseen_same: "6/13 (0.462) positive class-median Delta_app_ref — bar >=9/13 — FAIL"
+  P1_G_unseen_cross: "6/13 (0.462) — bar >=8/13 — FAIL"
+  P2_bar: "pooled median Delta_app_ref >= +0.1016 (band-setter)"
+  P2_measured: "-0.00777 (n=78) — FAIL"
+  P2_ci95: "[-0.02449, +0.01259] (10,000-boot); includes zero, does not exclude the bar"
+  sign_flip: "P2 pooled-median one-sided p=0.781; P1 donors-positive one-sided p=0.721 (n_perm 10,000,
+    seed 20260805) — noise, not a weak-but-consistent effect. Pooled units positive 34/78 (0.436)."
+calibration:
+  dead_channel: "PASS — 4/4 probe items bitwise-identical matched vs deranged when the adapter output
+    is zeroed (max_abs_pixel_diff 0). The channel is wired, not a hidden constant."
+  liveness_P3: "PASS / INTERPRETABLE — paired R_full 0.5839 (bar 0.10), R_first48 0.5368; per claim
+    cell G-unseen-same 0.532, G-unseen-cross 0.603. The context code moves the pixels; the model did
+    not learn to decode it into the manner metric. Transmits but does not instruct."
+analysis_files:                              # durable JSON these numbers were read from
+  - misc/bneck_redesign/build/arm_results/p1p2_bneck_ctx_v2.json
+  - misc/bneck_redesign/build/arm_results/signflip_bneck_ctx_v2.json
+  - misc/bneck_redesign/build/arm_results/deadchan_bneck_ctx_v2.json
+  - misc/bneck_redesign/build/arm_results/liveness_bneck_ctx_v2.json
+caveats:
+  - >-
+    ONE MACHINE. Generated AND scored on DeltaAI GH200, the same box as evals/001-003, with an
+    identical instrument sha. eps and DeltaAI do not reproduce each other row-by-row on this
+    instrument, so never mix rows across boxes.
+  - >-
+    Cache-race recovery: a mid-run 8-shard shared feature-cache WRITE RACE corrupted
+    73 (matched) / 65 (corpse) manifest rows (per DOSSIER.md ~line 1217). Recovered by a serial
+    fresh-cache re-score before the read; scores_clean = the deduped, recovered view. Final coverage
+    is 1,842/1,842 in BOTH arms with zero nulls, pool-identity TRUE.
+  - >-
+    Levels carry NO pass/fail bar. In particular the G-unseen-same level gap (matched 0.6419 <
+    shufcode 0.6481) must NOT be reported as "shuffled codes help".

@@ -1,3 +1,40 @@
+## 2026-08-13
+**13:05 — Store restructure PROPOSAL written (contract v2): arm-first gens, neutral/effect variant grammar, prompts shelf.**
+Four parallel audits (viewer wiring, prompt provenance, skills, train/gen/eval flow) established: prompts are already
+byte-identical within each of 4 families across ~25 copies (single renderer, shared clause file, refVFX-B = neutral);
+but gens/017-025 are meta-only stubs (media in outputs/, ~4.7 GB), grid.jsonl has no writer, evals/001 was retro-edited
+(9 unused forward symlinks), ~15 GB duplicate checkpoints in misc/, and the viewer is 3 hardcoded lists + a fork.
+Proposal (misc/2026-08-13_store_restructure/PROPOSAL.md): gens/NNN_<arm>/KK_<variant>__<machine> two-level layout,
+canonical-arm vs frozen harness_arm alias split, new prompts/ shelf (sha-pinned families) + stamp_rows/store_register
+tooling, evals stay pass-shaped, migrate-with-shims + MIGRATION.md. Awaiting owner sign-off on 4 decisions — nothing moved.
+
+## 2026-08-12
+**15:30 — EFFECT-PROMPT follow-on DONE: "text channel saturates the adapter gain" (co-located 2×2, evals/008).**
+Owner asked to run the effect prompt (the ctt_v2_leaky convention) for the new champion too. Advisor upgraded it to a
+CO-LOCATED adapter×prompt 2×2 on DeltaAI (5 arms, gens/021-025) to decontaminate the never-co-located "+8.8 text gain".
+Result: under the effect prompt the champion's schedule-fix edge WASHES OUT — pushA_effect 91.54 ≈ leaky_regen 90.21,
+primary paired Δ −0.22pp [−1.94,+1.45] (NULL, pre-declared "text saturates the adapter gain"); all effect arms sit at
+the ~91 regen-consistency ceiling. But the champion's text gain is significantly SMALLER than v2's (DiD −4.62pp
+[−7.54,−1.67]) — the corrected adapter reads from the reference what text otherwise supplies (mechanistic complement to
+the +5pp plain win). B (high-σ) inert again → RETIRED. Copy-guard clean. Methodological catch: the true co-located v2
+text gain is +7.3pp (not +8.8 — that conflated text with a ~1pp machine drift), reinforcing score-on-one-machine.
+Champion status UNCHANGED (88.0 plain; effect numbers are text-assisted only). Registered gens/021-025 + evals/008;
+F-block = addendum to the plain-campaign block (owner-gated). Fix filed: per-worker cache dir / flock (the concurrent
+40-task scoring crashed shards with cache-write EOFErrors; worked around with %4 throttle).
+
+**12:03 — ctt_v2 performance-push CLOSED: a NEW CHAMPION (ctt_v3, +5pp) via the LR-schedule fix; high-σ closed as a raw-reader lever.**
+Advised operator/advisor campaign (misc/2026-08-11_ctt_v2_perf_push/DOSSIER.md). Discovered ctt_v2's shipped `linear`
+LR schedule was mis-scaled by num_processes and floored at 1e-5 for **87.5%** of its 10k steps. Trained two arms on
+eps 8×H100 with a num_processes-correct **WSD** schedule (6000 steps): **Arm A** = corrected baseline, **Arm B** = A +
+SURG-1's high-σ timestep lean (owner's seed idea). Gen co-located on eps (repro gate BIT-IDENTICAL, PSNR=inf) → scored
+v4 on DeltaAI vs the ctt_v2=82.5 baseline (analysis reproduced 82.49 first). **Arm A = MEASURABLE WIN**: paired same-seed
+Δ%same +4.99pp ALL-152 [+2.38,+7.63] / +5.49pp same-60, headline **82.5→88.0**, copy-guard clean → new champion candidate
+`ctt_v3` (runs/008, PROVISIONAL pending the pre-registered blind A/B). **High-σ (Arm B) adds NOTHING over A** (B−A −0.4pp
+[−2.9,+2.1], slightly negative) → lever closed for raw readers (it transfers to a bottleneck code, not a raw reference).
+Registered runs/008+009, gens/017-020, evals/007; added both arms to the iclora_runs viewer. ⚠ CAVEAT: the shipped ctt_v2
+was UNDERTRAINED → every ctt_v2-anchored number (incl. the CTT-publishability baseline) needs re-reading. Owner-gated:
+blind A/B, git push, F-block. Trainer commit a4033230 is LOCAL (fork origin=Lightricks).
+
 ## 2026-08-11
 **18:34 — SURG-1 Gate B SCORED → CLOSED as a publishable negative; registered gens/015+016 + evals/006.**
 Generated 304 clips/arm through the V-JEPA-code path (matched `surg1_wsd` + deranged-twin `surg1_wsd_shufcode`)

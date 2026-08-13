@@ -1,0 +1,72 @@
+id: 006_bneck_ctx_v2
+seq: 6
+shelf: runs
+created: 2026-08-06          # store entry date; trained on the offsite GCP box (eps)
+machine: eps — offsite GCP, 4xH100 (DDP num_processes=4)
+source: misc/bneck_redesign campaign — DOSSIER.md is the run authority.
+  This is the CLEAN Idea-1 arm: the operator-token bottleneck injected as CONTEXT
+  (cross-attention context tokens) rather than concatenated reference tokens (runs/004).
+inputs:
+  dataset: datasets/002_ctt_v2        # the SAME 56,368-pair set as runs/002 and runs/004; not rebuilt
+  encoder: armPm_seed42/ckpt_08000.pt   # the certified transition encoder, FROZEN
+  encoder_sha256: d2b22693d0a8b8142a0d79585b5d5a2460a6ab1e201433df333ebda68a173ae9
+trainer:
+  checkout: src/LTX-2-bneck-coupling   # SAME worktree dir as runs/004, advanced to a new branch;
+    # runs/004's pin (branch bneck-coupling @ 5d6a31c) is a git ref and is unaffected by this move.
+  branch: bneck_redesign
+  commit: 7ffbe95546722f35c2571b482412750fe0642ae3
+  entry: accelerate launch --num_processes 4 scripts/train.py (config bneck_ctx_v2_eps.yaml)
+  context_adapter_source: packages/ltx-trainer/src/ltx_trainer/context_adapter.py  # the ContextAdapter module
+model: LTX-2 19B dev
+adapter: IC-LoRA + ContextAdapter (co-trained)
+rank: 128
+alpha: 128
+target_modules: attn_ffn        # attn1/attn2 q,k,v,out + ff.net.0.proj, ff.net.2
+reference_attention: one_way
+lr: 1e-4 linear                  # scheduler_type linear; see runs/002/004 caveat C1 on the REALIZED per-rank schedule
+timesteps: shifted_logit_normal
+seed: 42
+effective_batch: 8              # 4 DDP x bs1 x accum2
+steps_trained: 10000
+shipped_step: 10000
+checkpoint_sha256:
+  lora_weights_step_10000.safetensors: 844ee248eb91ca52f9ab987d3d66efdb72bf7746d61f526472a13cde4a518534
+training_data: 56,368 pairs; mix S0 5.0 / S1 12.0 / S2a 34.36059 / S2b 35.63941 / S4 13.0
+
+# ---------------------------------------------------------------------------- the intervention
+intervention: >
+  The reference channel carries the certified transition encoder's 72 operator tokens
+  (token_shape [6,4,3], K=72), held FROZEN, injected as CONTEXT: a co-trained ContextAdapter
+  compresses the 72 tokens to K'=16 learned context tokens fed to the DiT via cross-attention
+  (inject: context), instead of concatenating them as reference tokens (runs/004's bneck_frozen).
+  skip_scale pinned 0.0 so no raw pooled demo can leak in.
+context_adapter:
+  inject: context
+  context_tokens: 16            # K' — learned query tokens the adapter emits
+  adapter_width: 512
+  depth: 2
+  num_heads: 8
+  init: zero-init output head    # the adapter starts as a no-op and learns to read the code
+frozen_encoder:
+  source: armPm_seed42/ckpt_08000.pt (sha256 d2b22693...), freeze_encoder: true, skip_scale: 0.0
+  token_shape: [6, 4, 3]         # K = 72 operator tokens
+checkpoint_tensors:
+  total: 1041
+  context_adapter: 31           # the co-trained ContextAdapter (K'=16)
+  diffusion_model: 960          # the rank/alpha-128 LoRA
+  operator_encoder: 50          # the FROZEN certified encoder, shipped inside the checkpoint
+run_shape: >
+  Full-coverage single continuous run (resume_data_position: true): the sampler resumes its
+  data position across the run so every training pair is seen, not restarted per segment.
+  effective batch 8, step 10000.
+health:
+  checkpoints: interval 250, keep_last_n -1 (all kept in training scratch; only step 10000 shipped here)
+  inline_validation: 8 samples (skip_initial_validation false, interval 250) — ID + OOD (same/cross/foreign) + control,
+    routed THROUGH the bottleneck
+notes: >
+  run_gen.py defaults --rank to 32 — pass --rank 128 --alpha 128 explicitly.
+  This checkpoint carries 31 context_adapter.* + 50 operator_encoder.* tensors alongside 960 LoRA
+  tensors; generation must use the src/LTX-2-bneck-coupling checkout (bneck_redesign branch), which
+  reconstructs the frozen encoder + ContextAdapter and reads inject=context.
+  The same file serves gens/013 (matched) and gens/014 (shuffled-code corpse) — the corpse is a
+  generation-only arm and is never trained.

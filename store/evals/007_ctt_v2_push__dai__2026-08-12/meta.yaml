@@ -1,0 +1,45 @@
+id: 007_ctt_v2_push__dai__2026-08-12
+seq: 7
+shelf: evals
+created: 2026-08-12
+machine: DeltaAI ghx4 (aarch64 GH200)   # SAME machine as evals/001-006 (eps<->DeltaAI does NOT reproduce)
+instrument: transition-eval v4 (eval-v4-cert worktree); reference_v4 sha256 459fd9a7…e606a8; corpus 222 (sha 5a7a8be9…); tau_copy 0.858
+comparability: >
+  Scored on the SAME DeltaAI v4 instrument as evals/001 (the ctt_v2=82.5 baseline). The push arms were
+  GENERATED on eps co-located with ctt_v2's gens/002 — repro gate BIT-IDENTICAL (eps regenerates ctt_v2's
+  exact clips, PSNR=inf on 26/26) → the paired same-seed per-row Δ carries ZERO gen-machine term.
+  Analysis reused the certified four_arm_report code path and reproduced ctt_v2 = 82.49 (= published 82.5).
+arms_scored:
+  ctt_v2_pushA: {gen: gens/017_ctt_v2_pushA, run: runs/008_ctt_v3_wsd, rows: 1842}
+  ctt_v2_pushB: {gen: gens/018_ctt_v2_pushB, run: runs/009_pushB_wsd_hs302050, rows: 1842}
+  ctt_v2_pushA_shufref: {status: VOID, why: "eps run_gen (Jul-30 copy) ignores code_source_reference on the raw path → byte-identical to matched; mechanism control unusable"}
+  ctt_v2_pushB_shufref: {status: VOID, same_as: ctt_v2_pushA_shufref}
+baseline: ctt_v2 from evals/001 (bit-identical eps-gen; the paired comparator)
+metric: >
+  PRIMARY (advisor a38825fa, seed-noise contingency fired: 6.28pp split, directional/shared → headline
+  unreliable, paired same-seed Δ is the judge): per-row paired Δ(%same) = arm − ctt_v2, avg the 2 seeds
+  per item, bootstrap 95%CI over items. MEASURABLE WIN = CI excludes 0 AND mean >= +1.0pp.
+result:
+  ctt_v2_pushA:
+    headline_pct_same: 87.98
+    paired_delta_ALL152: {mean: 4.99, ci95: [2.38, 7.63], n: 152, win: true}
+    paired_delta_same60: {mean: 5.49, ci95: [1.88, 9.38], n: 60, win: true}
+    per_seed_same60: {s42: 6.37, s43: 4.62, sign_flip: false}
+    copy_guard: {near_copy: 0, ctt_v2_near_copy: 0, copy_max: 0.269, ctt_v2_copy_max: 0.255, core_deg: 19, ctt_v2_core_deg: 18, pass: true}
+    verdict: MEASURABLE_WIN
+  ctt_v2_pushB:
+    headline_pct_same: 86.21
+    paired_delta_ALL152: {mean: 4.59, ci95: [1.89, 7.43], n: 152, win: true}
+    paired_delta_same60: {mean: 3.72, ci95: [-0.21, 7.86], n: 60, win: false}   # CI includes 0
+    verdict: WIN_ON_152_NOT_SAME60
+  high_sigma_readout_B_minus_A:
+    ALL152: {mean: -0.39, ci95: [-2.94, 2.13]}
+    same60: {mean: -1.78, ci95: [-5.58, 1.58]}
+    conclusion: "indistinguishable / point-estimate negative → escalation gate NOT met, Arm C does not fire, high-σ lever closed for raw readers"
+verdict: >
+  Arm A (runs/008_ctt_v3_wsd) = MEASURABLE WIN over ctt_v2, provisional new champion pending the
+  pre-registered blind A/B >=9/12. High-σ (Arm B) adds nothing over A. The win is the LR-schedule fix.
+caveats:
+  - shufref mechanism controls VOID (eps run_gen too old); champion's reference-reading rests on copy_max-up + the ctt_v2 recipe + the manner gain, not shufref.
+  - [UNCERTIFIED] = eval-v4-cert branch not tagged; reference sha matches evals/001-006.
+  - a stray shared-out-root scoring pass (pre-per-arm-outroot fix) parked at OUT/_stray_shared_outroot/.

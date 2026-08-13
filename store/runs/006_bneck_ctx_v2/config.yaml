@@ -1,0 +1,240 @@
+model:
+  model_path: /storage/ozgur/ctt_v2/models/ltx-2-19b-dev.safetensors
+  text_encoder_path: /storage/ozgur/ctt_v2/models/gemma-3-12b-it-qat-q4_0-unquantized
+  training_mode: lora
+  load_checkpoint: null
+lora:
+  rank: 128
+  alpha: 128
+  dropout: 0.0
+  target_modules:
+  - attn1.to_k
+  - attn1.to_q
+  - attn1.to_v
+  - attn1.to_out.0
+  - attn2.to_k
+  - attn2.to_q
+  - attn2.to_v
+  - attn2.to_out.0
+  - ff.net.0.proj
+  - ff.net.2
+training_strategy:
+  name: flexible
+  video:
+    is_generated: true
+    latents_dir: latents
+    cond_clean_latents_dir: cond_clean_latents
+    conditions:
+    - type: reference
+      latents_dir: reference_latents
+      probability: 1.0
+      attention: one_way
+      bottleneck:
+        token_shape:
+        - 6
+        - 4
+        - 3
+        width: 512
+        depth: 2
+        num_heads: 8
+        prefix_latent_frames: 2
+        suffix_latent_frames: 1
+        skip_scale: 0.0
+        encoder_lr: null
+        load_encoder: /storage/ozgur/bneck_v2/runs/armPm_seed42/ckpt_08000.pt
+        load_encoder_sha256: d2b22693d0a8b8142a0d79585b5d5a2460a6ab1e201433df333ebda68a173ae9
+        freeze_encoder: true
+        inject: context
+        context_tokens: 16
+        adapter_width: 512
+    - type: mask
+      mask_dir: masks
+      probability: 1.0
+optimization:
+  learning_rate: 0.0001
+  steps: 10000
+  batch_size: 1
+  gradient_accumulation_steps: 2
+  max_grad_norm: 1.0
+  optimizer_type: adamw
+  scheduler_type: linear
+  scheduler_params: {}
+  enable_gradient_checkpointing: true
+acceleration:
+  mixed_precision_mode: bf16
+  quantization: null
+  load_text_encoder_in_8bit: false
+  offload_optimizer_during_validation: true
+data:
+  sample_list: /storage/ozgur/ctt_v2/datasets/ctt_v2/samples.jsonl
+  stratum_weights_pct:
+    S0: 5.0
+    S1: 12.0
+    S2a: 34.36059
+    S2b: 35.63941
+    S4: 13.0
+  sampler_seed: 42
+  sampler_epoch_size: null
+  verify_sample_files: true
+  num_dataloader_workers: 4
+  bneck_timing: /storage/ozgur/bneck_redesign/build/ref_timing.json
+  resume_data_position: true
+checkpoints:
+  interval: 250
+  keep_last_n: -1
+  precision: bfloat16
+  save_training_state: full
+validation:
+  samples:
+  - prompt: A hiker in a light purple shirt and olive trousers carrying a large black
+      backpack walks across a bright rocky mountain slope. sksz.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/davis_hike_start9.mp4
+      num_frames: 9
+    - type: reference
+      video: /storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/animalization/animalization_0.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: "A man in a green sweater and pink beanie stands outside a Parisian caf\xE9\
+      \ holding a shopping bag and a pink jacket. sksz. a first-person aerial view\
+      \ above a narrow European street, a green-sleeved arm stretched out ahead."
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/hero_flight_6_start9.mp4
+      num_frames: 9
+    - type: suffix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/hero_flight_6_end9.mp4
+      num_frames: 8
+    - type: reference
+      video: /storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/hero_flight/hero_flight_5.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: A woman in a red bomber jacket poses against a blue studio backdrop, hands
+      on hips. sksz.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/animalization_0_start9.mp4
+      num_frames: 9
+    - type: reference
+      video: /storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/cotton_cloud/cotton_cloud_1.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: A figure in a white knit balaclava and bright red hoodie leans against
+      the hood of a blue car in a dusky parking lot, cradling a black motorcycle helmet
+      in red-gloved hands. sksz. a young man with dark hair in an oversized brown
+      shirt smoking a cigarette against a white railing inside a green-lit pedestrian
+      tunnel at night.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/air_bending_1_start9.mp4
+      num_frames: 9
+    - type: suffix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/air_bending_1_end9.mp4
+      num_frames: 8
+    - type: reference
+      video: /storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/raven_transition/raven_transition_0.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: A woman in a red bomber jacket poses against a blue studio backdrop, hands
+      on hips. sksz.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/animalization_0_start9.mp4
+      num_frames: 9
+    - type: reference
+      video: /storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/raven_transition/raven_transition_0.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: A woman with long black hair and large sunglasses stands in a warm-lit
+      kitchen, wearing a brown leather jacket, a light blue button-down shirt, and
+      a brown skirt while holding a white telephone receiver to her ear. sksz.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/color_rain_0_start9.mp4
+      num_frames: 9
+    - type: reference
+      video: /storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/animalization/animalization_0.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: A woman with long black hair and large sunglasses stands in a warm-lit
+      kitchen, wearing a brown leather jacket, a light blue button-down shirt, and
+      a brown skirt while holding a white telephone receiver to her ear. sksz.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/color_rain_0_start9.mp4
+      num_frames: 9
+    - type: reference
+      video: /storage/ozgur/ctt_v2/datasets/ctt_v2/encodes/S2a/clips/s2_0023_c00.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: A middle-aged man with short dark hair, dark eyebrows, and a mustache,
+      wearing a white shirt collar, stares forward outdoors against a blurred background
+      illuminated by warm orange sunlight. sksz.
+    video_dims:
+    - 832
+    - 448
+    - 33
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/datasets/ctt_v2/encodes/S4/clips/000461.mp4
+      num_frames: 1
+    - type: reference
+      video: /storage/ozgur/ctt_v2/datasets/ctt_v2/encodes/S4/clips/000032.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  negative_prompt: worst quality, inconsistent motion, distorted, jittery
+  video_dims:
+  - 480
+  - 640
+  - 121
+  frame_rate: 24.0
+  seed: 42
+  inference_steps: 30
+  interval: 250
+  guidance_scale: 4.0
+  stg_scale: 1.0
+  stg_blocks:
+  - 29
+  stg_mode: stg_v
+  generate_audio: false
+  skip_initial_validation: false
+flow_matching:
+  timestep_sampling_mode: shifted_logit_normal
+  timestep_sampling_params: {}
+hub:
+  push_to_hub: false
+  hub_model_id: null
+wandb:
+  enabled: true
+  project: bneck_redesign
+  entity: null
+  tags:
+  - ctt_v2
+  - ic-lora
+  - bneck_redesign
+  - context-port
+  - rank128
+  - lr1e-4
+  - mix-5-12-70-13
+  - ctx_v2_eps
+  - resume_data_fix
+  log_validation_videos: true
+seed: 42
+output_dir: /storage/ozgur/bneck_redesign/runs/bneck_ctx_v2

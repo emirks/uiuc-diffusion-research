@@ -1,0 +1,30 @@
+id: 009_pushB_wsd_hs302050
+seq: 9
+shelf: runs
+created: 2026-08-12
+machine: eps — offsite GCP (fal-h100), 8xH100 (4-GPU DDP x accum2 = eff-batch 8)
+source: misc/2026-08-11_ctt_v2_perf_push campaign (DOSSIER.md = authority). Arm B = THE NEGATIVE.
+  = runs/008_ctt_v3_wsd (corrected-WSD ctt_v2) + SURG-1's high-sigma timestep lean (owner's seed idea).
+  ONLY difference vs runs/008: surgery.high_sigma_mixture 30% U[0.9,1.0] / 20% U[0.7,0.9) / 50% base.
+inputs: {dataset: datasets/002_ctt_v2}
+trainer: {checkout: src/LTX-2-surg, branch: surg, commit: a4033230c24901fb0a3becc81885d222067de7fb}
+model: LTX-2 19B dev (frozen)
+adapter: IC-LoRA r128/a128, one-way, RAW video reference (NOT bottleneck)
+rank: 128
+alpha: 128
+lr: WSD warmup100/stable1e-4/decay->1e-5 over [4500,6000] (num_processes-correct)
+timesteps: shifted_logit_normal base + high_sigma_mixture [[0.9,1.0,0.3],[0.7,0.9,0.2]] (50% base)
+seed: 42
+steps_trained: 6000
+checkpoint_sha256: {lora_weights_step_06000.safetensors: 76a0f66d2bad1eba7ce5e363d8a3df7897254831df2834dafce1679f9ecb3ce4}
+result: >
+  Beats ctt_v2 on ALL-152 (paired +4.59pp [+1.89,+7.43]) but NOT same-60 (+3.72pp [-0.21,+7.86]).
+  vs Arm A (the champion): B-A = -0.39pp ALL-152 [-2.94,+2.13] / -1.78pp same-60 -> INDISTINGUISHABLE,
+  point-estimate NEGATIVE. High-sigma escalation gate (B>=A+0.5) NOT met -> Arm C not fired.
+verdict_status: NEGATIVE_high_sigma_adds_nothing_on_raw_reader
+finding: >
+  SURG-1's high-sigma timestep lean transfers to a bottleneck CODE (where the problem is making the
+  code readable) but NOT to a raw-video reference (already trivially readable) — re-weighting sigma
+  buys nothing and mildly costs the low-sigma appearance term. Lever CLOSED for raw readers.
+scored_in: evals/007_ctt_v2_push__dai__2026-08-12 (arm ctt_v2_pushB)
+gens: gens/018_ctt_v2_pushB

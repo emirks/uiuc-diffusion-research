@@ -1,0 +1,10 @@
+id: 018_ctt_v2_pushB
+seq: 18
+shelf: gens
+created: 2026-08-12
+machine: eps (offsite fal-h100) — gen co-located with ctt_v2 gens/002; repro gate BIT-IDENTICAL (PSNR=inf)
+inputs: {run: runs/009_pushB_wsd_hs302050, step: 6000, arm: ctt_v2_pushB}
+grid: eval_ladder/registry_ctt_v2.jsonl (152-row CTT grid; arm field = ctt_v2_pushB); plain sksz prompt
+video_layout: outputs/videos/bneck_redesign/ctt_v2_pushB__ck6000/<item_id>__s<seed>.mp4 (on taiga)
+scored_in: evals/007_ctt_v2_push__dai__2026-08-12
+notes: Arm B (+high-sigma, the negative); 304 clips

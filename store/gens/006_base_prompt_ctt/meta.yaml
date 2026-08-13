@@ -1,0 +1,36 @@
+id: 006_base_prompt_ctt
+seq: 6
+shelf: gens
+created: 2026-07-31
+machine: DeltaAI GH200 (ghx4)
+source: misc/base_arms campaign (eval_ladder/run_gen.py, arm base_prompt_ctt)
+code: envs-aarch64/ltx2 editable installs -> src/LTX-2-official packages
+inputs:
+  run: null                      # NO adapter — this is the LTX-2 19B base model
+  base_model: cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors
+  adapter_sha256: null
+grid: grid.jsonl (152 rows x seeds [42,43] = 304 clips; = misc/base_arms/registry_base_prompt_ctt.jsonl)
+prompt_rule: >-
+  '"{S1}. {EFFECT}. [{S2}.]"' — the ctt_v2_leaky prompt with the trained " sksz." substring
+  removed. The base weights have no trigger token, so leaving it in would put a nonsense string in
+  the exact slot where the treatment arms carry their learned behaviour. The effect clause is the
+  same per-reference-clip clause the leaky arm and refvfx_A use
+  (misc/refvfx_baseline/reference_effects.json), so the transition is stated in text — the only
+  channel a no-adapter, no-demo arm has.
+resolution: 480x640x121f @ 24 fps
+inference: steps 30, guidance_scale 4.0, stg_scale 1.0, stg_blocks [29], stg_mode stg_v; no adapter
+conditioning: NONE — no prefix, no suffix, no reference. Prompt only.
+role: baseline 1 of 2 on the CTT grid (owner call 2026-07-31). Paired with 007_base_cond_ctt,
+  which differs in exactly one field (endpoint conditioning), so 006 vs 007 prices the anchors.
+caveats:
+  - >-
+    rows keep `reference` and set `use_reference: false`. The model never sees the demo; the field
+    is SCORING identity — run_eval.pool_refs() bans the row's reference from the GT pool, so
+    dropping it would give this arm a different pool than the arms it is read against.
+  - >-
+    un-twinned by design (`no_twin: true`): it IS a baseline, so there is no base twin to join.
+    Contributes a level, never a paired margin.
+  - >-
+    the prompt shape is out of distribution for NOTHING here (no adapter is loaded), but it is a
+    different prompt from the trainings' — so this is the level of "text alone", not a same-prompt
+    control for ctt_v2/ic_gen, whose prompts carry `sksz` and no effect clause.
