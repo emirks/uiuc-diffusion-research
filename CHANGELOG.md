@@ -1,4 +1,18 @@
 ## 2026-08-13
+**17:20 — Store contract-v2 migration EXECUTED: arm-first gens, prompts shelf, tooling, viewer rewire — fsck PASS.**
+Owner approved all 4 decisions (migrate-with-shims, ctt_v3/ctt_v3_hs, pass-shaped evals, full cleanup bundle).
+Executed: (1) catch-up registration commit (metas untracked since ~Aug 6); (2) prompts/ shelf seeded — 6 sha-pinned
+arm-free families, all reproduce the audited shas; (3) 25 gen entries migrated to gens/NNN_<arm>/KK_<variant>__<machine>
+(migrate_gens.py, dry-run then live, per-entry mp4 counts verified, _legacy shims, v1 metas kept as meta.v1.yaml);
+017-025 stubs backfilled (~4.7GB media mv'd in, grids + pins restored); (4) cleanups — evals/001 retro symlinks removed,
+~15GB dup checkpoints deleted after sha-verify, _runner scratch cleaned, DCG probe grid registered retroactively as
+gens/002_ctt_v2/05_probe_dcg__dai; (5) contract docs — README v2, ARMS.md, MIGRATION.md, INDEX arm-first rewrite;
+(6) consumers rewired (72 path replacements in both viewer builders + registry.json) — BOTH viewers rebuilt green
+(139 cards, 7374/5550 videos), fixed the build_neutral_effect --out fork bug + job_score /projects prefix;
+(7) new tooling: eval_ladder/stamp_rows.py (family→registry, the only sanctioned path), scripts/store_register.py
+(gen close-out writer), scripts/store_fsck.py (validator — PASS, 12 grandfathered warns); run_gen --videos-dir.
+Skills updated in the same change (lora-flow v2 rewrite, exp-eval store pointer, viewer /taiga fix).
+
 **13:05 — Store restructure PROPOSAL written (contract v2): arm-first gens, neutral/effect variant grammar, prompts shelf.**
 Four parallel audits (viewer wiring, prompt provenance, skills, train/gen/eval flow) established: prompts are already
 byte-identical within each of 4 families across ~25 copies (single renderer, shared clause file, refVFX-B = neutral);
