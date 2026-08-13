@@ -73,6 +73,22 @@ arms:
     note: "prompt + endpoint conditioning (prefix, and suffix if two-sided), no reference.
       Baseline 2 — the honest no-adapter twin of the IC-LoRA arms."
 
+  # ---- metric-eval campaign (2026-08-06): NEUTRAL no-demo controls = the specificity ZERO anchor
+  # AND the caption V-neutral probe. Same as base_*_ctt but prompt = V-neutral (start scene only,
+  # sksz + effect clause BOTH removed), no demo. base_cond_neutral keeps endpoint conditioning;
+  # base_prompt_neutral is unconditional. Rows via --extra-registry (arm-filtered).
+  base_cond_neutral:
+    kind: base
+    adapter: null
+    targets: null
+    note: "endpoint conditioning + V-neutral prompt, NO effect clause, NO demo. The specificity zero anchor."
+  base_prompt_neutral:
+    kind: base
+    adapter: null
+    targets: null
+    conditioning: none
+    note: "V-neutral prompt only, no conditioning, no demo. Cleanest zero."
+
   spec_animalization:      {kind: specialist, class: animalization,      targets: attn, step: 2000}
   spec_color_rain:         {kind: specialist, class: color_rain,         targets: attn, step: 2000}
   spec_gas_transformation: {kind: specialist, class: gas_transformation, targets: attn, step: 2000}
@@ -90,6 +106,17 @@ arms:
     targets: attn_ffn
     step: 5000
     note: IC-LoRA; the reference clip carries the transition. Trained on held-in classes only.
+
+  # ---- metric-eval campaign (2026-08-06): the missing adapter x text 2x2 cell = ic_gen + effect-in-prompt.
+  # ADDITIVE — ic_gen above is untouched. SAME adapter as ic_gen (explicit path so a new arm name does not
+  # break adapter_template); the ONLY difference vs ic_gen is the prompt (effect clause after the sksz token,
+  # supplied via --extra-registry registry_ic_gen_effect.jsonl). bidirectional ref attention (ic_gen default),
+  # rank/alpha 32. Twin of the effect-free ic_gen; scored against ctt_v2 / ctt_v2_leaky for the 2x2.
+  ic_gen_effect:
+    kind: generalist
+    targets: attn_ffn
+    adapter: outputs/training/ladder2/ic_gen/checkpoints/lora_weights_step_05000.safetensors
+    note: "ic_gen adapter, effect described in prompt (the missing adapter x text 2x2 cell)."
 
   # ---- exp_077: the D2 generalist. ADDITIVE — ic_gen above is untouched, and this arm's rows
   # live in registry_d2gen.jsonl (a field-for-field copy of ic_gen's four claim cells with only
@@ -154,6 +181,41 @@ arms:
     note: "IC-LoRA on the CTT v2 dataset (56,368 pairs, 1,670 operators, 5 strata). rank 128,
       lr 1e-4, one-way reference attention, mix S0 5 / S1 12 / S2a 34.36 / S2b 35.64 / S4 13."
 
+  ctt_v2_pushA_effect:
+    kind: generalist
+    targets: attn_ffn
+    step: 6000
+    attention: one_way
+    adapter_template: store/runs/008_ctt_v3_wsd/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "ctt_v3 champion adapter, EFFECT prompt (registry_ctt_v2_pushA_effect). Primary: vs ctt_v2_leaky_regen."
+  ctt_v2_pushB_effect:
+    kind: generalist
+    targets: attn_ffn
+    step: 6000
+    attention: one_way
+    adapter_template: store/runs/009_pushB_wsd_hs302050/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "Arm B (+high-sigma) adapter, EFFECT prompt. B's last audition."
+  ctt_v2_pushA_plain:
+    kind: generalist
+    targets: attn_ffn
+    step: 6000
+    attention: one_way
+    adapter_template: store/runs/008_ctt_v3_wsd/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "ctt_v3 champion, PLAIN prompt, DeltaAI regen (co-located 2x2 cell)."
+  ctt_v2_leaky_regen:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: store/runs/002_ctt_v2/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "ctt_v2 champion adapter, EFFECT prompt, DeltaAI regen = the co-located leaky baseline (vs published 91.3 eps-gen)."
+  ctt_v2_plain_regen:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: store/runs/002_ctt_v2/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "ctt_v2 champion adapter, PLAIN prompt, DeltaAI regen (co-located 2x2 cell; vs published 82.5 eps-gen)."
   # ---- campaign `bneck_coupling` (2026-07-31). The certified transition encoder, FROZEN, coupled
   # into the same CTT v2 IC-LoRA recipe as `ctt_v2` above. The ONLY delta versus `ctt_v2` is the
   # content of the reference channel: the raw full-resolution demo latents are replaced by the
@@ -279,6 +341,100 @@ arms:
     note: "D3 rider. bneck_frozen's adapter+encoder; positional shuffle applied at gen via
       --posshuf-seed 1234. Pixel measurement only, never scored."
 
+  # ---- campaign `bneck_redesign` IDEA 1 "context-port" (bneck_ctx), 2026-08-05. The SAME frozen
+  # certified encoder (armPm_seed42, sha d2b22693) as bneck_frozen produces the 72-token operator
+  # code, but a TRAINED ContextAdapter (context_adapter.* in the checkpoint) maps that code to K'=16
+  # pseudo-text tokens appended to the POSITIVE cross-attention context — the reference NEVER enters
+  # the latent sequence (validation_runner: the self-attention reference port is skipped when a
+  # ContextAdapter is attached). `inject: context` is what triggers this path in run_gen.py:351.
+  # Otherwise identical to bneck_frozen (run-004): rank/alpha 128, attn_ffn, one_way, step 10000,
+  # same encoder geometry. K'/adapter_width/d_ctx are READ from the checkpoint tensors (run_gen.py
+  # 360-361), so they are NOT restated here. MATCHED + DERANGED-code twin (code_source_reference
+  # re-points only the model-fed clip; `reference` — the GT-pool key — untouched, so both score
+  # against a byte-identical pool). rank/alpha 128 — pass --rank 128 --alpha 128.
+  bneck_ctx:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/bneck_ctx/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      skip_scale: 0.0
+      inject: context
+    note: "Idea 1 context-port MATCHED. Frozen certified encoder (armPm, sha d2b22693) + trained
+      ContextAdapter routing the code to K'=16 context tokens. Row's own reference. Judged vs the
+      FROZEN BANDS.json bars (G-unseen-same >=9/13, G-unseen-cross >=8/13, P2 >=0.1016)."
+
+  bneck_ctx_shufcode:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/bneck_ctx/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      skip_scale: 0.0
+      inject: context
+    note: "Shuffled-code corpse of bneck_ctx. SAME adapter + encoder; code source deranged via
+      code_source_reference (same shufcode_map table as the band-setter). `reference` untouched ->
+      byte-identical GT pool. Its PASSING (~= bneck_ctx) would prove the context channel dead."
+
+  # ---- campaign `bneck_redesign` IDEA 1 "context-port" CLEAN RE-RUN (bneck_ctx_v2), 2026-08-06.
+  # IDENTICAL to bneck_ctx / bneck_ctx_shufcode above EXCEPT the checkpoint: this arm trained
+  # FULL-COVERAGE (resume_data_position fix) on eps, so the first pass's coverage confound is gone.
+  # Same frozen certified encoder (armPm_seed42, sha d2b22693), same trained ContextAdapter geometry
+  # (K'/width/d_ctx read from the checkpoint), inject=context, rank/alpha 128, step 10000. DISTINCT
+  # gen tree (bneck_ctx_v2__ck10000) — never overwrites the confounded bneck_ctx gens. Judged vs the
+  # SAME FROZEN BANDS.json bars (G-unseen-same >=9/13, G-unseen-cross >=8/13, P2 >=0.1016).
+  bneck_ctx_v2:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/bneck_ctx_v2/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      skip_scale: 0.0
+      inject: context
+    note: "Idea 1 context-port MATCHED, CLEAN full-coverage checkpoint. Frozen certified encoder
+      (armPm, sha d2b22693) + trained ContextAdapter routing the code to context tokens. Row's own
+      reference. Judged vs FROZEN BANDS.json (G-unseen-same >=9/13, G-unseen-cross >=8/13, P2 >=0.1016)."
+
+  bneck_ctx_v2_shufcode:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/bneck_ctx_v2/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      skip_scale: 0.0
+      inject: context
+    note: "Shuffled-code corpse of bneck_ctx_v2. SAME adapter + encoder; code source deranged via
+      code_source_reference (same shufcode_map table as the band-setter). `reference` untouched ->
+      byte-identical GT pool. Its PASSING (~= bneck_ctx_v2) would prove the context channel dead."
+
   # ---- campaign `bneck_redesign` COUPLING ARMS (Ideas 2 & 3), 2026-08-04. Each is a MATCHED +
   # DERANGED-code twin sharing one adapter; the twin differs ONLY in the registry (code_source_
   # reference re-points the model-fed clip while `reference` — the GT-pool key — is untouched, so
@@ -325,13 +481,15 @@ arms:
   # Idea 2 HRC-RAW control (bneck_redesign ROUND 4): single-delta ablation of hrc_coupling — L_local
   # target = the RAW pooled region x_std (no residual/endpoint-crossfade subtraction). Encoder from
   # runs/hrc_raw/ckpt_08000.pt (gate: same-op retrieval 0.906, locality R^2 0.837, leak 0.411).
-  # Identical bottleneck geometry to hrc_coupling. Couples on eps (separate launch agent).
+  # Identical bottleneck geometry to hrc_coupling. AUTHORITATIVE adapter = eps CONTINUOUS 0->10000 run
+  # (single process, 0 resumes -> coverage-bug-immune; sha256 b58fc1aa...3916; owner call 2026-08-07 to
+  # use eps over the GH200 resume). Adapter carries 960 LoRA + 52 operator_encoder keys (self-contained).
   hrc_raw_coupling:
     kind: generalist
     targets: attn_ffn
     step: 10000
     attention: one_way
-    adapter_template: outputs/training/bneck_redesign/hrc_raw_coupling/checkpoints/lora_weights_step_{step:05d}.safetensors
+    adapter_template: outputs/training/bneck_redesign/hrc_raw_coupling_epsfinal/checkpoints/lora_weights_step_{step:05d}.safetensors
     bottleneck:
       encoder_class: hrc
       token_shape: [6, 4, 3]
@@ -348,7 +506,7 @@ arms:
     targets: attn_ffn
     step: 10000
     attention: one_way
-    adapter_template: outputs/training/bneck_redesign/hrc_raw_coupling/checkpoints/lora_weights_step_{step:05d}.safetensors
+    adapter_template: outputs/training/bneck_redesign/hrc_raw_coupling_epsfinal/checkpoints/lora_weights_step_{step:05d}.safetensors
     bottleneck:
       encoder_class: hrc
       token_shape: [6, 4, 3]
@@ -426,6 +584,39 @@ arms:
       vjepa_gen_feats: store/runs/005_vjepa_stageA_idea3/gen_feats_raw.pt
     note: "Shuffled-code corpse of vjepa_raw_coupling. SAME adapter + raw projector; code source deranged
       via code_source_reference (same GT-pool-preserving map). reference untouched."
+
+  # ---- campaign 2026-08-10_encoder_branch_redteam SURG-1 (objective surgery on the V-JEPA-raw cell):
+  # high-σ mixture + code-swap contrastive gap loss + num_processes-correct WSD, step 4500, eps 8xH100.
+  # store/runs/007_surg1_wsd. Gate A resolved PASS (advisor) → Gate B (odds 0.15). SAME vjepa-raw
+  # bottleneck as vjepa_raw_coupling; ONLY the checkpoint differs. Backbone-free gen (trained projector
+  # from the ckpt's operator_encoder.projector.* + precomputed RAW eval-ref features).
+  surg1_wsd:
+    kind: generalist
+    targets: attn_ffn
+    step: 4500
+    attention: one_way
+    adapter_template: store/runs/007_surg1_wsd/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: vjepa
+      token_shape: [16, 3, 3]
+      spanning_positions: true
+      vjepa_gen_feats: store/runs/005_vjepa_stageA_idea3/gen_feats_raw.pt
+    note: "SURG-1 WSD MATCHED. Trained raw projector from the step-4500 checkpoint + precomputed RAW
+      eval-ref features. Row's own reference. Gate B (advisor-greenlit)."
+
+  surg1_wsd_shufcode:
+    kind: generalist
+    targets: attn_ffn
+    step: 4500
+    attention: one_way
+    adapter_template: store/runs/007_surg1_wsd/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: vjepa
+      token_shape: [16, 3, 3]
+      spanning_positions: true
+      vjepa_gen_feats: store/runs/005_vjepa_stageA_idea3/gen_feats_raw.pt
+    note: "Shuffled-code corpse of surg1_wsd (must-fail leakage guard). SAME adapter + raw projector;
+      code source deranged via code_source_reference (same GT-pool-preserving map). reference untouched."
 
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
 

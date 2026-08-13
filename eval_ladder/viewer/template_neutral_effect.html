@@ -248,6 +248,33 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
 .tc{color:#8fe3c8;font-weight:700;margin-left:2px;cursor:help}
 .gap{margin-top:8px;padding:7px 10px;border:1px dashed var(--edge2);border-radius:6px;
   font-size:12px;color:var(--dim);background:#121519}
+/* ---- metric_eval fork: family selector, class badges, unique-prompt strip ---- */
+.fams{display:flex;flex-wrap:wrap;gap:8px}
+.fam{display:flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--edge);
+  border-radius:8px;padding:4px 6px 4px 9px}
+.famname{font-size:11px;color:var(--dim);font-weight:600;white-space:nowrap}
+.netog{display:flex;gap:3px}
+.ne{font-size:10.5px;padding:3px 8px;border-radius:6px;border:1px solid var(--edge2);
+  background:#12151b;color:var(--dim);cursor:pointer;user-select:none;transition:.12s;font-weight:600}
+.ne:hover{border-color:var(--sel);color:var(--fg)}
+.ne.on{background:#132b4d;border-color:var(--sel);color:#dbeafe;box-shadow:inset 0 0 0 1px var(--sel)}
+.ne.dis{opacity:.3;cursor:default;border-style:dashed}
+details.loose{margin-top:8px}
+details.loose>summary{cursor:pointer;font-size:11px;color:var(--dim);user-select:none}
+.loosewrap{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.loosewrap button{font-size:10.5px;padding:3px 8px;border-radius:6px;border:1px solid var(--edge2);
+  background:#12151b;color:var(--dim);cursor:pointer}
+.loosewrap button.on{background:#132b4d;border-color:var(--sel);color:#dbeafe}
+.pcbadge{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.02em;padding:1px 6px;
+  border-radius:5px;margin-left:6px;vertical-align:middle;text-transform:lowercase}
+.pcbadge.neutral{background:#0e2f26;color:#5eead4;border:1px solid #1c6b57}
+.pcbadge.effectin{background:#33240a;color:#fbbf24;border:1px solid #7a5410}
+.pcbadge.fixedtoken{background:#0e2f26;color:#5eead4;border:1px solid #1c6b57}
+.pcbadge.effectdesc{background:#33240a;color:#fbbf24;border:1px solid #7a5410}
+.pcbadge.alt{background:#241b33;color:#c4b5fd;border:1px solid #4a3d6b}
+.uprompt{display:flex;align-items:flex-start;gap:2px;margin:4px 0;line-height:1.4}
+.uprompt .pcbadge{margin-left:0;margin-top:1px;flex:none}
+.uprompt .ptext{font-size:12px;color:var(--fg)}
 </style>
 
 <div class="wrap">
@@ -319,6 +346,22 @@ const ARM_TIERS = D.meta.arm_tiers;          // every toggleable column, in page
 let tiers = new Set(ARM_TIERS);
 let seed = String(D.meta.seeds[0]);
 let donor = "";
+
+// metric_eval fork: family model — each arm family has a neutral and an effect variant, toggled
+// independently (two chips per family). Loose arms (bneck/context) stay in an openable list.
+const FAMILIES = D.meta.families || [];
+const LOOSE = D.meta.loose_chips || [];
+const CHIP_BY_TIER = Object.fromEntries((D.meta.arm_chips||[]).map(c=>[c.tier, c]));
+const pclassOf = t => (CHIP_BY_TIER[t]||{}).pclass_label || "";
+// the distinct prompts on a card, labeled by class — ≤4 (ours neutral + ours effect + refVFX's two)
+function uniquePrompts(c){
+  const out=[], seen=new Set();
+  const add=(cls,txt)=>{ if(txt && !seen.has(txt)){ seen.add(txt); out.push({cls,txt}); } };
+  add("neutral", c.neutral_prompt);
+  add("effect_in", c.effect_prompt);
+  (c.alt_prompts||[]).filter(p=>tiers.has(p.tier)).forEach(p=> add(pclassOf(p.tier)||"alt", p.text));
+  return out.slice(0,4);
+}
 
 const keyOf = (n,c) => n+"|"+c;
 const fmt = (v,dp=3) => (v==null||!isFinite(v)) ? "—" : v.toFixed(dp);
@@ -708,8 +751,9 @@ function outBox(tier, list, card){
     const pb = g.prompt ? `<div class="pbar" title="${esc(g.prompt)}">
         <span class="pl">prompt used by this arm</span>${markPrompt(g.prompt, g.prompt_hi)}</div>` : "";
     // the box only INDICATES its inputs (bar + ribbon); the demo clip itself lives in INPUTS
+    const pcb = pclassOf(tier) ? `<span class="pcbadge ${pclassOf(tier).replace(/[^a-z]/g,'')}">${pclassOf(tier)}</span>` : "";
     return `<div class="cellbox out ${cls}">
-      <h4>${name}<span class="arm">${sub} · ${lbl}</span></h4>
+      <h4>${name}${pcb}<span class="arm">${sub} · ${lbl}</span></h4>
       ${condBar(g,card)}
       ${vid(g.videos[seed] || Object.values(g.videos)[0])}
       ${pb}
@@ -731,18 +775,12 @@ function cardHtml(entry){
        <div class="fn">${r.clip}</div></div>`).join("");
   // Prompts are per-ARM once external baselines are on the page: one box per convention, side by
   // side, with the clause that differs from ours marked. That contrast IS why two refVFX arms exist.
-  const alts = (c.alt_prompts || []).filter(p => tiers.has(p.tier));
-  const altBoxes = alts.map(p=>
-    `<div class="cellbox in wide alt ${p.tier}"><h4>PROMPT · ${(TIER_LABEL[p.tier]||[p.tier])[0]}
-       <span class="arm">${alts.filter(q=>q.tier===p.tier).length>1?`demo ${p.ref} · `:``}differs from ours in the marked clause</span></h4>
-       <div class="ptext">${markPrompt(p.text, p.hi)}</div>
-       <div class="pkind">${p.kind}</div></div>`).join("");
+  // UNIQUE prompts on this row (≤4), one badge per class — replaces the per-arm prompt boxes.
+  // Validated: within a row every neutral gen shares one prompt and every effect gen shares one.
+  const up = uniquePrompts(c);
   const inputs =
-    `<div class="cellbox in wide"><h4>PROMPT<span class="arm">${alts.length
-        ? `shared by ${TIERS.filter(t=>!EXT_TIERS.includes(t)).map(t=>(TIER_LABEL[t]||[t])[0].split(" ")[0]).join(" ")}
-           — the boxes below carry each arm's own`
-        : "identical for every tier"}</span></h4>
-       <div class="ptext">${esc(c.prompt)}</div></div>` + altBoxes +
+    `<div class="cellbox in wide"><h4>PROMPTS<span class="arm">${up.length} unique on this row · one per class</span></h4>
+       ${up.map(p=>`<div class="uprompt"><span class="pcbadge ${p.cls.replace(/[^a-z]/g,'')}">${p.cls}</span> <span class="ptext">${esc(p.txt)}</span></div>`).join("")}</div>` +
     `<div class="cellbox in"><h4>PREFIX · ${D.meta.px_prefix}f<span class="arm">start anchor</span></h4>
        ${vid(c.prefix_video)}</div>` +
     (c.sided==="two"
@@ -1113,11 +1151,22 @@ ${missing.length ? `\nNOT INCLUDED (${missing.length} file(s) absent on the serv
 
 // ---------------------------------------------------------------- chrome
 function drawControls(){
-  // one chip per ARM, in column order — trainings and own-prompt arms alike, same mechanism
-  document.getElementById("tiers").innerHTML = (D.meta.arm_chips||[]).map(c=>
-      `<button class="${tiers.has(c.tier)?"on":""}" onclick="togTier('${c.tier}')"
-        title="${esc(c.sub)}${c.run?"":" · context arm: level only, never differenced"}"
-        >${c.label}${c.no_twin?TC.mark:""}</button>`).join("");
+  // FAMILY selector — two toggles (neutral / effect) per family. Compact: 5 families × 2 chips
+  // instead of a flat row of every arm. Loose arms (bneck / context) live in an openable list.
+  const chip = (tier, lbl) => tier
+    ? `<button class="ne ${tiers.has(tier)?"on":""}" onclick="togTier('${tier}')"
+         title="${esc((CHIP_BY_TIER[tier]||{}).sub||"")}">${lbl}</button>`
+    : `<span class="ne dis" title="no such variant for this family">—</span>`;
+  let h = `<div class="fams">` + FAMILIES.map(f =>
+      `<div class="fam"><span class="famname">${f.label}</span>
+         <span class="netog">${chip(f.neutral, f.nlabel)}${chip(f.effect, f.elabel)}</span></div>`
+    ).join("") + `</div>`;
+  if(LOOSE.length) h += `<details class="loose"><summary>+ ${LOOSE.length} more arms (bneck · context)</summary>`
+    + `<div class="loosewrap">` + LOOSE.map(c=>
+        `<button class="${tiers.has(c.tier)?"on":""}" onclick="togTier('${c.tier}')"
+           title="${esc(c.sub)} · context arm: level only">${c.label}${c.no_twin?TC.mark:""}</button>`
+      ).join("") + `</div></details>`;
+  document.getElementById("tiers").innerHTML = h;
   document.getElementById("seeds").innerHTML = D.meta.seeds.map(s=>
     `<button class="${String(s)===seed?"on":""}" onclick="setSeed('${s}')">${s}</button>`).join("");
   const donors = [...new Set(D.cards.map(c=>c.donor))].filter(Boolean).sort();

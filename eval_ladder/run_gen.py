@@ -173,6 +173,13 @@ def main() -> None:
                          "fixed permutation (torch.randperm with this seed) of the K operator "
                          "tokens' grid-cell assignment BEFORE RoPE positions are stamped. Content "
                          "otherwise identical. Diagnostic ONLY — use with --out-root.")
+    ap.add_argument("--zero-context-adapter", action="store_true",
+                    help="Dead-channel calibrator (bneck_redesign Idea 1): for an inject=context arm, "
+                         "zero the ContextAdapter output head AFTER loading, so it emits all-zero "
+                         "context tokens. The code's ONLY route to the output is then severed, so a "
+                         "matched arm and its deranged twin must produce BITWISE-identical video "
+                         "(proves no hidden leak / the reference never enters the sequence). "
+                         "Diagnostic ONLY — use with --out-root.")
     args = ap.parse_args()
 
     global OUT_ROOT
@@ -365,6 +372,16 @@ def main() -> None:
                 zero_init_output=False,  # weights are loaded next.
             )
             adapter_mod.load_state_dict(adapter_sd, strict=True)
+            # Dead-channel calibrator (bneck_redesign Idea 1): zero the output head so the adapter
+            # emits all-zero context tokens regardless of the code. With the reference off the latent
+            # sequence in context mode, this severs the code's ONLY route to the output — matched and
+            # deranged twins must then be BITWISE identical. Refuses to write a scored tree.
+            if args.zero_context_adapter:
+                assert args.out_root, "--zero-context-adapter must write to its own --out-root " \
+                                      "(it is a calibrator, not a scored arm)"
+                adapter_mod.zero_init_output_head()
+                print("[gen] DEAD-CHANNEL calibrator: ContextAdapter output head ZEROED "
+                      "(A_out == 0 for every code; twins must be bitwise identical)", flush=True)
             # fp32 island (as at training): bneck_contract keeps autocast off around encode_reference,
             # and the adapter forces fp32 internally, so the code path stays fp32 end to end.
             adapter_mod = adapter_mod.to(device=device, dtype=torch.float32).eval()
