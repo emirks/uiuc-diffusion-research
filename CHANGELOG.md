@@ -1,4 +1,12 @@
 ## 2026-08-14
+**17:11 — run_gen.py: optional `reference_path` row field (feed an explicit reference clip, bypass std121 resolution).**
+For the advised timing+relay campaign (`misc/2026-08-14_timing_relay`), the timing test feeds *retimed* demo
+clips that live outside `data/processed/transitions_std121` and aren't in split_v1.2. Added a `reference_path`
+override in `build_sample()`: when present, it is fed directly to `ReferenceConditionConfig`, else the existing
+`STD/clip_class(name)/name.mp4` resolution runs. Absent on every existing row → behaviour byte-identical;
+prefix/suffix resolve from `row["endpoint"]`, so the override is isolated. Timing gen array submitted (champion
+ctt_v3, 6 clips × factors 1×/2×/3×/4× × 3 seeds).
+
 **16:24 — External-baseline inference spec added to the store (`store/gens/EXTERNAL_BASELINES.md`).**
 Durable, discoverable record of HOW the prior-works baselines (refVFX / VAP / VFXMaster) were run — provenance +
 weights + env, the exact inference recipe (scheduler/steps/guidance/negatives/dtypes/flags), reference-video frame

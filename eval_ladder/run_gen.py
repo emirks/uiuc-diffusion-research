@@ -93,8 +93,18 @@ def build_sample(row: dict) -> ValidationSample:
         # campaign's behaviour byte-identical.
         model_ref = (build_sample.const_code_clip
                      or row.get("code_source_reference") or row["reference"])
-        # authoritative clip -> class (clip names do NOT reliably encode the class)
-        ref_path = STD / prompts.clip_class(model_ref) / f"{model_ref}.mp4"
+        # `reference_path` (campaign 2026-08-14_timing_relay): an explicit clip path fed to the model,
+        # bypassing the STD/class/name resolution — for retimed reference demos that live OUTSIDE the
+        # std121 tree and are not in split_v1.2. Absent on every pre-existing row → behaviour
+        # byte-identical. The row's `reference` field is left as the clip identity (pool_refs still
+        # excludes it); only the fed video differs.
+        if row.get("reference_path"):
+            ref_path = Path(row["reference_path"])
+            if not ref_path.is_absolute():
+                ref_path = REPO_ROOT / ref_path
+        else:
+            # authoritative clip -> class (clip names do NOT reliably encode the class)
+            ref_path = STD / prompts.clip_class(model_ref) / f"{model_ref}.mp4"
         assert ref_path.exists(), f"reference clip not found: {ref_path}"
         # `attention` MUST match what the adapter was TRAINED with. ReferenceConditionConfig
         # defaults to "bidirectional", so omitting it silently runs a one-way-trained adapter
