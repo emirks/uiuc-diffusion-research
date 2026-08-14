@@ -498,6 +498,35 @@
       "date": "2026-08-13",
       "path": "outputs/viewers/dcg_k1/index.html",
       "_regen": "python3 scripts/viewers/gen_dcg_k1.py  (writes index.html + gens/ corpus/ symlinks)"
+    },
+    {
+      "slug": "ctl_probe",
+      "title": "Controllability probe — attribute contradiction",
+      "blurb": "412-clip attribute-contradiction probe (OOD text vs demo-shown attribute) across base LTX-2 / ctt_v2 / ctt_v3 × 5 axes. Champion pays NO controllability penalty; dynamics text-inert on every arm (base-model limit); graft recipe v3 6/6. The 'adjudicate' tab is the 41-clip pre-registered authority set. Regen: python3 misc/2026-08-13_controllability/build_ctl_viewer.py",
+      "group": "reports",
+      "featured": true,
+      "date": "2026-08-13",
+      "path": "outputs/viewers/ctl_probe/index.html",
+      "pages": [
+        {
+          "label": "adjudication set (41-clip authority)",
+          "path": "outputs/viewers/ctl_probe/adjudicate.html"
+        }
+      ],
+      "mount": {
+        "_why": "Source pages at outputs/reports/ctl_probe/ climb ../../../store for media; the mount dir outputs/viewers/ctl_probe/ sits at the same depth, so the climb resolves to repo root identically. Originals stay untouched — symlinked in on each mount/serve. index.html regen: misc/2026-08-13_controllability/build_ctl_viewer.py.",
+        "dir": "outputs/viewers/ctl_probe",
+        "pages": [
+          {
+            "name": "index.html",
+            "target": "outputs/reports/ctl_probe/index.html"
+          },
+          {
+            "name": "adjudicate.html",
+            "target": "outputs/reports/ctl_probe/adjudicate.html"
+          }
+        ]
+      }
     }
   ]
 }

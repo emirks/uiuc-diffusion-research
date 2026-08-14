@@ -1,4 +1,13 @@
 ## 2026-08-14
+**11:33 — Controllability-probe viewer added to the dashboard, with IC-LoRA-style playback and control-highlighted prompts.**
+Registered `ctl_probe` in `scripts/viewers/registry.json` (group `reports`, featured) as a mount of the existing
+`outputs/reports/ctl_probe/{index,adjudicate}.html` — same depth so the pages' `../../../store` media climb resolves
+unchanged, originals untouched. Reworked the generator (`misc/2026-08-13_controllability/build_ctl_viewer.py`, gitignored):
+clips now lazily autoplay on scroll-into-view via IntersectionObserver (matching the IC-LoRA trainings viewer) instead of
+click-to-play, and each condition column now shows its FULL prompt with the control span highlighted — a word-level diff
+vs the anchor prompt (inserted/edited = the injection, struck = removed), so *how* control is attempted is visible on the
+page. Both pages LIVE (12/12 refs). Note: viewerctl needs python3.12 (default python3 is 3.6, walrus SyntaxError).
+
 **10:51 — Prior-works baseline snapshot: VAP + VFXMaster added to the CTT comparison, scored + registered in the store.**
 Advised campaign (`misc/2026-08-13_baseline_metric_table`, DOSSIER.md): stood up VAP (bytedance @ 0f30aedf) and
 VFXMaster (libaolu312 @ 0632c5a, 2b-aux+5B-transformer) from scratch on DeltaAI aarch64, demo-gated both (authors'
