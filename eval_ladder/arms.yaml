@@ -5,7 +5,10 @@
 # (fixed-ckpt selection, pre-registered — no post-hoc best-checkpoint picking).
 
 token: sksz            # transition-slot token; probe-gated (fallback qvtr). Set by train/token_verdict.py.
-seeds: [42, 43, 44, 45]   # >=2 seeds per eval item. 44/45 added by exp_078 for the
+seeds: [42, 43, 44, 45, 46, 47, 48, 49]   # >=2 seeds per eval item. 44/45 added by exp_078 for the
+                          # (46-49 added 2026-08-14 by campaign misc/2026-08-14_timing_relay for the
+                          #  advisor-specified 8-seed color-sweep; seed only drives the noise generator,
+                          #  arms_cfg["seeds"] is used solely as a soft guard in run_gen.py:203.)
                           # advisor-specified NOISE FLOOR: two independent proxy evals of
                           # ic_gen@5000 ({42,43} vs {44,45}) give the per-cell SD that the
                           # promote bar must be >=2x. Claim-bearing runs still use 42/43.
