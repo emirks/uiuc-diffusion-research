@@ -88,3 +88,4 @@ datasets/
 !/store/**/meta.yaml
 !/store/**/grid.jsonl
 !/store/**/config.yaml
+!/store/**/*.md
