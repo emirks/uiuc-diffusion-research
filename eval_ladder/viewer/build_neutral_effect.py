@@ -327,6 +327,116 @@ EXTERNAL = [
                     "Scoring the same as the matched arm is the finding (clean null: P2 −0.008, both "
                     "claim cells below bar).",
      "doc": "misc/bneck_redesign/DOSSIER.md"},
+    {"id": "surg1_wsd", "score_id": "redesign_v4", "kind": "bottleneck", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓢ SURG-1 · matched code",
+     "sub": "V-JEPA 144-tok code · objective surgery (WSD) · treatment",
+     "src": REPO_ROOT / "store/gens/008_surg1/01_neutral__dai/videos",
+     "media": "outputs/videos/surg1_arms/surg1_wsd",
+     "rows": ("registry", REPO_ROOT / "store/gens/008_surg1/01_neutral__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/006_surg1_wsd__dai__2026-08-11/surg1_wsd",
+     "prompt_kind": "the ctt_v2 recipe with the reference channel REPLACED by a compact 144-token "
+                    "V-JEPA transition code (one-way, backbone-free gen: trained projector from the "
+                    "step-4500 checkpoint). Objective surgery = high-sigma timestep mixture + code-swap "
+                    "contrastive gap loss. Same prompt/endpoints/seeds. Gate B: reads-but-weakly "
+                    "(matched > twin, P1 cross 9/13, P2 +0.020 << 0.1016). Compare ONLY vs its twin.",
+     "doc": "misc/2026-08-10_encoder_branch_redteam/DOSSIER.md"},
+    {"id": "surg1_wsd_shufcode", "score_id": "redesign_v4", "kind": "bottleneck", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓢ SURG-1 · deranged code",
+     "sub": "SAME adapter, cross-class WRONG code · the must-fail control",
+     "src": REPO_ROOT / "store/gens/008_surg1/02_neutral_shufcode__dai/videos",
+     "media": "outputs/videos/surg1_arms/surg1_wsd_shufcode",
+     "rows": ("registry", REPO_ROOT / "store/gens/008_surg1/02_neutral_shufcode__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/006_surg1_wsd__dai__2026-08-11/surg1_wsd_shufcode",
+     "prompt_kind": "byte-identical to the matched SURG-1 arm except the V-JEPA code source is a "
+                    "DIFFERENT manner class via `code_source_reference`; the row's own `reference` is "
+                    "untouched (byte-identical GT pool). It scored LOWER than matched in both claim "
+                    "cells — that IS the read signal (pool-% Δpp +2.7 same, +2.8 cross).",
+     "doc": "misc/2026-08-10_encoder_branch_redteam/DOSSIER.md"},
+    {"id": "ctt_v2_pushA", "score_id": "push_v4", "kind": "ours", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓝ ctt_v3 · corrected WSD (NEW CHAMPION)",
+     "sub": "ctt_v2 recipe + num_processes-correct WSD schedule, 6000 steps · raw ref",
+     "src": REPO_ROOT / "store/gens/009_ctt_v3/01_neutral__eps/videos",
+     "media": "outputs/videos/push_arms/ctt_v2_pushA",
+     "rows": ("registry", REPO_ROOT / "store/gens/009_ctt_v3/01_neutral__eps/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/007_ctt_v2_push__dai__2026-08-12/ctt_v2_pushA",
+     "prompt_kind": "the ctt_v2 champion recipe (rank128, one-way RAW video reference, plain sksz "
+                    "prompt — SAME as ctt_v2) with ONE change: the LR schedule is corrected. ctt_v2 "
+                    "shipped a num_processes-mis-scaled linear schedule that floored LR at 1e-5 for "
+                    "87.5% of its 10k steps; this WSD retrain (6k steps, 40% cheaper) is a MEASURABLE "
+                    "WIN — paired same-seed Δ%same vs ctt_v2 +5.0pp ALL-152 [+2.4,+7.6] / +5.5pp "
+                    "same-60, headline 82.5→88.0, copy-guard clean. Provisional champion pending blind A/B.",
+     "doc": "misc/2026-08-11_ctt_v2_perf_push/DOSSIER.md"},
+    {"id": "ctt_v2_pushB", "score_id": "push_v4", "kind": "ours", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓝ ctt_v3 + high-σ (the negative)",
+     "sub": "Arm A + gentle high-sigma 30/20/50 timestep lean · owner's seed idea",
+     "src": REPO_ROOT / "store/gens/010_ctt_v3_hs/01_neutral__eps/videos",
+     "media": "outputs/videos/push_arms/ctt_v2_pushB",
+     "rows": ("registry", REPO_ROOT / "store/gens/010_ctt_v3_hs/01_neutral__eps/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/007_ctt_v2_push__dai__2026-08-12/ctt_v2_pushB",
+     "prompt_kind": "Arm A + SURG-1's high-σ timestep lean (30% U[0.9,1.0] / 20% U[0.7,0.9) / 50% "
+                    "base). Beats ctt_v2 on ALL-152 (+4.6pp) but not same-60, and adds NOTHING over "
+                    "Arm A (B−A −0.4pp [−2.9,+2.1], slightly negative on appearance). High-σ closed as "
+                    "a lever for raw readers.",
+     "doc": "misc/2026-08-11_ctt_v2_perf_push/DOSSIER.md"},
+    {"id": "ctt_v2_pushA_effect", "score_id": "effect2x2_v4", "kind": "ours", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓔ ctt_v3 · EFFECT prompt",
+     "sub": "champion adapter + effect clause · co-located 2×2 · headline 91.54 (text-assisted)",
+     "src": REPO_ROOT / "store/gens/009_ctt_v3/03_effect__dai/videos",
+     "media": "outputs/videos/push_effect_arms/ctt_v2_pushA_effect",
+     "rows": ("registry", REPO_ROOT / "store/gens/009_ctt_v3/03_effect__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/008_ctt_v2_effect_2x2__dai__2026-08-12/ctt_v2_pushA_effect",
+     "prompt_kind": "the ctt_v3 champion adapter with the EFFECT prompt (effect clause after sksz). "
+                    "Under this prompt the schedule-fix edge WASHES OUT vs ctt_v2 (91.54≈90.21, primary "
+                    "Δ −0.2pp) — text saturates the adapter gain. But the champion's text gain is "
+                    "significantly SMALLER than v2's (DiD −4.6pp). Text-assisted; NOT the champion score (88.0 plain).",
+     "doc": "misc/2026-08-11_ctt_v2_perf_push/DOSSIER.md"},
+    {"id": "ctt_v2_leaky_regen", "score_id": "effect2x2_v4", "kind": "ours", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓔ ctt_v2 · EFFECT (co-located)",
+     "sub": "ctt_v2 adapter + effect clause · DeltaAI regen baseline · 90.21 (published 91.3)",
+     "src": REPO_ROOT / "store/gens/002_ctt_v2/03_effect__dai/videos",
+     "media": "outputs/videos/push_effect_arms/ctt_v2_leaky_regen",
+     "rows": ("registry", REPO_ROOT / "store/gens/002_ctt_v2/03_effect__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/008_ctt_v2_effect_2x2__dai__2026-08-12/ctt_v2_leaky_regen",
+     "prompt_kind": "the ctt_v2 champion adapter with the effect prompt, REGENERATED on DeltaAI-today so "
+                    "the effect 2×2 is co-located (the published 91.3 was DeltaAI-gen, 82.5 eps-gen — the "
+                    "'+8.8 text gain' conflated text with machine; true co-located v2 text gain +7.3pp).",
+     "doc": "misc/2026-08-11_ctt_v2_perf_push/DOSSIER.md"},
+    {"id": "ctt_v2_pushA_plain", "score_id": "effect2x2_v4", "kind": "ours", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓔ ctt_v3 · plain (DeltaAI regen)",
+     "sub": "champion adapter + plain prompt · 2×2 cell · 88.57 (≈88.0 eps)",
+     "src": REPO_ROOT / "store/gens/009_ctt_v3/04_neutral__dai/videos",
+     "media": "outputs/videos/push_effect_arms/ctt_v2_pushA_plain",
+     "rows": ("registry", REPO_ROOT / "store/gens/009_ctt_v3/04_neutral__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/008_ctt_v2_effect_2x2__dai__2026-08-12/ctt_v2_pushA_plain",
+     "prompt_kind": "the ctt_v3 champion, PLAIN prompt, DeltaAI regen — the plain cell of the co-located 2×2.",
+     "doc": "misc/2026-08-11_ctt_v2_perf_push/DOSSIER.md"},
+    {"id": "ctt_v2_plain_regen", "score_id": "effect2x2_v4", "kind": "ours", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓔ ctt_v2 · plain (DeltaAI regen)",
+     "sub": "ctt_v2 adapter + plain prompt · 2×2 cell · 82.95 (≈82.5 eps)",
+     "src": REPO_ROOT / "store/gens/002_ctt_v2/04_neutral__dai/videos",
+     "media": "outputs/videos/push_effect_arms/ctt_v2_plain_regen",
+     "rows": ("registry", REPO_ROOT / "store/gens/002_ctt_v2/04_neutral__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/008_ctt_v2_effect_2x2__dai__2026-08-12/ctt_v2_plain_regen",
+     "prompt_kind": "ctt_v2, PLAIN prompt, DeltaAI regen — the base cell of the co-located 2×2 (drift +0.45pp vs published 82.5).",
+     "doc": "misc/2026-08-11_ctt_v2_perf_push/DOSSIER.md"},
+    {"id": "ctt_v2_pushB_effect", "score_id": "effect2x2_v4", "kind": "ours", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "label": "Ⓔ Arm B · EFFECT (retired)",
+     "sub": "high-σ arm + effect clause · 90.00 · inert (B−A null)",
+     "src": REPO_ROOT / "store/gens/010_ctt_v3_hs/03_effect__dai/videos",
+     "media": "outputs/videos/push_effect_arms/ctt_v2_pushB_effect",
+     "rows": ("registry", REPO_ROOT / "store/gens/010_ctt_v3_hs/03_effect__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/008_ctt_v2_effect_2x2__dai__2026-08-12/ctt_v2_pushB_effect",
+     "prompt_kind": "Arm B (+high-σ) with the effect prompt. B−A effect null on both populations → high-σ inert under effect too; retired.",
+     "doc": "misc/2026-08-11_ctt_v2_perf_push/DOSSIER.md"},
     {"id": "refvfx_A", "score_id": "refvfx_v4", "kind": "prior-work", "frames": 33,
      "family": "refvfx", "pclass": "effect",
      "label": "Ⓐ refVFX · effect prompt",
@@ -1131,7 +1241,7 @@ def build() -> dict:
             "pct_type": r["pct_type"], "cond": cond, "ref": r.get("reference"),
             "mismatched_ref": bool(r.get("mismatched_reference")),
             "ceil": ceil.get(r["gt_pool_class"]), "tier": tier_of(r),
-            "scored": bool(m), "instr": iid,
+            "scored": bool(m), "instr": iid, "prompt": r["prompt"],
             # a gen only feeds the recomputed statistics if its instrument is the primary one —
             # this is what keeps every aggregate on the page single-instrument
             "stat": bool(m) and (iid == primary or SECONDARY_IN_STATS),
@@ -1304,6 +1414,58 @@ def build() -> dict:
         c["neutral_prompt"] = c.get("prompt")
         c["effect_prompt"] = _eff.get(c["key"])
 
+    # ---- contract-v2 arm catalog: category -> canonical arm -> selectable gen entries ----------
+    # (standalone table so legacy family/pclass fields stay untouched; tier ids must exist)
+    CATEGORIES = [("baseline", "Baselines (no adapter)"),
+                  ("generalist", "Generalist trainings"),
+                  ("bottleneck", "Bottleneck arms"),
+                  ("external", "External work")]
+    CATALOG = [  # (tier id, category, arm, arm label, variant, entry label)
+        ("base_prompt_neutral", "baseline", "base_prompt", "base · prompt-only", "neutral", "neutral"),
+        ("base_prompt_ctt",     "baseline", "base_prompt", "base · prompt-only", "effect",  "effect"),
+        ("base_cond_neutral",   "baseline", "base_cond",   "base · +endpoints",  "neutral", "neutral"),
+        ("base_cond_ctt",       "baseline", "base_cond",   "base · +endpoints",  "effect",  "effect"),
+        ("run_ic_gen",          "generalist", "ic_gen", "ic_gen (r32)",  "neutral", "neutral · cc"),
+        ("ic_gen_effect",       "generalist", "ic_gen", "ic_gen (r32)",  "effect",  "effect · dai"),
+        ("run_ctt_v2",          "generalist", "ctt_v2", "ctt_v2 (r128)", "neutral", "neutral · eps"),
+        ("ctt_v2_plain_regen",  "generalist", "ctt_v2", "ctt_v2 (r128)", "neutral", "neutral · dai regen"),
+        ("ctt_v2_leaky",        "generalist", "ctt_v2", "ctt_v2 (r128)", "effect",  "effect · dai"),
+        ("ctt_v2_leaky_regen",  "generalist", "ctt_v2", "ctt_v2 (r128)", "effect",  "effect · dai regen"),
+        ("ctt_v2_pushA",        "generalist", "ctt_v3", "ctt_v3 (champion)", "neutral", "neutral · eps"),
+        ("ctt_v2_pushA_plain",  "generalist", "ctt_v3", "ctt_v3 (champion)", "neutral", "neutral · dai regen"),
+        ("ctt_v2_pushA_effect", "generalist", "ctt_v3", "ctt_v3 (champion)", "effect",  "effect · dai"),
+        ("ctt_v2_pushB",        "generalist", "ctt_v3_hs", "ctt_v3_hs (retired)", "neutral", "neutral · eps"),
+        ("ctt_v2_pushB_effect", "generalist", "ctt_v3_hs", "ctt_v3_hs (retired)", "effect",  "effect · dai"),
+        ("bneck_frozen",          "bottleneck", "bneck_frozen", "bneck · frozen code",   "neutral", "neutral"),
+        ("bneck_frozen_shufcode", "bottleneck", "bneck_frozen", "bneck · frozen code",   "control", "shufcode control"),
+        ("bneck_ctx_v2",          "bottleneck", "bneck_ctx",    "bneck · context-inject", "neutral", "neutral"),
+        ("bneck_ctx_v2_shufcode", "bottleneck", "bneck_ctx",    "bneck · context-inject", "control", "shufcode control"),
+        ("surg1_wsd",             "bottleneck", "surg1",        "surg1 · V-JEPA code",    "neutral", "neutral"),
+        ("surg1_wsd_shufcode",    "bottleneck", "surg1",        "surg1 · V-JEPA code",    "control", "shufcode control"),
+        ("hrc_coupling",          "bottleneck", "hrc",   "hrc (legacy probe)",   "neutral", "neutral"),
+        ("hrc_coupling_shufcode", "bottleneck", "hrc",   "hrc (legacy probe)",   "control", "shufcode control"),
+        ("vjepa_coupling",          "bottleneck", "vjepa", "vjepa (legacy probe)", "neutral", "neutral"),
+        ("vjepa_coupling_shufcode", "bottleneck", "vjepa", "vjepa (legacy probe)", "control", "shufcode control"),
+        ("refvfx_B", "external", "refvfx", "refVFX (prior work)", "neutral", "neutral (fixed token)"),
+        ("refvfx_A", "external", "refvfx", "refVFX (prior work)", "effect",  "effect (their convention)"),
+    ]
+    known = set(all_tiers)
+    missing_cat = [t for t, *_ in CATALOG if t not in known]
+    assert not missing_cat, f"arm catalog names unknown tiers: {missing_cat}"
+    arm_catalog = []
+    for cid, clabel in CATEGORIES:
+        arms_l: list[dict] = []
+        for t, cat, armk, armlabel, variant, elabel in CATALOG:
+            if cat != cid:
+                continue
+            slot = next((x for x in arms_l if x["id"] == armk), None)
+            if slot is None:
+                slot = {"id": armk, "label": armlabel, "entries": []}
+                arms_l.append(slot)
+            slot["entries"].append({"tier": t, "variant": variant, "label": elabel})
+        if arms_l:
+            arm_catalog.append({"id": cid, "label": clabel, "arms": arms_l})
+
     return {
         "meta": {
             "title": "IC-LoRA trainings — results",
@@ -1333,6 +1495,7 @@ def build() -> dict:
             "tiers": all_tiers, "run_tiers": run_tiers,
             "arm_tiers": [c["tier"] for c in arm_chips], "arm_chips": arm_chips,
             "families": families, "loose_chips": loose_chips,
+            "arm_catalog": arm_catalog,
             "context_before": CONTEXT_TIERS_BEFORE, "context_after": CONTEXT_TIERS_AFTER,
             "spec_cards": n_spec,
             "machines": machines, "probe": PROBE, "window_caveat": WINDOW_CAVEAT,

@@ -29,6 +29,17 @@ don't contradict it". Unseen-row replication 87.5% > held-in 58.3%. Fixed-gist r
 gens {009_ctt_v3/05,002_ctt_v2/06,005_base_cond/03}_probe_ctl + evals/009_ctl_vqa + prompts/007; fsck PASS. Owner
 adjudication set (41 clips) at outputs/reports/ctl_probe/adjudicate.html — the pre-registered verdict authority.
 
+**18:55 — neutral_effect viewer REDESIGNED (owner spec): input-bag cards, categorized arm dropdown, prose removed.**
+The iclora_neutral_effect page is now metrics-then-examples: all verdict/caveat prose collapsed into one provenance
+<details>. New arm selector = stay-open dropdown with categories (baseline / generalist / bottleneck / external),
+per-category ▲▼ ordering (drives metrics rows + card cell order), variant-tinted pills per arm (neutral/effect/control),
+select-all/clear + N-on/off·E-on/off bulk ops scoped to arms with a selection; state in localStorage. Cards: left =
+input bag (UNIQUE prompts deduped by exact text with colored P# chips, anchors, consumed demos), right = one cell per
+selected entry with a matching-color P# dot + ref/conditioning indicators — cells tinted by category, per-arm CSS gone.
+Builder: +9 arms this page lacked (ctt_v3 era, surg1, regens → 27 toggles), per-gen prompt text, meta.arm_catalog.
+Dropped: zip bundle bar + tick boxes, alt_prompts band. Validation: jscheck lex clean, rebuild green (139 cards,
+8286 videos), page 200 over viewerctl :8017.
+
 **17:20 — Store contract-v2 migration EXECUTED: arm-first gens, prompts shelf, tooling, viewer rewire — fsck PASS.**
 Owner approved all 4 decisions (migrate-with-shims, ctt_v3/ctt_v3_hs, pass-shaped evals, full cleanup bundle).
 Executed: (1) catch-up registration commit (metas untracked since ~Aug 6); (2) prompts/ shelf seeded — 6 sha-pinned
