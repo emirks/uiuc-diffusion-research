@@ -1,3 +1,18 @@
+## 2026-08-14
+**10:51 — Prior-works baseline snapshot: VAP + VFXMaster added to the CTT comparison, scored + registered in the store.**
+Advised campaign (`misc/2026-08-13_baseline_metric_table`, DOSSIER.md): stood up VAP (bytedance @ 0f30aedf) and
+VFXMaster (libaolu312 @ 0632c5a, 2b-aux+5B-transformer) from scratch on DeltaAI aarch64, demo-gated both (authors'
+own examples reproduced), and generated the one-sided CTT grid (112 rows × 2 prompt tiers × 2 seeds = 448 clips each).
+Scored on OUR v4 pool-yardstick (new motion pool-% built + validated self-consistent) AND 7 competitor metrics
+(`their_metrics/score_batch.py`, frozen impl_sha d63935f4). **Result: CTT beats every external baseline by ~38pp on
+the leak-free neutral pool-%** (champion 77.3 vs best external 39.0); VAP/VFXMaster are reference-driven & text-inert,
+refVFX text-leaning; competitors' own metrics show ~30× dynamic-range collapse vs the GT-anchored instrument. Advisor
+R3 reviewed (numbers trusted, packaging fixed: §2 raw-table subset bug, scope labels, DISCLOSURES.md). **Registered:**
+`runs/010_vap`, `011_vfxmaster` (external stubs); `gens/011_vap`, `012_vfxmaster` (arm-first, videos in store);
+`evals/010_external_baselines__dai__2026-08-14` (4 arms, 2876 pool-rows each); ARMS.md + INDEX rows. store_fsck PASS.
+Tables: `TABLES_{our_metrics,subset_112,their_metrics}.md` + `DISCLOSURES.md`. Gemini VLM lens (competitors' actual
+headline) deferred — owner sign-off pending. [UNCERTIFIED — v4 branch not tagged]
+
 ## 2026-08-13
 **21:35 — Controllability campaign EXECUTED + CLOSED (pending owner adjudication): the champion pays NO attribute-control penalty; controllability is axis-stratified by the BASE model.**
 Advised campaign (misc/2026-08-13_controllability, pre-registered before generation): 412-clip contradiction probe —

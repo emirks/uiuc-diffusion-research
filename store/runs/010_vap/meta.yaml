@@ -1,0 +1,16 @@
+id: 010_vap
+seq: 10
+shelf: runs
+external: true
+created: 2026-08-14
+machine: n/a (not trained by us)
+source: bytedance/Video-As-Prompt @ 0f30aedfc09c698d9b2ffc0d70d608a7f22d8403 — official release (arXiv:2510.20888)
+inputs: {}
+model: Wan2.1-I2V-14B (frozen) + MoT expert, fused — ByteDance/Video-As-Prompt-Wan2.1-14B rev f0d6ab47 (65.87 GB self-contained)
+steps_trained: n/a (released checkpoint)
+checkpoints: symlink -> $LAB/cache/vap/Video-As-Prompt-Wan2.1-14B
+env: $LAB/envs-aarch64/vap
+code: $LAB/external/vap/... @ 0f30aedfc09c698d9b2ffc0d70d608a7f22d8403
+notes: >
+  One-sided CTT baseline (I2V, start-frame only — NO end-frame path; two-sided cells N/A).
+  Demo-gate PASS (authors' own examples reproduced). Provenance + integration: misc/2026-08-13_baseline_metric_table/DOSSIER.md.

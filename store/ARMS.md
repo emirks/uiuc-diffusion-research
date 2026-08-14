@@ -27,6 +27,8 @@ hand-write a registry.
 | `surg1` | closed refined negative | runs/007 | prompts/001 | — | surg1_wsd · surg1_wsd_shufcode |
 | `ctt_v3` | **champion (provisional)** | runs/008 | prompts/001 | prompts/002 | ctt_v2_pushA · ctt_v2_pushA_shufref · ctt_v2_pushA_effect · ctt_v2_pushA_plain |
 | `ctt_v3_hs` | retired negative | runs/009 | prompts/001 | prompts/002 | ctt_v2_pushB · ctt_v2_pushB_shufref · ctt_v2_pushB_effect |
+| `vap` | external baseline (one-sided) | runs/010 | prompts/001 ·ext | prompts/002 ·ext | vap_neutral · vap_effect |
+| `vfxmaster` | external baseline (one-sided) | runs/011 | prompts/001 ·ext | prompts/002 ·ext | vfxmaster_neutral · vfxmaster_effect |
 
 Adding an arm = one row here + `eval_ladder/arms.yaml` entry + `stamp_rows.py` for its registry.
 Campaign nicknames (pushA/pushB…) never become directory names — canonical slugs only.

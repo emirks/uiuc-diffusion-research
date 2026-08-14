@@ -1,0 +1,17 @@
+id: gens/011_vap/01_neutral__dai
+seq: 1
+shelf: gens
+arm: vap
+harness_arm: vap_neutral   # frozen stamp in items.jsonl item_ids
+variant: neutral
+machine: dai
+created: 2026-08-14
+inputs: {run: runs/010_vap (external)}
+prompt_family: prompts/001_ctt152_neutral (ext-derived: `prompt`=endpoint S1, prompt_mot_ref=""; one-sided; INPUT_MAPPING.md)
+prompt_sha: 911c8db067fd
+grid_rows: 224
+videos: 224
+geometry: 480x640x49f @ fps 9.719 (duration-matched to 121f@24; native 480x832 aspect off — disclosed)
+code: $LAB/external/vap @ 0f30aedfc09c698d9b2ffc0d70d608a7f22d8403 (worker gen_worker_vap.py)
+scores: -> ../../../evals/010_external_baselines__dai__2026-08-14/vap_neutral
+notes: one-sided CTT baseline, 112 rows x seeds 42/43. neutral = ZERO effect text in any channel.
