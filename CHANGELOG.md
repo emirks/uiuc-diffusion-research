@@ -1,4 +1,12 @@
 ## 2026-08-14
+**16:24 — External-baseline inference spec added to the store (`store/gens/EXTERNAL_BASELINES.md`).**
+Durable, discoverable record of HOW the prior-works baselines (refVFX / VAP / VFXMaster) were run — provenance +
+weights + env, the exact inference recipe (scheduler/steps/guidance/negatives/dtypes/flags), reference-video frame
+subsampling and native output length (refVFX 33f, VAP/VFXMaster 49f, all from our 121f clips), geometry (480×640) and
+duration-matched fps, and the full parity-vs-authors verdict from the 2026-08-14 3-agent primary-source audit
+(parity excellent; only deliberate/disclosed deviations). Linked from `store/INDEX.md` gens section. Consolidates what
+had lived only in the campaign dossier + DISCLOSURES so store consumers can find "how faithful is each external?" in one place.
+
 **11:33 — Controllability-probe viewer added to the dashboard, with IC-LoRA-style playback and control-highlighted prompts.**
 Registered `ctl_probe` in `scripts/viewers/registry.json` (group `reports`, featured) as a mount of the existing
 `outputs/reports/ctl_probe/{index,adjudicate}.html` — same depth so the pages' `../../../store` media climb resolves

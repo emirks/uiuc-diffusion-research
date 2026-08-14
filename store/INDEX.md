@@ -20,6 +20,7 @@ resolve via `gens/_legacy/`.
 11. `011_vfxmaster` — EXTERNAL: VFXMaster (CogVideoX-Fun-V1.1 **2b-aux + 5B-transformer** — the authors' own train/infer config; README 5b line inconsistent), libaolu312 @ 0632c5a; weights → `$LAB/cache/vfxmaster` (~24.5 GB). One-sided CTT baseline. Demo-gate PASS
 
 ## gens  (arm-first since v2; all on the 152-row CTT grid × seeds 42/43 = 304 clips unless noted)
+> **External baselines** (refvfx/vap/vfxmaster) inference spec — provenance, exact recipe, frame handling, geometry/fps, parity-vs-authors — is in [`gens/EXTERNAL_BASELINES.md`](gens/EXTERNAL_BASELINES.md).
 
 1. `001_ic_gen` — runs/001@5000 (IC-LoRA generalist) · `01_neutral__cc` 83.1 · `02_effect__dai` 89.1
 2. `002_ctt_v2` — runs/002@10000 (CTT v2, superseded) · `01_neutral__eps` 82.5 · `02_effect__dai` (leaky) 91.3 · `03_effect__dai` regen 90.21 · `04_neutral__dai` regen 82.95 · `05_probe_dcg__dai` (300-row DCG cycle-0 probe, off-CTT grid) · `06_probe_ctl__dai` (controllability probe, 136 clips)
