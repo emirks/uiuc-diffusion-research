@@ -256,6 +256,15 @@ def main() -> None:
 
     device = torch.device("cuda")
     runner = ValidationRunner(config=val_cfg, model_path=MODEL, text_encoder_path=GEMMA)
+    # relay hook (campaign misc/2026-08-14_timing_relay, Wave-2): install a Prompt-Relay cross-attention
+    # bias when RELAY_CONFIG points to a config json. Monkeypatches ltx_core Attention.forward at class
+    # level (affects the transformer built next). No-op when the env var is unset → byte-identical.
+    if os.environ.get("RELAY_CONFIG"):
+        _rc = Path(os.environ["RELAY_CONFIG"])
+        _relay_cfg = json.loads(_rc.read_text())
+        sys.path.insert(0, str(_rc.parent))
+        import relay_hook
+        relay_hook.install(_relay_cfg)
     transformer = load_transformer(MODEL, device="cpu", dtype=torch.bfloat16)
     if adapter is not None:
         print(f"[gen] adapter {adapter.name} ({len(target_modules)} target modules)")
