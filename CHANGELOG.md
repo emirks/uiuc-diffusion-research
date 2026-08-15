@@ -6,8 +6,12 @@ below the 0.25 bar → transition pacing is conditioning-inert (follows neither 
 controls localize it to token-binding-under-competition. (3) Prompt-Relay token-masking hook (run_gen.py RELAY_CONFIG):
 wiring-sanity killed as a clean ARCHITECTURAL negative — the Gemma embeddings-connector runs unmasked bidirectional
 mixing (embeddings_connector.py:148), smearing prompt content across all key positions, so per-token cross-attention
-masking cannot isolate a color. Dashboard viewer `timing_relay`; record in misc/2026-08-14_timing_relay/ (DOSSIER.md +
-REPORT.md). Wave-2b (block-routing) pre-registered, owner-gated.
+masking cannot isolate a color. (4) Wave-2b relay via per-frame conditioning ROUTING (concat red+green contexts,
+route early frames→red / late→green): red→green 0/8, but the all-green control flips the clip fully green (4/4) →
+routing delivers color GLOBALLY yet cannot SPLIT color within a clip. **Through-line: a transition's pacing AND
+color are globally-coherent properties — settable as a whole, resistant to within-clip per-frame control.**
+Dashboard viewer `timing_relay`; record in misc/2026-08-14_timing_relay/ (DOSSIER.md + REPORT.md, 4 pre-registered
+tracks). F-blocks proposed for owner approval.
 
 **17:11 — run_gen.py: optional `reference_path` row field (feed an explicit reference clip, bypass std121 resolution).**
 For the advised timing+relay campaign (`misc/2026-08-14_timing_relay`), the timing test feeds *retimed* demo
