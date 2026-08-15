@@ -1,4 +1,14 @@
 ## 2026-08-14
+**19:45 — timing_relay campaign (advised): timing NEGATIVE + color-sweep order-dependent PARTIAL + relay architectural negative.**
+Two inference-only tests on champion ctt_v3. (1) Timing (retimed-demo test): pooled β 0.084 [0.049,0.118], all clips
+below the 0.25 bar → transition pacing is conditioning-inert (follows neither text nor demo tempo). (2) Color sweep
+(2-color, shadow_smoke_1): green→red 6/8 works, red→green 3/8 fails — an order-dependent positional bias; single-color
+controls localize it to token-binding-under-competition. (3) Prompt-Relay token-masking hook (run_gen.py RELAY_CONFIG):
+wiring-sanity killed as a clean ARCHITECTURAL negative — the Gemma embeddings-connector runs unmasked bidirectional
+mixing (embeddings_connector.py:148), smearing prompt content across all key positions, so per-token cross-attention
+masking cannot isolate a color. Dashboard viewer `timing_relay`; record in misc/2026-08-14_timing_relay/ (DOSSIER.md +
+REPORT.md). Wave-2b (block-routing) pre-registered, owner-gated.
+
 **17:11 — run_gen.py: optional `reference_path` row field (feed an explicit reference clip, bypass std121 resolution).**
 For the advised timing+relay campaign (`misc/2026-08-14_timing_relay`), the timing test feeds *retimed* demo
 clips that live outside `data/processed/transitions_std121` and aren't in split_v1.2. Added a `reference_path`
