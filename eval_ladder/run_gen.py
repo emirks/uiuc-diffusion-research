@@ -265,6 +265,15 @@ def main() -> None:
         sys.path.insert(0, str(_rc.parent))
         import relay_hook
         relay_hook.install(_relay_cfg)
+    # rope hook (campaign misc/2026-08-14_timing_relay, Wave-3): warp the TEMPORAL RoPE coordinate of the
+    # target middle frames when ROPE_CONFIG points to a config json. Monkeypatches ltx_core
+    # TransformerArgsPreprocessor._prepare_positional_embeddings at class level. No-op when unset.
+    if os.environ.get("ROPE_CONFIG"):
+        _pc = Path(os.environ["ROPE_CONFIG"])
+        _rope_cfg = json.loads(_pc.read_text())
+        sys.path.insert(0, str(_pc.parent))
+        import rope_hook
+        rope_hook.install(_rope_cfg)
     transformer = load_transformer(MODEL, device="cpu", dtype=torch.bfloat16)
     if adapter is not None:
         print(f"[gen] adapter {adapter.name} ({len(target_modules)} target modules)")
@@ -415,7 +424,13 @@ def main() -> None:
             print(f"[gen] context port ATTACHED (Idea 1): K'={context_tokens} width={adapter_width} "
                   f"d_ctx={d_ctx}, {len(adapter_sd)} adapter tensors", flush=True)
 
-    tmp = OUT_ROOT / "_runner" / f"{args.arm}_s{args.seed}_c{args.chunk}"
+    # Scratch dir MUST be unique per running task: the runner writes step_000000_N.mp4 here and we
+    # rename them to <item_id>. Two concurrent SUBMISSIONS sharing (arm, seed, chunk, out-root) — e.g.
+    # a campaign fanned across rope configs — would otherwise clobber each other's samples mid-rename
+    # (FileNotFoundError). Slurm job/array ids disambiguate; empty (bare arm_s_c) for local single runs.
+    _jid = os.environ.get("SLURM_JOB_ID", "")
+    _suffix = f"_{_jid}" if _jid else ""
+    tmp = OUT_ROOT / "_runner" / f"{args.arm}_s{args.seed}_c{args.chunk}{_suffix}"
     saved = runner.run(transformer=transformer, step=0, output_dir=tmp, device=device,
                        progress=TrainingProgress(enabled=True, total_steps=1))
     for idx, path in saved:

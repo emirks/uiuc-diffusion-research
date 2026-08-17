@@ -1,4 +1,20 @@
 ## 2026-08-17
+**13:00 — timing_relay Wave-3: RoPE timing + demo-placement + versatile control (advised).** On the CTT champion
+(ctt_v3) vs its undertrained ancestor (ctt_v2), pre-registered (misc/2026-08-14_timing_relay/WAVE3.md). Two clean
+POSITIVES, both vindicating the owner's intuitions. (1) **Demo PLACEMENT is followed:** demos re-cut so the effect
+happens early vs late move the generation's t50 — ctt_v3 median Δ=−0.156, 18/18 sign-consistent → ADHERENCE-POSITIVE;
+ctt_v2 −0.046 / 67% → negative. Better training buys demonstration-dependence. This REFINES the Wave-1 duration-negative:
+transition RATE doesn't scale, but PHASE (when it happens) does. (2) **RoPE temporal warp imposes timing:** warping the
+free middle frames' temporal coords (γ=0.5 Δt50 −0.227 / γ=2.0 +0.19, both 12/12, 0 broken) matches the analytic f^γ
+prediction. Versatile (edit prompts, Gemini-scored): animal-identity (cat/dog/horse) and size (giant) controllable →
+PASS; jump event-timing and RoPE uniform span-scale → NEGATIVE. Block-0 free re-score: gens don't copy the demo's
+profile shape (null). New viewer `timing_relay_wave3` (+ interactive blind placement panel).
+**12:55 — run_gen: ROPE_CONFIG temporal-RoPE warp hook + job-unique scratch dir.** Added a `ROPE_CONFIG` env hook
+(mirrors `RELAY_CONFIG`) that monkeypatches `TransformerArgsPreprocessor._prepare_positional_embeddings` to warp the
+temporal coordinate of the target middle-frame tokens before the rotary bake (modes warp/scale/scramble/identity;
+`rope_hook.py` lives in the campaign dir). Also fixed a scratch-dir race: `_runner/<arm>_s<seed>_c<chunk>` now appends
+`$SLURM_JOB_ID`, so concurrent submissions sharing (arm, seed, chunk, out-root) — e.g. a fan-out over rope configs —
+can no longer clobber each other's `step_000000_N.mp4` mid-rename (FileNotFoundError).
 **11:43 — baseline_metric_table: registered the VAP/VFXMaster author-config re-run + ablation; "text-inert" REFUTED.**
 Registered the full-prompting external re-run to the store (contract v2): new gen variants `gens/011_vap/{03_authorcfg__dai,04_tgtfull_refempty__dai}`
 and `gens/012_vfxmaster/{03_,04_}` (224 clips each, moved in + old external paths symlinked back), and a new eval
