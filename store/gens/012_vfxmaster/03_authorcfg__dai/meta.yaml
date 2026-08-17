@@ -1,0 +1,18 @@
+id: gens/012_vfxmaster/03_authorcfg__dai
+seq: 3
+shelf: gens
+arm: vfxmaster
+harness_arm: vfxmaster_authorcfg   # frozen stamp in items.jsonl item_ids
+variant: authorcfg
+machine: dai
+created: 2026-08-17
+inputs: {run: runs/011_vfxmaster (external)}
+prompt_family: prompts/008_ext112_authorcfg (target=`{S1_endpoint}. {EFFECT}.`; ref_prompt={S1_reference}. {EFFECT}.; one-sided)
+prompt_sha: b33fad3fbc3e   # target/generation channel (fsck-validated; identical across 03/04 by design)
+ref_prompt_sha: fc93e96e8315   # ref_prompt channel — the ONLY difference between 03_authorcfg and 04_tgtfull_refempty
+grid_rows: 224
+videos: 224
+geometry: 480x640x49f @ fps 9.719 (duration-matched to 121f@24; native 480x720 aspect off — disclosed)
+code: $LAB/external/vfxmaster @ 0632c5a9979586adc1d4f96632e5b808ee11712f (worker gen_worker_vfxmaster.py (frozen from v1); bitwise-identical repro-probe md5)
+scores: -> ../../../evals/011_external_authorcfg__dai__2026-08-17/vfxmaster_authorcfg
+notes: one-sided CTT baseline, 112 rows x seeds 42/43. authors' intended full two-channel prompting: target=`{S1_endpoint}. {EFFECT}.`, ref_prompt=`{S1_reference}. {EFFECT}.`

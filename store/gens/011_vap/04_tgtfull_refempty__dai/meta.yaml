@@ -1,0 +1,18 @@
+id: gens/011_vap/04_tgtfull_refempty__dai
+seq: 4
+shelf: gens
+arm: vap
+harness_arm: vap_tgtfull_refempty   # frozen stamp in items.jsonl item_ids
+variant: tgtfull_refempty
+machine: dai
+created: 2026-08-17
+inputs: {run: runs/010_vap (external)}
+prompt_family: prompts/008_ext112_authorcfg (target=`{S1_endpoint}. {EFFECT}.`; prompt_mot_ref="" (EMPTY — ablation); one-sided)
+prompt_sha: b33fad3fbc3e   # target/generation channel (fsck-validated; identical across 03/04 by design)
+ref_prompt_sha: empty   # prompt_mot_ref channel — the ONLY difference between 03_authorcfg and 04_tgtfull_refempty
+grid_rows: 224
+videos: 224
+geometry: 480x640x49f @ fps 9.719 (duration-matched to 121f@24; native 480x832 aspect off — disclosed)
+code: $LAB/external/vap @ 0f30aedfc09c698d9b2ffc0d70d608a7f22d8403 (worker gen_worker_vap.py (frozen from v1); bitwise-identical repro-probe md5)
+scores: -> ../../../evals/011_external_authorcfg__dai__2026-08-17/vap_tgtfull_refempty
+notes: one-sided CTT baseline, 112 rows x seeds 42/43. ablation isolating the reference-text channel: target text IDENTICAL to 03_authorcfg, prompt_mot_ref EMPTY. (03-04 delta = the ref-channel contribution.)

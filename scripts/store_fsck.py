@@ -17,9 +17,17 @@ def key(r):
     return (r["cell"], r["endpoint"], r.get("reference") or "", r["sided"])
 
 
+def _row_text(r):
+    # two-channel shelves (e.g. 008_ext112_authorcfg) declare target_text/ref_text; single-channel
+    # shelves + gen rows carry `prompt` (the target/generation text). Match each shelf's own sha convention.
+    if "target_text" in r:
+        return r["target_text"] + "\x1f" + (r.get("ref_text") or "")
+    return r["prompt"]
+
+
 def corpus_sha(rows):
     uniq = {key(r): r for r in rows}
-    blob = "".join(r["prompt"] for r in sorted(uniq.values(), key=key))
+    blob = "".join(_row_text(r) for r in sorted(uniq.values(), key=key))
     return hashlib.sha256(blob.encode()).hexdigest()[:12]
 
 

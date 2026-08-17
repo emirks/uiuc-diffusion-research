@@ -1,3 +1,18 @@
+## 2026-08-17
+**11:43 — baseline_metric_table: registered the VAP/VFXMaster author-config re-run + ablation; "text-inert" REFUTED.**
+Registered the full-prompting external re-run to the store (contract v2): new gen variants `gens/011_vap/{03_authorcfg__dai,04_tgtfull_refempty__dai}`
+and `gens/012_vfxmaster/{03_,04_}` (224 clips each, moved in + old external paths symlinked back), and a new eval
+`evals/011_external_authorcfg__dai__2026-08-17` (v4, 4 arms, DeltaAI one-machine). `authorcfg` = the authors' intended
+`{S1}.{EFFECT}.` in BOTH text channels; `tgtfull_refempty` = identical target, empty reference channel (ablation).
+**Result:** the v1 "text-inert" reading was an under-prompting artifact — authorcfg is +22.5pp vs v1-neutral on Unseen
+appearance pool-% (VAP 37.5→60.0, VFX 39.0→61.5; paired stratified bootstrap 95% CI excludes 0). Channel decomposition
+(authorcfg − tgtfull_refempty) = ref-text channel contributes only +0.4/+1.5pp → the gain is the generation prompt
+naming the effect, not the demo channel. Champion still leads 16–27pp (advisor signed off). Registered the 4 arms in the
+`iclora_neutral_effect` viewer (build_neutral_effect.py; 139 cards, all seatbelts pass). ARMS/INDEX updated; store_fsck PASS.
+Also fixed `scripts/store_fsck.py` `corpus_sha` to handle the two-channel prompt schema (`target_text`/`ref_text`) —
+shelf `008_ext112_authorcfg` was previously uncheckable (KeyError) and now validates to its declared sha.
+Dossier: misc/2026-08-13_baseline_metric_table/DOSSIER.md.
+
 ## 2026-08-14
 **19:45 — timing_relay campaign (advised): timing NEGATIVE + color-sweep order-dependent PARTIAL + relay architectural negative.**
 Two inference-only tests on champion ctt_v3. (1) Timing (retimed-demo test): pooled β 0.084 [0.049,0.118], all clips
