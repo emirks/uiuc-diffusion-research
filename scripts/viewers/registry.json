@@ -566,6 +566,35 @@
      }
     ]
    }
+  },
+  {
+   "slug": "timing_relay_wave3",
+   "title": "Timing (RoPE) & control — Wave-3",
+   "blurb": "Wave-3 on ctt_v3 vs ctt_v2. Demo PLACEMENT: champion FOLLOWS it (Δt50 -0.156, 18/18 sign-consistent) but v2 does NOT — better training buys demonstration-dependence. RoPE warp IMPOSES timing (γ=0.5 Δt50 -0.227 / γ=2.0 +0.19, 12/12, matches f^γ). Attribute control (animal/size) PASS; jump event-timing & RoPE uniform span-scale NEGATIVE. Includes an interactive BLIND placement panel you score yourself. Regen: python3 misc/2026-08-14_timing_relay/build_viewer_wave3.py",
+   "group": "reports",
+   "featured": true,
+   "date": "2026-08-17",
+   "path": "outputs/viewers/timing_relay_wave3/index.html",
+   "mount": {
+    "_why": "source at outputs/reports/timing_relay_wave3/ climbs ../../../misc for media; mount dir is same depth so it resolves. Regen build_viewer_wave3.py.",
+    "dir": "outputs/viewers/timing_relay_wave3",
+    "pages": [
+     {
+      "name": "index.html",
+      "target": "outputs/reports/timing_relay_wave3/index.html"
+     }
+    ]
+   }
+  },
+  {
+   "slug": "dcg_cn_results",
+   "title": "DCG-CN \u00b7 does it follow the demo? (results)",
+   "blurb": "Explanatory results for the DCG-CN KEEP@w3 finding: per effect, DEMO | BASELINE | MATCHED-DCG | SWAPPED-DCG, autoplaying and fully labelled. Regen: scripts/viewers/gen_dcg_cn_results.py",
+   "group": "eval",
+   "featured": true,
+   "date": "2026-08-14",
+   "path": "outputs/viewers/dcg_cn_results/index.html",
+   "_regen": "python3 scripts/viewers/gen_dcg_cn_results.py"
   }
  ]
 }
