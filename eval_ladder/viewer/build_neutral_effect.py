@@ -460,113 +460,62 @@ EXTERNAL = [
                     "in place of our `sksz`. Same weights, same seeds, same geometry as Ⓐ; the "
                     "prompt is the only field that differs.",
      "doc": "misc/refvfx_baseline/PROMPT_DESIGN_ours.md"},
-    # ---- contract-v2 external baselines (store gens/011+012, evals/010). Both are I2V START-ONLY
-    # (no end-frame path) -> they join only the one-sided cards; 49f geometry, so copy_max /
-    # core_degenerate are NOT comparable against the 121f arms (absolute-frame windows).
-    # Their grids stamp their own harness_arm into item_ids -> join_swap aliases the REGISTRY
-    # lookup only (the ic_gen trap, see the collision note above arm_rows).
+    # ---- contract-v2 external baselines — the LATEST HEALTHY per prompt class (2026-08-17 curation).
+    # One-sided I2V (start-frame only, no end-frame path) -> join only one-sided cards; 49f, so
+    # copy_max / core_degenerate are NOT comparable to the 121f arms. Their grids stamp their own
+    # harness_arm -> join_swap aliases the REGISTRY lookup only. `ref_prompt_key` = the arm's demo/
+    # reference TEXT channel, surfaced in the input bag next to the target prompt (states the difference).
+    # NEUTRAL = no effect text anywhere (v1, evals/010). EFFECT = the authors' INTENDED full two-channel
+    # prompting `{S1}.{EFFECT}.` in BOTH the target and reference channels (authorcfg, evals/011) — the
+    # corrected run that supersedes the v1 under-prompted effect (+22.5pp v4 Unseen, paired-CI clean).
+    # (v1 effect + the tgtfull_refempty ablation stay in the store; intentionally not shown here — DOSSIER.)
     {"id": "vap_neutral", "score_id": "extbase_v4", "kind": "prior-work", "frames": 49,
-     "no_twin": True, "join_swap": ("__vap_neutral__", "__ctt_v2__"),
-     "label": "Ⓥ VAP · neutral prompt",
+     "no_twin": True, "join_swap": ("__vap_neutral__", "__ctt_v2__"), "ref_prompt_key": "prompt_mot_ref",
+     "label": "Ⓥ VAP · neutral (no effect text)",
      "sub": "Video-As-Prompt (Wan2.1-I2V-14B + MoT) · one-sided only · 49f",
      "src": REPO_ROOT / "store/gens/011_vap/01_neutral__dai/videos",
      "media": "outputs/videos/ext_baseline_arms/vap_neutral",
      "rows": ("manifest", REPO_ROOT / "store/gens/011_vap/01_neutral__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/010_external_baselines__dai__2026-08-14/vap_neutral",
-     "prompt_kind": "VAP (Video-As-Prompt): Wan2.1-I2V-14B with a Mixture-of-Transformers demo "
-                    "reader and a SECOND text channel (`prompt_mot_ref`) describing the demo. "
-                    "I2V start-only — no end-frame path, so two-sided cells are structurally N/A. "
-                    "Neutral arm: our leak-free text budget projected onto their convention. 49f "
-                    "geometry — copy/core windows not comparable to the 121f arms.",
+     "prompt_kind": "VAP (Video-As-Prompt): Wan2.1-I2V-14B + Mixture-of-Transformers demo reader, with a "
+                    "SECOND text channel (`prompt_mot_ref`) for the demo. I2V start-only (two-sided N/A). "
+                    "Neutral = NO effect text in either channel (target = start scene only; demo channel empty).",
      "doc": "misc/2026-08-13_baseline_metric_table/DOSSIER.md"},
-    {"id": "vap_effect", "score_id": "extbase_v4", "kind": "prior-work", "frames": 49,
-     "no_twin": True, "join_swap": ("__vap_effect__", "__ctt_v2__"),
-     "label": "Ⓥ VAP · effect prompt",
-     "sub": "same weights + the shared effect clause · one-sided only · 49f",
-     "src": REPO_ROOT / "store/gens/011_vap/02_effect__dai/videos",
-     "media": "outputs/videos/ext_baseline_arms/vap_effect",
-     "rows": ("manifest", REPO_ROOT / "store/gens/011_vap/02_effect__dai/grid.jsonl"),
-     "scores": REPO_ROOT / "store/evals/010_external_baselines__dai__2026-08-14/vap_effect",
-     "prompt_kind": "VAP with the shared per-reference effect clause rendered into its text "
-                    "channel — the effect twin of vap_neutral; same weights, seeds and geometry, "
-                    "the prompt is the only field that differs.",
-     "doc": "misc/2026-08-13_baseline_metric_table/DOSSIER.md"},
-    {"id": "vfxmaster_neutral", "score_id": "extbase_v4", "kind": "prior-work", "frames": 49,
-     "no_twin": True, "join_swap": ("__vfxmaster_neutral__", "__ctt_v2__"),
-     "label": "Ⓜ VFXMaster · neutral prompt",
-     "sub": "CogVideoX-Fun-InP I2V start-only · one-sided only · 49f",
-     "src": REPO_ROOT / "store/gens/012_vfxmaster/01_neutral__dai/videos",
-     "media": "outputs/videos/ext_baseline_arms/vfxmaster_neutral",
-     "rows": ("manifest", REPO_ROOT / "store/gens/012_vfxmaster/01_neutral__dai/grid.jsonl"),
-     "scores": REPO_ROOT / "store/evals/010_external_baselines__dai__2026-08-14/vfxmaster_neutral",
-     "prompt_kind": "VFXMaster on CogVideoX-Fun-InP, I2V start-only (NO end-frame path — "
-                    "one-sided cells only). Neutral arm: our leak-free budget in their "
-                    "convention. 49f geometry — copy/core windows not comparable to 121f arms.",
-     "doc": "misc/2026-08-13_baseline_metric_table/DOSSIER.md"},
-    {"id": "vfxmaster_effect", "score_id": "extbase_v4", "kind": "prior-work", "frames": 49,
-     "no_twin": True, "join_swap": ("__vfxmaster_effect__", "__ctt_v2__"),
-     "label": "Ⓜ VFXMaster · effect prompt",
-     "sub": "same weights + the shared effect clause · one-sided only · 49f",
-     "src": REPO_ROOT / "store/gens/012_vfxmaster/02_effect__dai/videos",
-     "media": "outputs/videos/ext_baseline_arms/vfxmaster_effect",
-     "rows": ("manifest", REPO_ROOT / "store/gens/012_vfxmaster/02_effect__dai/grid.jsonl"),
-     "scores": REPO_ROOT / "store/evals/010_external_baselines__dai__2026-08-14/vfxmaster_effect",
-     "prompt_kind": "VFXMaster with the shared effect clause — the effect twin of "
-                    "vfxmaster_neutral; same weights, seeds and geometry.",
-     "doc": "misc/2026-08-13_baseline_metric_table/DOSSIER.md"},
-    # ---- 2026-08-17 author-config re-run + ablation (store gens/011+012 variants 03/04, evals/011).
-    # authorcfg = the authors' INTENDED full two-channel prompting ({S1}.{EFFECT}. in BOTH channels);
-    # fixes the v1 under-prompting artifact (+22.5pp v4 Unseen, paired-CI clean). tgtfull_refempty =
-    # ablation, identical TARGET text but EMPTY ref channel -> (authorcfg - tgtfull) = ref-channel gain
-    # (only +0.4/+1.5pp -> these one-sided I2V models barely read the ref channel). 49f, one-sided only.
     {"id": "vap_authorcfg", "score_id": "extbase_v4", "kind": "prior-work", "frames": 49,
-     "no_twin": True, "join_swap": ("__vap_authorcfg__", "__ctt_v2__"),
-     "label": "Ⓥ VAP · author-config (full prompt)",
+     "no_twin": True, "join_swap": ("__vap_authorcfg__", "__ctt_v2__"), "ref_prompt_key": "prompt_mot_ref",
+     "label": "Ⓥ VAP · effect (full prompt)",
      "sub": "authors' full two-channel prompting · one-sided only · 49f",
      "src": REPO_ROOT / "store/gens/011_vap/03_authorcfg__dai/videos",
      "media": "outputs/videos/ext_baseline_arms/vap_authorcfg",
      "rows": ("manifest", REPO_ROOT / "store/gens/011_vap/03_authorcfg__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/011_external_authorcfg__dai__2026-08-17/vap_authorcfg",
-     "prompt_kind": "VAP under the authors' INTENDED prompting: `{S1_endpoint}. {EFFECT}.` in the "
-                    "target channel AND `{S1_reference}. {EFFECT}.` in the demo channel "
-                    "(`prompt_mot_ref`). Fixes the v1 under-prompting; +22.5pp v4 Unseen vs "
-                    "vap_neutral (paired-CI clean). 49f — copy/core windows not comparable to 121f arms.",
+     "prompt_kind": "VAP under the authors' INTENDED prompting: `{S1_endpoint}. {EFFECT}.` in the target "
+                    "channel AND `{S1_reference}. {EFFECT}.` in the demo channel (`prompt_mot_ref`). The "
+                    "latest healthy effect run; +22.5pp v4 Unseen vs vap_neutral (paired-CI clean). 49f.",
      "doc": "misc/2026-08-13_baseline_metric_table/DOSSIER.md"},
-    {"id": "vap_tgtfull_refempty", "score_id": "extbase_v4", "kind": "prior-work", "frames": 49,
-     "no_twin": True, "join_swap": ("__vap_tgtfull_refempty__", "__ctt_v2__"),
-     "label": "Ⓥ VAP · target-only (ref empty)",
-     "sub": "ablation: full target text, EMPTY demo channel · one-sided only · 49f",
-     "src": REPO_ROOT / "store/gens/011_vap/04_tgtfull_refempty__dai/videos",
-     "media": "outputs/videos/ext_baseline_arms/vap_tgtfull_refempty",
-     "rows": ("manifest", REPO_ROOT / "store/gens/011_vap/04_tgtfull_refempty__dai/grid.jsonl"),
-     "scores": REPO_ROOT / "store/evals/011_external_authorcfg__dai__2026-08-17/vap_tgtfull_refempty",
-     "prompt_kind": "Ablation of vap_authorcfg: TARGET text identical (`{S1}. {EFFECT}.`) but the "
-                    "demo channel (`prompt_mot_ref`) is EMPTY. authorcfg − this = the reference "
-                    "channel's contribution (only +0.4pp v4 — VAP barely reads its demo channel).",
+    {"id": "vfxmaster_neutral", "score_id": "extbase_v4", "kind": "prior-work", "frames": 49,
+     "no_twin": True, "join_swap": ("__vfxmaster_neutral__", "__ctt_v2__"), "ref_prompt_key": "ref_prompt",
+     "label": "Ⓜ VFXMaster · neutral (no effect text)",
+     "sub": "CogVideoX-Fun-InP I2V start-only · one-sided only · 49f",
+     "src": REPO_ROOT / "store/gens/012_vfxmaster/01_neutral__dai/videos",
+     "media": "outputs/videos/ext_baseline_arms/vfxmaster_neutral",
+     "rows": ("manifest", REPO_ROOT / "store/gens/012_vfxmaster/01_neutral__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/010_external_baselines__dai__2026-08-14/vfxmaster_neutral",
+     "prompt_kind": "VFXMaster on CogVideoX-Fun-InP, I2V start-only (NO end-frame path — one-sided cells "
+                    "only). Neutral = NO effect text (target = start scene only; reference channel empty). "
+                    "49f — copy/core windows not comparable to 121f arms.",
      "doc": "misc/2026-08-13_baseline_metric_table/DOSSIER.md"},
     {"id": "vfxmaster_authorcfg", "score_id": "extbase_v4", "kind": "prior-work", "frames": 49,
-     "no_twin": True, "join_swap": ("__vfxmaster_authorcfg__", "__ctt_v2__"),
-     "label": "Ⓜ VFXMaster · author-config (full prompt)",
+     "no_twin": True, "join_swap": ("__vfxmaster_authorcfg__", "__ctt_v2__"), "ref_prompt_key": "ref_prompt",
+     "label": "Ⓜ VFXMaster · effect (full prompt)",
      "sub": "authors' full two-channel prompting · one-sided only · 49f",
      "src": REPO_ROOT / "store/gens/012_vfxmaster/03_authorcfg__dai/videos",
      "media": "outputs/videos/ext_baseline_arms/vfxmaster_authorcfg",
      "rows": ("manifest", REPO_ROOT / "store/gens/012_vfxmaster/03_authorcfg__dai/grid.jsonl"),
      "scores": REPO_ROOT / "store/evals/011_external_authorcfg__dai__2026-08-17/vfxmaster_authorcfg",
-     "prompt_kind": "VFXMaster under the authors' INTENDED prompting: `{S1}. {EFFECT}.` in the "
-                    "target channel AND `{S1_reference}. {EFFECT}.` in the demo channel "
-                    "(`ref_prompt`). +22.5pp v4 Unseen vs vfxmaster_neutral (paired-CI clean). 49f.",
-     "doc": "misc/2026-08-13_baseline_metric_table/DOSSIER.md"},
-    {"id": "vfxmaster_tgtfull_refempty", "score_id": "extbase_v4", "kind": "prior-work", "frames": 49,
-     "no_twin": True, "join_swap": ("__vfxmaster_tgtfull_refempty__", "__ctt_v2__"),
-     "label": "Ⓜ VFXMaster · target-only (ref empty)",
-     "sub": "ablation: full target text, EMPTY demo channel · one-sided only · 49f",
-     "src": REPO_ROOT / "store/gens/012_vfxmaster/04_tgtfull_refempty__dai/videos",
-     "media": "outputs/videos/ext_baseline_arms/vfxmaster_tgtfull_refempty",
-     "rows": ("manifest", REPO_ROOT / "store/gens/012_vfxmaster/04_tgtfull_refempty__dai/grid.jsonl"),
-     "scores": REPO_ROOT / "store/evals/011_external_authorcfg__dai__2026-08-17/vfxmaster_tgtfull_refempty",
-     "prompt_kind": "Ablation of vfxmaster_authorcfg: TARGET text identical but the demo channel "
-                    "(`ref_prompt`) is EMPTY. authorcfg − this = +1.5pp v4 (the ref channel's small "
-                    "contribution).",
+     "prompt_kind": "VFXMaster under the authors' INTENDED prompting: `{S1_endpoint}. {EFFECT}.` in the "
+                    "target channel AND `{S1_reference}. {EFFECT}.` in the reference channel (`ref_prompt`). "
+                    "The latest healthy effect run; +22.5pp v4 Unseen vs vfxmaster_neutral (paired-CI clean). 49f.",
      "doc": "misc/2026-08-13_baseline_metric_table/DOSSIER.md"},
 ]
 #: kind -> (heading, the paragraph that governs how that kind may be read). Rendered per kind, in
@@ -1073,6 +1022,9 @@ def external_gen(a: dict, r: dict, per_seed: dict, m: dict | None, ceil: dict,
         "cond_note": ("1st+last frame" if row.get("end_image") else "1st frame")
                      + f" + demo → {row.get('num_frames', '?')}f",
         "prompt": row["prompt"], "prompt_hi": diff_span(our_prompt, row["prompt"]),
+        # the demo/reference TEXT channel (arm-specific key). Surfaced in the input bag next to the
+        # target prompt so the neutral (empty) vs effect (full caption) difference is visible.
+        "ref_prompt": (str(row.get(a["ref_prompt_key"]) or "").strip() if a.get("ref_prompt_key") else ""),
     }
     # an arm of OURS conditions the way our runs do, so it gets the real prefix/suffix bar — the
     # "their contract" box is for a model whose geometry is not ours. Which conditioning it
@@ -1560,10 +1512,10 @@ def build() -> dict:
         ("vjepa_coupling_shufcode", "bottleneck", "vjepa", "vjepa (legacy probe)", "control", "shufcode control"),
         ("refvfx_B", "external", "refvfx", "refVFX (prior work)", "neutral", "neutral (fixed token)"),
         ("refvfx_A", "external", "refvfx", "refVFX (prior work)", "effect",  "effect (their convention)"),
-        ("vap_neutral",       "external", "vap",       "VAP (prior work)",       "neutral", "neutral · dai"),
-        ("vap_effect",        "external", "vap",       "VAP (prior work)",       "effect",  "effect · dai"),
-        ("vfxmaster_neutral", "external", "vfxmaster", "VFXMaster (prior work)", "neutral", "neutral · dai"),
-        ("vfxmaster_effect",  "external", "vfxmaster", "VFXMaster (prior work)", "effect",  "effect · dai"),
+        ("vap_neutral",       "external", "vap",       "VAP (prior work)",       "neutral", "neutral · no effect · dai"),
+        ("vap_authorcfg",     "external", "vap",       "VAP (prior work)",       "effect",  "effect · full prompt · dai"),
+        ("vfxmaster_neutral", "external", "vfxmaster", "VFXMaster (prior work)", "neutral", "neutral · no effect · dai"),
+        ("vfxmaster_authorcfg","external","vfxmaster", "VFXMaster (prior work)", "effect",  "effect · full prompt · dai"),
     ]
     known = set(all_tiers)
     missing_cat = [t for t, *_ in CATALOG if t not in known]

@@ -4,8 +4,9 @@
 :root{--bg:#0e1014;--card:#171a1f;--card2:#1d2127;--edge:#2a2f37;--edge2:#3a414c;
  --fg:#dde3ea;--dim:#8b95a1;--dim2:#666f7a;
  --pre:#2dd4bf;--suf:#f5a524;--ref:#a78bfa;--bad:#f2555a;--good:#4ade80;--warn:#fbbf24;
- --sel:#3b82f6;
- --cat-baseline:#8b95a1;--cat-generalist:#60a5fa;--cat-bottleneck:#a78bfa;--cat-external:#e8d49a}
+ --sel:#3b82f6}
+/* category colors are assigned at runtime from the catalog (index-stable palette) — no
+   category ids in CSS, so a new category needs zero template edits */
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);overflow-x:hidden;
  font:13px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
@@ -54,19 +55,18 @@ details.prov .pline{margin:3px 0 0 14px}
 .seg button.on{background:#132b4d;color:var(--fg)}
 .lbl{color:var(--dim);font-size:11px}
 
-/* ---------------------------------------------------------------- arm dropdown */
-.armwrap{position:relative;display:inline-block}
-#armbtn{font-weight:600}
-#armpanel{position:absolute;top:calc(100% + 6px);left:0;z-index:50;width:560px;max-width:88vw;
- max-height:70vh;overflow-y:auto;background:#14171c;border:1px solid var(--edge2);
- border-radius:10px;box-shadow:0 10px 34px #000a;padding:10px;display:none}
-#armpanel.open{display:block}
+/* ------------------------------------------------- arm selector (inline, always open) */
+.selrow{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.selcol{flex:1 1 460px;min-width:340px}
+.armsec{background:#14171c;border:1px solid var(--edge);border-radius:9px;padding:10px}
+.armsec>h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);
+ margin-bottom:8px;display:flex;align-items:baseline;gap:8px}
+.armsec>h3 .cnt{color:var(--dim2);font-weight:400;text-transform:none;letter-spacing:0}
+#armlist{max-height:56vh;overflow-y:auto}
+#armlist::-webkit-scrollbar{width:9px}
+#armlist::-webkit-scrollbar-thumb{background:var(--edge2);border-radius:5px}
 .aptool{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding-bottom:8px;
- border-bottom:1px solid var(--edge);margin-bottom:8px;position:sticky;top:-10px;
- background:#14171c;padding-top:2px;z-index:2}
-.aptool .sp{flex:1}
-.apx{background:none;border:0;color:var(--dim);cursor:pointer;font-size:14px;padding:2px 6px}
-.apx:hover{color:var(--fg)}
+ border-bottom:1px solid var(--edge);margin-bottom:8px}
 .apcat{border:1px solid var(--edge);border-radius:8px;margin-bottom:8px;overflow:hidden}
 .apcat>.ch{display:flex;align-items:center;gap:8px;padding:6px 9px;background:var(--card2);
  font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
@@ -82,6 +82,7 @@ details.prov .pline{margin:3px 0 0 14px}
 .pill{font-size:10.5px;padding:3px 8px;border-radius:6px;border:1px solid var(--edge2);
  background:#12151b;color:var(--dim);cursor:pointer;user-select:none;font-weight:600;transition:.1s}
 .pill:hover{border-color:var(--sel);color:var(--fg)}
+.pill.on{background:#132b4d;border-color:var(--sel);color:#dbeafe}          /* unknown-variant fallback */
 .pill.v-neutral.on{background:#0e2f26;border-color:#1c6b57;color:#5eead4}
 .pill.v-effect.on{background:#33240a;border-color:#7a5410;color:#fbbf24}
 .pill.v-control.on{background:#241b33;border-color:#4a3d6b;color:#c4b5fd}
@@ -103,7 +104,8 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
 .catbar{display:inline-block;width:3px;height:12px;border-radius:2px;margin-right:7px;
  vertical-align:-2px}
 .vtag{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:5px;
- margin-left:6px;text-transform:lowercase}
+ margin-left:6px;text-transform:lowercase;background:#132b4d;color:#dbeafe;
+ border:1px solid var(--sel)}                                    /* unknown-variant fallback */
 .vtag.v-neutral{background:#0e2f26;color:#5eead4;border:1px solid #1c6b57}
 .vtag.v-effect{background:#33240a;color:#fbbf24;border:1px solid #7a5410}
 .vtag.v-control{background:#241b33;color:#c4b5fd;border:1px solid #4a3d6b}
@@ -146,11 +148,8 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
 .cellbox .miss{width:100%;aspect-ratio:3/4;display:grid;place-items:center;color:var(--dim2);
  background:#0b0d10;border-radius:5px;font-size:11px}
 .cellbox .fn{color:var(--dim2);font-size:10px;word-break:break-all;line-height:1.35}
-/* category tints on output cells — data-driven, no per-arm classes */
-.cellbox.out.cat-baseline{background:#15171a;border-color:#3d444d}
-.cellbox.out.cat-generalist{background:#0f1a25;border-color:#274d75}
-.cellbox.out.cat-bottleneck{background:#171129;border-color:#3d2f66}
-.cellbox.out.cat-external{background:#1b1710;border-color:#5a4a22}
+/* output cells: neutral base, category accent applied inline from the runtime palette */
+.cellbox.out{background:#15171a;border-color:#3d444d}
 
 /* prompt chips (input bag) + dots (cells) */
 .pchip{display:flex;align-items:flex-start;gap:6px;margin:3px 0}
@@ -198,19 +197,33 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
 
 <div class="panel">
   <h2>selection</h2>
-  <table class="mx" id="mx"></table>
-  <div class="mxbar">
-    <button class="btn" onclick="selAll(1)">select all</button>
-    <button class="btn" onclick="selAll(0)">clear</button>
-    <span class="armwrap">
-      <button class="btn" id="armbtn" onclick="togPanel(event)">arms ▾</button>
-      <div id="armpanel"></div>
-    </span>
-    <span class="lbl" style="margin-left:6px">seed</span>
-    <span class="seg" id="seeds"></span>
-    <span class="lbl" style="margin-left:6px">donor class</span>
-    <select id="donor" class="btn"></select>
-    <span class="lbl" id="selinfo" style="margin-left:auto"></span>
+  <div class="selrow">
+    <div class="selcol">
+      <table class="mx" id="mx"></table>
+      <div class="mxbar">
+        <button class="btn" onclick="selAll(1)">select all</button>
+        <button class="btn" onclick="selAll(0)">clear</button>
+        <span class="lbl" style="margin-left:6px">seed</span>
+        <span class="seg" id="seeds"></span>
+        <span class="lbl" style="margin-left:6px">donor class</span>
+        <select id="donor" class="btn"></select>
+        <span class="lbl" id="selinfo" style="margin-left:auto"></span>
+      </div>
+    </div>
+    <div class="selcol armsec">
+      <h3>arms <span class="cnt" id="armcount"></span></h3>
+      <div class="aptool">
+        <button class="btn" onclick="armAll(1)">select all</button>
+        <button class="btn" onclick="armAll(0)">clear</button>
+        <span class="lbl" style="margin-left:6px"
+          title="bulk variant switches — they apply ONLY to arms that already have a selected entry">for chosen arms:</span>
+        <button class="btn" onclick="bulkVar('neutral',1)">N on</button>
+        <button class="btn" onclick="bulkVar('neutral',0)">N off</button>
+        <button class="btn" onclick="bulkVar('effect',1)">E on</button>
+        <button class="btn" onclick="bulkVar('effect',0)">E off</button>
+      </div>
+      <div id="armlist"></div>
+    </div>
   </div>
 </div>
 
@@ -250,15 +263,18 @@ for(const c of CATALOG) for(const a of c.arms) for(const e of a.entries)
 const KNOWN = new Set(Object.keys(ENTRY_META));
 
 const LS_SEL = "iclne_v2_sel", LS_ORD = "iclne_v2_catorder";
+// category accent colors: assigned by CATALOG index (stable under user reordering), palette
+// cycles — a new category gets a color with zero template edits
+const CPAL = ["#8b95a1","#60a5fa","#a78bfa","#e8d49a","#4ade80","#f472b6","#2dd4bf","#f2555a"];
+const CAT_COLOR = Object.fromEntries(CATALOG.map((c,i)=>[c.id, CPAL[i % CPAL.length]]));
 function defaultSel(){
+  // generic default: each arm's first neutral-variant entry, every category
   const s = new Set();
-  for(const c of CATALOG){
-    if(c.id === "bottleneck") continue;
+  for(const c of CATALOG)
     for(const a of c.arms){
       const first = a.entries.find(e=>e.variant==="neutral");
       if(first) s.add(first.tier);
     }
-  }
   return s;
 }
 function loadState(){
@@ -331,50 +347,24 @@ function selAll(on){
   render();
 }
 
-// ---------------------------------------------------------------- arm dropdown
-let panelOpen = false;
-function togPanel(ev){
-  ev.stopPropagation();
-  panelOpen = !panelOpen;
-  drawPanel();
-}
-document.addEventListener("click", e => {
-  if(!panelOpen) return;
-  if(e.target.closest("#armpanel") || e.target.closest("#armbtn")) return;
-  panelOpen = false; drawPanel();
-});
-document.addEventListener("keydown", e => {
-  if(e.key === "Escape" && panelOpen){ panelOpen = false; drawPanel(); }
-});
-function drawPanel(){
-  const p = document.getElementById("armpanel");
-  p.classList.toggle("open", panelOpen);
-  document.getElementById("armbtn").textContent = `arms (${tiers.size}) ${panelOpen?"▴":"▾"}`;
-  if(!panelOpen){ p.innerHTML=""; return; }
-  const keepScroll = p.scrollTop;
-  let h = `<div class="aptool">
-    <button class="btn" onclick="armAll(1)">select all</button>
-    <button class="btn" onclick="armAll(0)">clear</button>
-    <span class="lbl" style="margin-left:6px" title="bulk variant ops — apply ONLY to arms that already have a selected entry">for chosen arms:</span>
-    <button class="btn" onclick="bulkVar('neutral',1)">N on</button>
-    <button class="btn" onclick="bulkVar('neutral',0)">N off</button>
-    <button class="btn" onclick="bulkVar('effect',1)">E on</button>
-    <button class="btn" onclick="bulkVar('effect',0)">E off</button>
-    <span class="sp"></span>
-    <button class="apx" onclick="panelOpen=false;drawPanel()" title="close">✕</button>
-  </div>`;
+// ------------------------------------------- arm selector (inline, always open, fully generic)
+function drawArms(){
+  document.getElementById("armcount").textContent = `${tiers.size} of ${KNOWN.size} entries selected`;
+  const p = document.getElementById("armlist");
+  const keepScroll = p.scrollTop;                 // the list re-renders on every toggle
+  let h = "";
   catOrder.forEach((cid, i) => {
     const c = CAT_BY_ID[cid]; if(!c) return;
     h += `<div class="apcat"><div class="ch">
-        <span class="cdot" style="background:var(--cat-${c.id})"></span>${c.label}
+        <span class="cdot" style="background:${CAT_COLOR[c.id]}"></span>${esc(c.label)}
         <span class="sp"></span>
         <button onclick="moveCat(${i},-1)" title="move category up">▲</button>
         <button onclick="moveCat(${i},1)" title="move category down">▼</button></div>`;
     for(const a of c.arms){
-      h += `<div class="aparm"><span class="an">${a.label}</span><span class="pillrow">` +
+      h += `<div class="aparm"><span class="an">${esc(a.label)}</span><span class="pillrow">` +
         a.entries.map(e =>
-          `<span class="pill v-${e.variant} ${tiers.has(e.tier)?"on":""}"
-             onclick="togTier('${e.tier}')">${e.label}</span>`).join("") +
+          `<span class="pill v-${esc(e.variant)} ${tiers.has(e.tier)?"on":""}"
+             onclick="togTier('${e.tier}')">${esc(e.label)}</span>`).join("") +
         `</span></div>`;
     }
     h += `</div>`;
@@ -452,8 +442,8 @@ function drawStats(){
     const same = gs.filter(g=>g.pct_type==="same").map(g=>g.pct);
     const prox = gs.filter(g=>g.pct_type==="proxy").map(g=>g.pct);
     const bad = [...new Set(gs.map(g=>g.instr).filter(i=>i && i!==PRIMARY))];
-    h += `<tr><td class="l"><span class="catbar" style="background:var(--cat-${m.cat})"></span>
-        <b>${m.armLabel}</b> <span class="vtag v-${m.variant}">${esc(m.label)}</span>
+    h += `<tr><td class="l"><span class="catbar" style="background:${CAT_COLOR[m.cat]}"></span>
+        <b>${esc(m.armLabel)}</b> <span class="vtag v-${esc(m.variant)}">${esc(m.label)}</span>
         ${bad.length?`<span class="badge">${bad.join("/")}</span>`:""}</td>
       <td class="num"><b>${pct(mean(same))}</b> <span class="mut">· ${same.filter(x=>x!=null).length}</span></td>
       <td class="num">${mean(prox)==null?"—":"("+pct(mean(prox))+")"} <span class="mut">· ${prox.filter(x=>x!=null).length}</span></td>
@@ -524,14 +514,28 @@ function cardHtml(entry){
     `<div class="pchip"><span class="pdot" style="background:${pcolor(i)};border-color:${pcolor(i)}">P${i+1}</span>
        <span class="ptxt" onclick="this.classList.toggle('openp')" title="click to expand">${esc(txt)}</span></div>`).join("");
 
+  // ---- the UNIQUE reference-channel prompts (the demo/reference TEXT budget). Shown beside the
+  // target prompt so the neutral (empty) vs effect (full caption) difference in that channel is visible.
+  const rIdx = new Map();
+  for(const [, g] of cells){ const rp = g.ref_prompt; if(rp && !rIdx.has(rp)) rIdx.set(rp, rIdx.size); }
+  const hasRefField = cells.some(([,g]) => g.ref_prompt !== undefined);
+  const refIof = g => (g.ref_prompt && rIdx.has(g.ref_prompt)) ? rIdx.get(g.ref_prompt) : null;
+  const refbag = [...rIdx.entries()].map(([txt, i]) =>
+    `<div class="pchip"><span class="pdot" style="background:#8b95a1;border-color:#8b95a1">R${i+1}</span>
+       <span class="ptxt" onclick="this.classList.toggle('openp')" title="click to expand">${esc(txt)}</span></div>`).join("");
+
   // ---- input bag
   const refBoxes = (c.refs||[]).filter(r => cells.some(([,g]) => g.ref === r.clip)).map(r=>
     `<div class="cellbox in" style="border-color:${r.mismatched?'#5c2426':'#3b3163'};background:${r.mismatched?'#1c1113':'#141127'}">
        <h4>${r.mismatched?"✕ WRONG DEMO":"◧ DEMO"} · ${r.cls||"?"}<span class="arm">reference video</span></h4>
        ${vid(r.video)}<div class="fn">${r.clip}</div></div>`).join("");
   const inputs =
-    `<div class="cellbox in wide"><h4>PROMPTS<span class="arm">${pIdx.size} unique across the selected arms</span></h4>${
-       bag || `<div class="fn">no prompts (no selected arm answers this row)</div>`}</div>` +
+    `<div class="cellbox in wide"><h4>PROMPTS<span class="arm">endpoint P${hasRefField?" · reference channel R":""}</span></h4>${
+       (bag ? `<div class="fn" style="margin:2px 0">endpoint / target prompt</div>${bag}`
+            : `<div class="fn">no prompts (no selected arm answers this row)</div>`) +
+       (hasRefField ? `<div class="fn" style="margin:8px 0 2px">reference-channel prompt (the demo text)</div>${
+          refbag || `<div class="fn">— empty (no effect text in the reference channel)</div>`}` : ``)
+     }</div>` +
     `<div class="cellbox in"><h4>PREFIX · ${D.meta.px_prefix}f<span class="arm">start anchor</span></h4>
        ${vid(c.prefix_video)}</div>` +
     (c.sided==="two"
@@ -546,18 +550,22 @@ function cardHtml(entry){
   const outs = cells.map(([t, g])=>{
     const m = ENTRY_META[t];
     const pi = g.prompt!=null && pIdx.has(g.prompt) ? pIdx.get(g.prompt) : null;
+    const ri = refIof(g);
     const chips = [
       pi==null ? `<span class="chip">P —</span>`
         : `<span class="pdot" style="background:${pcolor(pi)};border-color:${pcolor(pi)}" title="${esc(g.prompt)}">P${pi+1}</span>`,
     ];
+    if(g.ref_prompt !== undefined) chips.push(ri==null
+      ? `<span class="chip" title="reference channel empty (no effect text)">R —</span>`
+      : `<span class="pdot" style="background:#8b95a1;border-color:#8b95a1" title="${esc(g.ref_prompt)}">R${ri+1}</span>`);
     if(g.scored){
       chips.push(`<span class="chip big">%ceil <b>${pct(g.pct)}</b></span>`);
       chips.push(`<span class="chip">copy <b>${fmt(g.m.copy_max,2)}</b></span>`);
       if(g.f.near_copy>0) chips.push(`<span class="chip r">near_copy ${fmt(g.f.near_copy,2)}</span>`);
       if(g.instr && g.instr!==PRIMARY) chips.push(`<span class="badge">${g.instr}</span>`);
     } else chips.push(`<span class="chip a">unscored</span>`);
-    return `<div class="cellbox out cat-${m.cat}">
-      <h4>${m.armLabel} <span class="vtag v-${m.variant}">${esc(m.label)}</span>
+    return `<div class="cellbox out" style="box-shadow:inset 3px 0 0 ${CAT_COLOR[m.cat]}">
+      <h4>${m.armLabel} <span class="vtag v-${esc(m.variant)}">${esc(m.label)}</span>
         <span class="arm">${g.cell} · ${g.novelty}</span></h4>
       ${condBar(g)}
       ${vid(g.videos[seed] || Object.values(g.videos)[0])}
@@ -626,7 +634,7 @@ function setSeed(s){ seed = s; render(); }
 
 function render(){
   shown = Math.max(shown, PAGE);
-  drawMatrix(); drawControls(); drawPanel(); drawStats(); drawCards();
+  drawMatrix(); drawControls(); drawArms(); drawStats(); drawCards();
   const n = selectedCards().reduce((s,e)=>s+e.hit.length,0);
   document.getElementById("selinfo").textContent =
     (sel.size ? `${sel.size} ontology cells` : `all ontology cells`) +
