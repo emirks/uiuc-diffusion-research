@@ -163,11 +163,17 @@ skill first — they are the source of truth for this workflow:**
   transition-eval harness (`eval/v3.0.0`): certified-checkout rule,
   plan→infer→score, trust map, certification protocol; SPEC.md in
   `src/diffusion/transition_eval/` is the authority
-- `lora-flow` — the END-TO-END LoRA/IC-LoRA pipeline: dataset → train →
-  generate → evaluate (v4 default) → viewer → artifact-store bookkeeping.
-  Check it before ANY of those stages. Storage contract: `store/README.md`;
-  ledger: `store/INDEX.md` — entries are `NNN_<slug>` dirs, highest number
-  = latest.
+- `lora-flow` — **MUST-READ before ANY training, generation, scoring, store
+  registration, or viewer-arm step** — the END-TO-END pipeline: dataset →
+  train → generate → evaluate (v4 default) → viewer → store. Storage
+  contract v2 (2026-08-13): `store/README.md` — gens are
+  `NNN_<arm>/KK_<variant>__<machine>`, `ARMS.md` = naming authority,
+  `MIGRATION.md` resolves old ids; ledger `store/INDEX.md`; validate every
+  registration with `scripts/store_fsck.py`.
+- `viewer` — serving result pages (:8017) + creating/fixing viewers. The
+  arm-comparison page (`iclora_neutral_effect`) is the cornerstone and is
+  ruled strictly — arms enter the store first (`lora-flow`), then the page
+  via its two-edit builder recipe.
 
 Since 2026-07-22 the project also runs on **NCSA DeltaAI** (`gh-login*`,
 aarch64 GH200) — load the `deltaai` skill there (+ `deltaai-throughput` for
