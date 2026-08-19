@@ -1,4 +1,11 @@
 ## 2026-08-19
+**18:21 — Scaffolded the counterfactual_training advised campaign (dossier only, no rounds run).** Created
+`misc/2026-08-19_counterfactual_training/DOSSIER.md`: objective = counterfactual twin supervision (L4-CROSS lineage,
+redirect + differential on the cttv2 same-endpoint counterfactual cells per `store/datasets/002_ctt_v2/COUNTERFACTUAL.md`)
+to widen reference-dependence, warm on the runs/012 dualforce_control config shell with 012@1000 as the ready-made
+plain-FM control. Dossier is explicitly marked a single-agent chat handoff — round 1 must have a fresh fable-advisor
+re-evaluate the framing and design the experiment; nothing is pre-registered.
+
 **10:38 — F-003 landed (owner-approved): WSD LR-restart continue-training of ctt_v2 is a cheap, non-novel quality lever.**
 The DUAL-FORCE plain-FM control (`runs/012`) = ctt_v2@10k warm-started + ~1k steps under a fresh WSD schedule
 (surgery/KD off) reads qualitatively clearly better than ctt_v2 on the viewer. Logged in `docs/FINDINGS.md` as an
