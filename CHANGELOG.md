@@ -1,4 +1,10 @@
 ## 2026-08-19
+**10:38 — F-003 landed (owner-approved): WSD LR-restart continue-training of ctt_v2 is a cheap, non-novel quality lever.**
+The DUAL-FORCE plain-FM control (`runs/012`) = ctt_v2@10k warm-started + ~1k steps under a fresh WSD schedule
+(surgery/KD off) reads qualitatively clearly better than ctt_v2 on the viewer. Logged in `docs/FINDINGS.md` as an
+engineering lever, not a contribution; the vs-ctt_v2 magnitude is marked UNCERTIFIED pending a co-scored same-corpus
+A/B (ctt_v2@10k vs control@1000). Contribution search continues.
+
 **05:00 — dualforce_kd arm registered + neutral gen launched (run→arm→stamp→gen).** Registered the DUAL-FORCE
 text-crutch-distillation TREATMENT adapter to the store as `runs/013_dualforce_kd` (LTX-2 19B IC-LoRA r128/α128
 one-way, step-1000 checkpoint, sha f4d1103d; SAME ctt_v2 recipe + warm-start from runs/002@10000 as the control,
