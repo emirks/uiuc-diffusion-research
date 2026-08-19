@@ -544,6 +544,56 @@ EXTERNAL = [
                     "RESULT: NEGATIVE at 1000-step first-look — paired Δapp_ref −0.092 (worse), %same 83.2 vs control "
                     "89.6, ref-dependence gap SHRANK +21.4→+17.6pp (reads demo LESS), core_degenerate 17 vs 8.",
      "doc": "misc/2026-08-18_best_training_shot/DOSSIER.md"},
+    # ---- DCG on deployed ctt_v2 (test-time guidance sweep, neutral only, seed 42; manifest shape).
+    # Each w is its own arm. DCG@w=1 = the plain demo branch (parity ≈ ctt_v2 82.5). join_swap strips
+    # the __w{tag} item_id suffix back to the ic_gen registry row it shares its input with.
+    {"id": "dcg_w1", "score_id": "dcg_v4", "kind": "ours", "frames": 121, "no_twin": True,
+     "same_prompt_by_design": True, "join_swap": ("__w1", ""),
+     "label": "Ⓝ DCG w=1 (parity)",
+     "sub": "= plain demo branch (v(demo), null cancels) · reproduces ctt_v2 82.5 within seed noise (83.6) · the baseline",
+     "src": REPO_ROOT / "store/gens/015_dcg_w1/01_neutral__dai/videos",
+     "media": "outputs/videos/dcg_sweep/dcg_w1",
+     "rows": ("manifest", REPO_ROOT / "store/gens/015_dcg_w1/01_neutral__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/014_dcg_sweep__dai__2026-08-19/dcg_w1",
+     "prompt_kind": "ctt_v2 champion (runs/002 step 10000) + TEST-TIME DCG at strength w=1, DEPLOYED config "
+                    "(text-CFG 4 + STG 1), neutral prompt. At w=1 DCG reduces to the plain demo branch — the "
+                    "parity cell; no retraining.",
+     "doc": "misc/2026-08-14_dcg_conditioning/DOSSIER.md"},
+    {"id": "dcg_w1p5", "score_id": "dcg_v4", "kind": "ours", "frames": 121, "no_twin": True,
+     "same_prompt_by_design": True, "join_swap": ("__w1p5", ""),
+     "label": "Ⓝ DCG w=1.5 ✓ (operating point)",
+     "sub": "honest gain +3.3pp (86.9) · demo-copy CLEAN · demo-following up · the defensible operating point",
+     "src": REPO_ROOT / "store/gens/016_dcg_w1p5/01_neutral__dai/videos",
+     "media": "outputs/videos/dcg_sweep/dcg_w1p5",
+     "rows": ("manifest", REPO_ROOT / "store/gens/016_dcg_w1p5/01_neutral__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/014_dcg_sweep__dai__2026-08-19/dcg_w1p5",
+     "prompt_kind": "ctt_v2 champion + TEST-TIME DCG at strength w=1.5, DEPLOYED config (text-CFG 4 + STG 1), "
+                    "neutral prompt. The honest operating point: modest genuine quality gain, copy guards clean.",
+     "doc": "misc/2026-08-14_dcg_conditioning/DOSSIER.md"},
+    {"id": "dcg_w3", "score_id": "dcg_v4", "kind": "ours", "frames": 121, "no_twin": True,
+     "same_prompt_by_design": True, "join_swap": ("__w3", ""),
+     "label": "Ⓝ DCG w=3 ⚠ intrusion",
+     "sub": "%same 92.5 (+8.9) BUT demo-copy FAILS (GT-exceed 27%) — the gain is substantially reference-content intrusion, not real quality",
+     "src": REPO_ROOT / "store/gens/017_dcg_w3/01_neutral__dai/videos",
+     "media": "outputs/videos/dcg_sweep/dcg_w3",
+     "rows": ("manifest", REPO_ROOT / "store/gens/017_dcg_w3/01_neutral__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/014_dcg_sweep__dai__2026-08-19/dcg_w3",
+     "prompt_kind": "ctt_v2 champion + TEST-TIME DCG at strength w=3, DEPLOYED config (text-CFG 4 + STG 1), "
+                    "neutral prompt. Large %same gain but the demo-copy guard FAILS — the gen bleeds the demo's "
+                    "content; %same is inflated by intrusion, not honest quality.",
+     "doc": "misc/2026-08-14_dcg_conditioning/DOSSIER.md"},
+    {"id": "dcg_w6", "score_id": "dcg_v4", "kind": "ours", "frames": 121, "no_twin": True,
+     "same_prompt_by_design": True, "join_swap": ("__w6", ""),
+     "label": "Ⓝ DCG w=6 ⚠ intrusion",
+     "sub": "%same 96.8 (+13.2) — demo-copy FAILS worst (GT-exceed 34%) · mostly reference-content intrusion; NEVER headline this",
+     "src": REPO_ROOT / "store/gens/018_dcg_w6/01_neutral__dai/videos",
+     "media": "outputs/videos/dcg_sweep/dcg_w6",
+     "rows": ("manifest", REPO_ROOT / "store/gens/018_dcg_w6/01_neutral__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/014_dcg_sweep__dai__2026-08-19/dcg_w6",
+     "prompt_kind": "ctt_v2 champion + TEST-TIME DCG at strength w=6, DEPLOYED config (text-CFG 4 + STG 1), "
+                    "neutral prompt. Highest %same but also worst demo-copy — metric saturation + heavy "
+                    "reference-content intrusion. Dose-response endpoint, not an operating point.",
+     "doc": "misc/2026-08-14_dcg_conditioning/DOSSIER.md"},
 ]
 #: kind -> (heading, the paragraph that governs how that kind may be read). Rendered per kind, in
 #: this order, above that kind's arms — a single paragraph covering both would have to be vague
@@ -1088,7 +1138,7 @@ def attach_external(cards: dict, registry: dict, ceil: dict) -> list[dict]:
         by_item = arm_rows(a)
         metrics, prov = load_external_scores(a["scores"], registry, ceil, a["id"],
                                              a.get("join_swap"))
-        joined = vids = scored = off_grid = same_as_ours = 0
+        joined = vids = scored = off_grid = same_as_ours = exp_vids = 0
         js = a.get("join_swap")
         for item, per_seed in sorted(by_item.items()):
             r = registry.get(item.replace(*js) if js else item)
@@ -1106,6 +1156,7 @@ def attach_external(cards: dict, registry: dict, ceil: dict) -> list[dict]:
                 {"tier": a["id"], "label": a["label"], "kind": a["prompt_kind"],
                  "ref": r.get("reference"), "text": g["prompt"], "hi": g["prompt_hi"]})
             joined += 1
+            exp_vids += len(per_seed)   # seeds this arm DECLARES for the item (a manifest arm may be 1-seed)
             vids += len(g["videos"])
             scored += bool(g["scored"])
             same_as_ours += g["prompt"] == card["prompt"]
@@ -1116,7 +1167,7 @@ def attach_external(cards: dict, registry: dict, ceil: dict) -> list[dict]:
                       "prompt_kind": a["prompt_kind"], "doc": a["doc"],
                       "media": a["media"], "manifest": str(a["rows"][1].relative_to(LAB)),
                       "scores_slot": str(a["scores"].relative_to(LAB)),
-                      "rows": len(by_item), "gens": joined, "videos": vids, "scored": scored,
+                      "rows": len(by_item), "gens": joined, "videos": vids, "exp_vids": exp_vids, "scored": scored,
                       "off_grid": off_grid, "same_as_ours": same_as_ours,
                       # carried through so the prompt-identity seatbelt can exempt the arms whose
                       # claim REQUIRES an identical prompt (the ⑦/⑧ bottleneck pair)
@@ -1510,6 +1561,8 @@ def build() -> dict:
     CATEGORIES = [("baseline", "Baselines (no adapter)"),
                   ("generalist", "Generalist trainings"),
                   ("bottleneck", "Bottleneck arms"),
+                  ("dcg", "DCG on ctt_v2 (test-time guidance)"),
+                  ("dualforce", "DUAL-FORCE (KD-crutch A/B)"),
                   ("external", "External work")]
     CATALOG = [  # (tier id, category, arm, arm label, variant, entry label)
         ("base_prompt_neutral", "baseline", "base_prompt", "base · prompt-only", "neutral", "neutral"),
@@ -1545,6 +1598,10 @@ def build() -> dict:
         ("vfxmaster_authorcfg","external","vfxmaster", "VFXMaster (prior work)", "effect",  "effect · full prompt · dai"),
         ("dualforce_control_neutral", "dualforce", "dualforce_control", "DUAL-FORCE control (plain FM)", "neutral", "neutral · dai"),
         ("dualforce_kd_neutral",      "dualforce", "dualforce_kd",      "DUAL-FORCE KD (crutch distill)", "neutral", "neutral · dai"),
+        ("dcg_w1",   "dcg", "dcg_w1",   "DCG w=1 (parity)", "neutral", "neutral · dai"),
+        ("dcg_w1p5", "dcg", "dcg_w1p5", "DCG w=1.5", "neutral", "neutral · dai"),
+        ("dcg_w3",   "dcg", "dcg_w3",   "DCG w=3", "neutral", "neutral · dai"),
+        ("dcg_w6",   "dcg", "dcg_w6",   "DCG w=6", "neutral", "neutral · dai"),
     ]
     known = set(all_tiers)
     missing_cat = [t for t, *_ in CATALOG if t not in known]
@@ -1742,9 +1799,9 @@ def check(data: dict) -> None:
             print(f"              ⚠ {a['gens'] - a['scored']} of {a['gens']} rows have no score")
         if not a["gens"]:
             bad.append(f"arm '{a['id']}' joined ZERO cards — check item_id against the registry")
-        if a["videos"] != a["gens"] * len(SEEDS):
-            bad.append(f"arm '{a['id']}': {a['gens'] * len(SEEDS) - a['videos']} of "
-                       f"{a['gens'] * len(SEEDS)} mp4 are missing on disk")
+        if a["videos"] != a["exp_vids"]:
+            bad.append(f"arm '{a['id']}': {a['exp_vids'] - a['videos']} of "
+                       f"{a['exp_vids']} mp4 are missing on disk")
         if a["off_grid"]:
             bad.append(f"arm '{a['id']}': {a['off_grid']} source rows are not in the registry")
         # the whole reason these arms carry their own prompt is that it DIFFERS from ours. A row
