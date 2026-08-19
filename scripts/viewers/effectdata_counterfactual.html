@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EffectData · Counterfactual Axes</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --panel:#fff; --panel2:#eceef2; --ink:#14171c; --mut:#606a78;
+    --line:#e3e7ed; --accent:#5b7cfa; --accent-ink:#fff; --chip:#eef1f7; --chipink:#3a4557;
+    --a:#4c86f0; --abg:#e6f0ff; --b:#e0873a; --bbg:#fbeedd; --binkc:#7a4e06;
+    --ok:#2f9e57; --okbg:#e4f4ea;
+    --shadow:0 1px 2px rgba(20,30,50,.06),0 8px 24px rgba(20,30,50,.07);
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#0d1014; --panel:#161a20; --panel2:#1d232b; --ink:#e9ecf1; --mut:#98a3b2;
+    --line:#282f39; --accent:#8098ff; --accent-ink:#0d1014; --chip:#222932; --chipink:#c4cede;
+    --a:#6f9bff; --abg:#16233c; --b:#e6a34d; --bbg:#2e2411; --binkc:#f2d590;
+    --ok:#4cc47e; --okbg:#12281b;
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.4);
+  }}
+  :root[data-theme="dark"]{
+    --bg:#0d1014; --panel:#161a20; --panel2:#1d232b; --ink:#e9ecf1; --mut:#98a3b2;
+    --line:#282f39; --accent:#8098ff; --accent-ink:#0d1014; --chip:#222932; --chipink:#c4cede;
+    --a:#6f9bff; --abg:#16233c; --b:#e6a34d; --bbg:#2e2411; --binkc:#f2d590;
+    --ok:#4cc47e; --okbg:#12281b;
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  header{padding:20px 24px 0}
+  .back{color:var(--mut);font-size:13px}
+  h1{font-size:23px;margin:8px 0 4px;letter-spacing:-.3px}
+  .lede{color:var(--mut);font-size:14px;max-width:900px}
+  .callout{display:flex;gap:14px;align-items:center;background:var(--okbg);border:1px solid color-mix(in srgb,var(--ok) 40%,transparent);
+    border-radius:12px;padding:12px 16px;margin:16px 0 4px;max-width:900px;font-size:13px}
+  .callout .big{font-size:22px;font-weight:700;color:var(--ok);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tabs{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(10px);
+    padding:14px 24px 12px;margin-top:12px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .tab{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:10px 15px;font-size:13.5px;cursor:pointer;
+    display:flex;flex-direction:column;gap:1px;line-height:1.2}
+  .tab .t1{font-weight:700}.tab .t2{font-size:11px;color:var(--mut)}
+  .tab[aria-selected=true][data-axis=A]{border-color:var(--a);background:var(--abg)}
+  .tab[aria-selected=true][data-axis=B]{border-color:var(--b);background:var(--bbg)}
+  .spacer{flex:1}
+  .btn{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 13px;font-size:13px;cursor:pointer}
+  .btn.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:600}
+  main{padding:8px 24px 70px}
+  .section{margin:26px 0}
+  .shead{display:flex;align-items:baseline;gap:12px;margin:0 0 12px;flex-wrap:wrap}
+  .pill{font-size:11px;font-weight:700;letter-spacing:.4px;padding:3px 9px;border-radius:6px}
+  .pill.fix{background:var(--abg);color:var(--a)}
+  .pill.fixB{background:var(--bbg);color:var(--binkc)}
+  .stitle{font-size:17px;font-weight:700;margin:0}
+  .smeta{color:var(--mut);font-size:12.5px}
+  .sdesc{color:var(--mut);font-size:12.5px;max-width:840px;margin:-4px 0 12px}
+  .row{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+  .tile{position:relative;border:1px solid var(--line);border-radius:11px;overflow:hidden;background:var(--panel2);
+    box-shadow:var(--shadow);cursor:pointer;transition:transform .13s,border-color .13s}
+  .tile:hover{transform:translateY(-3px) scale(1.01);border-color:var(--accent);z-index:2}
+  .tile video,.tile .ph{width:100%;aspect-ratio:3/2;object-fit:cover;display:block;background:#0a0d11}
+  .ph{display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:11px}
+  .tlabel{position:absolute;left:0;right:0;bottom:0;padding:14px 9px 7px;font-size:12px;font-weight:600;color:#fff;
+    background:linear-gradient(transparent,rgba(0,0,0,.72));text-shadow:0 1px 2px rgba(0,0,0,.6)}
+  .tlabel .k{opacity:.8;font-weight:400;font-size:10.5px}
+  .kd{position:absolute;top:7px;left:7px;font-size:14px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}
+  .tbadge{position:absolute;top:7px;right:7px;background:var(--bbg);color:var(--binkc);border-radius:5px;padding:1px 6px;font-size:9.5px;font-weight:700}
+  .ov{position:fixed;inset:0;z-index:60;background:rgba(6,9,14,.72);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:24px}
+  .ov.open{display:flex}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;max-width:900px;width:100%;max-height:90vh;overflow:auto;box-shadow:var(--shadow);position:relative}
+  .modal video{width:100%;max-height:62vh;object-fit:contain;background:#000;display:block;border-radius:16px 16px 0 0}
+  .mbody{padding:18px 22px}
+  .mbody h2{margin:0 0 3px;font-size:19px}
+  .mbody .sub{color:var(--mut);margin-bottom:12px;font-size:13px}
+  .kv{margin:11px 0}.kv .k{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut);margin-bottom:2px}
+  .x{position:absolute;top:12px;right:14px;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:8px;width:34px;height:34px;font-size:18px;cursor:pointer;z-index:2}
+  .foot{color:var(--mut);font-size:12px;margin-top:30px;text-align:center;line-height:1.7;max-width:900px;margin-left:auto;margin-right:auto}
+  .theme{position:absolute;top:20px;right:24px}
+</style>
+</head>
+<body>
+<button class="btn theme" id="theme">◐</button>
+<header>
+  <div class="back"><a href="index.html">← EffectData browser</a></div>
+  <h1>Counterfactual axes</h1>
+  <div class="lede">EffectData is a sparse <b>(subject × operator)</b> grid. The middle token of every filename is a
+    <b>shared source-subject id</b> (e.g. <code>wolf-97860e78</code>) reused across many effects — so both counterfactual
+    diagonals the CTT task cares about actually exist here.</div>
+  <div class="callout">
+    <div class="big">0.99&nbsp;/&nbsp;255</div>
+    <div>Verified: the same subject id under two different operators has an <b>identical first frame</b>
+      (mean abs diff 0.99/255) yet diverges to <b>68/255</b> by the end. Shared id ⇒ <b>same endpoint</b>, operator ⇒ the transformation.
+      <span style="color:var(--mut)">This is a true same-endpoint × different-operator counterfactual, not just "same category".</span></div>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab" data-axis="A" aria-selected="true" onclick="setAxis('A')">
+    <span class="t1">↓ Same operator · different endpoints</span>
+    <span class="t2">fix the effect, vary the subject — the reference-demo signal</span></div>
+  <div class="tab" data-axis="B" aria-selected="false" onclick="setAxis('B')">
+    <span class="t1">→ Same endpoints · different operator</span>
+    <span class="t2">fix the subject, vary the effect — the counterfactual diagonal</span></div>
+  <div class="spacer"></div>
+  <button class="btn primary" id="sync" title="Restart every visible clip from t=0 at once">⟲ Replay all in sync</button>
+</div>
+
+<main id="main"></main>
+
+<div class="ov" id="ov"><div class="modal">
+  <button class="x" id="x">×</button>
+  <video id="mvid" autoplay loop muted playsinline controls></video>
+  <div class="mbody" id="mbody"></div>
+</div></div>
+
+<script>
+let CF=null, AXIS='A';
+const main=document.getElementById('main');
+const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const enc=s=>s.split('/').map(encodeURIComponent).join('/');
+const KIND={animal:'🐾',female:'♀',male:'♂',subject:'•'};
+
+const io=new IntersectionObserver(es=>{for(const e of es){const v=e.target.querySelector('video');if(!v)continue;
+  if(e.isIntersecting){if(!v.src&&v.dataset.src){v.src=v.dataset.src;}v.play?.().catch(()=>{});}
+  else{v.pause?.();if(v.src){v.removeAttribute('src');v.load?.();}}}},{rootMargin:"500px"});
+
+function tile(file, kd, label, kicon, badge, meta){
+  const t=document.createElement('div'); t.className='tile';
+  t.innerHTML=`<video muted loop playsinline preload="none" data-src="media/${enc(file)}"
+       onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"></video>
+     <div class="ph" style="display:none">missing</div>
+     <span class="kd">${kicon||''}</span>${badge?`<span class="tbadge">${badge}</span>`:''}
+     <div class="tlabel">${esc(label)}${kd?`<div class="k">${esc(kd)}</div>`:''}</div>`;
+  t.onclick=()=>openModal(file,meta);
+  io.observe(t); return t;
+}
+function openModal(file,m){
+  document.getElementById('mvid').src='media/'+enc(file);
+  document.getElementById('mbody').innerHTML=
+    `<h2>${esc(m.title)}</h2><div class="sub">${esc(m.sub)}</div>`+
+    (m.instruction?`<div class="kv"><div class="k">Operator instruction (the manner)</div><div>${esc(m.instruction)}</div></div>`:'')+
+    (m.prompt?`<div class="kv"><div class="k">Clip prompt</div><div>${esc(m.prompt)}</div></div>`:'');
+  document.getElementById('ov').classList.add('open');
+}
+document.getElementById('x').onclick=()=>{document.getElementById('ov').classList.remove('open');document.getElementById('mvid').pause();};
+document.getElementById('ov').onclick=e=>{if(e.target.id==='ov')document.getElementById('x').click();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('x').click();});
+
+function render(){
+  main.innerHTML='';
+  if(AXIS==='A'){
+    for(const o of CF.operators){
+      const sec=document.createElement('div'); sec.className='section';
+      sec.innerHTML=`<div class="shead"><span class="pill fix">FIXED OPERATOR</span>
+        <h2 class="stitle">${esc(o.label)}</h2>
+        <span class="smeta">${esc(o.vfx||'')} · ${o.n_subj} subjects in full set · showing ${o.clips.length}${o.trans?' · transition-shaped':''}</span></div>
+        <div class="sdesc">${esc(o.instruction||'')}</div>`;
+      const row=document.createElement('div'); row.className='row';
+      for(const c of o.clips){
+        row.appendChild(tile(c.file, c.subj_sub, c.subj_label, KIND[c.kind]||'•', null,
+          {title:o.label, sub:`applied to ${c.subj_label} (${c.subj_sub})`, instruction:o.instruction, prompt:c.prompt}));
+      }
+      sec.appendChild(row); main.appendChild(sec);
+    }
+  } else {
+    for(const s of CF.subjects){
+      const sec=document.createElement('div'); sec.className='section';
+      sec.innerHTML=`<div class="shead"><span class="pill fixB">FIXED ENDPOINT</span>
+        <h2 class="stitle">${KIND[s.kind]||'•'} ${esc(s.label)} <span style="color:var(--mut);font-weight:400;font-family:ui-monospace,monospace;font-size:13px">${esc(s.sub)}</span></h2>
+        <span class="smeta">appears under ${s.n_ops} operators · showing ${s.clips.length}</span></div>
+        <div class="sdesc">Every clip below starts from the <b>same first frame</b> — hit <b>⟲ Replay all in sync</b> and watch the operators diverge.</div>`;
+      const row=document.createElement('div'); row.className='row';
+      for(const c of s.clips){
+        row.appendChild(tile(c.file, null, c.op_label, null, c.trans?'↻':null,
+          {title:c.op_label, sub:`same subject ${s.label} (${s.sub}), different operator`, instruction:'', prompt:c.prompt}));
+      }
+      sec.appendChild(row); main.appendChild(sec);
+    }
+  }
+}
+function setAxis(a){AXIS=a;for(const t of document.querySelectorAll('.tab'))t.setAttribute('aria-selected',t.dataset.axis===a);render();window.scrollTo({top:0});}
+document.getElementById('sync').onclick=()=>{document.querySelectorAll('main video').forEach(v=>{if(v.src){try{v.currentTime=0;v.play();}catch(e){}}});};
+document.getElementById('theme').onclick=()=>{const r=document.documentElement,c=r.getAttribute('data-theme');
+  r.setAttribute('data-theme',c==='dark'?'light':c==='light'?'dark':(matchMedia('(prefers-color-scheme:dark)').matches?'light':'dark'));};
+
+fetch('media/cf_data.json').then(r=>r.json()).then(d=>{CF=d;render();});
+</script>
+</body>
+</html>
