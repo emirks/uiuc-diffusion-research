@@ -6,3 +6,4 @@ source: scripts/ctt_v2 pipeline; misc/ctt_v2_final campaign
 root: symlink -> ../../../datasets/ctt_v2 (152 GB: encodes, masks, conditions, captions)
 contents: 56,368 training pairs, 1,670 operators; strata S0/S1/S2a/S2b/S4
 consumers: [runs/002_ctt_v2]
+docs: COUNTERFACTUAL.md  # per-tier counterfactual structure (S0+S1, S2, S4); measured 2026-08-19
