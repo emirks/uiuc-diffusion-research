@@ -517,6 +517,33 @@ EXTERNAL = [
                     "target channel AND `{S1_reference}. {EFFECT}.` in the reference channel (`ref_prompt`). "
                     "The latest healthy effect run; +22.5pp v4 Unseen vs vfxmaster_neutral (paired-CI clean). 49f.",
      "doc": "misc/2026-08-13_baseline_metric_table/DOSSIER.md"},
+    {"id": "dualforce_control_neutral", "score_id": "dualforce_v4", "kind": "ours", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "join_swap": ("__dualforce_control_neutral__", "__ctt_v2__"),
+     "label": "Ⓝ DUAL-FORCE control (plain FM)",
+     "sub": "ctt_v2 warm-start + 1000 plain-FM steps @1000 · matched paired baseline · raw ref · dai",
+     "src": REPO_ROOT / "store/gens/013_dualforce_control/01_neutral__dai/videos",
+     "media": "outputs/videos/dualforce/dualforce_control",
+     "rows": ("registry", REPO_ROOT / "store/gens/013_dualforce_control/01_neutral__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/012_dualforce_control__dai__2026-08-19/dualforce_control_neutral",
+     "prompt_kind": "DUAL-FORCE CONTROL: ctt_v2 recipe warm-started from ctt_v2 step-10000 + 1000 more plain-FM "
+                    "steps (NO KD) — the matched paired baseline. rank128 one-way RAW reference, plain sksz neutral. "
+                    "%same 89.6, matched-vs-mismatched-ref gap +21.4pp, copy 0/304.",
+     "doc": "misc/2026-08-18_best_training_shot/DOSSIER.md"},
+    {"id": "dualforce_kd_neutral", "score_id": "dualforce_v4", "kind": "ours", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "join_swap": ("__dualforce_kd_neutral__", "__ctt_v2__"),
+     "label": "Ⓝ DUAL-FORCE KD (text-crutch distill)",
+     "sub": "ctt_v2 warm-start + 1000 KD steps @1000 · text-crutch self-distill (effect→neutral, λ0.3 high-σ) · dai · NEGATIVE",
+     "src": REPO_ROOT / "store/gens/014_dualforce_kd/01_neutral__dai/videos",
+     "media": "outputs/videos/dualforce/dualforce_kd",
+     "rows": ("registry", REPO_ROOT / "store/gens/014_dualforce_kd/01_neutral__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/013_dualforce_kd__dai__2026-08-19/dualforce_kd_neutral",
+     "prompt_kind": "DUAL-FORCE KD TREATMENT: same warm-start/budget/data as control, ONE change — text-crutch "
+                    "self-distillation (student=neutral | teacher=effect-caption stop-grad, L_KD=λ·MSE high-σ). "
+                    "RESULT: NEGATIVE at 1000-step first-look — paired Δapp_ref −0.092 (worse), %same 83.2 vs control "
+                    "89.6, ref-dependence gap SHRANK +21.4→+17.6pp (reads demo LESS), core_degenerate 17 vs 8.",
+     "doc": "misc/2026-08-18_best_training_shot/DOSSIER.md"},
 ]
 #: kind -> (heading, the paragraph that governs how that kind may be read). Rendered per kind, in
 #: this order, above that kind's arms — a single paragraph covering both would have to be vague
@@ -1516,6 +1543,8 @@ def build() -> dict:
         ("vap_authorcfg",     "external", "vap",       "VAP (prior work)",       "effect",  "effect · full prompt · dai"),
         ("vfxmaster_neutral", "external", "vfxmaster", "VFXMaster (prior work)", "neutral", "neutral · no effect · dai"),
         ("vfxmaster_authorcfg","external","vfxmaster", "VFXMaster (prior work)", "effect",  "effect · full prompt · dai"),
+        ("dualforce_control_neutral", "dualforce", "dualforce_control", "DUAL-FORCE control (plain FM)", "neutral", "neutral · dai"),
+        ("dualforce_kd_neutral",      "dualforce", "dualforce_kd",      "DUAL-FORCE KD (crutch distill)", "neutral", "neutral · dai"),
     ]
     known = set(all_tiers)
     missing_cat = [t for t, *_ in CATALOG if t not in known]
