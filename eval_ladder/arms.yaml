@@ -240,6 +240,53 @@ arms:
     attention: one_way
     adapter_template: store/runs/002_ctt_v2/checkpoints/lora_weights_step_{step:05d}.safetensors
     note: "ctt_v2 champion adapter, PLAIN prompt, DeltaAI regen (co-located 2x2 cell; vs published 82.5 eps-gen)."
+
+  # ---- DUAL-FORCE control arm (campaign `dualforce`, trained on DeltaAI GH200 this session, job 2975760).
+  # The plain-FM CONTROL: the ctt_v2 IC-LoRA recipe warm-started from runs/002@10000 with the dual-force
+  # trainer's surgery/KD objectives DISABLED (surgery.enabled=false, kd.enabled=false). Registered at the
+  # STEP-1000 checkpoint. Architecturally identical to ctt_v2/ctt_v3 (960 plain LoRA tensors, r128, attn_ffn,
+  # no encoder/bottleneck) — generated with the same proven one_way stack (src/LTX-2-ctt-v2-train packages).
+  # `adapter` is an EXPLICIT store path (--step cannot override; step lives in run/gen meta). Two variant keys
+  # (neutral/effect) share one checkpoint — canonical arm `dualforce_control` (store/ARMS.md).
+  # rank/alpha 128 — pass --rank 128 --alpha 128 (run_gen defaults to 32). attention one_way REQUIRED.
+  dualforce_control_neutral:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "dual-force plain-FM control, NEUTRAL prompt (registry_dualforce_control_neutral). runs/012@1000, r128/a128, one_way."
+  dualforce_control_effect:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "dual-force plain-FM control, EFFECT prompt (registry_dualforce_control_effect). runs/012@1000, r128/a128, one_way."
+
+  # ---- DUAL-FORCE treatment arm (campaign `dualforce`, trained on DeltaAI GH200 this session, job 2976278).
+  # The text-crutch-distillation TREATMENT: the SAME ctt_v2 IC-LoRA recipe / SAME warm-start (runs/002@10000) as
+  # dualforce_control above, with the dual-force trainer's KD objective ENABLED (kd.enabled=true, surgery.enabled=false).
+  # KD = text-crutch self-distillation — an effect-TEACHER (conditions_effect; derive_effect_from=null) supervises the
+  # neutral-STUDENT with λ_target 0.3 in the high-σ band (high_band_sigma 0.7, warmup 500). The ONLY delta vs the control
+  # is the training objective; the checkpoint is byte-for-byte a plain r128 attn_ffn LoRA (960 tensors, no encoder/bottleneck),
+  # so it GENERATES exactly like the control — same one_way stack (src/LTX-2-ctt-v2-train packages), --rank 128 --alpha 128.
+  # `adapter` is an EXPLICIT store path (--step cannot override; step lives in run/gen meta). Canonical arm `dualforce_kd`.
+  dualforce_kd_neutral:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/013_dualforce_kd/checkpoints/lora_weights_step_01000.safetensors
+    note: "dual-force text-crutch KD treatment, NEUTRAL prompt (registry_dualforce_kd_neutral). runs/013@1000, r128/a128, one_way."
+  dualforce_kd_effect:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/013_dualforce_kd/checkpoints/lora_weights_step_01000.safetensors
+    note: "dual-force text-crutch KD treatment, EFFECT prompt (registry_dualforce_kd_effect). runs/013@1000, r128/a128, one_way."
+
   # ---- campaign `bneck_coupling` (2026-07-31). The certified transition encoder, FROZEN, coupled
   # into the same CTT v2 IC-LoRA recipe as `ctt_v2` above. The ONLY delta versus `ctt_v2` is the
   # content of the reference channel: the raw full-resolution demo latents are replaced by the

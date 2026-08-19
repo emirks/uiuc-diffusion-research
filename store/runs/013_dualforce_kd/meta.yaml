@@ -1,0 +1,58 @@
+id: 013_dualforce_kd
+seq: 13
+shelf: runs
+created: 2026-08-19          # trained this session on DeltaAI GH200 (aarch64), job 2976278
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh; single-run this session
+source: >
+  DUAL-FORCE campaign — the text-crutch-distillation TREATMENT (dualforce_kd). A warm-started retrain of the
+  ctt_v2 IC-LoRA recipe with the dual-force trainer's KD objective ENABLED (kd.enabled=true) and the surgery
+  objective DISABLED (surgery.enabled=false). KD = text-crutch SELF-DISTILLATION: an effect-TEACHER pass
+  (effect_conditions_dir=conditions_effect; derive_effect_from=null, i.e. the teacher reads the real effect
+  conditioning, it is NOT derived) supervises the NEUTRAL-STUDENT pass, with a λ_target=0.3 distillation term
+  applied only in the HIGH-σ band (high_band_sigma=0.7) and warmed up over lambda_warmup_steps=500 — the treatment
+  arm measured against the plain-FM control (runs/012_dualforce_control). Registered at the STEP-1000 checkpoint
+  (2000-step config; shipped for evaluation this session).
+inputs:
+  dataset: datasets/002_ctt_v2        # SAME 56,368-pair CTT v2 set as runs/002/008/012; + conditions_effect KD-teacher condition dir (not a new dataset)
+warm_start:
+  from: runs/002_ctt_v2               # ctt_v2 shipped checkpoint, step 10000 (SAME init as the control arm)
+  checkpoint: store/runs/002_ctt_v2/checkpoints/lora_weights_step_10000.safetensors
+  note: config.model.load_checkpoint pins runs/002 step-10000 as the initialization
+trainer:
+  checkout: src/LTX-2-dualforce        # linked worktree, dual-force trainer fork
+  branch: dualforce
+  commit: a4033230c24901fb0a3becc81885d222067de7fb   # HEAD; == the surg WSD-scheduler commit the fork was cut from
+  working_tree: DIRTY at train time — uncommitted edits to packages/ltx-trainer/src/{config.py,datasets.py,trainer.py}
+    (dual-force training logic) + untracked tests/test_kd_objective.py. Not reproducible from the bare commit;
+    checkpoint sha256 is the immutable identity. origin=Lightricks (fork not pushed).
+  entry: job 2976278 (accelerate launch train.py, df_kd config); training_config.yaml copied here as config.yaml
+model: LTX-2 19B dev (frozen)
+adapter: IC-LoRA r128/a128; one-way reference attention; RAW video reference (reference latents concatenated as tokens — no bottleneck). target_modules attn_ffn (10 modules): attn1/attn2 {to_k,to_q,to_v,to_out.0} + ff.net.0.proj + ff.net.2.
+rank: 128
+alpha: 128
+dropout: 0.0
+reference_attention: one_way
+lr: 1e-4, WSD schedule (scheduler_type: wsd), 2000-step config
+timesteps: shifted_logit_normal
+seed: 42
+effective_batch: 8                     # batch_size 1 x grad_accum 2 (x DDP world size)
+steps_config: 2000                     # config target
+shipped_step: 1000                     # the checkpoint registered + evaluated this session
+surgery: false                         # surgery objective OFF — this arm's only delta vs the control is the KD objective
+kd:                                    # text-crutch self-distillation (this arm's treatment); config `df_kd.yaml`
+  enabled: true
+  derive_effect_from: null             # teacher reads the real effect conditioning, NOT derived
+  effect_conditions_dir: conditions_effect
+  high_band_sigma: 0.7                 # distillation term applied in the high-σ band
+  lambda_target: 0.3
+  lambda_warmup_steps: 500
+checkpoint_sha256:
+  lora_weights_step_01000.safetensors: f4d1103d03c5db9120e3aa6b3370c6e24fa115939d9c35b224e6b756b66d94dd
+source_location: outputs/dualforce/kd/checkpoints (scratch; training_state_step_01000.pt kept in scratch, not copied to store per contract §6)
+notes: >
+  Architecturally identical to ctt_v2/ctt_v3/dualforce_control (verified this session: checkpoint carries 960 plain
+  LoRA tensors, rank 128, attn_ffn, NO operator_encoder/bottleneck/context_adapter tensors — the KD objective changes
+  the TRAINING LOSS only, not the adapter architecture) — so generation uses the proven one_way IC-LoRA inference
+  stack (eval_ladder/run_gen.py with the src/LTX-2-ctt-v2-train packages on PYTHONPATH, --rank 128 --alpha 128,
+  attention one_way), exactly as dualforce_control was generated. run_gen.py defaults --rank to 32; pass
+  --rank 128 --alpha 128 explicitly or the adapter loads mismatched.

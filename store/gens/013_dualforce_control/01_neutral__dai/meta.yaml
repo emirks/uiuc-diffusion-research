@@ -1,0 +1,15 @@
+id: gens/013_dualforce_control/01_neutral__dai
+seq: 1
+shelf: gens
+arm: dualforce_control
+harness_arm: dualforce_control_neutral   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral
+machine: dai
+created: 2026-08-19
+inputs: {run: runs/012_dualforce_control, step: 1000}
+code: src/LTX-2-dualforce @ a403323
+prompt_family: prompts/001_ctt152_neutral
+prompt_sha: 0d708175fbfe
+grid_rows: 152
+videos: 304
+source: scripts/store_register.py over build/dualforce_control/registry_dualforce_control_neutral.jsonl

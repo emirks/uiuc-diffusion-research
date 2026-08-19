@@ -29,6 +29,8 @@ hand-write a registry.
 | `ctt_v3_hs` | retired negative | runs/009 | prompts/001 | prompts/002 | ctt_v2_pushB · ctt_v2_pushB_shufref · ctt_v2_pushB_effect |
 | `vap` | external baseline (one-sided) | runs/010 | prompts/001 ·ext | prompts/002 ·ext ; prompts/008 ·authorcfg | vap_neutral · vap_effect · vap_authorcfg · vap_tgtfull_refempty |
 | `vfxmaster` | external baseline (one-sided) | runs/011 | prompts/001 ·ext | prompts/002 ·ext ; prompts/008 ·authorcfg | vfxmaster_neutral · vfxmaster_effect · vfxmaster_authorcfg · vfxmaster_tgtfull_refempty |
+| `dualforce_control` | dual-force plain-FM control | runs/012 | prompts/001 | prompts/002 | dualforce_control_neutral · dualforce_control_effect |
+| `dualforce_kd` | dual-force text-crutch KD treatment | runs/013 | prompts/001 | prompts/002 | dualforce_kd_neutral · dualforce_kd_effect |
 
 Adding an arm = one row here + `eval_ladder/arms.yaml` entry + `stamp_rows.py` for its registry.
 Campaign nicknames (pushA/pushB…) never become directory names — canonical slugs only.

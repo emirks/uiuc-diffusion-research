@@ -1,3 +1,25 @@
+## 2026-08-19
+**05:00 — dualforce_kd arm registered + neutral gen launched (run→arm→stamp→gen).** Registered the DUAL-FORCE
+text-crutch-distillation TREATMENT adapter to the store as `runs/013_dualforce_kd` (LTX-2 19B IC-LoRA r128/α128
+one-way, step-1000 checkpoint, sha f4d1103d; SAME ctt_v2 recipe + warm-start from runs/002@10000 as the control,
+the ONLY delta being the KD objective: effect-teacher vs neutral-student self-distillation, λ_target 0.3 in the
+high-σ band 0.7, warmup 500, conditions_effect / derive_effect_from=null; surgery OFF; trained on DeltaAI GH200 job
+2976278, trainer src/LTX-2-dualforce @ a4033230 branch dualforce with a dirty working tree; verified 960 plain LoRA
+tensors, no encoder/bottleneck → generates on the proven one_way stack exactly like the control). Added arm keys
+`dualforce_kd_{neutral,effect}` to `eval_ladder/arms.yaml` + the `dualforce_kd` row to `store/ARMS.md`; stamped the
+152-row CTT neutral grid from prompts/001 (prompt_sha 0d708175fbfe) to `build/dualforce_kd/registry_dualforce_kd_neutral.jsonl`;
+LAUNCHED the neutral gen (152 rows × seeds 42/43 = 304 clips, 480×640×121, r128 one_way) on DeltaAI ghx4 (bhwp-dtai-gh,
+`--array=0-15`) into `store/gens/014_dualforce_kd/01_neutral__dai`. store_fsck PASS for the run registration; gen close-out
+(store_register + eval + viewer) driven by the parent.
+
+**02:36 — dualforce_control arm registered (run→gen→eval).** Registered the DUAL-FORCE plain-FM CONTROL
+adapter to the store as `runs/012_dualforce_control` (LTX-2 19B IC-LoRA r128/α128 one-way, step-1000 checkpoint,
+sha 72a213b9; ctt_v2 recipe warm-started from runs/002@10000 with surgery/KD OFF; trained on DeltaAI GH200 job
+2975760, trainer src/LTX-2-dualforce @ a4033230 branch dualforce with a dirty working tree). Added arm keys
+`dualforce_control_{neutral,effect}` to `eval_ladder/arms.yaml` + the `dualforce_control` row to `store/ARMS.md`;
+stamped the 152-row CTT grid from prompts/001 (neutral) and prompts/002 (effect); generated + v4-scored on DeltaAI
+(store/gens/013_dualforce_control, store/evals/012). store_fsck PASS.
+
 ## 2026-08-17
 **13:00 — timing_relay Wave-3: RoPE timing + demo-placement + versatile control (advised).** On the CTT champion
 (ctt_v3) vs its undertrained ancestor (ctt_v2), pre-registered (misc/2026-08-14_timing_relay/WAVE3.md). Two clean

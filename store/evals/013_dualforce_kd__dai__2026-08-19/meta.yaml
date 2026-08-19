@@ -1,0 +1,53 @@
+id: 013_dualforce_kd__dai__2026-08-19
+seq: 13
+shelf: evals
+created: 2026-08-19
+machine: DeltaAI ghx4 (aarch64 GH200) — GEN + SCORE both on DeltaAI (one machine)
+instrument: >
+  transition-eval v4.0.0 (eval-v4-cert worktree, branch eval/v4-metrics @ 258a990; [UNCERTIFIED] by
+  design — v4 branch is untagged and reference_v4.npz is the accepted working-tree mod that IS the v4
+  lane). reference_v4 sha256 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8 (== evals/001-012).
+  corpus data/processed/transitions_std121 = 222 clips / 39 classes
+  (raw-file sha256 5a7a8be9f8a0…; canonical-json sha256 dc2e139a2a82…). tau_copy 0.858.
+  SAME instrument + corpus + warm cache as the control eval (evals/012) — apples-to-apples.
+source: >
+  dualforce_kd_neutral = the DUAL-FORCE KD TREATMENT arm (rank128 one_way, warm-start ctt_v2,
+  text-crutch self-distillation, step 1000; adapter code src/LTX-2-dualforce @ a403323), neutral
+  (leak-free) prompt variant over the CTT grid (152 rows x seeds 42/43 = 304 gens;
+  gens/014_dualforce_kd/01_neutral__dai, prompt_sha 0d708175). Architecturally identical inference to
+  the control (evals/012); scored EXACTLY like the control.
+  Plan: eval_ladder/run_eval.py --mode plan --arms dualforce_kd_neutral --extra-registry
+  build/dualforce_kd/registry_dualforce_kd_neutral.jsonl (same-class GT pool, MAX 8 refs,
+  copy-guarded; exact keyed join to base twins in eval_ladder/registry.jsonl, 152/152 present).
+  Score: job 2977072, 16 shards on ghx4 (account bhwp-dtai-gh) via
+  misc/2026-08-19_dualforce_score/kd/score_dualforce_kd.sbatch (refvfx env, warm 222 cache
+  misc/refvfx_baseline/probe/cache).
+arms_scored:
+  dualforce_kd_neutral: {gen: gens/014_dualforce_kd/01_neutral__dai, run: runs/013_dualforce_kd, rows: 1842}
+headline:   # v4 pool-yardstick: raw app_ref . GT-class ceiling . achieved-% ; n = items (seed-averaged)
+  pooled_same:  {n: 60, raw: 0.7222, ceiling: 0.8722, pct_same: 83.2}   # ALL 5 same-typed cells (incl. 2 diagnostic)
+  pooled_proxy: {n: 92, raw: 0.5930, ceiling: 0.8729, pct_proxy: 68.4}  # cross/foreign, content-capped, ranking-only
+  by_cell:
+    G-fit:            {ptype: same,  n: 13, raw: 0.7415, ceil: 0.8735, pct: 84.9}
+    G-unseen-same:    {ptype: same,  n: 13, raw: 0.7929, ceil: 0.8735, pct: 91.2}
+    G-zs-same:        {ptype: same,  n: 8,  raw: 0.7508, ceil: 0.8635, pct: 86.9}
+    G-memo-probe:     {ptype: same,  n: 13, raw: 0.7513, ceil: 0.8735, pct: 87.2}   # DIAGNOSTIC: heldin memorization probe
+    G-ref-control:    {ptype: same,  n: 13, raw: 0.5853, ceil: 0.8735, pct: 67.3}   # DIAGNOSTIC: mismatched-reference control
+    G-zs-cross:       {ptype: proxy, n: 20, raw: 0.6813, ceil: 0.8722, pct: 80.1}
+    G-unseen-cross:   {ptype: proxy, n: 26, raw: 0.6759, ceil: 0.8735, pct: 77.6}
+    G-zs-foreign:     {ptype: proxy, n: 20, raw: 0.4905, ceil: 0.8722, pct: 55.6}
+    G-unseen-foreign: {ptype: proxy, n: 26, raw: 0.5209, ceil: 0.8735, pct: 60.1}
+  copy_guard: {copy_max_mean: 0.3649, copy_max_max: 0.7952, copy_max_p95: 0.6156, near_copy_tau858: 0, core_degenerate: 17, n_gen: 304}
+  delta_pp_vs_base: unpaired   # 152/152 base twins registered but NOT co-scored into this out-root; parent pairs later
+  ref_dependence: {matched_G-fit: 84.9, mismatched_G-ref-control: 67.3, gap_pp: 17.6}  # matched−mismatched (control gap +21.4)
+caveats:
+  - 35/1842 dualforce_kd eval-rows are EOFError error-rows (app_ref None) from the concurrent-cache-write
+    race (the same symmetric race as evals/006/007/008/012; fewer than control's 73 because the corpus
+    cache was already warm from evals/012). All 152 registry items retain a pool-mean (no item, and no
+    single gen, lost all refs); pool means are over surviving refs (mean 5.94/gen, min 1). This is NOT
+    "0 error-rows" — a re-score of the affected shards against the now-warmer cache is available if a
+    zero-error record is required.
+  - Unlike control's shards, THIS out-root contains ONLY dualforce_kd_neutral rows (no co-scored
+    non-model controls) — the plan was scoped --arms dualforce_kd_neutral into a private out-root, so
+    the 1842 rows are all in-scope. Headline + arms_scored cover dualforce_kd_neutral.
+  - [UNCERTIFIED] v4 instrument (owner directive: v4 is the default lane; v3 only for pre-registered claims).
