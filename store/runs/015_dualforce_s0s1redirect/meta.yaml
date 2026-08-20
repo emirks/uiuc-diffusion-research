@@ -1,0 +1,58 @@
+id: 015_dualforce_s0s1redirect
+seq: 15
+shelf: runs
+created: 2026-08-20          # trained this session on DeltaAI GH200 (aarch64), job 2988156
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh; 2 GPU × grad_accum 2
+source: >
+  Campaign 2026-08-20_s0s1_counterfactual — the REDESIGNED counterfactual redirect run, on the
+  eval-distribution S0+S1 stratum (real corpus + creative-manner re-renders). A single-variable
+  treatment over the plain-FM control 012: 012's exact objective/sampler/warm-start PLUS a
+  redirect-only term on same-content×different-operator twins. Redesign vs the KILLED S2 twin (014):
+  L_diff DROPPED; matched samples get plain L_FM with ZERO shaping (quality-preservation directive);
+  redirect is a cell-uniform pair (rowA,rowB): state A / cond_A (never cond_B) / demo of B → x̂₀
+  regressed to x0_B, σ_red∼U[0.5,0.9], seam-masked (latent frames adjacent to conditioning excluded),
+  λ_red=0.25. Registered at the STEP-1000 checkpoint (2000-step config), shipped for evaluation vs
+  012@1000. Advisor (fresh fable) designed it (R1); owner green-lit; owner dropped the step-300 gate.
+inputs:
+  dataset: datasets/002_ctt_v2        # SAME 56,368-pair CTT v2 set as runs/002/008/012; not rebuilt
+  cell_index: cell_index.json         # 149 S0+S1 twin cells (content×sidedness, ≥2 ops), mean K=7.8
+warm_start:
+  from: runs/002_ctt_v2               # ctt_v2 shipped checkpoint, step 10000
+  checkpoint: store/runs/002_ctt_v2/checkpoints/lora_weights_step_10000.safetensors
+  note: config.model.load_checkpoint pins runs/002 step-10000 as the initialization (same as 012/013/014)
+trainer:
+  checkout: src/LTX-2-dualforce        # linked worktree, dual-force trainer fork
+  branch: dualforce
+  commit: 5dfdcee                       # CLEAN — redirect variant committed (config+trainer). 015 reproducible from this sha.
+  entry: job 2988156 (accelerate launch --num_processes 2 scripts/train.py df_redirect.yaml); config.yaml here
+  smoke: job 2988106 (12 steps, 2 GPU) — redirect verified (L_red finite, σ_red∈[0.5,0.9], DDP clean)
+model: LTX-2 19B dev (frozen)
+adapter: IC-LoRA r128/a128; one-way reference attention; RAW video reference (reference latents concatenated as tokens — no bottleneck). target_modules attn_ffn (10 modules): attn1/attn2 {to_k,to_q,to_v,to_out.0} + ff.net.0.proj + ff.net.2.
+rank: 128
+alpha: 128
+dropout: 0.0
+reference_attention: one_way
+lr: 1e-4, WSD schedule (scheduler_type: wsd), 2000-step config
+timesteps: shifted_logit_normal
+seed: 42
+effective_batch: 4                     # batch_size 1 × grad_accum 2 × 2 GPU (matches 014's setup)
+steps_config: 2000                     # config target (job continued past 1000 for the GRAY-clause @2000 option)
+shipped_step: 1000                     # the checkpoint registered + evaluated this session (apples-to-apples vs 012@1000)
+twin:
+  variant: s0s1_redirect
+  strata: [S0, S1]
+  cell_index_path: cell_index.json
+  lambda_red: 0.25
+  lambda_diff: 0.0                     # DROPPED (the 014 matched-path shaper; leading suspect for the matched-fit fall)
+  lambda_warmup_steps: 250
+  band: [0.50, 0.90]                   # σ_red drawn uniformly in-band (UniformTimestepSampler)
+  seam_frames: 1                       # latent frames adjacent to each conditioning block excluded from L_red
+  cond_convention: cond_A              # state's own endpoints (never cond_B — cond_B would leak the target operator)
+  batch_rule: one forward/step (DDP-safe); batch-2 [matched|redirect] when primary geometry=16,20,15; batch-1 [matched] on S4
+checkpoint_sha256:
+  lora_weights_step_01000.safetensors: 4e84c3ddc48f4a064b25fda45bd15d9a941b6fa957743a5785f36d8eae382539
+source_location: outputs/dualforce/s0s1redirect/checkpoints (scratch; training_state kept in scratch, not copied per contract §6)
+notes: >
+  Architecturally identical to ctt_v2/012/013/014 (plain r128 attn_ffn LoRA, one_way, no operator_encoder/
+  bottleneck) — generation uses the proven one_way IC-LoRA inference stack (eval_ladder/run_gen.py with the
+  src/LTX-2-ctt-v2-train packages on PYTHONPATH, --rank 128 --alpha 128, attention one_way). Control = 012@1000.

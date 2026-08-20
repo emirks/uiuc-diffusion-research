@@ -31,6 +31,7 @@ hand-write a registry.
 | `vfxmaster` | external baseline (one-sided) | runs/011 | prompts/001 ·ext | prompts/002 ·ext ; prompts/008 ·authorcfg | vfxmaster_neutral · vfxmaster_effect · vfxmaster_authorcfg · vfxmaster_tgtfull_refempty |
 | `dualforce_control` | dual-force plain-FM control | runs/012 | prompts/001 | prompts/002 | dualforce_control_neutral · dualforce_control_effect |
 | `dualforce_kd` | dual-force text-crutch KD treatment | runs/013 | prompts/001 | prompts/002 | dualforce_kd_neutral · dualforce_kd_effect |
+| `dualforce_s0s1redirect` | S0+S1 counterfactual redirect treatment (redesign of 014) | runs/015 | prompts/001 | — | dualforce_s0s1redirect_neutral |
 
 Adding an arm = one row here + `eval_ladder/arms.yaml` entry + `stamp_rows.py` for its registry.
 Campaign nicknames (pushA/pushB…) never become directory names — canonical slugs only.

@@ -301,6 +301,18 @@ arms:
     adapter: store/runs/014_dualforce_twin/checkpoints/lora_weights_step_01000.safetensors
     note: "counterfactual-twin treatment, NEUTRAL prompt (registry_dualforce_twin_neutral). runs/014@1000, r128/a128, one_way."
 
+  # ---- campaign 2026-08-20_s0s1_counterfactual: the REDESIGNED redirect on S0+S1 (runs/015, job 2988156).
+  # Single-variable over 012: 012's objective/sampler/warm-start PLUS a redirect-only twin term on
+  # same-content×different-operator S0+S1 cells (L_diff dropped, matched=pure FM, cond_A, seam-masked,
+  # σ_red∼U[0.5,0.9], λ_red 0.25). Plain r128 attn_ffn LoRA → same one_way inference stack. --rank 128 --alpha 128.
+  dualforce_s0s1redirect_neutral:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/015_dualforce_s0s1redirect/checkpoints/lora_weights_step_01000.safetensors
+    note: "S0+S1 counterfactual redirect treatment, NEUTRAL prompt (registry_dualforce_s0s1redirect_neutral). runs/015@1000, r128/a128, one_way."
+
   # ---- campaign `bneck_coupling` (2026-07-31). The certified transition encoder, FROZEN, coupled
   # into the same CTT v2 IC-LoRA recipe as `ctt_v2` above. The ONLY delta versus `ctt_v2` is the
   # content of the reference channel: the raw full-resolution demo latents are replaced by the
