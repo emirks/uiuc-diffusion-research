@@ -287,6 +287,20 @@ arms:
     adapter: store/runs/013_dualforce_kd/checkpoints/lora_weights_step_01000.safetensors
     note: "dual-force text-crutch KD treatment, EFFECT prompt (registry_dualforce_kd_effect). runs/013@1000, r128/a128, one_way."
 
+  # ---- COUNTERFACTUAL-TWIN treatment arm (campaign `counterfactual_training`, trained DeltaAI GH200, job 2982505).
+  # Counterfactual twin supervision: SAME ctt_v2 IC-LoRA recipe / SAME warm-start (runs/002@10000) as
+  # dualforce_control/kd, with the trainer's twin objective ENABLED (redirect + differential on S2 same-endpoint
+  # counterfactuals; band σ∈[0.5,0.9]; surgery/kd OFF). The ONLY delta vs the control is the training objective;
+  # the checkpoint is byte-for-byte a plain r128 attn_ffn LoRA (960 tensors, no encoder/bottleneck) — so it
+  # GENERATES exactly like the control — same one_way stack, --rank 128 --alpha 128. Canonical arm `dualforce_twin`.
+  dualforce_twin_neutral:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/014_dualforce_twin/checkpoints/lora_weights_step_01000.safetensors
+    note: "counterfactual-twin treatment, NEUTRAL prompt (registry_dualforce_twin_neutral). runs/014@1000, r128/a128, one_way."
+
   # ---- campaign `bneck_coupling` (2026-07-31). The certified transition encoder, FROZEN, coupled
   # into the same CTT v2 IC-LoRA recipe as `ctt_v2` above. The ONLY delta versus `ctt_v2` is the
   # content of the reference channel: the raw full-resolution demo latents are replaced by the

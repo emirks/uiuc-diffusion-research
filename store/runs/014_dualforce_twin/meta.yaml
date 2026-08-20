@@ -1,0 +1,63 @@
+id: 014_dualforce_twin
+seq: 14
+shelf: runs
+created: 2026-08-19          # trained this session on DeltaAI GH200 (aarch64), job 2982505
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh; single-run this session
+source: >
+  COUNTERFACTUAL_TRAINING campaign — the counterfactual TWIN-supervision TREATMENT (dualforce_twin). A
+  warm-started retrain of the ctt_v2 IC-LoRA recipe with the twin objective ENABLED (twin.enabled=true;
+  surgery.enabled=false, kd.enabled=false). TWIN = per-step pair a primary S2 row with a same-endpoint
+  counterfactual (byte-exact endpoints, DIFFERENT operator), 4 forwards sharing ε and σ, and beyond the
+  plain FM loss add a DIFFERENTIAL term (v-space, all t: ‖(v̂_A−v̂_B)−(x₀^B−x₀^A)‖²) and a REDIRECT term
+  (x̂₀-space, σ∈[0.50,0.90] only: ‖x̂₀(x_t^A,ref_B)−x₀^B‖²), both MIDDLE-masked. λ_red 0.5 / λ_diff 0.25,
+  warmup 0→full over steps 0–250. The treatment arm measured against the plain-FM control (runs/012).
+  Registered at the STEP-1000 checkpoint (2000-step config; shipped for evaluation this session).
+inputs:
+  dataset: datasets/002_ctt_v2        # SAME 56,368-pair CTT v2 set as runs/002/012/013; twin index built offline over it
+  twin_index: misc/2026-08-19_counterfactual_training/probe/twin_index.json   # endpoint→{op→GT-middle}, S2a/S2b used
+warm_start:
+  from: runs/002_ctt_v2               # ctt_v2 shipped checkpoint, step 10000 (SAME init as control 012 & kd 013)
+  checkpoint: store/runs/002_ctt_v2/checkpoints/lora_weights_step_10000.safetensors
+  note: config.model.load_checkpoint pins runs/002 step-10000 as the initialization
+trainer:
+  checkout: src/LTX-2-dualforce        # linked worktree, dual-force trainer fork (twin objective added this campaign)
+  branch: dualforce
+  commit: 6dc2f6843dd9f4359d7666e133b1dcd4f4191d37   # HEAD, CLEAN working tree — 014 IS reproducible from this sha
+    # (twin impl 7bdea73 = config.TwinConfig + trainer._twin_training_step; + 6dc2f68 committed the pre-existing
+    #  KD dataset wiring that was dirty at 012/013 train time). origin=Lightricks (fork not pushed).
+  entry: job 2982505 (accelerate launch --num_processes 2 train.py, df_twin.yaml); config.yaml = df_twin.yaml copy
+model: LTX-2 19B dev (frozen)
+adapter: IC-LoRA r128/a128; one-way reference attention; RAW video reference (reference latents concatenated as
+  tokens — no bottleneck). target_modules attn_ffn (10 modules): attn1/attn2 {to_k,to_q,to_v,to_out.0} +
+  ff.net.0.proj + ff.net.2. The twin objective changes ONLY training; the checkpoint is a plain r128 attn_ffn LoRA.
+rank: 128
+alpha: 128
+dropout: 0.0
+reference_attention: one_way
+twin:
+  enabled: true
+  strata: [S2a, S2b]                   # twin terms on the byte-exact-endpoint S2 core only; S0/S1/S4 → plain FM
+  lambda_red: 0.5                       # redirect (x̂₀-space), band-gated
+  lambda_diff: 0.25                     # differential (v-space), all t
+  lambda_warmup_steps: 250
+  band_low: 0.50                        # redirect applies only for σ∈[0.50,0.90] (R2 advisor: measured high-σ band)
+  band_high: 0.90
+  cross_family_prob: 0.5                # 50% forced cross-shader-family partner
+lr: 1e-4, WSD schedule (scheduler_type: wsd), 2000-step config
+timesteps: shifted_logit_normal
+seed: 42
+effective_batch: 8                     # batch_size 1 x grad_accum 2 x DDP world size 2
+steps_config: 2000                     # config target; run continued past 1000 toward 2000 for the GRAY follow-up
+shipped_step: 1000                     # the checkpoint registered + evaluated this session
+surgery: false                         # twin treatment — surgery.enabled=false, kd.enabled=false
+checkpoint_sha256:
+  lora_weights_step_01000.safetensors: 20322d1056e20fe4a9d218e19b793b4fed47da44f56375269453fecac60a909a
+source_location: outputs/dualforce/twin/checkpoints (scratch; training_state kept in scratch, not copied per contract §6)
+notes: >
+  Architecturally identical to ctt_v2/012/013 (verified: checkpoint carries 960 plain LoRA tensors, rank 128,
+  attn_ffn, NO operator_encoder/bottleneck/context_adapter tensors) — so generation uses the proven one_way
+  IC-LoRA inference stack (eval_ladder/run_gen.py, --rank 128 --alpha 128, attention one_way), exactly as
+  012/013 were generated. run_gen.py defaults --rank to 32; pass --rank 128 --alpha 128 explicitly.
+  PRECHECK (campaign counterfactual_training): frozen α probe on 012@1000 showed α positive & rising with σ
+  (α(0.85)=+0.0164, below the clean-GO gate → proceed-flagged); S1 dropped (endpoints not pixel-identical,
+  18–39/255 vs S2 ~1/255). α-trajectory on 014: step-250 α(0.85)=+0.0511 (gate ≥0.033 passed early).
