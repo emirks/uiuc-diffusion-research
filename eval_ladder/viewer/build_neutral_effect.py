@@ -544,6 +544,22 @@ EXTERNAL = [
                     "RESULT: NEGATIVE at 1000-step first-look — paired Δapp_ref −0.092 (worse), %same 83.2 vs control "
                     "89.6, ref-dependence gap SHRANK +21.4→+17.6pp (reads demo LESS), core_degenerate 17 vs 8.",
      "doc": "misc/2026-08-18_best_training_shot/DOSSIER.md"},
+    {"id": "dualforce_twin_neutral", "score_id": "dualforce_v4", "kind": "ours", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "join_swap": ("__dualforce_twin_neutral__", "__ctt_v2__"),
+     "label": "Ⓝ COUNTERFACTUAL-TWIN (redirect+diff)",
+     "sub": "ctt_v2 warm-start + 1000 twin steps @1000 · redirect+differential on S2 same-endpoint counterfactuals (band σ0.5-0.9) · dai · NEGATIVE",
+     "src": REPO_ROOT / "store/gens/019_dualforce_twin/01_neutral__dai/videos",
+     "media": "outputs/videos/dualforce/dualforce_twin",
+     "rows": ("registry", REPO_ROOT / "store/gens/019_dualforce_twin/01_neutral__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/016_dualforce_twin__dai__2026-08-20/dualforce_twin_neutral",
+     "prompt_kind": "COUNTERFACTUAL-TWIN TREATMENT: same warm-start/budget/data as control, ONE change — per-step "
+                    "pair an S2 row with a same-endpoint byte-exact counterfactual (diff operator) and add a REDIRECT "
+                    "(x̂₀→swapped GT, σ0.5-0.9) + DIFFERENTIAL (v-space) loss, middle-masked. RESULT: NEGATIVE (KILL, "
+                    "advisor R3) — %same 80.3 vs control 89.6, ref-dependence gap SHRANK +21.4→+15.2pp (matched fell, "
+                    "not mismatched), core_degenerate 21 vs 8, transfer G-zs-same 78.3<92.7. Forward↑/sampled↓: frozen "
+                    "α(0.85) rose 0.016→0.32 (~20×) yet sampled reference-following FELL (compliance 0.73<control 0.83).",
+     "doc": "misc/2026-08-19_counterfactual_training/DOSSIER.md"},
     # ---- DCG on deployed ctt_v2 (test-time guidance sweep, neutral only, seed 42; manifest shape).
     # Each w is its own arm. DCG@w=1 = the plain demo branch (parity ≈ ctt_v2 82.5). join_swap strips
     # the __w{tag} item_id suffix back to the ic_gen registry row it shares its input with.
@@ -593,6 +609,57 @@ EXTERNAL = [
      "prompt_kind": "ctt_v2 champion + TEST-TIME DCG at strength w=6, DEPLOYED config (text-CFG 4 + STG 1), "
                     "neutral prompt. Highest %same but also worst demo-copy — metric saturation + heavy "
                     "reference-content intrusion. Dose-response endpoint, not an operating point.",
+     "doc": "misc/2026-08-14_dcg_conditioning/DOSSIER.md"},
+    # ---- EFFECT variant (Phase-2): SAME arms + the effect prompt (text describes the transition).
+    # VERDICT (advisor): REDUNDANT-BUT-SAFE @ w=1.5 — %same at ceiling (96), DCG adds ~0, but copy-clean;
+    # the effect text SUBSTITUTES for demo guidance (headroom-share 0% vs neutral 20%). eval 015.
+    {"id": "dcg_w1_e", "score_id": "dcg_effect_v4", "kind": "ours", "frames": 121, "no_twin": True,
+     "same_prompt_by_design": True, "join_swap": ("__w1_e", ""),
+     "label": "Ⓔ DCG w=1 (parity)",
+     "sub": "= plain demo branch, EFFECT prompt · %same 96.0 (incl-ref-control 90.4 ≈ ctt_v2 effect 90.2) · the effect baseline",
+     "src": REPO_ROOT / "store/gens/015_dcg_w1/02_effect__dai/videos",
+     "media": "outputs/videos/dcg_sweep/dcg_w1_e",
+     "rows": ("manifest", REPO_ROOT / "store/gens/015_dcg_w1/02_effect__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/015_dcg_sweep_effect__dai__2026-08-19/dcg_w1_e",
+     "prompt_kind": "ctt_v2 champion (runs/002 step 10000) + TEST-TIME DCG at strength w=1, DEPLOYED config "
+                    "(text-CFG 4 + STG 1), EFFECT prompt (prompts/002 — text describes the transition). "
+                    "At w=1 DCG reduces to the plain demo branch — the parity cell; no retraining.",
+     "doc": "misc/2026-08-14_dcg_conditioning/DOSSIER.md"},
+    {"id": "dcg_w1p5_e", "score_id": "dcg_effect_v4", "kind": "ours", "frames": 121, "no_twin": True,
+     "same_prompt_by_design": True, "join_swap": ("__w1p5_e", ""),
+     "label": "Ⓔ DCG w=1.5 (redundant · safe)",
+     "sub": "EFFECT prompt · %same 96.0→96.0 (Δ0) · demo-copy CLEAN · REDUNDANT-BUT-SAFE: text already saturates appearance (headroom-share 0%)",
+     "src": REPO_ROOT / "store/gens/016_dcg_w1p5/02_effect__dai/videos",
+     "media": "outputs/videos/dcg_sweep/dcg_w1p5_e",
+     "rows": ("manifest", REPO_ROOT / "store/gens/016_dcg_w1p5/02_effect__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/015_dcg_sweep_effect__dai__2026-08-19/dcg_w1p5_e",
+     "prompt_kind": "ctt_v2 champion + TEST-TIME DCG at strength w=1.5, DEPLOYED config (text-CFG 4 + STG 1), "
+                    "EFFECT prompt. The operating point under effect text: redundant on quality (adds ~0) but "
+                    "copy-clean and no-harm — DCG's value is specific to the NEUTRAL regime.",
+     "doc": "misc/2026-08-14_dcg_conditioning/DOSSIER.md"},
+    {"id": "dcg_w3_e", "score_id": "dcg_effect_v4", "kind": "ours", "frames": 121, "no_twin": True,
+     "same_prompt_by_design": True, "join_swap": ("__w3_e", ""),
+     "label": "Ⓔ DCG w=3 ⚠ intrusion (flatter)",
+     "sub": "EFFECT · %same 98.9 (ceiling) · demo-copy max-of-max FAILS (intrusion replicates) but ~3× flatter than neutral · not headlined",
+     "src": REPO_ROOT / "store/gens/017_dcg_w3/02_effect__dai/videos",
+     "media": "outputs/videos/dcg_sweep/dcg_w3_e",
+     "rows": ("manifest", REPO_ROOT / "store/gens/017_dcg_w3/02_effect__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/015_dcg_sweep_effect__dai__2026-08-19/dcg_w3_e",
+     "prompt_kind": "ctt_v2 champion + TEST-TIME DCG at strength w=3, DEPLOYED config (text-CFG 4 + STG 1), "
+                    "EFFECT prompt. Localized demo intrusion replicates (demo-copy FAILS) but the dose-response "
+                    "is ~3× flatter than neutral — text-anchoring damps marginal demo-pull (hypothesis-grade).",
+     "doc": "misc/2026-08-14_dcg_conditioning/DOSSIER.md"},
+    {"id": "dcg_w6_e", "score_id": "dcg_effect_v4", "kind": "ours", "frames": 121, "no_twin": True,
+     "same_prompt_by_design": True, "join_swap": ("__w6_e", ""),
+     "label": "Ⓔ DCG w=6 ⚠ intrusion (flatter)",
+     "sub": "EFFECT · %same 98.5 (ceiling) · demo-copy FAILS worst · intrusion flatter/plateaued vs neutral · dose-response endpoint",
+     "src": REPO_ROOT / "store/gens/018_dcg_w6/02_effect__dai/videos",
+     "media": "outputs/videos/dcg_sweep/dcg_w6_e",
+     "rows": ("manifest", REPO_ROOT / "store/gens/018_dcg_w6/02_effect__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/015_dcg_sweep_effect__dai__2026-08-19/dcg_w6_e",
+     "prompt_kind": "ctt_v2 champion + TEST-TIME DCG at strength w=6, DEPLOYED config (text-CFG 4 + STG 1), "
+                    "EFFECT prompt. Highest %same (saturated) + worst demo-copy, but the intrusion dose-response "
+                    "plateaus under effect text vs neutral. Dose-response endpoint, not an operating point.",
      "doc": "misc/2026-08-14_dcg_conditioning/DOSSIER.md"},
 ]
 #: kind -> (heading, the paragraph that governs how that kind may be read). Rendered per kind, in
@@ -1598,10 +1665,15 @@ def build() -> dict:
         ("vfxmaster_authorcfg","external","vfxmaster", "VFXMaster (prior work)", "effect",  "effect · full prompt · dai"),
         ("dualforce_control_neutral", "dualforce", "dualforce_control", "DUAL-FORCE control (plain FM)", "neutral", "neutral · dai"),
         ("dualforce_kd_neutral",      "dualforce", "dualforce_kd",      "DUAL-FORCE KD (crutch distill)", "neutral", "neutral · dai"),
+        ("dualforce_twin_neutral",    "dualforce", "dualforce_twin",    "COUNTERFACTUAL-TWIN (redirect+diff)", "neutral", "neutral · dai"),
         ("dcg_w1",   "dcg", "dcg_w1",   "DCG w=1 (parity)", "neutral", "neutral · dai"),
         ("dcg_w1p5", "dcg", "dcg_w1p5", "DCG w=1.5", "neutral", "neutral · dai"),
         ("dcg_w3",   "dcg", "dcg_w3",   "DCG w=3", "neutral", "neutral · dai"),
         ("dcg_w6",   "dcg", "dcg_w6",   "DCG w=6", "neutral", "neutral · dai"),
+        ("dcg_w1_e",   "dcg", "dcg_w1",   "DCG w=1 (parity)", "effect", "effect · dai"),
+        ("dcg_w1p5_e", "dcg", "dcg_w1p5", "DCG w=1.5", "effect", "effect · dai"),
+        ("dcg_w3_e",   "dcg", "dcg_w3",   "DCG w=3", "effect", "effect · dai"),
+        ("dcg_w6_e",   "dcg", "dcg_w6",   "DCG w=6", "effect", "effect · dai"),
     ]
     known = set(all_tiers)
     missing_cat = [t for t, *_ in CATALOG if t not in known]
