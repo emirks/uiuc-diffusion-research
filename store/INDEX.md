@@ -42,6 +42,7 @@ resolve via `gens/_legacy/`.
 16. `016_dcg_w1p5` — runs/002@10000 + DCG w=1.5 (operating point) · `01_neutral__dai` 86.9 (**+3.3pp HONEST**, demo-copy clean) · `02_effect__dai` 96.0 (Δ0 — **REDUNDANT-BUT-SAFE**, effect text saturates)
 17. `017_dcg_w3` — runs/002@10000 + DCG w=3 · `01_neutral__dai` 92.5 (⚠ +8.9 but demo-copy FAILS = reference-content intrusion) · `02_effect__dai` 98.9 (⚠ intrusion replicates, ~3× flatter than neutral)
 18. `018_dcg_w6` — runs/002@10000 + DCG w=6 · `01_neutral__dai` 96.8 (⚠ worst intrusion) · `02_effect__dai` 98.5 (⚠) — dose-response endpoints, never headline
+19. `019_dualforce_twin` — runs/014_dualforce_twin@1000 (counterfactual-twin treatment) · `01_neutral__dai` **80.3** pooled-same (control 89.6) — KILLED vs 012 (gap +15.2 &lt; +21.4, degen 21/304); scored evals/016
 
 ## prompts  (the TWO sources — everything else is a stamp_rows transform, verified 152/152 exact)
 1. `001_ctt152_neutral` — `{S1}. sksz. [{S2}.]` · sha 0d708175fbfe · derived: strip_sksz f2ebeedf2187 (base V-neutral) · swap_token_refvfx 11a50d24645a
@@ -75,6 +76,7 @@ resolve via `gens/_legacy/`.
 <!-- 12-13 = dualforce evals (parallel session) -->
 14. `014_dcg_sweep__dai__2026-08-19` — v4 on DeltaAI, arms `dcg_w{1,1p5,3,6}` **NEUTRAL**, 152-roster seed 42. DCG (test-time Demonstration-Contrastive Guidance) on the deployed ctt_v2 champion. **MODEST YES @ w=1.5** (86.9, +3.3pp HONEST, demo-copy CLEAN, demo-following up); w3/w6 gains (+8.9/+13.2pp) = reference-content **INTRUSION** (demo-copy FAILS, GT-exceed 27/34%; copy-to-GT clean throughout). ~7% arm-uniform cache drops. [UNCERTIFIED]
 15. `015_dcg_sweep_effect__dai__2026-08-19` — v4 on DeltaAI, arms `dcg_w{1,1p5,3,6}_e` **EFFECT**, 152-roster seed 42. **REDUNDANT-BUT-SAFE @ w=1.5** (advisor, conf HIGH): %same 96.0→96.0 (ceiling), demo-copy CLEAN (Δmean +0.014), harm rails clear; additivity VOID, headroom-share **0%** → effect text SUBSTITUTES for demo guidance (neutral was 20%). w3/w6 intrusion replicates but ~3× flatter than neutral (hypothesis-grade). Parity: incl-ref-control 90.4 ≈ ctt_v2 effect 90.21. [UNCERTIFIED]
+16. `016_dualforce_twin__dai__2026-08-20` — v4 on DeltaAI, arm `dualforce_twin_neutral` NEUTRAL, 152-grid seeds 42/43, same instrument+cache as evals/012 (comparable). **KILLED** (advisor R3, 4 triggers): ref-dep gap **+15.2pp** (control +21.4; narrowed the wrong way — matched G-fit −7.0, G-ref-control −0.8), pooled-same **80.3%** (89.6), core_degenerate **21/304** (8), G-zs-same 78.3 (&lt;92.7 floor); near_copy 0/304. Forward↑/sampled↓ (frozen α 0.016→0.051 @step250 but sampling fell everywhere). 3rd additive-objective death (007/013/014). [UNCERTIFIED]
 
 ## datasets
 1. `001_transitions_std121` — 222-clip eval corpus (stub → data/processed/transitions_std121)
