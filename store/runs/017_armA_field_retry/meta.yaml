@@ -78,7 +78,12 @@ field:
 result:
   verdict: REFINED NEGATIVE            # advisor-adjudicated on a pre-committed closure table (Row 3)
   positive: demo-dropout rescues a real seed-stable dose-stable nulled field-swap (10→10→12/13, +0.11) — first robust sampling-time effect from a TRAINED channel this campaign
-  negative: shuffle-invariant (spatial 13/13 ≈ full) + geometry at chance → GLOBAL CLOCK not per-token instruction; redundant with Arm C
+  negative: >
+    NOT per-token instruction — spatial-shuffle 13/13 ≈ full (zero attenuation) + geometry at chance ⇒ no per-token
+    spatial program; temporal-shuffle 13/13 with a sub-threshold 43% magnitude cut (0.107→0.0615, misses the ≥0.05
+    degrade bar by 0.004, sign structure intact) ⇒ the rescued signal is PREDOMINANTLY a scalar field-presence
+    MAGNITUDE readout with at most a weak temporal-envelope component (refines the earlier "global clock" wording).
+    Either way redundant with Arm C's free test-time clock steering.
   evidence: misc/2026-08-21_semantic_flow_run/build/fieldswap_{score_,}v2ck4000_{nulled,present,shuffled,tshuffled}.json ; gate curve via build/gate_trend.py
   finding: misc/2026-08-21_semantic_flow_run/PROPOSED_F_BLOCK.md (owner-gated — awaiting approval before docs/FINDINGS.md)
   instrument_note: the gate-magnitude liveness bar (raw gate ≥0.025) is RETIRED — a 0.0075-abs gate produced a +0.107 seed-stable phase swap
