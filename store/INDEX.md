@@ -46,6 +46,7 @@ resolve via `gens/_legacy/`.
 17. `017_dcg_w3` — runs/002@10000 + DCG w=3 · `01_neutral__dai` 92.5 (⚠ +8.9 but demo-copy FAILS = reference-content intrusion) · `02_effect__dai` 98.9 (⚠ intrusion replicates, ~3× flatter than neutral)
 18. `018_dcg_w6` — runs/002@10000 + DCG w=6 · `01_neutral__dai` 96.8 (⚠ worst intrusion) · `02_effect__dai` 98.5 (⚠) — dose-response endpoints, never headline
 19. `019_dualforce_twin` — runs/014_dualforce_twin@1000 (counterfactual-twin treatment) · `01_neutral__dai` **80.3** pooled-same (control 89.6) — KILLED vs 012 (gap +15.2 &lt; +21.4, degen 21/304); scored evals/016
+21. `021_dualforce_contrast` — runs/016_dualforce_contrast@1000 (contrastive paired-preference treatment over 012) · `01_neutral__dai` (304 clips; v4 → evals/018)
 
 ## prompts  (the TWO sources — everything else is a stamp_rows transform, verified 152/152 exact)
 1. `001_ctt152_neutral` — `{S1}. sksz. [{S2}.]` · sha 0d708175fbfe · derived: strip_sksz f2ebeedf2187 (base V-neutral) · swap_token_refvfx 11a50d24645a
