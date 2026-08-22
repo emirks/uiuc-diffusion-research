@@ -1,0 +1,89 @@
+id: 017_armA_field_retry
+seq: 17
+shelf: runs
+created: 2026-08-22          # trained + resumed this session on DeltaAI GH200 (aarch64); jobs 2997771 (0→2500) + 3002817 (resume 2500→4000)
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh; 2 GPU × grad_accum 2 (effective batch 4)
+source: >
+  Campaign 2026-08-21_semantic_flow_run — Arm A FLAGSHIP: a semantic-flow FIELD-conditioned IC-LoRA (v2,
+  "demo-dropout retry"). ctt_v2 (runs/002@10000) recipe warm-started, PLUS an auxiliary precomputed
+  "semantic-flow field" (per-reference (16,20,15,18) fp16: 8 logistic retiming PHASES + 8 temporal
+  derivatives + confidence + detour, extracted endpoint-relative from the DEMO via DINOv2) injected
+  ADDITIVELY through a gated per-channel-normed MLP (18→256→4096) at 6 evenly-spaced blocks on the
+  generated-middle tokens only (gate init 0.05, RMS-scaled = fraction of local hidden RMS, bf16-safe).
+  The ONE change vs the v1 field arm (which atrophied): demo_dropout=0.5 — on ~50% of steps the in-context
+  demo latents are replaced by a layout-preserving noised null, so the FM loss MUST route the operator
+  through the field (escapes the conditional-redundancy gate-atrophy that killed v1). Anti-endpoint-shortcut
+  twin data mix (~40% S2a+S2b same-endpoint×different-operator gl-transitions + ~60% ctt_v2 diet).
+  RESULT = REFINED NEGATIVE (advisor-adjudicated, pre-committed closure table): demo-dropout RESCUED a real,
+  seed-stable, dose-stable demo-NULLED field-swap (toward_B_phase 10/13→10/13→12/13 across ck2000/3000/4000,
+  mean_swap_phase +0.121/+0.105/+0.107, p≈0.002 @4k; gate collapse arrested at a plateau ~0.0075 abs vs
+  v1's death to 0.0016) — BUT the transfer is SHUFFLE-INVARIANT (spatial-shuffle control 13/13, +0.113,
+  gap −0.006) and the per-token geometry channel is at chance (5/5/6 of 13) → the field carries the
+  operator's GLOBAL TEMPORAL CLOCK, no per-token spatial program; redundant with Arm C's free test-time
+  clock steering. Copy-guard clean (near_copy 0/13). KEPT as a negative-result artifact / paper mechanism.
+inputs:
+  dataset: datasets/002_ctt_v2        # SAME 56,368-pair CTT v2 set as runs/002/012–016; not rebuilt
+  field_store: $LAB/cache/armA_fields  # 15,436 precomputed fp16 fields (2.6 GB) + __null__.npy; τ=19.99
+  field_index: misc/2026-08-21_semantic_flow_run/build/armA_field_index.json
+  cell_index: misc/2026-08-21_semantic_flow_run/build/arm_a_cell_index.json   # 1,103 twin cells
+warm_start:
+  from: runs/002_ctt_v2               # ctt_v2 shipped checkpoint, step 10000 (SAME init as 012–016)
+  checkpoint: store/runs/002_ctt_v2/checkpoints/lora_weights_step_10000.safetensors
+  note: v2 trained 0→2500 warm-started from runs/002@10000 (fresh FieldInjector, gate 0.05); then RESUMED
+        2500→4000 warm-started from its OWN ck2500 (trainer restores LoRA + FieldInjector + optimizer + WSD
+        scheduler + data position — field-injector resume path). Final shipped = step 4000.
+trainer:
+  checkout: src/LTX-2-dualforce        # linked worktree, branch `dualforce`
+  branch: dualforce
+  commit: 5dfdcee
+  working_tree: DIRTY — field wiring uncommitted in the fork: NEW packages/ltx-trainer/src/ltx_trainer/field_injector.py
+                + modified config.py (FieldConfig) + trainer.py (_setup_field_injector, _maybe_demo_dropout,
+                field arming/injection). Reproducibility caveat: the field wiring lives only in the working tree,
+                not a commit. (misc/ campaign build tooling is gitignored by project convention.)
+  entry: >
+    RESUME CHAIN (accelerate launch --num_processes 2 scripts/train.py <cfg>): (1) df_field_retry.yaml 0→2500,
+    job 2997771 (5h walltime, TIMEOUT at ~ck2500); (2) df_field_retry_resume.yaml 2500→4000, job 3002817.
+    Configs: config.yaml (base 0→2500) + config_resume_2500_4000.yaml here.
+model: LTX-2 19B dev (frozen)
+adapter: >
+  IC-LoRA r128/α128 one-way reference attention (RAW video reference latents concatenated as tokens — no
+  bottleneck) + a trainable semantic-flow FieldInjector (additive, gated, 6 sites). target_modules attn_ffn
+  (10): attn1/attn2 {to_k,to_q,to_v,to_out.0} + ff.net.0.proj + ff.net.2. FieldInjector params
+  (field_injector.gates + mlp + norm_mean/std) live IN the shipped safetensors.
+rank: 128
+alpha: 128
+dropout: 0.0
+reference_attention: one_way
+lr: 1e-4, WSD schedule (scheduler_type: wsd, warmup 150 / decay_frac 0.25 / end_factor 0.1), 4000-step config
+timesteps: shifted_logit_normal
+seed: 42
+effective_batch: 4                     # batch_size 1 × grad_accum 2 × 2 GPU
+steps_config: 4000
+shipped_step: 4000
+checkpoints:
+  lora_weights_step_04000.safetensors:
+    sha256: 8853040b833e6c6f2a8ec0869afbe2be68536c319f5874e4256e295ea162ee02
+    step: 4000
+    note: shipped/final; the FieldInjector weights are included in this file
+field:
+  enabled: true
+  demo_dropout: 0.5                    # 🔑 the retry lever (v1 = 0.0, which atrophied)
+  field_dropout: 0.15                  # null-field draw (enables field-CFG later)
+  gate_init: 0.05                      # RMS-scaled (fraction of local hidden RMS)
+  sites: 6
+  mlp_hidden: 256
+  channels: 18
+  scale_by_hidden_rms: true
+  gate_final_abs: 0.0075               # plateaued (signed 0.0031); v1 died to 0.0016
+result:
+  verdict: REFINED NEGATIVE            # advisor-adjudicated on a pre-committed closure table (Row 3)
+  positive: demo-dropout rescues a real seed-stable dose-stable nulled field-swap (10→10→12/13, +0.11) — first robust sampling-time effect from a TRAINED channel this campaign
+  negative: shuffle-invariant (spatial 13/13 ≈ full) + geometry at chance → GLOBAL CLOCK not per-token instruction; redundant with Arm C
+  evidence: misc/2026-08-21_semantic_flow_run/build/fieldswap_{score_,}v2ck4000_{nulled,present,shuffled,tshuffled}.json ; gate curve via build/gate_trend.py
+  finding: misc/2026-08-21_semantic_flow_run/PROPOSED_F_BLOCK.md (owner-gated — awaiting approval before docs/FINDINGS.md)
+  instrument_note: the gate-magnitude liveness bar (raw gate ≥0.025) is RETIRED — a 0.0075-abs gate produced a +0.107 seed-stable phase swap
+caveats:
+  - trainer working tree DIRTY (field wiring uncommitted in the fork) — reproducibility caveat
+  - fieldswap probe tooling lives in gitignored misc/2026-08-21_semantic_flow_run/build (durable on Taiga, untracked, per project convention)
+  - n=13 endpoint-matched twins; geometry-at-chance is CORROBORATION only (metric may be insensitive) — the shuffle control is the load-bearing evidence
+  - ck4000 produced via a 2500→4000 resume (walltime split), not one continuous run; scheduler/optimizer/data-position restored
