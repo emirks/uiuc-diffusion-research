@@ -25,6 +25,10 @@ Pool-yardstick: raw app_ref · same-class GT ceiling · achieved-%. n = items (s
 **Copy-guard (per-gen, n=304):** copy_max mean 0.3607 · near_copy(≥0.858) **0/304** · core_degenerate **21/304** (control 8, redirect 8).
 **Error-rows:** 7/1842 app_ref-None (control 73/1842).
 
-**Pre-registered bars (dossier §3, vs 012@1000):** WIN gap ≥ +27.4 & pooled-same ≥ 87.6 & compliance ≥ 0.831 & degen ≤ 12 & near_copy ≤ 1 & G-zs-same ≥ 92.7; KILL gap < +23.4 or pooled-same < 86.6 or degen ≥ 16 or near_copy ≥ 3 or compliance < 0.80 while gap improves; GRAY otherwise (quality-clean null). Verdict: advisor (dossier).
+**Pre-registered bars (dossier §3, vs 012@1000):** WIN gap ≥ +27.4 & pooled-same ≥ 87.6 & compliance ≥ 0.831 & degen ≤ 12 & near_copy ≤ 1 & G-zs-same ≥ 92.7; KILL gap < +23.4 or pooled-same < 86.6 or degen ≥ 16 or near_copy ≥ 3 or compliance < 0.80 while gap improves; GRAY otherwise (quality-clean null). Verdict: advisor (dossier R4).
+
+**VERDICT: KILL** on gap (+18.1 < +23.4), pooled-same (78.5 < 86.6) and core_degenerate (21 ≥ 16); WIN floors G-zs-same (79.8 < 92.7) and compliance (0.672 < 0.831) also failed; near_copy clean; the compliance-while-gap-improves clause does not fire (gap narrowed). Family (007/013/014/015/016) CLOSED.
+
+**Forward-side telemetry (per-step, archived in misc/2026-08-21_contrastive_training/build/telemetry/):** Δ reached −0.058 (800–1000 bin) but decomposes as ℓ_w−ℓ_w^ref **+0.033** / ℓ_l−ℓ_l^ref **+0.091** — the margin was won entirely by degrading the wrong row while the right row's own fit also worsened vs the frozen init; the softplus bound never engaged (Δ/saturation ≈ 0.5). Paired vs control on the same 152 items: median −0.096 raw app_ref, worse on 116/152 (transfer cells worst: G-unseen-foreign −0.151, 23/26).
 
 Per-item results: `store/evals/018_dualforce_contrast__dai__2026-08-21/dualforce_contrast_neutral/c{0..15}/items.jsonl`.
