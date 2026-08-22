@@ -560,6 +560,23 @@ EXTERNAL = [
                     "not mismatched), core_degenerate 21 vs 8, transfer G-zs-same 78.3<92.7. Forward↑/sampled↓: frozen "
                     "α(0.85) rose 0.016→0.32 (~20×) yet sampled reference-following FELL (compliance 0.73<control 0.83).",
      "doc": "misc/2026-08-19_counterfactual_training/DOSSIER.md"},
+    {"id": "dualforce_contrast_neutral", "score_id": "dualforce_v4", "kind": "ours", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "join_swap": ("__dualforce_contrast_neutral__", "__ctt_v2__"),
+     "label": "Ⓝ CONTRASTIVE (paired-preference)",
+     "sub": "ctt_v2 warm-start + 1000 steps @1000 · 012 recipe + DPO-style contrast on S0+S1 same-content pairs (win=right transition / lose=wrong, same demo, ref-anchored, β8 λ0.25 σ0.5-0.9) · dai · NEGATIVE",
+     "src": REPO_ROOT / "store/gens/021_dualforce_contrast/01_neutral__dai/videos",
+     "media": "outputs/videos/dualforce/dualforce_contrast",
+     "rows": ("registry", REPO_ROOT / "store/gens/021_dualforce_contrast/01_neutral__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/018_dualforce_contrast__dai__2026-08-21/dualforce_contrast_neutral",
+     "prompt_kind": "CONTRASTIVE TREATMENT (owner-requested 5th run of the counterfactual-objective family): 012's exact "
+                    "recipe + ONE paired-preference term per step — same demo, win = the demonstrated transition vs lose = a "
+                    "same-content different-operator transition, shared ε/σ∈[0.5,0.9], bounded softplus margin anchored to the "
+                    "frozen warm-start (Δ≡0 at init). RESULT: NEGATIVE (KILL on 4 pre-registered bars) — %same 78.5 vs control "
+                    "89.6, ref-dependence gap +18.1 vs +21.4 (matched fell more than mismatched), core_degenerate 21 vs 8, "
+                    "swapped-compliance 0.672 < 0.831. Forward↑/sampled↓ again: the training-side contrast margin grew ~6× "
+                    "(Δ −0.065) with FM loss flat, yet sampled quality fell on 116/152 items (transfer cells worst).",
+     "doc": "misc/2026-08-21_contrastive_training/DOSSIER.md"},
     # ---- DCG on deployed ctt_v2 (test-time guidance sweep, neutral only, seed 42; manifest shape).
     # Each w is its own arm. DCG@w=1 = the plain demo branch (parity ≈ ctt_v2 82.5). join_swap strips
     # the __w{tag} item_id suffix back to the ic_gen registry row it shares its input with.
@@ -1666,6 +1683,7 @@ def build() -> dict:
         ("dualforce_control_neutral", "dualforce", "dualforce_control", "DUAL-FORCE control (plain FM)", "neutral", "neutral · dai"),
         ("dualforce_kd_neutral",      "dualforce", "dualforce_kd",      "DUAL-FORCE KD (crutch distill)", "neutral", "neutral · dai"),
         ("dualforce_twin_neutral",    "dualforce", "dualforce_twin",    "COUNTERFACTUAL-TWIN (redirect+diff)", "neutral", "neutral · dai"),
+        ("dualforce_contrast_neutral", "dualforce", "dualforce_contrast", "CONTRASTIVE (paired-preference)", "neutral", "neutral · dai"),
         ("dcg_w1",   "dcg", "dcg_w1",   "DCG w=1 (parity)", "neutral", "neutral · dai"),
         ("dcg_w1p5", "dcg", "dcg_w1p5", "DCG w=1.5", "neutral", "neutral · dai"),
         ("dcg_w3",   "dcg", "dcg_w3",   "DCG w=3", "neutral", "neutral · dai"),
