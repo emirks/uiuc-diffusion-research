@@ -598,6 +598,28 @@ EXTERNAL = [
                     "text-absent - the program was never the sole operator description in context at any "
                     "training step. MEASURED (evals/019, standard arm treatment, both-mode): pooled-same 80.5% vs ctt_v2 82.5 and control-012 89.6; ref-dependence gap +29.0pp (both comparators +21.3/+21.4) with G-fit 92.6 the highest of the three and G-ref-control 63.6 the lowest; core_degenerate 18/304, near_copy 0/304, copy_max mean 0.3508 (lowest). NOT compute-matched to control 012 (10,000 steps vs 1,000) - the lineage-matched reference is ctt_v2. Quality and reference-dependence only: whether the program is READ was not tested.",
      "doc": "misc/2026-08-24_flow_signal_conditioning/DOSSIER.md"},
+    {"id": "flowsig_split_neutral", "score_id": "dualforce_v4", "kind": "ours", "frames": 121,
+     "no_twin": True, "same_prompt_by_design": True,
+     "join_swap": ("__flowsig_split_neutral__", "__ctt_v2__"),
+     "label": "Ⓝ FLOW-SIGNAL PROGRAM (RoPE tokens)",
+     "sub": "ctt_v2 warm-start + 10,000 steps @10000 · the SAME 18-ch program as b_all, but the "
+            "FIELD rides the sequence as 1,280 RoPE-positioned tokens (2x pooled, co-located with "
+            "the target block) and only the tempo rides adaLN · pixel reference KEPT in context "
+            "· recipe variant textdrop-coupled · dai",
+     "src": REPO_ROOT / "store/gens/023_flowsig_split/02_neutral__dai/videos",
+     "media": "outputs/videos/flowsig/flowsig_split",
+     "rows": ("registry", REPO_ROOT / "store/gens/023_flowsig_split/02_neutral__dai/grid.jsonl"),
+     "scores": REPO_ROOT / "store/evals/020_flowsig_split__dai__2026-08-25/flowsig_split_neutral",
+     "prompt_kind": "TRANSITION-PROGRAM CONDITIONING, SEQUENCE-TOKEN ROUTE (campaign "
+                    "flow_signal_conditioning, Step 2, arm `split`). Same appearance-free 18-channel "
+                    "descriptor as the adaLN arm and the same 152-row grid, seeds and prompts — the ONLY "
+                    "difference is the injection route, which is the point of the pair: the field enters as "
+                    "1,280 RoPE-positioned sequence tokens at the target block's own (t,y,x) centres with a "
+                    "learned type embedding, while the per-phase tempo still rides TimestepEmbedding.cond_proj. "
+                    "Shown in the arm's INTENDED regime (both: pixel reference in context AND matched program). "
+                    "Carries the same RECIPE DEFECT as b_all: the text-dropout draw was rank-coupled to the "
+                    "conditioning-cell draw, so the model never saw code_only x text-absent. MEASURED (evals/020, standard arm treatment, both-mode, grid row-identical to the adaLN arm): pooled-same 84.3% vs b_all 80.5, ctt_v2 82.5 and control-012 89.6; ref-dependence gap +29.9pp (b_all +29.0, both comparators ~+21.3) with G-fit 92.1 and G-ref-control 62.2; core_degenerate 10/304 (b_all 18); near_copy 1/304 - the only non-zero copy flag across all four arms (G-memo-probe animalization_0 s43, copy_max 0.9218; next-highest in the arm 0.8486). NOT compute-matched to control 012 (10,000 steps vs 1,000) - the lineage-matched reference is ctt_v2; the clean pair here is ball vs split, which ARE compute- and recipe-matched. Quality and reference-dependence only: whether the program is READ was not tested.",
+     "doc": "misc/2026-08-24_flow_signal_conditioning/DOSSIER.md"},
     # ---- DCG on deployed ctt_v2 (test-time guidance sweep, neutral only, seed 42; manifest shape).
     # Each w is its own arm. DCG@w=1 = the plain demo branch (parity ≈ ctt_v2 82.5). join_swap strips
     # the __w{tag} item_id suffix back to the ic_gen registry row it shares its input with.
@@ -1707,6 +1729,7 @@ def build() -> dict:
         ("dualforce_twin_neutral",    "dualforce", "dualforce_twin",    "COUNTERFACTUAL-TWIN (redirect+diff)", "neutral", "neutral · dai"),
         ("dualforce_contrast_neutral", "dualforce", "dualforce_contrast", "CONTRASTIVE (paired-preference)", "neutral", "neutral · dai"),
         ("flowsig_ball_neutral", "flowsig", "flowsig_ball", "flowsig · b_all (per-token adaLN)", "neutral", "neutral · both-mode · dai"),
+        ("flowsig_split_neutral", "flowsig", "flowsig_split", "flowsig · split (RoPE tokens)", "neutral", "neutral · both-mode · dai"),
         ("dcg_w1",   "dcg", "dcg_w1",   "DCG w=1 (parity)", "neutral", "neutral · dai"),
         ("dcg_w1p5", "dcg", "dcg_w1p5", "DCG w=1.5", "neutral", "neutral · dai"),
         ("dcg_w3",   "dcg", "dcg_w3",   "DCG w=3", "neutral", "neutral · dai"),

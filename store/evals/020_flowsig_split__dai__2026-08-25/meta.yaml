@@ -1,0 +1,56 @@
+id: 020_flowsig_split__dai__2026-08-25
+seq: 20
+shelf: evals
+created: 2026-08-25            # scored on DeltaAI GH200 (score array 3023360, 16 shards)
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh
+harness: transition-eval v4.0.0 (eval-v4-cert worktree @ eval/v4.0.0-18-g258a990, [UNCERTIFIED] by design)
+instrument:
+  reference_v4_sha256: 459fd9a71bb5…            # MEASURED at score time (matches evals/001, 012, 019)
+  corpus: data/processed/transitions_std121/corpus_manifest.json  # 222 clips
+  tau_copy: 0.858
+  matrix: m1a_S3
+  cache: misc/refvfx_baseline/probe/cache        # warm 222-clip corpus cache (shared → comparable)
+  env: envs-aarch64/refvfx (NOT the ltx2 gen env); PYTHONPATH=.claude/worktrees/eval-v4-cert/src
+source: >
+  Campaign 2026-08-24_flow_signal_conditioning, Step-2 EVAL — the STANDARD arm treatment of the
+  SEQUENCE-TOKEN injection arm (`split`), in its intended inference regime (`both`: pixel reference in
+  context AND matched transition program, field as 1,280 RoPE-positioned tokens + tempo on adaLN).
+  Row-identical grid, seeds, prompts and instrument to evals/019 (the adaLN arm b_all), evals/012
+  (plain-FM control) and evals/001 (ctt_v2) → all four directly comparable, one machine.
+  Owner-directed scope: standard treatment only; no sampled reading ladder.
+arms_scored:
+  flowsig_split_neutral:
+    gen: gens/023_flowsig_split/02_neutral__dai
+    run: runs/019_flowsig_split
+    step: 10000
+    rows: 1842
+plan:
+  rows: 1842                                  # (generation × pool-reference) rows / 16 chunks
+  seeds: [42, 43]
+  keyed_join: base twins found for all 152 rows
+headline:                                      # filled from report_compare.py after scoring
+  pooled_same_pct: 84.3                       # ctt_v2 82.5 · control 012 89.6 · b_all 80.5
+  pooled_proxy_pct: 70.5
+  ref_dep_gap_pp: 29.9                        # G-fit 92.1 − G-ref-control 62.2 (ctt_v2 +21.3, control +21.4, b_all +29.0)
+  g_fit_pct: 92.1
+  g_ref_control_pct: 62.2
+  core_degenerate: 10                   # /304
+  near_copy: 1                                 # /304 @ tau 0.858 — the ONLY non-zero near_copy
+                                               # across all four arms. Item:
+                                               # G-memo-probe__flowsig_split_neutral__animalization_0__ref_animalization_1 s43,
+                                               # copy_max 0.9218. The next-highest generation in this arm is
+                                               # 0.8486, i.e. below tau. Recorded, not explained: G-memo-probe
+                                               # deliberately re-uses a seen reference, so it is where a copy
+                                               # would surface first — but one item is not a pattern.
+  copy_max_mean: 0.3918
+error_rows: 51                            # /1842 app_ref-None; shared-warm-cache read race
+caveats: >
+  COMPARABILITY: runs/019 trained 10,000 steps at effective batch 2 from the runs/002 (ctt_v2) warm
+  start; control 012 trained 1,000 steps from the same parent. NOT matched on training compute, so the
+  lineage-matched reference is ctt_v2 (82.5). runs/019 IS compute-matched and recipe-matched to
+  runs/018 (b_all) — same data, mix, cells, warm start, schedule and step count — so the ball↔split
+  comparison is the clean one here: the injection route is the only difference. RECIPE DEFECT: same
+  `textdrop-coupled` variant as runs/018 — the model never saw `code_only × text-absent`. This eval
+  scores the `both` regime, so the defect does not bear on it directly; it bears on any code_only
+  reading claim. Measures transition QUALITY and reference-dependence only — it says nothing about
+  whether the program is read.
