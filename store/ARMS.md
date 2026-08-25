@@ -34,8 +34,7 @@ hand-write a registry.
 | `dualforce_s0s1redirect` | S0+S1 counterfactual redirect treatment (redesign of 014) | runs/015 | prompts/001 | — | dualforce_s0s1redirect_neutral |
 | `dualforce_contrast` | contrastive (paired-preference) treatment over 012 | runs/016 | prompts/001 | — | dualforce_contrast_neutral |
 | `flowsig_ball` | program-conditioned via per-token adaLN (recipe variant `textdrop-coupled`) | runs/018 | prompts/001 | — | flowsig_ball_neutral · flowsig_ball_pilot |
-| `flowsig_split` | same program via RoPE-positioned sequence TOKENS (field) + adaLN (tempo); recipe variant `textdrop-coupled` | runs/019 | prompts/001 | — | flowsig_split_pilot |
-| `flowsig_split` | program-conditioned via RoPE-positioned program TOKENS + adaLN tempo (recipe variant `textdrop-coupled`) | runs/019 | prompts/001 | — | *(unevaluated — no gens yet)* |
+| `flowsig_split` | program-conditioned via RoPE-positioned program TOKENS + adaLN tempo (recipe variant `textdrop-coupled`) | runs/019 | prompts/001 | — | flowsig_split_neutral · flowsig_split_pilot |
 
 Adding an arm = one row here + `eval_ladder/arms.yaml` entry + `stamp_rows.py` for its registry.
 Campaign nicknames (pushA/pushB…) never become directory names — canonical slugs only.
