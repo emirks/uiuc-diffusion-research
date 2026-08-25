@@ -33,6 +33,7 @@ hand-write a registry.
 | `dualforce_kd` | dual-force text-crutch KD treatment | runs/013 | prompts/001 | prompts/002 | dualforce_kd_neutral · dualforce_kd_effect |
 | `dualforce_s0s1redirect` | S0+S1 counterfactual redirect treatment (redesign of 014) | runs/015 | prompts/001 | — | dualforce_s0s1redirect_neutral |
 | `dualforce_contrast` | contrastive (paired-preference) treatment over 012 | runs/016 | prompts/001 | — | dualforce_contrast_neutral |
+| `flowsig_ball` | program-conditioned via per-token adaLN (recipe variant `textdrop-coupled`) | runs/018 | prompts/001 | — | *(unevaluated — no gens yet)* |
 
 Adding an arm = one row here + `eval_ladder/arms.yaml` entry + `stamp_rows.py` for its registry.
 Campaign nicknames (pushA/pushB…) never become directory names — canonical slugs only.
