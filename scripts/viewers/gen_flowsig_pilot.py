@@ -58,7 +58,10 @@ def main() -> int:
         p = vdir / link
         if p.is_symlink() or p.exists():
             p.unlink()
-        p.symlink_to(Path("../" * len(Path(link).parts) + str(target.relative_to(REPO))))
+        # depth is counted from the link's PARENT directory, not from the link path -- getting
+        # this wrong yields a symlink that resolves nowhere and a page of black boxes.
+        ups = len(p.parent.relative_to(REPO).parts)
+        p.symlink_to(Path("../" * ups) / target.relative_to(REPO))
 
     rows = [json.loads(l) for l in REG.read_text().splitlines() if l.strip()]
     rows.sort(key=lambda r: r["endpoint_class"])
@@ -146,8 +149,18 @@ conditioning it received.
 which clip the 18-channel appearance-free program came from. If the program is being followed,
 the deranged column should perform the <i>wrong</i> operator; if it is ignored, the two columns
 should look alike. <b>Column 7 (null)</b> is the no-program floor.
+<br><br><b>Caveat that belongs on every code_only column.</b> The trained model carries a known
+recipe defect (<code>textdrop-coupled</code>): during training the text-dropout draw was
+rank-coupled to the conditioning-cell draw, so text was dropped on exactly the <i>both</i> cell
+and nowhere else. The model therefore <b>never saw code_only with the text absent</b> — the
+program was never the sole operator description in context at any training step. Every clip here
+uses the standard neutral caption, so the code_only columns are in the <i>trained</i>
+(text-present) configuration, not an out-of-distribution one. The consequence for reading:
+a positive matched-vs-deranged difference gains force (the program would be doing work despite
+the caption also being available), while an all-alike outcome is non-diagnostic — it cannot
+separate "the model can't read the program" from "the model was never given a reason to".
 <br><br><b>Status:</b> {counts}. This is a qualitative pilot — no statistic, bar, or verdict is
-attached to it; the pre-registered reading tests are scored separately.
+attached to it; the reading tests were deferred by the owner pending this page.
 </div>
 <div class="bar"><button id="pa">▶ play all</button> <button id="ps">⏸ pause all</button></div>
 {''.join(cards)}
