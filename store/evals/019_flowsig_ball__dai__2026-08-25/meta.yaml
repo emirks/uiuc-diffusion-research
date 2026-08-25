@@ -1,0 +1,50 @@
+id: 019_flowsig_ball__dai__2026-08-25
+seq: 19
+shelf: evals
+created: 2026-08-25            # scored on DeltaAI GH200 (score array 3022964, 16 shards)
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh
+harness: transition-eval v4.0.0 (eval-v4-cert worktree @ eval/v4.0.0-18-g258a990, [UNCERTIFIED] by design)
+instrument:
+  reference_v4_sha256: 459fd9a71bb5…            # MEASURED at score time (matches evals/001 ctt_v2 and evals/012 control)
+  corpus: data/processed/transitions_std121/corpus_manifest.json  # 222 clips
+  tau_copy: 0.858
+  matrix: m1a_S3
+  cache: misc/refvfx_baseline/probe/cache        # warm 222-clip corpus cache (shared with 012/013/016/017/018 → comparable)
+  env: envs-aarch64/refvfx (NOT the ltx2 gen env); PYTHONPATH=.claude/worktrees/eval-v4-cert/src
+source: >
+  Campaign 2026-08-24_flow_signal_conditioning, Step-2 EVAL — the STANDARD arm treatment of the
+  program-conditioned arm b_all, in its intended inference regime (`both`: pixel reference in context AND
+  matched transition program through the per-token adaLN cond_proj hook). SAME instrument + corpus + warm
+  cache + 152-row grid + prompt_sha 0d708175 as evals/001 (ctt_v2) and evals/012 (plain-FM control 012)
+  → %same directly comparable. One machine. Owner-directed scope: standard treatment only; the
+  pre-registered sampled reading ladder (T1/T2/T4/T5/T3) was NOT run.
+arms_scored:
+  flowsig_ball_neutral:
+    gen: gens/022_flowsig_ball/01_neutral__dai
+    run: runs/018_flowsig_ball
+    step: 10000
+    rows: 1842
+plan:
+  rows: 1842                                  # (generation × pool-reference) rows / 16 chunks
+  seeds: [42, 43]
+  keyed_join: base twins found for all 152 rows (verified before submit)
+headline:
+  pooled_same_pct: 80.5                       # ctt_v2 82.5 · control 012 89.6
+  pooled_proxy_pct: 62.6                      # ctt_v2 66.7 · control 82.2
+  ref_dep_gap_pp: 29.0                        # G-fit 92.6 − G-ref-control 63.6 (ctt_v2 +21.3, control +21.4)
+  g_fit_pct: 92.6                             # ctt_v2 90.6 · control 90.7  (HIGHEST of the three)
+  g_ref_control_pct: 63.6                      # ctt_v2 69.2 · control 69.3  (LOWEST of the three)
+  core_degenerate: 18                          # /304 (ctt_v2 18, control 8)
+  near_copy: 0                                 # /304 @ τ0.858
+  copy_max_mean: 0.3508                        # ctt_v2 0.3708, control 0.4113 (LOWEST of the three)
+error_rows: 105                                # /1842 app_ref-None; shared-warm-cache EOFError/BadZipFile
+                                               # read race, same class as evals/006 (484) and evals/012 (73)
+caveats: >
+  COMPARABILITY: runs/018 warm-started from runs/002 (ctt_v2) and trained 10,000 steps at effective batch 2;
+  control 012 warm-started from the same parent but trained only 1,000 steps. The two are NOT matched on
+  training compute, so the lineage-matched reference point is ctt_v2 itself (82.5), against which this arm is
+  −2.0pp. RECIPE DEFECT: the scored model is recipe variant `textdrop-coupled` (runs/018 meta) — the model
+  never saw `code_only × text-absent`. This eval scores the `both` regime, where text WAS dropped in training,
+  so the defect does not bear on this arm directly; it bears on any code_only reading claim. This eval measures
+  transition QUALITY and reference-dependence only — it says nothing about whether the program is read, which
+  the (owner-deferred) reading tests would decide.
