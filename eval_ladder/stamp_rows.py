@@ -45,6 +45,10 @@ def main():
                     help="arm-contract field applied to every row (conditioning=prefix, use_reference=false, no_twin=true, ...)")
     ap.add_argument("--strip-token", action="store_true",
                     help="base-arm transform: remove ' sksz.' from prompts (sksz means nothing to base weights)")
+    ap.add_argument("--cells", default=None,
+                    help="OPTIONAL comma-separated cell filter -- a row SUBSET of the family, "
+                         "prompts byte-identical, yielding a DERIVED corpus sha to pin in meta. "
+                         "Default None => the whole family, byte-identical to every prior stamp.")
     ap.add_argument("--token", default=None, metavar="TEXT",
                     help="replace the literal 'sksz' with TEXT (external-model text budget, refvfx-B precedent)")
     args = ap.parse_args()
@@ -70,6 +74,14 @@ def main():
             if "prompt_base" in r:
                 r["prompt_base"] = transform(r["prompt_base"])
         sha = corpus_sha(rows)  # the DERIVED sha — pin THIS in the gen meta
+
+    if args.cells:
+        want = {c.strip() for c in args.cells.split(",") if c.strip()}
+        before = len(rows)
+        rows = [r for r in rows if r["cell"] in want]
+        assert rows, f"cell filter {sorted(want)} selected 0 of {before} rows"
+        sha = corpus_sha(rows)  # DERIVED sha over the subset -- pin THIS in the gen meta
+        print(f"[stamp] cell filter {sorted(want)}: {len(rows)}/{before} rows, derived sha {sha}")
 
     extra = dict(kv.split("=", 1) for kv in args.set)
     out = Path(args.out)

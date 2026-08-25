@@ -317,6 +317,30 @@ arms:
   # 012's recipe + one paired-preference (DPO-style, ref = frozen warm-start) term per step on S0+S1 same-content
   # pairs: converge to the demonstrated transition / escape from a wrong one; β 8.0, λ 0.25, σ∼U[0.5,0.9].
   # Plain r128 attn_ffn LoRA → same one_way inference stack. --rank 128 --alpha 128.
+  flowsig_ball_neutral:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter: store/runs/018_flowsig_ball/checkpoints/lora_weights_step_10000.safetensors
+    note: >-
+      flowsig arm b_all @10000 in its INTENDED inference regime (`both`): the pixel reference
+      stays in context AND the matched transition program is injected through the per-token
+      adaLN cond_proj hook. The standard neutral 152-grid arm treatment. The program is attached
+      at inference by FLOWSIG_CONFIG (step2eval/gen/cfg/01_neutral.json), not by this file.
+  flowsig_ball_pilot:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter: store/runs/018_flowsig_ball/checkpoints/lora_weights_step_10000.safetensors
+    note: >-
+      flowsig arm b_all @10000 (transition-PROGRAM through the per-token adaLN cond_proj hook).
+      r128/a128 one_way. The program itself is NOT in arms.yaml: it is attached at inference by
+      FLOWSIG_CONFIG (misc/2026-08-24_flow_signal_conditioning/step2eval/build/flowsig_hook.py),
+      because the conditioning MODE (both/code_only/ref_only/none), the program source (matched
+      vs deranged), signal-CFG w and the T5 shuffle all vary per generated variant while the
+      adapter does not. Registry rows carry program_source / program_source_deranged.
   dualforce_contrast_neutral:
     kind: generalist
     targets: attn_ffn

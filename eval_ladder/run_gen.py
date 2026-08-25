@@ -208,7 +208,21 @@ def main() -> None:
         assert args.out_root, "--const-code-clip must write to its own --out-root (it is a " \
                               "calibrator, not a scored arm) or it would overwrite real videos"
         print(f"[gen] CALIBRATOR A: code source forced to '{args.const_code_clip}' for EVERY row")
+    # flowsig hook (campaign 2026-08-24_flow_signal_conditioning, Step-2 EVAL). Read here because
+    # the conditioning MODE decides whether the pixel reference is attached, and that decision has
+    # to land before build_sample() runs. Unset FLOWSIG_CONFIG => byte-identical to every other
+    # campaign; the reference field itself is never touched, only `use_reference` (which run_eval
+    # ignores), so the GT pool composition is identical across the four modes.
+    _flowsig_cfg = None
+    if os.environ.get("FLOWSIG_CONFIG"):
+        _flowsig_cfg = json.loads(Path(os.environ["FLOWSIG_CONFIG"]).read_text())
+        assert args.out_root, "FLOWSIG_CONFIG must write to its own --out-root"
     rows = load_rows(args.arm, args.priority, args.cells, args.extra_registry)
+    if _flowsig_cfg is not None and _flowsig_cfg["mode"] not in ("both", "ref_only"):
+        for _r in rows:
+            _r["use_reference"] = False
+        print(f"[gen] flowsig mode={_flowsig_cfg['mode']}: pixel reference DROPPED from the model "
+              f"on all {len(rows)} rows (row identity `reference` untouched)")
 
     def out_path(r: dict) -> Path:
         # Baseline rows share one canonical video per (endpoint, sided) through
@@ -242,6 +256,12 @@ def main() -> None:
 
     adapter, target_modules = resolve_adapter(args.arm, arms_cfg, args.step)
     inf = arms_cfg["inference"]
+    # env-gated inference-steps override (no-op when unset → byte-identical for all existing
+    # campaigns; mirrors the RELAY_CONFIG env gate below). Used by the lerp-collapse x0-hat probe:
+    # a 1-step Euler generation from noise IS the model's x0-hat = x_1 - v_pred (conditional mean).
+    if os.environ.get("GEN_INFERENCE_STEPS"):
+        inf = {**inf, "steps": int(os.environ["GEN_INFERENCE_STEPS"])}
+        print(f"[gen] GEN_INFERENCE_STEPS override → inference_steps={inf['steps']}")
     # ValidationSample.video_dims is (WIDTH, HEIGHT, FRAMES) — the corpus is portrait
     # 480x640, so this reads 480 wide by 640 high (same tuple exp_074 generated with).
     vw, vh, vf = arms_cfg["resolution"]
@@ -428,6 +448,18 @@ def main() -> None:
     # rename them to <item_id>. Two concurrent SUBMISSIONS sharing (arm, seed, chunk, out-root) — e.g.
     # a campaign fanned across rope configs — would otherwise clobber each other's samples mid-rename
     # (FileNotFoundError). Slurm job/array ids disambiguate; empty (bare arm_s_c) for local single runs.
+    if _flowsig_cfg is not None:
+        _fc = Path(os.environ["FLOWSIG_CONFIG"])
+        # the hook module normally sits beside the config (RELAY_CONFIG/ROPE_CONFIG precedent);
+        # `hook_dir` lets a campaign keep configs in gen/cfg/ and code in build/ without a symlink.
+        for _d in (_flowsig_cfg.get("hook_dir"), str(_fc.parent)):
+            if _d:
+                sys.path.insert(0, str(Path(_d) if os.path.isabs(str(_d)) else REPO_ROOT / str(_d)))
+        import flowsig_hook  # noqa: PLC0415
+        _flowsig_cfg.setdefault("checkpoint", str(adapter))
+        flowsig_hook.install(_flowsig_cfg, runner, transformer,
+                             samples=val_cfg.samples, rows=todo)
+
     _jid = os.environ.get("SLURM_JOB_ID", "")
     _suffix = f"_{_jid}" if _jid else ""
     tmp = OUT_ROOT / "_runner" / f"{args.arm}_s{args.seed}_c{args.chunk}{_suffix}"
