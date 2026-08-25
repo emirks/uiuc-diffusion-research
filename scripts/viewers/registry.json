@@ -678,8 +678,8 @@
     },
     {
       "slug": "flowsig_pilot",
-      "title": "flowsig b_all \u2014 matched vs deranged transition program (Phase-A pilot)",
-      "blurb": "Does LTX-2 follow an appearance-free 18-channel transition program fed through the per-token adaLN cond_proj hook? 13 grid rows (one per operator class) x {code_only MATCHED, code_only DERANGED (wrong-operator program), both MATCHED, NULL} x seeds 42/43, with the ground-truth target and both source demos shown as inputs. The comparison the page exists for is matched vs deranged: the ONLY difference is which demo the program came from. Arm runs/018 @10000 (recipe variant textdrop-coupled), store gens/022_flowsig_ball. QUALITATIVE \u2014 no bar attached. Campaign misc/2026-08-24_flow_signal_conditioning (DOSSIER.md). Regen: scripts/viewers/gen_flowsig_pilot.py",
+      "title": "flowsig \u2014 matched vs deranged transition program (b_all & split)",
+      "blurb": "Does LTX-2 follow an appearance-free 18-channel transition program? 13 grid rows (one per operator class) x {code_only MATCHED, code_only DERANGED (wrong-operator program), both MATCHED via per-token adaLN (b_all), both MATCHED via 1,280 RoPE-positioned tokens (split), NULL} x seeds 42/43, with the ground-truth target and both source demos shown as inputs. The comparison the page exists for is matched vs deranged: the ONLY difference is which demo the program came from. Arms runs/018 + runs/019 @10000 (recipe variant textdrop-coupled), store gens/022_flowsig_ball + gens/023_flowsig_split. QUALITATIVE - no bar attached. Campaign misc/2026-08-24_flow_signal_conditioning (DOSSIER.md). Regen: scripts/viewers/gen_flowsig_pilot.py",
       "group": "runs",
       "featured": true,
       "date": "2026-08-25",
