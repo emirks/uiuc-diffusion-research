@@ -317,6 +317,19 @@ arms:
   # 012's recipe + one paired-preference (DPO-style, ref = frozen warm-start) term per step on S0+S1 same-content
   # pairs: converge to the demonstrated transition / escape from a wrong one; β 8.0, λ 0.25, σ∼U[0.5,0.9].
   # Plain r128 attn_ffn LoRA → same one_way inference stack. --rank 128 --alpha 128.
+  flowsig_split_pilot:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter: store/runs/019_flowsig_split/checkpoints/lora_weights_step_10000.safetensors
+    note: >-
+      flowsig arm SPLIT @10000 — the same 18-ch transition program as b_all, but the FIELD rides
+      the sequence as 1,280 RoPE-positioned tokens (2x spatially pooled, co-located with the
+      target block, learned type embedding) while only the tempo rides the adaLN cond_proj hook.
+      Same recipe variant `textdrop-coupled`. Generated in the production setting (mode `both`:
+      pixel reference in context + matched program + neutral caption). Program + token stream are
+      attached at inference by FLOWSIG_CONFIG (step2eval/gen/cfg/06_split_both_matched.json).
   flowsig_ball_neutral:
     kind: generalist
     targets: attn_ffn

@@ -30,10 +30,14 @@ COLS = [
     ("demo_d", "DEMO — deranged", "the clip the DERANGED program is computed from (wrong operator)"),
     ("02_pilot_code_matched", "code_only · MATCHED", "program only, no pixel demo"),
     ("03_pilot_code_deranged", "code_only · DERANGED", "wrong-operator program, no pixel demo"),
-    ("04_pilot_both_matched", "both · MATCHED", "pixel demo + matched program"),
+    ("04_pilot_both_matched", "both · MATCHED — b_all", "pixel demo + matched program, adaLN route"),
+    ("SPLIT:01_split_both_matched", "both · MATCHED — split", "same, but the field rides 1,280 RoPE-positioned tokens"),
     ("05_pilot_null", "null", "no program, no pixel demo (endpoints + neutral text only)"),
 ]
-VARIANTS = [c[0] for c in COLS if c[0].startswith("0")]
+# a column id may be prefixed "SPLIT:" to source it from the OTHER arm's gen entry -- the two
+# arms are different store entries with different item_id stamps, so they are joined here by
+# (cell, endpoint, reference), which is what actually identifies a grid row.
+VARIANTS = [c[0] for c in COLS if c[0][0].isdigit() or c[0].startswith("SPLIT:")]
 
 
 def find_clip(name: str) -> Path | None:
@@ -44,17 +48,20 @@ def find_clip(name: str) -> Path | None:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--genid", default="022_flowsig_ball")
+    ap.add_argument("--genid-split", default="023_flowsig_split")
     ap.add_argument("--slug", default="flowsig_pilot")
     ap.add_argument("--seeds", default="42,43")
     args = ap.parse_args()
     seeds = [int(s) for s in args.seeds.split(",")]
 
     gens = REPO / "store/gens" / args.genid
+    gens_split = REPO / "store/gens" / args.genid_split
     vdir = REPO / "outputs/viewers" / args.slug
     (vdir / "media").mkdir(parents=True, exist_ok=True)
     # relative symlinks only -- every href in the page is relative to the viewer directory,
     # which is the one rule that keeps viewers alive across restarts and repo moves.
-    for link, target in (("media/std121", STD), ("media/gens", gens)):
+    for link, target in (("media/std121", STD), ("media/gens", gens),
+                        ("media/gens_split", gens_split)):
         p = vdir / link
         if p.is_symlink() or p.exists():
             p.unlink()
@@ -66,8 +73,22 @@ def main() -> int:
     rows = [json.loads(l) for l in REG.read_text().splitlines() if l.strip()]
     rows.sort(key=lambda r: r["endpoint_class"])
 
-    have = {v: len(list((gens / f"{v}__dai/videos").glob("*.mp4")))
-            if (gens / f"{v}__dai/videos").is_dir() else 0 for v in VARIANTS}
+    def vdir_for(col: str) -> Path:
+        if col.startswith("SPLIT:"):
+            return gens_split / f"{col.split(':', 1)[1]}__dai/videos"
+        return gens / f"{col}__dai/videos"
+
+    have = {v: len(list(vdir_for(v).glob("*.mp4"))) if vdir_for(v).is_dir() else 0
+            for v in VARIANTS}
+    # the split arm stamps its own item_ids, so join by what identifies the ROW, not the stamp
+    split_rows = {}
+    srp = REPO / ("misc/2026-08-24_flow_signal_conditioning/step2eval/gen/"
+                  "registry_flowsig_split_pilot.jsonl")
+    if srp.exists():
+        for line in srp.read_text().splitlines():
+            if line.strip():
+                r = json.loads(line)
+                split_rows[(r["cell"], r["endpoint"], r["reference"])] = r["item_id"]
 
     def src(col: str, row: dict, seed: int) -> str | None:
         if col == "gt":
@@ -77,6 +98,13 @@ def main() -> int:
             name = row["program_source"] if col == "demo_m" else row["program_source_deranged"]
             c = find_clip(name)
             return f"media/std121/{c.parent.name}/{c.name}" if c else None
+        if col.startswith("SPLIT:"):
+            sub = col.split(":", 1)[1]
+            iid = split_rows.get((row["cell"], row["endpoint"], row["reference"]))
+            if iid is None:
+                return None
+            f = gens_split / f"{sub}__dai/videos" / f"{iid}__s{seed}.mp4"
+            return f"media/gens_split/{sub}__dai/videos/{f.name}" if f.exists() else None
         f = gens / f"{col}__dai/videos" / f"{row['item_id']}__s{seed}.mp4"
         return f"media/gens/{col}__dai/videos/{f.name}" if f.exists() else None
 
@@ -85,15 +113,17 @@ def main() -> int:
         cells = []
         for col, label, blurb in COLS:
             vids = []
-            for seed in (seeds if col.startswith("0") else seeds[:1]):
+            is_out = col in VARIANTS
+            for seed in (seeds if is_out else seeds[:1]):
                 s = src(col, row, seed)
                 tag = (f'<video src="{s}" muted loop playsinline preload="none" '
                        f'controls></video>' if s
                        else '<div class="missing">not generated</div>')
-                cap = f"seed {seed}" if col.startswith("0") else "reference clip"
+                cap = f"seed {seed}" if is_out else "reference clip"
                 vids.append(f'<figure>{tag}<figcaption>{cap}</figcaption></figure>')
             kind = ("in" if col in ("demo_m", "demo_d") else
-                    "gt" if col == "gt" else "out")
+                    "gt" if col == "gt" else
+                    "split" if col.startswith("SPLIT:") else "out")
             cells.append(f'<div class="col {kind}"><h4>{html.escape(label)}</h4>'
                          f'<p class="blurb">{html.escape(blurb)}</p>{"".join(vids)}</div>')
         cards.append(
@@ -105,11 +135,13 @@ def main() -> int:
             f'({html.escape(row["deranged_class"])})</span></header>'
             f'<div class="grid">{"".join(cells)}</div></section>')
 
-    counts = " · ".join(f"{v.split('_', 2)[2]} {have[v]}" for v in VARIANTS)
+    counts = " · ".join(
+        f"{('split ' + v.split(':', 1)[1]) if v.startswith('SPLIT:') else v.split('_', 2)[2]}"
+        f" {have[v]}" for v in VARIANTS)
     page = f"""<!doctype html><meta charset="utf-8">
 <title>flowsig b_all — matched vs deranged program (Phase-A pilot)</title>
 <style>
-:root{{--bg:#0f1115;--fg:#e6e8eb;--mut:#8b94a3;--line:#242833;--in:#2a3b52;--out:#33304a;--gt:#1f3a2f}}
+:root{{--bg:#0f1115;--fg:#e6e8eb;--mut:#8b94a3;--line:#242833;--in:#2a3b52;--out:#33304a;--gt:#1f3a2f;--split:#3a2f45}}
 *{{box-sizing:border-box}}
 body{{margin:0;padding:24px;background:var(--bg);color:var(--fg);
  font:14px/1.5 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}}
@@ -125,6 +157,7 @@ code{{background:#1c212b;padding:1px 5px;border-radius:3px;font-size:12px}}
 .grid{{display:grid;grid-template-columns:repeat({len(COLS)},minmax(0,1fr));gap:10px;padding:12px}}
 .col{{border:1px solid var(--line);border-radius:6px;padding:8px;min-width:0}}
 .col.in{{background:var(--in)}} .col.out{{background:var(--out)}} .col.gt{{background:var(--gt)}}
+.col.split{{background:var(--split)}}
 .col h4{{margin:0 0 2px;font-size:12px;letter-spacing:.02em}}
 .blurb{{margin:0 0 8px;font-size:11px;color:#aab2c0;min-height:28px}}
 figure{{margin:0 0 8px}} video{{width:100%;border-radius:4px;background:#000;display:block}}
@@ -148,7 +181,14 @@ conditioning it received.
 <b>The comparison this page exists for is columns 4 vs 5:</b> the only difference between them is
 which clip the 18-channel appearance-free program came from. If the program is being followed,
 the deranged column should perform the <i>wrong</i> operator; if it is ignored, the two columns
-should look alike. <b>Column 7 (null)</b> is the no-program floor.
+should look alike. <b>Column 8 (null)</b> is the no-program floor.
+<br><br><b>Columns 6 and 7 are the two injection routes, side by side, in the production
+setting</b> (pixel demo in context + matched program + neutral caption): <b>b_all</b> sends the
+whole program through the per-token adaLN modulation, so all 48 blocks' shift/scale/gate become
+f(σ, program); <b>split</b> sends the field instead as 1,280 RoPE-positioned sequence tokens
+co-located with the target block, leaving only the tempo on adaLN. Same data, same mix, same
+warm start, same 10,000 steps, same recipe defect — the injection route is the only difference,
+which is the point of the pair.
 <br><br><b>Caveat that belongs on every code_only column.</b> The trained model carries a known
 recipe defect (<code>textdrop-coupled</code>): during training the text-dropout draw was
 rank-coupled to the conditioning-cell draw, so text was dropped on exactly the <i>both</i> cell

@@ -1,0 +1,16 @@
+id: gens/023_flowsig_split/01_split_both_matched__dai
+seq: 1
+shelf: gens
+arm: flowsig_split
+harness_arm: flowsig_split_pilot   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: split_both_matched
+machine: dai
+created: 2026-08-25
+inputs: {run: runs/019_flowsig_split, step: 10000}
+code: src/LTX-2-flowsig @ 4cd3c94 + step2eval inference program port (token stream)
+prompt_family: prompts/001_ctt152_neutral
+prompt_sha: ccef2bac84da
+grid_rows: 13
+videos: 26
+source: scripts/store_register.py over misc/2026-08-24_flow_signal_conditioning/step2eval/gen/registry_flowsig_split_pilot.jsonl
+notes: Split arm in the PRODUCTION setting (mode=both: pixel reference in context + MATCHED program + neutral caption), 13 G-fit rows x seeds 42/43. The FIELD rides the sequence as 1,280 RoPE-positioned tokens (2x pooled = 16x10x8, co-located with the target block, learned type embedding); only the tempo rides the adaLN cond_proj hook. Inference layout [target | ref | program] with oneway_ref_tokens = n_ref + n_prog = 6080 and T = 10880 - the mirror of training's [program | ref | target] leading bank, and bit-for-bit the same token counts as the training-side G2 gate. Same rows, seeds, prompts and derangement mapping as gens/022_flowsig_ball so the two injection routes are directly comparable. Gen array 3023127 (8 tasks) on DeltaAI bhwp; recipe variant textdrop-coupled.
