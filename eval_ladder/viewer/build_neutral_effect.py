@@ -1668,6 +1668,7 @@ def build() -> dict:
                   ("bottleneck", "Bottleneck arms"),
                   ("dcg", "DCG on ctt_v2 (test-time guidance)"),
                   ("dualforce", "DUAL-FORCE (KD-crutch A/B)"),
+                  ("flowsig", "optical-flow program (flowsig)"),
                   ("external", "External work")]
     CATALOG = [  # (tier id, category, arm, arm label, variant, entry label)
         ("base_prompt_neutral", "baseline", "base_prompt", "base · prompt-only", "neutral", "neutral"),
@@ -1705,7 +1706,7 @@ def build() -> dict:
         ("dualforce_kd_neutral",      "dualforce", "dualforce_kd",      "DUAL-FORCE KD (crutch distill)", "neutral", "neutral · dai"),
         ("dualforce_twin_neutral",    "dualforce", "dualforce_twin",    "COUNTERFACTUAL-TWIN (redirect+diff)", "neutral", "neutral · dai"),
         ("dualforce_contrast_neutral", "dualforce", "dualforce_contrast", "CONTRASTIVE (paired-preference)", "neutral", "neutral · dai"),
-        ("flowsig_ball_neutral", "flowsig", "flowsig_ball", "FLOW-SIGNAL PROGRAM (adaLN)", "neutral", "neutral · both-mode · dai"),
+        ("flowsig_ball_neutral", "flowsig", "flowsig_ball", "flowsig · b_all (per-token adaLN)", "neutral", "neutral · both-mode · dai"),
         ("dcg_w1",   "dcg", "dcg_w1",   "DCG w=1 (parity)", "neutral", "neutral · dai"),
         ("dcg_w1p5", "dcg", "dcg_w1p5", "DCG w=1.5", "neutral", "neutral · dai"),
         ("dcg_w3",   "dcg", "dcg_w3",   "DCG w=3", "neutral", "neutral · dai"),
@@ -1716,6 +1717,12 @@ def build() -> dict:
         ("dcg_w6_e",   "dcg", "dcg_w6",   "DCG w=6", "effect", "effect · dai"),
     ]
     known = set(all_tiers)
+    _catids = {c for c, _ in CATEGORIES}
+    _orphan = sorted({cat for _, cat, *_ in CATALOG if cat not in _catids})
+    assert not _orphan, (
+        f"CATALOG rows name categories absent from CATEGORIES: {_orphan}. The panel is "
+        "built by iterating CATEGORIES, so these arms would be dropped from the selector "
+        "silently -- they would still score and still appear in the machine table.")
     missing_cat = [t for t, *_ in CATALOG if t not in known]
     assert not missing_cat, f"arm catalog names unknown tiers: {missing_cat}"
     arm_catalog = []
