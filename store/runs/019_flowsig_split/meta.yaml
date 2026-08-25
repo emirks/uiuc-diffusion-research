@@ -1,0 +1,292 @@
+id: runs/019_flowsig_split
+kind: run
+created: '2026-08-25T16:11:23Z'
+campaign: misc/2026-08-24_flow_signal_conditioning (Step 2)
+arm: flowsig_split
+trainer:
+  checkout: src/LTX-2-flowsig
+  branch: flowsig
+  commit: 4cd3c94
+  entry: packages/ltx-trainer/scripts/train.py (accelerate launch --num_processes 2 --mixed_precision
+    bf16)
+  sbatch: misc/2026-08-24_flow_signal_conditioning/step2/build/train_chunk.sbatch
+warm_start:
+  from: store/runs/002_ctt_v2/checkpoints/lora_weights_step_10000.safetensors
+  sha256: b85c994b7b472e4707a5aa18fd64efd39e3c43e64f43a57ecb2db1f6a1947128
+  mode: weight-only (FILE => step counter resets to 0)
+inputs:
+  dataset: datasets/002_ctt_v2 (samples.jsonl, v2.1.0)
+  stratum_weights_pct:
+    S0: 15.0
+    S1: 60.0
+    S2a: 12.5
+    S2b: 12.5
+    S4: 0.0
+  program_store: /taiga/illinois/eng/cs/jrehg/users/emirkisa/cache/flowsig_programs/v2_c18_20x15
+  program_descriptor:
+    descriptor: v2
+    channels: 18
+    channel_names:
+    - p_A_loc
+    - p_B_loc
+    - p_A_glob
+    - p_B_glob
+    - pi_n
+    - nu_p
+    - u_A
+    - v_A
+    - u_B
+    - v_B
+    - da_A
+    - da_B
+    - f_x
+    - f_y
+    - f_mag
+    - flicker_n
+    - dpi
+    - dnu
+    grid:
+    - 20
+    - 15
+    K: 16
+    n_clips: 1364
+    source_cache:
+    - /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/misc/2026-08-24_flow_signal_conditioning/step0/cache/feat/v2
+  norm_stats:
+    path: /taiga/illinois/eng/cs/jrehg/users/emirkisa/cache/flowsig_programs/v2_c18_20x15/NORM.json
+    sha256: b9692824b33242c7e78e71b4ff2649bdc6e7280f9c2c4ab56008805cdc91db5f
+lora:
+  rank: 128
+  alpha: 128
+  dropout: 0.0
+  target_modules:
+  - attn1.to_k
+  - attn1.to_q
+  - attn1.to_v
+  - attn1.to_out.0
+  - attn2.to_k
+  - attn2.to_q
+  - attn2.to_v
+  - attn2.to_out.0
+  - ff.net.0.proj
+  - ff.net.2
+optimization:
+  learning_rate: 0.0001
+  steps: 10000
+  batch_size: 1
+  gradient_accumulation_steps: 1
+  max_grad_norm: 1.0
+  optimizer_type: adamw
+  scheduler_type: wsd
+  scheduler_params:
+    warmup_steps: 100
+    decay_frac: 0.25
+    end_factor: 0.1
+  enable_gradient_checkpointing: true
+program:
+  enabled: true
+  arm: split
+  store: /taiga/illinois/eng/cs/jrehg/users/emirkisa/cache/flowsig_programs/v2_c18_20x15
+  norm_stats_path: /taiga/illinois/eng/cs/jrehg/users/emirkisa/cache/flowsig_programs/v2_c18_20x15/NORM.json
+  norm_clip: 5.0
+  hidden: 256
+  cond_dim: 256
+  token_pool: 2
+  lr: 0.001
+  p_both: 0.5
+  p_ref_only: 0.15
+  p_code_only: 0.25
+  p_none: 0.1
+  p_null_ref_only: 0.6
+  text_dropout: 0.5
+  always_attach_tokens: true
+checkpoints:
+  lora_weights_step_05000.safetensors:
+    step: 5000
+    sha256: e7b5bc9ce7d53a2a7ca5b9d478f54f6d36b3636c4a376dc1dd2480c03617b88c
+    bytes: 1309282236
+  lora_weights_step_10000.safetensors:
+    step: 10000
+    sha256: 2cbcf72fe42e7f933ad566f3b8133e38aa525e8972aac9b777c6277a5bc9eba4
+    bytes: 1309282236
+notes: Transition-PROGRAM conditioned IC-LoRA, arm split (field as 2x-pooled RoPE-positioned sequence
+  tokens at the target's own (t,y,x) + tempo through the per-token adaLN cond_proj hook). Campaign misc/2026-08-24_flow_signal_conditioning
+  Step 2. RECIPE VARIANT textdrop-coupled -- see meta.recipe_defect.
+smoke:
+  G1_join:
+    pass: true
+    detail: 'S1__spec_super_fast_run__polygon_0__s42 F(16, 20, 15, 18) mean+0.107 std1.001 finite=True;
+      S1__spec_hero_flight__hero_flight_7__s42 F(16, 20, 15, 18) mean+0.221 std1.208 finite=True; S1__spec_shadow_smoke__humanvid_7648657__vcbench_horse_8064259_1920x1080__s42
+      F(16, 20, 15, 18) mean+0.209 std1.331 finite=True; S2a resolves to None: True'
+  G2_shapes:
+    pass: true
+    detail: both:T=10880(want 10880),oneway=6080; ref_only:T=10880(want 10880),oneway=6080; code_only:T=6080(want
+      6080),oneway=1280; none:T=6080(want 6080),oneway=1280
+  split_step0_cosine_both: 0.995800793170929
+  split_step0_loss_rel_both: 0.029960169098971385
+  split_step0_cosine_ref_only: 0.995800793170929
+  split_step0_loss_rel_ref_only: 0.029960169098971385
+  G3_identity:
+    pass: true
+    detail: 'both: cosine=0.99580 (bar 0.95) loss_rel=0.0300 (bar 0.10) loss=0.3135 vs base 0.3044; ref_only:
+      cosine=0.99580 (bar 0.95) loss_rel=0.0300 (bar 0.05) loss=0.3135 vs base 0.3044; code_only: ref-layout
+      differs from baseline, identity N/A (loss 0.3389); none: ref-layout differs from baseline, identity
+      N/A (loss 0.3389)'
+  G4_grads:
+    pass: true
+    detail: 'in-graph 12/12 (detached: []); zero-init output layers with grad>0: [''adaln_head.4.weight'',
+      ''token_head.4.weight'']; non-zero at init: [''adaln_head.4.weight'', ''token_head.4.weight'', ''type_emb''];
+      base params leaking grad: 0'
+  G4_grad_norms:
+    'null': 0.0
+    type_emb: 0.015161975286900997
+    adaln_head.0.weight: 0.0
+    adaln_head.0.bias: 0.0
+    adaln_head.2.weight: 0.0
+    adaln_head.2.bias: 0.0
+    adaln_head.4.weight: 0.015601078979671001
+    token_head.0.weight: 0.0
+    token_head.0.bias: 0.0
+    token_head.2.weight: 0.0
+    token_head.2.bias: 0.0
+    token_head.4.weight: 0.01525989267975092
+  G4b_grad_norms_after_nudge:
+    'null': 2.735197813308332e-05
+    type_emb: 0.017203226685523987
+    adaln_head.0.weight: 0.00010004900832427666
+    adaln_head.0.bias: 4.570802775560878e-05
+    adaln_head.2.weight: 0.00024372548796236515
+    adaln_head.2.bias: 0.0001657854882068932
+    adaln_head.4.weight: 0.010753939859569073
+    token_head.0.weight: 0.00025976658798754215
+    token_head.0.bias: 4.586953582474962e-05
+    token_head.2.weight: 0.0004998965887352824
+    token_head.2.bias: 0.0001484046661062166
+    token_head.4.weight: 0.017675284296274185
+  G4b_grads_flow:
+    pass: true
+    detail: 'after nudging the zero-init output layer(s): 12/12 params have grad>0'
+  G5_roundtrip:
+    pass: true
+    detail: 12 program tensors reload identically
+  G6_forward_s: 1.0460312366485596
+recipe_variant: textdrop-coupled
+recipe_defect: 'RECIPE DEFECT (pre-registration deviation, discovered 2026-08-25 pre-registration): the
+  text-dropout draw and the conditioning-cell draw consumed the identical first uniform from same-seeded
+  per-step generators, making them rank-coupled. Realized joint (S0/S1 strata): text absent on 100% of
+  `both` rows; text present on 100% of `code_only`, `none`, and `ref_only` rows. Marginal text-drop rate
+  was on target (0.506 / 0.512), so the defect is invisible to marginal checks -- only the joint reveals
+  it. Consequence: the model never saw the `code_only x text-absent` configuration -- the program was
+  never the sole operator description in context at any training step. The pre-registered independent-50%-dropout
+  recipe was NOT run. Registered as recipe variant `textdrop-coupled`. Contrast D is empty by construction
+  in training telemetry.'
+recipe_defect_joint_table:
+  note: counts over the whole run; cell x text_dropped
+  all_rows:
+    both:
+      text0: 0
+      text1: 1783
+    code_only:
+      text0: 844
+      text1: 0
+    none:
+      text0: 806
+      text1: 0
+    ref_only:
+      text0: 622
+      text1: 601
+  program_bearing_S0_S1_only:
+    both:
+      text0: 0
+      text1: 1783
+    code_only:
+      text0: 844
+      text1: 0
+    none:
+      text0: 358
+      text1: 0
+    ref_only:
+      text0: 525
+      text1: 0
+  marginal_text_dropped_rate: 0.512
+  fix_commit: src/LTX-2-flowsig-fix @ c4b8383 (branch flowsig-textdrop-fix); NOT in this run
+arm_mechanics:
+  program_tokens: 1280
+  pooling: 2x spatial -> K16 x 10 x 8 (ceil on the odd width 15)
+  layout: '[program | ref | target]; one-way read-only split point at P+M'
+  positions: the corresponding target-region (t,y,x) block centres, NO time offset (min of block starts,
+    max of block ends -> RoPE midpoint is the block centre)
+  null_program: 'ALL-NULL TOKENS, not token absence -- the tokens are attached on EVERY step and carry
+    the learned null through an arithmetic blend feats = present*feats + (1-present)*null. This is a mid-run
+    change forced by a DDP failure (program.token_head.4.weight was marked ready twice because a structurally-zero
+    ''touch'' term used it outside the checkpointed blocks); the advisor ruled it and it also restores
+    the owner''s original ''learned null tokens'' spec. Consequence: signal-CFG''s unconditional branch
+    is ''all-null tokens'', which is exactly what the model saw in training.'
+  failed_attempts_before_the_fix: jobs 3021289/90/91 died at step 1 (~0.4 GPU-h)
+training_result:
+  steps_completed: 10000
+  final_step_loss: 0.2345
+  final_lr: 1.0e-05
+  steps_per_second: 0.31
+  nan_or_inf: 0
+  crashes_after_the_ddp_fix: 0
+  chunk_resumes_verified: 3
+  validation: 6 inline clips at step 5000 and 6 at step 10000; validation runs PROGRAM-FREE
+  forward_reading_contrast_steps_6751_10000:
+    code_only_minus_none:
+      A_all_rows_CONFOUNDED: -0.0263 +- 0.0098 (z -2.67, n 621/535)
+      B_S0S1_only: +0.0030 +- 0.0121 (z +0.24, n 621/246)
+      C_S0S1_sigma_matched: -0.0018 +- 0.0096 (z -0.18, n 621/246, 10 sigma deciles)
+    both_minus_ref_only_TEXT_CONFOUNDED:
+      A_all_rows: -0.0206 +- 0.0066
+      B_S0S1_only: -0.0094 +- 0.0094
+      C_S0S1_sigma_matched: -0.0031 +- 0.0071
+      caveat: 100% text-confounded under the recipe defect -- NOT a clean number
+    advisor_rider_i_record: 'No forward-loss evidence of reading at |delta| ~ 0.03 sensitivity, UNDER
+      RECIPE VARIANT textdrop-coupled, in which both contrast cells (code_only, none) were 100% text-present
+      -- i.e. the contrast measures the program''s marginal value GIVEN the caption. Whether the pre-registered
+      recipe shows forward reading is OPEN: it was never run.'
+  adaln_per_token_variance_ratio:
+    mean: 0.497
+    median: 0.669
+    token_std: 0.02274
+    cond_abs_mean: 0.03255
+    n: 3250
+    reading: the program-derived condition varies across target tokens at ~half its own magnitude, so
+      the INJECTED signal is not a constant per-clip offset and a T5 global-clock outcome is not pre-explained
+      by degenerate injection
+    caveat: measures the structure of the injected condition, NOT the model's use of it; a token-varying
+      condition can still be ignored downstream -- not evidence of reading
+  d_probe_ckpt_10000:
+    design: 'PAIRED forward-only: same row, same sigma, same noise; only program vs learned null differs.
+      Configuration code_only x no-text vs none x no-text -- NEVER trained under this recipe. Content
+      is in-sample (the sampler saw all ctt_v2 rows).'
+    status: EXPLORATORY, NO GATE (advisor pre-declaration 2026-08-25)
+    loss_delta: +0.00012 +- 0.00006 (SE), n=1000 pairs, z=+2.14, sd 0.00181
+    per_sigma:
+      '0.2': '+0.00037'
+      '0.4': '+0.00027'
+      '0.6': '+0.00011'
+      '0.8': '+0.00002'
+      '0.95': '-0.00016'
+    verdict_vs_bar: not clearly negative (bar -0.00011) => UNINFORMATIVE per the pre-declaration; must
+      NOT be written as evidence of non-reading
+    prediction_delta:
+      n_pairs: 300
+      per_token_cosine_mean: 0.9993
+      min: 0.021882
+      max: 0.089528
+      relative_L2_mean: 0.035317
+      reading: swapping the real program for the learned null moves the velocity prediction by ~3.5% in
+        relative L2 -- the channel is LIVE at the output (larger than b_all's 2.3%), but that movement
+        is loss-neutral
+known_limitations:
+- EffectData rows were NOT built (owner fallback clause invoked); the in-house counterfactual pressure
+  comes from S1's 126 contents with >=2 operators.
+- S2a+S2b (25% of the mix) carry NO cached program and trained as permanently program-null anchor mass;
+  program-present steps are ~56% of all steps.
+- Inline validation is program-free (see training_result.validation).
+- Effective batch 2 (2 GPU x bs1 x accum1) vs 002's 8 -- forced by the GPU-hour budget.
+- The D-probe's content is in-sample; only its CONFIGURATION is out of distribution.
+- split's null is all-null TOKENS (see arm_mechanics.null_program), so its step-0 warm-start identity
+  is a tolerance (cosine 0.99580, loss within 3.0%), not bitwise as for b_all.
