@@ -18,7 +18,7 @@ them — where the text lives, what assembles it, what reads it — is different
 
 ```
   LANE A — TRAINING captions (leak-free; the model must READ the operator from the demo)
-    A/B/S4 descriptions ─► assembled "{A}. sksz. {B}." ─► T5/Gemma embed (content-addressed)
+    A/B/S4 descriptions ─► assembled "{A}. sksz. {B}." ─► Gemma embed (content-addressed)
       (captions shelf)        (build_encode_inputs.py)      conditions/by_caption/<sha16>.pt
                                                                      │ trainer reads via samples.jsonl.caption_key
                                                                      ▼   TRAINING
@@ -60,7 +60,7 @@ rows has exactly one A-description. That is why the S0/S1/S2 store is 1,403, not
 | store | keyed | coverage | content hash | lock | generator |
 |---|---|---|---|---|---|
 | `outputs/ctt_v2/captions/CAPTION_STORE.json` (S0/S1/S2) | `<clip>\|<role>` | 1,403/1,403 | **`c8e2d95b…`** | `CAPTION_LOCK.json` LOCKED, `single_prompt_variant=v2` | gemini-3.6-flash (temp 0.7, 120 tok); auditor **gemini-3.5-flash-lite**, no-switch-back |
-| `outputs/ctt_v2/captions/S4_CAPTION_STORE.json` (S4, role A only) | `<stem>\|A` | 2,000/2,000 | **`34534e47…`** (disk-authoritative; `CAPTIONS.md §12`'s `fcd46f33…` is STALE) | separate store (variant `v2-s4f0`) | Claude vision, 25 batches × 80 |
+| `outputs/ctt_v2/captions/S4_CAPTION_STORE.json` (S4, role A only) | `<stem>\|A` | 2,000/2,000 | **`34534e47…`** (the SHIPPED store) | separate store (variant `v2-s4f0`) | **gemini-3.6-flash**, per-item length draw — regenerated from the earlier claude-sonnet store `fcd46f33…` (now archived) to fix gate 2 |
 
 ### 2.2 The prompt (variant `v2`) and the length target
 
@@ -82,7 +82,9 @@ still frame".
 - **Assemblers (NOT `render_prompt`):** `scripts/ctt_v2/captions/build_encode_inputs.py::assembled_for()`
   (S1/S2a/S2b) and `assemble_s4_captions.py` (S4). Grammar built by string-concat with
   `root_common.TRIGGER_SENTENCE = " sksz."` (`root_common.py:229`):
-  `one-sided → "{A}. sksz."`, `two-sided → "{A}. sksz. {B}."`. S0 uses its certified caption verbatim.
+  `one-sided → "{A}. sksz."`, `two-sided → "{A}. sksz. {B}."`. S0 uses its certified caption with the
+  outcome marker replaced by ` sksz. ` (not literally verbatim — a literal marker would fail the
+  marker-absent check in `caption_violations()`).
 - Every assembled caption is validated by `root_common.caption_violations()`: exactly one ` sksz.`,
   outcome marker absent, zero Tier-1 leak strings (`caption_common.LeakFilter`).
 - **Content-addressed:** a caption is a function of its endpoints (the shader is unnameable), so
@@ -127,11 +129,12 @@ and stores the exact rows in its own `grid.jsonl`. The generator reads the stamp
 
 ---
 
-## 4. Where the lanes meet: only S0
+## 4. Where the lanes meet: S0 (and S1's s0cf layer)
 
-S0's certified corpus captions are the sole text shared by both lanes (training uses them verbatim;
-eval renders from the same 222-clip corpus, split on the marker). Everywhere else the lanes are
-independent artifacts with independent provenance.
+S0's certified corpus captions are shared by both lanes: **training** replaces their outcome marker
+with ` sksz. `; **eval** renders from the same 222-clip corpus, split on that marker. Corpus-derived
+text also enters training via **S1's s0cf layer** (it draws on the certified 139), so the lanes are
+not strictly disjoint apart from S0. Everywhere else they are independent artifacts.
 
 ---
 
@@ -181,19 +184,29 @@ one-line `lane:` in each meta separates the two logically, non-breakingly.
 
 ## 7. Reconciliations (known discrepancies this doc settles)
 
-1. **S4 store hash:** disk `34534e47…` is authoritative; `CAPTIONS.md §12`'s `fcd46f33…` is stale.
+1. **S4 store provenance:** the shipped store `34534e47…` is a **gemini-3.6-flash** regeneration
+   (variant `v2-s4f0`, per-item length draw over the 171-value corpus list), source
+   `outputs/ctt_v2/captions/s4_gemini/`. The earlier **claude-sonnet** store `fcd46f33…` is ARCHIVED
+   at `outputs/ctt_v2/captions/archive/s4_gate_measurements/`. Training consumed the **Gemini**
+   captions. `CAPTIONS.md §12/§12.4` still describe the sonnet store and state "no caption was ever
+   regenerated" — **STALE vs disk**; the regen's authorization is recorded only in the store's own
+   `generator` field (no CHANGELOG/DOSSIER decision) — flagged to the owner.
 2. **Two assemblers vs "one renderer":** `render_prompt` owns Lane B *only*. Lane A is assembled by
    `build_encode_inputs.py` / `assemble_s4_captions.py`. The "one renderer" rule is about eval prompts.
+   (`eval_ladder/prompts.py`'s module docstring still claims it is the one place a prompt is made for
+   "training AND inference" — stale ladder2-era text, superseded here.)
 3. **`render_prompt` has no effect clause:** the effect grid's `{EFFECT}` is spliced from
    `reference_effects.json` downstream — "single renderer" covers the neutral skeleton only.
 4. **Mix drift:** `datasets/ctt_v2/mix.json` rules **S0 15 / S1 6 / S2a 33.87 / S2b 35.13 / S4 10**,
    but the shipped champion `store/runs/002_ctt_v2` trained **S0 5 / S1 12 / S2a 34.36 / S2b 35.64 /
    S4 13**. Any "what the champion saw" claim must cite the run's mix, not mix.json.
-5. **29-clip consumption gap:** 29 rendered S2a clips reference the A-role of the excluded
-   blank-anchor pair `openvid_T1MiFx98l3g_0_50to156`; no cross-role fallback; owner decision pending
-   (`CAPTIONS.md §4.2`). Changes no count/hash.
-6. **S4 ships past a pre-registered gate:** S4 captions FAIL gate 8a (0.8849 vs ≤0.73) and the width
-   gate; shipped by explicit owner decision (`CAPTIONS.md §12.4`). Any report citing S4 carries this.
+5. **29-clip consumption gap — RESOLVED** (not pending): A16 dropped-and-recorded the 29 S2a clips at
+   consumption (CHANGELOG 2026-07-28 13:45); `samples.jsonl` has zero S2a rows using
+   `openvid_T1MiFx98l3g_0_50to156` as an A endpoint. `CAPTIONS.md §4.2`'s "OPEN" flag is stale.
+6. **S4 gate attribution:** the only FORMAL battery (`GATE_BATTERY_S4.json` — 8a 0.8849, gate 2 FAIL)
+   measured the ARCHIVED **sonnet** captions. The shipped **gemini** regen fixed gate 2 (width now
+   inside the [16,26]/[34,44] bars); its 8a is comparison-measured ≈0.8913 (still FAIL) with no formal
+   battery of its own. So "S4 FAILS 8a at 0.8849 + width" is wrong for the shipped store on both numbers.
 
 ---
 
@@ -219,3 +232,25 @@ subjects**, additive, S2 kept):
 **Never in training:** EffectData's `prompt_en`/`vfx_en`/`abstract_en` — they name the effect and
 are Tier-1 leaks (identical situation to refVFX's 42 trigger phrases, withheld under
 `effect_of_clip_NOT_FOR_CAPTIONING`).
+
+### 8.1 Non-obvious requirements (learned from S4 — do not skip)
+
+- **The integration unit is an INVENTORY, not a caption store.** `assembled_for()` reads
+  `outputs/ctt_v2/inventories/<stratum>.json` (clips / groups / sided / `caption_sources`, with an
+  inline-caption override). A new stratum must first exist as an inventory (built via
+  `build_inventories.py` + a `<stratum>_spec.json`, cf. `s4/build_s4_spec.py`) — that is the actual
+  wiring step behind "assembled by `assembled_for()`".
+- **The per-item length draw is MANDATORY.** Draw each caption's target length by
+  `rng.choice(empirical)` over the 171-value corpus list — never a single fixed target. A fixed
+  target is exactly what made the *sonnet* S4 captions fail gate 2 (p10/p90 collapsed to 27/34); the
+  *gemini* regen fixed it by restoring the per-item draw. Applies to whatever model captions EffectData.
+- **One-sided masks are shape-ruled.** The mask family is `masks/f<F>_h<H>_w<W>_p<prefix>_onesided.pt`,
+  where `prefix = root_common.prefix_latents((F,H,W))`. EffectData's shapes (F=11) are **unruled** →
+  `DEFAULT_PREFIX_LATENTS = 2` would condition 9 video frames INTO the effect onset (the exact trap S4
+  avoided with `prefix_latents=1` = frame-0-only). Every EffectData shape MUST be added to
+  `RULED_SHAPES` with `prefix_latents: 1` before staging (owner-gated, as S4's was), or
+  `assemble_root` raises on the unruled shape. `assert_root_shapes.py` B3 (two-shape hardcode) and B7
+  (no token-count collision — fails on transpose pairs like 704×1248 vs 1248×704) must be generalized first.
+- **Vision-captioned strata need S4's extra gates**, not just the 12-gate battery: the blind-guess
+  gate and the 100% Layer-2 audit tripwire (`DATASET.md` C3) — a captioner writing from memory can
+  pass every lexical/length gate while describing the wrong clip.

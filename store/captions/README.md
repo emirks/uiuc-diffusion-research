@@ -12,7 +12,7 @@ prompts live in `prompts/`, and the *embeds the trainer reads* live in `datasets
 | id | role | keyed | count | hash / lock |
 |---|---|---|---|---|
 | `001_ctt_v2_endpoints` | A/B descriptions (S0/S1/S2), **Lane A training text** | `<clip>\|<role>` | 1,403 | `descriptions` map `sha256:c8e2d95b…` — **LOCKED** (`single_prompt_variant=v2`) |
-| `002_ctt_v2_s4` | S4 first-frame A descriptions (one-sided), **Lane A** | `<stem>\|A` | 2,000 | `sha256:34534e47…` (disk-authoritative) — variant `v2-s4f0`, ships past gate 8a by owner decision |
+| `002_ctt_v2_s4` | S4 first-frame A descriptions (one-sided), **Lane A** | `<stem>\|A` | 2,000 | `sha256:34534e47…` — **gemini-3.6-flash** regen, variant `v2-s4f0`, per-item length draw (the sonnet store `fcd46f33` was regenerated to fix gate 2, now archived) |
 | `003_effect_clauses` | EFFECT_DESC clauses, **Lane B EVAL ONLY** | reference id | 36 | `reference_effects.json` (append-only) |
 
 ## The two lanes (see TEXT_LIFECYCLE.md)

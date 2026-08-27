@@ -7,9 +7,9 @@ keyed: "<stem>|A"
 coverage: 2000/2000
 content_hash: sha256:34534e47c291c95211e7ee5a4c9308bdc80db0aab99833ca90b0191663c5f658  # disk-authoritative; CAPTIONS.md §12 fcd46f33 is STALE
 prompt_variant: v2-s4f0          # v2 role-A, "9-frame snippet" -> "single still frame"
-generator: Claude vision (25 batches x 80)
+generator: gemini-3.6-flash, prompt v2-s4f0, per-item length draw over the 171-value corpus list (SAME instrument+rule as the locked store). This is the SHIPPED store; an earlier claude-sonnet vision store (fcd46f33) was regenerated to fix gate 2 and is now ARCHIVED at outputs/ctt_v2/captions/archive/s4_gate_measurements/.
 spec: S4_CAPTION_SPEC.md
-gate_note: FAILS pre-registered gate 8a (0.8849 vs <=0.73) and the width gate; shipped by explicit owner decision (CAPTIONS.md §12.4). Any report citing S4 carries this.
+gate_note: The only FORMAL gate battery (GATE_BATTERY_S4.json — 8a 0.8849, gate 2 FAIL) measured the ARCHIVED sonnet captions. The shipped gemini regen fixed gate 2 (width now inside bars); its 8a is comparison-measured ~0.8913 (still FAIL), with no formal battery of its own. STALE-DOC ALERT: CAPTIONS.md §12.4 ("no caption was ever regenerated") contradicts disk; the gemini adoption is documented only in this store's own generator field — owner authorization is not recorded elsewhere.
 assembled_by: scripts/ctt_v2/captions/assemble_s4_captions.py -> "{A}. sksz."
 source: byte-copy of outputs/ctt_v2/captions/S4_CAPTION_STORE.json
 authority: ../../TEXT_LIFECYCLE.md   # §2 Lane A
