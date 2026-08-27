@@ -1,0 +1,15 @@
+id: captions/001_ctt_v2_endpoints
+seq: 1
+shelf: captions
+created: 2026-08-27
+role: A/B endpoint descriptions (S0/S1/S2) — Lane A training text
+keyed: "<clip>|<role>"          # A = opening anchor frames 0-8, B = closing 112-120
+coverage: 1403/1403
+content_hash: sha256:c8e2d95bd448e4392ab9c1f55f7eed2c8a26eda46556895961e9402ab4d23396  # over the `descriptions` map — LOCKED
+lock: CAPTION_LOCK.json          # single_prompt_variant=v2; no-switch-back auditor
+prompt_variant: v2               # generate_descriptions.py _PROMPT_{A,B}_TEMPLATE
+generator: gemini-3.6-flash (temp 0.7, thinkingLevel minimal, 120 tok)
+auditor: gemini-3.5-flash-lite   # no-switch-back
+assembled_by: scripts/ctt_v2/captions/build_encode_inputs.py::assembled_for -> "{A}. sksz. {B}."
+source: byte-copy of outputs/ctt_v2/captions/CAPTION_STORE.json  # gitignored original; this copy is the tracked canonical
+authority: ../../TEXT_LIFECYCLE.md   # §2 Lane A

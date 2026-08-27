@@ -1,0 +1,2249 @@
+{
+ "schema": "ctt_v2_caption_lock/v1",
+ "locked_at": "2026-07-28T17:52:37.114942+00:00",
+ "status": "LOCKED",
+ "scope": "S0 / S1 / S2 captions. S4 EXCLUDED.",
+ "authority_doc": "data/CAPTIONS.md",
+ "layout": {
+  "master": [
+   "CAPTION_STORE.json",
+   "CAPTION_LOCK.json",
+   "mass_pairs.json",
+   "mass_pairs_manifest.json",
+   "CORPUS_139_LAYER2_AUDIT.json",
+   "COST_LEDGER.json"
+  ],
+  "archive": "outputs/ctt_v2/captions/archive/ -- per-shard store dirs, pilot rounds, auditor validation lanes, and per-chunk pair lists. Audit trail only; nothing here is read by assembly."
+ },
+ "s4_status": "OUT OF SCOPE -- deferred by owner; if it misses the assembly cutoff the pre-registered branch sets the mix to S0 15 / S1 6 / S2 79",
+ "s1_generation": "DEFERRED to DeltaAI -- S1_GRID_deltaai.json sha dea8ffe436998e99 is the handoff, 390/390 prompted",
+ "s1_handoff": {
+  "path": "misc/ctt_v2_final/S1_GRID_deltaai.json",
+  "sha256": "dea8ffe436998e996749262d8c557d8399afcaf2309ab2a85d64273306b9c806",
+  "rows": 390,
+  "rows_with_prompt": 390,
+  "gate_deferred": "blind Gemini 11-way class-ID batch gate, top-1 >=80% vs 9% chance, with the real-corpus control arm. Runs on DeltaAI. If it FAILS the pre-registered branch drops S1 entirely and the mix renormalises to S0 15 / S2 85."
+ },
+ "requirement": {
+  "true_requirement_union": 1404,
+  "role_scoped_exclusions": 1,
+  "generatable_requirement": 1403,
+  "sources": [
+   {
+    "stratum": "S2a",
+    "schema": "s2a_rendered_meta_jsonl",
+    "file": "20 shard(s): outputs/videos/ctt_v2_s2/full/meta/clips_shard*.jsonl",
+    "sha256": "52fab84f477229d03005fd3cc4d88d71463e8299b17aa62564ff0505c8ff117d",
+    "distinct_clip_roles": 454,
+    "counts": {
+     "records": 7990,
+     "shards": 20
+    },
+    "sha256_kind": "rollup: sha256 over sorted '<shard name> <shard sha256>' lines",
+    "derived_constant": {
+     "name": "S2A_EXPECTED_CLIP_ROLES",
+     "value": 454,
+     "recomputed": true
+    },
+    "trap_witness": {
+     "records_with_endpoint_a_key": 0,
+     "strict_endpoint_a_lookup_would_yield": 0,
+     "note": "Executed on purpose. S2a's schema exposes endpoints as `A`/`B`, so a strict `endpoint_a` lookup yields an EMPTY set and misreads as 'S2a needs nothing'. This witness records that the empty set is a property of the schema, not of the requirement."
+    }
+   },
+   {
+    "stratum": "S2b",
+    "schema": "s2_union_pairs",
+    "file": "experiments/exp_082_s2_humanvid/PLAN_S2_UNION.json",
+    "sha256": "f58765acde984ac3ebc0273b3a3a4c343be3154908ac0af240f545380bbc1220",
+    "distinct_clip_roles": 1217,
+    "counts": {
+     "rows": 800
+    }
+   },
+   {
+    "stratum": "S1",
+    "schema": "s1_grid_rows",
+    "file": "/projects/illinois/eng/cs/jrehg/users/emirkisa/misc/ctt_v2_final/S1_GRID.json",
+    "sha256": "126fcac9cf56bdd69e896adb8817feb53dc3121954f47b26f6b033113d0937a5",
+    "distinct_clip_roles": 400,
+    "counts": {
+     "rows": 390,
+     "one_sided": 270,
+     "two_sided": 120
+    }
+   }
+  ],
+  "source_shas": {
+   "s2a_rendered_meta_jsonl": "52fab84f477229d03005fd3cc4d88d71463e8299b17aa62564ff0505c8ff117d",
+   "s2_union_pairs": "f58765acde984ac3ebc0273b3a3a4c343be3154908ac0af240f545380bbc1220",
+   "s1_grid_rows": "126fcac9cf56bdd69e896adb8817feb53dc3121954f47b26f6b033113d0937a5"
+  },
+  "by_role": {
+   "A": 750,
+   "B": 653
+  },
+  "by_bank": {
+   "synth_endpoints": 567,
+   "humanvid": 836
+  },
+  "distinct_clips": 968,
+  "s2a_fix": "S2a was ABSENT from the builder -- its endpoints live only in rendered metadata keyed A/B, and a strict endpoint_a lookup returns an EMPTY set that reads as 'S2a needs nothing'. 36 (clip, role) pairs were absent; 26 at risk of never being generated. Now enforced: all three schemas required, positive-presence per record, non-empty assert, derived constant 454 recomputed with SPEC-CONSTANT-MISMATCH escalation (never a fallback), and the vacuous endpoint_a lookup recorded as a trap witness.",
+  "role_scoped_exclusion_detail": {
+   "pair": [
+    "openvid_T1MiFx98l3g_0_50to156",
+    "A"
+   ],
+   "reason": "opening anchor is a blank screen; B-role window is fine and kept",
+   "authority": "A10_pool_drops_VERBATIM.md -- role-scoped; whole-clip drop DENIED",
+   "sidecar_sha": "91686fb8127d0a967d458b1d7297a7bdd46857420077cca4ef2f00da9db86985",
+   "note": "Adding S2a made this exclusion LIVE. With only two sources it matched nothing and was correctly reported as a no-op; S2a uses the clip as an A endpoint.",
+   "OPEN_CONSUMPTION_GAP": {
+    "finding": "29 of the 7,990 rendered S2a records use openvid_T1MiFx98l3g_0_50to156 as their A endpoint and therefore consume the role-A description A10 deliberately withheld.",
+    "verified": "first-hand over outputs/videos/ctt_v2_s2/full/meta/clips_shard*.jsonl",
+    "scope": "S2a ONLY -- 0 records use it as a B endpoint; S2b 0 pairs; S1 0 rows. Its B-role description IS present.",
+    "affects_counts_or_hashes": "NO. 1403/1403 and content_hash c8e2d95b... stand. This is a CONSUMPTION-side gap at assembly, not a store gap.",
+    "same_shape_as": "the S2a requirement defect -- correct at requirement level, wrong against what was actually rendered.",
+    "NO_FALLBACK": "There is no cross-role fallback and none may be invented. Substituting the B-role or another clip's text would caption a blank-screen anchor with content it does not show -- the exact failure the exclusion exists to prevent.",
+    "owner_options": [
+     "drop the 29 clips from the S2a roster at assembly (0.36% of S2a) -- cheapest, consistent with A10",
+     "overturn A10's role-A exclusion (reopens an adjudicated question; A10 denied a whole-clip drop precisely because the A window is defective)",
+     "re-render the 29 against a different A endpoint (correct, costs render time)"
+    ],
+    "status": "RESOLVED 2026-07-28 by A16_29_orphaned_s2a_clips_VERBATIM.md (RULING OF RECORD) + A17_29clip_affirmation_VERBATIM.md (INDEPENDENT AFFIRMATION) + A18_28plus1_and_ood_demo_VERBATIM.md (RECORDED AMENDMENT). Disposition: DROP the 29 at consumption, derived, recorded. Cite all three by FILENAME, never the bare number — the advisor namespace has four collisions (advisors/LEDGER.md).",
+    "found_by": "the quarantined assembly rehearsal's S2a inventory build; evidence retained at outputs/ctt_v2/roots/REHEARSAL_2026-07-28/logs/build_S2a_ATTEMPT1.log",
+    "resolution": {
+     "disposition": "drop the 29 at assembly (owner option 1), derived from ROLE_EXCLUSIONS, never a hand-kept stem list",
+     "closing_evidence_is_28_plus_1_and_that_is_CORRECT": "'exactly 29 in dropped_clips' was NEVER achievable by any correct execution: in assemble_root.py the GROUP loop (holdout_shader / inline_ood_op / zs_class) runs BEFORE the per-clip loop, and FilmBurn_bce3e2cb2d — the op of the 29th stem, s2_0818_c03 — is one of the 8 pre-registered inline-OOD ops. The SPEC was wrong; the EXECUTION was right. Recorded amendment — NOT 'satisfied by interpretation', NOT failure. The escalation clause worked exactly as designed: the operator escalated instead of self-adjudicating, and the machinery caught a spec bug in its own pre-registration.",
+     "A18_AMENDED_CLOSING_EVIDENCE_verbatim": "**A18 AMENDED CLOSING EVIDENCE** (amends `A16_29_orphaned_s2a_clips_VERBATIM.md` action 3 and `A17_29clip_affirmation_VERBATIM.md` overturn condition (ii); authority for the amendment: the deterministic intersection of `ROLE_EXCLUSIONS` with `PREREG_inline_ood_ops_s2a.json`, both pre-dating execution).\n\nLet **X** = the stems in rendered S2a meta consuming the pair (`openvid_T1MiFx98l3g_0_50to156`, A), derived at assembly time by keyed join with declared universe (7,990 rows scanned; hits as A and as B both reported) and a positive control through the same join path (a known-present (clip, role) key returning non-empty). Let **G** = X ∩ `PREREG_inline_ood_ops_s2a.json:clip_ids`.\n\nThe root manifest's drop record satisfies this ruling iff ALL of:\n1. |X| = 29, enumerated, with 29 hits as A and 0 as B;\n2. every stem in X∖G (= 28 under the current pre-registrations) appears in `drops.clips` bearing BOTH reasons `role_scoped_caption_exclusion` and `role_scoped_prefix_condition`; every stem in G (= exactly {`s2_0818_c03`}) is covered by a `drops.groups` entry with reason `inline_ood_op` whose group is one of the 8 pre-registered `op_ids`; no stem of X is accounted in both buckets or in neither;\n3. no member of X appears in any assembled sample as target or reference (`assert_root.py` A12/A13 pass, mutation-proven);\n4. **non-vacuity:** assembled S2a base pairs equal the derived contract count (22,731 with inventory sha256 `1e2ba24c…`), groups kept = 791/799, and the S2a census reconciles exactly — kept stems + clip-dropped + group-dropped stems = 7,990, every drop carrying a recorded reason (current census: 28 role-scoped + 305 standing-holdout clip drops + 8 groups × 10).\n\nAny deviation in any clause escalates. G is recomputed from the two source artifacts, never hand-edited.",
+     "measured": {
+      "n_consuming_the_excluded_pair": 29,
+      "hits_as_A": 29,
+      "hits_as_B": 0,
+      "clip_dropped": 28,
+      "group_dropped_via_inline_ood_op": 1,
+      "survivors_reaching_the_root": 0,
+      "as_pair_target": 0,
+      "as_reference": 0
+     },
+     "acceptance_annotation_verbatim": "\"Render acceptance covers 7,990 S2a clips on disk; assembly consumes 7,577 clips / 22,731 base pairs after ALL recorded drops (census: 28 role-scoped clips per A16/A17, 305 clips under standing holdout reasons, 8 inline-OOD groups = 80 clips). All 29 consumers of the excluded (`openvid_T1MiFx98l3g_0_50to156`, A) pair are dispositioned: 28 clip-dropped, 1 via its group's `inline_ood_op` drop. Evidence: ROOT_MANIFEST drop record per the A18 amended closing evidence.\"",
+     "acceptance_annotation_forbidden_wording": "NEVER write 'the root consumes 7,961'. A18 forbids it: it repeats the same spec error one level up — it subtracts only the role-scoped drops and ignores the standing holdout/OOD drops. No artifact will ever show 7,961, and writing it plants the next absence-read-as-success mine.",
+     "pp_figures": "NEVER transcribed — neither A16's 34.437/34.563 nor the rehearsal's 35.8332/37.1668. The manifest's derived-at-assembly value is the only record (A12_prorata_s2_split_VERBATIM.md).",
+     "S2_ACCEPTANCE_json": "BYTE-UNTOUCHED, not re-run. Acceptance certifies the deliverable (storage); assert_root certifies consumption.",
+     "evidence": [
+      "outputs/ctt_v2/roots/REHEARSAL_2026-07-28/A16_EXEC/DROP_RECORD_S2a.json",
+      "outputs/ctt_v2/roots/REHEARSAL_2026-07-28/A16_EXEC/logs/assemble_plan_only.log",
+      "outputs/ctt_v2/roots/REHEARSAL_2026-07-28/A18_EXEC/PROVE_BUILDERS.json",
+      "misc/ctt_v2_final/DERIVED_inline_ood_demo_pool.json"
+     ],
+     "resolved_at": "2026-07-28T14:01:04-0500"
+    }
+   }
+  }
+ },
+ "coverage": {
+  "in_scope_descriptions": 1403,
+  "required": 1403,
+  "coverage": "1403/1403",
+  "complete": true,
+  "shortfall": null,
+  "reconciliation": "1404 union - 1 role-scoped exclusion = 1403 generatable; 1403/1403 present. The 1404th pair is excluded by adjudication, not missing. Nothing is short."
+ },
+ "canonical_store": {
+  "path": "outputs/ctt_v2/captions/CAPTION_STORE.json",
+  "file_sha256": "7d7a1d066b5da32dd096dd964e9a97c179573d22c5ae19ec7ec65415c90435b6",
+  "content_hash": "sha256:c8e2d95bd448e4392ab9c1f55f7eed2c8a26eda46556895961e9402ab4d23396",
+  "content_hash_covers": "the in-scope `descriptions` map only (sorted keys, compact separators, ensure_ascii=False) -- stable against orphan and provenance churn",
+  "orphans_hash": "sha256:a67eb32889407b14a1492973beb556824611596ca3bb1d340c7f85b731e0e294",
+  "keying": "'clip_id|role'. A-role describes frames 0-8, B-role frames 112-120. One description per (clip, role), never per sample: a clip used as the A endpoint of 40 rows has exactly one A-role description.",
+  "homogeneity": {
+   "prompt_variants": [
+    "v2"
+   ],
+   "generator_models": [
+    "OPERATOR (hand-written)",
+    "gemini-3.6-flash"
+   ],
+   "auditor_models": [
+    "gemini-3.5-flash-lite"
+   ],
+   "single_prompt_variant": true,
+   "note": "A13-b/A14: never mix prompt variants in one store -- 8a names mixed prompts as a bug class it detects. A single variant here is the assert, not a coincidence."
+  },
+  "shards_audit_trail": [
+   {
+    "shard": "chunk1",
+    "descriptions_contributed": 312,
+    "prompt_variant": "v2",
+    "generator_model": "gemini-3.6-flash",
+    "auditor_model": "gemini-3.5-flash-lite",
+    "auditor_model_version_echo": [
+     "gemini-3.5-flash-lite"
+    ],
+    "records": 313,
+    "queued_unresolved": 1,
+    "note": null
+   },
+   {
+    "shard": "chunk2",
+    "descriptions_contributed": 280,
+    "prompt_variant": "v2",
+    "generator_model": "gemini-3.6-flash",
+    "auditor_model": "gemini-3.5-flash-lite",
+    "auditor_model_version_echo": [
+     "gemini-3.5-flash-lite"
+    ],
+    "records": 281,
+    "queued_unresolved": 1,
+    "note": null
+   },
+   {
+    "shard": "chunk3",
+    "descriptions_contributed": 278,
+    "prompt_variant": "v2",
+    "generator_model": "gemini-3.6-flash",
+    "auditor_model": "gemini-3.5-flash-lite",
+    "auditor_model_version_echo": [
+     "gemini-3.5-flash-lite"
+    ],
+    "records": 281,
+    "queued_unresolved": 3,
+    "note": null
+   },
+   {
+    "shard": "chunk4",
+    "descriptions_contributed": 277,
+    "prompt_variant": "v2",
+    "generator_model": "gemini-3.6-flash",
+    "auditor_model": "gemini-3.5-flash-lite",
+    "auditor_model_version_echo": [
+     "gemini-3.5-flash-lite"
+    ],
+    "records": 280,
+    "queued_unresolved": 3,
+    "note": null
+   },
+   {
+    "shard": "final3",
+    "descriptions_contributed": 0,
+    "prompt_variant": "v3",
+    "generator_model": "gemini-3.6-flash",
+    "auditor_model": "gemini-3.1-pro-preview",
+    "auditor_model_version_echo": [
+     "gemini-3.1-pro-preview"
+    ],
+    "records": 3,
+    "queued_unresolved": 3,
+    "note": "CONTRIBUTED NOTHING -- every attempt failed and went to the manual-rewrite queue; kept for the audit trail"
+   },
+   {
+    "shard": "gap213",
+    "descriptions_contributed": 210,
+    "prompt_variant": "v2",
+    "generator_model": "gemini-3.6-flash",
+    "auditor_model": "gemini-3.5-flash-lite",
+    "auditor_model_version_echo": [
+     "gemini-3.5-flash-lite"
+    ],
+    "records": 213,
+    "queued_unresolved": 3,
+    "note": null
+   },
+   {
+    "shard": "manual3",
+    "descriptions_contributed": 3,
+    "prompt_variant": "v2",
+    "generator_model": "OPERATOR (hand-written)",
+    "auditor_model": "gemini-3.5-flash-lite",
+    "auditor_model_version_echo": [
+     "gemini-3.5-flash-lite"
+    ],
+    "records": 3,
+    "queued_unresolved": 0,
+    "note": null
+   },
+   {
+    "shard": "s1_regrid",
+    "descriptions_contributed": 74,
+    "prompt_variant": "v2",
+    "generator_model": "gemini-3.6-flash",
+    "auditor_model": "gemini-3.5-flash-lite",
+    "auditor_model_version_echo": [
+     "gemini-3.5-flash-lite"
+    ],
+    "records": 75,
+    "queued_unresolved": 1,
+    "note": null
+   },
+   {
+    "shard": "s2a_gap",
+    "descriptions_contributed": 39,
+    "prompt_variant": "v2",
+    "generator_model": "gemini-3.6-flash",
+    "auditor_model": "gemini-3.5-flash-lite",
+    "auditor_model_version_echo": [
+     "gemini-3.5-flash-lite"
+    ],
+    "records": 39,
+    "queued_unresolved": 0,
+    "note": null
+   },
+   {
+    "shard": "tail",
+    "descriptions_contributed": 6,
+    "prompt_variant": "v2",
+    "generator_model": "gemini-3.6-flash",
+    "auditor_model": "gemini-3.5-flash-lite",
+    "auditor_model_version_echo": [
+     "gemini-3.5-flash-lite"
+    ],
+    "records": 8,
+    "queued_unresolved": 2,
+    "note": null
+   }
+  ]
+ },
+ "models": {
+  "generator": "gemini-3.6-flash (temp 0.7, thinkingLevel minimal, maxOutputTokens 120)",
+  "layer2_auditor": "gemini-3.5-flash-lite (temp 0, thinkingLevel minimal, maxOutputTokens 512) -- ONE auditor across all 1,403",
+  "auditor_deviation": "The directive named gemini-3.5-flash; it returns HTTP 503 and is unavailable (verified on probe). flash-lite holds a two-sided validation: mismatch 99.74% >=99, matched 2.0% <=10.",
+  "no_switch_back": "ONE recorded instrument change. If gemini-3.5-flash returns, do NOT revert.",
+  "first_pass_comparability": "First-pass rates are NOT a like-for-like series across any auditor change. No trend claims. The report must carry per-round auditor identity.",
+  "raw_response_archives": {
+   "generation": [
+    "outputs/ctt_v2/captions/archive/store/chunk1/raw_generation_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/chunk2/raw_generation_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/chunk3/raw_generation_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/chunk4/raw_generation_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/final3/raw_generation_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/gap213/raw_generation_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/s1_regrid/raw_generation_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/s2a_gap/raw_generation_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/tail/raw_generation_responses.jsonl"
+   ],
+   "audit": [
+    "outputs/ctt_v2/captions/archive/store/chunk1/raw_audit_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/chunk2/raw_audit_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/chunk3/raw_audit_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/chunk4/raw_audit_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/final3/raw_audit_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/gap213/raw_audit_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/manual3/raw_audit_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/s1_regrid/raw_audit_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/s2a_gap/raw_audit_responses.jsonl",
+    "outputs/ctt_v2/captions/archive/store/tail/raw_audit_responses.jsonl"
+   ],
+   "corpus139": "outputs/ctt_v2/captions/CORPUS_139_LAYER2_AUDIT_raw_responses.jsonl"
+  }
+ },
+ "prompt": {
+  "production_variant": "v2 (round 2)",
+  "single_variant_assert": true,
+  "v3_status": "ARCHIVED PAID-FOR NEGATIVE RESULT -- enters no store. Its be-verb mechanism is FALSIFIED (realized A-role rate 0.0% -> 0.0%); A8's motivating 8.8% was pooled and mis-attributed (corpus A-role 5.0%, B-role 25.0%), so the deficit is chiefly a B-role phenomenon v3 did not touch; 8a moved 0.0137 = ~1.2 SE = noise, NOT attributable. Round 3 also ran --no-audit, so it has no Layer-2 audits and cannot gate.",
+  "prohibitions": [
+   "Nobody may record that the be-verb tell was fixed.",
+   "Gate 8a/8b movement may NEVER be cited as evidence an intervention worked -- drift guards only.",
+   "No round 4. Hand-editing captions to inject be-verbs is banned.",
+   "Never mix prompt variants in one store.",
+   "Audits are ALWAYS per-item, never packed."
+  ]
+ },
+ "gate_battery": {
+  "SCOPE": "FULL 1,403-row canonical store. The 447-row subset gap named in the previous lock is CLOSED.",
+  "closed_at": "2026-07-28T17:52:37.114890+00:00",
+  "closed_by": "operator initiative -- A15 lists this as an owner call, not an operator default. Run anyway because it is CPU-only, zero API spend, and it removes a caveat from a lock that is about to be stamped.",
+  "n": 1403,
+  "report": "outputs/ctt_v2/captions/GATE_BATTERY_FULL_1403.json",
+  "invocation": "gate_battery.py --store archive/store/{chunk1..4,gap213,s1_regrid,s2a_gap,tail,final3,manual3} --restrict-to-grid mass_pairs.json  (nichescout python, sklearn)",
+  "input_provenance": "PROVEN to be the locked store, not a re-derivation: the pooled in-grid set is 1403 rows, key-identical and TEXT-identical to CAPTION_STORE.json's descriptions map, and re-hashes to the locked content_hash c8e2d95bd448e4392ab9c1f55f7eed2c8a26eda46556895961e9402ab4d23396.",
+  "api_spend": "ZERO. Gate 5 ran in its pinned regex form (--llm-participial NOT used), identical to the subset run, so the comparison is like-for-like.",
+  "same_bars_bigger_denominator": "No gate was added, retuned, or reinterpreted. 3.1x the rows.",
+  "hard_fail": [],
+  "no_hard_failures": true,
+  "gate8a_drift_guard": {
+   "value": 0.6819,
+   "bar": 0.73,
+   "verdict": "PASS",
+   "mean_pm_se": "0.6819 +/- 0.0113 SE (fold-std 0.0566, n_fits 25)",
+   "subset_447_value": 0.7099,
+   "movement": "0.7099 -> 0.6819 = -0.0280, about 2.5 SE, DOWNWARD (further from the bar). PER THE STANDING PROHIBITION this movement is NOT evidence of anything: 8a is a pass/fail drift guard and its movement may never be cited as an intervention working.",
+   "function": "DRIFT GUARD. Above 0.73 cannot be the known captioner fingerprint and means a BUG (mixed prompts, wrong round's store, contamination) => stop and investigate, do NOT tune.",
+   "stop_condition_not_triggered": "Above 0.73 would mean a BUG (mixed prompts, wrong store, contamination) and the pre-agreed response was STOP, do not tune. 0.6819 is below the bar, so no stop condition fired."
+  },
+  "gate8b_stratum_internal": {
+   "value": 0.595,
+   "bar": 0.6,
+   "verdict": "PASS",
+   "mean_pm_se": "0.5950 +/- 0.0075 SE (fold-std 0.0377, n_fits 25)",
+   "subset_447_value": 0.5787,
+   "movement": "0.5787 -> 0.5950 = +0.0163, about 2.2 SE, UPWARD (toward the bar).",
+   "ATTENTION": "This is the LOAD-BEARING gate and its headroom shrank from 0.0213 to 0.0050 -- about 0.67 SE. It PASSES on the full store, but it passes narrowly. Recorded prominently rather than folded in: any future change to the store should expect 8b to be the gate that moves first.",
+   "function": "LOAD-BEARING replacement for the superseded 8c bar"
+  },
+  "gate8c_original_bar": {
+   "value": 0.6819,
+   "bar": 0.65,
+   "verdict": "FAIL",
+   "subset_447_value": 0.7099,
+   "recorded_as": "FAILED -- recorded with its control table, NEVER quietly replaced. Mis-pinned: corpus internal register distance is 0.6419 and a same-model prompt delta opens 0.7233, so the bar sat in an unreachable reference frame.",
+   "note": "Still FAILS on the full store (0.6819 vs <=0.65), still recorded rather than replaced."
+  },
+  "gate9": {
+   "auc": 0.8963,
+   "balanced_accuracy": 0.8076470588235294,
+   "verdict": "INVESTIGATE -> ACCEPT",
+   "subset_447_auc": 0.9124,
+   "basis": "A8 pre-committed: content-dominated => accept. On the full store 33 of the 40 top features are content; the 7 function words (the, on, is, of, under, in, while) are the already-known gate-8 fingerprint. IDENTICAL reading to the subset -- the accept was not re-argued to fit a new number.",
+   "top20_toward_CORPUS": [
+    [
+     "sunglasses",
+     -1.1864
+    ],
+    [
+     "stands",
+     -0.9983
+    ],
+    [
+     "sky",
+     -0.9353
+    ],
+    [
+     "the",
+     -0.9228
+    ],
+    [
+     "on",
+     -0.6884
+    ],
+    [
+     "is",
+     -0.6594
+    ],
+    [
+     "warm",
+     -0.6308
+    ],
+    [
+     "golden",
+     -0.5979
+    ],
+    [
+     "of",
+     -0.5644
+    ],
+    [
+     "car",
+     -0.5239
+    ],
+    [
+     "city",
+     -0.5193
+    ],
+    [
+     "under",
+     -0.5184
+    ],
+    [
+     "night",
+     -0.5174
+    ],
+    [
+     "trousers",
+     -0.5145
+    ],
+    [
+     "sneakers",
+     -0.5002
+    ],
+    [
+     "sits",
+     -0.4804
+    ],
+    [
+     "slicked",
+     -0.4469
+    ],
+    [
+     "street",
+     -0.4469
+    ],
+    [
+     "cap",
+     -0.4305
+    ],
+    [
+     "gold",
+     -0.4228
+    ]
+   ],
+   "top20_toward_NEW": [
+    [
+     "daylight",
+     1.1716
+    ],
+    [
+     "short",
+     1.1204
+    ],
+    [
+     "brown",
+     0.9386
+    ],
+    [
+     "hair",
+     0.9166
+    ],
+    [
+     "gray",
+     0.8745
+    ],
+    [
+     "light",
+     0.8515
+    ],
+    [
+     "white",
+     0.8427
+    ],
+    [
+     "room",
+     0.826
+    ],
+    [
+     "indoor",
+     0.7625
+    ],
+    [
+     "skinned",
+     0.7566
+    ],
+    [
+     "wooden",
+     0.7517
+    ],
+    [
+     "lit",
+     0.7234
+    ],
+    [
+     "soft",
+     0.6981
+    ],
+    [
+     "shirt",
+     0.658
+    ],
+    [
+     "brightly",
+     0.6467
+    ],
+    [
+     "fair",
+     0.6304
+    ],
+    [
+     "in",
+     0.6161
+    ],
+    [
+     "looking",
+     0.6034
+    ],
+    [
+     "while",
+     0.5599
+    ],
+    [
+     "sleeved",
+     0.5392
+    ]
+   ]
+  },
+  "all_gates": [
+   {
+    "gate": 1,
+    "name": "word-count p50",
+    "value": 34.0,
+    "corpus": 33,
+    "bar": "p50 in [29, 36]",
+    "verdict": "PASS",
+    "type": "HARD"
+   },
+   {
+    "gate": 2,
+    "name": "word-count p10 / p90",
+    "value": "24.0 / 40.0",
+    "corpus": "21 / 39",
+    "bar": "p10 in [16,26] and p90 in [34,44]",
+    "verdict": "PASS",
+    "type": "HARD"
+   },
+   {
+    "gate": 3,
+    "name": "opens with determiner (A / B)",
+    "value": "97.9% / 96.3%",
+    "corpus": "96.4% / 96.9%",
+    "bar": ">= 86.4% / >= 86.9%",
+    "verdict": "PASS",
+    "type": "HARD"
+   },
+   {
+    "gate": 4,
+    "name": "B-role lowercase-initial (and A-role uppercase-initial)",
+    "value": "B 100.0% / A 100.0%",
+    "corpus": "B 100% / A 100%",
+    "bar": "both 100%",
+    "verdict": "PASS",
+    "type": "HARD"
+   },
+   {
+    "gate": 5,
+    "name": "B-role participial-NP",
+    "value": "99.7% (-ing regex)",
+    "corpus": "90.6% (-ing regex)",
+    "bar": ">= 80.6% (pinned regex form)",
+    "verdict": "PASS",
+    "type": "HARD"
+   },
+   {
+    "gate": 6,
+    "name": "audio words / Style: prefix / markdown / quotes",
+    "value": "audio 0, markup 0 (visible-speech actions, not gated: 90)",
+    "corpus": "0 / 0",
+    "bar": "0",
+    "verdict": "PASS",
+    "type": "HARD"
+   },
+   {
+    "gate": 7,
+    "name": "exact-duplicate rate within stratum",
+    "value": "0.0% (worst bank x role cell)",
+    "corpus": "0%",
+    "bar": "< 2%",
+    "verdict": "PASS",
+    "type": "HARD"
+   },
+   {
+    "gate": "8a",
+    "name": "corpus-vs-new function-word probe (DRIFT GUARD)",
+    "value": 0.6819,
+    "corpus": "0.50 = chance",
+    "mean_pm_se": "0.6819 +/- 0.0113 SE (fold-std 0.0566, n_fits 25)",
+    "fold_std": 0.0566,
+    "se_of_mean": 0.0113,
+    "bar": "<= 0.73 (above this cannot be the known fingerprint => bug: mixed prompts / wrong store / contamination)",
+    "verdict": "PASS",
+    "type": "HARD",
+    "detail": {
+     "mean_balanced_accuracy": 0.6819327731092437,
+     "std_balanced_accuracy": 0.056614961505351065,
+     "se_of_mean_balanced_accuracy": 0.011322992301070213,
+     "mean_auc": 0.7436549678695008,
+     "std_auc": 0.05925190086345604,
+     "se_of_mean_auc": 0.011850380172691207,
+     "n_per_class": 171,
+     "n_fits": 25,
+     "dispersion_note": "std_* is the FOLD-LEVEL fit std across the n_fits fits; se_of_mean_* is std/sqrt(n_fits) and is the yardstick for reading a MOVEMENT in the mean (A14 Q4). PRE-REGISTERED (A14 Q4, from A13_auditor_and_v3_VERBATIM.md): gate 8a/8b movement may NEVER be cited as evidence an intervention worked -- they are pass/fail drift guards only. The 25 fits are not independent, so this SE is nominal and if anything understates the true uncertainty.",
+     "top_features_toward_NEW": [
+      [
+       "in",
+       1.3978
+      ],
+      [
+       "with",
+       1.3006
+      ],
+      [
+       "while",
+       1.0367
+      ],
+      [
+       "by",
+       0.8687
+      ],
+      [
+       "t",
+       0.861
+      ],
+      [
+       "near",
+       0.8466
+      ],
+      [
+       "three",
+       0.602
+      ],
+      [
+       "down",
+       0.5576
+      ],
+      [
+       "beside",
+       0.5338
+      ],
+      [
+       "against",
+       0.522
+      ],
+      [
+       "along",
+       0.489
+      ],
+      [
+       "another",
+       0.4499
+      ],
+      [
+       "n_words",
+       0.4139
+      ],
+      [
+       "towards",
+       0.3986
+      ],
+      [
+       "even",
+       0.377
+      ],
+      [
+       "into",
+       0.2622
+      ],
+      [
+       "still",
+       0.2482
+      ],
+      [
+       "both",
+       0.2396
+      ],
+      [
+       "toward",
+       0.2365
+      ],
+      [
+       "up",
+       0.2362
+      ]
+     ],
+     "top_features_toward_CORPUS": [
+      [
+       "the",
+       -1.6058
+      ],
+      [
+       "is",
+       -1.5105
+      ],
+      [
+       "on",
+       -1.1501
+      ],
+      [
+       "under",
+       -1.0969
+      ],
+      [
+       "of",
+       -1.0843
+      ],
+      [
+       "between",
+       -0.8508
+      ],
+      [
+       "at",
+       -0.7229
+      ],
+      [
+       "that",
+       -0.5913
+      ],
+      [
+       "him",
+       -0.5071
+      ],
+      [
+       "his",
+       -0.5041
+      ],
+      [
+       "as",
+       -0.5015
+      ],
+      [
+       "beneath",
+       -0.4967
+      ],
+      [
+       "her",
+       -0.444
+      ],
+      [
+       "above",
+       -0.3944
+      ],
+      [
+       "PUNCT[.]",
+       -0.3524
+      ],
+      [
+       "are",
+       -0.3493
+      ],
+      [
+       "from",
+       -0.3038
+      ],
+      [
+       "over",
+       -0.2976
+      ],
+      [
+       "inside",
+       -0.2628
+      ],
+      [
+       "outside",
+       -0.2422
+      ]
+     ]
+    }
+   },
+   {
+    "gate": "8b",
+    "name": "stratum-internal blindness: humanvid vs synth_endpoints (LOAD-BEARING)",
+    "value": 0.595,
+    "corpus": "0.506 = measured NULL",
+    "mean_pm_se": "0.5950 +/- 0.0075 SE (fold-std 0.0377, n_fits 25)",
+    "fold_std": 0.0377,
+    "se_of_mean": 0.0075,
+    "bar": "<= 0.6",
+    "verdict": "PASS",
+    "type": "HARD",
+    "detail": {
+     "mean_balanced_accuracy": 0.5950287222480981,
+     "std_balanced_accuracy": 0.03765991835139423,
+     "se_of_mean_balanced_accuracy": 0.007531983670278845,
+     "mean_auc": 0.6430410547474489,
+     "std_auc": 0.03491210453895269,
+     "se_of_mean_auc": 0.006982420907790538,
+     "n_per_class": 567,
+     "n_fits": 25,
+     "dispersion_note": "std_* is the FOLD-LEVEL fit std across the n_fits fits; se_of_mean_* is std/sqrt(n_fits) and is the yardstick for reading a MOVEMENT in the mean (A14 Q4). PRE-REGISTERED (A14 Q4, from A13_auditor_and_v3_VERBATIM.md): gate 8a/8b movement may NEVER be cited as evidence an intervention worked -- they are pass/fail drift guards only. The 25 fits are not independent, so this SE is nominal and if anything understates the true uncertainty.",
+     "top_features_toward_NEW": [
+      [
+       "its",
+       1.6581
+      ],
+      [
+       "the",
+       1.2353
+      ],
+      [
+       "across",
+       0.972
+      ],
+      [
+       "with",
+       0.9375
+      ],
+      [
+       "of",
+       0.8494
+      ],
+      [
+       "other",
+       0.7451
+      ],
+      [
+       "at",
+       0.6305
+      ],
+      [
+       "towards",
+       0.6146
+      ],
+      [
+       "out",
+       0.5682
+      ],
+      [
+       "to",
+       0.5322
+      ],
+      [
+       "down",
+       0.4756
+      ],
+      [
+       "over",
+       0.4292
+      ],
+      [
+       "off",
+       0.4136
+      ],
+      [
+       "toward",
+       0.3455
+      ],
+      [
+       "all",
+       0.3156
+      ],
+      [
+       "near",
+       0.2932
+      ],
+      [
+       "no",
+       0.2729
+      ],
+      [
+       "or",
+       0.2416
+      ],
+      [
+       "by",
+       0.2254
+      ],
+      [
+       "himself",
+       0.2171
+      ]
+     ],
+     "top_features_toward_CORPUS": [
+      [
+       "against",
+       -1.5305
+      ],
+      [
+       "her",
+       -1.3001
+      ],
+      [
+       "on",
+       -0.7759
+      ],
+      [
+       "in",
+       -0.7333
+      ],
+      [
+       "his",
+       -0.6404
+      ],
+      [
+       "them",
+       -0.5398
+      ],
+      [
+       "and",
+       -0.5003
+      ],
+      [
+       "beneath",
+       -0.4737
+      ],
+      [
+       "even",
+       -0.4645
+      ],
+      [
+       "one",
+       -0.4561
+      ],
+      [
+       "it",
+       -0.4427
+      ],
+      [
+       "up",
+       -0.4403
+      ],
+      [
+       "four",
+       -0.4351
+      ],
+      [
+       "between",
+       -0.4346
+      ],
+      [
+       "inside",
+       -0.4016
+      ],
+      [
+       "before",
+       -0.3982
+      ],
+      [
+       "n_words",
+       -0.3371
+      ],
+      [
+       "still",
+       -0.3293
+      ],
+      [
+       "that",
+       -0.2969
+      ],
+      [
+       "both",
+       -0.2949
+      ]
+     ]
+    }
+   },
+   {
+    "gate": "8c",
+    "name": "ORIGINAL absolute bar (superseded, recorded not replaced)",
+    "value": 0.6819,
+    "corpus": "0.50 = chance",
+    "bar": "<= 0.65  [SUPERSEDED by 8a/8b -- round-9 ruling]",
+    "verdict": "FAIL (recorded; the bar was in an unreachable reference frame: it demanded a different model generation land within 0.008 of the corpus's own internal A-vs-B register distance 0.6419, while a prompt delta inside one model opens 0.7233)",
+    "type": "RECORD"
+   },
+   {
+    "gate": 9,
+    "name": "full-vocabulary classifier",
+    "value": 0.8963,
+    "corpus": "0.50 = chance",
+    "bar": "AUC >= 0.80 triggers feature investigation",
+    "verdict": "INVESTIGATE",
+    "type": "REVIEW",
+    "detail": {
+     "mean_balanced_accuracy": 0.8076470588235294,
+     "std_balanced_accuracy": 0.04812184708861276,
+     "se_of_mean_balanced_accuracy": 0.009624369417722552,
+     "mean_auc": 0.8963183391003459,
+     "std_auc": 0.047775717366998864,
+     "se_of_mean_auc": 0.009555143473399773,
+     "n_per_class": 171,
+     "n_fits": 25,
+     "dispersion_note": "std_* is the FOLD-LEVEL fit std across the n_fits fits; se_of_mean_* is std/sqrt(n_fits) and is the yardstick for reading a MOVEMENT in the mean (A14 Q4). PRE-REGISTERED (A14 Q4, from A13_auditor_and_v3_VERBATIM.md): gate 8a/8b movement may NEVER be cited as evidence an intervention worked -- they are pass/fail drift guards only. The 25 fits are not independent, so this SE is nominal and if anything understates the true uncertainty.",
+     "top_features_toward_NEW": [
+      [
+       "daylight",
+       1.1716
+      ],
+      [
+       "short",
+       1.1204
+      ],
+      [
+       "brown",
+       0.9386
+      ],
+      [
+       "hair",
+       0.9166
+      ],
+      [
+       "gray",
+       0.8745
+      ],
+      [
+       "light",
+       0.8515
+      ],
+      [
+       "white",
+       0.8427
+      ],
+      [
+       "room",
+       0.826
+      ],
+      [
+       "indoor",
+       0.7625
+      ],
+      [
+       "skinned",
+       0.7566
+      ],
+      [
+       "wooden",
+       0.7517
+      ],
+      [
+       "lit",
+       0.7234
+      ],
+      [
+       "soft",
+       0.6981
+      ],
+      [
+       "shirt",
+       0.658
+      ],
+      [
+       "brightly",
+       0.6467
+      ],
+      [
+       "fair",
+       0.6304
+      ],
+      [
+       "in",
+       0.6161
+      ],
+      [
+       "looking",
+       0.6034
+      ],
+      [
+       "while",
+       0.5599
+      ],
+      [
+       "sleeved",
+       0.5392
+      ]
+     ],
+     "top_features_toward_CORPUS": [
+      [
+       "sunglasses",
+       -1.1864
+      ],
+      [
+       "stands",
+       -0.9983
+      ],
+      [
+       "sky",
+       -0.9353
+      ],
+      [
+       "the",
+       -0.9228
+      ],
+      [
+       "on",
+       -0.6884
+      ],
+      [
+       "is",
+       -0.6594
+      ],
+      [
+       "warm",
+       -0.6308
+      ],
+      [
+       "golden",
+       -0.5979
+      ],
+      [
+       "of",
+       -0.5644
+      ],
+      [
+       "car",
+       -0.5239
+      ],
+      [
+       "city",
+       -0.5193
+      ],
+      [
+       "under",
+       -0.5184
+      ],
+      [
+       "night",
+       -0.5174
+      ],
+      [
+       "trousers",
+       -0.5145
+      ],
+      [
+       "sneakers",
+       -0.5002
+      ],
+      [
+       "sits",
+       -0.4804
+      ],
+      [
+       "slicked",
+       -0.4469
+      ],
+      [
+       "street",
+       -0.4469
+      ],
+      [
+       "cap",
+       -0.4305
+      ],
+      [
+       "gold",
+       -0.4228
+      ]
+     ]
+    }
+   },
+   {
+    "gate": 10,
+    "name": "colour-term density",
+    "value": 3.811,
+    "corpus": 3.158,
+    "bar": "in [1.579, 4.737]",
+    "verdict": "PASS",
+    "type": "REVIEW"
+   },
+   {
+    "gate": 11,
+    "name": "camera-phrase rate",
+    "value": "1.71%",
+    "corpus": "3.51%",
+    "bar": "within +/-10 pp",
+    "verdict": "PASS",
+    "type": "FLAG"
+   },
+   {
+    "gate": 12,
+    "name": "near-duplicate rate (token Jaccard > 0.8)",
+    "value": "0 pairs (0.0% of pairs)",
+    "corpus": "1 pairs",
+    "bar": "report only",
+    "verdict": "REPORT",
+    "type": "FLAG"
+   }
+  ],
+  "subset_447_for_the_record": {
+   "why_kept": "the 447-row pooled subset the battery originally stood on -- kept so the full-store numbers can be compared, never to be cited on its own again",
+   "n": 447,
+   "report": "outputs/ctt_v2/captions/archive/store/chunk1/gate_chunk1_plus_reused.json",
+   "hard_fail": [],
+   "gate8a": "0.7099 +/- 0.0091 SE (fold-std 0.0454, n_fits 25)",
+   "gate8b": "0.5787 +/- 0.0126 SE (fold-std 0.0632, n_fits 25)",
+   "gate8c": 0.7099,
+   "gate9_auc": 0.9124,
+   "all_gates": [
+    {
+     "gate": 1,
+     "name": "word-count p50",
+     "value": 34.0,
+     "corpus": 33,
+     "bar": "p50 in [29, 36]",
+     "verdict": "PASS",
+     "type": "HARD"
+    },
+    {
+     "gate": 2,
+     "name": "word-count p10 / p90",
+     "value": "24.0 / 41.0",
+     "corpus": "21 / 39",
+     "bar": "p10 in [16,26] and p90 in [34,44]",
+     "verdict": "PASS",
+     "type": "HARD"
+    },
+    {
+     "gate": 3,
+     "name": "opens with determiner (A / B)",
+     "value": "98.6% / 98.1%",
+     "corpus": "96.4% / 96.9%",
+     "bar": ">= 86.4% / >= 86.9%",
+     "verdict": "PASS",
+     "type": "HARD"
+    },
+    {
+     "gate": 4,
+     "name": "B-role lowercase-initial (and A-role uppercase-initial)",
+     "value": "B 100.0% / A 100.0%",
+     "corpus": "B 100% / A 100%",
+     "bar": "both 100%",
+     "verdict": "PASS",
+     "type": "HARD"
+    },
+    {
+     "gate": 5,
+     "name": "B-role participial-NP",
+     "value": "100.0% (-ing regex)",
+     "corpus": "90.6% (-ing regex)",
+     "bar": ">= 80.6% (pinned regex form)",
+     "verdict": "PASS",
+     "type": "HARD"
+    },
+    {
+     "gate": 6,
+     "name": "audio words / Style: prefix / markdown / quotes",
+     "value": "audio 0, markup 0 (visible-speech actions, not gated: 36)",
+     "corpus": "0 / 0",
+     "bar": "0",
+     "verdict": "PASS",
+     "type": "HARD"
+    },
+    {
+     "gate": 7,
+     "name": "exact-duplicate rate within stratum",
+     "value": "0.0% (worst bank x role cell)",
+     "corpus": "0%",
+     "bar": "< 2%",
+     "verdict": "PASS",
+     "type": "HARD"
+    },
+    {
+     "gate": "8a",
+     "name": "corpus-vs-new function-word probe (DRIFT GUARD)",
+     "value": 0.7099,
+     "corpus": "0.50 = chance",
+     "mean_pm_se": "0.7099 +/- 0.0091 SE (fold-std 0.0454, n_fits 25)",
+     "fold_std": 0.0454,
+     "se_of_mean": 0.0091,
+     "bar": "<= 0.73 (above this cannot be the known fingerprint => bug: mixed prompts / wrong store / contamination)",
+     "verdict": "PASS",
+     "type": "HARD",
+     "detail": {
+      "mean_balanced_accuracy": 0.7098991596638655,
+      "std_balanced_accuracy": 0.04542264858469656,
+      "se_of_mean_balanced_accuracy": 0.009084529716939311,
+      "mean_auc": 0.7658210578348985,
+      "std_auc": 0.045406538225868445,
+      "se_of_mean_auc": 0.009081307645173689,
+      "n_per_class": 171,
+      "n_fits": 25,
+      "dispersion_note": "std_* is the FOLD-LEVEL fit std across the n_fits fits; se_of_mean_* is std/sqrt(n_fits) and is the yardstick for reading a MOVEMENT in the mean (A14 Q4). PRE-REGISTERED (A14 Q4, from A13_auditor_and_v3_VERBATIM.md): gate 8a/8b movement may NEVER be cited as evidence an intervention worked -- they are pass/fail drift guards only. The 25 fits are not independent, so this SE is nominal and if anything understates the true uncertainty.",
+      "top_features_toward_NEW": [
+       [
+        "with",
+        1.9155
+       ],
+       [
+        "by",
+        1.1772
+       ],
+       [
+        "while",
+        1.0877
+       ],
+       [
+        "near",
+        1.0339
+       ],
+       [
+        "t",
+        1.0139
+       ],
+       [
+        "in",
+        0.7152
+       ],
+       [
+        "up",
+        0.6723
+       ],
+       [
+        "beside",
+        0.5732
+       ],
+       [
+        "n_words",
+        0.5645
+       ],
+       [
+        "another",
+        0.4946
+       ],
+       [
+        "down",
+        0.4164
+       ],
+       [
+        "along",
+        0.4102
+       ],
+       [
+        "during",
+        0.3678
+       ],
+       [
+        "across",
+        0.3049
+       ],
+       [
+        "three",
+        0.3039
+       ],
+       [
+        "both",
+        0.2677
+       ],
+       [
+        "into",
+        0.2544
+       ],
+       [
+        "who",
+        0.2408
+       ],
+       [
+        "towards",
+        0.2398
+       ],
+       [
+        "their",
+        0.2396
+       ]
+      ],
+      "top_features_toward_CORPUS": [
+       [
+        "is",
+        -1.4674
+       ],
+       [
+        "the",
+        -1.4625
+       ],
+       [
+        "on",
+        -1.3674
+       ],
+       [
+        "of",
+        -1.0276
+       ],
+       [
+        "between",
+        -0.9274
+       ],
+       [
+        "under",
+        -0.9237
+       ],
+       [
+        "his",
+        -0.7683
+       ],
+       [
+        "that",
+        -0.6946
+       ],
+       [
+        "at",
+        -0.6785
+       ],
+       [
+        "her",
+        -0.5933
+       ],
+       [
+        "him",
+        -0.5125
+       ],
+       [
+        "to",
+        -0.4984
+       ],
+       [
+        "beneath",
+        -0.4422
+       ],
+       [
+        "as",
+        -0.4039
+       ],
+       [
+        "PUNCT[.]",
+        -0.3592
+       ],
+       [
+        "inside",
+        -0.3194
+       ],
+       [
+        "behind",
+        -0.3095
+       ],
+       [
+        "before",
+        -0.2924
+       ],
+       [
+        "n_chars",
+        -0.2693
+       ],
+       [
+        "from",
+        -0.2361
+       ]
+      ]
+     }
+    },
+    {
+     "gate": "8b",
+     "name": "stratum-internal blindness: humanvid vs synth_endpoints (LOAD-BEARING)",
+     "value": 0.5787,
+     "corpus": "0.506 = measured NULL",
+     "mean_pm_se": "0.5787 +/- 0.0126 SE (fold-std 0.0632, n_fits 25)",
+     "fold_std": 0.0632,
+     "se_of_mean": 0.0126,
+     "bar": "<= 0.6",
+     "verdict": "PASS",
+     "type": "HARD",
+     "detail": {
+      "mean_balanced_accuracy": 0.578735632183908,
+      "std_balanced_accuracy": 0.06316570427318231,
+      "se_of_mean_balanced_accuracy": 0.012633140854636463,
+      "mean_auc": 0.5934206896551725,
+      "std_auc": 0.07529866060805762,
+      "se_of_mean_auc": 0.015059732121611524,
+      "n_per_class": 149,
+      "n_fits": 25,
+      "dispersion_note": "std_* is the FOLD-LEVEL fit std across the n_fits fits; se_of_mean_* is std/sqrt(n_fits) and is the yardstick for reading a MOVEMENT in the mean (A14 Q4). PRE-REGISTERED (A14 Q4, from A13_auditor_and_v3_VERBATIM.md): gate 8a/8b movement may NEVER be cited as evidence an intervention worked -- they are pass/fail drift guards only. The 25 fits are not independent, so this SE is nominal and if anything understates the true uncertainty.",
+      "top_features_toward_NEW": [
+       [
+        "an",
+        1.3767
+       ],
+       [
+        "of",
+        0.9089
+       ],
+       [
+        "its",
+        0.8053
+       ],
+       [
+        "the",
+        0.6879
+       ],
+       [
+        "with",
+        0.6679
+       ],
+       [
+        "across",
+        0.6034
+       ],
+       [
+        "outside",
+        0.3934
+       ],
+       [
+        "other",
+        0.3333
+       ],
+       [
+        "towards",
+        0.2862
+       ],
+       [
+        "PUNCT[']",
+        0.281
+       ],
+       [
+        "among",
+        0.2432
+       ],
+       [
+        "off",
+        0.2368
+       ],
+       [
+        "while",
+        0.2295
+       ],
+       [
+        "into",
+        0.2056
+       ],
+       [
+        "or",
+        0.1695
+       ],
+       [
+        "being",
+        0.1401
+       ],
+       [
+        "even",
+        0.1328
+       ],
+       [
+        "over",
+        0.1289
+       ],
+       [
+        "during",
+        0.1228
+       ],
+       [
+        "around",
+        0.1221
+       ]
+      ],
+      "top_features_toward_CORPUS": [
+       [
+        "her",
+        -1.3232
+       ],
+       [
+        "against",
+        -0.8492
+       ],
+       [
+        "behind",
+        -0.5957
+       ],
+       [
+        "in",
+        -0.5882
+       ],
+       [
+        "another",
+        -0.5026
+       ],
+       [
+        "before",
+        -0.4071
+       ],
+       [
+        "up",
+        -0.3721
+       ],
+       [
+        "his",
+        -0.3143
+       ],
+       [
+        "at",
+        -0.301
+       ],
+       [
+        "beneath",
+        -0.2925
+       ],
+       [
+        "PUNCT[,]",
+        -0.2848
+       ],
+       [
+        "within",
+        -0.2576
+       ],
+       [
+        "near",
+        -0.2447
+       ],
+       [
+        "that",
+        -0.2184
+       ],
+       [
+        "from",
+        -0.2159
+       ],
+       [
+        "on",
+        -0.2008
+       ],
+       [
+        "and",
+        -0.1834
+       ],
+       [
+        "as",
+        -0.1833
+       ],
+       [
+        "it",
+        -0.1815
+       ],
+       [
+        "toward",
+        -0.18
+       ]
+      ]
+     }
+    },
+    {
+     "gate": "8c",
+     "name": "ORIGINAL absolute bar (superseded, recorded not replaced)",
+     "value": 0.7099,
+     "corpus": "0.50 = chance",
+     "bar": "<= 0.65  [SUPERSEDED by 8a/8b -- round-9 ruling]",
+     "verdict": "FAIL (recorded; the bar was in an unreachable reference frame: it demanded a different model generation land within 0.008 of the corpus's own internal A-vs-B register distance 0.6419, while a prompt delta inside one model opens 0.7233)",
+     "type": "RECORD"
+    },
+    {
+     "gate": 9,
+     "name": "full-vocabulary classifier",
+     "value": 0.9124,
+     "corpus": "0.50 = chance",
+     "bar": "AUC >= 0.80 triggers feature investigation",
+     "verdict": "INVESTIGATE",
+     "type": "REVIEW",
+     "detail": {
+      "mean_balanced_accuracy": 0.8314117647058823,
+      "std_balanced_accuracy": 0.04296382832631509,
+      "se_of_mean_balanced_accuracy": 0.008592765665263017,
+      "mean_auc": 0.912401384083045,
+      "std_auc": 0.035250379830152924,
+      "se_of_mean_auc": 0.007050075966030585,
+      "n_per_class": 171,
+      "n_fits": 25,
+      "dispersion_note": "std_* is the FOLD-LEVEL fit std across the n_fits fits; se_of_mean_* is std/sqrt(n_fits) and is the yardstick for reading a MOVEMENT in the mean (A14 Q4). PRE-REGISTERED (A14 Q4, from A13_auditor_and_v3_VERBATIM.md): gate 8a/8b movement may NEVER be cited as evidence an intervention worked -- they are pass/fail drift guards only. The 25 fits are not independent, so this SE is nominal and if anything understates the true uncertainty.",
+      "top_features_toward_NEW": [
+       [
+        "short",
+        1.2381
+       ],
+       [
+        "daylight",
+        1.1021
+       ],
+       [
+        "brown",
+        1.0564
+       ],
+       [
+        "light",
+        1.0148
+       ],
+       [
+        "room",
+        0.8943
+       ],
+       [
+        "lit",
+        0.8566
+       ],
+       [
+        "white",
+        0.8485
+       ],
+       [
+        "shirt",
+        0.8234
+       ],
+       [
+        "indoor",
+        0.8224
+       ],
+       [
+        "skinned",
+        0.8042
+       ],
+       [
+        "hair",
+        0.802
+       ],
+       [
+        "soft",
+        0.7769
+       ],
+       [
+        "brightly",
+        0.7431
+       ],
+       [
+        "wooden",
+        0.6993
+       ],
+       [
+        "with",
+        0.6971
+       ],
+       [
+        "gray",
+        0.6822
+       ],
+       [
+        "fair",
+        0.6237
+       ],
+       [
+        "by",
+        0.6095
+       ],
+       [
+        "holds",
+        0.5959
+       ],
+       [
+        "t",
+        0.5805
+       ]
+      ],
+      "top_features_toward_CORPUS": [
+       [
+        "sunglasses",
+        -1.0529
+       ],
+       [
+        "sky",
+        -0.9549
+       ],
+       [
+        "stands",
+        -0.884
+       ],
+       [
+        "the",
+        -0.8512
+       ],
+       [
+        "warm",
+        -0.8244
+       ],
+       [
+        "on",
+        -0.8137
+       ],
+       [
+        "young",
+        -0.6995
+       ],
+       [
+        "is",
+        -0.6577
+       ],
+       [
+        "golden",
+        -0.5819
+       ],
+       [
+        "night",
+        -0.5638
+       ],
+       [
+        "sunlight",
+        -0.5105
+       ],
+       [
+        "trousers",
+        -0.5101
+       ],
+       [
+        "city",
+        -0.5047
+       ],
+       [
+        "under",
+        -0.5012
+       ],
+       [
+        "of",
+        -0.4855
+       ],
+       [
+        "street",
+        -0.4592
+       ],
+       [
+        "concrete",
+        -0.4568
+       ],
+       [
+        "slicked",
+        -0.4549
+       ],
+       [
+        "skirt",
+        -0.4535
+       ],
+       [
+        "sits",
+        -0.4518
+       ]
+      ]
+     }
+    },
+    {
+     "gate": 10,
+     "name": "colour-term density",
+     "value": 3.87,
+     "corpus": 3.158,
+     "bar": "in [1.579, 4.737]",
+     "verdict": "PASS",
+     "type": "REVIEW"
+    },
+    {
+     "gate": 11,
+     "name": "camera-phrase rate",
+     "value": "3.58%",
+     "corpus": "3.51%",
+     "bar": "within +/-10 pp",
+     "verdict": "PASS",
+     "type": "FLAG"
+    },
+    {
+     "gate": 12,
+     "name": "near-duplicate rate (token Jaccard > 0.8)",
+     "value": "0 pairs (0.0% of pairs)",
+     "corpus": "1 pairs",
+     "bar": "report only",
+     "verdict": "REPORT",
+     "type": "FLAG"
+    }
+   ]
+  }
+ },
+ "corpus_139_layer2_audit": {
+  "report": "outputs/ctt_v2/captions/CORPUS_139_LAYER2_AUDIT.json",
+  "captions": 139,
+  "audit_units": 171,
+  "a_side": 139,
+  "b_side": 32,
+  "leak_YES": 0,
+  "inaccurate_YES": 4,
+  "verdict": "HITS -- ESCALATE",
+  "positive_presence_control": {
+   "rule": "A11: an absence-assert may only PASS if the instrument positively produced a verdict for every unit; a shrunken denominator is a FAIL, never a zero-hits PASS.",
+   "verdicts_parsed_equals_units": true,
+   "errors_zero": true,
+   "satisfied": true
+  },
+  "headline": "0/171 leak=YES -- NO endpoint description leaks the transition effect, which is the question that mattered. 4/171 inaccurate=YES (2.3%).",
+  "escalation": "CERTIFIED captions -- kept BYTE-IDENTICAL, nothing edited. All 4 hits ESCALATE to the owner. audit_corpus_139.py is read-only by construction (no --fix, no store output).",
+  "operator_reading": "All four are fine-grained perceptual attribute errors (cap logo, eyewear, visor colour, hair texture) -- the class A8 s4 placed OUTSIDE the >=97% bar's scope. None describes change, onset or effect. Owner adjudicates.",
+  "hits_verbatim": {
+   "leak": [],
+   "inaccurate": [
+    {
+     "clip_id": "polygon_1",
+     "role": "A",
+     "description": "A man wearing a tan baseball cap, sunglasses, a pink patterned headscarf, a brown t-shirt over a white long-sleeved shirt, black pants, and white sneakers sits on a concrete ledge outdoors in bright sunlight next to a small potted plant",
+     "anchor_video": "data/processed/corpus_anchors/clips/polygon_1__A.mp4",
+     "verdict": {
+      "leak": "NO",
+      "inaccurate": "YES",
+      "errors": [
+       "The man is wearing a tan baseball cap with a 'C' logo, not a brown one as typically described or implied, but the main error is the cap color or style detail."
+      ]
+     },
+     "model_version_echo": "gemini-3.5-flash-lite"
+    },
+    {
+     "clip_id": "portal_2",
+     "role": "A",
+     "description": "An illustrated character with messy purple hair, glasses, and headphones around their neck stands outside a gas station at night, looking at a smartphone with a distressed, open-mouthed expression under a green neon glow",
+     "anchor_video": "data/processed/corpus_anchors/clips/portal_2__A.mp4",
+     "verdict": {
+      "leak": "NO",
+      "inaccurate": "YES",
+      "errors": [
+       "The character is not wearing glasses."
+      ]
+     },
+     "model_version_echo": "gemini-3.5-flash-lite"
+    },
+    {
+     "clip_id": "sakura_petals_0",
+     "role": "A",
+     "description": "An astronaut in a white spacesuit with a reflective purple visor stands on the metal framework of a skyscraper overlooking a sprawling city filled with tall buildings and billboards under an overcast sky",
+     "anchor_video": "data/processed/corpus_anchors/clips/sakura_petals_0__A.mp4",
+     "verdict": {
+      "leak": "NO",
+      "inaccurate": "YES",
+      "errors": [
+       "The visor is not purple, it is black with reflections.",
+       "The astronaut is standing on a concrete rooftop edge, not a metal framework of a skyscraper."
+      ]
+     },
+     "model_version_echo": "gemini-3.5-flash-lite"
+    },
+    {
+     "clip_id": "water_bending_1",
+     "role": "B",
+     "description": "a curly-haired man in a white polo shirt and sunglasses lunging toward the camera on a blue tennis court, blurred hands and a tennis ball filling the foreground beneath a high-rise tower and drifting clouds",
+     "anchor_video": "data/processed/corpus_anchors/clips/water_bending_1__B.mp4",
+     "verdict": {
+      "leak": "NO",
+      "inaccurate": "YES",
+      "errors": [
+       "The man is described as having curly hair, but his hair is short and straight or slightly wavy, not curly."
+      ]
+     },
+     "model_version_echo": "gemini-3.5-flash-lite"
+    }
+   ]
+  }
+ },
+ "tier2_queue": {
+  "size": 111,
+  "pct_of_in_scope": 7.91,
+  "policy": "100% operator review (A5 Ruling 5 compensating control). Flags are NOT auto-rejects.",
+  "context": "The certified corpus's own base rate is 13.5%, so ~8% is unremarkable.",
+  "pairs": [
+   "davis_blackswan|A",
+   "davis_blackswan|B",
+   "davis_breakdance-flare|A",
+   "davis_breakdance|B",
+   "davis_color-run|B",
+   "davis_drift-straight|B",
+   "davis_drone|A",
+   "davis_gold-fish|B",
+   "davis_horsejump-high|A",
+   "davis_horsejump-low|B",
+   "davis_mbike-trick|A",
+   "davis_mbike-trick|B",
+   "davis_rhino|B",
+   "humanvid_10535765|A",
+   "humanvid_10535765|B",
+   "humanvid_20427894|A",
+   "humanvid_4289764|A",
+   "humanvid_4507082|A",
+   "humanvid_4625692|A",
+   "humanvid_4752949|A",
+   "humanvid_4838256|A",
+   "humanvid_4904165|B",
+   "humanvid_4985237|B",
+   "humanvid_5025828|A",
+   "humanvid_5033911|A",
+   "humanvid_5265087|B",
+   "humanvid_5319931|A",
+   "humanvid_5895167|B",
+   "humanvid_6012147|A",
+   "humanvid_6058825|A",
+   "humanvid_6169612|A",
+   "humanvid_6169612|B",
+   "humanvid_6170784|A",
+   "humanvid_6170784|B",
+   "humanvid_6209376|B",
+   "humanvid_6249641|B",
+   "humanvid_6372013|A",
+   "humanvid_6524295|A",
+   "humanvid_6598886|A",
+   "humanvid_6616600|B",
+   "humanvid_6708593|A",
+   "humanvid_6768688|A",
+   "humanvid_6768688|B",
+   "humanvid_6892366|B",
+   "humanvid_7035065|B",
+   "humanvid_7251969|A",
+   "humanvid_7280198|A",
+   "humanvid_7320722|A",
+   "humanvid_7330831|A",
+   "humanvid_7330831|B",
+   "humanvid_7463918|B",
+   "humanvid_7583316|B",
+   "humanvid_7646789|B",
+   "humanvid_7870783|B",
+   "humanvid_7884054|A",
+   "humanvid_7988179|B",
+   "humanvid_8027444|B",
+   "humanvid_8041936|A",
+   "humanvid_8041936|B",
+   "humanvid_8132234|B",
+   "humanvid_8135344|B",
+   "humanvid_8154484|A",
+   "humanvid_8189502|B",
+   "humanvid_8360951|A",
+   "humanvid_8628670|A",
+   "humanvid_8715164|A",
+   "humanvid_8717541|B",
+   "humanvid_8939422|B",
+   "humanvid_8974077|A",
+   "humanvid_9460272|B",
+   "humanvid_9807743|A",
+   "humanvid_9807743|B",
+   "openvid_Rk9t33GCIzc_44_210to435|A",
+   "openvid_SyGOidmxV_E_4_0to163|A",
+   "openvid_T8ehDbQPv8w_4_0to163|A",
+   "openvid_UUUWxvofLgU_13_19to453|A",
+   "openvid_UUUWxvofLgU_13_19to453|B",
+   "openvid_X2WTwrFf2Q4_5_0to239|B",
+   "openvid_XFSw6t7SP00_79_0to109|A",
+   "openvid_XFSw6t7SP00_79_0to109|B",
+   "openvid__hKvS8p3JCM_17_0to102|B",
+   "openvid__nLdQ5vZP5c_6_0to148|A",
+   "vcbench_animal_2430774_3840x2160|A",
+   "vcbench_animal_2430774_3840x2160|B",
+   "vcbench_animal_9116154_1080x1920|A",
+   "vcbench_boat_7318821_1080x1920|B",
+   "vcbench_bus_2950082_3840x2160|B",
+   "vcbench_car_2878091_3840x2160|A",
+   "vcbench_car_2878091_3840x2160|B",
+   "vcbench_coast_33754706_2160x3840|B",
+   "vcbench_dancing_3713455_2160x4096|A",
+   "vcbench_football_4612890_4096x2160|A",
+   "vcbench_football_4612890_4096x2160|B",
+   "vcbench_library_8086641_2160x4096|B",
+   "vcbench_meal_3944327_2160x4096|A",
+   "vcbench_meal_3944327_2160x4096|B",
+   "vcbench_meal_5607788_2160x3840|B",
+   "vcbench_painting_3795837_4096x2160|A",
+   "vcbench_phone_3692634_1920x1080|B",
+   "vcbench_robot_8327799_3840x2160|A",
+   "vcbench_robot_8327799_3840x2160|B",
+   "vcbench_robot_8501993_2160x3840|A",
+   "vcbench_school_5184436_1080x1920|A",
+   "vcbench_school_5184436_1080x1920|B",
+   "vcbench_sculpture_7574279_1920x1080|A",
+   "vcbench_talk_4426529_3840x2160|A",
+   "vcbench_tulip_10536489_4096x2160|A",
+   "vcbench_tulip_10536489_4096x2160|B",
+   "vcbench_tulip_7268820_4096x2160|A",
+   "vcbench_turtle_17823784_2160x3840|A",
+   "vcbench_turtle_17823784_2160x3840|B"
+  ]
+ },
+ "orphans": {
+  "count": 76,
+  "policy": "KEPT, never deleted -- paid-for descriptions no current pinned grid consumes (S1_GRID.json drifted eb4a88f3 -> 126fcac9). Held OUT of the descriptions map so they can neither ship nor inflate coverage.",
+  "pairs": [
+   "humanvid_10036905|B",
+   "humanvid_13931580|A",
+   "humanvid_3704250|B",
+   "humanvid_4486544|A",
+   "humanvid_4711916|A",
+   "humanvid_4812839|B",
+   "humanvid_5025840|A",
+   "humanvid_5234719|B",
+   "humanvid_5379013|B",
+   "humanvid_5435288|B",
+   "humanvid_5478730|A",
+   "humanvid_5512135|B",
+   "humanvid_5722215|B",
+   "humanvid_5783786|A",
+   "humanvid_5805068|A",
+   "humanvid_5916725|A",
+   "humanvid_5919413|B",
+   "humanvid_5930443|B",
+   "humanvid_6172963|A",
+   "humanvid_6173047|B",
+   "humanvid_6248213|B",
+   "humanvid_6263482|B",
+   "humanvid_6316961|A",
+   "humanvid_6316965|B",
+   "humanvid_6323036|B",
+   "humanvid_6389830|A",
+   "humanvid_6463803|B",
+   "humanvid_6476841|A",
+   "humanvid_6529534|B",
+   "humanvid_6563962|A",
+   "humanvid_6624491|B",
+   "humanvid_6765199|A",
+   "humanvid_6892729|A",
+   "humanvid_6894255|B",
+   "humanvid_6900919|B",
+   "humanvid_6909834|A",
+   "humanvid_6951169|A",
+   "humanvid_6974519|A",
+   "humanvid_7062381|B",
+   "humanvid_7062989|A",
+   "humanvid_7097849|A",
+   "humanvid_7102365|B",
+   "humanvid_7148116|A",
+   "humanvid_7166778|B",
+   "humanvid_7224704|A",
+   "humanvid_7330183|A",
+   "humanvid_7362666|A",
+   "humanvid_7392951|A",
+   "humanvid_7423727|A",
+   "humanvid_7463918|A",
+   "humanvid_7467119|A",
+   "humanvid_7551202|A",
+   "humanvid_7712292|A",
+   "humanvid_7904587|A",
+   "humanvid_7972153|A",
+   "humanvid_8056841|A",
+   "humanvid_8113148|A",
+   "humanvid_8344236|A",
+   "humanvid_8375459|B",
+   "humanvid_8385522|A",
+   "humanvid_8402093|A",
+   "humanvid_8410587|A",
+   "humanvid_8503116|A",
+   "humanvid_8513964|B",
+   "humanvid_8611640|A",
+   "humanvid_8688100|A",
+   "humanvid_8716789|B",
+   "humanvid_8811129|A",
+   "humanvid_8906771|A",
+   "humanvid_8912759|B",
+   "humanvid_9466166|A",
+   "humanvid_9484783|B",
+   "humanvid_9489176|A",
+   "humanvid_9640927|A",
+   "humanvid_9697679|A",
+   "humanvid_9798676|A"
+  ]
+ },
+ "residual_loop": {
+  "unresolved_inaccurate_in_final_store": 0,
+  "bar": "A8 s4: unresolved inaccurate in the final store = 0, HARD",
+  "operator_manual_rewrites": 3,
+  "detail": "3 pairs exhausted regenerations: 2 on the audio-word format assert (music; sound/audio) and 1 on a persistent perceptual attribute (dress navy, not white). Each hand-edited minimally from its own last attempt, re-validated through the identical mechanical filters, and RE-AUDITED clean on the production path. Logged in archive/store/manual3 with rationale and full pre-rewrite history.",
+  "hand_edit_ban": "Hand-editing to move a DISTRIBUTIONAL gate remains banned. These edits fix auditor-named content errors and mechanical format violations only.",
+  "final3_shard": "Retried the same 3 under v3 + the pro auditor, hit the same audio:music wall, accepted 0 descriptions. Kept as audit trail. This is why store homogeneity survived -- nothing v3-generated or pro-audited ever entered.",
+  "content_borne_leak_rule": "Pre-registered rule NEVER INVOKED: 0 leak=YES in the final pass, so no clip was dropped and nothing was marked leak_content_borne."
+ },
+ "spend": {
+  "this_session_measured": {
+   "calls": 609,
+   "tokens": 185089,
+   "by_lane": {
+    "gap213_generation": {
+     "calls": 220,
+     "tokens": 103948,
+     "model_version_echo": [
+      "gemini-3.6-flash"
+     ]
+    },
+    "gap213_audit": {
+     "calls": 215,
+     "tokens": 44901,
+     "model_version_echo": [
+      "gemini-3.5-flash-lite"
+     ]
+    },
+    "manual3_audit": {
+     "calls": 3,
+     "tokens": 640,
+     "model_version_echo": [
+      "gemini-3.5-flash-lite"
+     ]
+    },
+    "corpus139_audit": {
+     "calls": 171,
+     "tokens": 35600,
+     "model_version_echo": [
+      "gemini-3.5-flash-lite"
+     ]
+    }
+   },
+   "try_at_316_79_per_million": 58.63,
+   "try_at_371_per_million_reference": 68.67,
+   "note": "MEASURED from archived usageMetadata, not estimated."
+  },
+  "campaign_cumulative": {
+   "calls": 5515,
+   "tokens": 2825223,
+   "prompt_tokens": 2593780,
+   "output_tokens": 231443,
+   "invoice_try": 895,
+   "try_per_million_upper_bound": 316.79,
+   "upper_bound_note": "UPPER bound -- unarchived calls also contributed to the invoice, so the true TRY/token is lower.",
+   "production_shaped_rate": "682 tokens per finished description (generation + audit)"
+  },
+  "cost_ledger_limitation": "cost_ledger.py applies ONE blended rate to every model and therefore CANNOT price a model-choice decision (understates pro ~8x, overstates flash-lite ~2x)."
+ },
+ "path_convention": "All paths are REPO-RELATIVE. They were recorded from the ctt-v2 worktree and relativised so the lock does not depend on that worktree existing. NOTE: outputs/ is gitignored, so the artifacts these paths name are NOT in git -- see portability_warning.",
+ "portability_warning": "The canonical store, the lock, and the whole archive/ audit trail live under outputs/, which is GITIGNORED. Merging the branch into main moved the CODE but not these ARTIFACTS. Exactly one copy exists, currently inside the ctt-v2 worktree. Removing that worktree would DELETE the only copy. Back them up or relocate them before any worktree cleanup.",
+ "locked_at_original": "2026-07-28T17:21:23.989930+00:00",
+ "lock_history": [
+  {
+   "at": "2026-07-28T17:21:23.989930+00:00",
+   "what": "captions LOCKED at 1403/1403; battery on a 447-row subset, gap NAMED"
+  },
+  {
+   "at": "2026-07-28T17:52:37.114942+00:00",
+   "what": "battery gap CLOSED on the full 1403-row store; hard_fail [] holds; 8a 0.7099->0.6819, 8b 0.5787->0.5950 (load-bearing, narrow), gate9 AUC 0.9124->0.8963. Nothing else in the lock changed."
+  },
+  {
+   "at": "2026-07-28T14:01:04-0500",
+   "what": "requirement.role_scoped_exclusion_detail.OPEN_CONSUMPTION_GAP flipped OPEN -> RESOLVED per A16_29_orphaned_s2a_clips_VERBATIM.md + A17_29clip_affirmation_VERBATIM.md + A18_28plus1_and_ood_demo_VERBATIM.md. Coverage, hashes, models, gates and spend are UNCHANGED — 1403/1403 and content_hash c8e2d95b... stand; this was always a consumption-side gap, never a store gap."
+  }
+ ]
+}

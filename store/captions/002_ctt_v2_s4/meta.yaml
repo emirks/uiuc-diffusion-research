@@ -1,0 +1,15 @@
+id: captions/002_ctt_v2_s4
+seq: 2
+shelf: captions
+created: 2026-08-27
+role: S4 first-frame A descriptions (one-sided) — Lane A training text
+keyed: "<stem>|A"
+coverage: 2000/2000
+content_hash: sha256:34534e47c291c95211e7ee5a4c9308bdc80db0aab99833ca90b0191663c5f658  # disk-authoritative; CAPTIONS.md §12 fcd46f33 is STALE
+prompt_variant: v2-s4f0          # v2 role-A, "9-frame snippet" -> "single still frame"
+generator: Claude vision (25 batches x 80)
+spec: S4_CAPTION_SPEC.md
+gate_note: FAILS pre-registered gate 8a (0.8849 vs <=0.73) and the width gate; shipped by explicit owner decision (CAPTIONS.md §12.4). Any report citing S4 carries this.
+assembled_by: scripts/ctt_v2/captions/assemble_s4_captions.py -> "{A}. sksz."
+source: byte-copy of outputs/ctt_v2/captions/S4_CAPTION_STORE.json
+authority: ../../TEXT_LIFECYCLE.md   # §2 Lane A

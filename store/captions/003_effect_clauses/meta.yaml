@@ -1,0 +1,10 @@
+id: captions/003_effect_clauses
+seq: 3
+shelf: captions
+created: 2026-08-27
+role: EFFECT_DESC — one leak-ful clause per reference; Lane B EVAL ONLY (never in training)
+count: 36
+style: ~20 words, subject-generic ("the subject..."), transition-describing
+source: byte-copy of misc/refvfx_baseline/reference_effects.json  # append-only
+consumed_by: prompts/002_ctt152_effect   # {S1}. sksz. {EFFECT}. [{S2}.], spliced downstream of render_prompt
+authority: ../../TEXT_LIFECYCLE.md   # §3 Lane B

@@ -89,3 +89,5 @@ datasets/
 !/store/**/grid.jsonl
 !/store/**/config.yaml
 !/store/**/*.md
+# the captions shelf's description stores are versioned SOURCE TEXT, not artifacts:
+!/store/captions/**/*.json
