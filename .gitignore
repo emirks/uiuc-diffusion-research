@@ -91,3 +91,5 @@ datasets/
 !/store/**/*.md
 # the captions shelf's description stores are versioned SOURCE TEXT, not artifacts:
 !/store/captions/**/*.json
+# the datasets shelf's frozen normalization-stats jsons are versioned metadata, not artifacts:
+!/store/datasets/**/NORM_*.json

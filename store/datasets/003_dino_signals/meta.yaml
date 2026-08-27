@@ -1,0 +1,22 @@
+id: 003_dino_signals
+seq: 3
+shelf: datasets
+created: 2026-08-28 (44-ch DINO-basis operator signal + frozen norm v1)
+source: armA_extract.py + SIGNAL_REFERENCE.html; campaign misc/2026-08-24_flow_signal_conditioning
+root: symlink -> ../../../../cache/armA_signals  # signal cache (fp16 fields + raw + pca); NOT copied into git
+contents: >
+  19,023 per-clip signal fields — the 44-channel DINO-basis operator signal (fp16) on the LTX-2
+  latent grid: eval 223, S0 139, S1 1,225, S2a 7,577, S2b 7,859, S4 2,000. Shapes (T,H,W,44) =
+  (16,20,15,44) for S0/S1/S2a/S2b/eval, (5,14,26,44) for S4. Channels: G1 pca_00..31 (frozen
+  768->32 DINOv2-base PCA state) · G2 u,v,conf,entropy (windowed correspondence transport) · G3
+  dF_norm,one_minus_cos (in-place change) · G4 s_A,s_B,nu (endpoint bank-max) · G5 dLab,csim_A,csim_B
+  (Lab). Plus dino_raw/ (19,023 raw DINOv2-base patch-token caches, ~483 GB) and pca.npz (frozen PCA).
+norm:
+  file: NORM_dino_v1.json
+  sha256: 79061ec44c028604e5e2ff36f661fff24446a72b2aba9a94774b1e3cf48c51d3
+  scheme: zscore_clip5_equalstratum   # x_norm = clip((x-loc)/scale, -5, +5), equal-stratum S0/S1/S2a/S2b/S4, eval excluded
+pca_sha256: 4d59539bd048cccc21af76f38055497943f3d649644d798d0ee71f7ea7917244
+coverage: {S0: 139/139, S1: 1225/1225, S2a: 7577/7577, S2b: 7859/7859, S4: 2000/2000, eval: 223}
+norm_gates: {G-N1: PASS, G-N2: PASS, G-N3: PASS, G-N4: PASS, G-N5: PASS, asinh_channels: none, dead_channels: none}
+docs: NORM_dino_v1.json (this dir) · report misc/2026-08-24_flow_signal_conditioning/armA/NORM_REPORT.md · spec .../armA/SIGNAL_REFERENCE.html
+consumers: []

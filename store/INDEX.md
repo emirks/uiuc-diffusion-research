@@ -95,3 +95,4 @@ resolve via `gens/_legacy/`.
 ## datasets
 1. `001_transitions_std121` — 222-clip eval corpus (stub → data/processed/transitions_std121)
 2. `002_ctt_v2` — 56,368-pair training set (stub → datasets/ctt_v2)
+3. `003_dino_signals` — 19,023-clip 44-ch DINO-basis operator signal + frozen norm v1 (stub → cache/armA_signals)
