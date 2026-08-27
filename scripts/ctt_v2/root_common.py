@@ -262,6 +262,23 @@ RULED_SHAPES = {
                   "prefix_latents": 1,
                   "authority": "DOSSIER §13.2 — verified on disk; 832x448 is a pure "
                                "16-row centre crop, 464 is not a multiple of 32"},
+    # EffectData (S6) — one-sided breadth stratum, 81f/24fps clips whose NATIVE resolutions are
+    # already VAE-legal (no crop, unlike S4).  The top-2k roster has exactly these 4 native shapes
+    # (two transpose pairs).  prefix_latents=1 conditions video frame 0 ALONE, as S4 does — a 9-frame
+    # prefix (the 121f default of 2) would reach into the effect onset and mismatch the frame-0
+    # caption.  Same frame-0 rationale as S4's owner decision 2026-07-28; see TEXT_LIFECYCLE.md §8.1.
+    (11, 22, 39): {"name": "effd_1248x704_81f", "px": (1248, 704, 81), "fps": 24.0,
+                   "strata": ("S6",), "prefix_latents": 1,
+                   "authority": "EffectData native (VAE-legal); frame-0 anchor per S4 precedent"},
+    (11, 39, 22): {"name": "effd_704x1248_81f", "px": (704, 1248, 81), "fps": 24.0,
+                   "strata": ("S6",), "prefix_latents": 1,
+                   "authority": "EffectData native (VAE-legal); frame-0 anchor per S4 precedent"},
+    (11, 33, 22): {"name": "effd_704x1056_81f", "px": (704, 1056, 81), "fps": 24.0,
+                   "strata": ("S6",), "prefix_latents": 1,
+                   "authority": "EffectData native (VAE-legal); frame-0 anchor per S4 precedent"},
+    (11, 22, 33): {"name": "effd_1056x704_81f", "px": (1056, 704, 81), "fps": 24.0,
+                   "strata": ("S6",), "prefix_latents": 1,
+                   "authority": "EffectData native (VAE-legal); frame-0 anchor per S4 precedent"},
 }
 
 #: Fallback for an unruled shape.  2 is the 121f value, so an unruled shape behaves like the
