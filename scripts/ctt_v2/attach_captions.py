@@ -37,6 +37,7 @@ IN = REPO / "outputs/ctt_v2/conditions_inputs"
 INV = REPO / "outputs/ctt_v2/inventories"
 LOCKED = REPO / "outputs/ctt_v2/captions/CAPTION_STORE.json"
 S4_STORE = REPO / "outputs/ctt_v2/captions/S4_CAPTION_STORE.json"
+S6_STORE = REPO / "store/captions/004_effectdata/EFFECTDATA_CAPTION_STORE.json"
 
 
 def _bei():
@@ -57,15 +58,16 @@ def main() -> int:
     bei = _bei()
     locked = json.loads(LOCKED.read_text())["descriptions"]
     s4 = json.loads(S4_STORE.read_text())["descriptions"]
+    s6 = json.loads(S6_STORE.read_text())["descriptions"] if S6_STORE.exists() else {}
     filt = rc.leak_filter()
     rc_ = 0
 
-    for st in ("S1", "S2a", "S2b", "S4"):
+    for st in ("S1", "S2a", "S2b", "S4", "S6"):
         inv_p = INV / f"{st}.json"
         inv = json.loads(inv_p.read_text())
         need = [s for s, c in inv["clips"].items() if not c.get("caption")]
         c2h = json.loads((IN / f"{st}_clip_to_hash.json").read_text())
-        caps = bei.assembled_for(st, locked, s4)
+        caps = bei.assembled_for(st, locked, s4, s6)
 
         # consistency: the caption must hash to the embed the inventory already points at
         bad_hash, bad_leak, absent = [], [], []

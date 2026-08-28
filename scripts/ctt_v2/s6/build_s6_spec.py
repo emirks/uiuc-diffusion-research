@@ -55,17 +55,46 @@ def main() -> None:
         raise SystemExit(f"{len(missing)}/{len(subjects)} subjects have no |A description in the "
                          f"store: {missing[:10]}")
 
+    # EffectData has 15 effect-name pairs that differ ONLY in case (e.g. 'Back_Laser_Wings' vs
+    # 'Back_laser_wings') — genuinely distinct operators (disjoint clips/subjects) that collapse
+    # under rc.slug_group's lowercase. assemble_root REFUSES to slug two operator groups to one
+    # path (a silent merge). They stay distinct groups; we make the group id itself slug-unique by
+    # suffixing a short hash of the raw effect name ONLY where a collision exists.
+    import hashlib
+    from collections import Counter
+    all_effects = sorted({c["effect"] for c in clips})
+    slug_counts = Counter(rc.slug_group(e) for e in all_effects)
+    disambig: dict[str, str] = {}
+
+    def gid_for(eff: str) -> str:
+        if slug_counts[rc.slug_group(eff)] > 1:
+            gid = f"{eff}__{hashlib.sha1(eff.encode()).hexdigest()[:6]}"
+            disambig[eff] = gid
+            return gid
+        return eff
+
     groups: dict[str, dict] = {}
     endpoints: dict[str, list[str]] = {}
     cap_srcs: dict[str, list[list[str]]] = {}
     for c in clips:
         st, subj, eff = c["stem"], c["subject"], c["effect"]
-        groups.setdefault(eff, {"class": None, "shader": None, "sided": "one",
-                                "clips": []})["clips"].append(st)
-        endpoints[st] = [subj]
+        groups.setdefault(gid_for(eff), {"class": None, "shader": None, "sided": "one",
+                                         "clips": []})["clips"].append(st)
+        # endpoint = the TARGET clip itself (its own frame-0 is the start anchor / cond_clean),
+        # exactly as S4 (endpoints=[target]). The SUBJECT supplies only the caption, via the
+        # explicit caption_sources below — subjects are not clips/endpoints.
+        endpoints[st] = [st]
         cap_srcs[st] = [[subj, "A"]]              # explicit: draw the A-description from the subject
     for g in groups.values():
         g["clips"].sort()
+    # assert every group id now slugs uniquely
+    gslugs = Counter(rc.slug_group(gid) for gid in groups)
+    dup = {rc.slug_group(gid): gid for gid in groups if gslugs[rc.slug_group(gid)] > 1}
+    if dup:
+        raise SystemExit(f"slug collisions remain after disambiguation: {dup}")
+    if disambig:
+        print(f"[ok] disambiguated {len(disambig)} case-collision effect ids (e.g. "
+              f"{list(disambig.items())[0]})")
 
     # shape lookup: all clips are 81f; use any clip's latent_fhw as the representative for
     # prefix_latents (all 4 shapes carry prefix_latents=1 in RULED_SHAPES)
