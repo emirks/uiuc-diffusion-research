@@ -154,7 +154,7 @@ store/
 │   ├── 001_ctt_v2_endpoints/      A/B (clip,role) descriptions   [byte-copy, hash c8e2d95b — LOCKED]
 │   ├── 002_ctt_v2_s4/             S4 first-frame A descriptions   [hash 34534e47]
 │   ├── 003_effect_clauses/        EFFECT_DESC clauses            [from reference_effects.json]
-│   └── 0NN_effectdata/            EffectData A (per subject) + effect_desc (per effect)   [FUTURE]
+│   └── 004_effectdata/            EffectData (S6) A descriptions, per SUBJECT   [hash 4796ca7b — DONE 2026-08-28]
 ├── prompts/                       ← flat ids preserved; a `lane:` field carries the gen_eval/training split
 │   ├── 001_ctt152_neutral   (lane: gen_eval)   002_ctt152_effect (lane: gen_eval)
 │   ├── 007_ctl_probe (lane: gen_eval)          008_ext112_authorcfg (lane: gen_eval)
@@ -211,6 +211,19 @@ one-line `lane:` in each meta separates the two logically, non-breakingly.
 ---
 
 ## 8. Adding a stratum — EffectData worked example (one-sided)
+
+> **EXECUTED 2026-08-28 as stratum S6.** Full build authority: `misc/2026-08-28_effectdata_s6/BUILD.md`.
+> The plan below was followed with these DIVERGENCES worth flagging:
+> - Lane A landed as a **single subject-keyed store** `store/captions/004_effectdata/EFFECTDATA_CAPTION_STORE.json`
+>   (schema `ctt_v2_s6_caption_store/v1`, keyed `<subject>|A`, hash `4796ca7b`), matching the S4 store
+>   schema — not an `A/` subdir. Each clip reaches it via explicit `caption_sources=[[subject,"A"]]`.
+> - **EFFECT_DESC (step 2) and eval grids (step 4) are DEFERRED** — eval-only, not on the training path.
+> - **Caption QA gap vs S4 (OPEN, for advisor):** the 2,000 captions passed a generic leak/length/format
+>   gate (`build_caption_store.py validate`: 0 hard leaks, 0 format/length failures) plus each fan-out
+>   batch's own self-validation. The **formal S4 gate battery — the blind-guess gate and the 100%
+>   Layer-2 audit tripwire (§8.1) — was NOT run.** The captioner *did* surface the failure mode it
+>   guards against (mislabeled/hybrid animal ids) and described visible content instead, but that is not
+>   the formal gate. Whether S6 needs S4's full battery before training is an advisor question.
 
 The template is S4. For EffectData's chosen subset (advisor-recommended **top-2,000 counterfactual
 subjects**, additive, S2 kept):
