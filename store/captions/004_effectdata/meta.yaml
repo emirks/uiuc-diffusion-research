@@ -5,9 +5,9 @@ created: 2026-08-28
 role: S6 (EffectData) first-frame A descriptions (one-sided) — Lane A training text
 keyed: "<subject>|A"          # per-subject; reused across the subject's clips (Axis-A shared first frame)
 coverage: 2000/2000 subjects -> 28644 clips
-content_hash: sha256:4796ca7b7ebef8f7b0849ccba49ac207156fb8d6655586b354f447a66a559782   # covers the `descriptions` map (see store JSON `content_hash_covers`)
+content_hash: sha256:3c317b80c803dd67974e664def92c182f058c1a6d0afe6daedf6deea6e9614d8   # covers the `descriptions` map (see store JSON `content_hash_covers`)
 prompt_variant: v2-s4f0       # S4 role-A prompt; spec CAPTION_TASK.md carried into this shelf
-generator: claude-opus-4-8 vision, prompt v2-s4f0, per-item length draw over the corpus word-count spread (targets ~13..47 word). Fan-out of 25 batches (pilot 40 + 24 batches), each validated leak/length/format-clean; assembled + hashed by scripts/ctt_v2/s6/build_caption_store.py.
+generator: gemini-3.6-flash, prompt v2-s4f0 ('single still frame'), ONE IMAGE PER CALL (structural alignment fix after the opus 80-image batches misaligned caption<->subject; see misc/2026-08-28_effectdata_s6/BUILD.md). Per-item length draw over the 171-value corpus. Same instrument/rule as the S4 store.  Descriptions stored WITHOUT trailing period (S4 convention; build_encode_inputs adds '. sksz.'). Assembled + hashed by scripts/ctt_v2/s6/build_caption_store.py.
 spec: CAPTION_TASK.md
 leak_gate: generic HARD-leak scan (process/effect/frame/sound families) — 0 hard leaks; 20 state-word soft-watch (glow/beam of sunlight) accepted as literal still-state per spec.
 assembled_by: scripts/ctt_v2/s6/build_caption_store.py -> descriptions '<subject>|A'; training grammar "{A}. sksz." (one-sided) at root assembly

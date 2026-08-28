@@ -27,6 +27,26 @@ SELECTION = REPO / "data/processed/effectdata/selection_top2000.json"
 ROSTER = REPO / "outputs/ctt_v2/encodes/EFFECTDATA/ROSTER.json"
 SHELF = REPO / "store/captions/004_effectdata"
 SPEC_SRC = CAPDIR / "CAPTION_TASK.md"
+REGEN_JSON = CAPDIR / "regen/gemini_captions.json"   # per-image gemini-3.6-flash regen (2026-08-28)
+
+#: which caption source to build from. 'regen' = the alignment-safe per-image gemini regen that
+#: replaced the batch-hallucinated opus captions; 'batches' = the original opus fan-out.
+SOURCE = "regen"
+GENERATOR = {
+    "regen": "gemini-3.6-flash, prompt v2-s4f0 ('single still frame'), ONE IMAGE PER CALL "
+             "(structural alignment fix after the opus 80-image batches misaligned "
+             "caption<->subject; see misc/2026-08-28_effectdata_s6/BUILD.md). Per-item length "
+             "draw over the 171-value corpus. Same instrument/rule as the S4 store.",
+    "batches": "claude-opus-4-8 vision, prompt v2-s4f0, per-item length draw — SUPERSEDED "
+               "(batch caption<->subject misalignment; do not use).",
+}
+
+
+def _strip_terminal_period(s: str) -> str:
+    """S4 convention: descriptions carry NO trailing period; build_encode_inputs adds `. sksz.`
+    A stored period yields the double-period `...front.. sksz.` bug this fixes."""
+    s = s.strip()
+    return s[:-1].rstrip() if s.endswith(".") else s
 
 # HARD leaks: a caption naming/foreshadowing the transition is worse than none. These are
 # process/outcome/effect/frame/sound words. State words ("a low sun", "glowing embers") are NOT
@@ -62,6 +82,9 @@ def _selection_subjects() -> set[str]:
 
 
 def _merged() -> dict[str, str]:
+    if SOURCE == "regen":
+        d = json.loads(REGEN_JSON.read_text())        # {subject: caption} (2000)
+        return {k: v.strip() for k, v in d.items() if isinstance(v, str)}
     out: dict[str, str] = {}
     dup: list[str] = []
     files = [CAPDIR / "pilot_captions.json"] + sorted(glob.glob(str(CAPDIR / "out_*.json")))
@@ -143,7 +166,8 @@ def assemble() -> int:
         print("\n[assemble] REFUSING to write — validation not clean. Fix the above first.")
         return 1
     # descriptions keyed '<subject>|A'
-    descriptions = {f"{sub}|A": cap.strip() for sub, cap in sorted(caps.items())}
+    # descriptions carry NO trailing period (S4 convention); build_encode_inputs adds `. sksz.`
+    descriptions = {f"{sub}|A": _strip_terminal_period(cap) for sub, cap in sorted(caps.items())}
     ch = _content_hash(descriptions)
 
     roster = json.loads(ROSTER.read_text())
@@ -161,8 +185,7 @@ def assemble() -> int:
                   "(2000) is reused by that subject's clips at assembly (28,644 clips total). There "
                   "is no role-B description (frame 0 alone is conditioned: latent frame 0, prefix_latents=1).",
         "sided_authority": "roster sided='one'; prefix_latents=1 (RULED_SHAPES, commit 117daa0)",
-        "generator": "claude-opus-4-8 vision, prompt variant v2-s4f0, per-item length draw over the "
-                     "corpus word-count spread (targets ~13..47 ±4). Same instrument+rule as the S4 store.",
+        "generator": GENERATOR[SOURCE],
         "prompt_variant": "v2-s4f0",
         "prompt_variant_delta": "S4 prompt v2 role-A verbatim; spec text CAPTION_TASK.md carried into this shelf.",
         "spec_sha256": hashlib.sha256(SPEC_SRC.read_bytes()).hexdigest() if SPEC_SRC.exists() else None,
@@ -195,7 +218,7 @@ keyed: "<subject>|A"          # per-subject; reused across the subject's clips (
 coverage: {len(caps)}/2000 subjects -> {n_clips} clips
 content_hash: {ch}   # covers the `descriptions` map (see store JSON `content_hash_covers`)
 prompt_variant: v2-s4f0       # S4 role-A prompt; spec CAPTION_TASK.md carried into this shelf
-generator: claude-opus-4-8 vision, prompt v2-s4f0, per-item length draw over the corpus word-count spread (targets ~13..47 word). Fan-out of 25 batches (pilot 40 + 24 batches), each validated leak/length/format-clean; assembled + hashed by scripts/ctt_v2/s6/build_caption_store.py.
+generator: {GENERATOR[SOURCE]}  Descriptions stored WITHOUT trailing period (S4 convention; build_encode_inputs adds '. sksz.'). Assembled + hashed by scripts/ctt_v2/s6/build_caption_store.py.
 spec: CAPTION_TASK.md
 leak_gate: generic HARD-leak scan (process/effect/frame/sound families) — 0 hard leaks; 20 state-word soft-watch (glow/beam of sunlight) accepted as literal still-state per spec.
 assembled_by: scripts/ctt_v2/s6/build_caption_store.py -> descriptions '<subject>|A'; training grammar "{{A}}. sksz." (one-sided) at root assembly
@@ -210,9 +233,14 @@ authority: ../../TEXT_LIFECYCLE.md   # §2 Lane A
 
 
 def main() -> int:
+    global SOURCE
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("cmd", choices=["validate", "assemble"])
+    ap.add_argument("--source", choices=["regen", "batches"], default=SOURCE,
+                    help="regen = per-image gemini regen (default, alignment-safe); "
+                         "batches = superseded opus fan-out")
     args = ap.parse_args()
+    SOURCE = args.source
     if args.cmd == "validate":
         _, problems = validate()
         return 1 if problems else 0
