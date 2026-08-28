@@ -62,14 +62,30 @@ assert set(_S_PRESENT) == set(rc.MIX_STRATA), (
     "_S_PRESENT and rc.MIX_STRATA must name exactly the same strata"
 )
 
+#: Per-contract root path (a new dataset writes a NEW root; never overwrites 002's).
+CONTRACT_ROOTS = {
+    "002_ctt_v2": DEFAULT_ROOT,
+    "003_ctt_v2plus": REPO / "outputs/ctt_v2/roots/ctt_v2plus_mix",
+}
+#: `present` is a disk FACT. S6 becomes present once its encode + conditions land.
+_CONTRACT_PRESENT = {
+    "002_ctt_v2": dict(_S_PRESENT),
+    "003_ctt_v2plus": {**_S_PRESENT, "S6": True},
+}
+
 
 # --------------------------------------------------------------------------------------
-def default_manifest() -> dict:
+def default_manifest(contract_id: str = "002_ctt_v2") -> dict:
+    c = rc.mix_contract(contract_id)               # weights / prorata / mix_strata / absent
+    present = _CONTRACT_PRESENT[contract_id]
+    assert set(present) == set(c["mix_strata"]), (
+        f"{contract_id}: _CONTRACT_PRESENT != contract mix_strata")
     inv = REPO / "outputs/ctt_v2/inventories"
     return {
         "schema": rc.STRATA_MANIFEST_SCHEMA,
-        "authority": "A5 RULING 2/3/4 (misc/ctt_v2_final/advisors/A5_SYNTHESIS_RULING_VERBATIM.md)",
-        "root": str(DEFAULT_ROOT),
+        "contract": contract_id,
+        "authority": c["authority"],
+        "root": str(CONTRACT_ROOTS[contract_id]),
         "seed": rc.SEED,
         "pairing": {"rule": rc.PAIRING_RULE, "max_refs_per_target": rc.MAX_REFS_PER_TARGET},
         "mix_tolerance_pp": rc.MIX_TOLERANCE_PP,
@@ -83,8 +99,8 @@ def default_manifest() -> dict:
         # that a forced-equal share would require.  The split is computed at assembly time
         # from the counts the assembler produces, and its inputs are frozen in
         # `misc/ctt_v2_final/PREREG_mix_inputs.json`.
-        "stratum_weights_pct": dict(rc.STRATUM_WEIGHTS_PCT),
-        "prorata_groups": {k: list(v) for k, v in rc.PRORATA_GROUPS.items()},
+        "stratum_weights_pct": dict(c["weights"]),
+        "prorata_groups": {k: list(v) for k, v in c["prorata"].items()},
         "mix_contract_authority":
             "A9 §4 + A11 item 3 (S2 total 69) + A12 (split derived pro-rata to the "
             "assembled post-exclusion base pair counts; A1b: uniform per-sample weight "
@@ -103,8 +119,7 @@ def default_manifest() -> dict:
         #   S1 fails its gates       -> S0 15 / S2 total 73 / S4 12
         #   S4 misses the cutoff     -> A5's 15 / 6 / S2 total 79, unchanged
         #   both                     -> A5's registered 15 / S2 total 85
-        "absent_weight_overrides": {k: dict(v)
-                                    for k, v in rc.ABSENT_BRANCH_WEIGHTS_PCT.items()},
+        "absent_weight_overrides": {k: dict(v) for k, v in c["absent"].items()},
         "absent_weight_overrides_authority":
             "A9 §4, ratified verbatim by A11 item 3 and restated in mix-contract space by "
             "A12 — root_common.ABSENT_BRANCH_WEIGHTS_PCT (each branch guarded to sum to "
@@ -127,19 +142,18 @@ def default_manifest() -> dict:
         #   S4  — reinstated by A9; extraction + encode in flight, captions blocked.
         "strata": {
             s: {
-                "present": _S_PRESENT[s],
+                "present": present[s],
                 # the mix-contract weight this stratum draws from.  For a pro-rata member
                 # `weight_pct` is deliberately null — the number does not exist until the
                 # counts do.
                 "weight_group": rc.weight_owner(s),
-                "weight_pct": (rc.STRATUM_WEIGHTS_PCT[s]
-                               if s in rc.STRATUM_WEIGHTS_PCT else None),
-                "weight_rule": ("fixed (ruled)" if s in rc.STRATUM_WEIGHTS_PCT else
+                "weight_pct": (c["weights"][s] if s in c["weights"] else None),
+                "weight_rule": ("fixed (ruled)" if s in c["weights"] else
                                 f"DERIVED pro-rata within {rc.weight_owner(s)} from the "
                                 f"assembled post-exclusion base pair counts (A12)"),
                 "inventory": str(inv / f"{s}.json"),
             }
-            for s in rc.MIX_STRATA
+            for s in c["mix_strata"]
         },
     }
 
@@ -401,6 +415,10 @@ def main() -> None:
     ap.add_argument("--manifest")
     ap.add_argument("--init-manifest", metavar="PATH",
                     help="write a default strata manifest and exit")
+    ap.add_argument("--contract", default="002_ctt_v2",
+                    help="mix contract id for --init-manifest (root_common.MIX_CONTRACTS). "
+                         "DEFAULT 002_ctt_v2 so no existing command silently builds a new mix; "
+                         "003_ctt_v2plus must be asked for by name (adds EffectData S6 at 20 pp).")
     ap.add_argument("--root", help="override the root path from the manifest")
     ap.add_argument("--set-present", action="append", default=[], metavar="S4=true",
                     help="toggle a stratum in/out without editing the manifest")
@@ -427,7 +445,7 @@ def main() -> None:
     args = ap.parse_args()
 
     if args.init_manifest:
-        rc.write_json(args.init_manifest, default_manifest())
+        rc.write_json(args.init_manifest, default_manifest(args.contract))
         print(f"[assemble] wrote default strata manifest -> {args.init_manifest}")
         return
     if not args.manifest:
