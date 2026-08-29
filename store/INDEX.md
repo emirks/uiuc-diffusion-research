@@ -95,5 +95,5 @@ resolve via `gens/_legacy/`.
 ## datasets
 1. `001_transitions_std121` — 222-clip eval corpus (stub → data/processed/transitions_std121)
 2. `002_ctt_v2` — 56,368-pair training set (stub → datasets/ctt_v2)
-3. `003_dino_signals` — 19,023-clip 44-ch DINO-basis operator signal + frozen norm v1 (stub → cache/armA_signals)
+3. `003_dino_signals` — 47,667-clip 44-ch DINO-basis operator signal; norm v1 (ctt_v2) + v2 (004_ctt_v2plus, adds EffectData S6) (stub → cache/armA_signals)
 4. `004_ctt_v2plus` — **cttv2 + EffectData (S6)**: 138,625-pair sampler-mix training set (S0 385 / S2a 22,731 / S2b 23,577 / S4 6,000 / **S6 85,932**; S1 absent), mix S0 12 / S2a 28.67 / S2b 29.73 / S4 9.6 / **S6 20** (contract 003_ctt_v2plus). S6 = EffectData top-2,000 counterfactual subjects (2,917 effects, one-sided frame-0 anchor, same-effect demonstration ref); captions store 004_effectdata (gemini one-image-per-call, leak-clean). Root symlink → outputs/ctt_v2/roots/ctt_v2plus_mix (physical sampler-mix, 693k source-referencing symlinks; no data moved). All paths resolve; training-ready. Paired-arm gate vs 002 pending. (stub → outputs/ctt_v2/roots/ctt_v2plus_mix)

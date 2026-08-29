@@ -20,3 +20,50 @@ coverage: {S0: 139/139, S1: 1225/1225, S2a: 7577/7577, S2b: 7859/7859, S4: 2000/
 norm_gates: {G-N1: PASS, G-N2: PASS, G-N3: PASS, G-N4: PASS, G-N5: PASS, asinh_channels: none, dead_channels: none}
 docs: NORM_dino_v1.json (this dir) · report misc/2026-08-24_flow_signal_conditioning/armA/NORM_REPORT.md · spec .../armA/SIGNAL_REFERENCE.html
 consumers: []
+
+# ─────────────────── ADDENDUM 2026-08-28 · EffectData stratum S6 (append-only) ───────────────────
+# Entry 003 extended ADDITIVELY. Everything above this line is frozen/untouched (immutable-by-
+# addendum, per NORM_DIRECTIVES.md §6). fable-advisor GO 2026-08-28.
+addendum_s6:
+  what: >
+    Added the EffectData breadth stratum S6 to the SAME signal cache, produced by BYTE-IDENTICAL
+    frozen compute (armA_extract) and the SAME frozen pca.npz, then refit the norm as
+    NORM_dino_v2.json. v1 stays frozen (it is the norm for ctt_v2, which includes S1).
+  s6_signal:
+    clips: 28644            # all consumed by 004_ctt_v2plus (target ∪ reference over 85,932 S6 rows)
+    sided: one             # frame-0 anchor; A=first frame, B=last frame (same convention as S4)
+    shapes: [[11,22,33],[11,22,39],[11,33,22],[11,39,22]]  # 4 native VAE-legal, 81f/24fps, NO crop
+    ids: "S6__<stem>"       # under feat/ + dino_raw/, stratum=S6
+  cache_total: 47667        # 19,023 (v1 strata) + 28,644 (S6)
+  norm_v2:
+    file: NORM_dino_v2.json
+    sha256: cd7593b9cad3c2882456ba0f70fb770aaf5c8eb196b1352947aba03e57013937
+    scheme: zscore_clip5_equalstratum
+    strata: [S0, S2a, S2b, S4, S6]           # the 004_ctt_v2plus training strata (S1 absent from 004)
+    rule: "norm strata = the served dataset's training strata, eval excluded (v1<->ctt_v2, v2<->004_ctt_v2plus)"
+    gates: {G-N1: PASS, G-N2: PASS, G-N3: PASS, G-N4: PASS, G-N5: PASS, asinh_channels: none, dead_channels: none}
+    fit: {n_files: 46219, n_cells: 328254352}   # S6 contributes 249,854,352 cells
+    coverage: {S0: 139/139, S2a: 7577/7577, S2b: 7859/7859, S4: 2000/2000, S6: 28644/28644, eval: 223}
+  pca_health_s6:            # frozen 768->32 basis REUSED (not refit); captured-var share vs 0.452 baseline
+    pooled: "0.86x"
+    per_shape: {"[11,22,33]": "0.85x", "[11,22,39]": "0.85x", "[11,33,22]": "0.84x", "[11,39,22]": "0.89x"}
+    bars: "pooled>=0.75x AND per-shape>=0.70x (pre-registered before measuring); all pass -> basis kept"
+  channel_health_s6: >
+    conf 48.2% exact-zero on S6 (effect-onset frames lack reliable fwd-bwd correspondence) — a DOMAIN
+    property, NOT comparable to ctt_v2's conf channel; nu is the intended onset carrier there.
+    u/v window-saturation 0.03% of cells (negligible).
+  cross_orientation_WARNING: >
+    TRAINER-FACING: S6 rows may pair a target and reference with DIFFERENT grid orientations
+    (e.g. (11,22,33) vs (11,39,22)) because the reference is a different subject. A row's `shape`
+    describes only the TARGET. Any consumer that conditions on the reference's signal must handle
+    cross-shape signals and MUST key each stem's shape by its OWN ROSTER latent_fhw, never by the
+    row's target shape. (This exact assumption was the bug in the first coverage checker — the canary.)
+  provenance:
+    extractor: "armA_extract_s6.py (imports frozen armA_extract compute); 96-shard bhwp ghx4 array"
+    incident: >
+      First extraction pass invalidated by a tmp-naming defect (np.savez auto-appends .npz) compounded
+      by a live-import edit; cache purged of 17,541 misnamed files and FULLY RE-EXTRACTED. Post-fix
+      full-open validation: 28,644/28,644 valid (0 corrupt / 0 shape-bad / 0 non-finite / 0 dtype / 0 channel).
+    validation: "misc/2026-08-24_flow_signal_conditioning/armA/VALIDATION_TRAINING_READY.md (OVERALL READY)"
+    report: "misc/2026-08-24_flow_signal_conditioning/armA/NORM_REPORT_v2.md"
+  consumers_v2: []          # fill when a 004_ctt_v2plus training run consumes the signal

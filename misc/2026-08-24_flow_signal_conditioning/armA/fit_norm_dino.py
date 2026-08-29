@@ -26,12 +26,23 @@ CACHE = f"{LAB}/cache/armA_signals"
 FEAT = f"{CACHE}/feat"
 PCA_PATH = f"{CACHE}/pca.npz"
 CTT = f"{DR}/datasets/ctt_v2"
+ROOT004 = f"{DR}/outputs/ctt_v2/roots/ctt_v2plus_mix"   # 004_ctt_v2plus root (carries the S6 rows)
+ENC_ROSTER = f"{DR}/outputs/ctt_v2/encodes/EFFECTDATA/ROSTER.json"   # per-S6-clip authoritative shape
 CAMP = f"{DR}/misc/2026-08-24_flow_signal_conditioning"
 ARMA = f"{CAMP}/armA"
 sys.path.insert(0, ARMA)
 from armA_extract import CH_NAMES  # single naming authority
 
+# Fit strata. v1 (frozen, committed) = the 5 ctt_v2 strata. v2 adds EffectData S6 (--strata).
 STRATA = ["S0", "S1", "S2a", "S2b", "S4"]
+# where each stratum's (stratum,stem)->row coverage is joined from, for G-N5. A norm's coverage
+# is checked against the dataset it SERVES: v2 serves 004_ctt_v2plus, so its shared strata join
+# from 004's samples.jsonl (advisor change 2). S0/S2a/S2b/S4 rows are identical across ctt_v2 and
+# 004 (004 symlinks the same clips); S6 exists only in 004; S1 exists only in ctt_v2.
+COVERAGE_SOURCES = [
+    (f"{ROOT004}/samples.jsonl", {"S0", "S2a", "S2b", "S4", "S6"}),
+    (f"{CTT}/samples.jsonl", {"S1"}),
+]
 NC = 44
 CLIP = 5.0
 SCALE_FLOOR = 1e-6
@@ -210,16 +221,29 @@ def gate_channel_names():
 
 
 def gate_coverage():
-    """G-N5: every (stratum,stem) target/reference in samples.jsonl has a feat file whose
-       F shape == row['shape'].  100% for S0,S1,S2a,S2b,S4.  eval reported separately."""
+    """G-N5: every (stratum,stem) target/reference in the stratum's samples.jsonl has a feat
+       file whose F shape == row['shape'].  100% for every fit stratum.  eval reported separately.
+       Sources per stratum come from COVERAGE_SOURCES (ctt_v2 for S0-S4, 004_ctt_v2plus for S6)."""
     from collections import defaultdict
+    # S6 target and reference are DIFFERENT subjects and can have different orientations, so a
+    # row's `shape` describes only its target. Expected shape per S6 stem is that stem's OWN
+    # ROSTER latent_fhw, not the pairing row's shape. (S0-S4 are same-res within a group.)
+    s6shape = {}
+    if "S6" in STRATA:
+        for c in json.load(open(ENC_ROSTER))["clips"]:
+            s6shape[c["stem"]] = tuple(int(x) for x in c["latent_fhw"])
     need = {}   # (stratum, stem) -> expected shape tuple
-    for l in open(f"{CTT}/samples.jsonl"):
-        r = json.loads(l)
-        s = r["stratum"]
-        shp = tuple(int(x) for x in r["shape"])
-        for stem in (r["target"], r["reference"]):
-            need[(s, stem)] = shp
+    for path, subset in COVERAGE_SOURCES:
+        if not (subset & set(STRATA)):
+            continue
+        for l in open(path):
+            r = json.loads(l)
+            s = r["stratum"]
+            if s not in STRATA or s not in subset:
+                continue
+            rowshp = tuple(int(x) for x in r["shape"])
+            for stem in (r["target"], r["reference"]):
+                need[(s, stem)] = s6shape[stem] if s == "S6" else rowshp
     per = defaultdict(lambda: dict(total=0, hit=0, shape_ok=0, miss=[], shape_bad=[]))
     for (s, stem), shp in need.items():
         fid = f"train__{s}__{stem}" if s in ("S0", "S1") else f"{s}__{stem}"
@@ -268,11 +292,18 @@ def tracked(path):
 
 # ---------------------------------------------------------------- main driver
 def main():
+    global STRATA
     ap = argparse.ArgumentParser()
     ap.add_argument("--out-json", default=f"{ARMA}/NORM_dino_v1.json")
     ap.add_argument("--out-report", default=f"{ARMA}/NORM_REPORT.md")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--strata", default="S0,S1,S2a,S2b,S4",
+                    help="comma list of fit strata; v1='S0,S1,S2a,S2b,S4', v2 adds S6")
+    ap.add_argument("--version", default="dino_signal_norm_v1")
     a = ap.parse_args()
+    STRATA = [s for s in a.strata.split(",") if s]
+    weighting = "equal_stratum_" + "_".join(STRATA)
+    print(f"[cfg] version={a.version} strata={STRATA} weighting={weighting}", flush=True)
     np.seterr(all="warn")
 
     print("[1/5] fit pass (streaming all non-eval feat files) ...", flush=True)
@@ -344,8 +375,8 @@ def main():
     script_rel = "misc/2026-08-24_flow_signal_conditioning/armA/fit_norm_dino.py"
     script_commit = git_head() if tracked(script_rel) else "UNCOMMITTED"
     doc = dict(
-        version="dino_signal_norm_v1", clip=CLIP,
-        weighting="equal_stratum_S0_S1_S2a_S2b_S4", excluded=["eval"],
+        version=a.version, clip=CLIP,
+        weighting=weighting, excluded=["eval"],
         channels=channels, per_stratum=per_stratum_json,
         fit=dict(n_files=int(sum(acc[s]["n_files"] for s in STRATA)),
                  n_cells=int(sum(acc[s]["n"] for s in STRATA)),
@@ -364,8 +395,9 @@ def main():
         return f"{x:{w}.{p}f}"
     lines = []
     P = lines.append
-    P(f"# NORM_REPORT — DINO-basis operator signal (44-ch), frozen norm v1\n")
-    P(f"Generated 2026-08-28 on `{os.uname().nodename}` · CPU · equal-stratum z-score, clip ±{CLIP:.0f}.\n")
+    P(f"# NORM_REPORT — DINO-basis operator signal (44-ch), {a.version}\n")
+    P(f"Generated 2026-08-28 on `{os.uname().nodename}` · CPU · equal-stratum z-score over "
+      f"{'+'.join(STRATA)}, clip ±{CLIP:.0f}.\n")
     P(f"- fit population: **{doc['fit']['n_files']} files**, **{doc['fit']['n_cells']:,} cells** "
       f"(eval EXCLUDED); per-stratum cells: " + ", ".join(f"{s}={acc[s]['n']:,}" for s in STRATA) + ".")
     P(f"- verify sample (seed {a.seed}): " + ", ".join(f"{s}={vcounts[s]}" for s in STRATA) +
@@ -381,7 +413,7 @@ def main():
     P(f"| G-N2 | clip rate %\\|z\\|≥5 ≤ {G_N2_MAX}% all ch | {'PASS' if g2_pass else 'FAIL'} |")
     P(f"| G-N3 | no undocumented dead channel | {'PASS' if g3_pass else 'FAIL'} (dead: {g3_dead or 'none'}) |")
     P(f"| G-N4 | channel names identical ({nchk} files) & ==CH_NAMES | {'PASS' if g4_pass else 'FAIL'} |")
-    P(f"| G-N5 | coverage 100% S0/S1/S2a/S2b/S4 | {'PASS' if g5_pass else 'FAIL'} |")
+    P(f"| G-N5 | coverage 100% {'/'.join(STRATA)} | {'PASS' if g5_pass else 'FAIL'} |")
     P("")
     if asinh_ch:
         P(f"**asinh escape hatch applied** to: {', '.join(asinh_ch)} (each failed identity G-N2; single refit round).\n")
