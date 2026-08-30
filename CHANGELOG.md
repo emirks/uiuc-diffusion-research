@@ -1,4 +1,5 @@
 ## 2026-08-30
+- 00:33 DINO-signal arms — fork `32d6e3f` (SPEC R2.5): LoRA-A init seeded (`set_seed` before `_load_models()`) and per-(chunk, rank) σ/ε stream (`set_seed(seed + initial_step, device_specific=True)`) — a resumed chunk no longer replays the seed-42 stream; data order and signal-drop RNG unchanged. Owner waived re-gating and smokes; shipped to eps (trainer at 32d6e3f). Launch-ready.
 - 00:17 DINO-signal arms — resume-mechanism check before launch: data order continues exactly (offline-exact sampler proof + 2-GPU chunked-vs-continuous test), LR/scheduler/optimizer/drop counters/wandb id continue; multi-GPU resume replays the σ/ε RNG stream per chunk (unbiased); NEW: LoRA-A init is unseeded (PEFT wrap in __init__ before set_seed in train(); same-seed runs corr 0.002) — 2-line fork fix owner-gated. Launcher fixes on both machines: `build/pick_resume_ckpt.py` (resume from the newest intact pair, quarantine truncated) and `build/prune_ckpts.py` (chain-aware keep-3 + 500-grid hard-links; chains would otherwise accumulate ~250 GB/arm).
 
 ## 2026-08-29
