@@ -204,3 +204,20 @@ it is the exact silent-drift artifact this rework must not leave alive. It is st
 The DINO 44-ch signal (norm v3) is a separate input joined by `(stratum, stem)`; it is unchanged by
 the pairing/form rework (only S1 rejoins the norm; the 2,378 dropped clips' feat stays cached-but-
 unconsumed). See `store/datasets/003_dino_signals/meta.yaml`.
+
+## 8 · OPEN RESIDUALS (owner-visible; fable-advisor 2026-08-29, at close)
+
+The 004 rebuild + norm v3 are complete, verified, and committed (`81437f2`); consumers still empty.
+Two items remain OPEN and are the owner's / a downstream agent's to close — record here so no run
+launches against a stale state:
+
+1. **eps stale-root kill + config sha-repoint is documented, not executed** (§7). Until the eps agent
+   runs it, a stale **138,625-row, S1-less, mis-paired-S6, symlink-form** `samples.jsonl` is live at
+   `eps:/storage/ozgur/dino_signal/datasets/ctt_v2plus_mix/`. **No training run may launch against 004
+   from eps before §7 executes.**
+2. **The trainer-config sha-pin is not yet enforced anywhere** — it is a documented step (§4.6). The
+   first consumer (the paired-arm gate, 004 vs 002) MUST verify `samples_sha256 == 5a73eb3c…` is present
+   in the config and asserted at run start before its runs count.
+
+Housekeeping done at close: the pre-S1 root backups were moved OUT of the shippable root to
+`misc/2026-08-28_effectdata_s6/pre_s1_root_backups/`; the bring-up rsync excludes `*.bak`.
