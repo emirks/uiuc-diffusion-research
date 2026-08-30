@@ -17,7 +17,7 @@ Outputs (paths are CLI args):
 CPU-only.  Run under: source $LAB/envs-aarch64/activate ; OMP_NUM_THREADS=2.
 """
 from __future__ import annotations
-import os, sys, json, glob, math, time, random, argparse, hashlib
+import os, sys, json, glob, math, time, random, argparse, hashlib, datetime
 import numpy as np
 
 LAB = "/taiga/illinois/eng/cs/jrehg/users/emirkisa"
@@ -291,7 +291,7 @@ def tracked(path):
 
 # ---------------------------------------------------------------- main driver
 def main():
-    global STRATA
+    global STRATA, FEAT, PCA_PATH, ENC_ROSTER, COVERAGE_SOURCES
     ap = argparse.ArgumentParser()
     ap.add_argument("--out-json", default=f"{ARMA}/NORM_dino_v1.json")
     ap.add_argument("--out-report", default=f"{ARMA}/NORM_REPORT.md")
@@ -299,8 +299,21 @@ def main():
     ap.add_argument("--strata", default="S0,S1,S2a,S2b,S4",
                     help="comma list of fit strata; v1='S0,S1,S2a,S2b,S4', v2 adds S6")
     ap.add_argument("--version", default="dino_signal_norm_v1")
+    ap.add_argument("--feat-dir", default=FEAT,
+                    help="signal feat/ dir (default = 003 cache; use SIG005 for a v4 fit)")
+    ap.add_argument("--pca", default=PCA_PATH, help="pca.npz path (frozen basis)")
+    ap.add_argument("--s6-roster", default=ENC_ROSTER,
+                    help="per-S6-clip authoritative-shape ROSTER for G-N5 (default = native EFFECTDATA)")
+    ap.add_argument("--s6-coverage-rows", default="",
+                    help="if set, a jsonl of S6 coverage rows; S0-S4 coverage stays from 004, S6 from here")
     a = ap.parse_args()
     STRATA = [s for s in a.strata.split(",") if s]
+    FEAT = a.feat_dir
+    PCA_PATH = a.pca
+    ENC_ROSTER = a.s6_roster
+    if a.s6_coverage_rows:
+        COVERAGE_SOURCES = [(f"{ROOT004}/samples.jsonl", {"S0", "S1", "S2a", "S2b", "S4"}),
+                            (a.s6_coverage_rows, {"S6"})]
     weighting = "equal_stratum_" + "_".join(STRATA)
     print(f"[cfg] version={a.version} strata={STRATA} weighting={weighting}", flush=True)
     np.seterr(all="warn")
@@ -379,7 +392,7 @@ def main():
         channels=channels, per_stratum=per_stratum_json,
         fit=dict(n_files=int(sum(acc[s]["n_files"] for s in STRATA)),
                  n_cells=int(sum(acc[s]["n"] for s in STRATA)),
-                 date="2026-08-28", extractor="armA_extract.py",
+                 date=datetime.date.today().isoformat(), extractor="armA_extract.py",
                  extractor_commit=extractor_commit, script_commit=script_commit,
                  scheme="zscore_clip5_equalstratum",
                  fit_population_rule="the stratum's signal-cache roster (every extracted feat); "
@@ -398,7 +411,7 @@ def main():
     lines = []
     P = lines.append
     P(f"# NORM_REPORT — DINO-basis operator signal (44-ch), {a.version}\n")
-    P(f"Generated 2026-08-28 on `{os.uname().nodename}` · CPU · equal-stratum z-score over "
+    P(f"Generated {datetime.date.today().isoformat()} on `{os.uname().nodename}` · CPU · equal-stratum z-score over "
       f"{'+'.join(STRATA)}, clip ±{CLIP:.0f}.\n")
     P(f"- fit population: **{doc['fit']['n_files']} files**, **{doc['fit']['n_cells']:,} cells** "
       f"(eval EXCLUDED); per-stratum cells: " + ", ".join(f"{s}={acc[s]['n']:,}" for s in STRATA) + ".")

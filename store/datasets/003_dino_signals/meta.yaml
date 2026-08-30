@@ -88,3 +88,65 @@ addendum_norm_v3:
   v2_status: "superseded for 004_ctt_v2plus by v3 (S1 restored 2026-08-29); retained as record (its sha is pinned above and in the CHANGELOG)"
   note: "S6 coverage joins the code-side 004 samples.jsonl (26,266 consumed targets after the same-shape drop); the 2,378 dropped clips' feat stays cached-but-unconsumed (fit-population rule keeps them in the fit)."
   consumers_v3: []
+
+# ─────────────────── ADDENDUM 2026-08-30 · NORM_dino_v4 (S6 re-extracted at r832) ───────────────────
+# Append-only. v1/v2/v3 lines above frozen. Dataset 005_ctt_v2plus_s6reshape re-encodes S6 at two
+# common grids (832×512 landscape / 512×832 portrait, 81f/24fps) so S6 is grid-consistent, token-
+# matched to the corpus (4,576 tok vs 4,800), and same-orientation-pairing-complete. The norm that
+# serves 005 is refit as v4 over the SAME six strata from a NEW signal root (armA_signals_005): non-S6
+# feat are HARDLINKS of the 003 cache (byte-identical), S6 feat are freshly extracted at r832 by the
+# SAME frozen compute (armA_extract) and the SAME frozen pca.npz. Advisor pre-registered bars all PASS.
+addendum_norm_v4:
+  norm_v4:
+    file: NORM_dino_v4.json
+    sha256: db47be8890ea84ad7b89aa3a858ab4b0e941d0159f5a7142120742be771fe622
+    scheme: zscore_clip5_equalstratum
+    strata: [S0, S1, S2a, S2b, S4, S6]
+    rule: "v4 <-> 005_ctt_v2plus_s6reshape (S6 re-extracted at r832); non-S6 strata unchanged from v3"
+    fit_population_rule: "fit population = the stratum's signal-cache roster; pairing/mix knobs do not alter it"
+    signal_root: "$LAB/cache/armA_signals_005 (non-S6 feat = hardlinks of 003's armA_signals; S6 feat = new r832; pca.npz = hardlink of 003's frozen basis)"
+    gates: {G-N1: PASS, G-N2: PASS, G-N3: PASS, G-N4: PASS, G-N5: PASS, asinh_channels: none, dead_channels: none}
+    fit: {n_files: 47444, n_cells: 215354944, s6_n_cells: 131074944}   # S6 = 28,644 x 4,576
+    coverage: {S0: 139/139, S1: 1225/1225, S2a: 7577/7577, S2b: 7859/7859, S4: 2000/2000, S6: 28644/28644, eval: 223}
+    non_s6_moments_vs_v3: "per_stratum n_cells identical AND max rel|Δ| of mean/std over S0,S1,S2a,S2b,S4 = 0.00e+00 (same feat inodes, same order)"
+    report: "misc/2026-08-24_flow_signal_conditioning/armA/NORM_REPORT_v4.md"
+  s6_signal_r832:
+    clips: 28644
+    sided: one                 # frame-0 anchor; A=first frame, B=last frame
+    shapes: [[11,16,26],[11,26,16]]        # 2 common grids (landscape 14,523 / portrait 14,121)
+    px: "832x512 (landscape) / 512x832 (portrait) x 81f @ 24fps"
+    resize: "aspect-preserving scale-to-COVER + center-crop (process_videos default; NO letterbox/pad)"
+    crop_offsets: {"1248x704": [0, 38], "1056x704": [21, 0], "704x1248": [38, 0], "704x1056": [0, 21]}  # (top,left) at 32*grid
+    crop_loss: "16:9-native crops 8.27% of the long side (4.13%/edge); 3:2-native crops 7.58% of the short side (3.79%/edge)"
+    tokens: 4576               # both grids (F*H*W symmetric); shift 2.221875 (corpus 4,800/2.302)
+    ids: "S6__<stem>"
+  raw_policy: >
+    /work/nvme/bgms is not accessible to this user (not in delta_bgms); /work/nvme/bhwp is a 500 G
+    project quota. A full dino_raw at the new grid (~750 GB) is NOT produced anywhere. PCA health is
+    measured over the FULL population from per-clip float64 sufficient statistics that replicate
+    validate_training_ready.v4_pca_health exactly, plus a persisted 1% raw sample (310 clips) in
+    armA_signals_005/dino_raw_health_sample/ used to cross-check the inline statistic against the
+    original V4 tool. Consequence: a future PCA refit on S6-r832 would re-run DINO (~8 GPU-h), not read a cache.
+  pca_health_s6_r832:          # frozen 768->32 basis REUSED (not refit); baseline evr.sum() = 0.4521
+    pooled: {abs: 0.3744, x_baseline: 0.8281}
+    per_orientation: {"[11,16,26] landscape": {abs: 0.3713, x_baseline: 0.8213}, "[11,26,16] portrait": {abs: 0.3771, x_baseline: 0.8342}}
+    per_native_shape:
+      "1248x704": {abs: 0.3703, x_baseline: 0.8192}
+      "1056x704": {abs: 0.3724, x_baseline: 0.8238}
+      "704x1248": {abs: 0.3781, x_baseline: 0.8363}
+      "704x1056": {abs: 0.3763, x_baseline: 0.8323}
+    paired_native_ratio:       # r832 share / native-grid share on the SAME 310-clip raw sample
+      pooled: 0.9694
+      per_native: {"1056x704": 0.9732, "1248x704": 0.9669, "704x1056": 0.9727, "704x1248": 0.9645}
+      per_clip: {min: 0.9149, mean: 0.9705, max: 1.0104}
+    cross_check_meta_vs_v4raw: "max|Δ| = 3.719e-15 on pooled + 4 native (bar ≤ 1e-6)"
+    bars: "PRIMARY pooled>=0.339 (0.75x) AND each native>=0.316 (0.70x); SECONDARY paired ratio pooled>=0.90 AND per-native>=0.88; cross-check|Δ|<=1e-6. ALL PASS (pre-registered before measuring)."
+  channel_health_s6_r832: >
+    conf 43.47% exact-zero on S6-r832 (effect-onset frames lack reliable fwd-bwd correspondence; a
+    DOMAIN property, cf. 48.2% on native S6 — NOT comparable to ctt_v2's conf channel; nu is the
+    intended onset carrier). u/v window-saturation 0.026% of cells (negligible).
+  provenance:
+    extractor: "armA_extract_s6r.py (imports frozen armA_extract compute; sha256 2a3e7629...); 96-shard bgjg-dtai-gh ghx4 array job 3049605, Σ 7.69 GPU-h"
+    health_design: "per-clip float64 sufficient statistics (sum_x, sum_x2 over pooled cells; sum_p, sum_p2 over frozen-PCA projections) in _extract_meta/shard_*of96.npz replicate validate_training_ready.v4_pca_health exactly; no full dino_raw persisted (raw_policy A2)"
+    verification: "armA_extract_s6r.py verify = ALL CHECKS PASS (feat 28,644 set-equal; census (11,16,26,44)=14,523 / (11,26,16,44)=14,121; shape/chan/finite 0; META 28,644); cross-job determinism 24/24 bitwise; META pilot-vs-shard |Δ|=0"
+  consumers_v4: []          # fill when a 005_ctt_v2plus_s6reshape training run consumes the signal
