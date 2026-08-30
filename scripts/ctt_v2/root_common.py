@@ -370,6 +370,17 @@ RULED_SHAPES = {
     (11, 22, 33): {"name": "effd_1056x704_81f", "px": (1056, 704, 81), "fps": 24.0,
                    "strata": ("S6",), "prefix_latents": 1,
                    "authority": "EffectData native (VAE-legal); frame-0 anchor per S4 precedent"},
+    # EffectData S6 RESHAPE (dataset 005) — the 4 native S6 grids re-encoded to 2 orientation grids
+    # at 832x512 / 512x832 px x 81f: 4,576 tokens (95.3% of corpus 4,800), shift 2.222, ~half the
+    # per-row compute of the native 7,986-9,438-token zoo, and same-orientation pairing returns
+    # 2,286 of the 004 shape-singletons.  Aspect-preserving scale-to-COVER + center-crop (<=4.13%/edge),
+    # frame-0 anchor unchanged (prefix_latents=1, sided one), as the native S6 grids.
+    (11, 16, 26): {"name": "effd_832x512_81f", "px": (832, 512, 81), "fps": 24.0,
+                   "strata": ("S6",), "prefix_latents": 1,
+                   "authority": "S6 reshape spec, misc/2026-08-30_s6_reshape/DOSSIER.md Round 1"},
+    (11, 26, 16): {"name": "effd_512x832_81f", "px": (512, 832, 81), "fps": 24.0,
+                   "strata": ("S6",), "prefix_latents": 1,
+                   "authority": "S6 reshape spec, misc/2026-08-30_s6_reshape/DOSSIER.md Round 1"},
 }
 
 #: Fallback for an unruled shape.  2 is the 121f value, so an unruled shape behaves like the
