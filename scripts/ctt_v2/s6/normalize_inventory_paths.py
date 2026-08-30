@@ -29,7 +29,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
 INV = REPO / "outputs/ctt_v2/inventories"
-STRATA = ["S0", "S2a", "S2b", "S4"]          # S6 is already /taiga-native
+STRATA = ["S0", "S1", "S2a", "S2b", "S4"]    # S6 is already /taiga-native; S1 added 2026-08-29 (was omitted from the plus build)
 FIELDS = ["latents", "cond_clean", "conditions"]
 
 

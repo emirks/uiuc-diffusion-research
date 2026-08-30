@@ -18,3 +18,40 @@ consumers: []   # paired-arm gate (arm A = this vs arm B = 002 mix) pending, per
 health: samples.jsonl 138,625 rows, all 5 paths/row resolve to real tensors; S6 latents (128,11,H,W) fps 24, cond_clean==latents, reference from a different subject, mask p1_onesided
 docs: ../../../misc/2026-08-28_effectdata_s6/BUILD.md
 authority: root/ROOT_MANIFEST.json (weights/counts/shapes/provenance); store/TEXT_LIFECYCLE.md (text)
+
+# ═══════════════ CORRECTION 2026-08-29 (append-only; original lines above unchanged) ═══════════════
+# Three corrections landed together (owner-directed, fable-advisor GO 2026-08-29). The original
+# lines above describe the 2026-08-28 build and are SUPERSEDED by this block where they conflict.
+correction_2026_08_29:
+  supersedes: "the original contents/mix/health lines + the 'S1 absent (pilot only)' label"
+  1_S1_restored:
+    what: "S1 was NOT pilot-only — its absence was a BUILD GAP. The 003_ctt_v2plus contract always
+           included S1 (mix_strata has it, 4.8%); the assembler ran the pre-registered S1-ABSENT
+           branch because normalize_inventory_paths.py omitted S1 from STRATA (so S1's inventory
+           was never /projects->/taiga normalized) and the manifest had S1 present=false. Fixed:
+           S1 normalized + present=true. The 'S1 absent (pilot only)' label is RETRACTED."
+    added: "S1 3,675 pairs / 1,225 clips (16,20,15); DINO signal already cached (no re-extraction)."
+  2_S6_same_shape_repairing:
+    what: "S6 had 4 native shapes and was paired within-effect only -> 75.1% of pairs were
+           CROSS-shape (reference grid != target grid), which breaks reference-aligned conditioning.
+           Re-paired SAME-SHAPE (ring within each (effect,shape)); every S6 pair is now same-shape."
+    dropped: "2,378 clips are the lone subject of their shape for their effect -> no same-shape
+              partner -> DROPPED. They are UNTRAINED same-effect subjects = free unseen-subject eval
+              material (a trained effect on an untrained subject). MUST NOT be described as trained."
+    s6_now: "26,266 clips / 57,847 same-shape pairs (was 28,644 / 85,932)."
+  3_form_code_side:
+    what: "The root is now CODE-SIDE: no per-row symlink trees. samples.jsonl carries ROOT-RELATIVE
+           paths; source tensors resolve through ONE re-pointable symlink `_src` -> the repo, masks
+           in `_mask_store`. Portable across devices (only `_src` changes per device). See the format
+           doc below."
+    rationale: "owner: the mix was already sampler-side (never in the trees), and the trees baked in
+                one machine's paths -> not portable across training devices with different store roots."
+  new_totals: "138,625 -> 114,215 pairs (S0 385 / S1 3,675 / S2a 22,731 / S2b 23,577 / S4 6,000 / S6 57,847)."
+  mix: "full contract S0 12 / S1 4.8 / S2 55.2 (S2a 27.10 / S2b 28.10 pro-rata) / S4 8 / S6 20 (S1-present branch)."
+  samples_sha256: 5a73eb3c24e274d021e8f47a32a0bfa1ed4f0051395f6cabaa77f768040b380e   # pin at run start
+  verification: "misc/2026-08-24_flow_signal_conditioning/armA/CODESIDE_VERIFY.md (invariants 1-5 PASS);
+                 old 571k-symlink tree pruned in full; final root == the 8 code-side entries."
+  norm: "served by NORM_dino_v3 over {S0,S1,S2a,S2b,S4,S6} — store/datasets/003_dino_signals (v3 addendum)."
+  format_doc: "misc/2026-08-28_effectdata_s6/CODESIDE_FORMAT.md + root/README.md (layout, _src portability, per-device bring-up, row schema)."
+  eps_migration: "the stale 138,625-row symlink-form samples.jsonl shipped to eps must be killed +
+                  reshipped code-side; instructions in CODESIDE_FORMAT.md §7 (eps agent's job)."

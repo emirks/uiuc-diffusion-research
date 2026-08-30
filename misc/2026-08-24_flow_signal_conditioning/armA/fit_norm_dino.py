@@ -36,12 +36,11 @@ from armA_extract import CH_NAMES  # single naming authority
 # Fit strata. v1 (frozen, committed) = the 5 ctt_v2 strata. v2 adds EffectData S6 (--strata).
 STRATA = ["S0", "S1", "S2a", "S2b", "S4"]
 # where each stratum's (stratum,stem)->row coverage is joined from, for G-N5. A norm's coverage
-# is checked against the dataset it SERVES: v2 serves 004_ctt_v2plus, so its shared strata join
-# from 004's samples.jsonl (advisor change 2). S0/S2a/S2b/S4 rows are identical across ctt_v2 and
-# 004 (004 symlinks the same clips); S6 exists only in 004; S1 exists only in ctt_v2.
+# is checked against the dataset it SERVES: 004_ctt_v2plus now carries ALL six training strata
+# (S1 restored 2026-08-29), so every stratum joins from 004's samples.jsonl. (For a v2 fit, which
+# excludes S1, the S1 source is simply unused.)
 COVERAGE_SOURCES = [
-    (f"{ROOT004}/samples.jsonl", {"S0", "S2a", "S2b", "S4", "S6"}),
-    (f"{CTT}/samples.jsonl", {"S1"}),
+    (f"{ROOT004}/samples.jsonl", {"S0", "S1", "S2a", "S2b", "S4", "S6"}),
 ]
 NC = 44
 CLIP = 5.0
@@ -382,7 +381,10 @@ def main():
                  n_cells=int(sum(acc[s]["n"] for s in STRATA)),
                  date="2026-08-28", extractor="armA_extract.py",
                  extractor_commit=extractor_commit, script_commit=script_commit,
-                 scheme="zscore_clip5_equalstratum"),
+                 scheme="zscore_clip5_equalstratum",
+                 fit_population_rule="the stratum's signal-cache roster (every extracted feat); "
+                                     "pairing/mix knobs do not alter it — so a clip dropped by "
+                                     "dataset pairing (e.g. S6 shape-singletons) still counts in the fit"),
     )
     with open(a.out_json, "w") as fh:
         json.dump(doc, fh, indent=2, sort_keys=False)

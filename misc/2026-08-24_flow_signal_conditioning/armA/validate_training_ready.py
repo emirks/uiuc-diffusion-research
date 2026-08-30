@@ -39,7 +39,7 @@ sys.path.insert(0, ARMA)
 from armA_extract import CH_NAMES
 from fit_norm_dino import npz_F_shape
 
-TRAIN_STRATA = ["S0", "S2a", "S2b", "S4", "S6"]
+TRAIN_STRATA = ["S0", "S1", "S2a", "S2b", "S4", "S6"]   # S1 restored 2026-08-29
 PCA_POOLED_BAR = 0.75      # x baseline  (pre-registered)
 PCA_PERSHAPE_BAR = 0.70    # x baseline  (pre-registered)
 SAT_THRESH = 2.4           # |u|/|v| near the R=5 -> 2.5-cell ceiling
@@ -195,6 +195,26 @@ def v5_channel_health(n=200, seed=3):
 
 
 # ---------------------------------------------------------------- V8 norm smoke
+def v7_orphans():
+    """Every training-stratum feat file is either consumed by 004 OR a WHITELISTED drop.
+    Whitelist = the S6 shape-singleton drops recorded in ROOT_MANIFEST (feat kept in cache, not
+    consumed after the same-shape re-pairing). A non-whitelisted orphan is a coverage regression."""
+    need = load_consumed(f"{ROOT004}/samples.jsonl", set(TRAIN_STRATA))
+    consumed = {feat_id(s, stem) for (s, stem) in need}
+    cache_ids = set()
+    for s in TRAIN_STRATA:
+        pat = f"{FEAT}/train__{s}__*.npz" if s in ("S0", "S1") else f"{FEAT}/{s}__*.npz"
+        cache_ids |= {os.path.basename(p)[:-4] for p in glob.glob(pat)}
+    man = json.load(open(f"{ROOT004}/ROOT_MANIFEST.json"))
+    dropped = [d["clip"] for d in man.get("drops", {}).get("S6", {}).get("clips", [])
+               if "no_same_shape_same_effect_partner" in d.get("reasons", [])]
+    whitelist = {f"S6__{stem}" for stem in dropped}
+    orphans = cache_ids - consumed - whitelist
+    return dict(cache=len(cache_ids), consumed=len(consumed & cache_ids),
+                whitelisted=len(whitelist), n_dropped=len(dropped),
+                orphans=sorted(orphans)[:10], n_orphans=len(orphans))
+
+
 def v8_norm_smoke(norm_json, n=600, seed=11):
     doc = json.load(open(norm_json))
     loc = np.array([c["loc"] for c in doc["channels"]], np.float64)
@@ -241,8 +261,10 @@ def main():
     print("[V3] S6 raw integrity ...", flush=True); rr = v3_raw_integrity()
     print("[V4] S6 PCA health per shape ...", flush=True); base, pooled, pershape = v4_pca_health()
     print("[V5] S6 channel health ...", flush=True); zero, satpct, nch = v5_channel_health()
+    print("[V7] orphan whitelist ...", flush=True); orph = v7_orphans()
     eval_ct = len(glob.glob(f"{FEAT}/eval__*.npz"))
     v8 = v8_norm_smoke(a.norm) if a.norm and os.path.exists(a.norm) else None
+    v7_pass = orph["n_orphans"] == 0
 
     cov_pass = all(per[s]["hit"] == per[s]["total"] and per[s]["shape_ok"] == per[s]["total"] for s in TRAIN_STRATA)
     fullscan_pass = (not fs["corrupt"] and not fs["shape_bad"] and not fs["finite_bad"]
@@ -302,6 +324,12 @@ def main():
     P("## V6 · Eval corpus\n")
     P(f"eval__ feat present: **{eval_ct}** (held-out instrument; not a training input).\n")
 
+    P("## V7 · Orphan whitelist (bar: 0 non-whitelisted orphans)\n")
+    P(f"training-stratum feat in cache **{orph['cache']:,}**, consumed by 004 **{orph['consumed']:,}**, "
+      f"whitelisted S6 shape-singleton drops **{orph['whitelisted']:,}** (from ROOT_MANIFEST). "
+      f"non-whitelisted orphans: **{orph['n_orphans']}**.  **V7: {'PASS' if v7_pass else 'FAIL'}**"
+      + (f"  e.g. {orph['orphans']}" if orph['n_orphans'] else "") + "\n")
+
     if v8 is not None:
         P("## V8 · Norm-apply smoke (join + NORM v2, the contract the trainer's signal-loader will use)\n")
         P(f"applied to **{v8['applied']}** rows across strata; S6 shapes exercised: {v8['s6_shapes']}. "
@@ -313,11 +341,11 @@ def main():
     else:
         P("## V8 · Norm-apply smoke\n_Not run (pass `--norm NORM_dino_v2.json`)._\n")
 
-    overall = cov_pass and fullscan_pass and raw_pass and pca_pass and v8_pass
+    overall = cov_pass and fullscan_pass and raw_pass and pca_pass and v7_pass and v8_pass
     P(f"## Overall: {'READY' if overall else 'NOT READY / STOP'} — "
       f"V1 {'✓' if cov_pass else '✗'} · V2 {'✓' if fullscan_pass else '✗'} · V3 {'✓' if raw_pass else '✗'} · "
-      f"V4 {'✓' if pca_pass else '✗'} · V8 {'✓' if v8_pass else ('✓' if v8 is None else '✗')}. "
-      f"Norm gates G-N1..G-N5 in NORM_REPORT_v2.md.\n")
+      f"V4 {'✓' if pca_pass else '✗'} · V7 {'✓' if v7_pass else '✗'} · V8 {'✓' if v8_pass else ('✓' if v8 is None else '✗')}. "
+      f"Norm gates G-N1..G-N5 in the current NORM_REPORT.\n")
 
     open(a.out, "w").write("\n".join(L))
     print("wrote", a.out, flush=True)
@@ -326,6 +354,7 @@ def main():
           f"V2_fullscan={'PASS' if fullscan_pass else 'FAIL'}",
           f"V3_raw={'PASS' if raw_pass else 'FAIL'}",
           f"V4_pca={'PASS' if pca_pass else 'FAIL'}(pooled {pooled:.3f}/{pooled/base:.2f}x)",
+          f"V7_orphans={'PASS' if v7_pass else 'FAIL'}(n={orph['n_orphans']},wl={orph['whitelisted']})",
           f"V8={'PASS' if v8_pass else ('skip' if v8 is None else 'FAIL')}",
           f"OVERALL={'READY' if overall else 'NOT_READY'}", flush=True)
 

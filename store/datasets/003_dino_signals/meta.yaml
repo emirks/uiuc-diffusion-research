@@ -67,3 +67,24 @@ addendum_s6:
     validation: "misc/2026-08-24_flow_signal_conditioning/armA/VALIDATION_TRAINING_READY.md (OVERALL READY)"
     report: "misc/2026-08-24_flow_signal_conditioning/armA/NORM_REPORT_v2.md"
   consumers_v2: []          # fill when a 004_ctt_v2plus training run consumes the signal
+
+# ─────────────────── ADDENDUM 2026-08-29 · NORM_dino_v3 (S1 restored) ───────────────────
+# Append-only. v1/v2 lines above frozen. When 004_ctt_v2plus regained S1 (build-gap fix) its
+# training strata became {S0,S1,S2a,S2b,S4,S6}, so the norm that serves it is refit as v3 over
+# those 6. fable-advisor GO 2026-08-29.
+addendum_norm_v3:
+  norm_v3:
+    file: NORM_dino_v3.json
+    sha256: 91af261de5d51235bb799ce172840d92d72e07427d368daac837e34ee6bbd212
+    scheme: zscore_clip5_equalstratum
+    strata: [S0, S1, S2a, S2b, S4, S6]        # the (corrected) 004_ctt_v2plus training strata
+    rule: "norm strata = the served dataset's training strata, eval excluded (v1<->ctt_v2, v2<->004-without-S1, v3<->004-with-S1)"
+    fit_population_rule: "fit population = the stratum's signal-cache roster; pairing/mix knobs do not alter it (so S6's 2,378 pairing-dropped clips still count in the fit)"
+    gates: {G-N1: PASS, G-N2: PASS, G-N3: PASS, G-N4: PASS, G-N5: PASS, asinh_channels: none, dead_channels: none}
+    fit: {n_files: 47444, n_cells_note: "46,219 (v2 set) + 1,225 S1"}
+    coverage: {S0: 139/139, S1: 1225/1225, S2a: 7577/7577, S2b: 7859/7859, S4: 2000/2000, S6: 26266/26266, eval: 223}
+    s6_kept_vs_dropped_moment: "worst |Δμ|/σ_kept = 0.110 (< 0.15 ⇒ the 2,378 pairing-drops introduce no distribution shift)"
+    report: "misc/2026-08-24_flow_signal_conditioning/armA/NORM_REPORT_v3.md"
+  v2_status: "superseded for 004_ctt_v2plus by v3 (S1 restored 2026-08-29); retained as record (its sha is pinned above and in the CHANGELOG)"
+  note: "S6 coverage joins the code-side 004 samples.jsonl (26,266 consumed targets after the same-shape drop); the 2,378 dropped clips' feat stays cached-but-unconsumed (fit-population rule keeps them in the fit)."
+  consumers_v3: []

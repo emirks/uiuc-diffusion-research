@@ -1,16 +1,17 @@
 # VALIDATION — 44-ch DINO signal, training-readiness for `004_ctt_v2plus`
 
-Read-only audit on `gh-login02.delta.ncsa.illinois.edu`; 46,219 consumed (stratum,stem) keys from `004_ctt_v2plus/samples.jsonl`. Bars & checks per fable-advisor 2026-08-28.
+Read-only audit on `gh-login02.delta.ncsa.illinois.edu`; 45,066 consumed (stratum,stem) keys from `004_ctt_v2plus/samples.jsonl`. Bars & checks per fable-advisor 2026-08-28.
 
 ## V1 · Coverage — every training row's signal present + shape-matched (bar 100%)
 
 | stratum | consumed keys | feat hit | shape match | gaps |
 |---|--:|--:|--:|--:|
 | S0 | 139 | 139 | 139 | 0 |
+| S1 | 1,225 | 1,225 | 1,225 | 0 |
 | S2a | 7,577 | 7,577 | 7,577 | 0 |
 | S2b | 7,859 | 7,859 | 7,859 | 0 |
 | S4 | 2,000 | 2,000 | 2,000 | 0 |
-| S6 | 28,644 | 28,644 | 28,644 | 0 |
+| S6 | 26,266 | 26,266 | 26,266 | 0 |
 
 **V1: PASS**
 
@@ -48,8 +49,11 @@ conf %exact-zero (fwd-bwd rejected cells): **48.24%**.
 
 eval__ feat present: **223** (held-out instrument; not a training input).
 
-## V8 · Norm-apply smoke (join + NORM v2, the contract the trainer's signal-loader will use)
+## V7 · Orphan whitelist (bar: 0 non-whitelisted orphans)
 
-applied to **604** rows across strata; S6 shapes exercised: ['(11, 22, 33)', '(11, 22, 39)', '(11, 33, 22)', '(11, 39, 22)']. non-finite 0, out-of-[-5,5] 0, unresolved 0.  **V8: PASS**
+training-stratum feat in cache **47,444**, consumed by 004 **45,066**, whitelisted S6 shape-singleton drops **2,378** (from ROOT_MANIFEST). non-whitelisted orphans: **0**.  **V7: PASS**
 
-## Overall: READY — V1 ✓ · V2 ✓ · V3 ✓ · V4 ✓ · V8 ✓. Norm gates G-N1..G-N5 in NORM_REPORT_v2.md.
+## V8 · Norm-apply smoke
+_Not run (pass `--norm NORM_dino_v2.json`)._
+
+## Overall: READY — V1 ✓ · V2 ✓ · V3 ✓ · V4 ✓ · V7 ✓ · V8 ✓. Norm gates G-N1..G-N5 in the current NORM_REPORT.
