@@ -55,3 +55,15 @@ correction_2026_08_29:
   format_doc: "misc/2026-08-28_effectdata_s6/CODESIDE_FORMAT.md + root/README.md (layout, _src portability, per-device bring-up, row schema)."
   eps_migration: "the stale 138,625-row symlink-form samples.jsonl shipped to eps must be killed +
                   reshipped code-side; instructions in CODESIDE_FORMAT.md §7 (eps agent's job)."
+
+# ═══════════════ DOCS RELOCATED IN-STORE 2026-08-29 (append-only) ═══════════════
+docs_relocated_2026_08_29:
+  what: "The dataset docs were carried INTO this store entry so it is self-sufficient. Canonical
+         copies now live here: ./README.md (entry point/index), ./CODESIDE_FORMAT.md (format + usage
+         + portability + verify — the primary doc), ./BUILD.md (S6 source build; §1-7 authority,
+         §8 superseded). Symlink stubs remain at the old misc/2026-08-28_effectdata_s6/ paths so
+         CHANGELOG, the hashed caption store, and code comments still resolve."
+  read_first: "./README.md — routes to CODESIDE_FORMAT.md / BUILD.md / meta.yaml correction block /
+               root (via the `root` symlink) / ../003_dino_signals (signal + NORM_dino_v3, not duplicated)."
+  supersedes_pointers: "the earlier `docs:` and `format_doc:` fields point at the old misc paths;
+                        those still resolve via the stubs, but the canonical home is this directory."

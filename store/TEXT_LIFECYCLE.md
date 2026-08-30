@@ -212,7 +212,7 @@ one-line `lane:` in each meta separates the two logically, non-breakingly.
 
 ## 8. Adding a stratum — EffectData worked example (one-sided)
 
-> **EXECUTED 2026-08-28 as stratum S6.** Full build authority: `misc/2026-08-28_effectdata_s6/BUILD.md`.
+> **EXECUTED 2026-08-28 as stratum S6.** Full build authority: `store/datasets/004_ctt_v2plus/BUILD.md`.
 > The plan below was followed with these DIVERGENCES worth flagging:
 > - Lane A landed as a **single subject-keyed store** `store/captions/004_effectdata/EFFECTDATA_CAPTION_STORE.json`
 >   (schema `ctt_v2_s6_caption_store/v1`, keyed `<subject>|A`, hash `4796ca7b`), matching the S4 store
