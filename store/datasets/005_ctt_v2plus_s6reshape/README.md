@@ -64,6 +64,24 @@ at `NORM_dino_v4.json`. Assert the `samples_sha256` above at run start (`build/a
   S6 81,779 / 28,552 targets / 2,286 returned / 92 dropped; mask frame-0 sum 416.
 - `build/signal_fsck.py` 100% hit in every stratum; `build/verify_signal_store.py` PASS ×5 arms.
 
+## eps ship (Round 5, 2026-08-30)
+
+Shipped to eps (`fal-h100`, `/storage/ozgur/dino_signal/`) in **NEW sibling dirs** (004 + the live A0-004
+run untouched): root `datasets/ctt_v2plus_s6reshape_mix/` (`samples.jsonl` `048d1ef4`, `_src` → `srcroot`
+== 004's, **no `_shape_cache.json`**), S6 tensors `…/encodes/EFFECTDATA_r832/{latents,cond_clean}` (28,644×2),
+`signals_005/feat` (47,667 = 28,644 real S6 + 19,023 **hardlinked** non-S6; NORM_dino_v4 `db47be88`, pca
+`4d59539b`), `campaign/configs_005/`, and an `env.sh` `SIGNALS` knob (set `SIGNALS=$DS/signals_005`). All eps
+CPU verification PASS (assert_pins ×5, verify_signal_store ×5 v4, `01_preflight` `01 OK` fsck S6 81,779/0 miss).
+Details + verification table in **`CODESIDE_FORMAT.md` → eps ship**; full trajectory in the campaign DOSSIER Round 5.
+
+## `_shape_cache.json`
+
+`root/_shape_cache.json` is a **regenerable** local build cache (keys `realpath|size|mtime` → `[F,H,W]`);
+the assembler does not rewrite it on a 100% hit and it is **excluded from the eps ship**. It is not part of
+the dataset contract — `samples_sha256` / `ROOT_MANIFEST.json` are. `samples_sha256` / `samples_rows` are now
+emitted **natively** by `assemble_root.py` (Round-6 commit); the 004/005 manifests were stamped post-assembly
+(Round 4) and Round 6's determinism proof verified native emission EQUAL. See `CODESIDE_FORMAT.md`.
+
 ## Note on S6 (reshaped)
 
 S6 pairs are **same-shape same-effect, different-subject**, paired *within effect × orientation grid*.

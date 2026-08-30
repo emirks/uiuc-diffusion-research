@@ -769,9 +769,10 @@ def main() -> None:
         shape_counts[key] = shape_counts.get(key, 0) + r["replicas"]
         shape_by_stratum.setdefault(r["stratum"], set()).add(key)
     shapes_block = {
-        "note": "A9 §3/§5 — the root holds TWO SHAPES; tokens and shift are DERIVED from "
-                "the latent shape via ltx_trainer/timestep_samplers.py, never restated. "
-                "A9's prose figures (1,500 tokens / shift 1.120) are wrong; see DOSSIER §13.2.",
+        "note": f"the root holds {len(shape_counts)} shape classes; tokens and shift are "
+                f"DERIVED from the latent shape via ltx_trainer/timestep_samplers.py, never "
+                f"restated (A9's prose figures 1,500 tokens / shift 1.120 are wrong; see "
+                f"DOSSIER §13.2)",
         "per_shape": [dict(rc.shape_record(k), n_samples=v,
                            strata=sorted(s for s, v2 in shape_by_stratum.items() if k in v2))
                       for k, v in sorted(shape_counts.items())],
@@ -844,11 +845,17 @@ def main() -> None:
             "stratum_weights_pct": mix["intended_pct"], "prorata_split": mix.get("prorata_split"),
             "strata_present": present, "strata_absent": absent,
             "authority": "root_common.MIX_CONTRACTS; StratifiedEpochSampler realizes intended_pct"})
+        # samples.jsonl is fully written and closed above; stamp its byte-sha + row count
+        # into the manifest NATIVELY (identical names/types to the post-assembly stamp used
+        # for ROOT4/ROOT5 in earlier rounds — see DOSSIER Round 4 §3 / Round 6 §1).
+        samples_sha256 = rc.sha256_file(root / "samples.jsonl")
+        samples_rows = n
         rc.write_json(root / "ROOT_MANIFEST.json", {
             "schema": rc.ROOT_MANIFEST_SCHEMA, "form": "code_side",
             "created": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "root": str(root),
             "contract": args.contract, "seed": man.get("seed", rc.SEED),
             "strata_present": present, "strata_absent": absent, "total_samples": n,
+            "samples_sha256": samples_sha256, "samples_rows": samples_rows,
             "pairing": {"rule": rc.PAIRING_RULE, "max_refs_per_target": max_refs, **s6_prov},
             "weights": {"note": weight_note, "intended_pct": mix["intended_pct"]},
             "shapes": shapes_block,
