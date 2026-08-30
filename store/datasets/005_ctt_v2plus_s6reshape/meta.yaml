@@ -1,0 +1,43 @@
+id: 005_ctt_v2plus_s6reshape
+seq: 5
+shelf: datasets
+naming_note: "store shelf seq is 005. The MIX CONTRACT id is '005_ctt_v2plus_s6reshape' (root_common.MIX_CONTRACTS; weights IDENTICAL to 003_ctt_v2plus), baked into the assembled ROOT_MANIFEST as `contract`."
+created: 2026-08-30
+role: "successor of 004_ctt_v2plus in which ONLY stratum S6 (EffectData) is RESHAPED — re-encoded at two orientation grids so S6 is grid-consistent for the signal contract, token-matched with the corpus, and pairing-complete (2,286 dropped-in-004 targets return)."
+source: "scripts/ctt_v2 pipeline (assemble_root --sampler-mix --code-side --contract 005_ctt_v2plus_s6reshape); S6 r832 build misc/2026-08-30_s6_reshape (DOSSIER); non-S6 strata byte-identical to 004."
+root: symlink -> ../../../outputs/ctt_v2/roots/ctt_v2plus_s6reshape_mix  # code-side sampler-mix root
+form: "code-side — samples.jsonl with ROOT-RELATIVE paths (source via re-pointable `_src` symlink; masks in `_mask_store`); no per-row symlink trees. mix realized by the trainer's StratifiedEpochSampler from mix.json (never rebuilt to change the mix)."
+version: 3.1.0-ctt_v2plus_s6reshape-codeside
+samples_sha256: 048d1ef45d8ec98664291c8bce1c8c4b1f756435ae180abc89979ba323747d98   # pin at run start
+contents: "138,147 pairs — S0 385 / S1 3,675 / S2a 22,731 / S2b 23,577 / S4 6,000 / S6 81,779. Non-S6 rows are a MULTISET-IDENTICAL copy of 004 (verified). Total distinct paths 100,301."
+mix: "S0 12 / S1 4.8 / S2 55.2 (S2a 27.0958 / S2b 28.1042 pro-rata) / S4 8 / S6 20 (mix.json; IDENTICAL to 004's contract). configs_005 apply the owner run-override S0 2 / S1 18 / S2a 22.09 / S2b 22.91 / S4 8 / S6 27 (a config-side knob, printed as 'mix OVERRIDE')."
+s6:
+  clips: 28644                       # EffectData top-2,000 counterfactual subjects, 2,917 effects
+  trained_targets: 28552             # 92 same-grid same-effect singletons dropped (unseen-subject eval material)
+  grids: "2 — 832x512 px (W×H) × 81 f → latent (11,16,26) `effd_832x512_81f` (14,523 landscape); 512x832 × 81 f → latent (11,26,16) `effd_512x832_81f` (14,121 portrait)"
+  tokens: 4576                       # 95.3% of corpus 4,800 (was 7,986–9,438 in 004)
+  shift: 2.221875                    # DERIVED by root_common from the latent shape; never restated
+  fps: 24
+  frames: 81                         # native, no resample; F_latent = 11
+  crop_policy: "process_videos default: aspect-preserving scale-to-COVER + center-crop; NO letterbox/pad, NO rotation"
+  crop_offsets: "1248×704 -> (top,left)=(0,38) · 1056×704 -> (21,0) · 704×1248 -> (38,0) · 704×1056 -> (0,21) (VAE ≈ DINO within <1px)"
+  crop_loss: "16:9-native crops the long side 8.27% (4.13%/edge); 3:2-native crops the short side 7.59% (3.79%/edge); every clip ≤ 4.13%/edge"
+  sided: one                         # frame-0 anchor, prefix_latents=1; A -> A-transformed, no B endpoint
+  reference: "same-effect different-subject demonstration, SAME orientation grid as the target"
+  pairing: "ring_offset_within_op_shape__k=min(3,n-1)__s6_drop_shape_singletons (shape = orientation grid); 81,779 same-grid pairs, 92 shape-singletons dropped, 2,286 targets returned vs 004"
+  encode_dir: outputs/ctt_v2/encodes/EFFECTDATA_r832   # {ROSTER.json (derived), latents/, cond_clean/}; native EFFECTDATA/ untouched
+  captions: "reused unchanged from 004 (store/captions/004_effectdata; per-subject A; resolution-independent, ≤4.13%/edge crop leaves A-description valid)"
+s6_signal_root: /taiga/illinois/eng/cs/jrehg/users/emirkisa/cache/armA_signals_005   # feat/ = 19,023 non-S6 003 hardlinks + 28,644 S6 r832 fields + pca hardlink (47,667)
+norm: "NORM_dino_v4.json (six strata {S0,S1,S2a,S2b,S4,S6}; S6 re-extracted at the r832 grids) — store/datasets/003_dino_signals (v4 addendum), sha256 db47be8890ea84ad7b89aa3a858ab4b0e941d0159f5a7142120742be771fe622; version tag dino_signal_norm_v4."
+trainer: "SampleListDataset + StratifiedEpochSampler; data.sample_list = root/samples.jsonl; data.stratum_weights_pct from configs_005 (owner override). Trainer fork src/LTX-2-armA (32d6e3f) UNCHANGED — the reshape needs no trainer change (grids are RULED_SHAPES; the signal contract's only failure mode, ref grid ≠ target grid, is eliminated by same-grid pairing)."
+eval_axis: "UNCHANGED vs 004 — seen/unseen/zero-shot is AUTOMATIC over operators (2,917 seen effects; zero-shot operators in ED, untrained; unseen = seen effect on a subject outside the 2,000). The 92 same-grid singletons + the rest of ED remain unseen-subject eval material; no held-out carve."
+predecessor: 004_ctt_v2plus          # UNTOUCHED by this build
+consumers: []
+health:
+  codeside_verify: "misc/2026-08-24_flow_signal_conditioning/armA/CODESIDE_VERIFY_005.md — invariants 1-5 PASS (counts 138,147; S6 28,552 targets + 92 drops = 28,644; same-grid + different-subject on all 81,779; existence FULL over 100,301 paths; 5 masks; frame-0 mask sum 416)."
+  compare_004_005: "misc/2026-08-30_s6_reshape/r4/COMPARE_004_005.md PASS — non-S6 rows full-row multiset-identical to 004 (id unchanged); S6 81,779 / distinct targets 28,552 / returned 2,286 / dropped 92."
+  training_ready: "misc/2026-08-24_flow_signal_conditioning/armA/VALIDATION_TRAINING_READY_005.md READY — V1 100% coverage per stratum (shape-aware), V6 eval 223, V8 NORM_dino_v4 smoke (800 rows finite/in-range, both S6 grids)."
+  signal_fsck: "build/signal_fsck.py 100% hit every stratum (S6 81,779 rows, 0 miss) for A0 + A1; verify_signal_store.py PASS ×5 signal arms (A0 disabled), norm version dino_signal_norm_v4."
+  round3: "signal extract 96/96 clean; verify ALL PASS (28,644 feat, census 14,523/14,121); PCA health pooled 0.3744; determinism 24/24; NORM_dino_v4 gates G-N1..G-N5 PASS (S6 131,074,944 cells, non-S6 moments == v3)."
+docs: "./CODESIDE_FORMAT.md (format deltas + verify), ./BUILD.md (S6 r832 build), misc/2026-08-30_s6_reshape/DOSSIER.md (full campaign)"
+authority: root/ROOT_MANIFEST.json (weights/counts/shapes/provenance/samples_sha256); store/TEXT_LIFECYCLE.md (text)

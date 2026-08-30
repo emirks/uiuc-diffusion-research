@@ -268,6 +268,15 @@ MIX_CONTRACTS = {
                      "exactly 002. Escalation to 25-28 pre-registered iff the paired-arm gate "
                      "shows breadth benefit absent AND core non-regression.",
     },
+    "005_ctt_v2plus_s6reshape": {
+        "weights": _S6_W,                              # IDENTICAL to 003_ctt_v2plus
+        "prorata": {"S2": ("S2a", "S2b")},
+        "mix_strata": ("S0", "S1", "S2a", "S2b", "S4", "S6"),
+        "absent": _S6_ABSENT,
+        "authority": "S6 reshape (misc/2026-08-30_s6_reshape DOSSIER Round 1, advisor "
+                     "2026-08-30): weights IDENTICAL to 003_ctt_v2plus; S6 re-encoded at two "
+                     "orientation grids (11,16,26)/(11,26,16) and paired within effect x grid",
+    },
 }
 
 

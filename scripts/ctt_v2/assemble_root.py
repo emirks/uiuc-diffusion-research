@@ -67,11 +67,30 @@ assert set(_S_PRESENT) == set(rc.MIX_STRATA), (
 CONTRACT_ROOTS = {
     "002_ctt_v2": DEFAULT_ROOT,
     "003_ctt_v2plus": REPO / "outputs/ctt_v2/roots/ctt_v2plus_mix",
+    "005_ctt_v2plus_s6reshape": REPO / "outputs/ctt_v2/roots/ctt_v2plus_s6reshape_mix",
 }
 #: `present` is a disk FACT. S6 becomes present once its encode + conditions land.
 _CONTRACT_PRESENT = {
     "002_ctt_v2": dict(_S_PRESENT),
     "003_ctt_v2plus": {**_S_PRESENT, "S6": True},
+    # S1 restored 2026-08-29 (disk fact — 003's manifest carries S1 present by hand-edit;
+    # 005 encodes it in code).
+    "005_ctt_v2plus_s6reshape": {**_S_PRESENT, "S1": True, "S6": True},
+}
+#: S6 pairing reads each clip's shape + subject from a FROZEN per-contract ROSTER (never the
+#: env-dependent ShapeCache). 005 re-encodes S6 at the r832 grids ⇒ a distinct roster.
+CONTRACT_S6_ROSTER = {
+    "002_ctt_v2": None,  # native (no S6 in 002; kept for symmetry, unused)
+    "003_ctt_v2plus": REPO / "outputs/ctt_v2/encodes/EFFECTDATA/ROSTER.json",
+    "005_ctt_v2plus_s6reshape": REPO / "outputs/ctt_v2/encodes/EFFECTDATA_r832/ROSTER.json",
+}
+#: Per-contract S6 inventory basename override (005's S6 latents live at r832 grids).
+CONTRACT_S6_INVENTORY = {
+    "005_ctt_v2plus_s6reshape": {"S6": "S6_r832.json"},
+}
+#: Per-contract code-side VERSION string.
+CONTRACT_VERSION = {
+    "005_ctt_v2plus_s6reshape": "3.1.0-ctt_v2plus_s6reshape-codeside",
 }
 
 
@@ -152,7 +171,7 @@ def default_manifest(contract_id: str = "002_ctt_v2") -> dict:
                 "weight_rule": ("fixed (ruled)" if s in c["weights"] else
                                 f"DERIVED pro-rata within {rc.weight_owner(s)} from the "
                                 f"assembled post-exclusion base pair counts (A12)"),
-                "inventory": str(inv / f"{s}.json"),
+                "inventory": str(inv / CONTRACT_S6_INVENTORY.get(contract_id, {}).get(s, f"{s}.json")),
             }
             for s in c["mix_strata"]
         },
@@ -475,6 +494,11 @@ def main() -> None:
     man = rc.read_json(args.manifest)
     if man.get("schema") != rc.STRATA_MANIFEST_SCHEMA:
         raise SystemExit(f"bad manifest schema: {man.get('schema')!r}")
+    # A manifest's own `contract` field is authoritative: never let mix.json / ROOT_MANIFEST
+    # record a contract other than the one the manifest was built for.
+    if man.get("contract") and man["contract"] != args.contract:
+        raise SystemExit(
+            f"[assemble] manifest contract {man['contract']!r} != --contract {args.contract!r}")
     for spec in args.set_present:
         k, _, v = spec.partition("=")
         if k not in man["strata"]:
@@ -534,7 +558,8 @@ def main() -> None:
     # subject of a shape within an effect has no same-shape partner and is DROPPED (recorded).
     s6_shape, s6_subject = {}, {}
     if "S6" in invs:
-        _rj = rc.read_json(REPO / "outputs/ctt_v2/encodes/EFFECTDATA/ROSTER.json")
+        _roster_p = CONTRACT_S6_ROSTER[man.get("contract", args.contract)]
+        _rj = rc.read_json(_roster_p)
         s6_shape = {c["stem"]: tuple(c["latent_fhw"]) for c in _rj["clips"]}
         s6_subject = {c["stem"]: c["subject"] for c in _rj["clips"]}
     kept_groups, drops, samples = {}, {}, {}
@@ -835,7 +860,8 @@ def main() -> None:
                     "carries ROOT-RELATIVE paths (source via _src symlink -> repo, re-point per device). Filesystem-count asserts (assert_root.py) do not "
                     "apply; verification is the trainer's own _verify_files + fewer-files-to-audit.",
         })
-        (root / "VERSION").write_text("3.0.0-ctt_v2plus-codeside\n")
+        (root / "VERSION").write_text(
+            CONTRACT_VERSION.get(args.contract, "3.0.0-ctt_v2plus-codeside") + "\n")
         print(f"[assemble] CODE-SIDE: samples.jsonl {n} rows (absolute realpaths) + mix.json + "
               f"ROOT_MANIFEST + {len(list((root / '_mask_store').glob('*.pt')))} masks; "
               f"NO symlink trees ({time.time() - t0:.1f}s)")
