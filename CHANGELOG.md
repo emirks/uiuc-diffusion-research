@@ -1,3 +1,7 @@
+## 2026-08-31
+
+- 11:24 Lerp-collapse campaign: owner correction appended to REPORT.md/DOSSIER.md — refVFX's base (Wan-FLF2V) is itself a trained FLF2V model, so its 0 % shortcut is a trained-model result (C4′), not a base-model comparison; the C3′ "LTX-specific" interpretation is retracted for paper use. Paper claims scoped to our base model, no cross-model arguments (ctt_iclr2027/CLAIMS.md updated).
+
 ## 2026-08-30
 - 18:25 infra(dino_signal): watch loop → 1h (cron, +optimize/fairshare report); EVAL_RUNBOOK.md stages the post-10k gen+eval+viewer (per-arm opus-4-8 via Workflow), held for the signal-gen phase pending more DeltaAI project access.
 - 13:15 DINO-signal arms — dataset 005 (S6 reshaped to 832×512/512×832×81f, 81,779 S6 pairs, NORM v4) passed an INDEPENDENT Fable "check everything" (no blockers; 32 read-only checks on both machines; spec endorsed) → the four DeltaAI chains were relaunched on `configs_005` (A1/A5 on bgjg started within a minute, A2/A4 on bhwp pending; self-stop 500-step chunks). eps A0 on 004 continues until the owner decides finish-vs-stop; then eps switches to 005. Tracked provenance snapshot of configs_005 + PINS + chunk script added to the store entry (bf9ee7a). Details: misc/2026-08-27_dino_signal_training/DOSSIER.md "005 LAUNCHED", misc/2026-08-30_s6_reshape/REPORT.md.
