@@ -111,10 +111,20 @@ def build_sample(row: dict) -> ValidationSample:
         # bidirectionally — a train/inference mismatch the config's own docstring warns about.
         # Every arm through b1/m1lite was trained bidirectionally, so the default keeps them
         # byte-identical; ctt_v2 sets `attention: one_way` in arms.yaml.
+        # DINO-signal id (campaign 2026-08-27_dino_signal_training, SPEC 1.2 `eval__<stem>`): when a
+        # SIGNAL_CONFIG is active, stamp the reference's signal_id = id_prefix + the source clip. The
+        # source is `row[source_field]` (e.g. the shufsig registry's deranged `signal_source`) or, when
+        # that column is absent (the matched arm), the model_ref = the row's own reference. Absent
+        # SIGNAL_CONFIG => None => baseline behaviour, byte-identical to every other campaign.
+        _scfg = getattr(build_sample, "signal_cfg", None)
+        _sig_id = None
+        if _scfg is not None:
+            _sig_id = _scfg["id_prefix"] + (row.get(_scfg["source_field"]) or model_ref)
         conds.append(ReferenceConditionConfig(video=str(ref_path),
                                               downscale_factor=build_sample.ref_downscale,
                                               attention=build_sample.ref_attention,
-                                              temporal_scale_factor=1, include_in_output=False))
+                                              temporal_scale_factor=1, include_in_output=False,
+                                              signal_id=_sig_id))
     return ValidationSample(prompt=row["prompt"], conditions=conds)
 
 
@@ -217,6 +227,15 @@ def main() -> None:
     if os.environ.get("FLOWSIG_CONFIG"):
         _flowsig_cfg = json.loads(Path(os.environ["FLOWSIG_CONFIG"]).read_text())
         assert args.out_root, "FLOWSIG_CONFIG must write to its own --out-root"
+    # DINO-signal hook (campaign 2026-08-27_dino_signal_training, SPEC 8 + R1.3/R1.4). Read here so
+    # build_sample() can stamp each reference's `signal_id` before samples are constructed. Unset
+    # SIGNAL_CONFIG => byte-identical to every other campaign (signal_id stays None, no port attached).
+    # The port itself is attached after the runner+adapter are built (see below).
+    _signal_cfg = None
+    if os.environ.get("SIGNAL_CONFIG"):
+        _signal_cfg = json.loads(Path(os.environ["SIGNAL_CONFIG"]).read_text())
+        assert args.out_root, "SIGNAL_CONFIG must write to its own --out-root"
+    build_sample.signal_cfg = _signal_cfg
     rows = load_rows(args.arm, args.priority, args.cells, args.extra_registry)
     if _flowsig_cfg is not None and _flowsig_cfg["mode"] not in ("both", "ref_only"):
         for _r in rows:
@@ -459,6 +478,53 @@ def main() -> None:
         _flowsig_cfg.setdefault("checkpoint", str(adapter))
         flowsig_hook.install(_flowsig_cfg, runner, transformer,
                              samples=val_cfg.samples, rows=todo)
+
+    # DINO-signal port (campaign 2026-08-27_dino_signal_training). Attach the trainer's SignalModule
+    # + SignalStore to the runner, exactly as training did, so the appended signal tokens re-enter
+    # the sequence at inference. Env-gated: no SIGNAL_CONFIG => this whole block is skipped and the
+    # generator is byte-identical to every other campaign.
+    if _signal_cfg is not None:
+        from ltx_trainer.signal import SignalStore, SIGNAL_PREFIX  # noqa: PLC0415
+        from ltx_trainer.signal_module import SignalModule  # noqa: PLC0415
+        # (3) ONE source of truth: the config's checkpoint MUST be the arms.yaml-resolved adapter.
+        _sc_ckpt = Path(_signal_cfg["checkpoint"])
+        if adapter is None or _sc_ckpt.resolve() != Path(adapter).resolve():
+            raise RuntimeError(
+                f"SIGNAL_CONFIG checkpoint {_sc_ckpt} != arms.yaml-resolved adapter {adapter} — "
+                "refusing to attach a signal module from a checkpoint the LoRA did not come from")
+        # (2) store + norm pin: verify() raises unless the norm file's sha256 == the pinned value.
+        _sig_store = SignalStore(_signal_cfg["signal_root"], _signal_cfg["norm_path"],
+                                 norm_sha256=_signal_cfg["norm_sha256"])
+        _sig_store.verify()
+        # dims READ FROM THE MODEL, never hard-coded (patchify_proj in/out features).
+        _base = transformer.get_base_model() if hasattr(transformer, "get_base_model") else transformer
+        _route = _signal_cfg["route"]
+        _sig_module = SignalModule(route=_route,
+                                   inner_dim=int(_base.patchify_proj.out_features),
+                                   token_dim=int(_base.patchify_proj.in_features),
+                                   hidden=int(_signal_cfg.get("hidden", 256)))
+        # load the signal.* keys from the RAW safetensors (the PEFT set_peft_model_state_dict path
+        # above drops them) and assert EXACTLY the module's key set, strict.
+        _raw = load_file(str(_sc_ckpt))
+        _ssd = {k[len(SIGNAL_PREFIX):]: v for k, v in _raw.items() if k.startswith(SIGNAL_PREFIX)}
+        _sig_module.load_state_dict(_ssd, strict=True)  # raises on any missing/unexpected/shape drift
+        _want_keys = set(_sig_module.state_dict().keys())
+        if set(_ssd.keys()) != _want_keys:
+            raise RuntimeError(f"signal.* key set mismatch: got {sorted(_ssd)} want {sorted(_want_keys)}")
+        _ref_param = next(_base.parameters())
+        _sig_module = _sig_module.to(device=_ref_param.device, dtype=torch.float32).eval()
+        _sig_module.requires_grad_(False)
+        runner.attach_signal(_sig_module, _sig_store, route=_route,
+                             placement=_signal_cfg.get("placement", "target"),
+                             token_pool=int(_signal_cfg.get("token_pool", 2)),
+                             guidance=float(_signal_cfg.get("guidance", 1.0)))
+        print(f"[signal] DINO-signal port ATTACHED: route={_route} "
+              f"placement={_signal_cfg.get('placement', 'target')} "
+              f"token_pool={_signal_cfg.get('token_pool', 2)} guidance={_signal_cfg.get('guidance', 1.0)} "
+              f"keys={len(_ssd)}/{len(_want_keys)} strict={sorted(_ssd)} "
+              f"inner_dim={_base.patchify_proj.out_features} token_dim={_base.patchify_proj.in_features} "
+              f"norm_sha={_signal_cfg['norm_sha256'][:8]} store={_signal_cfg['signal_root']} "
+              f"checkpoint={_sc_ckpt}", flush=True)
 
     _jid = os.environ.get("SLURM_JOB_ID", "")
     _suffix = f"_{_jid}" if _jid else ""
