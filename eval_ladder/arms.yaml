@@ -776,5 +776,48 @@ arms:
     note: "Shuffled-code corpse of surg1_wsd (must-fail leakage guard). SAME adapter + raw projector;
       code source deranged via code_source_reference (same GT-pool-preserving map). reference untouched."
 
+  # ---- DINO-signal arms (campaign 2026-08-27_dino_signal_training). Both arms run through the
+  # LTX-2-armA fork; A2 attaches the SIGNAL_CONFIG token port (env-gated in run_gen.py), A0 is the
+  # plain reference-only IC-LoRA (no signal). Explicit staged adapter paths (sha-verified == the eps
+  # source): A2 33afbd86, A0 8ab6e2d3. rank/alpha 128, one_way ref attention (trained one-way), KEEP
+  # sksz (stamped from family 001_ctt152_neutral / 002_ctt152_effect without --strip-token). A0's 10k
+  # is the 004-dataset A0 (005 rerun deferred) => A2-vs-A0 is dataset-confounded; the claim-bearing
+  # contrast is A2-matched vs A2-shufsig (within-arm). See PROTOCOL_LOCKED.md.
+  dino_a2_tokens_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A2_tokens/lora_weights_step_10000.safetensors
+    note: "A2 tokens-route DINO-signal, neutral prompt (family 001). SIGNAL_CONFIG=gen/cfg/a2_tokens.json.
+      Matched signal_id=eval__<own ref>. rank/alpha 128."
+  dino_a2_tokens_effect:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A2_tokens/lora_weights_step_10000.safetensors
+    note: "A2 tokens-route DINO-signal, effect prompt (family 002). Full grid only, no shufsignal. rank/alpha 128."
+  dino_a2_tokens_shufsig_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A2_tokens/lora_weights_step_10000.safetensors
+    note: "A2 tokens-route DINO-signal, DERANGED signal (primary within-arm control). SAME adapter +
+      SIGNAL_CONFIG; rows carry a `signal_source` column (rotation-by-2 derangement of the 36 sorted
+      refs); pixel reference UNCHANGED. rank/alpha 128."
+  dino_a0_baseline_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A0_baseline/lora_weights_step_10000.safetensors
+    note: "A0 reference-only IC-LoRA baseline, neutral prompt (family 001). NO signal port (SIGNAL_CONFIG
+      unset). dataset=004_ctt_v2plus (005 rerun deferred) => A2-vs-A0 dataset-confounded. rank/alpha 128."
+  dino_a0_baseline_effect:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A0_baseline/lora_weights_step_10000.safetensors
+    note: "A0 reference-only IC-LoRA baseline, effect prompt (family 002). Full grid only. NO signal port.
+      dataset=004_ctt_v2plus (005 rerun deferred). rank/alpha 128."
+
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
 

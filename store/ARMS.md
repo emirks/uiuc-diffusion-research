@@ -35,6 +35,8 @@ hand-write a registry.
 | `dualforce_contrast` | contrastive (paired-preference) treatment over 012 | runs/016 | prompts/001 | — | dualforce_contrast_neutral |
 | `flowsig_ball` | program-conditioned via per-token adaLN (recipe variant `textdrop-coupled`) | runs/018 | prompts/001 | — | flowsig_ball_neutral · flowsig_ball_pilot |
 | `flowsig_split` | program-conditioned via RoPE-positioned program TOKENS + adaLN tempo (recipe variant `textdrop-coupled`) | runs/019 | prompts/001 | — | flowsig_split_neutral · flowsig_split_pilot |
+| `dino_a2_tokens` | DINO-signal token-route IC-LoRA (appearance-free 44-ch operator signal → pseudo-latent bank tokens; SIGNAL_CONFIG port) | staged (misc 2026-08-27, A2 10k sha 33afbd86) | prompts/001 | prompts/002 | dino_a2_tokens_neutral · dino_a2_tokens_effect · dino_a2_tokens_shufsig_neutral |
+| `dino_a0_baseline` | reference-only IC-LoRA baseline, no signal (dataset=004_ctt_v2plus, 005 rerun deferred → A2-vs-A0 dataset-confounded) | staged (misc 2026-08-27, A0 10k sha 8ab6e2d3) | prompts/001 | prompts/002 | dino_a0_baseline_neutral · dino_a0_baseline_effect |
 
 Adding an arm = one row here + `eval_ladder/arms.yaml` entry + `stamp_rows.py` for its registry.
 Campaign nicknames (pushA/pushB…) never become directory names — canonical slugs only.
