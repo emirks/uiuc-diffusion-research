@@ -1,3 +1,7 @@
+## 2026-09-01
+
+- 13:20 dino_a2_sample viewer now pairs each generation with the demo reference it was fed (also the matched signal source). `scripts/viewers/gen_dino_a2_sample.py` adds a relative `refs/` symlink to the std121 tree and renders each card as reference ▸ generation. `viewerctl check` LIVE.
+
 ## 2026-08-31
 
 - 11:24 Lerp-collapse campaign: owner correction appended to REPORT.md/DOSSIER.md — refVFX's base (Wan-FLF2V) is itself a trained FLF2V model, so its 0 % shortcut is a trained-model result (C4′), not a base-model comparison; the C3′ "LTX-specific" interpretation is retracted for paper use. Paper claims scoped to our base model, no cross-model arguments (ctt_iclr2027/CLAIMS.md updated).
