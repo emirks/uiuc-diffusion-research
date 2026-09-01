@@ -1,0 +1,72 @@
+id: 021_dino_signal__dai__2026-09-01
+seq: 21
+shelf: evals
+created: 2026-09-01            # scored on DeltaAI GH200 (bhwp-dtai-gh)
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh
+harness: transition-eval v4.0.0 (eval-v4-cert worktree @ eval/v4.0.0-18-g258a990, [UNCERTIFIED] by design)
+instrument:
+  reference_v4_sha256: 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8  # MEASURED at close (sha256sum of eval-v4-cert worktree reference_v4.npz; matches evals/001, 012, 019, 020)
+  corpus: data/processed/transitions_std121/corpus_manifest.json  # 222 clips
+  tau_copy: 0.858
+  matrix: m1a_S3
+  cache: misc/refvfx_baseline/probe/cache        # warm 222-clip corpus cache (shared -> comparable)
+  env: envs-aarch64/refvfx (module miniforge3_pytorch/2.10.0); PYTHONPATH=.claude/worktrees/eval-v4-cert/src
+  torch: 2.10.0+cu129                            # MEASURED from score .out logs (miniforge3_pytorch/2.10.0, CUDA 12.9)
+source: >
+  Campaign 2026-08-27_dino_signal_training — FULL PRODUCTION grid, MATCHED case only (owner FINAL
+  2026-09-01): reference (pixel demo) + per-row DINO signal (A2) + prompt, single seed 42, all 152
+  rows, both prompts neutral (family 001) + effect (family 002). Two arms through the SAME LTX-2-armA
+  fork (@32d6e3f): A2_tokens (signal->appended tokens, route=tokens placement=target token_pool=2
+  signal-guidance=1.0, rank/alpha 128) and A0_baseline (reference-only IC-LoRA, NO signal port,
+  rank/alpha 128). Row-identical grid, seeds, prompts and instrument to the ctt_v2 / dcg / flowsig
+  evals (same reference_v4 459fd9a7, same warm cache) -> directly comparable, one machine.
+  CAVEAT — A0 adapter trained on dataset 004_ctt_v2plus (005 rerun deferred by owner), so A2-vs-A0
+  is DATASET-CONFOUNDED (secondary yardstick only); the claim-bearing within-arm contrast
+  (A2-matched vs A2-shufsignal) is NOT part of this production pass.
+  INFERENCE SETTINGS vs training-validation: guidance_scale 4.0, resolution 480x640x121, frame_rate
+  24.0, stg (scale 1.0 / blocks [29] / mode stg_v), seed 42, and the signal port (token_pool 2,
+  guidance 1.0, hidden 256, norm db47be88) all MATCH the A2_tokens.yaml/A0_baseline.yaml validation
+  block EXACTLY. num_inference_steps differs: gen used the arms.yaml global 30, training-validation
+  used 20 — a sampler-discretisation knob (not a training-distribution property; all distribution-
+  bearing settings match), kept at 30 for consistency with the reused 33 A2-neutral clips and the
+  existing ctt_v2/dcg/flowsig comparators (all scored at 30). Flagged for owner.
+arms_scored:
+  dino_a2_tokens_neutral:
+    gen: gens/024_dino_a2_tokens/01_neutral__dai
+    run: "staged eps A2_tokens @ step 10000 (sha 33afbd86; LTX-2-armA @32d6e3f); dataset 005_ctt_v2plus_s6reshape"
+    step: 10000
+    rows: 152
+  dino_a2_tokens_effect:
+    gen: gens/024_dino_a2_tokens/02_effect__dai
+    run: "staged eps A2_tokens @ step 10000 (sha 33afbd86; LTX-2-armA @32d6e3f); dataset 005_ctt_v2plus_s6reshape"
+    step: 10000
+    rows: 152
+  dino_a0_baseline_neutral:
+    gen: gens/025_dino_a0_baseline/01_neutral__dai
+    run: "staged eps A0_baseline @ step 10000 (sha 8ab6e2d3; LTX-2-armA @32d6e3f); dataset 004_ctt_v2plus (005 deferred)"
+    step: 10000
+    rows: 152
+  dino_a0_baseline_effect:
+    gen: gens/025_dino_a0_baseline/02_effect__dai
+    run: "staged eps A0_baseline @ step 10000 (sha 8ab6e2d3; LTX-2-armA @32d6e3f); dataset 004_ctt_v2plus (005 deferred)"
+    step: 10000
+    rows: 152
+plan:
+  seeds: [42]
+  chunks: 16
+  keyed_join: >
+    base twins found for all 152 rows. Neutral arms twin base directly; EFFECT arms (family 002,
+    whose own input_key has no base twin) are re-keyed to their geometry twin's NEUTRAL input_key
+    (matched on cell/endpoint/reference/sided/pct_type — 152/152 unique, DCG-precedent
+    misc/2026-08-14_dcg_conditioning/build_eval_arms.py). The harness `arm` stamp is unchanged.
+headline:                                      # MEASURED via eval/report_dino.py (pool-yardstick, tau_copy 0.858) — NEUTRAL numbers only, no comparison settled
+  a2_tokens_neutral:   {pooled_same_pct: 86.0, ref_dep_gap_pp: 33.0, g_fit_pct: 96.0, g_ref_control_pct: 63.0, core_degenerate: "10/152", near_copy: "0/152", copy_max_mean: 0.3785}
+  a2_tokens_effect:    {pooled_same_pct: 90.1, ref_dep_gap_pp: 27.1, g_fit_pct: 96.3, g_ref_control_pct: 69.3, core_degenerate: "6/152", near_copy: "0/152", copy_max_mean: 0.4385}
+  a0_baseline_neutral: {pooled_same_pct: 84.6, ref_dep_gap_pp: 34.1, g_fit_pct: 96.6, g_ref_control_pct: 62.5, core_degenerate: "7/152", near_copy: "1/152", copy_max_mean: 0.3964}
+  a0_baseline_effect:  {pooled_same_pct: 86.8, ref_dep_gap_pp: 29.8, g_fit_pct: 94.3, g_ref_control_pct: 64.5, core_degenerate: "6/152", near_copy: "0/152", copy_max_mean: 0.4419}
+  err_rows_note: >     # per-arm app_ref=None decode failures (EOFError/BadZipFile on a minority of pool-reference comparisons; every one of the 152 gens still landed a pooled score): a2n 16, a2e 25, a0n 36, a0e 36 (of 921 pool-rows/arm). Data-quality note, NOT re-scored per owner directive.
+caveats: >
+  A2-vs-A0 is DATASET-CONFOUNDED (A0 on 004, A2 on 005) — secondary yardstick, any "signal beats
+  baseline" reading is provisional until an A0-005 rerun. Cross-pass comparison to ctt_v2/dcg/flowsig
+  is same-machine + same instrument sha (459fd9a7) but a different scoring pass (cross-pass caveat).
+  Bars NOT pre-set for this production case; a bar-setting consult is owed before interpreting.
