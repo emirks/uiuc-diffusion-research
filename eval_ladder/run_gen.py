@@ -499,10 +499,20 @@ def main() -> None:
         # dims READ FROM THE MODEL, never hard-coded (patchify_proj in/out features).
         _base = transformer.get_base_model() if hasattr(transformer, "get_base_model") else transformer
         _route = _signal_cfg["route"]
-        _sig_module = SignalModule(route=_route,
-                                   inner_dim=int(_base.patchify_proj.out_features),
-                                   token_dim=int(_base.patchify_proj.in_features),
-                                   hidden=int(_signal_cfg.get("hidden", 256)))
+        # Route-aware construction, mirroring Trainer._signal_attach (trainer.py ~1901). dims are
+        # READ FROM THE MODEL (patchify_proj in/out features), never hard-coded. channels/tokens use
+        # `signal.hidden`; `xattn` (SPEC R1.4) uses `signal.xattn.hidden` (passed as `hidden`) plus
+        # its SDPA head count (`heads`). Threading `channels`/`heads` from the config keeps the module
+        # byte-identical to the one training built, so the strict signal.* load below is exact for
+        # EVERY route (tokens = 5 keys, xattn = 13 keys, channels = 1). Unset SIGNAL_CONFIG or a
+        # tokens/channels config is byte-identical to before (heads unused; channels default 44).
+        _sm_kwargs = dict(inner_dim=int(_base.patchify_proj.out_features),
+                          token_dim=int(_base.patchify_proj.in_features),
+                          hidden=int(_signal_cfg.get("hidden", 256)),
+                          channels=int(_signal_cfg.get("channels", 44)))
+        if _route == "xattn":
+            _sm_kwargs["heads"] = int(_signal_cfg.get("heads", 4))
+        _sig_module = SignalModule(route=_route, **_sm_kwargs)
         # load the signal.* keys from the RAW safetensors (the PEFT set_peft_model_state_dict path
         # above drops them) and assert EXACTLY the module's key set, strict.
         _raw = load_file(str(_sc_ckpt))
