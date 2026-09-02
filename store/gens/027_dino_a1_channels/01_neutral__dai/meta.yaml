@@ -1,0 +1,16 @@
+id: gens/027_dino_a1_channels/01_neutral__dai
+seq: 1
+shelf: gens
+arm: dino_a1_channels
+harness_arm: dino_a1_channels_neutral   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral
+machine: dai
+created: 2026-09-02
+inputs: {run: staged A1_channels_target @ step 10000 (sha 1093362b; LTX-2-armA @32d6e3f); dataset 005_ctt_v2plus_s6reshape, step: 10000}
+code: src/LTX-2-armA @ 32d6e3f
+prompt_family: prompts/001_ctt152_neutral
+prompt_sha: 0d708175fbfe
+grid_rows: 152
+videos: 152
+source: scripts/store_register.py over /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/misc/2026-08-27_dino_signal_training/gen/registry_dino_a1_channels_neutral.jsonl
+notes: A1 channels-route DINO-signal (SPEC §2): per-row appearance-free 44-ch DINO signal projected by Linear(44,inner_dim) and added onto the target token embeddings. SIGNAL_CONFIG=gen/cfg/a1_channels.json route=channels placement=target token_pool=2 signal-guidance=1.0 hidden 256 channels 44, 1 signal.proj.weight key strict, norm db47be88, inner_dim 4096. Matched signal_id=eval__<own ref>. Production MATCHED case, seed 42. gen num_inference_steps 30 (arms.yaml global) vs 20 at training-validation — sampler knob, flagged for owner.
