@@ -835,6 +835,25 @@ arms:
     attention: one_way
     adapter: outputs/dino_signal_005/A5_xattn_fusion/checkpoints/lora_weights_step_10000.safetensors
     note: "A5 xattn-route DINO-signal, effect prompt (family 002). Full grid only, no shufsignal. rank/alpha 128."
+  # A1 channels-route DINO-signal (signal projected to the model inner dim by Linear(44,inner_dim),
+  # added onto the target token embeddings, SPEC §2). Adapter STAGED on Taiga (misc staged_adapters,
+  # A1 10k sha 1093362b, 961 tensors = 960 LoRA + 1 signal.proj.weight). SIGNAL_CONFIG=gen/cfg/
+  # a1_channels.json (route=channels, channels 44, hidden 256, token_pool 2, guidance 1.0, placement
+  # target; loads the 1 signal.* key strict). dataset 005_ctt_v2plus_s6reshape (SAME as A2/A5 =>
+  # A1-vs-A2-vs-A5 is a clean same-dataset route comparison). Matched signal_id=eval__<own ref>.
+  dino_a1_channels_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A1_channels_target/lora_weights_step_10000.safetensors
+    note: "A1 channels-route DINO-signal, neutral prompt (family 001). SIGNAL_CONFIG=gen/cfg/a1_channels.json.
+      Matched signal_id=eval__<own ref>. rank/alpha 128, LTX-2-armA @32d6e3f, step 10000, dataset 005."
+  dino_a1_channels_effect:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A1_channels_target/lora_weights_step_10000.safetensors
+    note: "A1 channels-route DINO-signal, effect prompt (family 002). Full grid only, no shufsignal. rank/alpha 128."
 
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
 
