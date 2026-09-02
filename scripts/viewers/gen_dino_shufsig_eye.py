@@ -31,6 +31,8 @@ ARMS = [
      "pooled signal is the QUERY, the own reference block is K/V; fused tokens appended (deranged = donor query, own K/V)"),
 ]
 VD.mkdir(parents=True, exist_ok=True)
+SWAP_JSON = REPO / "misc/2026-08-27_dino_signal_training/eval/swap_sensitivity.json"
+SWAP = json.load(open(SWAP_JSON)) if SWAP_JSON.exists() else {}
 
 
 def relink(name, target):
@@ -45,6 +47,15 @@ def relink(name, target):
 
 relink("refs", STD)
 REF_REL = {p.stem: "%s/%s" % (p.parent.name, p.name) for p in STD.rglob("*.mp4")}
+
+
+def swap_chip(tab, cell, ep):
+    for x in SWAP.get(tab, []):
+        if x["row"] == "%s/%s" % (cell, ep):
+            a0 = x.get("a0_psnr")
+            return '<span class="swap" title="PSNR over middle frames; lower = bigger change. Scale: this row\'s A0 (no-signal) gen vs matched">swap %.0f dB%s</span>' % (
+                x["swap_psnr"], (" · vs A0 %.0f dB" % a0) if a0 else "")
+    return ""
 
 
 def card(arm, r):
@@ -78,8 +89,8 @@ def card(arm, r):
             '  </div>\n  %s\n'
             '  <figcaption><button class="play">▶ play all</button><b>%s</b>'
             '<span class="k">ref <i>%s</i></span><span class="k donor">signal ▸ <i>%s</i></span>'
-            '<span class="cell">%s</span><span class="seed">s%d</span></figcaption>\n</figure>'
-            % (REF_REL[ref], REF_REL[src], m_video, d_video, flip, ep, ref, src, cell, SEED)), d_ok
+            '<span class="cell">%s</span>%s<span class="seed">s%d</span></figcaption>\n</figure>'
+            % (REF_REL[ref], REF_REL[src], m_video, d_video, flip, ep, ref, src, cell, swap_chip(tab, cell, ep), SEED)), d_ok
 
 
 panels, tabs, status_lines = [], [], []
@@ -132,6 +143,7 @@ video{width:100%;display:block;background:#000;aspect-ratio:4/3}
 figcaption{padding:7px 9px;font-size:12px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
 figcaption b{color:#e6edf3} .k{color:#9fb0c3;font:11px ui-monospace,monospace} .k i{color:#e0b76c;font-style:normal}
 .k.donor i{color:#e08ac0} .cell{color:#8aa0b6;font:11px ui-monospace,monospace} .seed{color:#7d8ea0;margin-left:auto;font:11px ui-monospace,monospace}
+.swap{color:#d6b4ff;font:11px ui-monospace,monospace;background:#241c33;padding:1px 6px;border-radius:8px}
 .play{background:#1b232e;color:#cdd9e5;border:1px solid #2a3542;border-radius:6px;padding:2px 8px;font-size:11px;cursor:pointer}
 </style></head><body>
 <header><h1>DINO-signal arms — matched vs DERANGED signal (eye test)</h1>
@@ -140,7 +152,7 @@ The only difference: the matched gen receives the 44-ch DINO signal extracted fr
 extracted from the <b>donor clip</b> (another operator class; rotation-by-2 over the 36 eval references, frozen in PROTOCOL_LOCKED §28 — the same map for every arm).
 If an arm reads the signal, its deranged clip should drift toward the donor operator or at least differ visibly; if the training probe's Δderanged ≈ 0 is real,
 matched and deranged will be near-identical frame for frame. <b>FLIP</b>: click the bottom slot (or press F with the mouse over a card) to swap matched↔deranged
-at the same playhead. ▶ play all starts a card's four clips together. Cells: G-zs-same (8) + G-unseen-same (13); staged 10k adapters, rank 128, dataset 005.</div>
+at the same playhead. ▶ play all starts a card's four clips together. Cells: G-zs-same (8) + G-unseen-same (13); staged 10k adapters, rank 128, dataset 005. <b>Measured:</b> generation is bit-identical on re-render (determinism control 138 dB), so every matched↔deranged difference is the signal swap; per-card chip = swap PSNR (A1 mean 17 dB · A2 22 · A5 24; same-row A0 ≈ 15.5 dB). Judge <i>direction</i>, not difference: does the deranged clip look like the <b>donor</b> transition?</div>
 <div class="tabs">@@TABS@@</div></header>
 @@PANELS@@
 <script>
