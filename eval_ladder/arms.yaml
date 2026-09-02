@@ -854,6 +854,22 @@ arms:
     attention: one_way
     adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A1_channels_target/lora_weights_step_10000.safetensors
     note: "A1 channels-route DINO-signal, effect prompt (family 002). Full grid only, no shufsignal. rank/alpha 128."
+  dino_a1_channels_shufsig_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A1_channels_target/lora_weights_step_10000.safetensors
+    note: "A1 channels-route DINO-signal, DERANGED signal (within-arm control). SAME adapter + SIGNAL_CONFIG
+      gen/cfg/a1_channels.json; rows carry `signal_source` (rotation-by-2 derangement of the 36 sorted refs,
+      PROTOCOL_LOCKED §28); pixel reference UNCHANGED. rank/alpha 128."
+  dino_a5_xattn_shufsig_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: outputs/dino_signal_005/A5_xattn_fusion/checkpoints/lora_weights_step_10000.safetensors
+    note: "A5 xattn-route DINO-signal, DERANGED signal (within-arm control): the donor's pooled signal is the
+      QUERY, the row's OWN reference stays the K/V (SPEC R1.4 derangement swaps the signal only). SAME adapter +
+      SIGNAL_CONFIG gen/cfg/a5_xattn.json; `signal_source` rotation-by-2. rank/alpha 128."
 
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
 
