@@ -818,6 +818,23 @@ arms:
     adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A0_baseline/lora_weights_step_10000.safetensors
     note: "A0 reference-only IC-LoRA baseline, effect prompt (family 002). Full grid only. NO signal port.
       dataset=004_ctt_v2plus (005 rerun deferred). rank/alpha 128."
+  # A5 xattn-route DINO-signal (signal-as-Q cross-attention, SPEC R1.4). Adapter lives in the DeltaAI-
+  # visible outputs/ tree (Taiga), NOT staged. SIGNAL_CONFIG=gen/cfg/a5_xattn.json (route=xattn,
+  # xattn.hidden 256, xattn.heads 4, token_pool 2, guidance 1.0; 13 signal.* keys, strict). dataset
+  # 005_ctt_v2plus_s6reshape (SAME as A2). Matched signal_id=eval__<own ref>.
+  dino_a5_xattn_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: outputs/dino_signal_005/A5_xattn_fusion/checkpoints/lora_weights_step_10000.safetensors
+    note: "A5 xattn-route DINO-signal, neutral prompt (family 001). SIGNAL_CONFIG=gen/cfg/a5_xattn.json.
+      Matched signal_id=eval__<own ref>. rank/alpha 128, LTX-2-armA @32d6e3f, step 10000, dataset 005."
+  dino_a5_xattn_effect:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: outputs/dino_signal_005/A5_xattn_fusion/checkpoints/lora_weights_step_10000.safetensors
+    note: "A5 xattn-route DINO-signal, effect prompt (family 002). Full grid only, no shufsignal. rank/alpha 128."
 
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
 
