@@ -1,0 +1,16 @@
+id: gens/031_dualforce_dcg_w3/01_neutral__dai
+seq: 1
+shelf: gens
+arm: dualforce_dcg_w3
+harness_arm: dualforce_dcg_w3   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral
+machine: dai
+created: 2026-09-03
+inputs: {run: runs/012_dualforce_control, step: 1000}
+code: src/LTX-2-ctt-v2-train @ 65c0c6b + DCG driver misc/2026-09-02_dcg_dualforce_control (crossfade null, gs4/stg1)
+prompt_family: prompts/001_ctt152_neutral
+prompt_sha: 0d708175fbfe
+grid_rows: 152
+videos: 152
+source: scripts/store_register.py over misc/2026-09-02_dcg_dualforce_control/store_grid_dualforce_dcg_w3.jsonl
+notes: dualforce_control (plain-FM control) 1k + test-time DCG w=3.0 at deployed gs=4/stg=1, neutral prompt; same protocol as ctt_v2 DCG (gens 015-018)
