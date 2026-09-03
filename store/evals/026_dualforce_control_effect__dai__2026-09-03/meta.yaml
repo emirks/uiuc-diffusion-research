@@ -1,0 +1,30 @@
+id: 026_dualforce_control_effect__dai__2026-09-03
+seq: 26
+shelf: evals
+created: 2026-09-03
+machine: DeltaAI ghx4 (aarch64 GH200) — GEN + SCORE both on DeltaAI (one machine)
+instrument: >
+  transition-eval v4 (eval-v4-cert worktree; [UNCERTIFIED] by design). reference_v4 sha256
+  459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8 (== evals/012/024/025). corpus
+  data/processed/transitions_std121 = 222 clips / 39 classes; tau_copy 0.858. refvfx env, warm 222 cache.
+source: >
+  The DUAL-FORCE plain-FM CONTROL arm's EFFECT variant (dualforce_control_effect) — completes the base arm
+  (neutral = eval 012). runs/012 @ step 1000, effect (leaky_regen) prompt over the CTT grid, seeds 42/43 = 304
+  gens (gens/013_dualforce_control/02_effect__dai, prompt_sha 35930d7d). Plan: run_eval.py --mode plan --arms
+  dualforce_control_effect --extra-registry misc/2026-09-02_dcg_dualforce_control/registry_dualforce_control_effect_notwin.jsonl
+  (no_twin: the base arm is a baseline, not a treatment — its effect input_key has no base twin). Score: job 3075647, 16 shards ghx4.
+arms_scored:
+  dualforce_control_effect: {gen: gens/013_dualforce_control/02_effect__dai, run: runs/012_dualforce_control, step: 1000, rows: 3664}
+headline:   # v4 pool-yardstick app%same; pooled_same = ALL 5 same-typed cells (incl 2 diagnostic), n-weighted; levels >100 = raw exceeds GT-class ceiling
+  pooled_same:  {n: 60, pct_same: 93.6}    # vs the NEUTRAL base (eval 012) pooled_same 89.6 — effect text lifts appearance
+  pooled_proxy: {n: 92, pct_proxy: 91.6}   # cross/foreign, content-capped, ranking-only
+  by_cell:
+    G-fit:         {ptype: same,  n: 13, pct: 99.6}
+    G-unseen-same: {ptype: same,  n: 13, pct: 100.1}
+    G-zs-same:     {ptype: same,  n: 8,  pct: 95.0}
+    G-memo-probe:  {ptype: same,  n: 13, pct: 102.1}   # DIAGNOSTIC heldin memorization probe
+    G-ref-control: {ptype: same,  n: 13, pct: 71.7}    # DIAGNOSTIC mismatched-reference control
+caveats:
+  - Un-twinned (no_twin) — the base arm contributes a LEVEL, not a Δpp margin (report() patched to honor no_twin,
+    mirroring plan()). Single machine; seeds 42/43. Shares the ~7% warm-cache row-drop race with evals/012.
+  - [UNCERTIFIED] v4 instrument.
