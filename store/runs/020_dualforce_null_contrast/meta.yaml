@@ -1,0 +1,50 @@
+id: 020_dualforce_null_contrast
+seq: 20
+shelf: runs
+created: 2026-09-03          # trained this session on DeltaAI GH200 (aarch64), jobs 3073199-3073201, bgms-dtai-gh
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bgms-dtai-gh; 2 GPU × grad_accum 4 (eff batch 8)
+source: >
+  Campaign 2026-09-02_null_contrast — the FOLDED "control + lose" arm (contrast_axis=control_null) over the
+  plain-FM control 012. Owner: "exactly the control arm + a lose objective with the lerp as reference." The
+  primary dataloader row IS the win, so its plain-FM loss is EXACTLY 012's L_FM (normal sampler, full mix) and
+  doubles as l_w; lose = the SAME row/target with reference := LERP-NULL(its own demo) — a latent-space dissolve
+  of the demo's own endpoints (first↔last latent frame, linear cross-fade). loss = L_FM + λ_con·L_con(l_w, l_l);
+  L_con = (2/β)(softplus(βΔ) − log2), Δ = l_w − l_l (SimPO, ref_anchor=false — self-anchored: L_FM pins l_w low,
+  so the term only pushes l_l up). No cell pair / band sampler; contrast rides the primary row's own noise/mix,
+  so the base is byte-for-byte the 012 control. Registered at the STEP-1000 checkpoint.
+inputs:
+  dataset: datasets/002_ctt_v2        # SAME 56,368-pair CTT v2 set as runs/002/012/016; not rebuilt
+warm_start:
+  from: runs/002_ctt_v2               # ctt_v2 shipped checkpoint, step 10000 (SAME init as 012/016)
+  checkpoint: store/runs/002_ctt_v2/checkpoints/lora_weights_step_10000.safetensors
+trainer:
+  checkout: src/LTX-2-contrast        # linked worktree, branch `contrast`
+  branch: contrast
+  commit: e938cd4                     # control_null axis (folded control+lose); dict-fix 4c87e15; demo_null b5d7e0b
+  entry: RESUMABLE CHUNK CHAIN (singleton, 2h30 chunks) jobs 3073199,3073200,3073201 (accelerate launch --num_processes 2 scripts/train.py df_null_contrast_chunk.yaml); config.yaml copied here
+model: LTX-2 19B dev (frozen)
+adapter: IC-LoRA r128/a128; one-way reference attention; RAW video reference (reference latents concatenated as tokens — no bottleneck). target_modules attn_ffn (10 modules): attn1/attn2 {to_k,to_q,to_v,to_out.0} + ff.net.0.proj + ff.net.2. PLAIN LoRA — verified 960 tensors, 0 signal.* keys; architecturally identical to ctt_v2/012/016 → generation uses the proven one_way IC-LoRA stack.
+rank: 128
+alpha: 128
+dropout: 0.0
+reference_attention: one_way
+lr: 1e-4, WSD schedule (warmup 100 / decay_frac 0.25 / end_factor 0.1), 2000-step config
+timesteps: shifted_logit_normal
+seed: 42
+effective_batch: 8                     # batch_size 1 × grad_accum 4 × 2 GPU (matches 012 control's eff-batch 8; 4-GPU whole-node jobs don't land, 2-GPU backfills)
+steps_config: 2000
+shipped_step: 1000
+contrast:
+  axis: control_null
+  beta: 8.0
+  lambda_con: 0.25
+  lambda_warmup_steps: 250
+  ref_anchor: false                    # SimPO — self-anchored by L_FM pinning l_w
+  null_reference: lerp_dissolve(demo's own endpoints, first<->last latent frame)  # the DCG null, moved into training
+checkpoint_sha256:
+  lora_weights_step_01000.safetensors: 392b4d4edfe29944593425075b3c938d8eea19bc6d94305fb2e61d02b3a7bd46
+source_location: outputs/dualforce/null_contrast_ctrllose/checkpoints (scratch; SHIP_step01000.safetensors backup kept there)
+notes: >
+  Comparators (co-scored A/B target): dualforce_control@1000 (runs/012, gens/013) — the plain-FM control, IDENTICAL
+  recipe except the added lose term; ctt_v2 lineage anchor. Generate with eval_ladder/run_gen.py, src/LTX-2-ctt-v2-train
+  packages on PYTHONPATH, --rank 128 --alpha 128, one_way (run_gen defaults --rank 32 → pass 128 explicitly).

@@ -374,6 +374,25 @@ arms:
     adapter: store/runs/016_dualforce_contrast/checkpoints/lora_weights_step_01000.safetensors
     note: "contrastive treatment over 012, NEUTRAL prompt (registry_dualforce_contrast_neutral). runs/016@1000, r128/a128, one_way."
 
+  # ---- campaign `2026-09-02_null_contrast`. FOLDED "control + lose" (contrast_axis=control_null): the plain-FM
+  # control 012 PLUS one lose term = the same row/target with reference := lerp-dissolve of the demo's own endpoints
+  # (the DCG null, moved into training). Architecturally identical to ctt_v2/012/016 (plain r128 attn_ffn one_way,
+  # 960 tensors) → same one_way IC-LoRA inference stack. Compare @1000 vs dualforce_control@1000 (co-scored A/B).
+  dualforce_null_contrast_neutral:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/020_dualforce_null_contrast/checkpoints/lora_weights_step_01000.safetensors
+    note: "control+lose (lerp-null reference), NEUTRAL prompt (registry_dualforce_null_contrast_neutral). runs/020@1000, r128/a128, one_way."
+  dualforce_null_contrast_effect:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/020_dualforce_null_contrast/checkpoints/lora_weights_step_01000.safetensors
+    note: "control+lose (lerp-null reference), EFFECT prompt (registry_dualforce_null_contrast_effect). runs/020@1000, r128/a128, one_way."
+
   # ---- campaign `bneck_coupling` (2026-07-31). The certified transition encoder, FROZEN, coupled
   # into the same CTT v2 IC-LoRA recipe as `ctt_v2` above. The ONLY delta versus `ctt_v2` is the
   # content of the reference channel: the raw full-resolution demo latents are replaced by the

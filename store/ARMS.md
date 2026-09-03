@@ -33,6 +33,7 @@ hand-write a registry.
 | `dualforce_kd` | dual-force text-crutch KD treatment | runs/013 | prompts/001 | prompts/002 | dualforce_kd_neutral · dualforce_kd_effect |
 | `dualforce_s0s1redirect` | S0+S1 counterfactual redirect treatment (redesign of 014) | runs/015 | prompts/001 | — | dualforce_s0s1redirect_neutral |
 | `dualforce_contrast` | contrastive (paired-preference) treatment over 012 | runs/016 | prompts/001 | — | dualforce_contrast_neutral |
+| `dualforce_null_contrast` | folded control+lose (lerp-null reference) over 012 | runs/020 | prompts/001 | prompts/002 | dualforce_null_contrast_neutral · dualforce_null_contrast_effect |
 | `flowsig_ball` | program-conditioned via per-token adaLN (recipe variant `textdrop-coupled`) | runs/018 | prompts/001 | — | flowsig_ball_neutral · flowsig_ball_pilot |
 | `flowsig_split` | program-conditioned via RoPE-positioned program TOKENS + adaLN tempo (recipe variant `textdrop-coupled`) | runs/019 | prompts/001 | — | flowsig_split_neutral · flowsig_split_pilot |
 | `dino_a2_tokens` | DINO-signal token-route IC-LoRA (appearance-free 44-ch operator signal → pseudo-latent bank tokens; SIGNAL_CONFIG port) | staged (misc 2026-08-27, A2 10k sha 33afbd86) | prompts/001 | prompts/002 | dino_a2_tokens_neutral · dino_a2_tokens_effect · dino_a2_tokens_shufsig_neutral |
