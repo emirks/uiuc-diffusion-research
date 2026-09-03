@@ -120,11 +120,17 @@ def build_sample(row: dict) -> ValidationSample:
         _sig_id = None
         if _scfg is not None:
             _sig_id = _scfg["id_prefix"] + (row.get(_scfg["source_field"]) or model_ref)
-        conds.append(ReferenceConditionConfig(video=str(ref_path),
-                                              downscale_factor=build_sample.ref_downscale,
-                                              attention=build_sample.ref_attention,
-                                              temporal_scale_factor=1, include_in_output=False,
-                                              signal_id=_sig_id))
+        # Only pass signal_id when a SIGNAL_CONFIG is active — the ctt-v2-train / ctt_v2-lineage
+        # ReferenceConditionConfig has no signal_id field (added only in the DINO-signal fork), so
+        # passing signal_id=None trips pydantic extra_forbidden on those stacks (e.g. the dualforce
+        # plain-FM arms). Omitting it when None restores pre-2026-08-27 behaviour, byte-identical.
+        _ref_kw = dict(video=str(ref_path),
+                       downscale_factor=build_sample.ref_downscale,
+                       attention=build_sample.ref_attention,
+                       temporal_scale_factor=1, include_in_output=False)
+        if _sig_id is not None:
+            _ref_kw["signal_id"] = _sig_id
+        conds.append(ReferenceConditionConfig(**_ref_kw))
     return ValidationSample(prompt=row["prompt"], conditions=conds)
 
 
