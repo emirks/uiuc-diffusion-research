@@ -1,0 +1,39 @@
+id: 026_dualforce_null_contrast__dai__2026-09-03
+seq: 26
+shelf: evals
+created: 2026-09-03
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh
+instrument: transition-eval v4 (eval-v4-cert worktree)
+torch: 2.10.0+cu129
+corpus: data/processed/transitions_std121/corpus_manifest.json  # 222 clips
+corpus_sha256: 5a7a8be9f8a0ba70de9d3c77aaec77801a59170255d5fcb425d80a364afd3652
+reference_v4_sha256: 459fd9a71bb50ef8    # measured (canonical)
+tau_copy: 0.858
+seeds: [42]
+source: >
+  CERTIFIED co-scored A/B — dualforce_null_contrast (control_null = folded "control + lose", lerp-null
+  reference; runs/020@1000) vs dualforce_control (plain-FM control; runs/012@1000), NEUTRAL + EFFECT, all
+  four arms scored in ONE v4 pass (same instrument/corpus/machine/pass ⇒ paired, no cross-pass caveat).
+  Effect rows re-keyed to their neutral geometry twin's input_key for the keyed join (DCG/dino precedent).
+  Seed 42 only (matches null_contrast's single-seed production gen). The published control is evals/012
+  (89.6, seeds 42/43); here the co-scored seed-42-only control is N=88.3 (validates the pipeline).
+arms_scored:
+  dualforce_null_contrast_neutral: {gen: gens/028_dualforce_null_contrast/01_neutral__dai, run: runs/020, step: 1000, rows: 921}
+  dualforce_null_contrast_effect:  {gen: gens/028_dualforce_null_contrast/02_effect__dai,  run: runs/020, step: 1000, rows: 921}
+  dualforce_control_neutral:       {gen: gens/013_dualforce_control/01_neutral__dai,       run: runs/012, step: 1000, rows: 921}
+  dualforce_control_effect:        {gen: gens/013_dualforce_control/02_effect__dai,        run: runs/012, step: 1000, rows: 921}
+results_pooled_same_pct:   # NEUTRAL numbers — verdict → owner/FINDINGS, not settled
+  null_contrast_neutral: {whole: 82.3, seen: 88.0, unseen: 88.6, zs: 93.9, ref_dep_gap: 20.6, near_copy: 0, core_degenerate: 10, gens: 152}
+  control_neutral:       {whole: 88.3, seen: 89.9, unseen: 97.5, zs: 90.2, ref_dep_gap: 22.7, near_copy: 0, core_degenerate: 5, gens: 152}
+  null_contrast_effect:  {whole: 91.2, seen: 96.1, unseen: 94.8, zs: 98.2, ref_dep_gap: 27.6, near_copy: 0, core_degenerate: 3, gens: 152}
+  control_effect:        {whole: 93.7, seen: 101.8, unseen: 99.5, zs: 96.8, ref_dep_gap: 32.6, near_copy: 0, core_degenerate: 0, gens: 152}
+paired_delta_null_minus_control:
+  neutral: {whole: -6.0, seen: -1.9, unseen: -8.9, zs: +3.7}
+  effect:  {whole: -2.5, seen: -5.8, unseen: -4.7, zs: +1.3}
+caveats: >
+  NEUTRAL result. The lerp-null contrast term did NOT improve whole pooled-same over the plain control
+  (−6.0 neutral / −2.5 effect); the deficit sits in seen/unseen while zero-shot rose (+3.7 / +1.3). Copy-clean
+  (near_copy 0/152 both arms; core_degenerate 10 vs control 5 on neutral). Whether this reflects a genuine
+  arm effect vs seed/metric noise is UNSETTLED — a candidate for owner → FINDINGS, not a decision. Milder
+  than 016's cross-operator contrast (that was 78.5 vs 89.6 = −11.1). Aggregator: report_nullc.py in the
+  build/eval dir.

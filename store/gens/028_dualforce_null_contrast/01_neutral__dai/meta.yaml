@@ -1,0 +1,15 @@
+id: gens/028_dualforce_null_contrast/01_neutral__dai
+seq: 1
+shelf: gens
+arm: dualforce_null_contrast
+harness_arm: dualforce_null_contrast_neutral   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral
+machine: dai
+created: 2026-09-03
+inputs: {run: runs/020, step: 1000}
+code: src/LTX-2-contrast @ e938cd4
+prompt_family: prompts/001_ctt152_neutral
+prompt_sha: 0d708175fbfe
+grid_rows: 152
+videos: 152
+source: scripts/store_register.py over eval_ladder/registry_dualforce_null_contrast_neutral.jsonl
