@@ -1,0 +1,82 @@
+id: 027_dino_a7_repa44__dai__2026-09-05
+seq: 27
+shelf: evals
+created: 2026-09-05            # scored on DeltaAI GH200 (bhwp-dtai-gh)
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh
+harness: transition-eval v4.0.0 (eval-v4-cert worktree, [UNCERTIFIED] by design — HEAD tag None; reference modified vs HEAD)
+instrument:
+  reference_v4_sha256: 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8  # MEASURED at close; SAME instrument as evals/001,012,019,020,021,022,023
+  corpus: data/processed/transitions_std121/corpus_manifest.json  # 222 clips
+  tau_copy: 0.858
+  matrix: m1a_S3
+  cache: misc/refvfx_baseline/probe/cache        # warm 222-clip corpus cache (shared -> comparable)
+  env: envs-aarch64/refvfx (module miniforge3_pytorch/2.10.0); PYTHONPATH=.claude/worktrees/eval-v4-cert/src
+  torch: 2.10.0+cu129                            # MEASURED from score .out logs
+source: >
+  Campaign 2026-08-27_dino_signal_training — A7_repa44 (TRANSPORT-REPA) Phase-2 pass. A7 is a
+  reference-only IC-LoRA (signal.enabled=false, NOTHING injected — inference byte-identical to A0);
+  the training aux head (16 aux_program.* keys in the safetensors) is ignored by run_gen's peft loader
+  (strict=False). ONE v4 pass, single seed 42, all 152 rows, neutral prompt (family 001), scoring 5
+  arms: A7 MATCHED (dino_a7_repa44_neutral), A7 SHUFREF and A0 SHUFREF controls (A2's rotation-by-2
+  derangement applied to the FED reference via `code_source_reference`; the row's `reference` — hence
+  the pool_refs GT pool — is UNCHANGED, so matched and shufref are scored against BYTE-IDENTICAL pools),
+  plus A0-neutral and A2-neutral RE-SCORED in this same pass as same-pass paired comparators. Row-
+  identical grid/seeds/prompts + same instrument (reference_v4 459fd9a7, same warm cache) to the
+  ctt_v2/dcg/flowsig/dino-021-023 lineage -> directly comparable, one machine. Re-scored comparators
+  reproduce their cross-pass numbers (A2n here 86.0 == evals/021 A2n 86.0; A0n 84.4 ~ evals/021 84.6)
+  -> pipeline validated. INFERENCE: guidance_scale 4.0, 480x640x121, frame_rate 24.0, STG (scale 1.0 /
+  blocks [29] / mode stg_v), num_inference_steps 30 (arms.yaml global; same as the A0/A2/A5/A1 gens).
+arms_scored:
+  dino_a7_repa44_neutral:
+    gen: gens/033_dino_a7_repa44/01_neutral__dai
+    run: "runs/021_dino_a7_repa44 (transport-REPA, ckpt sha 575a32f3; LTX-2-armA @08bdbc8); dataset 005_ctt_v2plus_s6reshape"
+    step: 6000
+    rows: 152
+  dino_a7_repa44_shufref_neutral:
+    gen: gens/033_dino_a7_repa44/02_shufref_neutral__dai
+    run: "runs/021_dino_a7_repa44 (transport-REPA, ckpt sha 575a32f3; LTX-2-armA @08bdbc8); dataset 005; SHUFREF via code_source_reference"
+    step: 6000
+    rows: 152
+  dino_a0_baseline_shufref_neutral:
+    gen: gens/025_dino_a0_baseline/03_shufref_neutral__dai
+    run: "staged eps A0_baseline @ step 10000 (sha 8ab6e2d3; LTX-2-armA @32d6e3f); dataset 004_ctt_v2plus; SHUFREF via code_source_reference"
+    step: 10000
+    rows: 152
+  dino_a0_baseline_neutral:                       # RE-SCORED in-pass (matched comparator; gen unchanged from evals/021)
+    gen: gens/025_dino_a0_baseline/01_neutral__dai
+    run: "staged eps A0_baseline @ step 10000 (sha 8ab6e2d3; LTX-2-armA @32d6e3f); dataset 004_ctt_v2plus (005 deferred)"
+    step: 10000
+    rows: 152
+  dino_a2_tokens_neutral:                         # RE-SCORED in-pass (matched comparator; gen unchanged from evals/021)
+    gen: gens/024_dino_a2_tokens/01_neutral__dai
+    run: "staged eps A2_tokens @ step 10000 (sha 33afbd86; LTX-2-armA @32d6e3f); dataset 005_ctt_v2plus_s6reshape"
+    step: 10000
+    rows: 152
+plan:
+  seeds: [42]
+  chunks: 16
+  keyed_join: >
+    All 5 arms are NEUTRAL (family 001) -> they twin the base arm directly; no effect input_key remap
+    is needed. 921 (generation x pool-reference) rows/arm. shufref rows carry `code_source_reference`
+    (ignored by run_eval) and keep `reference`, so pool composition is byte-identical to the matched
+    twin -> paired matched-minus-shufref Δ is pool-clean.
+headline:                                          # MEASURED via eval/report_dino_a7.py (pool-yardstick, tau_copy 0.858) — NEUTRAL numbers only, no PASS/FAIL vs A7_PREREG bars (advisor owns those). Paired CIs in eval/A7_TABLES.md.
+  dino_a7_repa44_neutral:           {pooled_same_pct: 85.3, pooled_proxy_pct: 72.0, all152_pct: 77.3, ref_dep_gap_pp: 30.6, g_fit_pct: 93.4, g_unseen_same_pct: 93.2, g_zs_same_pct: 88.2, g_zs_cross_pct: 86.0, g_unseen_cross_pct: 82.0, g_ref_control_pct: 62.8, core_degenerate: "10/152", near_copy: "0/152", copy_max_mean: 0.3904}
+  dino_a7_repa44_shufref_neutral:   {pooled_same_pct: 66.6, pooled_proxy_pct: 50.9, all152_pct: 57.1, ref_dep_gap_pp: 2.7, g_fit_pct: 68.2, g_unseen_same_pct: 69.9, g_zs_same_pct: 52.2, g_zs_cross_pct: 56.3, g_unseen_cross_pct: 61.2, g_ref_control_pct: 65.6, core_degenerate: "17/152", near_copy: "0/152", copy_max_mean: 0.3365}
+  dino_a0_baseline_shufref_neutral: {pooled_same_pct: 62.9, pooled_proxy_pct: 50.6, all152_pct: 55.4, ref_dep_gap_pp: 10.3, g_fit_pct: 67.7, g_unseen_same_pct: 69.9, g_zs_same_pct: 46.0, g_zs_cross_pct: 50.6, g_unseen_cross_pct: 59.8, g_ref_control_pct: 57.3, core_degenerate: "20/152", near_copy: "0/152", copy_max_mean: 0.3342}
+  dino_a0_baseline_neutral:         {pooled_same_pct: 84.4, pooled_proxy_pct: 76.3, all152_pct: 79.5, ref_dep_gap_pp: 33.7, g_fit_pct: 96.4, g_unseen_same_pct: 91.9, g_zs_same_pct: 85.8, g_zs_cross_pct: 89.9, g_unseen_cross_pct: 83.7, g_ref_control_pct: 62.6, core_degenerate: "7/152", near_copy: "1/152", copy_max_mean: 0.3982}
+  dino_a2_tokens_neutral:           {pooled_same_pct: 86.0, pooled_proxy_pct: 69.6, all152_pct: 76.1, ref_dep_gap_pp: 32.8, g_fit_pct: 96.0, g_unseen_same_pct: 93.1, g_zs_same_pct: 87.5, g_zs_cross_pct: 76.9, g_unseen_cross_pct: 79.5, g_ref_control_pct: 63.2, core_degenerate: "10/152", near_copy: "0/152", copy_max_mean: 0.3799}
+  paired_summary:                                  # per-row bootstrap 95% CI, seed 42; full table (all cells) in eval/A7_TABLES.md
+    A7_matched_minus_A7_shufref: {pooled_same: "+18.8 [+12.4,+25.3]*", g_unseen_same: "+23.3 [+14.1,+32.5]*", g_zs_same: "+36.0 [+22.9,+51.7]*", all152: "+20.2 [+16.0,+24.5]*"}   # in-pass; all cells CI-exclude-0
+    A0_matched_minus_A0_shufref: {pooled_same: "+21.5 [+15.2,+27.7]*", g_unseen_same: "+22.0 [+10.3,+34.6]*", g_zs_same: "+39.9 [+24.2,+56.5]*", all152: "+24.0 [+19.7,+28.4]*"}   # in-pass; all cells CI-exclude-0
+    A7n_minus_A0n: {pooled_same: "+1.0 [-2.6,+4.6]", all152: "-2.2 [-5.0,+0.5]", pooled_proxy: "-4.3 [-8.1,-0.5]*"}   # in-pass; A7-vs-A0 carries 004-vs-005 + 10k-vs-6k confounds
+    A7n_minus_A2n: {pooled_same: "-0.7 [-4.5,+2.8]", g_zs_cross: "+9.0 [-2.6,+20.3]", all152: "+1.2 [-1.8,+4.4]"}   # in-pass (A2 re-scored); A7-vs-A2 carries 10k-vs-6k + route confounds
+    A7n_minus_A2_shufsig: "NOT COMPUTABLE — A2_tokens_shufsig has never been v4-scored (partial 21-clip unregistered eye-gen at gens/024_dino_a2_tokens/03_neutral_shufsig__dai + image-space PSNR probe only)"
+  err_rows_note: >     # per-arm app_ref=None / missing pool-reference comparisons (EOFError/BadZipFile on a minority; EVERY one of the 152 gens still landed a pooled score): a7_matched 28, a7_shufref 15, a0_shufref 19, a0_matched 0, a2_matched 0 (of 921 pool-rows/arm). Data-quality note, NOT re-scored (matches the evals/021-023 pattern).
+caveats: >
+  NEUTRAL numbers — no branch/family verdict; PASS/FAIL vs the A7_PREREG bars (B1/B2/B3) is the
+  advisor's, not recorded here. The within-arm paired controls (A7 matched vs A7 shufref; A0 matched
+  vs A0 shufref) are pool-clean and confound-free. The cross-ARM cells (A7n vs A0n, A7n vs A2n) carry
+  the dataset (A0=004 vs A7/A2=005) and steps (A0/A2=10k vs A7=6k) confounds — no compute-matched
+  A0-005 twin exists (owner decision). Single seed 42. A2_tokens_shufsig is NOT in this pass (never
+  v4-scored), so the A7n-vs-A2-shufsig comparison is not computable.
