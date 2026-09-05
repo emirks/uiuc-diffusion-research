@@ -1,0 +1,316 @@
+acceleration:
+  load_text_encoder_in_8bit: false
+  mixed_precision_mode: bf16
+  offload_optimizer_during_validation: true
+  quantization: null
+aux_program:
+  block: 16
+  channels: 44
+  enabled: true
+  hidden: 1024
+  lambda_: 0.25
+  norm_path: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/store/datasets/003_dino_signals/NORM_dino_v4.json
+  norm_sha256: db47be8890ea84ad7b89aa3a858ab4b0e941d0159f5a7142120742be771fe622
+  probe:
+    interval: 500
+    mode: reference
+    n_rows: 8
+    seed: 1234
+    sigmas:
+    - 0.2
+    - 0.5
+    - 0.8
+  probe_blocks:
+  - 8
+  - 24
+  - 32
+  signal_root: /taiga/illinois/eng/cs/jrehg/users/emirkisa/cache/armA_signals_005/feat
+checkpoints:
+  interval: 250
+  keep_last_n: 3
+  no_resume: false
+  precision: bfloat16
+  save_training_state: full
+data:
+  bneck_timing: null
+  num_dataloader_workers: 4
+  preprocessed_data_root: null
+  resume_data_position: true
+  sample_list: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/ctt_v2/roots/ctt_v2plus_s6reshape_mix/samples.jsonl
+  sampler_epoch_size: null
+  sampler_seed: 42
+  stratum_weights_pct:
+    S0: 2.0
+    S1: 18.0
+    S2a: 22.09
+    S2b: 22.91
+    S4: 8.0
+    S6: 27.0
+  verify_sample_files: true
+flow_matching:
+  timestep_sampling_mode: shifted_logit_normal
+  timestep_sampling_params: {}
+hub:
+  hub_model_id: null
+  push_to_hub: false
+kd:
+  derive_effect_from: conditions
+  effect_conditions_dir: conditions_effect
+  enabled: false
+  high_band_sigma: 0.7
+  lambda_target: 0.3
+  lambda_warmup_steps: 500
+lora:
+  alpha: 128
+  dropout: 0.0
+  rank: 128
+  target_modules:
+  - attn1.to_k
+  - attn1.to_q
+  - attn1.to_v
+  - attn1.to_out.0
+  - attn2.to_k
+  - attn2.to_q
+  - attn2.to_v
+  - attn2.to_out.0
+  - ff.net.0.proj
+  - ff.net.2
+model:
+  load_checkpoint: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/dino_signal_005/A7_repa44/checkpoints
+  model_path: /taiga/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors
+  text_encoder_path: /taiga/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized
+  training_mode: lora
+optimization:
+  batch_size: 1
+  enable_gradient_checkpointing: true
+  gradient_accumulation_steps: 4
+  learning_rate: 0.0001
+  max_grad_norm: 1.0
+  optimizer_type: adamw
+  scheduler_params: {}
+  scheduler_type: wsd
+  steps: 6000
+output_dir: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/dino_signal_005/A7_repa44
+program:
+  always_attach_tokens: false
+  arm: b_all
+  cond_dim: 256
+  enabled: false
+  hidden: 256
+  lr: null
+  norm_clip: 5.0
+  norm_stats_path: ''
+  p_both: 0.5
+  p_code_only: 0.25
+  p_none: 0.1
+  p_null_ref_only: 0.6
+  p_ref_only: 0.15
+  store: ''
+  text_dropout: 0.5
+  token_pool: 2
+seed: 42
+signal:
+  channels: 44
+  enabled: false
+  hidden: 256
+  log_interval: 250
+  lr: 0.001
+  norm_path: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/store/datasets/003_dino_signals/NORM_dino_v4.json
+  norm_sha256: db47be8890ea84ad7b89aa3a858ab4b0e941d0159f5a7142120742be771fe622
+  p_drop: 0.1
+  placement: target
+  probe:
+    interval: 500
+    n_rows: 8
+    seed: 1234
+    sigmas:
+    - 0.2
+    - 0.5
+    - 0.8
+  root: /taiga/illinois/eng/cs/jrehg/users/emirkisa/cache/armA_signals_005/feat
+  route: channels
+  token_pool: 2
+  xattn:
+    heads: 4
+    hidden: 256
+surgery:
+  enabled: false
+  gap_loss:
+    delta_file: null
+    demo_class_map: null
+    derange_policy: cross_class
+    enabled: false
+    high_band_sigma: 0.9
+    lambda_target: 10.0
+    lambda_warmup_steps: 1000
+  high_sigma_mixture:
+    bands:
+    - !!python/tuple
+      - 0.9
+      - 1.0
+      - 0.6
+    - !!python/tuple
+      - 0.7
+      - 0.9
+      - 0.15
+    enabled: false
+    sigma_max: 1.0
+  per_sigma_loss_norm:
+    enabled: false
+    weight_file: null
+  probe:
+    dataset_root: datasets/ctt_v2
+    enabled: false
+    flag_dsame_ratio: 0.5
+    flag_dsame_se: 3.0
+    interval_steps: 500
+    max_targets: 64
+    top_band_sigma: 0.9
+    triples_file: null
+    vjepa_manifest: null
+training_strategy:
+  audio: null
+  name: flexible
+  video:
+    cond_clean_latents_dir: cond_clean_latents
+    conditions:
+    - attention: one_way
+      bottleneck: null
+      latents_dir: reference_latents
+      probability: 1.0
+      type: reference
+    - mask_dir: masks
+      probability: 1.0
+      type: mask
+    is_generated: true
+    latents_dir: latents
+twin:
+  band_high: 0.9
+  band_low: 0.5
+  beta: 8.0
+  cell_index_path: null
+  contrast_axis: sample
+  cross_family_prob: 0.5
+  enabled: false
+  lambda_con: 0.25
+  lambda_diff: 0.25
+  lambda_red: 0.5
+  lambda_warmup_steps: 250
+  ref_anchor: true
+  ref_checkpoint: null
+  seam_frames: 1
+  strata:
+  - S2a
+  - S2b
+  twin_index_path: null
+  variant: s2_twin_014
+validation:
+  frame_rate: 24.0
+  generate_audio: false
+  generate_video: true
+  guidance_scale: 4.0
+  images: null
+  include_reference_in_output: false
+  inference_steps: 20
+  interval: 500
+  negative_prompt: worst quality, inconsistent motion, distorted, jittery
+  prompts: []
+  reference_downscale_factor: 1
+  reference_videos: null
+  samples:
+  - conditions:
+    - audio: null
+      duration: null
+      num_frames: 9
+      type: prefix
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/misc/2026-08-27_dino_signal_training/build/conds/color_rain_1_start9.mp4
+    - attention: one_way
+      audio: null
+      downscale_factor: 1
+      include_in_output: false
+      signal_id: train__S0__color_rain_3
+      temporal_scale_factor: 1
+      type: reference
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/datasets/ctt_v2/encodes/S0/clips/color_rain/color_rain_3.mp4
+    prompt: A young man with slicked-back dark hair and a serious expression crouches
+      in front of a chain-link fence, wearing a bright red sweatshirt and dark pants
+      under soft natural light. sksz.
+    seed: null
+    signal_id: null
+    video_dims: null
+  - conditions:
+    - audio: null
+      duration: null
+      num_frames: 9
+      type: prefix
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/davis_hike_start9.mp4
+    - attention: one_way
+      audio: null
+      downscale_factor: 1
+      include_in_output: false
+      signal_id: eval__animalization_0
+      temporal_scale_factor: 1
+      type: reference
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/animalization/animalization_0.mp4
+    prompt: A hiker in a light purple shirt and olive trousers carrying a large black
+      backpack walks across a bright rocky mountain slope. sksz.
+    seed: null
+    signal_id: null
+    video_dims: null
+  - conditions:
+    - audio: null
+      duration: null
+      num_frames: 9
+      type: prefix
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/air_bending_1_start9.mp4
+    - audio: null
+      duration: null
+      num_frames: 8
+      type: suffix
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/air_bending_1_end9.mp4
+    - attention: one_way
+      audio: null
+      downscale_factor: 1
+      include_in_output: false
+      signal_id: eval__raven_transition_0
+      temporal_scale_factor: 1
+      type: reference
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/raven_transition/raven_transition_0.mp4
+    prompt: A figure in a white knit balaclava and bright red hoodie leans against
+      the hood of a blue car in a dusky parking lot. sksz.
+    seed: null
+    signal_id: null
+    video_dims: null
+  - conditions:
+    - audio: null
+      duration: null
+      num_frames: 9
+      type: prefix
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/davis_hike_start9.mp4
+    prompt: A hiker in a light purple shirt and olive trousers carrying a large black
+      backpack walks across a bright rocky mountain slope, the camera holding steady.
+    seed: null
+    signal_id: null
+    video_dims: null
+  seed: 42
+  skip_initial_validation: true
+  stg_blocks:
+  - 29
+  stg_mode: stg_v
+  stg_scale: 1.0
+  video_dims: !!python/tuple
+  - 480
+  - 640
+  - 121
+wandb:
+  enabled: true
+  entity: null
+  log_validation_videos: true
+  project: dino_signal
+  tags:
+  - dino_signal
+  - A7_repa44
+  - transport_repa
+  - coldstart
+  - rank128
+  - ctt_v2plus_s6reshape

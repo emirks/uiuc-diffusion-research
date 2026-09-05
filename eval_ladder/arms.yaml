@@ -889,6 +889,34 @@ arms:
     note: "A5 xattn-route DINO-signal, DERANGED signal (within-arm control): the donor's pooled signal is the
       QUERY, the row's OWN reference stays the K/V (SPEC R1.4 derangement swaps the signal only). SAME adapter +
       SIGNAL_CONFIG gen/cfg/a5_xattn.json; `signal_source` rotation-by-2. rank/alpha 128."
+  # A7_repa44 = A0_baseline recipe + transport-REPA aux LOSS (block-16 hidden -> target's own 44-ch
+  # DINO program). signal.enabled=false: NOTHING injected at inference, so the gen path is IDENTICAL
+  # to A0 (reference-only IC-LoRA, NO SIGNAL_CONFIG). dataset 005, step 6000, rank/alpha 128.
+  dino_a7_repa44_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: outputs/dino_signal_005/A7_repa44/keep/lora_weights_step_06000.safetensors
+    note: "A7 transport-REPA reference-only IC-LoRA, neutral prompt (family 001). NO signal port
+      (SIGNAL_CONFIG unset). aux head is train-only and NOT loaded at inference. dataset 005, step 6000,
+      LTX-2-armA @08bdbc8. rank/alpha 128."
+  dino_a7_repa44_shufref_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: outputs/dino_signal_005/A7_repa44/keep/lora_weights_step_06000.safetensors
+    note: "A7 SHUFREF control: A2's rotation-by-2 derangement applied to the FED reference clip via the
+      registry `code_source_reference` column (run_gen feeds the deranged partner while `reference` — the
+      row identity used by pool_refs — stays unchanged => matched and shufref scored against byte-identical
+      pools). NO signal port. SAME step-6000 adapter. rank/alpha 128."
+  dino_a0_baseline_shufref_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A0_baseline/lora_weights_step_10000.safetensors
+    note: "A0 SHUFREF control (A7's same-permutation paired comparator): rotation-by-2 derangement of the
+      fed reference via `code_source_reference`, `reference` unchanged. A0 10k adapter (sha 8ab6e2d3),
+      NO signal port, dataset 004_ctt_v2plus. rank/alpha 128."
 
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
 
