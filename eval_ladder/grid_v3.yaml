@@ -104,4 +104,5 @@ effectdata:
     - [704, 1056]
   pool_size: 8
   frames_policy: native_81         # owner 2026-09-07: EffectData rows generate + score at the native 81 frames (own arm-variant, GEN_FRAMES=81)
+  prefix_frames: 1                 # frame-0 anchor = 1 latent frame, exactly S6's (and S4's) training convention; GEN_PREFIX_FRAMES=1 for gen AND eval plan
   clip_prefix: ed                  # std121 stem = ed.<effect>.<subject>.<tag>

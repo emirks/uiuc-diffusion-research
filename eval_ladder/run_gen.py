@@ -68,7 +68,7 @@ def build_sample(row: dict) -> ValidationSample:
     conds = []
     if row.get("conditioning") != "none" and row["endpoint"] is not None:
         paths = ec.cond_paths(row["endpoint"], row["sided"])
-        conds.append(PrefixConditionConfig(video=str(paths["prefix"]), num_frames=ec.PX_PREFIX))
+        conds.append(PrefixConditionConfig(video=str(paths["prefix"]), num_frames=ec.prefix_frames()))
         if row["sided"] == "two":
             conds.append(SuffixConditionConfig(video=str(paths["suffix"]),
                                                num_frames=ec.SUFFIX_GEN_FRAMES))

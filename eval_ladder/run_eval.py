@@ -147,7 +147,7 @@ def plan(seeds: list[int], chunks: int, arms: set[str] | None = None) -> None:
                 # never of the class label.
                 paths = ec.cond_paths(row["endpoint"], row["sided"])
                 cond["condition_prefix"] = {"video": str(paths["prefix"].relative_to(REPO_ROOT)),
-                                            "num_frames": ec.PX_PREFIX}
+                                            "num_frames": ec.prefix_frames()}
                 if row["sided"] == "two":
                     cond["condition_suffix"] = {"video": str(paths["suffix"].relative_to(REPO_ROOT)),
                                                 "num_frames": ec.SUFFIX_GEN_FRAMES}
