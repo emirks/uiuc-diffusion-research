@@ -556,22 +556,21 @@ def health(cfg, corpus, old, new_a, base_rows, pend, blocks, flags, ed, split_cl
 
     # per-class yardstick support (Higgsfield)
     man = json.loads((REPO_ROOT / "data/processed/transitions_std121/corpus_manifest.json").read_text())
-    corpus_n = collections.Counter(c["class"] for c in man["clips"].values())
-    add = collections.Counter()
-    for k in ("tier1_topups", "tier1_reference_only", "flame_additions", "zs_pool_topups"):
-        for cls, stems in cfg[k].items():
-            add[cls] += len(stems)
-    for cls in cfg["new_zero_shot_classes"]:
-        add[cls] += len(list((REPO_ROOT / cfg["raw_root"] / cls).glob("*.mp4")))   # all passed the res/duration filter at build
+    corpus_n = collections.Counter(c["class"] for c in man["clips"].values())          # the corpus NOW (grid v3 members included)
+    before_p = REPO_ROOT / "data/processed/transitions_std121/corpus_manifest_v1_222.json"
+    before_n = collections.Counter(c["class"] for c in json.loads(before_p.read_text())["clips"].values()) if before_p.exists() else corpus_n
+    add = collections.Counter({c: corpus_n[c] - before_n.get(c, 0) for c in corpus_n if corpus_n[c] > before_n.get(c, 0)})
     donors = sorted({r["donor_class"] for r in allrows if not r["donor_class"].startswith(cfg["effectdata"]["clip_prefix"] + ".")})
     bands = ceiling_bands([c for c in donors if c in corpus_n])
+    kernel_path = HERE / "ceilings_v3.json"      # scripts/grid_v3/ceilings_kernel.py --aggregate (deployed kernel, frozen reference)
+    kernel_ceil = json.loads(kernel_path.read_text())["ceilings"] if kernel_path.exists() else {}
     lines += ["", "## 3. Higgsfield donor classes: yardstick support", "",
-              "| class | tier | corpus clips | additions | after | same rows | pool on same rows (after) | ceiling pairs (after) | ceiling 90 % band now | sided | flags |",
+              "| class | tier | corpus clips before v3 | added | now | same rows | pool on same rows | ceiling pairs | certified ceiling 90 % band | sided | flags |",
               "|---|---|---|---|---|---|---|---|---|---|---|"]
     H["classes"] = {}
     for cls in donors:
-        now = corpus_n.get(cls, 0)
-        after = now + add.get(cls, 0)
+        now = before_n.get(cls, 0)          # before grid v3
+        after = corpus_n.get(cls, 0)        # the corpus now
         same = sum(1 for r in allrows if r["donor_class"] == cls and r["content"] == "same")
         tier = "zero-shot" if cls in corpus.held_out or cls in cfg["new_zero_shot_classes"] else "unseen"
         sided = corpus.sided.get(cls, cfg["new_zero_shot_classes"].get(cls, "?"))
@@ -581,12 +580,15 @@ def health(cfg, corpus, old, new_a, base_rows, pend, blocks, flags, ed, split_cl
         if cls in cfg["mid_effect_anchor"]["classes"]:
             fl.append("mid-effect anchors: reference only")
         if cls in cfg["new_zero_shot_classes"]:
-            fl.append("PROVISIONAL class, sidedness assumed")
-        if add.get(cls):
-            fl.append("owner review of raw clips")
+            fl.append("new zero-shot class, owner-confirmed one-sided 2026-09-07")
+        elif add.get(cls):
+            fl.append("top-up raw clips (owner watch-through not recorded)")
         bd = bands.get(cls, {}).get("band90_pct")
         if bd and max(abs(bd[0]), abs(bd[1])) > 5:
             fl.append("ceiling band > ±5 %")
+        kc = kernel_ceil.get(cls)
+        if kc and not bands.get(cls, {}).get("ceiling"):
+            fl.append(f"kernel ceiling {kc['ceiling']:.3f} (sd over pairs {kc['sd_pairs']:.3f}, {kc['n_pairs']} pairs)")
         H["classes"][cls] = {"tier": tier, "corpus": now, "additions": add.get(cls, 0), "after": after, "same_rows": same,
                              "pool_same": max(min(after - 2, 8), 0), "ceiling_pairs": after * (after - 1) // 2,
                              "ceiling_band90_pct": bd, "sided": sided, "flags": fl}
@@ -595,13 +597,16 @@ def health(cfg, corpus, old, new_a, base_rows, pend, blocks, flags, ed, split_cl
 
     # EffectData blocks
     lines += ["", "## 4. EffectData blocks (Tier 3)", "",
-              "| block | e1 | cat | e2 | cat | same subject | cross subject | foreign | portrait-ok clips e1/e2 | pool | ceiling pairs e1/e2 |",
-              "|---|---|---|---|---|---|---|---|---|---|---|"]
+              "| block | e1 | cat | e2 | cat | same subject | cross subject | foreign | portrait-ok clips e1/e2 | pool | ceiling pairs e1/e2 | kernel ceiling e1/e2 |",
+              "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     H["effectdata_blocks"] = blocks
     for k, b in enumerate(blocks, 1):
         p1, p2 = len(ed.portrait_clips(b["e1"])), len(ed.portrait_clips(b["e2"]))
+        kc1 = kernel_ceil.get(ed.class_name(cfg["effectdata"]["clip_prefix"], b["e1"]), {}).get("ceiling")
+        kc2 = kernel_ceil.get(ed.class_name(cfg["effectdata"]["clip_prefix"], b["e2"]), {}).get("ceiling")
         lines.append(f"| {k} | {b['e1']} | {b['cat'][0]} | {b['e2']} | {b['cat'][1]} | {b['same']} | {b['cross']} | {b['foreign']} | "
-                     f"{p1}/{p2} | {cfg['effectdata']['pool_size']} | {p1 * (p1 - 1) // 2}/{p2 * (p2 - 1) // 2} |")
+                     f"{p1}/{p2} | {cfg['effectdata']['pool_size']} | {p1 * (p1 - 1) // 2}/{p2 * (p2 - 1) // 2} | "
+                     f"{'' if kc1 is None else f'{kc1:.3f}'}/{'' if kc2 is None else f'{kc2:.3f}'} |")
     lines.append(f"\nprobed EffectData clips (orientation cache): {len(ed.shapes)}; blocks built: {len(blocks)}/{cfg['effectdata']['blocks']}.")
 
     # blockers
@@ -634,6 +639,14 @@ def health(cfg, corpus, old, new_a, base_rows, pend, blocks, flags, ed, split_cl
     H["blockers"] = dict(blk)
     H["flags_on_kept_rows"] = dict(flags)
     lines += ["", "## 6. Flags on kept v2 rows", ""] + [f"- `{k}`: {', '.join(v)}" for k, v in sorted(flags.items())]
+    if kernel_ceil:
+        cal = json.loads(kernel_path.read_text())
+        lines += ["", "## 6b. Ceilings for the new classes (deployed kernel, frozen reference) — calibration", "",
+                  "| class | kernel on the 222-clip subset | certified | ratio |", "|---|---|---|---|"]
+        for cname, v in cal["calibration"].items():
+            lines.append(f"| {cname} | {v['kernel_222clips']:.4f} | {v['certified']:.4f} | {v['ratio']:.3f} |")
+        lines.append(f"\nmean ratio {cal['calibration_ratio_mean']}; {cal['n_classes']} classes in eval_ladder/ceilings_v3.json; "
+                     "run_eval.ceilings() overlays it for classes ABSENT from the certified matrix only.")
     lines += ["", "## 7. Seatbelts", "", "- v2 `seatbelts()` PASSED on registry_v3.jsonl (old + new + base twins).",
               "- old ic_gen rows byte-identical to registry.jsonl (asserted).",
               "- pending rows: unique item_id (asserted); EffectData endpoints/references outside the S6 selection, portrait-only, "
