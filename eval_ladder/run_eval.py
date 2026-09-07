@@ -62,8 +62,9 @@ EXTRA_REGISTRY: Path | None = None
 
 def load_registry() -> list[dict]:
     text = REGISTRY.read_text()
-    if EXTRA_REGISTRY is not None:
-        text += EXTRA_REGISTRY.read_text()
+    extras = EXTRA_REGISTRY if isinstance(EXTRA_REGISTRY, (list, tuple)) else ([EXTRA_REGISTRY] if EXTRA_REGISTRY else [])
+    for extra in extras:                       # grid v3 (2026-09-07): the viewer wires several extra registries
+        text += Path(extra).read_text()
     return [json.loads(x) for x in text.splitlines() if x.strip()]
 
 

@@ -200,6 +200,7 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
   <div class="selrow">
     <div class="selcol">
       <table class="mx" id="mx"></table>
+      <div class="mxbar" id="grids"></div>
       <div class="mxbar">
         <button class="btn" onclick="selAll(1)">select all</button>
         <button class="btn" onclick="selAll(0)">clear</button>
@@ -311,6 +312,23 @@ const selTiers = () => dispTiers().filter(t=>tiers.has(t));
 const sel = new Set();
 let seed = String(D.meta.seeds[0]);
 let donor = "";
+// grid facet (generic: ids/labels come from D.meta.grids; v2 = the 152-row grid, v3-* = grid-v3 families)
+const LS_GRID = "iclne_v2_grid";
+const GRIDS = D.meta.grids || [];
+let gridSel = new Set(GRIDS.map(g=>g.id));
+try{ const s = JSON.parse(localStorage.getItem(LS_GRID)); if(Array.isArray(s)) gridSel = new Set(s.filter(x=>GRIDS.some(g=>g.id===x))); }catch(e){}
+function drawGrids(){
+  const el = document.getElementById("grids"); if(!el) return;
+  if(GRIDS.length < 2){ el.innerHTML = ""; return; }
+  el.innerHTML = `<span class="lbl">grid</span>` + GRIDS.map(g =>
+    `<button class="btn ${gridSel.has(g.id)?"on":""}" onclick="togGrid('${g.id}')">${g.label} <span class="cnt">${g.cards}</span></button>`).join("");
+}
+function togGrid(id){
+  gridSel.has(id) ? gridSel.delete(id) : gridSel.add(id);
+  try{ localStorage.setItem(LS_GRID, JSON.stringify([...gridSel])); }catch(e){}
+  shown = PAGE; render();
+}
+const gridOk = g => !GRIDS.length || gridSel.has(g.grid || "v2");
 function drawMatrix(){
   const t = document.getElementById("mx");
   let h = "<tr><th class='corner'></th>";
@@ -405,6 +423,7 @@ function cardMatches(card){
     for(const g of card.slots[t]||[]){
       if(sel.size && !sel.has(keyOf(g.novelty, g.content))) continue;
       if(donor && g.donor !== donor) continue;
+      if(!gridOk(g)) continue;
       hit.push(g);
     }
   return hit.length ? hit : null;
@@ -429,24 +448,28 @@ function drawStats(){
       for(const g of card.slots[t]||[]){
         if(sel.size && !sel.has(keyOf(g.novelty, g.content))) continue;
         if(donor && g.donor !== donor) continue;
+        if(!gridOk(g)) continue;
         (per[t] = per[t] || []).push(g);
       }
   let h = `<div class="tw"><table class="d"><thead><tr>
     <th class="l">arm · variant</th>
     <th>%_same<br><span class="mut" style="font-size:9px">comparable · n</span></th>
     <th>(%_proxy)<br><span class="mut" style="font-size:9px">ranking only · n</span></th>
+    <th>%_all<br><span class="mut" style="font-size:9px">same+proxy · n</span></th>
     <th>raw app_ref</th><th>copy_max ↓</th><th>near_copy ↓</th><th>items</th></tr></thead><tbody>`;
   for(const t of st){
     const gs = per[t] || [];
     const m = ENTRY_META[t];
     const same = gs.filter(g=>g.pct_type==="same").map(g=>g.pct);
     const prox = gs.filter(g=>g.pct_type==="proxy").map(g=>g.pct);
+    const all = gs.filter(g=>g.pct_type==="same"||g.pct_type==="proxy").map(g=>g.pct);
     const bad = [...new Set(gs.map(g=>g.instr).filter(i=>i && i!==PRIMARY))];
     h += `<tr><td class="l"><span class="catbar" style="background:${CAT_COLOR[m.cat]}"></span>
         <b>${esc(m.armLabel)}</b> <span class="vtag v-${esc(m.variant)}">${esc(m.label)}</span>
         ${bad.length?`<span class="badge">${bad.join("/")}</span>`:""}</td>
       <td class="num"><b>${pct(mean(same))}</b> <span class="mut">· ${same.filter(x=>x!=null).length}</span></td>
       <td class="num">${mean(prox)==null?"—":"("+pct(mean(prox))+")"} <span class="mut">· ${prox.filter(x=>x!=null).length}</span></td>
+      <td class="num">${pct(mean(all))} <span class="mut">· ${all.filter(x=>x!=null).length}</span></td>
       <td class="num">${fmt(mean(gs.map(g=>g.m.app_ref)),4)}</td>
       <td class="num">${fmt(mean(gs.map(g=>g.m.copy_max)),3)}</td>
       <td class="num">${fmt(mean(gs.map(g=>g.f.near_copy)),3)}</td>
@@ -566,7 +589,7 @@ function cardHtml(entry){
     } else chips.push(`<span class="chip a">unscored</span>`);
     return `<div class="cellbox out" style="box-shadow:inset 3px 0 0 ${CAT_COLOR[m.cat]}">
       <h4>${m.armLabel} <span class="vtag v-${esc(m.variant)}">${esc(m.label)}</span>
-        <span class="arm">${g.cell} · ${g.novelty}</span></h4>
+        <span class="arm">${g.cell} · ${g.novelty}${g.grid && g.grid!=="v2" ? " · "+esc(g.grid) : ""}</span></h4>
       ${condBar(g)}
       ${vid(g.videos[seed] || Object.values(g.videos)[0])}
       <div class="chips">${chips.join("")}</div></div>`;
@@ -634,7 +657,7 @@ function setSeed(s){ seed = s; render(); }
 
 function render(){
   shown = Math.max(shown, PAGE);
-  drawMatrix(); drawControls(); drawArms(); drawStats(); drawCards();
+  drawMatrix(); drawGrids(); drawControls(); drawArms(); drawStats(); drawCards();
   const n = selectedCards().reduce((s,e)=>s+e.hit.length,0);
   document.getElementById("selinfo").textContent =
     (sel.size ? `${sel.size} ontology cells` : `all ontology cells`) +
@@ -680,7 +703,8 @@ document.getElementById("prov").innerHTML =
   (m.machines||[]).map(x=>`<div class="pline"><span class="mono">${x.arch} · torch ${x.torch} · py ${x.python}</span>
      ${x.primary?"<b>(primary)</b>":""} ← ${x.cols.join(", ")}</div>`).join("") +
   `<div class="pline">score sets: ${(m.score_sets||[]).map(s=>`<span class="mono">${s.id}</span>${s.id===m.primary_set?" (primary)":""}`).join(" · ")}</div>` +
-  `<div class="pline">%_same is cross-class comparable; (%_proxy) is ranking-only and never blended.
+  `<div class="pline">%_same is cross-class comparable; (%_proxy) is ranking-only. %_all pools same+proxy
+    at the gen level — a convenience blend that mixes the comparable and ranking-only pools, so read it with that caveat.
     copy_max / near_copy are not comparable across frame counts (33f external vs 121f).</div>`;
 
 selAll(1);

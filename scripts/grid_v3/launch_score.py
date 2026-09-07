@@ -83,6 +83,12 @@ def plan(chunks: int):
     gens.mkdir(parents=True, exist_ok=True)
     for arm, tier, fam, ha in all_arms():
         sub = REPO / subentry(arm, tier, fam)
+        if not (sub / "meta.yaml").exists():      # incremental: only registered (= complete) subentries are planned
+            print(f"SKIP {ha}: not registered yet")
+            continue
+        if (EVALDIR / "manifests" / ha / "eval_c0.json").exists():
+            print(f"already planned: {ha}")
+            continue
         link = gens / ha
         if not link.exists():
             link.symlink_to(sub / "videos")
