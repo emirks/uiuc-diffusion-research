@@ -202,6 +202,13 @@ def ceilings() -> dict[str, float]:
             continue
         block = sim[np.ix_(idx, idx)]
         out[cls] = float(block[~np.eye(len(idx), dtype=bool)].mean())
+    # grid v3 (2026-09-07): classes ABSENT from the certified matrix (the 7 new Higgsfield zero-shot classes, the
+    # EffectData `ed.*` classes) take their scorer-path ceiling from eval_ladder/ceilings_v3.json
+    # (scripts/grid_v3/ceilings_manifest.py --aggregate). Certified classes are never overridden.
+    extra = HERE / "ceilings_v3.json"
+    if extra.exists():
+        for cls, v in json.loads(extra.read_text())["ceilings"].items():
+            out.setdefault(cls, float(v["ceiling"]))
     return out
 
 
