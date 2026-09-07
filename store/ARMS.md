@@ -17,11 +17,11 @@ hand-write a registry.
 
 | arm | status | run | neutral family | effect family | harness_arm aliases (frozen) |
 |---|---|---|---|---|---|
-| `ic_gen` | active | runs/001 | prompts/001 | prompts/002 | ic_gen · ic_gen_effect |
+| `ic_gen` | active | runs/001 | prompts/001 | prompts/002 | ic_gen · ic_gen_effect · ic_gen_neutral_v3 · ic_gen_effect_v3 · ic_gen_neutral_v3ed81 · ic_gen_effect_v3ed81 (grid v3: prompts/010-013; `_v3ed81` = EffectData tier, native 81 f, frame-0 anchor) |
 | `ctt_v2` | superseded by ctt_v3 | runs/002 | prompts/001 | prompts/002 | ctt_v2 · ctt_v2_leaky · ctt_v2_leaky_regen · ctt_v2_plain_regen |
 | `refvfx` | external baseline | runs/003 | prompts/001 ·token-swap | prompts/002 ·template | refvfx_A (=effect) · refvfx_B (=neutral) |
 | `base_prompt` | floor (no adapter) | — | prompts/001 ·strip | prompts/002 ·strip | base_prompt_ctt (=effect) · base_prompt_neutral |
-| `base_cond` | floor (no adapter) | — | prompts/001 ·strip | prompts/002 ·strip | base_cond_ctt (=effect) · base_cond_neutral |
+| `base_cond` | floor (no adapter) | — | prompts/001 ·strip | prompts/002 ·strip | base_cond_ctt (=effect) · base_cond_neutral · base_cond_neutral_v3 · base_cond_effect_v3 · base_cond_neutral_v3ed81 · base_cond_effect_v3ed81 (grid v3: prompts/010-013; `_v3ed81` = EffectData tier, native 81 f, frame-0 anchor) |
 | `bneck_frozen` | closed negative | runs/004 | prompts/001 | — | bneck_frozen · bneck_frozen_shufcode |
 | `bneck_ctx` | closed negative | runs/006 | prompts/001 | — | bneck_ctx_v2 · bneck_ctx_v2_shufcode |
 | `surg1` | closed refined negative | runs/007 | prompts/001 | — | surg1_wsd · surg1_wsd_shufcode |
@@ -29,7 +29,8 @@ hand-write a registry.
 | `ctt_v3_hs` | retired negative | runs/009 | prompts/001 | prompts/002 | ctt_v2_pushB · ctt_v2_pushB_shufref · ctt_v2_pushB_effect |
 | `vap` | external baseline (one-sided) | runs/010 | prompts/001 ·ext | prompts/002 ·ext ; prompts/008 ·authorcfg | vap_neutral · vap_effect · vap_authorcfg · vap_tgtfull_refempty |
 | `vfxmaster` | external baseline (one-sided) | runs/011 | prompts/001 ·ext | prompts/002 ·ext ; prompts/008 ·authorcfg | vfxmaster_neutral · vfxmaster_effect · vfxmaster_authorcfg · vfxmaster_tgtfull_refempty |
-| `dualforce_control` | dual-force plain-FM control | runs/012 | prompts/001 | prompts/002 | dualforce_control_neutral · dualforce_control_effect |
+| `dualforce_control` | dual-force plain-FM control | runs/012 | prompts/001 | prompts/002 | dualforce_control_neutral · dualforce_control_effect · dualforce_control_neutral_v3 · dualforce_control_effect_v3 · dualforce_control_neutral_v3ed81 · dualforce_control_effect_v3ed81 (grid v3: prompts/010-013; `_v3ed81` = EffectData tier, native 81 f, frame-0 anchor) |
+| `dualforce_dcg_w6` | dual-force control + test-time null-operator guidance w=6 (crossfade null, gs4/stg1) | runs/012 | prompts/001 | prompts/002 | dualforce_dcg_w6 · dualforce_dcg_w6_e · dualforce_dcg_w6_neutral_v3 · dualforce_dcg_w6_effect_v3 · dualforce_dcg_w6_neutral_v3ed81 · dualforce_dcg_w6_effect_v3ed81 (grid v3: prompts/010-013; `_v3ed81` = EffectData tier, native 81 f, frame-0 anchor) |
 | `dualforce_kd` | dual-force text-crutch KD treatment | runs/013 | prompts/001 | prompts/002 | dualforce_kd_neutral · dualforce_kd_effect |
 | `dualforce_s0s1redirect` | S0+S1 counterfactual redirect treatment (redesign of 014) | runs/015 | prompts/001 | — | dualforce_s0s1redirect_neutral |
 | `dualforce_contrast` | contrastive (paired-preference) treatment over 012 | runs/016 | prompts/001 | — | dualforce_contrast_neutral |
