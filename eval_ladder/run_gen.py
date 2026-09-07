@@ -290,6 +290,11 @@ def main() -> None:
     # ValidationSample.video_dims is (WIDTH, HEIGHT, FRAMES) — the corpus is portrait
     # 480x640, so this reads 480 wide by 640 high (same tuple exp_074 generated with).
     vw, vh, vf = arms_cfg["resolution"]
+    # GEN_FRAMES (grid v3, 2026-09-07): the EffectData tier generates at its NATIVE 81 frames (81 = 8k+1) as its own
+    # arm-variant run; unset => arms.yaml resolution, byte-identical to every prior generation.
+    if os.environ.get("GEN_FRAMES"):
+        vf = int(os.environ["GEN_FRAMES"])
+        print(f"[gen] GEN_FRAMES override → frames={vf}")
     val_cfg = ValidationConfig(
         samples=[build_sample(r) for r in todo],
         negative_prompt="worst quality, inconsistent motion, distorted, jittery",

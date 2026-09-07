@@ -160,6 +160,15 @@ class EffectData:
             self.clips[e].sort()
         sel = json.loads((REPO_ROOT / cfg["selection"]).read_text())
         self.selected_subjects = {c["subject"] for c in sel["clips"]}
+        # S6 roster: orientation is KNOWN for its 28,644 clips (no zip probing) and every roster subject has
+        # a leak-clean start-frame caption in store/captions/004_effectdata (key "<subject>|A").
+        self.roster_shape: dict[str, tuple[int, int]] = {}
+        if cfg.get("roster"):
+            ro = json.loads((REPO_ROOT / cfg["roster"]).read_text())
+            rows = ro if isinstance(ro, list) else (ro.get("clips") or ro.get("rows") or list(ro.values()))
+            if isinstance(rows, dict):
+                rows = list(rows.values())
+            self.roster_shape = {r["stem"]: (int(r["w"]), int(r["h"])) for r in rows if isinstance(r, dict) and "stem" in r}
         self.cache_path = REPO_ROOT / cfg["shape_cache"]
         self.shapes: dict[str, list[int]] = json.loads(self.cache_path.read_text()) if self.cache_path.exists() else {}
         self.probe_enabled = probe
@@ -173,6 +182,8 @@ class EffectData:
         return len(self.clips[effect]) >= self.cfg["min_clips_per_effect"] and len(self.cat[effect]) == 1
 
     def shape(self, stem: str) -> tuple[int, int] | None:
+        if stem in self.roster_shape:
+            return self.roster_shape[stem]
         if stem in self.shapes:
             w, h = self.shapes[stem]
             return (w, h)
@@ -207,7 +218,9 @@ class EffectData:
         return self.portrait_ok(stem)
 
     def portrait_clips(self, effect: str) -> list[tuple[str, str, str]]:
-        return [c for c in self.clips[effect] if self.portrait_ok(c[0])]
+        """Portrait-ok clips of an effect, ROSTER clips first (known shape, captioned subjects), then outside."""
+        return sorted((c for c in self.clips[effect] if self.portrait_ok(c[0])),
+                      key=lambda c: (c[1] not in self.selected_subjects, c[0]))
 
     def save(self):
         self.cache_path.write_text(json.dumps(self.shapes, sort_keys=True))
@@ -371,7 +384,9 @@ def build(cfg: dict, corpus: v2.Corpus, token: str, inv: dict, probe: bool):
     ed = EffectData(ed_cfg, probe=probe)
     blocks = []
     eligible = {e for e in ed.clips if ed.eligible_effect(e)}
-    outside = sorted(s for s, es in ed.subj.items() if s not in ed.selected_subjects and len(es & eligible) >= 2)
+    # endpoint subjects come FROM the S6 roster (owner 2026-09-07): captions + orientation exist; the 012 family,
+    # ctt_v2/v3, controls and externals never saw EffectData, so the tier is zero-shot for every arm on this grid.
+    outside = sorted(s for s, es in ed.subj.items() if s in ed.selected_subjects and len(es & eligible) >= 2)
     used_eff: set[str] = set()
     used_subj: set[str] = set()
     used_ref: set[str] = set()
@@ -382,8 +397,8 @@ def build(cfg: dict, corpus: v2.Corpus, token: str, inv: dict, probe: bool):
         return len(ed.portrait_clips(effect)) >= ed_cfg["min_portrait_ok_clips"]
 
     def reference_for(effect: str, avoid: set[str]) -> tuple[str, str] | None:
-        for fn, s, t in ed.portrait_clips(effect):
-            if s in ed.selected_subjects or s in avoid or fn in used_ref:
+        for fn, s, t in ed.portrait_clips(effect):          # roster clips first
+            if s in avoid or fn in used_ref:
                 continue
             return fn, s
         return None
@@ -433,10 +448,10 @@ def build(cfg: dict, corpus: v2.Corpus, token: str, inv: dict, probe: bool):
             pool = [ed.std_stem(pref, fn) for fn, sub, t in ed.portrait_clips(e) if fn not in (refs[e][0], gt)][:ed_cfg["pool_size"]]
             b = ["std121", "cond_windows", "split_entry", "corpus_manifest", "instrument_reference"]
             pend.append(pending_row("G-zs-same", ed.std_stem(pref, gt), donor, "one", ref_std, donor, "effectdata", "test",
-                                    "train", "zero_shot", "same", b + ["caption", "audit"]))
+                                    "train", "zero_shot", "same", b + ["caption_map_004", "audit"]))
             pend.append(pending_row("G-zs-cross", ed.std_stem(pref, cross_clip), donor, "one", ref_std,
                                     f"{pref}.{sorted(ed.subj[s_cross])[0]}", "effectdata", "test", "train", "zero_shot", "cross",
-                                    b + ["caption", "audit"]))
+                                    b + ["caption_map_004", "audit"]))
             pend.append(pending_row("G-zs-foreign", h, donor, "one", ref_std, "davis", "humanvid", "foreign", "train",
                                     "zero_shot", "foreign", b + ["caption", "audit", "roster_entry"]))
             blocks[-1].setdefault("pools", {})[e] = pool
@@ -597,8 +612,11 @@ def health(cfg, corpus, old, new_a, base_rows, pend, blocks, flags, ed, split_cl
             ep_src[r["endpoint"]] = "effectdata" if r["endpoint_source"] == "effectdata" else (
                 "reserve" if r["endpoint_source"] == "humanvid" else "higgsfield")
     cnt = collections.Counter(ep_src.values())
-    lines.append(f"\nendpoints needing caption + audit: {len(ep_src)} "
-                 f"(reserve {cnt['reserve']}, effectdata {cnt['effectdata']}, higgsfield {cnt['higgsfield']}).")
+    n_map = len({r["endpoint"] for r in pend if "caption_map_004" in r["pending"]})
+    lines.append(f"\nendpoints needing a NEW caption + audit: {len(ep_src)} "
+                 f"(reserve {cnt['reserve']}, higgsfield {cnt['higgsfield']}, effectdata {cnt['effectdata']}). "
+                 f"EffectData endpoints whose start-frame caption ALREADY EXISTS in store/captions/004_effectdata "
+                 f"(key subject|A) and only needs mapping into a caption source + the leak audit: {n_map}.")
     review = []
     for k in ("tier1_topups", "tier1_reference_only", "flame_additions", "zs_pool_topups"):
         for cls, stems in cfg[k].items():

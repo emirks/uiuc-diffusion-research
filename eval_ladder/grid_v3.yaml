@@ -83,10 +83,17 @@ reserve:
   pair_offset: 50             # two-sided foreign pair = (clip i, clip i+50), suffix = first 9 frames of B (DAVIS rule)
 
 # EffectData zero-shot tier: 17 blocks x (2 effects x {same, cross, foreign}). Zero-shot for every arm
-# trained WITHOUT S6 (012 family, ctt_v2/v3, ic_gen, controls, externals). Portrait subjects only.
+# trained WITHOUT S6 (012 family, ctt_v2/v3, ic_gen, controls, externals) -- the only arms this grid serves in
+# Tier 3 (a tier fair to the S6-trained DINO arms is infeasible: 8 untrained effects with >=10 clips). Endpoint and
+# reference subjects are taken from the S6 ROSTER so their captions (store/captions/004) and orientation (ROSTER.json)
+# already exist; pool clips come from the roster first, then outside clips (probed in the zips). Portrait only.
+# The A0 training latents/cond_clean under outputs/ctt_v2/encodes/EFFECTDATA are NOT reused: run_gen conditions on
+# pixel windows (eval_ladder/conds/<clip>_start9.mp4) cut from the 480x640 clip, and scores on the 480x640 mp4s.
 effectdata:
   annotations: data/raw/effectdata/annotations.json
-  selection: data/processed/effectdata/selection_top2000.json   # S6 roster: excluded from endpoint + reference roles
+  selection: data/processed/effectdata/selection_top2000.json   # S6 roster: endpoint + reference subjects come FROM it (owner 2026-09-07)
+  roster: outputs/ctt_v2/encodes/EFFECTDATA/ROSTER.json         # per-clip w/h for the 28,644 roster clips -> no zip probing for them
+  captions: store/captions/004_effectdata/EFFECTDATA_CAPTION_STORE.json   # leak-clean start-frame captions, key "<subject>|A" (2,000 subjects)
   zips: data/raw/effectdata/Videos
   shape_cache: eval_ladder/effectdata_shapes.json               # derived, regenerable
   blocks: 17
@@ -96,5 +103,5 @@ effectdata:
     - [704, 960]
     - [704, 1056]
   pool_size: 8
-  frames_policy: resample_to_121   # keeps the std121 corpus contract; alternative: native 81
+  frames_policy: native_81         # owner 2026-09-07: EffectData rows generate + score at the native 81 frames (own arm-variant, GEN_FRAMES=81)
   clip_prefix: ed                  # std121 stem = ed.<effect>.<subject>.<tag>
