@@ -26,6 +26,18 @@
   "servers": [],
   "viewers": [
     {
+      "slug": "higgsfield_inventory",
+      "title": "Higgsfield inventory — used vs unused",
+      "blurb": "Every clip of the Higgsfield pull (101 classes, 720 clips) sorted into six tiers by how the project uses it: on the 152-row grid as seen/unseen (13 classes) or zero-shot (10), trained as S0 but off-grid (13), in the corpus but dropped (3), curated with sidedness but never processed (10 classes, 105 clips), raw only (52 classes, 354 clips). Per clip: corpus / S0-trained / test-band / grid-endpoint / grid-reference badges, contact-sheet thumbnail, hover to play, cdn provenance. The material for growing the seen/unseen and same-source zero-shot tiers of the eval grid. Regen: scripts/viewers/build_higgsfield_inventory.py (+ `thumbs`).",
+      "group": "datasets",
+      "featured": true,
+      "date": "2026-09-07",
+      "path": "outputs/viewers/higgsfield_inventory/index.html",
+      "generator": "scripts/viewers/build_higgsfield_inventory.py",
+      "check_files": ["data.json", "media", "curated"],
+      "notes": "Derived only: raw folder + curated transitions + corpus_manifest + split_v1.2 + S0 inventory + the 152-row grid. Nothing hand-kept; rerun the generator if any of those change."
+    },
+    {
       "slug": "ctt_v2_corpora",
       "title": "ctt_v2 corpora \u2014 refVFX + VFXMaster",
       "blurb": "Both external corpora along their counterfactual axes \u2014 same operator \u00d7 many contents, same content \u00d7 many operators. 153,758 samples, video read straight out of the WebDataset tars by byte range; nothing is extracted or copied.",
