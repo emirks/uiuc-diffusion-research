@@ -99,9 +99,17 @@ def plan(chunks: int, force: bool = False, only: set[str] | None = None):
         env = dict(os.environ)
         if fam == "ed":
             env["GEN_PREFIX_FRAMES"] = "1"
-        out = sh([PY, str(REPO / "eval_ladder/run_eval.py"), "--mode", "plan", "--arms", ha, "--extra-registry", str(registry(arm, tier, fam)),
-                  "--gens", str(gens), "--scores", str(REPO / EVAL_ENTRY / ha), "--eval-dir", str(mdir), "--chunks", str(chunks), "--seeds", "42,43"], env=env, check=False)
-        print(f"{ha:40s} " + " | ".join(l for l in out.strip().splitlines() if l.startswith("[plan]"))[:300])
+        # the planner's keyed join needs the base twins (arm "base") next to the arm's rows; the stamped
+        # registries are single-arm (store_register), so plan over stamped rows + the twins of registry_v3
+        reg = EVALDIR / "registries" / f"{ha}.jsonl"
+        reg.parent.mkdir(parents=True, exist_ok=True)
+        twins = [l for l in (REPO / "eval_ladder/registry_v3.jsonl").read_text().splitlines() if l.strip() and json.loads(l)["arm"] == "base"]
+        reg.write_text(registry(arm, tier, fam).read_text().rstrip("\n") + "\n" + "\n".join(twins) + "\n")
+        r = subprocess.run([PY, str(REPO / "eval_ladder/run_eval.py"), "--mode", "plan", "--arms", ha, "--extra-registry", str(reg),
+                            "--gens", str(gens), "--scores", str(REPO / EVAL_ENTRY / ha), "--eval-dir", str(mdir), "--chunks", str(chunks), "--seeds", "42,43"],
+                           env=env, capture_output=True, text=True)
+        lines = [l for l in r.stdout.strip().splitlines() if l.startswith("[plan]")]
+        print(f"{ha:40s} " + (" | ".join(lines)[:300] if lines else f"PLAN FAILED rc={r.returncode}: {(r.stderr or r.stdout).strip().splitlines()[-1][:200]}"))
 
 
 def submit(chunks: int, dry: bool, npass: int = 1, only: set[str] | None = None):
