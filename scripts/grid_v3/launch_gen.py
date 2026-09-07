@@ -47,8 +47,10 @@ ARMS = {
     "base_cond": dict(gen_dir="005_base_cond", stack="official", rank=32, alpha=32, run="base weights (no adapter)",
                       code="src/LTX-2-official (venv editable) @ grid v3", kind="base", account="bhwp-dtai-gh",
                       old={"neutral": "005_base_cond/02_neutral__dai", "effect": "005_base_cond/01_effect__dai"}, next_kk=4),
-    "ic_gen": dict(gen_dir="001_ic_gen", stack="official", rank=32, alpha=32, run="runs/001_ic_gen", step=5000,
-                   code="src/LTX-2-official (venv editable) @ grid v3", kind="generalist", account="bhwp-dtai-gh",
+    # ic_gen runs on the ctt fork like every reference arm through run_gen: the official ReferenceConditionConfig has no
+    # `attention` field (run_gen always passes it) and the fork's default `bidirectional` IS the official reference semantics
+    "ic_gen": dict(gen_dir="001_ic_gen", stack="ctt", rank=32, alpha=32, run="runs/001_ic_gen", step=5000,
+                   code="src/LTX-2-ctt-v2-train packages @ grid v3 (attention=bidirectional = official reference semantics)", kind="generalist", account="bhwp-dtai-gh",
                    old={"neutral": "001_ic_gen/01_neutral__cc", "effect": "001_ic_gen/02_effect__dai"}, next_kk=3),
     "dualforce_control": dict(gen_dir="013_dualforce_control", stack="ctt", rank=128, alpha=128, run="runs/012_dualforce_control", step=1000,
                               code="src/LTX-2-ctt-v2-train packages @ grid v3 (one_way IC-LoRA stack)", kind="generalist", account="bgjg-dtai-gh",
