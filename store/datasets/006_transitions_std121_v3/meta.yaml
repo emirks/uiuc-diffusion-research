@@ -1,0 +1,20 @@
+id: 006_transitions_std121_v3
+seq: 6
+shelf: datasets
+created: 2026-09-07
+role: the grid-v3 eval corpus — a STRICT SUPERSET of 001_transitions_std121 (222 clips untouched, byte-identical manifest entries) + 455 new members
+source: scripts/grid_v3/prepare_media.py (Higgsfield raw pull -> corpus rule: whole-clip linspace 121 f, cover-crop 480x640, 24 fps; EffectData zips -> native 81 f, same spatial rule)
+root: symlink -> ../../../data/processed/transitions_std121   # same physical root as 001; 001 remains the 222-clip view (corpus_manifest_v1_222.json)
+contents: 677 clips / 97 classes — 39 original + 7 Higgsfield zero-shot classes (x_ray, point_cloud, acid, glitch, northern_lights, explosion, train_rush; owner-confirmed one-sided) + 51 EffectData `ed.<effect>` classes (34 donors with reference + pool, 17 cross-endpoint classes) + 21 top-up clips in 17 existing classes
+manifest: corpus_manifest.json (rebuilt 2026-09-07 by build_corpus_manifest.py --allow-partial; sha256 4cdc9852e6180ffcf2bcfdf31c27f1b00ce59b8434a4e4cc42d36fa9f869c4d3); the 222 pre-existing entries are byte-identical to corpus_manifest_v1_222.json
+manifest_problems: 357 EffectData clips violate the 121-frame std contract BY DESIGN (native 81 f, owner 2026-09-07); 58 new classes carry no dedup-pass tag (recorded, not gated)
+split: split_v1.3.json (sha256 bbb4aee2ae8d67cb30619b2cb305ab21f0e14a89141f4f92eeda17d440931324) — strict superset of v1.2; scripts/grid_v3/build_split_v1_3.py
+captions: store/captions/005_grid_v3_endpoints (Higgsfield + reserve endpoints) · captions/004_effectdata (EffectData endpoints, subject|A) · captions/003 (120 effect clauses)
+conditioning: eval_ladder/conds/ windows for every new endpoint (cut_windows; EffectData prefix only; reserve pairs suffix = first 9 frames of B)
+pool_note: |
+  run_eval.pool_refs() globs the class directory, so the 17 topped-up classes now expose ENLARGED pools
+  (e.g. cotton_cloud 6 -> 9). Evals scored before 2026-09-07 used the 222-clip pools; a re-score of an
+  OLD grid on this root sees the enlarged pools for those classes. The old pools are recoverable from
+  corpus_manifest_v1_222.json. Ceilings: the certified v4 matrix stays the authority for the 39 original
+  classes; the 58 new classes get scorer-path ceilings (eval_ladder/ceilings_v3.json, pending GPU pass).
+consumers: [prompts/010_ctt_v3_neutral, prompts/011_ctt_v3_effect, prompts/012_ctt_v3ed_neutral, prompts/013_ctt_v3ed_effect]

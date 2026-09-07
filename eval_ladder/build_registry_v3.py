@@ -226,21 +226,35 @@ class EffectData:
         self.cache_path.write_text(json.dumps(self.shapes, sort_keys=True))
 
     @staticmethod
+    def class_name(prefix: str, effect: str) -> str:
+        """Corpus class of an EffectData effect: `ed.<effect>` with '-' -> '_' (build_corpus_manifest's
+        std_name_candidates() normalises hyphens, so a hyphen in a class name would never match its raw dir)."""
+        return f"{prefix}.{effect.replace('-', '_')}"
+
+    @staticmethod
     def std_stem(prefix: str, stem: str) -> str:
         effect, subject, tag = stem.split(",")
-        return f"{prefix}.{effect}.{subject}.{tag}"
+        return f"{EffectData.class_name(prefix, effect)}.{subject}.{tag}"
 
 
 # --------------------------------------------------------------------------- the v3 cells
-def build(cfg: dict, corpus: v2.Corpus, token: str, inv: dict, probe: bool):
+SPLIT13 = REPO_ROOT / "data/processed/transitions_std121/split_v1.3.json"
+SPLIT13_SHA = "bbb4aee2ae8d67cb30619b2cb305ab21f0e14a89141f4f92eeda17d440931324"   # strict superset of v1.2 (scripts/grid_v3/build_split_v1_3.py)
+REF_EFFECTS = REPO_ROOT / "misc/refvfx_baseline/reference_effects.json"   # Lane-B clauses (store/captions/003 byte-copy)
+
+
+def build(cfg: dict, corpus12: v2.Corpus, corpus13: v2.Corpus, token: str, inv: dict, probe: bool):
+    """Old rows + Stage-A rows on the v1.2 corpus (family 009 stays byte-identical); every other row is RENDERED
+    through v2.make_row on the v1.3 corpus when its inputs exist (split entry, caption+audit, conditioning
+    windows, roster entry) and PENDED otherwise. One rule for all: nothing is authored by hand."""
     keep = set(cfg["keep_cells"])
     mid_cls = set(cfg["mid_effect_anchor"]["classes"])
     mid_clip = set(cfg["mid_effect_anchor"]["clips"])
     reserve = Reserve(cfg["reserve"])
     trained_clips = {c for v in inv["clips"].values() for c in v}
 
-    # ---------------- 0. old rows: the v2 generalist rows, kept byte-identical
-    v2rows = v2.build_rows(corpus, token)
+    # ---------------- 0. old rows: the v2 generalist rows, kept byte-identical (v1.2 corpus)
+    v2rows = v2.build_rows(corpus12, token)
     old = [r for r in v2rows if r["arm"] == "ic_gen" and r["cell"] in keep]
     frozen = {r["item_id"]: r for r in jl(v2.REGISTRY)}
     for r in old:
@@ -250,142 +264,123 @@ def build(cfg: dict, corpus: v2.Corpus, token: str, inv: dict, probe: bool):
         if r["endpoint_class"] in mid_cls or r["endpoint"] in mid_clip:
             flags[r["item_id"]].append("mid_effect_anchor")
 
-    new_a: list[dict] = []      # renderable now
+    new_a: list[dict] = []      # Stage A: rendered on the v1.2 corpus (family 009)
+    new_b: list[dict] = []      # rendered on the v1.3 corpus
     pend: list[dict] = []       # blocked on data
-    raw_root = REPO_ROOT / cfg["raw_root"]
 
-    def raw_path(stem: str, cls: str) -> Path | None:
-        """Raw folder names do not always equal the class (flame_transition_* -> class flame): search by stem."""
-        p = raw_root / cls / f"{stem}.mp4"
-        if p.exists():
-            return p
-        hits = sorted(raw_root.glob(f"*/{stem}.mp4"))
-        return hits[0] if hits else None
+    def emit(cell, endpoint, donor, sided, reference, meta: dict, blockers: list[str]):
+        """Render through the v2 machinery on the v1.3 corpus, or pend with the blockers."""
+        try:
+            row = v2.make_row(cell, "ic_gen", endpoint, donor, corpus13, token, reference=reference)
+        except (KeyError, FileNotFoundError, AssertionError, ValueError) as e:
+            pend.append(pending_row(cell, endpoint, donor, sided, reference, meta["endpoint_class"], meta["endpoint_source"],
+                                    meta["endpoint_split"], meta["reference_split"], meta["ref_novelty"], meta["content"],
+                                    blockers + [f"render:{type(e).__name__}:{str(e)[:60]}"]))
+            return None
+        new_b.append(row)
+        return row
 
-    def raw_blockers(stem: str, cls: str, folder: Path | None = None) -> list[str]:
-        p = (folder / f"{stem}.mp4") if folder else raw_path(stem, cls)
-        b = ["std121", "cond_windows", "split_entry"]
-        if p is None or not p.exists():
-            return b + ["raw_missing"]
-        w, h, n, r = video_geo(p)
-        if min(w, h) < cfg["min_short_side_px"]:
-            b.append(f"low_res_{w}x{h}")
-        if r and n / r < cfg["min_duration_s"]:
-            b.append("short")
-        return b
+    def M(ep_class, ep_source, ep_split, ref_split, novelty, content):
+        return {"endpoint_class": ep_class, "endpoint_source": ep_source, "endpoint_split": ep_split,
+                "reference_split": ref_split, "ref_novelty": novelty, "content": content}
 
-    # ---------------- 1. Tier 1: second reference for the 13 two-test classes (renderable now)
-    for i, cls in enumerate(corpus.g_pool):
-        test, sided = corpus.test[cls], corpus.sided[cls]
+    def foreign(cell, cls, sided, ref, novelty, ref_split):
+        emit(cell, reserve.pick(sided), cls, sided, ref, M("davis", "humanvid", "foreign", ref_split, novelty, "foreign"),
+             ["caption", "audit", "cond_windows", "roster_entry"])
+
+    # ---------------- 1. Tier 1: second reference for the 13 two-test classes (Stage A on v1.2; foreign on v1.3)
+    for i, cls in enumerate(corpus12.g_pool):
+        test, sided = corpus12.test[cls], corpus12.sided[cls]
         ref = test[1]
         if cls not in mid_cls and test[0] not in mid_clip:
-            new_a.append(v2.make_row("G-unseen-same", "ic_gen", test[0], cls, corpus, token, reference=ref))
-        for clip in v2.rotate(corpus.eval_endpoints(sided, exclude_class=cls), i * 3 + v2.CROSS_PER_DONOR, 1):
-            new_a.append(v2.make_row("G-unseen-cross", "ic_gen", clip, cls, corpus, token, reference=ref))
-        fe = reserve.pick(sided)
-        pend.append(pending_row("G-unseen-foreign", fe, cls, sided, ref, "davis", "humanvid", "foreign",
-                                "test", "unseen", "foreign", ["caption", "audit", "cond_windows", "roster_entry"]))
+            new_a.append(v2.make_row("G-unseen-same", "ic_gen", test[0], cls, corpus12, token, reference=ref))
+        for clip in v2.rotate(corpus12.eval_endpoints(sided, exclude_class=cls), i * 3 + v2.CROSS_PER_DONOR, 1):
+            new_a.append(v2.make_row("G-unseen-cross", "ic_gen", clip, cls, corpus12, token, reference=ref))
+        foreign("G-unseen-foreign", cls, sided, ref, "unseen", "test")
 
     # ---------------- 2. Tier 1: one-test trained classes with a raw top-up (same endpoint = the new clip)
     for cls, stems in cfg["tier1_topups"].items():
-        sided = corpus.sided[cls]
-        ref = corpus.test[cls][0]
+        sided = corpus12.sided[cls]
+        ref = corpus12.test[cls][0]
         assert ref not in trained_clips
         i = sorted(cfg["tier1_topups"]).index(cls)
         for stem in stems:
-            pend.append(pending_row("G-unseen-same", stem, cls, sided, ref, cls, "heldin_test", "test", "test",
-                                    "unseen", "same", raw_blockers(stem, cls) + ["caption", "audit", "owner_review"]))
-        for clip in v2.rotate(corpus.eval_endpoints(sided, exclude_class=cls), i * 3, 1):
-            new_a.append(v2.make_row("G-unseen-cross", "ic_gen", clip, cls, corpus, token, reference=ref))
-        pend.append(pending_row("G-unseen-foreign", reserve.pick(sided), cls, sided, ref, "davis", "humanvid",
-                                "foreign", "test", "unseen", "foreign", ["caption", "audit", "cond_windows", "roster_entry"]))
+            emit("G-unseen-same", stem, cls, sided, ref, M(cls, "heldin_test", "test", "test", "unseen", "same"),
+                 ["std121", "caption", "audit", "cond_windows", "split_entry", "owner_review"])
+        for clip in v2.rotate(corpus12.eval_endpoints(sided, exclude_class=cls), i * 3, 1):
+            new_a.append(v2.make_row("G-unseen-cross", "ic_gen", clip, cls, corpus12, token, reference=ref))
+        foreign("G-unseen-foreign", cls, sided, ref, "unseen", "test")
 
     # ---------------- 3. Tier 1: trained classes with one test clip and NO top-up -> cross + foreign only
-    for j, cls in enumerate(sorted(c for c in corpus.held_in if len(corpus.test[c]) == 1
+    for j, cls in enumerate(sorted(c for c in corpus12.held_in if len(corpus12.test[c]) == 1
                                    and c not in cfg["tier1_topups"] and c not in cfg["flame_additions"])):
-        sided = corpus.sided[cls]
-        ref = corpus.test[cls][0]
-        for clip in v2.rotate(corpus.eval_endpoints(sided, exclude_class=cls), j * 3, 1):
-            new_a.append(v2.make_row("G-unseen-cross", "ic_gen", clip, cls, corpus, token, reference=ref))
-        pend.append(pending_row("G-unseen-foreign", reserve.pick(sided), cls, sided, ref, "davis", "humanvid",
-                                "foreign", "test", "unseen", "foreign", ["caption", "audit", "cond_windows", "roster_entry"]))
+        sided = corpus12.sided[cls]
+        ref = corpus12.test[cls][0]
+        for clip in v2.rotate(corpus12.eval_endpoints(sided, exclude_class=cls), j * 3, 1):
+            new_a.append(v2.make_row("G-unseen-cross", "ic_gen", clip, cls, corpus12, token, reference=ref))
+        foreign("G-unseen-foreign", cls, sided, ref, "unseen", "test")
 
     # ---------------- 4. Tier 1: trained classes whose only untrained clip is a new raw clip (reference role)
     for cls, stems in cfg["tier1_reference_only"].items():
-        sided = corpus.sided[cls]
+        sided = corpus12.sided[cls]
+        i = sorted(cfg["tier1_reference_only"]).index(cls)
         for stem in stems:
-            b = raw_blockers(stem, cls) + ["owner_review"]
-            i = sorted(cfg["tier1_reference_only"]).index(cls)
-            for clip in v2.rotate(corpus.eval_endpoints(sided, exclude_class=cls), i * 3, 1):
-                pend.append(pending_row("G-unseen-cross", clip, cls, sided, stem, prompts.clip_class(clip),
-                                        corpus.endpoint_source(clip), corpus.band(clip), "test", "unseen", "cross", b))
-            pend.append(pending_row("G-unseen-foreign", reserve.pick(sided), cls, sided, stem, "davis", "humanvid",
-                                    "foreign", "test", "unseen", "foreign", b + ["caption", "audit", "cond_windows", "roster_entry"]))
+            for clip in v2.rotate(corpus13.eval_endpoints(sided, exclude_class=cls), i * 3, 1):
+                emit("G-unseen-cross", clip, cls, sided, stem, M(prompts.clip_class(clip), corpus13.endpoint_source(clip), corpus13.band(clip), "test", "unseen", "cross"),
+                     ["std121", "split_entry", "owner_review"])
+            foreign("G-unseen-foreign", cls, sided, stem, "unseen", "test")
 
     # ---------------- 5. Tier 1: flame (two-sided) — 3 untrained curated full-res clips
     for cls, stems in cfg["flame_additions"].items():
-        sided = corpus.sided[cls]
-        folder = None                       # resolved by stem through raw_path()
+        sided = corpus12.sided[cls]
         refs = stems[:2]
         for k, ref in enumerate(refs):
             same_ep = refs[1 - k]
-            b = raw_blockers(ref, cls, folder) + raw_blockers(same_ep, cls, folder) + ["caption", "audit"]
-            pend.append(pending_row("G-unseen-same", same_ep, cls, sided, ref, cls, "heldin_test", "test", "test", "unseen", "same", b))
-            for clip in v2.rotate(corpus.eval_endpoints(sided, exclude_class=cls), k * 3, 1):
-                pend.append(pending_row("G-unseen-cross", clip, cls, sided, ref, prompts.clip_class(clip),
-                                        corpus.endpoint_source(clip), corpus.band(clip), "test", "unseen", "cross",
-                                        raw_blockers(ref, cls, folder)))
-            pend.append(pending_row("G-unseen-foreign", reserve.pick(sided), cls, sided, ref, "davis", "humanvid",
-                                    "foreign", "test", "unseen", "foreign",
-                                    raw_blockers(ref, cls, folder) + ["caption", "audit", "cond_windows", "roster_entry"]))
+            emit("G-unseen-same", same_ep, cls, sided, ref, M(cls, "heldin_test", "test", "test", "unseen", "same"),
+                 ["std121", "caption", "audit", "cond_windows", "split_entry", "owner_review"])
+            for clip in v2.rotate(corpus13.eval_endpoints(sided, exclude_class=cls), k * 3, 1):
+                emit("G-unseen-cross", clip, cls, sided, ref, M(prompts.clip_class(clip), corpus13.endpoint_source(clip), corpus13.band(clip), "test", "unseen", "cross"),
+                     ["std121", "split_entry", "owner_review"])
+            foreign("G-unseen-foreign", cls, sided, ref, "unseen", "test")
 
-    # ---------------- 6. Tier 2: second reference for the 10 held-out classes
-    for i, cls in enumerate(sorted(corpus.held_out)):
-        pool = corpus.train[cls] + corpus.test[cls]
+    # ---------------- 6. Tier 2: second reference for the 10 held-out classes (Stage A on v1.2; foreign on v1.3)
+    for i, cls in enumerate(sorted(corpus12.held_out)):
+        pool = corpus12.train[cls] + corpus12.test[cls]
         if len(pool) < 2:
             continue
         ref = pool[1]
-        sided = corpus.sided[cls]
-        audited_same = [c for c in corpus.test[cls] + corpus.train[cls]
-                        if c != ref and c in corpus.audited and c not in mid_clip]
+        sided = corpus12.sided[cls]
+        audited_same = [c for c in corpus12.test[cls] + corpus12.train[cls]
+                        if c != ref and c in corpus12.audited and c not in mid_clip]
         if cls not in mid_cls and audited_same:
-            new_a.append(v2.make_row("G-zs-same", "ic_gen", audited_same[0], cls, corpus, token, reference=ref))
-        heldin = [c for c in corpus.eval_endpoints(sided, exclude_class=cls)
-                  if prompts.clip_class(c) not in corpus.held_out]
+            new_a.append(v2.make_row("G-zs-same", "ic_gen", audited_same[0], cls, corpus12, token, reference=ref))
+        heldin = [c for c in corpus12.eval_endpoints(sided, exclude_class=cls)
+                  if prompts.clip_class(c) not in corpus12.held_out]
         for clip in v2.rotate(heldin, i * 3 + v2.CROSS_PER_DONOR, 1):
-            new_a.append(v2.make_row("G-zs-cross", "ic_gen", clip, cls, corpus, token, reference=ref))
-        pend.append(pending_row("G-zs-foreign", reserve.pick(sided), cls, sided, ref, "davis", "humanvid",
-                                "foreign", "train" if ref in corpus.train[cls] else "test", "zero_shot", "foreign",
-                                ["caption", "audit", "cond_windows", "roster_entry"]))
+            new_a.append(v2.make_row("G-zs-cross", "ic_gen", clip, cls, corpus12, token, reference=ref))
+        foreign("G-zs-foreign", cls, sided, ref, "zero_shot", "train" if ref in corpus12.train[cls] else "test")
 
-    # ---------------- 7. Tier 2: new zero-shot Higgsfield classes (raw full-res, PROVISIONAL list)
-    zs_new = cfg["new_zero_shot_classes"]
-    for i, (cls, sided) in enumerate(sorted(zs_new.items())):
-        folder = raw_root / cls
-        stems = sorted(p.stem for p in folder.glob("*.mp4"))
-        good = [s for s in stems if not any(x.startswith("low_res") or x == "short" for x in raw_blockers(s, cls))]
-        assert len(good) >= 4, f"{cls}: only {len(good)} usable full-res clips"
-        refs = good[:2]
+    # ---------------- 7. Tier 2: new zero-shot Higgsfield classes (owner-confirmed one-sided, 2026-09-07)
+    for i, (cls, sided) in enumerate(sorted(cfg["new_zero_shot_classes"].items())):
+        stems = sorted(corpus13.test[cls]) if cls in corpus13.test else []
+        if len(stems) < 2:
+            raise SystemExit(f"{cls}: not in split v1.3 with 2 test clips")
+        refs = stems[:2]
+        heldin = [c for c in corpus13.eval_endpoints(sided, exclude_class=cls) if prompts.clip_class(c) not in corpus13.held_out]
         for k, ref in enumerate(refs):
             same_ep = refs[1 - k]
-            b = ["std121", "cond_windows", "split_entry", "caption", "audit", "owner_review", "sidedness_assumed"]
-            pend.append(pending_row("G-zs-same", same_ep, cls, sided, ref, cls, "heldout", "test", "train", "zero_shot", "same", b))
-            for clip in v2.rotate([c for c in corpus.eval_endpoints(sided) if prompts.clip_class(c) not in corpus.held_out],
-                                  i * 3 + k, 1):
-                pend.append(pending_row("G-zs-cross", clip, cls, sided, ref, prompts.clip_class(clip),
-                                        corpus.endpoint_source(clip), corpus.band(clip), "train", "zero_shot", "cross",
-                                        ["std121", "cond_windows", "split_entry", "owner_review", "sidedness_assumed"]))
-            pend.append(pending_row("G-zs-foreign", reserve.pick(sided), cls, sided, ref, "davis", "humanvid",
-                                    "foreign", "train", "zero_shot", "foreign",
-                                    ["std121", "split_entry", "owner_review", "sidedness_assumed", "caption", "audit", "cond_windows", "roster_entry"]))
+            emit("G-zs-same", same_ep, cls, sided, ref, M(cls, "heldout", "test", "test", "zero_shot", "same"),
+                 ["std121", "caption", "audit", "cond_windows", "split_entry"])
+            for clip in v2.rotate(heldin, i * 3 + k, 1):
+                emit("G-zs-cross", clip, cls, sided, ref, M(prompts.clip_class(clip), corpus13.endpoint_source(clip), corpus13.band(clip), "test", "zero_shot", "cross"),
+                     ["std121", "split_entry"])
+            foreign("G-zs-foreign", cls, sided, ref, "zero_shot", "test")
 
-    # ---------------- 8. Tier 3: EffectData blocks
+    # ---------------- 8. Tier 3: EffectData blocks (roster subjects; native 81 f; frame-0 anchor)
     ed_cfg = cfg["effectdata"]
     ed = EffectData(ed_cfg, probe=probe)
     blocks = []
     eligible = {e for e in ed.clips if ed.eligible_effect(e)}
-    # endpoint subjects come FROM the S6 roster (owner 2026-09-07): captions + orientation exist; the 012 family,
-    # ctt_v2/v3, controls and externals never saw EffectData, so the tier is zero-shot for every arm on this grid.
     outside = sorted(s for s, es in ed.subj.items() if s in ed.selected_subjects and len(es & eligible) >= 2)
     used_eff: set[str] = set()
     used_subj: set[str] = set()
@@ -415,7 +410,6 @@ def build(cfg: dict, corpus: v2.Corpus, token: str, inv: dict, probe: bool):
         e2 = next((e for e in cands if e != e1 and ed.category(e) != ed.category(e1) and enough_portrait(e)), None)
         if e2 is None:
             continue
-        # cross subject: outside, portrait, under NEITHER effect (checked over ALL its effects)
         s_cross = None
         while cursor_cross < len(outside):
             c = outside[cursor_cross]
@@ -441,24 +435,21 @@ def build(cfg: dict, corpus: v2.Corpus, token: str, inv: dict, probe: bool):
         blocks.append({"e1": e1, "e2": e2, "cat": [ed.category(e1), ed.category(e2)], "same": s, "cross": s_cross,
                        "foreign": h, "refs": {e: refs[e][0] for e in (e1, e2)}})
         for e in (e1, e2):
-            donor = f"{pref}.{e}"
+            donor = ed.class_name(pref, e)
             ref_std = ed.std_stem(pref, refs[e][0])
             gt = next(fn for fn, sub, t in ed.clips[e] if sub == s)
-            cross_clip = next(fn for fn, sub, t in ed.clips[sorted(ed.subj[s_cross])[0]] if sub == s_cross)
+            cross_effect = sorted(ed.subj[s_cross])[0]
+            cross_clip = next(fn for fn, sub, t in ed.clips[cross_effect] if sub == s_cross)
             pool = [ed.std_stem(pref, fn) for fn, sub, t in ed.portrait_clips(e) if fn not in (refs[e][0], gt)][:ed_cfg["pool_size"]]
             b = ["std121", "cond_windows", "split_entry", "corpus_manifest", "instrument_reference"]
-            pend.append(pending_row("G-zs-same", ed.std_stem(pref, gt), donor, "one", ref_std, donor, "effectdata", "test",
-                                    "train", "zero_shot", "same", b + ["caption_map_004", "audit"]))
-            pend.append(pending_row("G-zs-cross", ed.std_stem(pref, cross_clip), donor, "one", ref_std,
-                                    f"{pref}.{sorted(ed.subj[s_cross])[0]}", "effectdata", "test", "train", "zero_shot", "cross",
-                                    b + ["caption_map_004", "audit"]))
-            pend.append(pending_row("G-zs-foreign", h, donor, "one", ref_std, "davis", "humanvid", "foreign", "train",
-                                    "zero_shot", "foreign", b + ["caption", "audit", "roster_entry"]))
+            emit("G-zs-same", ed.std_stem(pref, gt), donor, "one", ref_std, M(donor, "effectdata", "test", "train", "zero_shot", "same"), b + ["caption_map_004", "audit"])
+            emit("G-zs-cross", ed.std_stem(pref, cross_clip), donor, "one", ref_std, M(ed.class_name(pref, cross_effect), "effectdata", "test", "train", "zero_shot", "cross"), b + ["caption_map_004", "audit"])
+            emit("G-zs-foreign", h, donor, "one", ref_std, M("davis", "humanvid", "foreign", "train", "zero_shot", "foreign"), b + ["caption", "audit", "roster_entry"])
             blocks[-1].setdefault("pools", {})[e] = pool
     ed.save()
 
-    # ---------------- 9. base twins for everything renderable (identical rule to build_registry)
-    treat = old + new_a
+    # ---------------- 9. base twins for everything rendered (identical rule to build_registry)
+    treat = old + new_a + new_b
     seen: set[str] = set()
     base_rows = []
     for r in treat:
@@ -473,7 +464,22 @@ def build(cfg: dict, corpus: v2.Corpus, token: str, inv: dict, probe: bool):
 
     ids = [r["item_id"] for r in treat + pend]
     assert len(ids) == len(set(ids)), "item_id collision across v3 rows"
-    return old, new_a, base_rows, pend, blocks, flags, ed, reserve
+    return old, new_a, new_b, base_rows, pend, blocks, flags, ed, reserve
+
+
+def effect_rows(rows: list[dict]) -> list[dict]:
+    """Family B (`{S1}. sksz. {EFFECT}. [{S2}.]`): the clause from reference_effects.json spliced after the token,
+    exactly as prompts/002_ctt152_effect was built (verified byte-identical on the 139 kept rows at build)."""
+    eff = json.loads(REF_EFFECTS.read_text())
+    out = []
+    for r in rows:
+        clause = eff[r["reference"]]
+        e = dict(r)
+        assert " sksz." in e["prompt"], r["item_id"]
+        e["prompt"] = e["prompt"].replace(" sksz.", f" sksz. {clause}.", 1)
+        e["input_key"] = v2.input_key(e)
+        out.append(e)
+    return out
 
 
 # --------------------------------------------------------------------------- health
@@ -678,31 +684,49 @@ def main() -> None:
     args = ap.parse_args()
 
     cfg = yaml.safe_load(GRID.read_text())
-    split, arms, inv = v2.load()
+    split12, arms, inv = v2.load()
+    split13, _, _ = v2.load(SPLIT13, SPLIT13_SHA, "v1.3")
     token = arms["token"]
-    corpus = v2.Corpus(split)
-    old, new_a, base_rows, pend, blocks, flags, ed, reserve = build(cfg, corpus, token, inv, probe=not args.no_probe)
+    corpus12, corpus13 = v2.Corpus(split12), v2.Corpus(split13)
+    old, new_a, new_b, base_rows, pend, blocks, flags, ed, reserve = build(cfg, corpus12, corpus13, token, inv, probe=not args.no_probe)
 
-    rows_now = old + new_a + base_rows
-    v2.seatbelts(rows_now, corpus, inv, token)
+    rows_now = old + new_a + new_b + base_rows
+    v2.seatbelts(rows_now, corpus13, inv, token)
     OUT.write_text("".join(json.dumps(r) + "\n" for r in rows_now))
     OUT_PENDING.write_text("".join(json.dumps(r) + "\n" for r in pend))
 
-    md, H = health(cfg, corpus, old, new_a, base_rows, pend, blocks, flags, ed, split["classes"])
+    md, H = health(cfg, corpus13, old, new_a + new_b, base_rows, pend, blocks, flags, ed, split13["classes"])
     HEALTH_DIR.mkdir(parents=True, exist_ok=True)
     (HEALTH_DIR / "HEALTH.md").write_text(md)
     (HEALTH_DIR / "health.json").write_text(json.dumps(H, indent=1, sort_keys=True))
-    sha = stage_family(old + new_a, "009_ctt_v3_neutral", "{S1}. sksz. [{S2}.]",
-                       "neutral for adapter arms (grid v3, renderable subset)", OUT)
+
+    # families: 009 = renderable-on-v1.2 subset (frozen), 010/011 = grid v3 Higgsfield+reserve rows (121 f) neutral/effect,
+    # 012/013 = the EffectData tier (81 f, frame-0 anchor) neutral/effect. Rows are ARM-FREE; stamp_rows.py per arm.
+    pref = cfg["effectdata"]["clip_prefix"] + "."
+    treat = old + new_a + new_b
+    hf = [r for r in treat if not r["donor_class"].startswith(pref)]
+    edr = [r for r in treat if r["donor_class"].startswith(pref)]
+    sha009 = stage_family(old + new_a, "009_ctt_v3_neutral", "{S1}. sksz. [{S2}.]", "neutral for adapter arms (grid v3, renderable-on-v1.2 subset)", OUT)
+    sha010 = stage_family(hf, "010_ctt_v3_neutral", "{S1}. sksz. [{S2}.]", "neutral for adapter arms (grid v3: Higgsfield + reserve rows, 121 f)", OUT)
+    eff_hf = effect_rows(hf)
+    # byte-identity of the kept rows' effect prompts with prompts/002
+    key = lambda r: (r["cell"], r["endpoint"], r.get("reference") or "", r["sided"])
+    p002 = {key(r): r["prompt"] for r in jl(REPO_ROOT / "store/prompts/002_ctt152_effect/grid.jsonl")}
+    kept = {key(r) for r in old}
+    mism = [key(r) for r in eff_hf if key(r) in kept and p002.get(key(r)) != r["prompt"]]
+    assert not mism, f"effect splice drifted from prompts/002 on {len(mism)} kept rows: {mism[:2]}"
+    sha011 = stage_family(eff_hf, "011_ctt_v3_effect", "{S1}. sksz. {EFFECT}. [{S2}.]", "effect for adapter arms (grid v3: Higgsfield + reserve rows, 121 f)", OUT)
+    sha012 = stage_family(edr, "012_ctt_v3ed_neutral", "{S1}. sksz.", "neutral for adapter arms (grid v3 EffectData tier: 81 f, frame-0 anchor; run with GEN_FRAMES=81 GEN_PREFIX_FRAMES=1)", OUT) if edr else None
+    sha013 = stage_family(effect_rows(edr), "013_ctt_v3ed_effect", "{S1}. sksz. {EFFECT}.", "effect for adapter arms (grid v3 EffectData tier: 81 f, frame-0 anchor)", OUT) if edr else None
 
     n_seeds = 2   # claim seeds 42/43 (arms.yaml lists 8 for the noise-floor study)
-    print(f"[registry_v3] {len(old)} v2 rows kept + {len(new_a)} new renderable + {len(base_rows)} base twins -> {OUT.relative_to(REPO_ROOT)}")
+    print(f"[registry_v3] {len(old)} v2 rows kept + {len(new_a)} stage-A + {len(new_b)} rendered on v1.3 + {len(base_rows)} base twins -> {OUT.relative_to(REPO_ROOT)}")
     print(f"[registry_v3] {len(pend)} pending rows -> {OUT_PENDING.relative_to(REPO_ROOT)}  (EffectData blocks {len(blocks)})")
-    print(f"[registry_v3] full grid = {len(old) + len(new_a) + len(pend)} treatment rows x {n_seeds} seeds = {(len(old) + len(new_a) + len(pend)) * n_seeds} gens")
-    print(f"[registry_v3] staged family 009_ctt_v3_neutral prompt_sha={sha} ({len(old) + len(new_a)} rows)")
+    print(f"[registry_v3] full grid = {len(treat) + len(pend)} treatment rows x {n_seeds} seeds = {(len(treat) + len(pend)) * n_seeds} gens")
+    print(f"[registry_v3] families: 009 {sha009} ({len(old) + len(new_a)}) · 010 {sha010} ({len(hf)}) · 011 {sha011} · 012 {sha012} ({len(edr)}) · 013 {sha013}")
     print(f"[registry_v3] health -> {HEALTH_DIR.relative_to(REPO_ROOT)}/HEALTH.md")
     if args.stats:
-        by = collections.Counter((r["cell"], "now") for r in old + new_a) + collections.Counter((r["cell"], "pending") for r in pend)
+        by = collections.Counter((r["cell"], "now") for r in treat) + collections.Counter((r["cell"], "pending") for r in pend)
         for k in sorted(by):
             print(f"  {k[0]:18s} {k[1]:8s} {by[k]:4d}")
 

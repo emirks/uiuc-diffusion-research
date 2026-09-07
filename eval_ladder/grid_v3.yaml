@@ -70,7 +70,7 @@ new_zero_shot_classes:
   glitch: one
   northern_lights: one
   explosion: one
-  train_rush: one
+  train_rush: one   # owner 2026-09-07: all 7 confirmed ONE-sided
 raw_root: data/processed/higgsfield_transitions
 min_short_side_px: 480
 min_duration_s: 4.9

@@ -30,14 +30,17 @@ from pathlib import Path
 # Paths
 # --------------------------------------------------------------------------
 REPO = Path(__file__).resolve().parents[3]
-LAB = Path("/projects/illinois/eng/cs/jrehg/users/emirkisa")
+LAB = Path("/taiga/illinois/eng/cs/jrehg/users/emirkisa")   # /taiga resolves on BOTH clusters (CLAUDE.md)
 
 CORPUS_CAPTIONS = LAB / "diffusion-research/eval_ladder/dataset/captions/dataset_captions.json"
 CORPUS_MANIFEST = REPO / "data/processed/transitions_std121/corpus_manifest.json"
-STRIPS_INDEX = REPO / "data/processed/caption_strips/strips_index.json"
+STRIPS_INDEX = Path(os.environ["CTT_STRIPS_INDEX"]) if os.environ.get("CTT_STRIPS_INDEX") else \
+    REPO / "data/processed/caption_strips/strips_index.json"   # grid v3 (2026-09-07): CTT_STRIPS_INDEX selects a sibling index
+                                                              # whose 9-frame anchors are re-timed to 8 fps (frames identical) —
+                                                              # the API now rejects 0.375 s clips (HTTP 400); the locked index is untouched
 SHADER_DIR = LAB / "misc/gl-transitions/transitions"
 REFVFX_LORA_INDEX = LAB / "diffusion-research/data/raw/refvfx/_viewer_index/lora.jsonl.gz"
-LENGTH_EMPIRICAL = LAB / "misc/ctt_v2_final/M1_length_empirical.json"
+LENGTH_EMPIRICAL = REPO / "misc/ctt_v2_final/M1_length_empirical.json"   # campaign folders live under the repo since the 2026-08 move
 
 
 # --------------------------------------------------------------------------

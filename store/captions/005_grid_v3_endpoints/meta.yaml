@@ -1,0 +1,17 @@
+id: captions/005_grid_v3_endpoints
+seq: 5
+shelf: captions
+created: 2026-09-07
+role: grid v3 eval endpoints — A/B descriptions for the new Higgsfield corpus clips + A descriptions for the humanvid reserve (foreign roster); Lane B EVAL ONLY (never in training)
+keyed: "<clip>|<role>"
+coverage: 89 descriptions (26 Higgsfield, 63 reserve)
+content_hash: sha256:a0d08eb8843ca26d988004135394e84e6275bcbeca622d0d1934c8f0a88e709d   # over the `descriptions` map
+prompt_variant: v2               # generate_descriptions.py _PROMPT_{A,B}_TEMPLATE, per-item length draw over the 171-value corpus list
+generator: gemini-3.6-flash (temp 0.7, thinkingLevel minimal, 120 tok)
+auditor: gemini-3.5-flash-lite   # Layer-2, every shipped description leak NO + inaccurate NO (CTT_AUDIT_MODEL, the store-validated auditor)
+strips: 9-frame A (0-8) / B (112-120) anchors, RE-TIMED TO 8 FPS (frames identical) — the API now rejects 0.375 s clips (HTTP 400); data/processed/caption_strips/strips_index_grid_v3.json
+consumers: data/processed/transitions_std121/dataset_grid_v3.json (corpus-format caption source read by eval_ladder/prompts.py) · eval_ladder/reserve.yaml (foreign roster)
+effectdata_endpoints: NOT here — their A descriptions are the S6 store (captions/004_effectdata, key subject|A), mapped into dataset_grid_v3.json
+source: outputs/ctt_v2/captions/grid_v3/{reserve,higgsfield}/  (records.json + raw_*_responses.jsonl archives)
+assembled_by: scripts/grid_v3/assemble_text.py
+authority: ../../TEXT_LIFECYCLE.md   # §3 Lane B

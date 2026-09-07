@@ -1,0 +1,13 @@
+id: prompts/013_ctt_v3ed_effect
+seq: 13
+shelf: prompts
+created: 2026-09-07
+family: A
+grammar: "{S1}. sksz. {EFFECT}."
+role: effect for adapter arms (grid v3 EffectData tier: 81 f, frame-0 anchor)
+rows: 102
+prompt_corpus_sha: d896a41b5ae0   # sha256[:12] over prompts concatenated in (cell,endpoint,reference,sided) order, unique items
+renderer: eval_ladder/prompts.py::render_prompt (single source; families B/D/refvfx splice clauses from misc/refvfx_baseline/reference_effects.json)
+derived_from: eval_ladder/registry_v3.jsonl (sha256[:12] d77a7638213a; design 3.0.0 superset of prompts/001_ctt152_neutral)
+source: eval_ladder/build_registry_v3.py
+notes: rows are ARM-FREE — arm/item_id/video_key + arm-contract fields stripped; stamp_rows.py re-adds them per arm. STAGED under misc/ until registered (store/README.md §5).

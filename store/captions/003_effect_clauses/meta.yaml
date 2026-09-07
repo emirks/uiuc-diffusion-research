@@ -8,3 +8,7 @@ style: ~20 words, subject-generic ("the subject..."), transition-describing
 source: byte-copy of misc/refvfx_baseline/reference_effects.json  # append-only
 consumed_by: prompts/002_ctt152_effect   # {S1}. sksz. {EFFECT}. [{S2}.], spliced downstream of render_prompt
 authority: ../../TEXT_LIFECYCLE.md   # §3 Lane B
+grid_v3_append_2026_09_07:   # APPEND-ONLY: the original 36 clauses are byte-identical; +84 clauses for the grid-v3 references
+  count: 120
+  producer: scripts/grid_v3/build_ref_effects_v3.py (same instrument + verbatim prompt as build_ref_effects.py; raw responses in misc/refvfx_baseline/raw_ref_effects/)
+  consumed_by: prompts/011_ctt_v3_effect, prompts/013_ctt_v3ed_effect

@@ -63,9 +63,10 @@ PRIORITY = {
 
 
 # --------------------------------------------------------------------------- frozen inputs
-def load() -> tuple[dict, dict, dict]:
-    split = json.loads(SPLIT_PATH.read_text())
-    assert split["split"] == "v1.2" and split["sha256"] == SPLIT_SHA, "split is not the frozen v1.2"
+def load(split_path: Path = SPLIT_PATH, split_sha: str = SPLIT_SHA, split_name: str = "v1.2") -> tuple[dict, dict, dict]:
+    """The v2 ladder pins split v1.2; build_registry_v3 passes its own pinned superset split (v1.3)."""
+    split = json.loads(split_path.read_text())
+    assert split["split"] == split_name and split["sha256"] == split_sha, f"split is not the frozen {split_name}"
     arms = yaml.safe_load(ARMS.read_text())
     inv = json.loads(INVENTORY.read_text())
     return split, arms, inv
@@ -157,7 +158,7 @@ def make_row(cell: str, arm: str, endpoint: str, donor_class: str, corpus: Corpu
         "endpoint": endpoint,
         "endpoint_class": ep_class,
         "endpoint_split": "davis" if foreign else corpus.band(endpoint),
-        "endpoint_source": "davis" if foreign else corpus.endpoint_source(endpoint),
+        "endpoint_source": prompts.foreign_source(endpoint) if foreign else corpus.endpoint_source(endpoint),
         "sided": sided,
         "reference": reference,
         "reference_split": corpus.band(reference) if reference else None,
@@ -243,6 +244,8 @@ def build_rows(corpus: Corpus, token: str) -> list[dict]:
     # real footage? Gated lane: %-suppressed to ranking-only, claim = margin vs base + 2AFC.
     davis_by_side = {"one": [], "two": []}
     for name, entry in prompts.davis().items():
+        if entry.get("source", "davis") != "davis":     # the v2 foreign lane is DAVIS only (grid v3 adds the reserve roster)
+            continue
         davis_by_side[entry["sided"]].append(name)
     for side in davis_by_side:
         davis_by_side[side].sort()

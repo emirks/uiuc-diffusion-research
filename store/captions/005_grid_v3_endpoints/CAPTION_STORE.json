@@ -1,0 +1,1529 @@
+{
+ "content_hash": "sha256:a0d08eb8843ca26d988004135394e84e6275bcbeca622d0d1934c8f0a88e709d",
+ "content_hash_covers": "descriptions",
+ "counts": {
+  "descriptions": 89,
+  "higgsfield": 26,
+  "reserve": 63
+ },
+ "descriptions": {
+  "acid_0|A": "A young woman with dark hair, wearing a hooded grey jersey with orange flame graphics and light blue jeans, stands with crossed arms on a deck at night before a illuminated city skyline and bridge over water",
+  "acid_1|A": "A woman with brown hair with bangs, wearing orange sunglasses, a white strap top, gold earrings, and a gold chain necklace, touches her lower lip with her index finger in a brightly lit room with a beige wall",
+  "earth_wave_5|A": "A young woman with dark hair tied in two buns, wearing white sunglasses, a black leather jacket with white piping, and olive-green pants, stands and looks up in a narrow library aisle surrounded by high wooden bookshelves under bright indoor overhead lights",
+  "earth_wave_5|B": "a woman with large Afro hair, black sunglasses, and a silver necklace in a black crop top, leaning back against a metal stair railing beside a bright window in a concrete stairwell",
+  "explosion_0|A": "A long-haired woman wearing glasses, a grey top, a pleated beige mini skirt, black knee-high boots, and a white shoulder bag crosses a city street at a crosswalk illuminated by warm afternoon sunlight between parked cars and overhead power lines",
+  "explosion_1|A": "A tattooed young man with dark curly hair, wearing a white t-shirt, a red jacket, and light blue jeans, leans back on a red and white motorcycle on an urban street lined with tall brick apartment buildings under overcast daylight",
+  "fire_element_3|A": "A shirtless man wearing a black and white varsity jacket, a black cap, and black pants stands motionless in a field of small yellow flowers during an orange and purple sunset",
+  "flame_transition_2|A": "A fair-skinned woman with short blonde hair, wearing a red long-sleeved latex top, a black mesh skirt, and gold sneakers, crouches on a tiled ledge outdoors in bright daylight before a leafy tree bearing yellow lemons and distant green hills",
+  "flame_transition_2|B": "a dark-haired woman with bold makeup in a black fur coat and white socks, crouching on a grassy hill with her head resting on her hands under a bright blue sky with white clouds in daylight",
+  "flame_transition_3|A": "A dark-haired woman with long curly hair, wearing a white sleeveless top, a red plaid skirt, and silver platform heels, sits outdoors on a red cooler in an asphalt parking lot under a bright blue sky, holding a spoon in her left hand and resting her chin on her right hand",
+  "flame_transition_3|B": "a young woman with styled dark hair in a green floral dress and white knee-high boots, touching her face while sitting on outdoor terra-cotta stairs under bright sunlight in front of a stucco house",
+  "giant_grab_5|A": "A man in a black bucket hat, black sweatshirt, and black shorts stands on a sidewalk next to a brown and white dog in front of a wooden door, illuminated by bright daylight outdoors",
+  "giant_grab_5|B": "a person with a light brown hand making a peace sign gesture, standing outdoors in front of a glass and wooden door beside a light gray wall with a black sign numbered two under bright daytime light",
+  "glitch_0|A": "A person with long curly black hair, wearing black sunglasses, a red track jacket, a beige shirt, and white pants, sits cross-legged on a blue floor in front of black speakers and boomboxes against a solid blue wall illuminated by bright white studio light",
+  "glitch_1|A": "A dark-haired woman in a sheer grey dress rests her chin on her hands atop a small beige vintage television set that displays a close-up image of her face, sitting on a plain white floor in front of a neutral grey studio backdrop under soft white overhead lighting",
+  "humanvid_10042758|A": "A tan woman with short dark hair, wearing a purple crop top and matching purple leggings, stands outdoors on a balcony with a metal railing against a hazy pale blue sky with a faint glow",
+  "humanvid_12405668|A": "A young woman with curly black hair, wearing a black top and a multicolored kimono robe, smiles while holding a pink landline telephone receiver to her ear in a colorful room with geometric wall decorations and bright studio lighting",
+  "humanvid_2402374|A": "An older shirtless man with a white beard and glasses, wearing blue denim shorts, sits outdoors on a chair reading a newspaper beside a wooden table under soft natural light",
+  "humanvid_3795426|A": "A woman with reddish hair in a bun and black paint on her arm and torso, wearing an olive-green sports bra and matching shorts, stands facing away from the camera in a bright studio illuminated by soft white light from a large window",
+  "humanvid_4058810|A": "A woman with short dark hair, wearing a black robe and blue slippers, sits on a dark floor in front of an open refrigerator illuminated by blue, purple, and yellow light, holding a spoon and looking down at her phone",
+  "humanvid_4076737|A": "A young man with short brown hair, wearing a gray long-sleeved shirt and brown pants, sits cross-legged on a gray couch while using a silver laptop computer in a dimly lit room with muted indoor light",
+  "humanvid_4223661|A": "A blonde woman in a white long-sleeved shirt and black pants sits in a white chair with a pink cushion, working on a desktop computer at a white desk in a brightly lit room with a potted plant and minimalist wall art",
+  "humanvid_4325522|A": "A shirtless young man with short dark hair, wearing black shorts, holds a forearm plank position on a black yoga mat on a light brown wooden floor in front of a beige sheer curtain illuminated by soft natural light",
+  "humanvid_4457812|A": "A young woman with brown hair, wearing a grey athletic tank top with blue straps and a white towel around her neck, stretches her arms overhead in a sunny outdoor park with tall green trees silhouetted against a bright white sky",
+  "humanvid_4650062|A": "A fair-skinned woman with long blonde hair, wearing a dark grey suit jacket and black pants, stands beside a fair-skinned woman with long red hair, who rests her black-nailed hand on her shoulder while wearing a light grey striped blazer in soft natural sunlight",
+  "humanvid_4734626|A": "A man wearing a grey t-shirt, black track pants, and a grey beanie crouches low on a grey asphalt road with white crosswalk stripes, under a overcast sky near a tall grey structure",
+  "humanvid_4873451|A": "A man with short brown hair, wearing a white long-sleeved shirt and cream pants, carries a woman in a white t-shirt and grey pants while walking away through a tall green grass field under a bright overcast sky",
+  "humanvid_5124224|A": "A fair-skinned woman with brown hair tied in a low ponytail, wearing a black top and a silver ring, holds her hands together in a low-angle view against a plain beige wall under soft indoor lighting",
+  "humanvid_5385990|A": "A young woman with long light brown hair, wearing a white baseball cap, a pink and white checked button-up shirt, beige biker shorts, and red sneakers, squats on a stone bridge with black metal railings in bright outdoor light",
+  "humanvid_5712746|A": "A young man with short dark hair and a trimmed beard, wearing a maroon long-sleeved button-down shirt, sits facing left while gesturing with his hands in a dimly lit indoor space with soft neutral wall tones",
+  "humanvid_5759064|A": "A light-skinned man with short blond hair and a dark beard, wearing a heavy black knit sweater with a cowl neck and a small hoop earring, leans forward indoors in dim side lighting",
+  "humanvid_6011432|A": "A bald man with pale skin, wearing a light blue hospital gown and a green nasal cannula, sits upright on a white hospital bed in a dimly lit room with a gray bedside table and white lamp",
+  "humanvid_6111509|A": "A woman with long dark hair, wearing a white turtleneck sweater, a beige fleece jacket, and blue jeans, stands holding a silver disco ball next to another woman wearing a striped brown sweater and grey pants who holds a black sign with white text against a white wall with gold decorations",
+  "humanvid_6111510|A": "A woman with long dark hair and red lipstick, wearing a party hat, a brown striped sweater, and khaki pants, stands holding a black sign with white text against a white wall decorated with silver and gold circles under bright indoor lighting",
+  "humanvid_6202949|A": "A young boy with short dark hair, wearing a white short-sleeved t-shirt and a white cape, writes on a transparent glass surface with a blue marker in a dimly lit studio illuminated by soft blue background light",
+  "humanvid_6263410|A": "A short-haired man with a short-sleeved white karate uniform and a black belt holds a side-lunge stance on a yellow and red mat inside a brightly lit gym with large blue-framed windows and blue railings",
+  "humanvid_6300528|A": "A smiling man with short dark hair, wearing a white shirt under a brown sweater, a black jacket, blue jeans, and a dark scarf, stands outdoors in a park surrounded by bare trees in bright daylight",
+  "humanvid_6316946|A": "A dark silhouette of a man with short hair and a dark silhouette of a long-haired woman hold hands while facing each other outdoors against a soft purple and orange gradient sky at dusk",
+  "humanvid_6396124|A": "A smiling woman with long dark hair, wearing a black lace-detailed dress and silver necklace, holds a glass of champagne while standing beside a man in a grey suit jacket in a brightly lit indoor space with neutral background tones",
+  "humanvid_6438110|A": "A bearded man with a dark topknot hairstyle, wearing a dark gray zip-up hoodie and light gray pants, sits in a cross-legged lotus position on a dark yoga mat against a white brick wall and light wooden floor",
+  "humanvid_6455384|A": "A woman with dark curly hair, wearing a gray t-shirt under an open blue jacket and beige leggings, walks on a treadmill in a gym with dark grey mats and a black punching bag hanging in the background",
+  "humanvid_6517487|A": "A brown-haired man with glasses, wearing a blue hoodie over a blue shirt and blue plaid pajama pants, sits on a kitchen counter while talking on a mobile phone and holding a silver laptop in a dimly lit kitchen",
+  "humanvid_6548002|A": "A dark-haired woman, wearing an olive-green tank top and black leggings, bends forward while working out in an indoor gym with bright natural lighting and a brick wall",
+  "humanvid_6570439|A": "A man with curly brown hair, wearing a black puffer jacket and grey sweatpants, hugs a person in a black coat inside an A-frame wooden cabin filled with warm, soft yellow indoor light",
+  "humanvid_6625516|A": "A middle-aged man with short grey hair, wearing turquoise sunglasses and a beige turtleneck, sits against a plain purple background in bright studio lighting",
+  "humanvid_6697837|A": "A bearded man with short dark hair, wearing a yellow crew-neck t-shirt and possessing an arm tattoo, sits with eyes closed in a calm outdoor setting bathed in daylight",
+  "humanvid_6774466|A": "A young man with short dark hair, wearing an olive green shirt, looks down at a colorful laptop screen in bright sunlight",
+  "humanvid_6778823|A": "A short-haired blonde woman, wearing a striped tan sweater, blue bell-bottom jeans, and black heeled boots, sits in a side split pose on a white floor in a brightly lit studio with red tulips around her",
+  "humanvid_6815493|A": "An older woman with grey hair, wearing a white short-sleeved shirt and beige pants, spins a green hula hoop around her waist in a gym with brown brick walls and colorful equipment",
+  "humanvid_6868356|A": "A young woman with long pink-and-purple hair, wearing black headphones, an olive green crop top, a white shirt, black pants, and pink sneakers, sits on a beige sofa in a brightly lit room with white walls",
+  "humanvid_6878737|A": "A dark-skinned woman wearing a brown headwrap, a blue and yellow patterned shirt, and brown wide-leg pants sits at a black desk with a microphone, holding a pencil in a dimly lit studio space with a potted plant",
+  "humanvid_6898098|A": "A woman with long black braided hair, wearing a white long-sleeved shirt and blue pants, sits cross-legged on a grey couch and opens a brown cardboard box, surrounded by soft warm indoor lighting",
+  "humanvid_6944277|A": "A long-haired woman with wavy brown hair, wearing a black jacket and white trousers, sits in a chair near microphones and coffee cups against a white brick wall",
+  "humanvid_6970182|A": "An older man with a long white beard and graying hair, wearing a light blue button-down shirt and a black smartwatch, raises a white mug of hot liquid to his mouth while seated at a wooden table in an indoor room with bright white window light from the side",
+  "humanvid_7150191|A": "A young child in a beige sweater holds a chocolate cupcake with a gold number four candle in a dimly lit room",
+  "humanvid_7169950|A": "A dark-skinned woman with braided hair, wearing a gray jumpsuit, holds a white space helmet in profile against a background of dark blue clouds illuminated by cool blue side lighting",
+  "humanvid_7171022|A": "A young man with short dark hair, wearing a red and black plaid shirt and blue jeans, holds a white sign that reads I'M SPECIAL in front of a bright yellow wall lit by bright studio lighting",
+  "humanvid_7218892|A": "A smiling woman with curly brown hair, wearing a black tank top, tan overalls, and white sneakers, walks forward holding a coffee cup next to a bicycle on a grey city street with street signs and brick buildings",
+  "humanvid_7235992|A": "A dark-haired woman in a black tank top and black leggings crouches barefoot on a stone path beside a large red ball, surrounded by green tropical plants under soft daylight",
+  "humanvid_7236896|A": "A smiling woman with long white hair, wearing a red cowl-neck sweater and dark blue jeans, walks along a sandy beach in front of calm ocean waves and brown cliffs under bright daylight",
+  "humanvid_7301433|A": "A woman with long dark brown curly hair and light skin, wearing a white sleeveless dress with pearl-beaded back straps, stands facing right and turns her head toward the camera in a brightly lit studio with a white background and a pink arch shape",
+  "humanvid_7319993|A": "An older man with short white hair, wearing a black short-sleeved shirt and pants styled with red-and-white stripes on one leg and white stars on a blue background on the other, lifts blue dumbbells in a room with grey curtains and soft overhead lighting",
+  "humanvid_7467659|A": "A man with short dark hair and a beard, wearing an olive-green flight suit with patches, stands with his arms crossed against a plain white background in bright studio lighting",
+  "humanvid_7480485|A": "A dark-haired young woman, wearing a pink cropped shirt and a pleated skirt divided into purple plaid and yellow plaid halves with white sneakers, dances in front of a ring light in a room with a white textured wall",
+  "humanvid_7534403|A": "A man with short brown hair and wire-rimmed glasses, wearing a beige jacket over a white shirt, gestures with his hands toward a black laptop screen while talking to a colleague in a bright office",
+  "humanvid_7537430|A": "A young woman with curly brown and blonde hair, wearing a white long-sleeved shirt and blue denim jeans, holds a white tablet displaying the text NEW IDEA against a solid bright yellow background with bright front lighting",
+  "humanvid_7539020|A": "A long-haired woman in a black shirt and black pants dances outdoors in a wooded area surrounded by tree branches with small white flowers under soft daylight",
+  "humanvid_7663067|A": "A woman with brown hair in a top knot, wearing a grey cropped long-sleeved shirt and black leggings, holds a warrior pose on a black yoga mat on a wooden deck in front of woods",
+  "humanvid_7670221|A": "A single red laser beam stretches diagonally across a dark, minimalist studio space set against a plain grey background, casting a soft red glow on the dark grey rectangular structure at the right side of the frame",
+  "humanvid_7682587|A": "A young man with short dark hair, wearing a tan long-sleeved button-up shirt and a black headset, smiles downward while sitting at a white desk in a room with a black and grey wall background illuminated by soft studio light",
+  "humanvid_7707744|A": "A woman with skull makeup on her face, wearing a black long-sleeved dress and a black spiked crown, holds a pot of red flowers in a dim room with blue side lighting and warm yellow candlelight in the background",
+  "humanvid_7772314|A": "A smiling woman with dark hair tied back with a yellow ribbon, wearing a blue, red, yellow, and white ruffed traditional dress, stands outdoors with hands on her hips in a daytime garden setting",
+  "humanvid_7776745|A": "A young woman with red hair styled in a bun, wearing a light blue collared shirt over a white shirt, leans forward in a sunlit room filled with neutral tones and soft indoor lighting",
+  "humanvid_7864986|A": "A woman with straight dark hair, wearing a black turtleneck shirt and black leather pants, sits in a gray chair while holding a black electric bass guitar in a studio with a gray wall and soft studio lighting",
+  "humanvid_7884019|A": "A man with short dark hair, wearing a white tracksuit jacket with dark blue trim over a black shirt, jogs forward along a paved path surrounded by green trees and foliage in bright, natural daylight with a warm sun flare",
+  "humanvid_7957231|A": "A woman with long dark hair and red fingernails, wearing a black strap tank top and dark pants, holds her hands together in front of her waist against a plain beige background with soft studio lighting",
+  "humanvid_7969628|A": "A man in a colorful patterned jacket and green pants straddles a silver bicycle indoors beside bright white windows",
+  "humanvid_7970355|A": "A middle-aged woman with short blonde hair, wearing a tan blazer and a black top, holds a champagne glass filled with yellow liquid in a brightly lit room with a potted green plant nearby",
+  "mystification_1|A": "A man with blonde hair and glasses, wearing a red and black sleeveless shirt, brown pants, and black boots, sits forward on a chair in front of a beige cloth backdrop under soft light",
+  "northern_lights_0|A": "A person with a headlamp and dark goggles, wearing an orange snowsuit and carrying a light gray and orange backpack, stands on a snowy mountain peak at night beneath a dark sky filled with stars",
+  "northern_lights_1|A": "A dark-haired man in a black jacket and brown trousers sits in a dark armchair on a wooden deck, looking out at a blue sea under a clear blue evening sky next to a metal fire pit with bright orange flames",
+  "plasma_explosion_3|A": "A young man with short blonde hair, wearing a red, blue, and yellow jacket over a white t-shirt, black pants, and white sneakers, sits on a sticker-covered utility box on a city street flanked by tall buildings with japanese signage under overcast lighting",
+  "point_cloud_0|A": "A person with a white baseball cap, wearing a short-sleeved white shirt and dark pants, sits on a bench in front of a blue and white subway car under bright white light",
+  "point_cloud_1|A": "A woman with dark hair and white hoop earrings, wearing a white strapless top, leans her arm out the window of a brown classic car parked outdoors against a soft-lit house and a pale green sky in warm evening sunlight",
+  "train_rush_0|A": "A blonde woman in black sunglasses, wearing a yellow and green long-sleeved jacket and black pants, stands outside on a dark street illuminated by warm streetlights and a camera flash",
+  "train_rush_1|A": "A man with short dark hair, wearing a black jacket and dark pants, sits hunched forward on a wooden pew inside a dimly lit church with tall arched ceilings and glowing yellow lamps",
+  "water_element_3|A": "A blonde woman with long hair, wearing a white earmuff set, a white jacket with fluffy trim, a blue cardigan over a white shirt, and a light blue mini skirt, stands in a snowy mountain landscape under a clear blue sky",
+  "x_ray_0|A": "A woman with shoulder-length dark hair, wearing light gray over-ear headphones and a black jacket, stands in a dimly lit space against a plain light gray background with dim overhead lighting casting shadows on her face",
+  "x_ray_1|A": "A young woman with long wavy blonde hair, wearing a dark blue strapless dress with a small bow detail, sits calmly in a metal chair inside a dim concrete warehouse lit by soft neutral daylight"
+ },
+ "keying": "<clip>|<role>",
+ "provenance": {
+  "acid_0|A": {
+   "N_target": 33,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 37
+  },
+  "acid_1|A": {
+   "N_target": 34,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 38
+  },
+  "earth_wave_5|A": {
+   "N_target": 39,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 42
+  },
+  "earth_wave_5|B": {
+   "N_target": 40,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 32
+  },
+  "explosion_0|A": {
+   "N_target": 36,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 40
+  },
+  "explosion_1|A": {
+   "N_target": 27,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 40
+  },
+  "fire_element_3|A": {
+   "N_target": 31,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 31
+  },
+  "flame_transition_2|A": {
+   "N_target": 39,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 40
+  },
+  "flame_transition_2|B": {
+   "N_target": 39,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 36
+  },
+  "flame_transition_3|A": {
+   "N_target": 45,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 51
+  },
+  "flame_transition_3|B": {
+   "N_target": 32,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 34
+  },
+  "giant_grab_5|A": {
+   "N_target": 37,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 34
+  },
+  "giant_grab_5|B": {
+   "N_target": 31,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 37
+  },
+  "glitch_0|A": {
+   "N_target": 39,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 44
+  },
+  "glitch_1|A": {
+   "N_target": 42,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 48
+  },
+  "humanvid_10042758|A": {
+   "N_target": 38,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 35
+  },
+  "humanvid_12405668|A": {
+   "N_target": 35,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 39
+  },
+  "humanvid_2402374|A": {
+   "N_target": 36,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 30
+  },
+  "humanvid_3795426|A": {
+   "N_target": 41,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 43
+  },
+  "humanvid_4058810|A": {
+   "N_target": 32,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 40
+  },
+  "humanvid_4076737|A": {
+   "N_target": 32,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 36
+  },
+  "humanvid_4223661|A": {
+   "N_target": 37,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 42
+  },
+  "humanvid_4325522|A": {
+   "N_target": 38,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 39
+  },
+  "humanvid_4457812|A": {
+   "N_target": 35,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 41
+  },
+  "humanvid_4650062|A": {
+   "N_target": 39,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 44
+  },
+  "humanvid_4734626|A": {
+   "N_target": 31,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 33
+  },
+  "humanvid_4873451|A": {
+   "N_target": 35,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 38
+  },
+  "humanvid_5124224|A": {
+   "N_target": 38,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 36
+  },
+  "humanvid_5385990|A": {
+   "N_target": 32,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 39
+  },
+  "humanvid_5712746|A": {
+   "N_target": 37,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 36
+  },
+  "humanvid_5759064|A": {
+   "N_target": 25,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 33
+  },
+  "humanvid_6011432|A": {
+   "N_target": 33,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 37
+  },
+  "humanvid_6111509|A": {
+   "N_target": 39,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 51
+  },
+  "humanvid_6111510|A": {
+   "N_target": 35,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 42
+  },
+  "humanvid_6202949|A": {
+   "N_target": 37,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 37
+  },
+  "humanvid_6263410|A": {
+   "N_target": 33,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 35
+  },
+  "humanvid_6300528|A": {
+   "N_target": 40,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 36
+  },
+  "humanvid_6316946|A": {
+   "N_target": 32,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 34
+  },
+  "humanvid_6396124|A": {
+   "N_target": 36,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 40
+  },
+  "humanvid_6438110|A": {
+   "N_target": 36,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 38
+  },
+  "humanvid_6455384|A": {
+   "N_target": 37,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 38
+  },
+  "humanvid_6517487|A": {
+   "N_target": 34,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 39
+  },
+  "humanvid_6548002|A": {
+   "N_target": 24,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 28
+  },
+  "humanvid_6570439|A": {
+   "N_target": 32,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 33
+  },
+  "humanvid_6625516|A": {
+   "N_target": 22,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 24
+  },
+  "humanvid_6697837|A": {
+   "N_target": 33,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 29
+  },
+  "humanvid_6774466|A": {
+   "N_target": 17,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 22
+  },
+  "humanvid_6778823|A": {
+   "N_target": 30,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 36
+  },
+  "humanvid_6815493|A": {
+   "N_target": 27,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 32
+  },
+  "humanvid_6868356|A": {
+   "N_target": 34,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 36
+  },
+  "humanvid_6878737|A": {
+   "N_target": 29,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 38
+  },
+  "humanvid_6898098|A": {
+   "N_target": 36,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 33
+  },
+  "humanvid_6944277|A": {
+   "N_target": 27,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 28
+  },
+  "humanvid_6970182|A": {
+   "N_target": 45,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 49
+  },
+  "humanvid_7150191|A": {
+   "N_target": 15,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 22
+  },
+  "humanvid_7169950|A": {
+   "N_target": 35,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 30
+  },
+  "humanvid_7171022|A": {
+   "N_target": 31,
+   "accepted_on_attempt": 2,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 37
+  },
+  "humanvid_7218892|A": {
+   "N_target": 32,
+   "accepted_on_attempt": 2,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 38
+  },
+  "humanvid_7235992|A": {
+   "N_target": 32,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 30
+  },
+  "humanvid_7236896|A": {
+   "N_target": 38,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 33
+  },
+  "humanvid_7301433|A": {
+   "N_target": 45,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 44
+  },
+  "humanvid_7319993|A": {
+   "N_target": 37,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 44
+  },
+  "humanvid_7467659|A": {
+   "N_target": 37,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 30
+  },
+  "humanvid_7480485|A": {
+   "N_target": 30,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 39
+  },
+  "humanvid_7534403|A": {
+   "N_target": 29,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 35
+  },
+  "humanvid_7537430|A": {
+   "N_target": 32,
+   "accepted_on_attempt": 2,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 37
+  },
+  "humanvid_7539020|A": {
+   "N_target": 33,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 27
+  },
+  "humanvid_7663067|A": {
+   "N_target": 15,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 35
+  },
+  "humanvid_7670221|A": {
+   "N_target": 34,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 37
+  },
+  "humanvid_7682587|A": {
+   "N_target": 35,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 40
+  },
+  "humanvid_7707744|A": {
+   "N_target": 37,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 39
+  },
+  "humanvid_7772314|A": {
+   "N_target": 32,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 34
+  },
+  "humanvid_7776745|A": {
+   "N_target": 31,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 34
+  },
+  "humanvid_7864986|A": {
+   "N_target": 38,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 38
+  },
+  "humanvid_7884019|A": {
+   "N_target": 44,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 40
+  },
+  "humanvid_7957231|A": {
+   "N_target": 32,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 36
+  },
+  "humanvid_7969628|A": {
+   "N_target": 18,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 19
+  },
+  "humanvid_7970355|A": {
+   "N_target": 29,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "reserve",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/reserve/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 34
+  },
+  "mystification_1|A": {
+   "N_target": 30,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 34
+  },
+  "northern_lights_0|A": {
+   "N_target": 30,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 35
+  },
+  "northern_lights_1|A": {
+   "N_target": 24,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 41
+  },
+  "plasma_explosion_3|A": {
+   "N_target": 38,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 43
+  },
+  "point_cloud_0|A": {
+   "N_target": 32,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 32
+  },
+  "point_cloud_1|A": {
+   "N_target": 37,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 40
+  },
+  "train_rush_0|A": {
+   "N_target": 17,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 30
+  },
+  "train_rush_1|A": {
+   "N_target": 26,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 33
+  },
+  "water_element_3|A": {
+   "N_target": 39,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 41
+  },
+  "x_ray_0|A": {
+   "N_target": 33,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 36
+  },
+  "x_ray_1|A": {
+   "N_target": 37,
+   "accepted_on_attempt": 1,
+   "audit": {
+    "errors": [],
+    "inaccurate": "NO",
+    "leak": "NO"
+   },
+   "auditor_model": "gemini-3.5-flash-lite",
+   "generator_model": "gemini-3.6-flash",
+   "lane": "higgsfield",
+   "prompt_variant": "v2",
+   "raw_archive": "outputs/ctt_v2/captions/grid_v3/higgsfield/raw_generation_responses.jsonl",
+   "strips": "9 anchor frames, re-timed to 8 fps for the API minimum duration (frames identical)",
+   "words": 35
+  }
+ },
+ "schema": "ctt_v2_caption_store/v1",
+ "written_at": "2026-09-07"
+}

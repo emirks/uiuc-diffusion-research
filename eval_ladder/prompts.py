@@ -46,12 +46,23 @@ CAPTION_SOURCES = (
     "data/processed/transitions_std121/dataset_exp058.json",
     "data/processed/transitions_std121/dataset_exp064_missing.json",
     "data/processed/transitions_std121/dataset.json",
+    # grid v3 (2026-09-07): the new corpus members' A/B descriptions (Higgsfield: gemini v2 audited;
+    # EffectData: the S6 subject|A store) in the corpus caption shape — assembled by scripts/grid_v3/assemble_text.py
+    "data/processed/transitions_std121/dataset_grid_v3.json",
 )
 
 #: clips whose caption was audited against the actual frames (leak-free, eval-eligible)
 AUDITED_SOURCE = "docs/archive/eval_ladder_v1/clip_captions.json"
 #: promoted to test by split v1.2 after the 81-endpoint audit; audited separately 2026-07-22
 AUDITED_EXTRA = ("earth_element_6", "money_rain_1")
+#: grid v3: every clip in this source passed the Layer-2 audit (leak NO, inaccurate NO) or carries the S6 store's
+#: own leak gate (EffectData subjects); assembled by scripts/grid_v3/assemble_text.py, tracked in store/captions/005
+AUDITED_SOURCES_EXTRA = ("data/processed/transitions_std121/dataset_grid_v3.json",)
+#: the frozen split the renderer resolves clip -> class from. v1.3 is a STRICT SUPERSET of v1.2 (every v1.2 clip keeps
+#: its class and band), so every pre-existing render is byte-identical; build_registry.py still pins v1.2 for itself.
+SPLIT_FILE = "split_v1.3.json"
+#: foreign endpoint rosters (davis.yaml + the grid-v3 reserve); each entry may carry `source`
+FOREIGN_ROSTERS = ("davis.yaml", "reserve.yaml")
 
 
 def _load_any(path: Path) -> dict[str, str]:
@@ -76,7 +87,9 @@ def captions() -> dict[str, str]:
 def audited_clips() -> frozenset[str]:
     """Clips whose caption was checked against its frames — the only eval-eligible endpoints."""
     # DAVIS captions are hand-written against the rendered windows -> audited by construction
-    return (frozenset(_load_any(REPO_ROOT / AUDITED_SOURCE)) | frozenset(AUDITED_EXTRA)
+    extra = frozenset().union(*(frozenset(_load_any(REPO_ROOT / rel)) for rel in AUDITED_SOURCES_EXTRA
+                                 if (REPO_ROOT / rel).exists()))
+    return (frozenset(_load_any(REPO_ROOT / AUDITED_SOURCE)) | frozenset(AUDITED_EXTRA) | extra
             | frozenset(davis()))
 
 
@@ -108,7 +121,7 @@ def clip_index() -> dict[str, str]:
     name silently mislabels those rows — which is exactly the kind of hand-derived fact the
     ladder2 redesign exists to eliminate.
     """
-    split = json.loads((STD / "split_v1.2.json").read_text())["classes"]
+    split = json.loads((STD / SPLIT_FILE).read_text())["classes"]
     return {clip: cls for cls, entry in split.items() for clip in entry["paths"]}
 
 
@@ -119,7 +132,7 @@ def clip_class(clip: str) -> str:
     try:
         return clip_index()[clip]
     except KeyError:
-        raise KeyError(f"{clip} is not in split_v1.2") from None
+        raise KeyError(f"{clip} is not in {SPLIT_FILE}") from None
 
 
 @lru_cache(maxsize=1)
@@ -132,14 +145,24 @@ def davis() -> dict[str, dict]:
     """
     import yaml
 
-    cfg = yaml.safe_load((Path(__file__).resolve().parent / "davis.yaml").read_text())
     out = {}
-    for name, e in (cfg.get("one_sided") or {}).items():
-        out[name] = {"s1": _trim(e["caption"]), "s2": None, "sided": "one"}
-    for name, e in (cfg.get("two_sided") or {}).items():
-        out[name] = {"s1": _trim(e["prefix"]["caption"]), "s2": _trim(e["suffix"]["caption"]),
-                     "sided": "two"}
+    for fname in FOREIGN_ROSTERS:
+        path = Path(__file__).resolve().parent / fname
+        if not path.exists():
+            continue
+        cfg = yaml.safe_load(path.read_text())
+        source = cfg.get("source", "davis")
+        for name, e in (cfg.get("one_sided") or {}).items():
+            out[name] = {"s1": _trim(e["caption"]), "s2": None, "sided": "one", "source": source}
+        for name, e in (cfg.get("two_sided") or {}).items():
+            out[name] = {"s1": _trim(e["prefix"]["caption"]), "s2": _trim(e["suffix"]["caption"]),
+                         "sided": "two", "source": source}
     return out
+
+
+def foreign_source(clip: str) -> str:
+    """'davis' | 'humanvid' — which foreign roster an endpoint comes from (v2 rows: always 'davis')."""
+    return davis()[clip]["source"]
 
 
 def is_davis(clip: str) -> bool:
