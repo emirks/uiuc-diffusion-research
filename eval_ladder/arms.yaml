@@ -264,6 +264,49 @@ arms:
     adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
     note: "dual-force plain-FM control, EFFECT prompt (registry_dualforce_control_effect). runs/012@1000, r128/a128, one_way."
 
+  # ---- GRID v3 (design 3.0.0, 2026-09-07): the SAME runs/012@1000 adapter on the v3 families. `_v3` = prompts/010 (neutral) /
+  # 011 (effect): Higgsfield + reserve rows at the corpus 121 f. `_v3ed81` = prompts/012 / 013: the EffectData tier at its NATIVE
+  # 81 f with the frame-0 anchor — generate AND plan with GEN_FRAMES=81 GEN_PREFIX_FRAMES=1 (encode_conditioning.prefix_frames()).
+  # base_cond twins: no adapter, prefix conditioning, no reference (stamped with --strip-token; rows carry use_reference=false, no_twin=true).
+  dualforce_control_neutral_v3:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 neutral, prompts/010_ctt_v3_neutral sha d8b0f6d3502b (registry_dualforce_control_neutral_v3). runs/012@1000, r128/a128, one_way."
+  dualforce_control_effect_v3:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 effect, prompts/011_ctt_v3_effect sha 896afdd33e40 (registry_dualforce_control_effect_v3)."
+  dualforce_control_neutral_v3ed81:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 EffectData tier neutral, prompts/012_ctt_v3ed_neutral sha 423ea86ce085; NATIVE 81 f + frame-0 anchor: GEN_FRAMES=81 GEN_PREFIX_FRAMES=1."
+  dualforce_control_effect_v3ed81:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 EffectData tier effect, prompts/013_ctt_v3ed_effect sha d896a41b5ae0; GEN_FRAMES=81 GEN_PREFIX_FRAMES=1."
+  base_cond_neutral_v3:
+    kind: base
+    adapter: null
+    targets: null
+    note: "grid v3 base twin (prompt + prefix/suffix conditioning, NO reference), prompts/010 strip_sksz sha 30edd3dc8c4f (registry_base_cond_neutral_v3)."
+  base_cond_neutral_v3ed81:
+    kind: base
+    adapter: null
+    targets: null
+    note: "grid v3 EffectData-tier base twin, prompts/012 strip_sksz sha 6e2b9d5dd6da; GEN_FRAMES=81 GEN_PREFIX_FRAMES=1."
+
   # ---- DUAL-FORCE treatment arm (campaign `dualforce`, trained on DeltaAI GH200 this session, job 2976278).
   # The text-crutch-distillation TREATMENT: the SAME ctt_v2 IC-LoRA recipe / SAME warm-start (runs/002@10000) as
   # dualforce_control above, with the dual-force trainer's KD objective ENABLED (kd.enabled=true, surgery.enabled=false).
