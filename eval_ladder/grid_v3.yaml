@@ -1,0 +1,100 @@
+# ladder2 — grid v3 additions (design 3.0.0). The ONLY hand-written input of build_registry_v3.py
+# besides arms.yaml / davis.yaml / split_v1.2.json. Everything else is derived from disk.
+#
+# Rule (SPEC §1.4): lists here name SOURCES (clip stems, classes, rosters), never rows. Rows are
+# derived by the builder with the same rotate()/make_row() machinery as build_registry.py, so the
+# v3 registry is schema-identical to registry.jsonl and stamps into store/prompts via stamp_rows.py.
+#
+# Block style only (a flow-style comma once truncated a DAVIS caption).
+
+design: 3.0.0
+superset_of: eval_ladder/registry.jsonl     # ic_gen rows kept BYTE-IDENTICAL (asserted at build)
+
+# v2 generalist cells kept verbatim; G-ref-control dropped (owner 2026-09-07). Keep memo-probe as P2.
+keep_cells:
+  - G-fit
+  - G-memo-probe
+  - G-unseen-same
+  - G-unseen-cross
+  - G-unseen-foreign
+  - G-zs-same
+  - G-zs-cross
+  - G-zs-foreign
+drop_cells:
+  - G-ref-control
+
+# Clean-anchor residual (REFERENCE.html "Endpoint QA"): conditioning windows already mid-effect.
+# These clips/classes serve as REFERENCES only; existing v2 rows that use them as endpoints are
+# kept (SPEC §1.8, never delete) but flagged `mid_effect_anchor` in the health report.
+mid_effect_anchor:
+  classes:
+    - polygon
+    - raven_transition
+  clips:
+    - giant_grab_3
+
+# Raw Higgsfield clips NOT in the corpus (data/processed/higgsfield_transitions/<class>/<stem>.mp4),
+# all >= 480 px short side, >= 4.9 s. UNTRAINED by every arm. Each needs: std121 processing, a caption
+# (endpoint role), a leak audit (endpoint role), conditioning windows. OWNER WATCH-THROUGH PENDING —
+# the curation step that built the corpus left these out for a reason that is not recorded.
+tier1_topups:                 # trained classes with ONE test clip: the new clip becomes the same-content endpoint
+  earth_wave: [earth_wave_5]
+  giant_grab: [giant_grab_5]
+  mystification: [mystification_1]
+  water_element: [water_element_3]
+  fire_element: [fire_element_3]
+  plasma_explosion: [plasma_explosion_3]
+tier1_reference_only:         # trained classes with 2 corpus clips (both trained): the new clip is an UNSEEN reference
+  sakura_petals: [sakura_petals_1]
+  nature_bloom: [nature_bloom_1]
+  wonderland: [wonderland_1]
+flame_additions:              # curated full-res two-sided clips, class `flame` (split rule: flame_transition_* -> flame)
+  flame: [flame_transition_2, flame_transition_3, flame_transition_4]
+zs_pool_topups:               # held-out classes: corpus additions for the POOL/CEILING only (no caption needed)
+  cotton_cloud: [cotton_cloud_3, cotton_cloud_5, cotton_cloud_7]
+  display_transition: [display_transition_0]
+  flying_cam_transition: [flying_cam_transition_0]
+  luminous_gaze: [luminous_gaze_4]
+  melt_transition: [melt_transition_0]
+  monstrosity: [monstrosity_3]
+  saint_glow: [saint_glow_4]
+  # live_concert_2 is QUARANTINED (split v1.2) — never added.
+
+# New zero-shot Higgsfield classes: PROVISIONAL, chosen from the 19 raw full-resolution classes with
+# >= 8 clips by name (transform / overlay / cover / traverse balance). Sidedness ASSUMED one-sided.
+# The owner's watch-through in the higgsfield_inventory viewer replaces this list; the builder re-derives.
+new_zero_shot_classes:
+  x_ray: one
+  point_cloud: one
+  acid: one
+  glitch: one
+  northern_lights: one
+  explosion: one
+  train_rush: one
+raw_root: data/processed/higgsfield_transitions
+min_short_side_px: 480
+min_duration_s: 4.9
+
+# Foreign endpoints for every NEW row: the never-trained reserve (CONTENT_POOL_union.json:reserved).
+# v2 rows keep their DAVIS endpoints. Reserve clips are 480x640x121@24 on disk; captions PENDING.
+reserve:
+  pool: data/processed/ctt_v2_strata/CONTENT_POOL_union.json
+  bank: humanvid
+  pair_offset: 50             # two-sided foreign pair = (clip i, clip i+50), suffix = first 9 frames of B (DAVIS rule)
+
+# EffectData zero-shot tier: 17 blocks x (2 effects x {same, cross, foreign}). Zero-shot for every arm
+# trained WITHOUT S6 (012 family, ctt_v2/v3, ic_gen, controls, externals). Portrait subjects only.
+effectdata:
+  annotations: data/raw/effectdata/annotations.json
+  selection: data/processed/effectdata/selection_top2000.json   # S6 roster: excluded from endpoint + reference roles
+  zips: data/raw/effectdata/Videos
+  shape_cache: eval_ladder/effectdata_shapes.json               # derived, regenerable
+  blocks: 17
+  min_clips_per_effect: 20
+  min_portrait_ok_clips: 8
+  portrait_ok_shapes:
+    - [704, 960]
+    - [704, 1056]
+  pool_size: 8
+  frames_policy: resample_to_121   # keeps the std121 corpus contract; alternative: native 81
+  clip_prefix: ed                  # std121 stem = ed.<effect>.<subject>.<tag>
