@@ -67,7 +67,7 @@ def harness_arm(arm: str, tier: str, fam: str) -> str:
 
 def subentry(arm: str, tier: str, fam: str) -> str:
     kk = ARMS[arm]["next_kk"] + TIERS.index(tier) * 2 + FAMKEY[fam]
-    return f"gens/{ARMS[arm]['gen_dir']}/{kk:02d}_{tier}_v3{'ed81' if fam == 'ed' else ''}__dai"
+    return f"store/gens/{ARMS[arm]['gen_dir']}/{kk:02d}_{tier}_v3{'ed81' if fam == 'ed' else ''}__dai"
 
 
 def registry(arm: str, tier: str, fam: str) -> Path:
@@ -139,7 +139,7 @@ def prepare() -> None:
     for arm, spec in ARMS.items():
         for tier in TIERS:
             for fam in ("hf", "ed"):
-                sub = STORE / subentry(arm, tier, fam).split("/", 1)[1]
+                sub = REPO / subentry(arm, tier, fam)
                 vids = sub / "videos"
                 vids.mkdir(parents=True, exist_ok=True)
                 rows = [json.loads(l) for l in registry(arm, tier, fam).read_text().splitlines() if l.strip()]
@@ -223,7 +223,7 @@ def status() -> None:
         for tier in TIERS:
             for fam in ("hf", "ed"):
                 ha = harness_arm(arm, tier, fam)
-                sub = STORE / subentry(arm, tier, fam).split("/", 1)[1]
+                sub = REPO / subentry(arm, tier, fam)
                 rows = sum(1 for l in registry(arm, tier, fam).read_text().splitlines() if l.strip() and json.loads(l)["arm"] == ha)
                 have = len(list((sub / "videos").glob("*.mp4"))) if (sub / "videos").exists() else 0
                 tot_have += have
