@@ -11,3 +11,5 @@ renderer: eval_ladder/prompts.py::render_prompt (single source; families B/D/ref
 derived_from: eval_ladder/registry_v3.jsonl (sha256[:12] d77a7638213a; design 3.0.0 superset of prompts/001_ctt152_neutral)
 source: eval_ladder/build_registry_v3.py
 notes: rows are ARM-FREE — arm/item_id/video_key + arm-contract fields stripped; stamp_rows.py re-adds them per arm. STAGED under misc/ until registered (store/README.md §5).
+derived:   # deterministic transforms (stamp_rows.py flags)
+  strip_sksz: 6e2b9d5dd6da        # base arms: ' sksz.' removed (registry_base_cond_neutral_v3ed81)
