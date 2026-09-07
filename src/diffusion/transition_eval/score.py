@@ -223,6 +223,13 @@ def main() -> int:
     ap.add_argument("--cache-dir", default="outputs/eval/cache",
                     help="feature/track cache (stability's cold-anchor rerun "
                          "points this at a fresh directory)")
+    ap.add_argument("--reference-corpus", default=None,
+                    help="AMENDMENT grid-v3 (2026-09-07): the manifest the reference_v4 populations are certified "
+                         "on (the 222-clip corpus_manifest_v1_222.json) when --corpus is a STRICT SUPERSET of it "
+                         "(new classes/clips). The artifact pin is verified against THIS file; --corpus supplies "
+                         "styles, sidedness, pools and reference bundles; the per-corpus v4 pack (M1c corpus "
+                         "profiles, camera fits) is built over the reference keys so the certified population is "
+                         "unchanged. Superset-ness (every reference clip present, same class + sidedness) is asserted.")
     ap.add_argument("--lpips-cache", choices=("on", "off"), default="on",
                     help="cache temporal/endpoint LPIPS in --cache-dir keyed by "
                          "stat-based video identity (numeric no-op: a miss "
@@ -236,6 +243,22 @@ def main() -> int:
         print("[UNCERTIFIED] " + "; ".join(stamp["uncertified_reasons"]))
 
     corpus = load_corpus_manifest(args.corpus)
+    ref_corpus, pin_sha = None, stamp["corpus_sha256"]
+    if args.reference_corpus:
+        ref_corpus = load_corpus_manifest(args.reference_corpus)
+        ref_stamp = versioning.stamp(args.reference_corpus)
+        for key, entry in ref_corpus["clips"].items():
+            assert key in corpus["clips"] and corpus["clips"][key]["class"] == entry["class"], \
+                f"--corpus is not a superset of --reference-corpus at {key}"
+            assert (corpus["classes"][entry["class"]]["sidedness"]
+                    == ref_corpus["classes"][entry["class"]]["sidedness"]), f"sidedness drift at {key}"
+        pin_sha = ref_stamp["corpus_sha256"]
+        stamp["amendment_grid_v3_reference_corpus"] = {"path": args.reference_corpus, "corpus_sha256": pin_sha,
+                                                       "superset_corpus_clips": len(corpus["clips"]),
+                                                       "reference_corpus_clips": len(ref_corpus["clips"])}
+        print(f"[AMENDMENT grid-v3] reference pin verified against {args.reference_corpus} ({pin_sha[:12]}); "
+              f"--corpus is a strict superset ({len(corpus['clips'])} clips, {len(corpus['classes'])} classes); "
+              f"v4 corpus pack over the {len(ref_corpus['clips'])} reference keys")
     training = load_training_manifest(args.training) if args.training else None
     items = load_eval_manifest(args.manifest)
 
@@ -254,8 +277,8 @@ def main() -> int:
     ref_bundles, pools = _ref_bundle_cache(corpus, cache_dir, extractor, tracker)
     # v4: the frozen reference artifact (pinned instrument constant) + per-run
     # corpus precomputations. Corpus mismatch refuses loudly (SPEC §4/§7).
-    ref_stats = load_reference(expect_corpus_sha=stamp["corpus_sha256"])
-    v4pack = _corpus_v4_pack(corpus, ref_bundles)
+    ref_stats = load_reference(expect_corpus_sha=pin_sha)
+    v4pack = _corpus_v4_pack(ref_corpus or corpus, ref_bundles)
     assert [str(k) for k in ref_stats["keys"]] == v4pack["keys"], \
         "reference_v4 artifact key order != corpus manifest key order"
     v4pack["ref_stats"] = ref_stats
