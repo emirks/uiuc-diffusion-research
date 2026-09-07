@@ -33,5 +33,5 @@ export PYTHONPATH=$WT/src
 export HF_HOME=$LAB/cache/huggingface TORCH_HOME=$LAB/cache/torch HF_HUB_OFFLINE=1 TOKENIZERS_PARALLELISM=false
 cd $DR
 python -m diffusion.transition_eval.score --manifest $MDIR/eval_c${TASK}.json --corpus $CORPUS --reference-corpus $REFCORPUS \
-    --label c${TASK} --out-root $OUT --cache-dir $CACHE
+    --label ${LABEL:-c}${TASK} --out-root $OUT --cache-dir $CACHE
 echo "done task=$TASK date=$(date -Is)"

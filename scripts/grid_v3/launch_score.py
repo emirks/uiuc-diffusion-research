@@ -78,15 +78,17 @@ def register():
     print(sh([PY, str(REPO / "scripts/store_fsck.py")], check=False)[-600:])
 
 
-def plan(chunks: int):
+def plan(chunks: int, force: bool = False, only: set[str] | None = None):
     gens = EVALDIR / "gens"
     gens.mkdir(parents=True, exist_ok=True)
     for arm, tier, fam, ha in all_arms():
+        if only and ha not in only:
+            continue
         sub = REPO / subentry(arm, tier, fam)
         if not (sub / "meta.yaml").exists():      # incremental: only registered (= complete) subentries are planned
             print(f"SKIP {ha}: not registered yet")
             continue
-        if (EVALDIR / "manifests" / ha / "eval_c0.json").exists():
+        if (EVALDIR / "manifests" / ha / "eval_c0.json").exists() and not force:
             print(f"already planned: {ha}")
             continue
         link = gens / ha
@@ -102,38 +104,50 @@ def plan(chunks: int):
         print(f"{ha:40s} " + " | ".join(l for l in out.strip().splitlines() if l.startswith("[plan]"))[:300])
 
 
-def submit(chunks: int, dry: bool):
+def submit(chunks: int, dry: bool, npass: int = 1, only: set[str] | None = None):
+    """pass 1 writes chunk labels c0..; a re-pass N (after a plan --force over the still-unscored rows) writes
+    pNc0.. BESIDE them — run_eval.pool_means dedups by item_id across labels, nothing is overwritten."""
     ledger = json.loads(LEDGER.read_text()) if LEDGER.exists() else {}
     for arm, tier, fam, ha in all_arms():
-        if ha in ledger and not dry:
-            print(f"skip {ha}: job {ledger[ha]}")
+        if only and ha not in only:
+            continue
+        key = ha if npass == 1 else f"{ha}#p{npass}"
+        if key in ledger and not dry:
+            print(f"skip {key}: job {ledger[key]}")
             continue
         mdir = EVALDIR / "manifests" / ha
         if not (mdir / "eval_c0.json").exists():
             print(f"SKIP {ha}: no manifest")
             continue
-        cmd = ["sbatch", "--parsable", f"--account={ACCOUNTS[arm]}", f"--array=0-{chunks - 1}%16", f"--job-name=v3s_{arm[:8]}_{tier[0]}{fam}",
-               "--export=ALL," + ",".join([f"MDIR={mdir}", f"EVAL={REPO / EVAL_ENTRY / ha}"] + (["GEN_PREFIX_FRAMES=1"] if fam == "ed" else [])),
+        n_chunks = len(list(mdir.glob("eval_c*.json")))
+        label = "c" if npass == 1 else f"p{npass}c"
+        cmd = ["sbatch", "--parsable", f"--account={ACCOUNTS[arm]}", f"--array=0-{n_chunks - 1}%16", f"--job-name=v3s_{arm[:8]}_{tier[0]}{fam}",
+               "--export=ALL," + ",".join([f"MDIR={mdir}", f"EVAL={REPO / EVAL_ENTRY / ha}", f"LABEL={label}"] + (["GEN_PREFIX_FRAMES=1"] if fam == "ed" else [])),
                str(REPO / "misc/2026-09-07_eval_grid_v2/score_v3.sbatch")]
         if dry:
             print(" ".join(cmd))
             continue
         jid = sh(cmd).strip()
-        ledger[ha] = jid
+        ledger[key] = jid
         LEDGER.write_text(json.dumps(ledger, indent=1))
-        print(f"{ha:40s} -> {jid}")
+        print(f"{key:40s} -> {jid}")
 
 
 def status():
+    """scored rows (all passes, error rows counted separately) vs the CURRENT manifest (a re-pass manifest
+    covers only the rows still unscored, so 'planned' shrinks after plan --force)."""
     for arm, tier, fam, ha in all_arms():
         d = REPO / EVAL_ENTRY / ha
-        n = 0
+        n = err = 0
         for f in d.glob("*/items.jsonl"):
-            n += sum(1 for l in f.read_text().splitlines() if l.strip())
+            for l in f.read_text().splitlines():
+                if l.strip():
+                    n += 1
+                    err += "error" in json.loads(l)
         planned = 0
         for f in (EVALDIR / "manifests" / ha).glob("eval_c*.json"):
             planned += len(json.loads(f.read_text()))
-        print(f"{ha:40s} scored rows {n:6d} / planned {planned:6d}")
+        print(f"{ha:40s} scored rows {n:6d} (error rows {err:4d}) / current manifest {planned:6d}")
 
 
 def main():
@@ -141,8 +155,12 @@ def main():
     ap.add_argument("cmd", choices=["register", "plan", "submit", "status"])
     ap.add_argument("--chunks", type=int, default=16)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--force", action="store_true", help="plan: re-plan an already planned arm (unscored rows only)")
+    ap.add_argument("--pass", dest="npass", type=int, default=1, help="submit: re-pass number (labels pNc*)")
+    ap.add_argument("--arms", default=None, help="comma-separated harness arms to restrict plan/submit to")
     a = ap.parse_args()
-    {"register": register, "plan": lambda: plan(a.chunks), "submit": lambda: submit(a.chunks, a.dry_run), "status": status}[a.cmd]()
+    only = set(a.arms.split(",")) if a.arms else None
+    {"register": register, "plan": lambda: plan(a.chunks, a.force, only), "submit": lambda: submit(a.chunks, a.dry_run, a.npass, only), "status": status}[a.cmd]()
 
 
 if __name__ == "__main__":

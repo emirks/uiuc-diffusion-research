@@ -28,7 +28,7 @@ import run_eval  # noqa: E402
 
 EVALDIR = REPO / "misc/2026-09-07_eval_grid_v2/eval"
 LEDGER = EVALDIR / "score_ledger.json"
-CELL_ORDER = ["seen", "unseen", "zs_higgsfield", "zs_effectdata"]
+CELL_ORDER = ["seen", "unseen", "zero_shot"]
 CONTENT_ORDER = ["same", "cross", "foreign"]
 
 
@@ -68,7 +68,7 @@ def arm_summary(ha: str, arm: str, tier: str, fam: str, entry: Path) -> dict | N
     copies: dict[tuple[str, str], list[float]] = collections.defaultdict(list)
     for item, v in pct.items():
         r = rows[item]
-        key = (r["novelty"], r["content"])
+        key = (r["ref_novelty"], r["content"])
         cells[key].append(v)
         ptype[key].add(r["pct_type"])
         if item in copy_by_item:
