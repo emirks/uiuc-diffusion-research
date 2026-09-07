@@ -30,7 +30,8 @@ import numpy as np
 from . import versioning
 from .endpoints import (LPIPS_CACHE_TAG, LpipsScorer, cached_temporal_lpips,
                         endpoint_fidelity, lpips_cache_path, seam_scores)
-from .features import DinoExtractor, file_key
+from .features import DinoExtractor, file_key, savez_atomic, load_npz_or_none
+from .reference_stats import csls_r
 from .controls import make_lerp, make_static_hold
 from .m1_transfer import (appearance_ref, appearance_s3, camera_match,
                           camera_trajectory, camera_zpr, object_csls,
@@ -66,18 +67,23 @@ def _ref_bundle_cache(corpus: dict, cache_dir, extractor, tracker):
     return bundles, pools
 
 
-def _corpus_v4_pack(corpus: dict, bundles: dict) -> dict:
+def _corpus_v4_pack(corpus: dict, bundles: dict, superset: dict | None = None) -> dict:
     """Per-corpus-clip v4 precomputations, once per run: camera fits + residual-
     direction profiles in sorted key order (the reference artifact's row order).
     M1c's CSLS neighborhood term needs every item's similarities to all 223
-    corpus clips; profiles make that 223 cheap correlations per item."""
+    corpus clips; profiles make that 223 cheap correlations per item.
+    Grid-v3 amendment: `superset` (the --corpus manifest) adds cams + profiles for
+    clips OUTSIDE the reference population, keyed by name, so they can serve as a
+    row's reference; `keys`/`profiles` (the population) stay the reference corpus."""
     keys = sorted(corpus["clips"])
+    all_keys = sorted(set(keys) | (set(superset["clips"]) if superset else set()))
     cams = {k: camera_trajectory(bundles[k][0].tracks, bundles[k][0].vis)
-            for k in keys}
-    profiles = [residual_direction_profile(bundles[k][0].tracks,
-                                           bundles[k][0].vis, cams[k])
-                for k in keys]
-    return {"keys": keys, "cams": cams, "profiles": profiles}
+            for k in all_keys}
+    by_key = {k: residual_direction_profile(bundles[k][0].tracks,
+                                            bundles[k][0].vis, cams[k])
+              for k in all_keys}
+    return {"keys": keys, "cams": cams, "profiles": [by_key[k] for k in keys],
+            "profile_by_key": by_key, "r_ref_extra": {}}
 
 
 def _endpoint_key(gen_key: str, side: str, cond, short_side: int) -> str:
@@ -94,8 +100,8 @@ def _cached_endpoint(item, side, n, gen_bundle, gen_frames, extractor,
     cond = item.condition_prefix if side == "prefix" else item.condition_suffix
     p = (lpips_cache_path(_endpoint_key(gen_bundle.key, side, cond, short_side),
                           cache_dir) if cache_dir is not None else None)
-    if p is not None and p.exists():
-        z = np.load(p)
+    z = load_npz_or_none(p) if p is not None else None
+    if z is not None:
         return {k: float(z[k]) for k in z.files}
     if gen_frames is None:
         raise RuntimeError(f"endpoint cache miss for {item.item_id}:{side} "
@@ -105,7 +111,7 @@ def _cached_endpoint(item, side, n, gen_bundle, gen_frames, extractor,
     out = endpoint_fidelity(gen_frames, gen_bundle.feats, sl,
                             lambda f: extractor.extract(f), lpips_scorer, side)
     if p is not None:
-        np.savez_compressed(p, **out)
+        savez_atomic(p, **out)
     return out
 
 
@@ -115,7 +121,7 @@ def lpips_warm(item, gen_key: str, cache_dir: pathlib.Path | None,
     only then may the generated video's decode be skipped."""
     if cache_dir is None:
         return False
-    if not lpips_cache_path(f"{gen_key}:tlpips:{LPIPS_CACHE_TAG}", cache_dir).exists():
+    if load_npz_or_none(lpips_cache_path(f"{gen_key}:tlpips:{LPIPS_CACHE_TAG}", cache_dir)) is None:
         return False
     for side in ("prefix", "suffix"):
         cond = getattr(item, f"condition_{side}")
@@ -140,7 +146,21 @@ def score_item(item, sidedness, gen_bundle, gen_frames, ref_bundle, ref_core,
     gen_res = residual_direction_profile(gen_bundle.tracks, gen_bundle.vis, gen_cam)
     sims_corpus = np.array([object_match_from_profiles(gen_res, pj)
                             for pj in v4pack["profiles"]])
-    ref_idx = v4pack["keys"].index(ref_key)
+    # grid-v3 amendment: a reference outside the frozen population (a new-class or topped-up corpus
+    # clip) has no row in the artifact — its similarity to the gen and its CSLS hub term r_ref are
+    # computed the artifact's way against the SAME 222-clip population (flagged on the row).
+    in_pop = ref_key in v4pack["keys"]
+    ref_idx = v4pack["keys"].index(ref_key) if in_pop else None
+    if in_pop:
+        sim_ref, r_ref = float(sims_corpus[ref_idx]), None
+    else:
+        prof_ref = v4pack["profile_by_key"][ref_key]
+        sim_ref = float(object_match_from_profiles(gen_res, prof_ref))
+        r_ref = v4pack["r_ref_extra"].get(ref_key)
+        if r_ref is None:
+            sims_ref = np.array([object_match_from_profiles(prof_ref, pj) for pj in v4pack["profiles"]])
+            r_ref = csls_r(sims_ref, int(v4pack["ref_stats"]["k_csls"]))
+            v4pack["r_ref_extra"][ref_key] = r_ref
     prof_g, prof_r = gen_bundle.profile, ref_bundle.profile
 
     row = {
@@ -154,12 +174,12 @@ def score_item(item, sidedness, gen_bundle, gen_frames, ref_bundle, ref_core,
                         v4pack["ref_stats"]),
         **camera_zpr(gen_bundle.tracks, gen_bundle.vis, gen_cam,
                      ref_bundle.tracks, ref_bundle.vis, ref_cam, v4pack["ref_stats"]),
-        **object_csls(float(sims_corpus[ref_idx]), sims_corpus, ref_idx,
-                      v4pack["ref_stats"]),
+        **object_csls(sim_ref, sims_corpus, ref_idx, v4pack["ref_stats"], r_ref=r_ref),
+        "ref_in_v4_population": in_pop,
         # M1 — v3 analysis/bridge fields (raw substrate statistics, ungated)
         "app_ref_v3": appearance_ref(gen_bundle.feats, gcore, ref_bundle.feats, ref_core),
         **camera_match(gen_cam, ref_cam),
-        "obj_match": float(sims_corpus[ref_idx]),
+        "obj_match": sim_ref,
         # M2
         **copy_score(gen_bundle.feats, gmid, ref_bundle.feats, ref_core, TAU_COPY),
         **intrusion_margin(gen_bundle.feats, gcore, pools, item.style),
@@ -258,7 +278,8 @@ def main() -> int:
                                                        "reference_corpus_clips": len(ref_corpus["clips"])}
         print(f"[AMENDMENT grid-v3] reference pin verified against {args.reference_corpus} ({pin_sha[:12]}); "
               f"--corpus is a strict superset ({len(corpus['clips'])} clips, {len(corpus['classes'])} classes); "
-              f"v4 corpus pack over the {len(ref_corpus['clips'])} reference keys")
+              f"v4 corpus pack over the {len(ref_corpus['clips'])} reference keys; cams/profiles for every superset clip, "
+              f"out-of-population references get r_ref against the population (row flag ref_in_v4_population)")
     training = load_training_manifest(args.training) if args.training else None
     items = load_eval_manifest(args.manifest)
 
@@ -278,7 +299,7 @@ def main() -> int:
     # v4: the frozen reference artifact (pinned instrument constant) + per-run
     # corpus precomputations. Corpus mismatch refuses loudly (SPEC §4/§7).
     ref_stats = load_reference(expect_corpus_sha=pin_sha)
-    v4pack = _corpus_v4_pack(ref_corpus or corpus, ref_bundles)
+    v4pack = _corpus_v4_pack(ref_corpus or corpus, ref_bundles, superset=corpus if ref_corpus else None)
     assert [str(k) for k in ref_stats["keys"]] == v4pack["keys"], \
         "reference_v4 artifact key order != corpus manifest key order"
     v4pack["ref_stats"] = ref_stats

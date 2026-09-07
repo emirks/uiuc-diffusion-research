@@ -622,12 +622,18 @@ def m1b_pair(gen_tracks, gen_vis, gen_cam, ref_tracks, ref_vis, ref_cam,
             "saturated": bool(sat), "cam_valid": True}
 
 
-def m1c_pair(sim_gen_ref: float, sims_gen_corpus: np.ndarray, ref_key_index: int,
-             R: dict) -> dict:
+def m1c_pair(sim_gen_ref: float, sims_gen_corpus: np.ndarray, ref_key_index: int | None,
+             R: dict, r_ref: float | None = None) -> dict:
     """CSLS distance for one (gen, ref) pair: the gen clip's neighborhood mean is
     computed against the frozen 223-clip reference corpus; the reference clip's
-    r_j is a frozen artifact constant."""
+    r_j is a frozen artifact constant. Grid-v3 amendment (2026-09-07): a reference
+    OUTSIDE the frozen population has no artifact r_j — the caller passes r_ref,
+    computed the artifact's way (csls_r of its similarities to the population)."""
     r_gen = csls_r(sims_gen_corpus, int(R["k_csls"]))
-    r_ref = float(R["r_obj"][ref_key_index])
+    if ref_key_index is None:
+        assert r_ref is not None, "m1c_pair: reference outside the population needs r_ref"
+        r_ref = float(r_ref)
+    else:
+        r_ref = float(R["r_obj"][ref_key_index])
     return {"csls": csls_distance(sim_gen_ref, r_gen, r_ref),
             "r_gen": r_gen, "r_ref": r_ref}
