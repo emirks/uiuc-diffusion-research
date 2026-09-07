@@ -125,8 +125,8 @@ def lpips_warm(item, gen_key: str, cache_dir: pathlib.Path | None,
         return False
     for side in ("prefix", "suffix"):
         cond = getattr(item, f"condition_{side}")
-        if cond and not lpips_cache_path(
-                _endpoint_key(gen_key, side, cond, short_side), cache_dir).exists():
+        if cond and load_npz_or_none(lpips_cache_path(
+                _endpoint_key(gen_key, side, cond, short_side), cache_dir)) is None:
             return False
     return True
 
