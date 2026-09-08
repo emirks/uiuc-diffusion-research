@@ -34,8 +34,8 @@ CONTENT_ORDER = ["same", "cross", "foreign"]
 
 def eval_entry() -> Path:
     hits = sorted((REPO / "store/evals").glob("028_grid_v3_paper_arms__dai__*"))
-    assert hits, "no eval entry directory yet (launch_score.py plan creates it)"
-    return hits[-1]
+    assert len(hits) == 1, f"expected exactly one 028 eval entry, found {[h.name for h in hits]} (merge first)"
+    return hits[0]
 
 
 def all_arms():

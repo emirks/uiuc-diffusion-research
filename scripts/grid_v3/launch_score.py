@@ -26,7 +26,14 @@ from launch_gen import ARMS, FAMILIES, FAMKEY, TIERS, harness_arm, registry, sub
 
 PY = "/taiga/illinois/eng/cs/jrehg/users/emirkisa/envs-aarch64/ltx2/bin/python"
 EVALDIR = REPO / "misc/2026-09-07_eval_grid_v2/eval"
-EVAL_ENTRY = f"store/evals/028_grid_v3_paper_arms__dai__{date.today().isoformat()}"
+def _eval_entry() -> str:
+    """ONE eval entry for the whole pass: reuse the existing 028 directory (a pass spanning midnight must not fork
+    a second, date-suffixed entry — it did on 2026-09-08, merged back by hand), else name it by today."""
+    hits = sorted(Path(REPO / "store/evals").glob("028_grid_v3_paper_arms__dai__*"))
+    return str(hits[0].relative_to(REPO)) if hits else f"store/evals/028_grid_v3_paper_arms__dai__{date.today().isoformat()}"
+
+
+EVAL_ENTRY = _eval_entry()
 LEDGER = EVALDIR / "score_ledger.json"
 ACCOUNTS = {"base_cond": "bhwp-dtai-gh", "ic_gen": "bhwp-dtai-gh", "dualforce_control": "bhwp-dtai-gh", "dualforce_dcg_w6": "bhwp-dtai-gh"}  # scoring is short: keep it off bgjg while the DCG effect gens run there
 
