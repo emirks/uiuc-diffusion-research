@@ -314,6 +314,11 @@ arms:
     targets: null
     note: "grid v3 effect, prompts/011_ctt_v3_effect (strip_sksz)"
   base_cond_effect_v3ed81:
+  base_cond_effect_edscreen:
+    kind: base
+    adapter: null
+    targets: null
+    note: "EffectData gapper screen (misc/2026-09-08_ed_gapper_screen): prompt-only effect arm, 300 effects x 3 same rows, seed 42; native 81 f + frame-0 anchor: GEN_FRAMES=81 GEN_PREFIX_FRAMES=1; prompts_effect_edscreen sha 282660f3f940"
     kind: base
     adapter: null
     targets: null
