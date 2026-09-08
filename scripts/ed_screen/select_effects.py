@@ -5,7 +5,8 @@ Roles:
   exploit  150  highest kNN-predicted DCG-vs-prompt gap from BGE-large text embeddings of the effect descriptions,
                 fitted on the 34 EffectData effects measured in grid v3 (eval/gap_predictors.csv)
   explore  140  one medoid per k-means cluster over the remaining eligible effects (coverage of effect space)
-  anchor    10  measured effects (5 largest + 5 smallest gaps) re-drawn with NEW subjects: calibrate the one-seed screen
+  anchor   <=10 measured effects (5 largest + 5 smallest gaps, those with >= 4 roster-portrait subjects; clips may recur):
+                calibrate the one-seed screen against the two-seed grid
 Eligibility: single-category effect, >= 20 clips (grid_v3.yaml), >= 4 portrait-ok S6-ROSTER clips from >= 4 distinct
 subjects (reference + 3 endpoints: known shape, captioned subjects — no new captioning) and >= 12 portrait-ok clips in
 total (pool topped up from non-roster clips, shapes probed lazily from the zips and cached). Per effect: 1 reference clip, 3 same-content
@@ -96,8 +97,12 @@ def main():
     texts = {e: f"{ed.category(e)}. {instr[e].most_common(1)[0][0]}" for e in set(eligible) | set(meas_eff)}
     for e in list(meas_eff)[:2]:
         print(f"  text sample [{e}]: {texts[e][:220]}")
-    names = sorted(texts); X = embed([texts[e] for e in names]); idx = {e: i for i, e in enumerate(names)}
-    np.savez(CAMP / "embeddings.npz", names=np.array(names), X=X)
+    names = sorted(texts); idx = {e: i for i, e in enumerate(names)}
+    cache = CAMP / "embeddings.npz"
+    if cache.exists() and list(np.load(cache)["names"]) == names:
+        X = np.load(cache)["X"]; print("[select] embeddings from cache")
+    else:
+        X = embed([texts[e] for e in names]); np.savez(cache, names=np.array(names), X=X)
 
     # exploit: kNN (k=5, cosine, similarity-weighted) regression of gap_eff / base_eff from the measured 34
     M = sorted(meas_eff); XM = X[[idx[e] for e in M]]; gM = np.array([meas_eff[e]["gap_eff"] for e in M]); bM = np.array([meas_eff[e]["base_eff"] for e in M])
@@ -130,10 +135,15 @@ def main():
         used = tier_used.get(B.EffectData.class_name(pref, e), set())
         return [c for c in portrait_lazy(e, MIN_PORTRAIT_TOTAL + 4) if B.EffectData.std_stem(pref, c[0]) not in used]
     by_gap = sorted(meas_eff, key=lambda e: meas_eff[e]["gap_eff"])
-    anchors = [e for e in reversed(by_gap) if len({s for _, s, _ in fresh(e)}) >= MIN_SUBJECTS][:5] + [e for e in by_gap if len({s for _, s, _ in fresh(e)}) >= MIN_SUBJECTS][:5]
+    def anchor_ok(e):   # only ~30% of roster subjects are portrait, so anchors MAY reuse the tier's clips: >= 4 roster-portrait
+        ro = roster_portrait(e)   # subjects (reference + 3 endpoints) and >= 8 portrait clips in total
+        return len({s for _, s, _ in ro}) >= MIN_SUBJECTS and len(portrait_lazy(e)) >= 8
+    ok = [e for e in by_gap if anchor_ok(e)]
+    anchors = list(dict.fromkeys(list(reversed(ok))[:5] + ok[:5]))
+    print(f"[select] anchor-eligible measured effects: {len(ok)}/{len(meas_eff)}")
 
     def assign(e, role):
-        clips = fresh(e) if role == "anchor" else portrait_lazy(e)
+        clips = portrait_lazy(e)   # anchors too (see anchor_ok); the tier's clips may recur — a calibration, not new evidence
         roster = [c for c in clips if c[0] in ed.roster_shape]          # reference + endpoints: captioned roster subjects
         ref = roster[0]; eps = []
         for c in roster[1:]:
