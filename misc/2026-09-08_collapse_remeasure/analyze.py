@@ -50,6 +50,8 @@ df["is_dup_any"] = df.groupby(["arm", "md5"]).cumcount() > 0
 df["clean"] = (~df["foreign"].astype(bool)) & (~df["static"].astype(bool)) & df["DR_med"].notna()
 u = df[(~df["is_dup"]) & df["clean"]].copy()          # analysis frame: unique within variant, clean
 u2 = df[(~df["is_dup_any"]) & df["clean"]].copy()     # pooled-analysis frame: unique across variants, clean
+T2 = "tier2_start__dai"
+u_lvl = u[u["variant"] != T2]                          # level tables: grid rows only (the tier-2 regen enters the paired probe only)
 OUT["n_rows"] = int(len(df)); OUT["n_unique_clean"] = int(len(u))
 OUT["n_dup"] = int(df["is_dup"].sum()); OUT["n_foreign"] = int(df["foreign"].sum()); OUT["n_static"] = int(df["static"].sum())
 
@@ -90,9 +92,9 @@ md("\n## A. Levels per arm × grid × prompt × conditioning (unique clean clips
 md("| arm | grid | prompt | cond | n clips | n static (excl.) | n endpoints | DR median [IQR] | DR CI | M median | on-line share [CI] | on-line n | DISS/CUT/FRZ |")
 md("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
 levels = []
-for (arm, grid, prompt, cond), g in u.groupby(["arm", "grid", "prompt", "condition"]):
+for (arm, grid, prompt, cond), g in u_lvl.groupby(["arm", "grid", "prompt", "condition"]):
     ns = int(((df["arm"] == arm) & (df["grid"] == grid) & (df["prompt"] == prompt) & (df["condition"] == cond)
-              & (~df["is_dup"]) & (~df["foreign"].astype(bool)) & df["static"].astype(bool)).sum())
+              & (~df["is_dup"]) & (~df["foreign"].astype(bool)) & df["static"].astype(bool) & (df["variant"] != T2)).sum())
     q = g["DR_med"].quantile([.25, .5, .75]).values
     lo, hi = cboot(g, med("DR_med"))
     so = share_online(g); slo, shi = cboot(g, share_online)
@@ -114,7 +116,7 @@ ths = [0.06, 0.08, 0.10, 0.12, 0.14, 0.16, 0.18, 0.20, 0.25]
 md("| grid | prompt | cond | n | " + " | ".join(f"θ={t}" for t in ths) + " |")
 md("|---|---|---|---|" + "---|" * len(ths))
 sens = []
-for (grid, prompt, cond), g in u[u["arm"] == "base_cond"].groupby(["grid", "prompt", "condition"]):
+for (grid, prompt, cond), g in u_lvl[u_lvl["arm"] == "base_cond"].groupby(["grid", "prompt", "condition"]):
     vals = [float((g["DR_med"] <= t).mean()) for t in ths]
     sens.append(dict(grid=grid, prompt=prompt, condition=cond, n=len(g), thetas=ths, shares=vals))
     md(f"| {grid} | {prompt} | {cond} | {len(g)} | " + " | ".join(f"{v*100:.0f}%" for v in vals) + " |")
@@ -193,7 +195,7 @@ md("\n## D. Unpaired both-endpoint vs start-only within arm × grid × prompt (d
 md("| arm | grid | prompt | n both / start | DR median both / start | Δmedian [CI] | Cliff δ (MWU) | on-line both / start | Δshare [CI] |")
 md("|---|---|---|---|---|---|---|---|---|")
 unp = []
-for (arm, grid, prompt), g in u.groupby(["arm", "grid", "prompt"]):
+for (arm, grid, prompt), g in u_lvl.groupby(["arm", "grid", "prompt"]):
     gb, gs = g[g["condition"] == "both"], g[g["condition"] == "start"]
     if len(gb) < 5 or len(gs) < 5:
         continue
