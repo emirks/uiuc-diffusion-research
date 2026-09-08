@@ -22,7 +22,7 @@ WT=$DR/.claude/worktrees/eval-v4-cert
 MDIR=${MDIR:?plan dir with eval_c*.json (run_eval.py --mode plan)}
 OUT=${EVAL:?per-arm eval out dir under store/evals/}
 CACHE=$DR/misc/refvfx_baseline/probe/cache
-CORPUS=$DR/data/processed/transitions_std121/corpus_manifest.json            # grid v3: 677 clips / 97 classes
+CORPUS=${CORPUS:-$DR/data/processed/transitions_std121/corpus_manifest.json}  # grid v3: 677 clips / 97 classes; a side lane passes its own superset manifest
 REFCORPUS=$DR/data/processed/transitions_std121/corpus_manifest_v1_222.json  # the certified 222-clip pin
 TASK=${SLURM_ARRAY_TASK_ID:-0}
 mkdir -p "$OUT" "$DR/outputs/logs/slurm"

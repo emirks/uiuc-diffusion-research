@@ -207,9 +207,13 @@ def ceilings() -> dict[str, float]:
     # EffectData `ed.*` classes) take their scorer-path ceiling from eval_ladder/ceilings_v3.json
     # (scripts/grid_v3/ceilings_manifest.py --aggregate). Certified classes are never overridden.
     extra = HERE / "ceilings_v3.json"
-    if extra.exists():
-        for cls, v in json.loads(extra.read_text())["ceilings"].items():
-            out.setdefault(cls, float(v["ceiling"]))
+    # side lanes (e.g. the 2026-09-08 EffectData gapper screen) add their own kernel-ceiling files via
+    # LADDER_CEILINGS_EXTRA=<file>[:<file>...]; certified classes are still never overridden.
+    extras = [extra] + [Path(p) for p in os.environ.get("LADDER_CEILINGS_EXTRA", "").split(":") if p]
+    for f in extras:
+        if f.exists():
+            for cls, v in json.loads(f.read_text())["ceilings"].items():
+                out.setdefault(cls, float(v["ceiling"]))
     return out
 
 
