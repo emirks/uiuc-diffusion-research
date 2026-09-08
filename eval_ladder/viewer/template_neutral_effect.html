@@ -329,6 +329,11 @@ function togGrid(id){
   shown = PAGE; render();
 }
 const gridOk = g => !GRIDS.length || gridSel.has(g.grid || "v2");
+// which grids each arm entry has generations on (from the cards; generic — no ids hardcoded)
+const TIER_GRIDS = {};
+for(const c of D.cards) for(const [t, gs] of Object.entries(c.slots||{})) for(const g of gs)
+  (TIER_GRIDS[t] = TIER_GRIDS[t] || new Set()).add(g.grid || "v2");
+const tierOnGrid = t => !GRIDS.length || [...(TIER_GRIDS[t]||[])].some(x => gridSel.has(x));
 function drawMatrix(){
   const t = document.getElementById("mx");
   let h = "<tr><th class='corner'></th>";
@@ -367,18 +372,24 @@ function selAll(on){
 
 // ------------------------------------------- arm selector (inline, always open, fully generic)
 function drawArms(){
-  document.getElementById("armcount").textContent = `${tiers.size} of ${KNOWN.size} entries selected`;
+  // the panel lists only the entries that have generations on a selected grid (grid chip row)
+  const visible = new Set(Object.keys(ENTRY_META).filter(tierOnGrid));
+  const nSel = [...tiers].filter(t => visible.has(t)).length;
+  document.getElementById("armcount").textContent = `${nSel} of ${visible.size} entries selected` +
+    (visible.size < KNOWN.size ? ` (${KNOWN.size - visible.size} off-grid hidden)` : "");
   const p = document.getElementById("armlist");
   const keepScroll = p.scrollTop;                 // the list re-renders on every toggle
   let h = "";
   catOrder.forEach((cid, i) => {
     const c = CAT_BY_ID[cid]; if(!c) return;
+    const arms = c.arms.map(a => ({...a, entries: a.entries.filter(e => visible.has(e.tier))})).filter(a => a.entries.length);
+    if(!arms.length) return;
     h += `<div class="apcat"><div class="ch">
         <span class="cdot" style="background:${CAT_COLOR[c.id]}"></span>${esc(c.label)}
         <span class="sp"></span>
         <button onclick="moveCat(${i},-1)" title="move category up">▲</button>
         <button onclick="moveCat(${i},1)" title="move category down">▼</button></div>`;
-    for(const a of c.arms){
+    for(const a of arms){
       h += `<div class="aparm"><span class="an">${esc(a.label)}</span><span class="pillrow">` +
         a.entries.map(e =>
           `<span class="pill v-${esc(e.variant)} ${tiers.has(e.tier)?"on":""}"

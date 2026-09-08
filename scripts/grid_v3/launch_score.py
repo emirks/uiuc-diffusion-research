@@ -35,7 +35,7 @@ def _eval_entry() -> str:
 
 EVAL_ENTRY = _eval_entry()
 LEDGER = EVALDIR / "score_ledger.json"
-ACCOUNTS = {"base_cond": "bhwp-dtai-gh", "ic_gen": "bhwp-dtai-gh", "dualforce_control": "bhwp-dtai-gh", "dualforce_dcg_w6": "bhwp-dtai-gh"}  # scoring is short: keep it off bgjg while the DCG effect gens run there
+ACCOUNTS = {"base_cond": "bhwp-dtai-gh", "ic_gen": "bhwp-dtai-gh", "dualforce_control": "bhwp-dtai-gh", "dualforce_dcg_w6": "bgms-dtai-gh"}  # scoring is short: keep it off bgjg while the DCG effect gens run there
 
 
 def all_arms():

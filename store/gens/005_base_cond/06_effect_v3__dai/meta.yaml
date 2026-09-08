@@ -1,0 +1,16 @@
+id: gens/005_base_cond/06_effect_v3__dai
+seq: 6
+shelf: gens
+arm: base_cond
+harness_arm: base_cond_effect_v3   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: effect_v3
+machine: dai
+created: 2026-09-07
+inputs: {run: base weights (no adapter)}
+code: src/LTX-2-official (venv editable) @ grid v3
+prompt_family: prompts/011_ctt_v3_effect
+prompt_sha: 280a0c4bc2e8
+grid_rows: 282
+videos: 564
+source: scripts/store_register.py over eval_ladder/registry_base_cond_effect_v3.jsonl
+notes: grid v3 (design 3.0.0) effect tier, family prompts/011_ctt_v3_effect; 139 kept rows hardlinked from gens/005_base_cond/01_effect__dai (byte-identical inputs); seeds 42/43; DeltaAI GH200

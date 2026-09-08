@@ -108,6 +108,29 @@ def summary(write: bool) -> dict:
         head = f"{s['headline_pct_same']*100:.1f} ({s['n_same']})" if s["headline_pct_same"] is not None else "—"
         lines.append(f"| `{ha}` | {s['items_scored']}/{s['rows']} | {head} | " + " | ".join(cells) + " |")
     lines += ["", "copy_max mean per cell is in summary.json."]
+    # owner-requested view (2026-09-08): per novelty tier, ALL content cells pooled (same + cross + foreign; the
+    # cross/foreign rows are %_proxy = content-capped, so these pooled levels rank arms, they are not headline claims)
+    def pooled(sm, nov):
+        cells = [c for c in sm["cells"].values() if c["novelty"] == nov]
+        n = sum(c["n"] for c in cells)
+        return (sum(c["level"] * c["n"] for c in cells) / n, n) if n else None
+    for tier in TIERS:
+        lines += ["", f"## {tier} prompts — pooled over all content cells (same + cross + foreign), by reference novelty", "",
+                  "| arm | seen (HF) | unseen (HF) | zero-shot (HF) | zero-shot (EffectData 81 f) | all HF rows |", "|---|---|---|---|---|---|"]
+        for arm in ARMS:
+            hf, ed = out.get(harness_arm(arm, tier, "hf")), out.get(harness_arm(arm, tier, "ed"))
+            row = [arm]
+            for nov in CELL_ORDER:
+                q = pooled(hf, nov) if hf else None
+                row.append(f"{q[0]*100:.1f} ({q[1]})" if q else "—")
+            q = pooled(ed, "zero_shot") if ed else None
+            row.append(f"{q[0]*100:.1f} ({q[1]})" if q else "—")
+            if hf:
+                n = sum(c["n"] for c in hf["cells"].values())
+                row.append(f"{sum(c['level']*c['n'] for c in hf['cells'].values())/n*100:.1f} ({n})")
+            else:
+                row.append("—")
+            lines.append("| " + " | ".join(row) + " |")
     text = "\n".join(lines) + "\n"
     print(text)
     if write:

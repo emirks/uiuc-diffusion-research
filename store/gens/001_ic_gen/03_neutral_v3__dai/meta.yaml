@@ -1,0 +1,16 @@
+id: gens/001_ic_gen/03_neutral_v3__dai
+seq: 3
+shelf: gens
+arm: ic_gen
+harness_arm: ic_gen_neutral_v3   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral_v3
+machine: dai
+created: 2026-09-07
+inputs: {run: runs/001_ic_gen, step: 5000}
+code: src/LTX-2-ctt-v2-train packages @ grid v3 (attention=bidirectional = official reference semantics)
+prompt_family: prompts/010_ctt_v3_neutral
+prompt_sha: d8b0f6d3502b
+grid_rows: 282
+videos: 564
+source: scripts/store_register.py over eval_ladder/registry_ic_gen_neutral_v3.jsonl
+notes: grid v3 (design 3.0.0) neutral tier, family prompts/010_ctt_v3_neutral; 139 kept rows hardlinked from gens/001_ic_gen/01_neutral__cc (byte-identical inputs); seeds 42/43; DeltaAI GH200

@@ -1,0 +1,162 @@
+{
+ "base_cond_neutral_v3": {
+  "job": "3109403",
+  "subentry": "store/gens/005_base_cond/04_neutral_v3__dai",
+  "tasks": 16,
+  "account": "bhwp-dtai-gh",
+  "tier": "neutral",
+  "family": "010_ctt_v3_neutral",
+  "submitted": "2026-09-07",
+  "dependency": null
+ },
+ "base_cond_neutral_v3ed81": {
+  "job": "3109404",
+  "subentry": "store/gens/005_base_cond/05_neutral_v3ed81__dai",
+  "tasks": 6,
+  "account": "bhwp-dtai-gh",
+  "tier": "neutral",
+  "family": "012_ctt_v3ed_neutral",
+  "submitted": "2026-09-07",
+  "dependency": null
+ },
+ "dualforce_control_neutral_v3": {
+  "job": "3109407",
+  "subentry": "store/gens/013_dualforce_control/03_neutral_v3__dai",
+  "tasks": 16,
+  "account": "bgjg-dtai-gh",
+  "tier": "neutral",
+  "family": "010_ctt_v3_neutral",
+  "submitted": "2026-09-07",
+  "dependency": null
+ },
+ "dualforce_control_neutral_v3ed81": {
+  "job": "3109408",
+  "subentry": "store/gens/013_dualforce_control/04_neutral_v3ed81__dai",
+  "tasks": 6,
+  "account": "bgjg-dtai-gh",
+  "tier": "neutral",
+  "family": "012_ctt_v3ed_neutral",
+  "submitted": "2026-09-07",
+  "dependency": null
+ },
+ "dualforce_dcg_w6_neutral_v3": {
+  "job": "3109409",
+  "subentry": "store/gens/032_dualforce_dcg_w6/03_neutral_v3__dai",
+  "tasks": 28,
+  "account": "bgjg-dtai-gh",
+  "tier": "neutral",
+  "family": "010_ctt_v3_neutral",
+  "submitted": "2026-09-07",
+  "dependency": null
+ },
+ "dualforce_dcg_w6_neutral_v3ed81": {
+  "job": "3109410",
+  "subentry": "store/gens/032_dualforce_dcg_w6/04_neutral_v3ed81__dai",
+  "tasks": 10,
+  "account": "bgjg-dtai-gh",
+  "tier": "neutral",
+  "family": "012_ctt_v3ed_neutral",
+  "submitted": "2026-09-07",
+  "dependency": null
+ },
+ "base_cond_effect_v3": {
+  "job": "3109411",
+  "subentry": "store/gens/005_base_cond/06_effect_v3__dai",
+  "tasks": 16,
+  "account": "bhwp-dtai-gh",
+  "tier": "effect",
+  "family": "011_ctt_v3_effect",
+  "submitted": "2026-09-07",
+  "dependency": "afterany:3109403:3109404:3109405:3109406:3109407:3109408:3109409:3109410"
+ },
+ "base_cond_effect_v3ed81": {
+  "job": "3109412",
+  "subentry": "store/gens/005_base_cond/07_effect_v3ed81__dai",
+  "tasks": 6,
+  "account": "bhwp-dtai-gh",
+  "tier": "effect",
+  "family": "013_ctt_v3ed_effect",
+  "submitted": "2026-09-07",
+  "dependency": "afterany:3109403:3109404:3109405:3109406:3109407:3109408:3109409:3109410"
+ },
+ "dualforce_control_effect_v3": {
+  "job": "3109415",
+  "subentry": "store/gens/013_dualforce_control/05_effect_v3__dai",
+  "tasks": 16,
+  "account": "bgjg-dtai-gh",
+  "tier": "effect",
+  "family": "011_ctt_v3_effect",
+  "submitted": "2026-09-07",
+  "dependency": "afterany:3109403:3109404:3109405:3109406:3109407:3109408:3109409:3109410"
+ },
+ "dualforce_control_effect_v3ed81": {
+  "job": "3109416",
+  "subentry": "store/gens/013_dualforce_control/06_effect_v3ed81__dai",
+  "tasks": 6,
+  "account": "bgjg-dtai-gh",
+  "tier": "effect",
+  "family": "013_ctt_v3ed_effect",
+  "submitted": "2026-09-07",
+  "dependency": "afterany:3109403:3109404:3109405:3109406:3109407:3109408:3109409:3109410"
+ },
+ "dualforce_dcg_w6_effect_v3": {
+  "job": "3109417",
+  "subentry": "store/gens/032_dualforce_dcg_w6/05_effect_v3__dai",
+  "tasks": 28,
+  "account": "bgjg-dtai-gh",
+  "tier": "effect",
+  "family": "011_ctt_v3_effect",
+  "submitted": "2026-09-07",
+  "dependency": "afterany:3109403:3109404:3109405:3109406:3109407:3109408:3109409:3109410"
+ },
+ "dualforce_dcg_w6_effect_v3ed81": {
+  "job": "3109418",
+  "subentry": "store/gens/032_dualforce_dcg_w6/06_effect_v3ed81__dai",
+  "tasks": 10,
+  "account": "bgjg-dtai-gh",
+  "tier": "effect",
+  "family": "013_ctt_v3ed_effect",
+  "submitted": "2026-09-07",
+  "dependency": "afterany:3109403:3109404:3109405:3109406:3109407:3109408:3109409:3109410"
+ },
+ "ic_gen_neutral_v3": {
+  "job": "3109701",
+  "subentry": "store/gens/001_ic_gen/03_neutral_v3__dai",
+  "tasks": 16,
+  "account": "bhwp-dtai-gh",
+  "tier": "neutral",
+  "family": "010_ctt_v3_neutral",
+  "submitted": "2026-09-07",
+  "dependency": null
+ },
+ "ic_gen_neutral_v3ed81": {
+  "job": "3109702",
+  "subentry": "store/gens/001_ic_gen/04_neutral_v3ed81__dai",
+  "tasks": 6,
+  "account": "bhwp-dtai-gh",
+  "tier": "neutral",
+  "family": "012_ctt_v3ed_neutral",
+  "submitted": "2026-09-07",
+  "dependency": null
+ },
+ "ic_gen_effect_v3": {
+  "job": "3109703",
+  "subentry": "store/gens/001_ic_gen/05_effect_v3__dai",
+  "tasks": 16,
+  "account": "bhwp-dtai-gh",
+  "tier": "effect",
+  "family": "011_ctt_v3_effect",
+  "submitted": "2026-09-07",
+  "dependency": null
+ },
+ "ic_gen_effect_v3ed81": {
+  "job": "3109704",
+  "subentry": "store/gens/001_ic_gen/06_effect_v3ed81__dai",
+  "tasks": 6,
+  "account": "bhwp-dtai-gh",
+  "tier": "effect",
+  "family": "013_ctt_v3ed_effect",
+  "submitted": "2026-09-07",
+  "dependency": null
+ }
+}

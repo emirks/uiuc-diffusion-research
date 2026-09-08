@@ -1,0 +1,16 @@
+id: gens/013_dualforce_control/04_neutral_v3ed81__dai
+seq: 4
+shelf: gens
+arm: dualforce_control
+harness_arm: dualforce_control_neutral_v3ed81   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral_v3ed81
+machine: dai
+created: 2026-09-07
+inputs: {run: runs/012_dualforce_control, step: 1000}
+code: src/LTX-2-ctt-v2-train packages @ grid v3 (one_way IC-LoRA stack)
+prompt_family: prompts/012_ctt_v3ed_neutral
+prompt_sha: 423ea86ce085
+grid_rows: 102
+videos: 204
+source: scripts/store_register.py over eval_ladder/registry_dualforce_control_neutral_v3ed81.jsonl
+notes: "grid v3 (design 3.0.0) neutral tier, family prompts/012_ctt_v3ed_neutral; EffectData tier: native 81 f, frame-0 anchor (GEN_FRAMES=81 GEN_PREFIX_FRAMES=1); seeds 42/43; DeltaAI GH200"
