@@ -1,0 +1,16 @@
+id: gens/005_base_cond/08_effect_edscreen__dai
+seq: 8
+shelf: gens
+arm: base_cond
+harness_arm: base_cond_effect_edscreen   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: effect_edscreen
+machine: dai
+created: 2026-09-08
+inputs: {run: base weights (no adapter)}
+code: src/LTX-2-official (venv editable) @ ed gapper screen
+prompt_family: prompts/014_edscreen_effect
+prompt_sha: 1fe0d1860631
+grid_rows: 900
+videos: 900
+source: scripts/store_register.py over eval_ladder/registry_base_cond_effect_edscreen.jsonl
+notes: "EffectData gapper screen stage A (misc/2026-09-08_ed_gapper_screen): prompt-only effect arm, 300 effects x 3 same-content rows, seed 42, native 81 f + frame-0 anchor (GEN_FRAMES=81 GEN_PREFIX_FRAMES=1); DeltaAI GH200"

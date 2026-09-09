@@ -24,6 +24,7 @@ against `class_axes_v2.yaml`; a disagreement is a hard error, never a silent pic
 from __future__ import annotations
 
 import json
+import os
 from functools import lru_cache
 from pathlib import Path
 
@@ -60,7 +61,7 @@ AUDITED_EXTRA = ("earth_element_6", "money_rain_1")
 AUDITED_SOURCES_EXTRA = ("data/processed/transitions_std121/dataset_grid_v3.json",)
 #: the frozen split the renderer resolves clip -> class from. v1.3 is a STRICT SUPERSET of v1.2 (every v1.2 clip keeps
 #: its class and band), so every pre-existing render is byte-identical; build_registry.py still pins v1.2 for itself.
-SPLIT_FILE = "split_v1.3.json"
+SPLIT_FILE = os.environ.get("LADDER_SPLIT_FILE", "split_v1.3.json")   # side lanes (ed gapper screen) point at a superset split
 #: foreign endpoint rosters (davis.yaml + the grid-v3 reserve); each entry may carry `source`
 FOREIGN_ROSTERS = ("davis.yaml", "reserve.yaml")
 

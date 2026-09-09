@@ -85,7 +85,7 @@ def plan():
     if not link.exists():
         link.symlink_to(SUB / "videos")
     mdir = CAMP / "eval/manifests"; mdir.mkdir(parents=True, exist_ok=True)
-    env = dict(os.environ, GEN_PREFIX_FRAMES="1")
+    env = dict(os.environ, GEN_PREFIX_FRAMES="1", LADDER_SPLIT_FILE="split_screen.json")
     r = subprocess.run([PY, str(REPO / "eval_ladder/run_eval.py"), "--mode", "plan", "--arms", ARM, "--extra-registry", str(REG), "--gens", str(gens),
                         "--scores", str(EVAL_ENTRY / ARM), "--eval-dir", str(mdir), "--chunks", str(CHUNKS), "--seeds", "42"], env=env, capture_output=True, text=True)
     print("\n".join(l for l in r.stdout.splitlines() if l.startswith("[plan]")) or r.stderr[-800:])
@@ -113,7 +113,7 @@ def status():
 
 
 def summary():
-    os.environ["LADDER_CEILINGS_EXTRA"] = str(CAMP / "ceilings_screen.json")
+    os.environ["LADDER_CEILINGS_EXTRA"] = str(CAMP / "ceilings_screen.json"); os.environ["LADDER_SPLIT_FILE"] = "split_screen.json"
     import run_eval
     ceil = run_eval.ceilings(); rs = {r["item_id"]: r for r in rows()}
     pool = run_eval.pool_means(EVAL_ENTRY / ARM); pct = run_eval.item_pct(pool, rs, ceil)
