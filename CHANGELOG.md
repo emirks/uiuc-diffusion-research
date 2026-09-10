@@ -1,4 +1,5 @@
 ## 2026-09-09
+- `10:45` **Temporal-dynamics probe — one-ingredient-per-rung ladder on the frozen exam (naive DINO → set matching → transport).** On identical residual velocity sets: concatenation 0.46–0.51, Chamfer bag 0.673, transport 0.749, clocked transport 0.776 (V1e on raw velocities 0.780; Round-1 window-clock OT composite 0.8655); appearance lever = endpoint-plane projection (+16 clips for set matching). Claim supported for the matching operator over DINO; the 'semantic features necessary' half is untested (no pixel/flow substrate run). REPORT.md § Ladder.
 - `10:20` **Temporal-dynamics probe — quick checks: naive CLS baselines and frame-concatenated DINO trajectories on the frozen exam.** Mean-CLS 0.49–0.61, flattened trajectory 0.57, unit-residual rows concatenated 0.668 (vs Mu set-matching 0.709, Look_u 0.798, S3 0.807); progress re-timing before concatenation hurts; first-frame-only 0.17. Exam corpus confirmed as the 223-clip Higgsfield-derived CTT corpus, no EffectData. REPORT.md § Quick checks.
 
 ## 2026-09-08
