@@ -2,5 +2,7 @@
  "media": "3115301",
  "ceilings": "3115400",
  "gen": "3115401",
- "score": "3115641"
+ "score_failed_missing_symlinks": "3115641",
+ "score": "3115766",
+ "gen_b": "3120802"
 }
