@@ -1,0 +1,55 @@
+id: 029_ed_gapper_screen__dai__2026-09-08
+seq: 29
+shelf: evals
+created: '2026-09-09'
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh (stage A) + bgjg-dtai-gh (stage B)
+harness: transition-eval v4.0.0 (eval-v4-cert worktree, branch eval/v4-metrics @4e792c0 — grid-v3 amendments 1+2; [UNCERTIFIED] by design)
+instrument:
+  reference_v4_sha256: 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8
+  reference_corpus: data/processed/transitions_std121/corpus_manifest_v1_222.json (certified pin)
+  corpus: 'misc/2026-09-08_ed_gapper_screen/corpus_manifest_screen.json  # 4,175 clips / 385 classes: 677-clip datasets/006 + 300 screen effects (12 clips
+    each)'
+  ceilings: misc/2026-09-08_ed_gapper_screen/ceilings_screen.json (deployed kernel vs frozen populations; used via LADDER_CEILINGS_EXTRA)
+  split: data/processed/transitions_std121/split_screen.json (side-lane superset of v1.3; LADDER_SPLIT_FILE)
+  tau_copy: 0.858
+  matrix: m1a_S3
+  cache: misc/refvfx_baseline/probe/cache
+  env: envs-aarch64/refvfx; PYTHONPATH=.claude/worktrees/eval-v4-cert/src
+  job: misc/2026-09-07_eval_grid_v2/score_v3.sbatch with CORPUS=<screen manifest>
+source: 'EffectData gapper screen (misc/2026-09-08_ed_gapper_screen/PLAN.md). Stage A: prompt-only effect arm over 300 effects chosen by scripts/ed_screen/select_effects.py
+  (150 exploit / 140 explore / 10 anchors), 3 same-content rows each, seed 42, native 81 f + frame-0 anchor. Stage B: DCG w=6 effect on the 40 lowest stage-A
+  effects, ONE row each (the screen''s first endpoint), paired with the base arm''s row. Levels only; the screen ranks effects, the reportable gap needs
+  held-out subjects (stage C, not run).'
+arms_scored:
+  base_cond_effect_edscreen:
+    gen: gens/005_base_cond/08_effect_edscreen__dai
+    run: base weights (no adapter)
+    rows: 900
+    seeds:
+    - 42
+    prompt_family: prompts/014_edscreen_effect
+    slurm_job: '3115766'
+    readout:
+      effects: 300
+      median_level: 70.4
+      share_below_80: 0.69
+      file: misc/2026-09-08_ed_gapper_screen/eval/REPORT.md
+  dualforce_dcg_w6_effect_edscreen:
+    gen: gens/032_dualforce_dcg_w6/07_effect_edscreen__dai
+    run: runs/012_dualforce_control @1000 + DCG w=6 (crossfade null, gs4/stg1)
+    rows: 40
+    seeds:
+    - 42
+    prompt_family: prompts/015_edscreen_effect_token
+    slurm_job: '3120979'
+    readout:
+      paired_rows: 40
+      mean_delta_pp: 27.1
+      median_delta_pp: 30.8
+      dcg_higher: 35/40
+      mean_base: 45.4
+      mean_dcg: 72.5
+      file: misc/2026-09-08_ed_gapper_screen/eval/STAGE_B.md
+notes: Anchors (10 measured grid-v3 effects) read on average 11 pp LOWER at one seed / new rows than their grid-v3 two-seed levels — the screen's absolute
+  levels are pessimistic, its ordering is the deliverable. The text-embedding prior did not predict the outcome (Spearman 0.03; exploit vs explore share<80
+  0.67 vs 0.73).

@@ -1,0 +1,16 @@
+id: gens/032_dualforce_dcg_w6/07_effect_edscreen__dai
+seq: 7
+shelf: gens
+arm: dualforce_dcg_w6
+harness_arm: dualforce_dcg_w6_effect_edscreen   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: effect_edscreen
+machine: dai
+created: 2026-09-09
+inputs: {run: runs/012_dualforce_control, step: 1000}
+code: src/LTX-2-ctt-v2-train packages + scripts/grid_v3/gen_dcg_v3.py (crossfade null, gs4/stg1, w=6) @ ed gapper screen
+prompt_family: prompts/015_edscreen_effect_token
+prompt_sha: 75ff2bea6a12
+grid_rows: 40
+videos: 40
+source: scripts/store_register.py over eval_ladder/registry_dualforce_dcg_w6_effect_edscreen.jsonl
+notes: "EffectData gapper screen stage B: DCG w=6 effect on the 40 lowest prompt-only effects, one same-content row each (screen endpoint 0), seed 42, native 81 f + frame-0 anchor; paired with gens/005_base_cond/08_effect_edscreen__dai"
