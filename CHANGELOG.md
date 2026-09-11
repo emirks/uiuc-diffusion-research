@@ -1,3 +1,6 @@
+## 2026-09-11
+- `12:30` **Collapse probe — endpoint distance vs collapse (TABLES.md §G, REPORT.md addendum).** `misc/2026-09-08_collapse_probe/scripts/distance_corr.py`: DINO / CLIP (ViT-B/32) / pixel distance between the two anchor frames of all 120 pairs vs DR of R1/R2/R3 and the paired deltas; pooled: far pairs collapse more in R3 (on-line 22–30% vs 5–10% near) but within scene-change pairs semantic distance does not order the collapse; pixel gap ρ≈−0.3 in every run incl. R1. Viewer server now lives in tmux session `viewer` (static 8017).
+
 ## 2026-09-10
 - `11:30` **Temporal-dynamics probe — correction: the reference pool does not guard against copying** (a pasted demo scores ≈ the class ceiling against the pool); copy detection is an explicit check under both pooled-% and demo-only scoring. Demo-only ÷ class-pair mean proposed as primary, pool and demo − pool as companions. REPORT.md correction note.
 

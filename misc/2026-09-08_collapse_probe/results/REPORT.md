@@ -114,3 +114,7 @@ sbatch --dependency=afterok:<r2r3 jobid> job_score.sbatch
 ```
 Inputs: `prompts/prompts.jsonl`, `reg/r1.jsonl` (built by `build_r1.py`), `reg/r{2,3}_s<seed>.jsonl` (built by
 `splice_r1.py` from the R1 outputs). Probe conditioning windows: `eval_ladder/conds/probe_<pid>_s<seed>_{start9,end9}.mp4`.
+
+## Addendum 2026-09-11 — does endpoint distance predict the collapse?
+
+Pooled over the 120 pairs, yes: R3 pairs in the far DINO/CLIP terciles land on the endpoint line 22–30% of the time vs 5–10% for near pairs, and the text-removed shift ΔDR(R3−R2) is more negative for semantically distant pairs (ρ −0.24 DINO, −0.28 CLIP). But the pooled relation is the tier contrast in disguise: scene-change pairs are all at DINO ≈ 1 and in-place pairs at 0.3–0.6. Within scene-change pairs, neither DINO nor CLIP distance orders the collapse (R3: ρ −0.12 / −0.04, n.s.; CLIP terciles 33/20/30% on-line). The pixel gap correlates weakly (ρ ≈ −0.3) in every run including the start-only witness R1, so it is a property of the pair, not of the collapse, and partly arithmetic since DR is normalised by that gap. Full table in TABLES.md §G; script scripts/distance_corr.py. Not tested: a within-tier design that varies distance while holding the mechanism fixed.
