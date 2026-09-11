@@ -33,3 +33,20 @@ R3 by distance tercile, pooled 120 (on-line share = DR ≤ 0.12; ΔDR = R3−R2 
 Within scene change, R3 by CLIP tercile (CLIP 0.20–0.46 / 0.46–0.54 / 0.54–0.68): on-line share 33% / 20% / 30%, DR median 0.16 / 0.24 / 0.20 — no gradient.
 
 Reading (attributed, this campaign): pooled over both tiers the far endpoints collapse more in R3 (DINO/CLIP terciles: on-line share 5–10% near vs 22–30% mid/far), but that pooled relation is carried by the tier contrast (scene-change vs in-place), which is also the text-off contrast. Within scene-change endpoints the semantic distance (DINO saturated at ~1, CLIP 0.2–0.7) does not order the collapse at all; the pixel gap does weakly (ρ ≈ −0.3) in all three runs, R1 included, and the pixel-gap relation is partly arithmetic (DR is normalised by that gap). The text-removed delta ΔDR(R3−R2) is more negative for semantically distant pairs pooled (ρ −0.24 DINO, −0.28 CLIP) and unrelated to the pixel gap. Same picture as the grid re-measure Table F (neutral/both ρ DINO −0.48/−0.39, ρ pixel −0.41/−0.43, ρ CLIP n.s.), which likewise pools scene-change and in-place rows.
+
+## H. Which member of the null family? cut vs dissolve on the on-line clips (added 2026-09-11)
+
+On-line = DR ≤ 0.12. Inside the endpoint line the mid-band share M separates the members: M ≈ 0 = frames sit at the two anchors (a cut), M ≈ 0.5 = frames spread along the line (a dissolve). τ_med = where along the clip the median frame crosses to the end anchor (1.0 = jump in the last frames).
+
+| tier | run | cut-like (M<0.15) | mixed | off-line |
+|---|---|---|---|---|
+| scene change | R1 start only, full prompt | 1% | 6% | 93% |
+| scene change | R2 both anchors, full prompt | 2% | 4% | 93% |
+| scene change | R3 both anchors, captions only | 26% | 2% | 72% |
+| in-place | R1 / R2 / R3 | 0% | 0% | 100% |
+
+Among the on-line clips: R3 scene change n=25, M median 0.05 [0.02, 0.07], 92% cut-like, 0% dissolve-like (M>0.30); τ_med of the cut-like clips median 0.99 (IQR 0.87–1.00), i.e. the start scene is held and the jump to the end anchor happens in the last frames. R1/R2 on-line clips (n=6 each) have M ≈ 0.2, partial blends rather than clean cuts.
+
+Distance does not move the kind within scene change: ρ(M, DINO) −0.02, ρ(M, CLIP) −0.20 (p=0.06), ρ(M, pixel) −0.04 over the 90 R3 clips; cut-like share by CLIP tercile 30% / 17% / 30%.
+
+Reading (attributed, this campaign): base LTX-2's operator-unaware default on scene-change endpoints is the late cut (hold A, jump to B), not the dissolve. Both are members of the interpolation family (α(t) a step at t≈1 vs linear) and both sit on the endpoint line, so DR alone calls them the same thing; M and τ tell them apart. No dissolve-like on-line clip was produced by the base model in this probe. The dissolve member has not been observed in any current-state arm; whether an operator-blind fine-tune lands there is untested.
