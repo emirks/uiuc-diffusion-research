@@ -50,3 +50,20 @@ Among the on-line clips: R3 scene change n=25, M median 0.05 [0.02, 0.07], 92% c
 Distance does not move the kind within scene change: ρ(M, DINO) −0.02, ρ(M, CLIP) −0.20 (p=0.06), ρ(M, pixel) −0.04 over the 90 R3 clips; cut-like share by CLIP tercile 30% / 17% / 30%.
 
 Reading (attributed, this campaign): base LTX-2's operator-unaware default on scene-change endpoints is a cut at about one third of the clip (hold A briefly, cut, hold B), not the dissolve. Both are members of the interpolation family (α(t) a step at t≈1 vs linear) and both sit on the endpoint line, so DR alone calls them the same thing; M and τ tell them apart. No dissolve-like on-line clip was produced by the base model in this probe. The dissolve member has not been observed in any current-state arm; whether an operator-blind fine-tune lands there is untested.
+
+## I. Abrupt cuts, on or off the endpoint line (added 2026-09-12)
+
+A cut between two live scenes is not on the endpoint line (frames on either side carry their own motion), so the on-line count misses it. Single-step detector in the instrument's pixel space (128 px, blurred), over the span from the start anchor to the end anchor: step_share = largest adjacent-frame step / total path length; step/gap = largest step / anchor-to-anchor distance. Calibrated on 240 random real transition clips (`data/processed/transitions_std121`, same windows): step_share median 0.03, p95 0.06; step/gap median 0.28, p95 0.56. **Abrupt cut := step_share > 0.06 and step/gap > 0.56** (both above the real-transition p95). Table `results/cut_detector.csv`.
+
+| tier | run | abrupt cut | on-line (DR ≤ 0.12) | abrupt & on-line | abrupt & off-line | on-line & not abrupt |
+|---|---|---|---|---|---|---|
+| scene change | R1 start only, full prompt | 2% | 7% | 0% | 2% | 7% |
+| scene change | R2 both anchors, full prompt | 4% | 7% | 0% | 4% | 7% |
+| scene change | R3 both anchors, captions only | **40%** | 28% | 12% | 28% | 16% |
+| in-place | R1 / R2 / R3 | 0% / 10% / 10% | 0% | 0% | 0 / 10 / 10% | 0% |
+
+Paired, scene change, 90 pairs: R2 → R3 turns 33 pairs abrupt and 1 back; R1 → R2 turns 2 abrupt and 0 back. R3 abrupt clips cross at 0.23 of the interior (median). The abrupt-and-off-line clips have DR 0.28 and path/gap 7.4 (live motion on both sides of the cut). The 14 on-line-but-not-abrupt clips have step_share 0.08 and M 0.06: crossings spread over a few frames, still in the cut/fast-blend corner of the family. 12 of 30 scene-change prompts are abrupt in R3 in at least two seeds, 2 of 30 in all three.
+
+Distance within scene change (Spearman with step_share): R3 DINO +0.19 (p=0.07), CLIP +0.15 (p=0.16), pixel +0.03; R2 DINO +0.18 (p=0.09); R1 pixel +0.22 (p=0.04), others n.s. Abrupt share by DINO tercile in R3: 37% / 37% / 47%; by CLIP tercile 37% / 43% / 40%.
+
+Reading (attributed, this campaign): with the operator absent from the text, base LTX-2 cuts in 40% of scene-change generations, of which under a third are the static hold-cut-hold that lands on the endpoint line; the rest are cuts between live scenes. Naming the operator removes the cut in 33 of 34 discordant pairs; the end anchor alone adds almost none (2 of 90). A weak, non-significant trend toward more abrupt cuts at larger DINO distance exists in both R2 and R3 (ρ ≈ 0.2), in the direction of the Veo 3.1 documentation note, but the scene-change tier spans too little distance to test it.
