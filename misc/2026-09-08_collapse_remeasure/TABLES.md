@@ -171,3 +171,17 @@ Spearman ρ of DR with each covariate (per grid × prompt × cond); DINO/CLIP di
 | DINO dist | -0.342 | [-0.743, +0.069] |
 | motion_prefix | +1.055 | [-0.819, +5.871] |
 | motion_suffix | +0.742 | [-0.221, +1.760] |
+
+## G. Tier-2 end-anchor removal, re-checked (2026-09-12)
+
+The Aug-24 Tier-2 design: the 40 two-sided rows of grid v2 (independent ground-truth endpoints), base LTX-2, neutral prompt, generated with both anchors (`02_neutral__dai`) and regenerated start-only with the suffix dropped and the prefix byte-identical (`tier2_start__dai`), seeds 42/43. Both variants contain byte-identical duplicates across rows that share an endpoint (base_cond ignores the reference): 80 clips each = 36 unique generations over 18 endpoints; 3 endpoints (6 pairs) are davis real-video rows flagged foreign. Pairs joined on (endpoint, seed). Start-only clips are scored against their own last frame. Abrupt cut = single-step detector of the probe's TABLES §I (step_share > 0.06 and step/gap > 0.56). Pair table `tier2_pairs.csv`.
+
+| denominator | pairs (endpoints) | DR median both → start | paired ΔDR median [endpoint-cluster 95% CI] | pairs ΔDR<0 | Wilcoxon one-sided p | on-line both → start | flips both-only / start-only (sign p) | classes both → start | abrupt cut both → start (flips) |
+|---|---|---|---|---|---|---|---|---|---|
+| clean (pre-registered) | 30 (15) | 0.211 → 0.345 | −0.052 [−0.173, +0.018] | 20/30 | 0.010 | 26.7% (8) → 10.0% (3) | 5 / 0 (0.031) | CUT 8, REAL 22 → CUT 3, REAL 27 | 50% (15) → 53% (16) (5 / 6) |
+| all incl. davis | 36 (18) | 0.255 → 0.375 | −0.025 [−0.158, +0.058] | 21/36 | 0.093 | 22.2% → 8.3% | 5 / 0 (0.031) | CUT 8 → CUT 3 | 42% → 44% (5 / 6) |
+| davis only | 6 (3) | 0.649 → 0.482 | +0.199 [+0.016, +0.249] | 1/6 | 0.97 | 0% → 0% | – | REAL → REAL | 0% → 0% |
+
+No dissolve or freeze class on either side; every on-line clip is a CUT (M median 0.06 both, 0.05 start). Per-endpoint (clean): the 5 flips are air_bending_1 ×2, melt_transition_2, hero_flight_5, shadow_smoke_7; shadow_smoke_2 stays on-line in all four clips; hero_flight_5 s42 stays on-line start-only.
+
+Reading (attributed, this re-check): removing only the end anchor lowers the on-line share from 27% to 10% with all five discordant pairs in that direction, and raises the median residual from 0.21 to 0.35; the paired median shift is −0.05 and its endpoint-cluster interval touches zero at 15 endpoints. The abrupt-cut rate does not change (50% vs 53%): the start-only generations cut to a scene of their own about as often as the both-anchor ones cut to the pinned end. The end anchor therefore does not cause the cutting; it determines whether the cut lands on the endpoint line as a static hold-cut-hold. Neutral prompt, grid v2, two seeds only; not replicated on v3.
