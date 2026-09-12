@@ -201,11 +201,11 @@ partitions, SU accounting, and account/priority strategy. One Taiga filesystem
 serves both clusters: `/taiga/illinois/...` resolves on BOTH;
 `/projects/illinois/...` is Campus-Cluster-only.
 
-**DeltaAI account rule (owner directive 2026-08-19, AMENDED 2026-08-30): `bgjg-dtai-gh`
-is PERMITTED** — the owner cleared it with that project's owner (first for the DINO-signal
-arm chains on 2026-08-29, then explicitly for the S6-reshape campaign on 2026-08-30).
-Charge `bgjg-dtai-gh` or `bhwp-dtai-gh` (`bgms-dtai-gh` is allowed but nearly depleted);
-pick by FairShare per `deltaai-throughput`; balance is only a don't-drain ceiling.
+**DeltaAI account rule (owner directive 2026-09-12): charge ONLY `bgjg-dtai-gh`
+(CIS260255, proactive streaming video foundation models) or `bhwp-dtai-gh` (CIS261307,
+scalable & universal immunization against deepfakes).** `bgms-dtai-gh` is NO LONGER permitted
+(it was allowed before 2026-09-12; owner restricted to the two projects above).
+Pick between bgjg/bhwp by FairShare per `deltaai-throughput`; balance is only a don't-drain ceiling.
 `--account=` is mandatory on every job.
 
 Hard rules: long runs go through `sbatch` (never park `srun ... bash`);
