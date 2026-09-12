@@ -65,9 +65,10 @@ def main():
                 "reference": r["reference"], "sided": r.get("sided"), "src": r.get("endpoint_source"),
                 "gt_ref": gt(r["reference"], r.get("donor_class") or c), "gt_end": gt(r["endpoint"], r["endpoint_class"]), "prompts": {}, "gens": {}}
 
-    def ingest(ha, sub, scores_dir, tier, seeds, classes):
+    def ingest(ha, vids, scores_dir, tier, seeds, classes):
         """gens[ha][seed] = level (None = scored row missing); the clip path is rebuilt client-side from
-        media/<ha>/<cell>__<ha>__<endpoint>__ref_<reference>__s<seed>.mp4 — the store's item_id contract."""
+        media/<ha>/<cell>__<ha>__<endpoint>__ref_<reference>__s<seed>.mp4 — the store's item_id contract.
+        `vids` = the directory holding <item_id>__s<seed>.mp4 (a subentry's videos/ or a per-clip dir spanning subentries)."""
         rows = {r["item_id"]: r for r in map(json.loads, filter(str.strip, open(REPO / f"eval_ladder/registry_{ha}.jsonl"))) if r["arm"] == ha}
         lv = levels(scores_dir, rows, ceil)
         for iid, r in rows.items():
@@ -75,7 +76,7 @@ def main():
             assert iid == f"{r['cell']}__{ha}__{r['endpoint']}__ref_{r['reference']}", iid
             row = classes[c].setdefault(key, new_row(r, c)); row["prompts"].setdefault(tier, r["prompt"])
             for seed in seeds:
-                if (sub / "videos" / f"{iid}__s{seed}.mp4").exists():
+                if (vids / f"{iid}__s{seed}.mp4").exists():
                     row["gens"].setdefault(ha, {})[str(seed)] = lv.get((iid, seed))
                 else:
                     missing[ha] += 1
@@ -92,7 +93,7 @@ def main():
                 if f != fam: continue
                 ha = f"{arm}_{tier}_{suffix}"; sub = REPO / f"store/gens/{gdir}/{kks[i]:02d}_{tier}_{suffix}__dai"
                 link(ha, sub / "videos"); cols.append({"ha": ha, "arm": short, "tier": tier})
-                ingest(ha, sub, E / ha, tier, (42, 43), classes)
+                ingest(ha, sub / "videos", E / ha, tier, (42, 43), classes)
         cards = []
         for c, rws in classes.items():
             rl = list(rws.values()); m = lambda ha, s=False: class_mean(rl, ha, s)
@@ -105,8 +106,9 @@ def main():
     # ---- EffectData probe (screen stage A + B)
     cols = []; classes = collections.defaultdict(dict)
     for ha, sub in (("base_cond_effect_edscreen", REPO / "store/gens/005_base_cond/08_effect_edscreen__dai"), ("dualforce_dcg_w6_effect_edscreen", REPO / "store/gens/032_dualforce_dcg_w6/07_effect_edscreen__dai")):
-        link(ha, sub / "videos"); cols.append({"ha": ha, "arm": "base" if ha.startswith("base") else "DCG", "tier": "effect"})
-        ingest(ha, sub, E029 / ha, "effect", (42,), classes)
+        vids = SCREEN / "eval/gens_b2" / ha if (SCREEN / "eval/gens_b2" / ha).is_dir() else sub / "videos"  # stage B2: per-clip dir spanning subentries 07 + 08
+        link(ha, vids); cols.append({"ha": ha, "arm": "base" if ha.startswith("base") else "DCG", "tier": "effect"})
+        ingest(ha, vids, E029 / ha, "effect", (42,), classes)
     screen = {f"ed.{r['effect']}": r for r in csv.DictReader(open(SCREEN / "eval/screen_levels.csv"))}
     cards = []
     for c, rws in classes.items():
@@ -115,7 +117,7 @@ def main():
         cards.append({"cls": c, "nov": "zero_shot", "ceiling": ceil.get(c), "n_all": len(rl), "n_same": len(rl), "A": A, "A_same": A, "B": None, "C": None, "base_neu": None, "dcg_neu": None,
                       "dcg_eff": dl, "role": s.get("role"), "category": s.get("category"),
                       "rows": sorted(rl, key=lambda r: (0 if "dualforce_dcg_w6_effect_edscreen" in r["gens"] else 1, r["endpoint"]))})
-    sections.append({"id": "probe", "label": "EffectData probe · 300 effects (81 f, seed 42; DCG effect on the 40 lowest)", "frames": 81, "cols": cols, "seeds": [42], "kind": "probe", "cards": cards})
+    sections.append({"id": "probe", "label": "EffectData probe · 300 effects (81 f, seed 42; DCG effect on the 40 lowest, up to 3 rows)", "frames": 81, "cols": cols, "seeds": [42], "kind": "probe", "cards": cards})
     sections.append(gappers(sections))
     index = {"built": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), "sections": [{k: v for k, v in s.items() if k != "cards"} | {"n": len(s["cards"])} for s in sections]}
     sizes = []
@@ -266,7 +268,7 @@ function append(){const s=sec();const vis=visible();const box=document.getElemen
  S.shown+=next.length;document.getElementById('more').textContent=S.shown<vis.length?S.shown+' / '+vis.length+' classes shown — scroll for more':vis.length+' classes';
  document.getElementById('stats').textContent=vis.length+' classes · '+(s.frames?s.frames+' f · ':'')+'A<80: '+vis.filter(function(c){return c.A!=null&&c.A<80}).length}
 function draw(keep){const box=document.getElementById('cards');box.innerHTML='';S.shown=0;drawTabs();if(!keep)drawCols();
- document.getElementById('legend').innerHTML='<b>A</b> = base_cond effect level (prompt-only; lower = harder, red &lt; 80). <b>B</b> = DCG w6 neutral − base_cond effect (reference alone vs best text). <b>C</b> = base effect − base neutral. Levels under each clip = that generation\'s pool-% of m1a (mean app_ref vs ≤8 same-class GT clips ÷ class ceiling ×100); the yardstick saturates past 100 on low-ceiling classes. Videos autoplay muted when in view. Built '+D.built+'.'+(sec().kind==='gappers'?'<br><b>gappers tab</b>: every zero-shot class with a DCG-effect measurement, ranked by gap = DCG effect − base effect. Base for probe effects = the stage-B row itself (same row, seed 42, selected on this outcome → diagnostic); for v3 classes = class mean over all rows, two seeds. Pareto front 1 = not dominated on (lower base, higher DCG). Tags: core = base ≤ 60 & DCG ≥ 80, ext = base ≤ 80 & DCG ≥ 80.':'');
+ document.getElementById('legend').innerHTML='<b>A</b> = base_cond effect level (prompt-only; lower = harder, red &lt; 80). <b>B</b> = DCG w6 neutral − base_cond effect (reference alone vs best text). <b>C</b> = base effect − base neutral. Levels under each clip = that generation\'s pool-% of m1a (mean app_ref vs ≤8 same-class GT clips ÷ class ceiling ×100); the yardstick saturates past 100 on low-ceiling classes. Videos autoplay muted when in view. Built '+D.built+'.'+(sec().kind==='gappers'?'<br><b>gappers tab</b>: every zero-shot class with a DCG-effect measurement, ranked by gap = DCG effect − base effect. Base for probe effects = mean over the probe rows that have a DCG clip (row 0 = stage B, the row the shortlist was selected on; rows 1-2 = stage B2, unselected), seed 42; for v3 classes = class mean over all rows, two seeds. Pareto front 1 = not dominated on (lower base, higher DCG). Tags: core = base ≤ 60 & DCG ≥ 80, ext = base ≤ 80 & DCG ≥ 80.':'');
  append();more.disconnect();more.observe(document.getElementById('more'))}
 function load(){const st=document.getElementById('status');if(CARDS[S.tab]){st.style.display='none';draw();return}
  st.style.display='block';st.textContent='loading data_'+S.tab+'.json …';document.getElementById('cards').innerHTML='';drawTabs();
