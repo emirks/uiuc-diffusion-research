@@ -127,3 +127,51 @@ Tier readout on SAME rows (levels), classes as selected above:
 | C top-10 | 10 | 10 | 40.1 | 72.6 | 53.2 | 80.8 | 95.0 | 96.5 | 99.1 | 100.1 | +26.5 |
 | zero-shot minus A | 24 | 24 | 34.7 | 95.5 | 61.0 | 93.8 | 98.7 | 99.9 | 99.8 | 101.1 | +4.3 |
 
+
+## Two-criterion selection: lowest base effect AND highest DCG w6 effect (owner 2026-09-12)
+
+Candidates: 17 v3 HF zero-shot classes + 34 v3 EffectData effects (2 seeds, all rows) + 40 screen effects (1 same row, seed 42). DCG neutral only exists on v3. Selection on an outcome arm → diagnostic; report on new rows.
+
+### Threshold grid — number of effects with base effect ≤ b and DCG effect ≥ d (v3 HF / v3 ED / screen)
+
+| base ≤ \ DCG ≥ | 70 | 80 | 90 |
+|---|---|---|---|
+| 40 | 0 / 0 / 7 = **7** | 0 / 0 / 5 = **5** | 0 / 0 / 4 = **4** |
+| 50 | 0 / 0 / 9 = **9** | 0 / 0 / 7 = **7** | 0 / 0 / 6 = **6** |
+| 60 | 0 / 1 / 11 = **12** | 0 / 1 / 9 = **10** | 0 / 1 / 8 = **9** |
+| 70 | 2 / 3 / 16 = **21** | 1 / 3 / 14 = **18** | 1 / 3 / 13 = **17** |
+| 80 | 4 / 7 / 17 = **28** | 3 / 7 / 15 = **25** | 3 / 6 / 14 = **23** |
+
+### Pareto fronts 1–2 (non-dominated on the two criteria), then the rest with base ≤ 60 and DCG ≥ 80
+
+| effect | source | n | base eff | DCG eff | gap | DCG neu | ceiling | front |
+|---|---|---|---|---|---|---|---|---|
+| Body_Dark_Energy_Field | screen B | 1 | 5.2 | 36.8 | +31.6 | — | 0.75 | 1 |
+| Mycelial_wings | screen B | 1 | 15.1 | 51.9 | +36.8 | — | 0.81 | 1 |
+| Hair_transforms_into_Koi | screen B | 1 | 16.9 | 53.4 | +36.5 | — | 0.85 | 1 |
+| Honey_skin_patterns | screen B | 1 | 18.6 | 80.4 | +61.8 | — | 0.85 | 1 |
+| Blood_cloak_aura | screen B | 1 | 29.8 | 94.9 | +65.1 | — | 0.81 | 1 |
+| Fingertip_smoke | screen B | 1 | 31.5 | 102.6 | +71.1 | — | 0.87 | 1 |
+| Foot-rising_light_column | screen B | 1 | 42.7 | 105.4 | +62.7 | — | 0.81 | 1 |
+| melt_transition | v3 HF zs | 8 | 64.4 | 108.8 | +44.3 | 108.3 | 0.53 | 1 |
+| Head-encircling_halo | screen B | 1 | 87.2 | 111.4 | +24.2 | — | 0.69 | 1 |
+| ed.Chest_Laser_Burst | v3 ED | 3 | 105.9 | 114.1 | +8.2 | 114.3 | 0.80 | 1 |
+| ed.Chest_sigil | v3 ED | 3 | 109.2 | 118.0 | +8.8 | 116.9 | 0.75 | 1 |
+| flying_cam_transition | v3 HF zs | 8 | 114.3 | 136.2 | +21.9 | 134.6 | 0.49 | 1 |
+| Bee_veil | screen B | 1 | 20.1 | 34.6 | +14.5 | — | 0.86 | 2 |
+| Fruit_core_vortex_shield | screen B | 1 | 20.5 | 36.8 | +16.3 | — | 0.94 | 2 |
+| Eye_tide_shell_beams | screen B | 1 | 24.9 | 60.1 | +35.2 | — | 0.90 | 2 |
+| Leaf_path_from_feet | screen B | 1 | 28.3 | 78.8 | +50.5 | — | 0.81 | 2 |
+| Shattering_chains_binding_body | screen B | 1 | 33.9 | 93.4 | +59.5 | — | 0.85 | 2 |
+| Petal_shield_from_arm | screen B | 1 | 35.5 | 100.3 | +64.8 | — | 0.77 | 2 |
+| Overhead_spherical_seal | screen B | 1 | 59.5 | 103.4 | +43.9 | — | 0.89 | 2 |
+| Green_liquid_wings | screen B | 1 | 61.9 | 105.0 | +43.1 | — | 0.92 | 2 |
+| Rainbow_wings | screen B | 1 | 64.8 | 106.4 | +41.6 | — | 0.93 | 2 |
+| ed.Avocado_Pulp_Aura | v3 ED | 3 | 79.7 | 106.6 | +26.9 | 106.3 | 0.86 | 2 |
+| acid | v3 HF zs | 6 | 100.6 | 111.3 | +10.7 | 109.1 | 0.76 | 2 |
+| Seashell_Armor_on_Shoulders | screen B | 1 | 48.2 | 91.6 | +43.4 | — | 0.83 | · |
+| ed.Diamond_Footpath | v3 ED | 3 | 56.6 | 92.4 | +35.8 | 85.4 | 0.94 | · |
+| Carrot_eye_beams | screen B | 1 | 59.4 | 92.3 | +32.9 | — | 0.86 | · |
+
+Shortlist rule base ≤ 60 & DCG ≥ 80 → 10 effects: mean base 41.6, mean DCG 95.7, gap +54.1; by source {'v3 ED': 1, 'screen B': 9}.
+Same rule on v3 only (two seeds): ['ed.Diamond_Footpath']
