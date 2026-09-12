@@ -1,3 +1,7 @@
+## 2026-09-12
+
+- `17:34` Lerp-collapse addendum: re-measured the Aug-24 both-anchor base generations for the "far endpoints → abrupt cuts" failure (abrupt-cut detector, jump3/transit profiles, DINO/CLIP/pixel endpoint-distance terciles, paired Tier-2 abrupt flags, frame strips). Tables + CSVs + scripts in `misc/2026-08-24_lerp_collapse/distance_vs_cut/` (TABLES.md).
+
 ## 2026-09-11
 - `12:30` **Collapse probe — endpoint distance vs collapse (TABLES.md §G, REPORT.md addendum).** `misc/2026-09-08_collapse_probe/scripts/distance_corr.py`: DINO / CLIP (ViT-B/32) / pixel distance between the two anchor frames of all 120 pairs vs DR of R1/R2/R3 and the paired deltas; pooled: far pairs collapse more in R3 (on-line 22–30% vs 5–10% near) but within scene-change pairs semantic distance does not order the collapse; pixel gap ρ≈−0.3 in every run incl. R1. Viewer server now lives in tmux session `viewer` (static 8017).
 
