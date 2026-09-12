@@ -6,7 +6,7 @@ the 300-effect EffectData probe (prompt-only; DCG effect on the 40 lowest). Leve
 Writes outputs/viewers/hardness_scene/index.html + media/ symlinks. Serve: viewerctl serve (repo root, port 8017).
 """
 from __future__ import annotations
-import collections, csv, json, statistics as st, sys
+import collections, csv, datetime, json, statistics as st, sys
 from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "eval_ladder")); sys.path.insert(0, str(REPO / "scripts/grid_v3"))
@@ -116,7 +116,7 @@ def main():
                       "dcg_eff": dl, "role": s.get("role"), "category": s.get("category"),
                       "rows": sorted(rl, key=lambda r: (0 if "dualforce_dcg_w6_effect_edscreen" in r["gens"] else 1, r["endpoint"]))})
     sections.append({"id": "probe", "label": "EffectData probe · 300 effects (81 f, seed 42; DCG effect on the 40 lowest)", "frames": 81, "cols": cols, "seeds": [42], "kind": "probe", "cards": cards})
-    import datetime
+    sections.append(gappers(sections))
     index = {"built": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), "sections": [{k: v for k, v in s.items() if k != "cards"} | {"n": len(s["cards"])} for s in sections]}
     sizes = []
     for s in sections:
@@ -129,6 +129,50 @@ def main():
     for s in sections:
         no_gt = sum(1 for c in s["cards"] for r in c["rows"] if not r["gt_end"] or not r["gt_ref"])
         if no_gt: print(f"  {s['id']}: {no_gt} rows without a GT clip on disk (foreign DAVIS windows or removed clips)")
+
+ROLES = ["base|effect", "DCG|effect", "DCG|neutral", "ctrl|effect", "ctrl|neutral", "ic_gen|effect", "ic_gen|neutral", "base|neutral"]
+ROLE_ARM = {"base": "base_cond", "DCG": "dualforce_dcg_w6", "ctrl": "dualforce_control", "ic_gen": "ic_gen"}
+
+
+def gappers(sections):
+    """Two-criterion tab (owner 2026-09-12): every zero-shot class with a DCG-effect measurement — grid v3 HF zero-shot,
+    grid v3 EffectData, the probe's 40 — ranked by gap = DCG effect − base effect; Pareto fronts on (min base, max DCG);
+    rule tags core = base ≤ 60 & DCG ≥ 80, ext = base ≤ 80 & DCG ≥ 80. Same numbers as scripts/grid_v3/gapper_select.py.
+    Rows carry ha_map (role -> harness arm) so one column set spans the three families; base for the probe = the
+    stage-B row itself (same-row comparison), for v3 = the class mean over all rows."""
+    by = {s["id"]: s for s in sections}; cards = []
+    for sid, src, suffix in (("v3_hf", "v3 HF zs", "v3"), ("v3_ed", "v3 ED", "v3ed81")):
+        ha_map = {r: f"{ROLE_ARM[r.split('|')[0]]}_{r.split('|')[1]}_{suffix}" for r in ROLES}
+        for c in by[sid]["cards"]:
+            if c["nov"] != "zero_shot" or c["dcg_eff"] is None or c["A"] is None:
+                continue
+            cards.append(dict(c, source=src, base_ref=c["A"], gap=c["dcg_eff"] - c["A"], rows=[dict(r, ha_map=ha_map, seeds=[42, 43]) for r in c["rows"]]))
+    ha_map = {"base|effect": "base_cond_effect_edscreen", "DCG|effect": "dualforce_dcg_w6_effect_edscreen"}
+    for c in by["probe"]["cards"]:
+        drows = [r for r in c["rows"] if "dualforce_dcg_w6_effect_edscreen" in r["gens"]]
+        if not drows:
+            continue
+        b = [x for r in drows for x in r["gens"].get("base_cond_effect_edscreen", {}).values() if x is not None]
+        d = [x for r in drows for x in r["gens"]["dualforce_dcg_w6_effect_edscreen"].values() if x is not None]
+        if not b or not d:
+            continue
+        base_ref, dcg = st.mean(b), st.mean(d)
+        cards.append(dict(c, source="screen B", A=base_ref, A_same=base_ref, base_ref=base_ref, dcg_eff=dcg, gap=dcg - base_ref, screen_A=c["A"],
+                          rows=[dict(r, ha_map=ha_map, seeds=[42]) for r in c["rows"]]))
+    rest = list(cards); front = 1
+    while rest:
+        f = [a for a in rest if not any((b["base_ref"] <= a["base_ref"] and b["dcg_eff"] >= a["dcg_eff"]) and (b["base_ref"] < a["base_ref"] or b["dcg_eff"] > a["dcg_eff"]) for b in rest)]
+        for a in f:
+            a["front"] = front
+        rest = [a for a in rest if a not in f]; front += 1
+    for a in cards:
+        a["rule"] = "core" if a["base_ref"] <= 60 and a["dcg_eff"] >= 80 else "ext" if a["base_ref"] <= 80 and a["dcg_eff"] >= 80 else None
+    cards.sort(key=lambda a: -a["gap"])
+    cols = [{"ha": r, "arm": r.split("|")[0], "tier": r.split("|")[1]} for r in ROLES]
+    n = collections.Counter(a["source"] for a in cards)
+    return {"id": "gappers", "label": f"gappers · lowest base effect × highest DCG effect ({n['v3 HF zs']} HF zs + {n['v3 ED']} v3 ED + {n['screen B']} probe)",
+            "frames": 0, "cols": cols, "seeds": [42, 43], "kind": "gappers", "cards": cards}
+
 
 TEMPLATE = r"""<!doctype html><html><head><meta charset="utf-8"><title>Hardness scene · base vs DCG</title>
 <style>
@@ -166,12 +210,13 @@ video{width:172px;background:#000;border-radius:3px;display:block;aspect-ratio:3
 </style></head><body>
 <header><h1>Hardness scene</h1>
 <div class="tabs" id="tabs"></div>
-<span>sort <select id="sort"><option value="A">A · prompt-only effect (hardest first)</option><option value="B">B · DCG neutral − base effect (largest first)</option><option value="C">C · effect − neutral (smallest first)</option><option value="dcg_eff">DCG effect (lowest first)</option><option value="cls">class name</option></select></span>
+<span>sort <select id="sort"><option value="A">A · prompt-only effect (hardest first)</option><option value="B">B · DCG neutral − base effect (largest first)</option><option value="C">C · effect − neutral (smallest first)</option><option value="gap">gap · DCG effect − base effect (largest first)</option><option value="dcg_eff">DCG effect (lowest first)</option><option value="front">Pareto front (min base, max DCG)</option><option value="cls">class name</option></select></span>
 <span>rows <select id="content"><option value="same">same only</option><option value="all">same + cross + foreign</option></select></span>
 <span>seeds <select id="seeds"><option value="both">42 + 43</option><option value="42">42</option><option value="43">43</option></select></span>
 <span id="cols"></span>
 <input type="text" id="q" placeholder="filter class…" size="16">
 <label class="ck"><input type="checkbox" id="hardonly"> A &lt; 80 only</label>
+<label class="ck"><input type="checkbox" id="bothonly"> both criteria (base ≤ 80 &amp; DCG ≥ 80)</label>
 <span id="stats"></span></header>
 <div id="err"></div><div id="status">loading index.json …</div>
 <main><div class="legend" id="legend"></div><div id="cards"></div><div id="more"></div></main>
@@ -180,9 +225,9 @@ video{width:172px;background:#000;border-radius:3px;display:block;aspect-ratio:3
 function showErr(m){const e=document.getElementById('err');e.style.display='block';e.textContent+=m+'\n'}
 window.onerror=function(m,src,l,c){showErr('JS error: '+m+' @'+l+':'+c);return false};
 let D=null;const CARDS={};
-const S={tab:null,sort:'A',content:'same',seeds:'both',cols:null,q:'',hard:false,shown:0,gtref:true,gtend:true};
+const S={tab:null,sort:'A',content:'same',seeds:'both',cols:null,q:'',hard:false,both:false,shown:0,gtref:true,gtend:true};
 const LS='hardness_scene_v2';try{Object.assign(S,JSON.parse(localStorage.getItem(LS)||'{}'));S.shown=0}catch(e){}
-function save(){try{localStorage.setItem(LS,JSON.stringify({tab:S.tab,sort:S.sort,content:S.content,seeds:S.seeds,cols:S.cols,hard:S.hard,gtref:S.gtref,gtend:S.gtend}))}catch(e){}}
+function save(){try{localStorage.setItem(LS,JSON.stringify({tab:S.tab,sort:S.sort,content:S.content,seeds:S.seeds,cols:S.cols,hard:S.hard,both:S.both,gtref:S.gtref,gtend:S.gtend}))}catch(e){}}
 function sec(){return D.sections.find(function(s){return s.id===S.tab})||D.sections[0]}
 const DEF=['base|effect','DCG|effect','DCG|neutral'];
 function colOn(c){const k=c.arm+'|'+c.tier;return S.cols?S.cols.indexOf(k)>=0:DEF.indexOf(k)>=0}
@@ -197,8 +242,8 @@ function drawCols(){const s=sec();let h='cols: <label class="ck"><input type="ch
  document.getElementById('cols').innerHTML=h;
  document.querySelectorAll('#cols input').forEach(function(i){i.onchange=function(){const k=i.dataset.c;if(k==='gt_ref'){S.gtref=i.checked}else if(k==='gt_end'){S.gtend=i.checked}else{S.cols=S.cols||DEF.slice();S.cols=i.checked?S.cols.concat(S.cols.indexOf(k)<0?[k]:[]):S.cols.filter(function(x){return x!==k})}save();draw(true)}})}
 function sortCards(cards){const k=S.sort;function v(c){return c[k]}function nul(c){return v(c)==null?1:0}
- return cards.slice().sort(function(a,b){if(k==='cls')return a.cls.localeCompare(b.cls);const d=nul(a)-nul(b);if(d)return d;if(nul(a))return 0;return k==='B'?v(b)-v(a):v(a)-v(b)})}
-function visible(){let c=CARDS[S.tab]||[];if(S.hard)c=c.filter(function(x){return x.A!=null&&x.A<80});if(S.q){const q=S.q.toLowerCase();c=c.filter(function(x){return x.cls.toLowerCase().indexOf(q)>=0})}return sortCards(c)}
+ return cards.slice().sort(function(a,b){if(k==='cls')return a.cls.localeCompare(b.cls);const d=nul(a)-nul(b);if(d)return d;if(nul(a))return 0;return (k==='B'||k==='gap')?v(b)-v(a):v(a)-v(b)})}
+function visible(){let c=CARDS[S.tab]||[];if(S.hard)c=c.filter(function(x){return x.A!=null&&x.A<80});if(S.both)c=c.filter(function(x){return !!x.rule});if(S.q){const q=S.q.toLowerCase();c=c.filter(function(x){return x.cls.toLowerCase().indexOf(q)>=0})}return sortCards(c)}
 function cellHTML(src,cap,lv,gtc){if(!src)return '<div class="cell"><div class="none">missing</div><div class="cap"><b>'+esc(cap)+'</b></div></div>';
  const lvc=lv==null?'':lv<60?'lo':lv>=90?'hi':'';
  return '<div class="cell '+(gtc||'')+'"><video muted loop playsinline preload="none" data-src="'+src+'"></video><div class="cap"><b>'+esc(cap)+'</b>'+(lv==null?'':'<span class="lv '+lvc+'">'+lv.toFixed(1)+'</span>')+'</div></div>'}
@@ -207,10 +252,11 @@ function rowHTML(s,r){const seeds=S.seeds==='both'?s.seeds:[+S.seeds];
  let h='<div class="row"><div class="meta"><b>'+r.content+'</b> · '+r.nov+'<br>'+r.cell+'<br>end: '+esc(r.endpoint)+'<br>ref: '+esc(r.reference)+(r.sided?'<br>'+r.sided:'')+'</div>';
  if(S.gtref)h+=cellHTML(r.gt_ref,'reference (GT)',null,'gt');
  if(S.gtend)h+=cellHTML(r.gt_end,r.content==='foreign'?'endpoint content (foreign, no GT effect)':r.content==='cross'?'endpoint clip (other class)':'endpoint clip (GT, same effect)',null,'gt');
- for(const c of s.cols){if(!colOn(c))continue;const g=r.gens[c.ha]||{};for(const sd of seeds){if(!(String(sd) in g)){if(s.seeds.length===1)continue;h+=cellHTML(null,c.arm+' '+c.tier+' s'+sd,null);continue}h+=cellHTML(genSrc(c.ha,r,sd),c.arm+' '+c.tier+' s'+sd,g[String(sd)])}}
+ for(const c of s.cols){if(!colOn(c))continue;if(r.ha_map&&!(c.ha in r.ha_map))continue;const ha=(r.ha_map&&r.ha_map[c.ha])||c.ha;const g=r.gens[ha]||{};for(const sd of seeds){if(r.seeds&&r.seeds.indexOf(sd)<0)continue;if(!(String(sd) in g)){if(s.seeds.length===1)continue;h+=cellHTML(null,c.arm+' '+c.tier+' s'+sd,null);continue}h+=cellHTML(genSrc(ha,r,sd),c.arm+' '+c.tier+' s'+sd,g[String(sd)])}}
  return h+'</div>'}
 function cardHTML(s,c){const rows=c.rows.filter(function(r){return S.content==='all'||r.content==='same'});const p=(c.rows[0]&&c.rows[0].prompts.effect)||'';
- const kv=s.kind==='v3'?'<span class="kv">A all rows <b>'+fmt(c.A)+'</b> · same <b>'+fmt(c.A_same)+'</b></span><span class="kv">B DCG neu − base eff <b>'+sgn(c.B)+'</b></span><span class="kv">C eff − neu <b>'+sgn(c.C)+'</b></span><span class="kv">DCG neu <b>'+fmt(c.dcg_neu)+'</b> · DCG eff <b>'+fmt(c.dcg_eff)+'</b></span>'
+ const kv=s.kind==='gappers'?'<span class="kv">source <b>'+esc(c.source)+'</b></span><span class="kv">base eff <b>'+fmt(c.base_ref)+'</b> · DCG eff <b>'+fmt(c.dcg_eff)+'</b> · gap <b>'+sgn(c.gap)+'</b></span>'+(c.dcg_neu==null?'':'<span class="kv">DCG neu <b>'+fmt(c.dcg_neu)+'</b> · B <b>'+sgn(c.B)+'</b></span>')+(c.screen_A==null?'':'<span class="kv">screen A (3 rows) <b>'+fmt(c.screen_A)+'</b></span>')+(c.rule?'<span class="tag '+(c.rule==='core'?'hard':'mid')+'">'+(c.rule==='core'?'core · base ≤ 60 & DCG ≥ 80':'ext · base ≤ 80 & DCG ≥ 80')+'</span>':'')+'<span class="kv">front <b>'+c.front+'</b></span>'
+  :s.kind==='v3'?'<span class="kv">A all rows <b>'+fmt(c.A)+'</b> · same <b>'+fmt(c.A_same)+'</b></span><span class="kv">B DCG neu − base eff <b>'+sgn(c.B)+'</b></span><span class="kv">C eff − neu <b>'+sgn(c.C)+'</b></span><span class="kv">DCG neu <b>'+fmt(c.dcg_neu)+'</b> · DCG eff <b>'+fmt(c.dcg_eff)+'</b></span>'
   :'<span class="kv">screen A (3 rows) <b>'+fmt(c.A)+'</b></span><span class="kv">DCG eff (stage B row) <b>'+fmt(c.dcg_eff)+'</b></span><span class="kv">'+esc(c.role||'')+(c.category?' · '+esc(c.category):'')+'</span>';
  return '<div class="card"><h2><span class="cls">'+esc(c.cls)+'</span>'+tagA(c.A)+'<span class="nov">'+c.nov+'</span>'+kv+'<span class="kv">ceiling <b>'+(c.ceiling==null?'—':c.ceiling.toFixed(2))+'</b> · rows '+c.n_same+' same / '+c.n_all+' all</span></h2><div class="prompt">'+esc(p)+'</div>'+(rows.map(function(r){return rowHTML(s,r)}).join('')||'<div class="kv">no rows under this filter</div>')+'</div>'}
 const io=new IntersectionObserver(function(es){for(const e of es){const v=e.target;if(e.isIntersecting){if(!v.getAttribute('src'))v.src=v.dataset.src;const p=v.play();if(p&&p.catch)p.catch(function(){})}else{v.pause()}}},{rootMargin:'300px'});
@@ -218,16 +264,16 @@ const more=new IntersectionObserver(function(es){if(es.some(function(e){return e
 function append(){const s=sec();const vis=visible();const box=document.getElementById('cards');const next=vis.slice(S.shown,S.shown+8);
  for(const c of next){const d=document.createElement('div');d.innerHTML=cardHTML(s,c);const el=d.firstElementChild;box.appendChild(el);el.querySelectorAll('video').forEach(function(v){io.observe(v)})}
  S.shown+=next.length;document.getElementById('more').textContent=S.shown<vis.length?S.shown+' / '+vis.length+' classes shown — scroll for more':vis.length+' classes';
- document.getElementById('stats').textContent=vis.length+' classes · '+s.frames+' f · A<80: '+vis.filter(function(c){return c.A!=null&&c.A<80}).length}
+ document.getElementById('stats').textContent=vis.length+' classes · '+(s.frames?s.frames+' f · ':'')+'A<80: '+vis.filter(function(c){return c.A!=null&&c.A<80}).length}
 function draw(keep){const box=document.getElementById('cards');box.innerHTML='';S.shown=0;drawTabs();if(!keep)drawCols();
- document.getElementById('legend').innerHTML='<b>A</b> = base_cond effect level (prompt-only; lower = harder, red &lt; 80). <b>B</b> = DCG w6 neutral − base_cond effect (reference alone vs best text). <b>C</b> = base effect − base neutral. Levels under each clip = that generation\'s pool-% of m1a (mean app_ref vs ≤8 same-class GT clips ÷ class ceiling ×100); the yardstick saturates past 100 on low-ceiling classes. Videos autoplay muted when in view. Built '+D.built+'.';
+ document.getElementById('legend').innerHTML='<b>A</b> = base_cond effect level (prompt-only; lower = harder, red &lt; 80). <b>B</b> = DCG w6 neutral − base_cond effect (reference alone vs best text). <b>C</b> = base effect − base neutral. Levels under each clip = that generation\'s pool-% of m1a (mean app_ref vs ≤8 same-class GT clips ÷ class ceiling ×100); the yardstick saturates past 100 on low-ceiling classes. Videos autoplay muted when in view. Built '+D.built+'.'+(sec().kind==='gappers'?'<br><b>gappers tab</b>: every zero-shot class with a DCG-effect measurement, ranked by gap = DCG effect − base effect. Base for probe effects = the stage-B row itself (same row, seed 42, selected on this outcome → diagnostic); for v3 classes = class mean over all rows, two seeds. Pareto front 1 = not dominated on (lower base, higher DCG). Tags: core = base ≤ 60 & DCG ≥ 80, ext = base ≤ 80 & DCG ≥ 80.':'');
  append();more.disconnect();more.observe(document.getElementById('more'))}
 function load(){const st=document.getElementById('status');if(CARDS[S.tab]){st.style.display='none';draw();return}
  st.style.display='block';st.textContent='loading data_'+S.tab+'.json …';document.getElementById('cards').innerHTML='';drawTabs();
  fetch('data_'+S.tab+'.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(cards){CARDS[S.tab]=cards;st.style.display='none';draw()}).catch(function(e){st.textContent='';showErr('failed to load data_'+S.tab+'.json: '+e)})}
-document.getElementById('sort').value=S.sort;document.getElementById('content').value=S.content;document.getElementById('seeds').value=S.seeds;document.getElementById('hardonly').checked=S.hard;
+document.getElementById('sort').value=S.sort;document.getElementById('content').value=S.content;document.getElementById('seeds').value=S.seeds;document.getElementById('hardonly').checked=S.hard;document.getElementById('bothonly').checked=S.both;
 document.getElementById('sort').onchange=function(e){S.sort=e.target.value;save();draw(true)};document.getElementById('content').onchange=function(e){S.content=e.target.value;save();draw(true)};
-document.getElementById('seeds').onchange=function(e){S.seeds=e.target.value;save();draw(true)};document.getElementById('hardonly').onchange=function(e){S.hard=e.target.checked;save();draw(true)};
+document.getElementById('seeds').onchange=function(e){S.seeds=e.target.value;save();draw(true)};document.getElementById('hardonly').onchange=function(e){S.hard=e.target.checked;save();draw(true)};document.getElementById('bothonly').onchange=function(e){S.both=e.target.checked;save();draw(true)};
 document.getElementById('q').oninput=function(e){S.q=e.target.value;draw(true)};
 fetch('index.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(d){D=d;if(!D.sections.some(function(s){return s.id===S.tab}))S.tab=D.sections[0].id;load()}).catch(function(e){document.getElementById('status').textContent='';showErr('failed to load index.json: '+e)});
 </script></body></html>"""
