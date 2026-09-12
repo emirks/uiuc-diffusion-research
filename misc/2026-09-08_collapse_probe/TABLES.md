@@ -36,7 +36,7 @@ Reading (attributed, this campaign): pooled over both tiers the far endpoints co
 
 ## H. Which member of the null family? cut vs dissolve on the on-line clips (added 2026-09-11)
 
-On-line = DR ≤ 0.12. Inside the endpoint line the mid-band share M separates the members: M ≈ 0 = frames sit at the two anchors (a cut), M ≈ 0.5 = frames spread along the line (a dissolve). τ_med = where along the clip the median frame crosses to the end anchor (1.0 = jump in the last frames).
+On-line = DR ≤ 0.12. Inside the endpoint line the mid-band share M separates the members: M ≈ 0 = frames sit at the two anchors (a cut), M ≈ 0.5 = frames spread along the line (a dissolve). τ = projection coordinate of a frame on the A→B line (0 = at the start anchor, 1 = at the end anchor); τ_med = median τ over the interior frames.
 
 | tier | run | cut-like (M<0.15) | mixed | off-line |
 |---|---|---|---|---|
@@ -45,8 +45,8 @@ On-line = DR ≤ 0.12. Inside the endpoint line the mid-band share M separates t
 | scene change | R3 both anchors, captions only | 26% | 2% | 72% |
 | in-place | R1 / R2 / R3 | 0% | 0% | 100% |
 
-Among the on-line clips: R3 scene change n=25, M median 0.05 [0.02, 0.07], 92% cut-like, 0% dissolve-like (M>0.30); τ_med of the cut-like clips median 0.99 (IQR 0.87–1.00), i.e. the start scene is held and the jump to the end anchor happens in the last frames. R1/R2 on-line clips (n=6 each) have M ≈ 0.2, partial blends rather than clean cuts.
+Among the on-line clips: R3 scene change n=25, M median 0.05 [0.02, 0.07], 92% cut-like, 0% dissolve-like (M>0.30); τ_med of the cut-like clips median 0.99 (IQR 0.87–1.00): the end scene dominates the interior. Per-frame τ profiles (recomputed 2026-09-12 with the same instrument): the start scene is held for the first third, the crossing (first τ > 0.5) happens at 0.34 of the interior (median, IQR 0.23–0.40), and the end scene is held for the remaining two thirds (near-A share 0.30, near-B share 0.64; mean 10-bin profile 0.03 0.14 0.21 0.54 0.77 0.91 0.98 0.99 1.00 1.00). No on-line clip holds the start scene to the end (0 of 25 with near-A share > 0.8); 3 of 25 jump almost immediately. The 65 off-line R3 scene-change clips have the same shape (crossing at 0.27, near-B share 0.69) at residual DR 0.19–0.33: they also reach the end scene early, but the crossing or the holds carry off-line content. R1/R2 on-line clips (n=6 each) have M ≈ 0.2, partial blends rather than clean cuts.
 
 Distance does not move the kind within scene change: ρ(M, DINO) −0.02, ρ(M, CLIP) −0.20 (p=0.06), ρ(M, pixel) −0.04 over the 90 R3 clips; cut-like share by CLIP tercile 30% / 17% / 30%.
 
-Reading (attributed, this campaign): base LTX-2's operator-unaware default on scene-change endpoints is the late cut (hold A, jump to B), not the dissolve. Both are members of the interpolation family (α(t) a step at t≈1 vs linear) and both sit on the endpoint line, so DR alone calls them the same thing; M and τ tell them apart. No dissolve-like on-line clip was produced by the base model in this probe. The dissolve member has not been observed in any current-state arm; whether an operator-blind fine-tune lands there is untested.
+Reading (attributed, this campaign): base LTX-2's operator-unaware default on scene-change endpoints is a cut at about one third of the clip (hold A briefly, cut, hold B), not the dissolve. Both are members of the interpolation family (α(t) a step at t≈1 vs linear) and both sit on the endpoint line, so DR alone calls them the same thing; M and τ tell them apart. No dissolve-like on-line clip was produced by the base model in this probe. The dissolve member has not been observed in any current-state arm; whether an operator-blind fine-tune lands there is untested.
