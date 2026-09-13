@@ -1,0 +1,51 @@
+id: 008_crossing_allbutone
+seq: 8
+shelf: datasets
+created: 2026-09-13
+role: >
+  Crossing ablation, "ALL BUT ONE" layout — a MATCHED PAIR of from-scratch training sets (crossed vs
+  uncrossed) that differ ONLY in how the same shots and operators are laid out. Uncrossed: every shot
+  under exactly 1 operator (the shot alone names the operator). Crossed: every shot under all operators
+  of its block but ONE; the missing cell rotates and is the T2 probe, shown only through the reference,
+  untrained in BOTH models. Supersedes the 007 layout (degree 5 + EffectData degree 2; 007 never consumed).
+source: >
+  datasets/crossing_allbutone/build_s0s1.py (deterministic, seed 42) over the training-verified manifest
+  store/datasets/005_ctt_v2plus_s6reshape/root/samples.jsonl; assemble.py concatenates blocks/ and
+  ASSERTS the control. Tensors are COPIED into root/data (self-contained, 4.1 GB; nothing points outside).
+root: symlink -> ../../../datasets/crossing_allbutone   # crossed/, uncrossed/, tests/, data/, _mask_store/, blocks/
+form: >
+  two roots (crossed/, uncrossed/), each samples.jsonl in the 005 row schema with ROOT-RELATIVE paths
+  (`data -> ../data`, `_mask_store -> ../_mask_store` per root). Trainer reads ONE root per run.
+blocks:
+  s0s1:   # BUILT 2026-09-13 — onesided, the 9 dense S1 spec manners
+    operators: 9
+    crossed:   {shots: 27, operators_per_shot: 8, missing_per_operator: 3}
+    uncrossed: {shots: 216, operators_per_shot: 1, designated_per_operator: 3, fresh_per_operator: 21}
+    shots_per_operator: 24      # both sets
+    refs_per_shot_op: 4         # same operator, different shot, WITHIN the block; rotated (each shot x op is a ref exactly 4x)
+    pairs: 864                  # both sets
+  s2:     # PENDING — twosided, 12 shader operators x 12 endpoints minus a Latin diagonal, one fixed op per shader, rendered fresh
+    operators: 12
+    crossed:   {shots: 12, operators_per_shot: 11}
+contents: >
+  CURRENT (s0s1 only): 864 pairs PER SET; 9 operators; crossed 27 shots x 8 operators = 216 shot x operators;
+  uncrossed 216 shots x 1 = 216; 24 shots per operator in both. 405 distinct target tensors (the 27 designated
+  cells are shared), 216 caption-key conditions, 1 onesided mask (+ the twosided mask staged for s2).
+control_invariant: >
+  operator->pairs, operator->shot x operators and operator->shots histograms are IDENTICAL between crossed and
+  uncrossed; crossed shots are a subset of uncrossed shots, each under its designated operator (one of its trained
+  operators). The ONLY difference is operators per shot (8 vs 1). Asserted by assemble.py; recorded in BUILD_AUDIT.json.
+tests:
+  t1_seen: datasets/crossing_allbutone/tests/t1_seen.jsonl   # 27; designated operator, matched reference -> expect tie
+  t2_swap: datasets/crossing_allbutone/tests/t2_swap.jsonl   # 27; the MISSING operator via the reference; untrained in both; THE cell
+  t3_zeroshot: datasets/crossing_ablation/tests/t3_zeroshot.md  # bonus; grid v3 held-out operators + shots
+health: >
+  assemble.py all asserts pass (pairs 864/864, histograms equal, degree 8 on all 27 crossed shots, degree 1 on all
+  216 uncrossed shots, subset ok, references regular 4x, 0 missing paths over 1,027 distinct files). Torch shapes
+  sampled both roots: latents/reference/cond_clean (128,16,20,15), mask (16,20,15), conditions embeds (1024,3840).
+recipe_planned: >
+  BOTH arms identical, from scratch, never warm-started: rank 32 / alpha 32, lr 2e-4, 3,000 steps, batch 1,
+  WSD (warmup 100, decay 25%), seed 42 (ic_gen's recipe + the ctt_v3 WSD schedule).
+consumers: []    # NOT consumed yet — s2 block still to be added, then re-assemble; two runs on eps pending
+docs: ./root/README.md
+authority: ./root/BUILD_AUDIT.json (assembled invariants); ./root/blocks/*/audit.json (per block); build_s0s1.py / assemble.py
