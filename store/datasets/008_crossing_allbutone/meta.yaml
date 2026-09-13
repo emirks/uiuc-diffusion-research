@@ -24,28 +24,43 @@ blocks:
     shots_per_operator: 24      # both sets
     refs_per_shot_op: 4         # same operator, different shot, WITHIN the block; rotated (each shot x op is a ref exactly 4x)
     pairs: 864                  # both sets
-  s2:     # PENDING — twosided, 12 shader operators x 12 endpoints minus a Latin diagonal, one fixed op per shader, rendered fresh
-    operators: 12
-    crossed:   {shots: 12, operators_per_shot: 11}
+  s2:     # BUILT 2026-09-13 — twosided, 12 owner-picked gl-transitions shader families on existing S2 endpoint pairs
+    operators: 12   # butterflywavescrawler dissolve edgetransition pixelize waterdrop bookflip bowtiewithparameter crosszoom filmburn gridflip fragment pinwheel
+    crossed:   {shots: 12, operators_per_shot: 11, missing_per_operator: 1}
+    uncrossed: {shots: 132, operators_per_shot: 1, designated_per_operator: 1, fresh_per_operator: 10}
+    shots_per_operator: 11
+    refs_per_shot_op: 4
+    pairs: 528
+    topup: >
+      208 cells from existing S2a/S2b renders + 44 HOLES rendered fresh (frozen S2 engine, one existing complete op per
+      shader, flip none/swap false; CC secondary CPU GL) and encoded on DeltaAI (1 GH200, S2b recipe, twosided suffix
+      correction, median suffix_rel_l2 0.327). All 44 byte-exact endpoints + operator-identity gate pass; 41/44 pass the
+      visual quality gate (3 seam-flagged, kept: s2x_00_edgetransition s2x_00_gridflip s2x_03_filmburn).
+    tests_reference: existing S2 render of the operator on an endpoint OUTSIDE both training sets (novel demonstration)
+    provenance: root/s2_topup/{PLAN.json,render_jobs.json,render/meta,encodes/S2X}
 contents: >
-  CURRENT (s0s1 only): 864 pairs PER SET; 9 operators; crossed 27 shots x 8 operators = 216 shot x operators;
-  uncrossed 216 shots x 1 = 216; 24 shots per operator in both. 405 distinct target tensors (the 27 designated
-  cells are shared), 216 caption-key conditions, 1 onesided mask (+ the twosided mask staged for s2).
+  1,392 pairs PER SET (s0s1 864 + s2 528); 21 operators (9 onesided S1 manners + 12 twosided S2 shaders).
+  CROSSED: 39 shots (27 x 8 operators + 12 x 11) = 348 shot x operators. UNCROSSED: 348 shots x 1 operator.
+  Shots per operator: 24 (s0s1) / 11 (s2) in both sets. 657 distinct target tensors, 348 caption-key conditions,
+  2 masks; root/data 6.7 GB, self-contained (1,664 distinct files referenced).
 control_invariant: >
   operator->pairs, operator->shot x operators and operator->shots histograms are IDENTICAL between crossed and
   uncrossed; crossed shots are a subset of uncrossed shots, each under its designated operator (one of its trained
   operators). The ONLY difference is operators per shot (8 vs 1). Asserted by assemble.py; recorded in BUILD_AUDIT.json.
 tests:
-  t1_seen: datasets/crossing_allbutone/tests/t1_seen.jsonl   # 27; designated operator, matched reference -> expect tie
-  t2_swap: datasets/crossing_allbutone/tests/t2_swap.jsonl   # 27; the MISSING operator via the reference; untrained in both; THE cell
+  t1_seen: datasets/crossing_allbutone/tests/t1_seen.jsonl   # 39 (27 s0s1 + 12 s2); designated operator, matched reference -> expect tie
+  t2_swap: datasets/crossing_allbutone/tests/t2_swap.jsonl   # 39; the MISSING operator via the reference; untrained in both; THE cell
   t3_zeroshot: datasets/crossing_ablation/tests/t3_zeroshot.md  # bonus; grid v3 held-out operators + shots
 health: >
-  assemble.py all asserts pass (pairs 864/864, histograms equal, degree 8 on all 27 crossed shots, degree 1 on all
-  216 uncrossed shots, subset ok, references regular 4x, 0 missing paths over 1,027 distinct files). Torch shapes
-  sampled both roots: latents/reference/cond_clean (128,16,20,15), mask (16,20,15), conditions embeds (1024,3840).
+  assemble.py all asserts pass with both blocks (pairs 1,392/1,392; operator->pairs/shot x ops/shots histograms
+  identical; degree 8 on all 27 s0s1 crossed shots and 11 on all 12 s2 crossed shots; degree 1 on all 348 uncrossed
+  shots; crossed subset of uncrossed; references regular 4x; 0 missing paths over 1,664 distinct files). Torch shapes
+  sampled both roots/both blocks: latents/reference/cond_clean (128,16,20,15), masks (16,20,15), conditions embeds
+  (1024,3840); twosided cond_clean != latents (suffix corrected). GOTCHA fixed during build: S2a/S2b clips share the
+  s2_XXXX_cYY stem naming -> copied/row stems are prefixed by stratum (S2a__..., S2b__...).
 recipe_planned: >
   BOTH arms identical, from scratch, never warm-started: rank 32 / alpha 32, lr 2e-4, 3,000 steps, batch 1,
   WSD (warmup 100, decay 25%), seed 42 (ic_gen's recipe + the ctt_v3 WSD schedule).
-consumers: []    # NOT consumed yet — s2 block still to be added, then re-assemble; two runs on eps pending
+consumers: []    # COMPLETE, not consumed yet — two from-scratch runs (crossed, uncrossed) pending; immutable once they start
 docs: ./root/README.md
-authority: ./root/BUILD_AUDIT.json (assembled invariants); ./root/blocks/*/audit.json (per block); build_s0s1.py / assemble.py
+authority: ./root/BUILD_AUDIT.json (assembled invariants); ./root/blocks/*/audit.json (per block); build_s0s1.py / s2_topup/*.py / assemble.py
