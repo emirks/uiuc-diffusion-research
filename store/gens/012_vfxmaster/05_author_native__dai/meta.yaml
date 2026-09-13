@@ -1,0 +1,18 @@
+id: gens/012_vfxmaster/05_author_native__dai
+seq: 5
+shelf: gens
+arm: vfxmaster
+harness_arm: vfxmaster_author_native   # frozen stamp in items.jsonl
+variant: author_native
+machine: dai
+created: 2026-09-13
+inputs: {run: runs/011_vfxmaster (external)}
+prompt_family: authorcfg_native_captions (health-gated 2026-09-12; prompt=step6 first-frame fusion, ref_prompt=step5 ref-video caption (authors' Fig-13/14 prompts, verbatim, via gemini-3.6-flash))
+prompt_sha: 306ebab7af92
+grid_rows: 366
+videos: 366
+geometry: 480x640x49f @ fps 9.719 (duration-matched to 121f@24; native aspect off — disclosed)
+grid: v3 ZERO-SHOT one-sided set (183 pairs x seeds 42/43); target zs_target.jsonl
+code: $LAB/external/vfxmaster (worker gen_worker_vfxmaster.py); refVFX under misc/refvfx_baseline
+scores: -> ../../../evals/030_external_zs_authornative__dai__2026-09-12/vfxmaster_author_native
+notes: author-native tier — externals at their richest supported text config; one-sided zero-shot only.

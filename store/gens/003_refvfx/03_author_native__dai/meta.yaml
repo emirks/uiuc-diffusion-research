@@ -1,0 +1,18 @@
+id: gens/003_refvfx/03_author_native__dai
+seq: 3
+shelf: gens
+arm: refvfx
+harness_arm: refvfx_author_native   # frozen stamp in items.jsonl
+variant: author_native
+machine: dai
+created: 2026-09-13
+inputs: {run: runs/003_refvfx (external)}
+prompt_family: authorcfg_native_captions (health-gated 2026-09-12; prompt = refVFX's own template (S1 + 'Make it so that ... during the video <effect>'); reference_effects.json clauses; first-frame-only native I2V (end_image=None))
+prompt_sha: c0834e8f82df
+grid_rows: 366
+videos: 366
+geometry: 480x640x33f @ fps 6.5455 (duration-matched to 121f@24; native aspect off — disclosed)
+grid: v3 ZERO-SHOT one-sided set (183 pairs x seeds 42/43); target zs_target.jsonl
+code: $LAB/external/refvfx (worker gen_worker.py); refVFX under misc/refvfx_baseline
+scores: -> ../../../evals/030_external_zs_authornative__dai__2026-09-12/refvfx_author_native
+notes: author-native tier — externals at their richest supported text config; one-sided zero-shot only.

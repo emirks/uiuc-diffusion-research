@@ -1592,6 +1592,38 @@ EXTERNAL.extend(_GRID_V3_EXTERNAL)
 CONTEXT_TIERS_AFTER.extend(a["id"] for a in _GRID_V3_EXTERNAL)          # card slots + selector order
 TIER_LABEL.update({a["id"]: [a["label"].upper(), a["sub"]] for a in _GRID_V3_EXTERNAL})
 
+# External ZERO-SHOT author-native arms (VFXMaster/VAP/refVFX) — one combined HF+ED eval per arm
+# (single harness_arm stamp, unlike the paper arms' split _v3/_v3ed81), so ONE entry per arm that
+# joins the existing v3 cards (makes_cards=False) — its HF rows land on v3-hf cards, ED rows on
+# v3-ed cards. Store: gens/<shelf>/<KK>_author_native__dai + evals/030. See authorcfg_native_captions/.
+_EXT_AN, _EXT_AN_CATALOG = [], []
+for _m, _subdir, _F, _refkey, _mlabel in [
+    ("vfxmaster", "store/gens/012_vfxmaster/05_author_native__dai", 49, "ref_prompt", "VFXMaster"),
+    ("vap", "store/gens/011_vap/05_author_native__dai", 49, "prompt_mot_ref", "VAP"),
+    ("refvfx", "store/gens/003_refvfx/03_author_native__dai", 33, None, "refVFX"),
+]:
+    _ha = f"{_m}_author_native"
+    _e = {"id": _ha, "score_id": "extan_v4", "kind": "prior-work", "frames": _F,
+          "no_twin": True, "grid": "v3-hf", "makes_cards": False,
+          "join_swap": (f"__{_ha}__", "__ic_gen__"), "rows_arm": _ha,
+          "label": f"Ⓐ {_mlabel} · author-native (zero-shot)",
+          "sub": f"external @ author-native (richest captions) · one-sided zero-shot · {_F}f (HF+ED) — "
+                 f"copy/core not comparable across frame counts",
+          "src": REPO_ROOT / f"{_subdir}/videos",
+          "media": f"outputs/videos/ext_zs_authornative/{_ha}",
+          "rows": ("manifest", REPO_ROOT / f"{_subdir}/grid.jsonl"),
+          "scores": REPO_ROOT / f"store/evals/030_external_zs_authornative__dai__2026-09-12/{_ha}",
+          "prompt_kind": f"{_mlabel} at author-native — its richest supported text (VFXMaster Fig-13/14 "
+                         f"captions via Gemini; VAP reuses them; refVFX its own template). One-sided zero-shot, {_F}f.",
+          "doc": "misc/2026-08-13_baseline_metric_table/authorcfg_native_captions/"}
+    if _refkey:
+        _e["ref_prompt_key"] = _refkey
+    _EXT_AN.append(_e)
+    _EXT_AN_CATALOG.append((_ha, "external", _m, _mlabel, "author_native", "author-native · v3 zs"))
+EXTERNAL.extend(_EXT_AN)
+CONTEXT_TIERS_AFTER.extend(a["id"] for a in _EXT_AN)
+TIER_LABEL.update({a["id"]: [a["label"].upper(), a["sub"]] for a in _EXT_AN})
+
 # ------------------------------------------------------------------------------- score loading
 def load_all_scores() -> tuple[dict, dict]:
     """item_id -> metrics (from the most-preferred set that scored it), and item_id -> set id.
@@ -2066,6 +2098,7 @@ def build() -> dict:
         ("dualforce_dcg_w6_e",   "df_dcg", "dualforce_dcg_w6",   "DCG w=6", "effect", "effect · dai"),
     ]
     CATALOG += GRID_V3_CATALOG                    # grid v3 arms, categorised under their own arms
+    CATALOG += _EXT_AN_CATALOG                    # external zero-shot author-native arms (VFXMaster/VAP/refVFX)
     known = set(all_tiers)
     _catids = {c for c, _ in CATEGORIES}
     _orphan = sorted({cat for _, cat, *_ in CATALOG if cat not in _catids})
