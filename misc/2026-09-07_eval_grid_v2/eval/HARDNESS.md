@@ -127,7 +127,6 @@ Tier readout on SAME rows (levels), classes as selected above:
 | C top-10 | 10 | 10 | 40.1 | 72.6 | 53.2 | 80.8 | 95.0 | 96.5 | 99.1 | 100.1 | +26.5 |
 | zero-shot minus A | 24 | 24 | 34.7 | 95.5 | 61.0 | 93.8 | 98.7 | 99.9 | 99.8 | 101.1 | +4.3 |
 
-
 ## Two-criterion selection: lowest base effect AND highest DCG w6 effect (owner 2026-09-12)
 
 Candidates: 17 v3 HF zero-shot classes + 34 v3 EffectData effects (2 seeds, all rows) + 40 screen effects (1 same row, seed 42). DCG neutral only exists on v3. Selection on an outcome arm → diagnostic; report on new rows.
@@ -175,3 +174,52 @@ Candidates: 17 v3 HF zero-shot classes + 34 v3 EffectData effects (2 seeds, all 
 
 Shortlist rule base ≤ 60 & DCG ≥ 80 → 10 effects: mean base 41.6, mean DCG 95.7, gap +54.1; by source {'v3 ED': 1, 'screen B': 9}.
 Same rule on v3 only (two seeds): ['ed.Diamond_Footpath']
+
+
+## Hard vs rest zero-shot classes with the external baselines (evals/030, owner 2026-09-13)
+
+hard = prompt-only effect level (A) below 80 over all zero-shot rows; externals scored at author-native captions only, so the same numbers appear in the neutral and effect tables.
+
+### neutral prompts — zero-shot classes, all content rows (externals = author-native captions, their only tier; levels, 2 seeds)
+
+| slice | classes | rows/seed (ours) | rows/seed (ext) | base neu | ic_gen neu | control neu | DCG w6 neu | refVFX (author-native) | VAP (author-native) | VFXMaster (author-native) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| HF hard (base eff < 80) | 4 | 29 | 14 | 49.7 | 61.9 | 83.0 | 93.3 | 46.5 | 76.3 | 78.5 |
+| HF rest | 13 | 90 | 67 | 52.4 | 69.1 | 87.9 | 96.4 | 54.3 | 81.0 | 84.1 |
+| HF all | 17 | 119 | 81 | 51.7 | 67.4 | 86.7 | 95.6 | 53.0 | 80.2 | 83.1 |
+| ED hard (base eff < 80) | 7 | 21 | 21 | 40.4 | 52.6 | 88.2 | 93.0 | 47.1 | 66.9 | 73.0 |
+| ED rest | 27 | 81 | 81 | 37.9 | 58.3 | 95.7 | 100.0 | 76.0 | 86.7 | 93.1 |
+| ED all | 34 | 102 | 102 | 38.4 | 57.1 | 94.1 | 98.5 | 70.1 | 82.6 | 88.9 |
+
+### effect prompts — zero-shot classes, all content rows (externals = author-native captions, their only tier; levels, 2 seeds)
+
+| slice | classes | rows/seed (ours) | rows/seed (ext) | base eff | ic_gen eff | control eff | DCG w6 eff | refVFX (author-native) | VAP (author-native) | VFXMaster (author-native) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| HF hard (base eff < 80) | 4 | 29 | 14 | 68.7 | 72.4 | 89.1 | 94.2 | 46.5 | 76.3 | 78.5 |
+| HF rest | 13 | 90 | 67 | 97.1 | 94.6 | 95.6 | 99.0 | 54.3 | 81.0 | 84.1 |
+| HF all | 17 | 119 | 81 | 90.2 | 89.2 | 94.0 | 97.8 | 53.0 | 80.2 | 83.1 |
+| ED hard (base eff < 80) | 7 | 21 | 21 | 71.0 | 72.9 | 90.8 | 96.8 | 47.1 | 66.9 | 73.0 |
+| ED rest | 27 | 81 | 81 | 95.1 | 94.1 | 99.9 | 101.3 | 76.0 | 86.7 | 93.1 |
+| ED all | 34 | 102 | 102 | 90.2 | 89.7 | 98.0 | 100.4 | 70.1 | 82.6 | 88.9 |
+
+### neutral prompts — zero-shot classes, same rows only (externals = author-native captions, their only tier; levels, 2 seeds)
+
+| slice | classes | rows/seed (ours) | rows/seed (ext) | base neu | ic_gen neu | control neu | DCG w6 neu | refVFX (author-native) | VAP (author-native) | VFXMaster (author-native) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| HF hard (base eff < 80) | 4 | 7 | 4 | 55.2 | 67.3 | 90.7 | 97.3 | 50.0 | 82.8 | 85.5 |
+| HF rest | 13 | 24 | 19 | 62.2 | 85.9 | 97.0 | 101.5 | 63.9 | 82.2 | 88.4 |
+| HF all | 17 | 31 | 23 | 60.6 | 81.7 | 95.6 | 100.5 | 61.5 | 82.3 | 87.9 |
+| ED hard (base eff < 80) | 7 | 7 | 7 | 40.4 | 52.8 | 93.1 | 98.0 | 56.7 | 65.4 | 72.6 |
+| ED rest | 27 | 27 | 27 | 34.0 | 58.4 | 97.9 | 99.3 | 74.7 | 83.1 | 91.5 |
+| ED all | 34 | 34 | 34 | 35.3 | 57.3 | 96.9 | 99.0 | 71.0 | 79.4 | 87.6 |
+
+### effect prompts — zero-shot classes, same rows only (externals = author-native captions, their only tier; levels, 2 seeds)
+
+| slice | classes | rows/seed (ours) | rows/seed (ext) | base eff | ic_gen eff | control eff | DCG w6 eff | refVFX (author-native) | VAP (author-native) | VFXMaster (author-native) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| HF hard (base eff < 80) | 4 | 7 | 4 | 75.8 | 73.6 | 96.1 | 100.0 | 50.0 | 82.8 | 85.5 |
+| HF rest | 13 | 24 | 19 | 98.7 | 99.4 | 101.9 | 103.9 | 63.9 | 82.2 | 88.4 |
+| HF all | 17 | 31 | 23 | 93.5 | 93.6 | 100.6 | 103.0 | 61.5 | 82.3 | 87.9 |
+| ED hard (base eff < 80) | 7 | 7 | 7 | 70.1 | 76.1 | 95.1 | 99.2 | 56.7 | 65.4 | 72.6 |
+| ED rest | 27 | 27 | 27 | 93.7 | 92.5 | 99.3 | 100.6 | 74.7 | 83.1 | 91.5 |
+| ED all | 34 | 34 | 34 | 88.8 | 89.1 | 98.4 | 100.3 | 71.0 | 79.4 | 87.6 |
