@@ -27,3 +27,11 @@ swapfam = RMSE between the clip's progress curve tau(s) and the nearest member o
 | S-GRID:GT | 19 | 0.26 | 0.26 | 0.00 |
 | S-PROBE:R1:high | 90 | 0.64 | 0.53 | 0.16 |
 | S-PROBE:R2:high | 90 | 0.71 | 0.53 | 0.18 |
+
+## Reportable continuous numbers (PIX; computed 2026-09-14)
+Change duration d = ramp length of the best-fitting hold-A / linear change / hold-B curve, frames of the 104-frame interior (24 fps):
+grid default 12 [8, 26] (n=68) · probe R3 scene-change 14 [8, 24] (n=90) · GT 80 [56, 104] (n=19) · R1 full prompt 48 [32, 64] · R2 48 [24, 64] · R3 in-place 48 [24, 48].
+P(random default clip changes faster than random GT clip) = 0.957 (MWU p 5e-10); P(R3 faster than R1) = 0.857 (p 4e-17); paired R3−R1 same prompt+seed: median −32 frames, R3 shorter in 82 % of 90 pairs.
+Swap index = d_lerp / (d_lerp + d_swap) with d = RMSE of the progress curve to the full lerp / to the nearest 12-frame swap (1 = pure swap, 0 = pure lerp, 0.5 = equidistant):
+grid default 0.77 [0.70, 0.87] · DAVIS-anchor default 0.71 [0.49, 0.84] · R3 scene-change 0.82 [0.73, 0.87] · GT 0.36 [0.31, 0.50] · R1 0.58 [0.43, 0.73] · R2 0.63 [0.48, 0.74] · R3 in-place 0.61 [0.50, 0.76] · exp_024 empty 0.51 / "transition" 0.52 (n=10, other config).
+P(default swap index > GT) = 0.959 (p 6e-10); P(R3 > R1) = 0.839 (p 2e-15). DINO gives the same medians within 0.05.
