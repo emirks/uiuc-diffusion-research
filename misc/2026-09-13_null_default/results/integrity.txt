@@ -1,0 +1,17 @@
+# INTEGRITY PASS - null-default Phase B npz (C4 step 0)
+features dir: /taiga/illinois/eng/cs/jrehg/users/emirkisa/cache/null_default/features
+
+expected npz (manifest enumeration): 2513
+npz on disk:                         2513
+checks run (main+landmark kinds):    2513
+
+checks per kind:    CUT50=441, FREEZE=441, LATLERP=441, LERP=441, main=749
+checks per stratum: S-GRID=163, S-GRID-F=190, S-GRID-START=1020, S-PROBE=840, S-SWEEP=300
+
+orphan npz on disk (not in manifest enumeration): 0
+
+expected-but-absent files: 0
+
+BAD FILES: 0
+
+VERDICT: CLEAN - all npz pass
