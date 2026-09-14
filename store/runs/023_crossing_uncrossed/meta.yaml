@@ -1,0 +1,68 @@
+id: 023_crossing_uncrossed
+seq: 23
+shelf: runs
+created: 2026-09-14          # trained 2026-09-14 00:14:17Z -> 03:07:40Z (DONE) on eps; 2h55m wall, ~2.94 s/step
+machine: eps fal-h100 2xH100 DDP eff-batch 2   # data-parallel batch 1/GPU x 2 GPUs (GPUs 2,3); no grad accumulation
+source: >
+  Campaign 2026-09-13_crossing_ablation — arm UNCROSSED, the "all but one" uncrossed layout. From-scratch
+  IC-LoRA on LTX-2 19B dev. Uncrossed = every shot is trained under EXACTLY ONE operator (the shot alone names
+  the operator; the reference is redundant). 21 operators = 9 S1 manners (one-sided) + 12 S2 shaders
+  (two-sided). 1,392 pairs. Identical in every setting to the CROSSED arm (runs/022); the ONLY difference is
+  the data layout. The T1/T2 readout of the two arms is the experiment; see
+  gens/035_crossing_uncrossed/01_t1t2__eps and HANDOFF.md §1. Owner terms: shots, operators, pairs,
+  references, crossed/uncrossed. This run DIVERGED at step 1392 (see health); the owner decided to test it as
+  trained.
+inputs:
+  dataset: datasets/008_crossing_allbutone     # 1,392 pairs (uncrossed layout: 348 shots x 1 operator + S2); root self-contained
+trainer:
+  checkout: src/LTX-2-surg
+  commit: a403323            # eps copy has no .git; content-verified identical (171/171 tracked files of packages/{ltx-trainer,ltx-core,ltx-pipelines}/src) per HANDOFF §2
+  entry: accelerate launch --num_processes 2 (DDP, 2 GPUs) via misc/2026-09-13_crossing_ablation/eps/{launch_lane2.sh, run_arm2.sh}; config.yaml (the eps uncrossed_2gpu.yaml) copied here; training_config.yaml is the trainer-written record
+recipe: LTX-2 19B dev; IC-LoRA rank 128 / alpha 128 on attn1+attn2+FF (10 modules, target_modules attn_ffn); one_way reference attention + mask, cond_clean latents; lr 2e-4; batch 1/GPU x 2 GPU (eff-batch 2, no accumulation); WSD (warmup 100 / decay_frac 0.25 / end 0.1); grad checkpointing; bf16; uniform pair sampler seed 42; checkpoint every 250 (all kept); validation every 500 incl. step 0 (validation NOT representative — see health)
+rank: 128
+alpha: 128
+dropout: 0.0
+reference_attention: one_way
+lr: 2e-4, WSD (warmup 100 / decay_frac 0.25 / end 0.1)
+seed: 42
+effective_batch: 2          # batch_size 1 x 2 GPU, gradient_accumulation_steps 1
+steps: 3000
+checkpoints:                 # every 250, all kept; each 1,308,756,384 B. Checkpoints >= 01500 are POST-DIVERGENCE (see health)
+  - lora_weights_step_00250.safetensors
+  - lora_weights_step_00500.safetensors
+  - lora_weights_step_00750.safetensors
+  - lora_weights_step_01000.safetensors
+  - lora_weights_step_01250.safetensors    # last PRE-divergence checkpoint
+  - lora_weights_step_01500.safetensors    # post-divergence
+  - lora_weights_step_01750.safetensors    # post-divergence
+  - lora_weights_step_02000.safetensors    # post-divergence
+  - lora_weights_step_02250.safetensors    # post-divergence
+  - lora_weights_step_02500.safetensors    # post-divergence
+  - lora_weights_step_02750.safetensors    # post-divergence
+  - lora_weights_step_03000.safetensors    # post-divergence (SHIPPED for T1/T2 as-trained, owner decision)
+checkpoint_sha256:
+  lora_weights_step_03000.safetensors: 70f42f871a882e1108696e7c28b26764ea7991ed45901e8c6c68b8ab42c84153
+wandb:
+  project: crossing_ablation      # entity ozgur-personal
+  run_id: 1lui33wk
+  run_name: uncrossed_2gpu
+health: >
+  DIVERGED at step 1392, completed anyway (owner chose to test as trained). Reached step 3000, 12 checkpoints,
+  7 validation rounds, 0 error lines (no nan/OOM/CUDA/Killed). Per-step loss was 0.2-0.6 through step 1391,
+  jumped to ~2.25 at step 1400 and stayed 1.1-2.5 through ~step 2000, then drifted down only as the WSD lr
+  decayed (2500=0.95, 3000=0.21; last-10 logged mean 0.309) — never a clean recovery, staying above the crossed
+  arm across the whole diverged region. Loss series (logged every 20 steps), crossed vs uncrossed:
+    1300 0.4674/0.1841  1320 0.1580/0.2530  1340 0.1804/0.3443  1360 0.4153/0.3408
+    1380 0.2808/0.2943 (last healthy)  1400 0.2402/2.2525 (divergence)  1420 0.2207/2.1868  1440 0.3712/1.9547
+    1460 0.1789/1.7951  1480 0.4518/2.0548  1500 0.4260/1.7892 (val boundary; already diverged)  1520 0.7732/2.2173
+    1540 0.7489/1.8771  1560 0.2821/2.0312  1580 0.2633/2.0216  1600 0.1704/2.0803  1620 0.3917/1.9501
+    1640 0.3410/1.9193  1660 0.3377/1.7670  1680 0.5092/2.4917  1700 0.2533/1.8410  1720 0.2616/2.1706
+    1740 0.2135/1.6877  1760 0.2512/1.9163  1780 0.2468/2.1265  1800 0.2605/1.1794  1820 0.2630/2.4071
+  Last step line: Step 3000/3000 - Loss 0.2139, LR 2.00e-05. The last PRE-divergence checkpoint is step_01250;
+  checkpoints >= 01500 all traverse the post-divergence trajectory. The recipe (rank 128, lr 2e-4, eff-batch 2)
+  proved unstable here — the project's earlier rank-128 runs used lr 1e-4.
+  CAVEAT (both arms): inline validation is NOT representative (bidirectional validation reference vs one_way
+  training); the one_way run_gen path (gens/035) is the real readout. See HANDOFF.md §6.
+notes: >
+  Report: misc/2026-09-13_crossing_ablation/logs/operator_2gpu_report.md (2-GPU switch + final state, §5-§6).
+  An abandoned 1-GPU attempt left step-250 checkpoints in outputs/uncrossed on eps (NOT registered).
