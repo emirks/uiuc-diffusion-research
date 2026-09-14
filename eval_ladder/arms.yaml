@@ -1037,4 +1037,21 @@ arms:
       fed reference via `code_source_reference`, `reference` unchanged. A0 10k adapter (sha 8ab6e2d3),
       NO signal port, dataset 004_ctt_v2plus. rank/alpha 128."
 
+  # ---- crossing ablation (campaign 2026-09-13_crossing_ablation): from-scratch T1/T2 arms, one_way, r128/a128.
+  #      Generated on eps via misc/2026-09-13_crossing_ablation/gen/xab_gen.py; these entries are the store record.
+  crossing_crossed_t1t2:
+    kind: generalist
+    targets: attn_ffn
+    step: 3000
+    attention: one_way
+    adapter_template: store/runs/022_crossing_crossed/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "crossing ablation CROSSED arm (runs/022, clean). T1/T2 readout, family prompts/017_crossing_t1t2. rank/alpha 128, downscale 1."
+  crossing_uncrossed_t1t2:
+    kind: generalist
+    targets: attn_ffn
+    step: 3000
+    attention: one_way
+    adapter_template: store/runs/023_crossing_uncrossed/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "crossing ablation UNCROSSED arm (runs/023, diverged step 1392, tested as trained). T1/T2 readout, family prompts/017_crossing_t1t2. rank/alpha 128, downscale 1."
+
 adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
