@@ -1,0 +1,20 @@
+id: prompts/018_crossing_s0s1
+seq: 18
+shelf: prompts
+created: 2026-09-15
+family: crossing_s0s1   # clean s0+s1-only retrain readout: T1 (designated-op, matched ref) + T2 (missing-op swap ref) + T0 (shot-only, no ref); crossed, uncrossed & base share this arm-free family
+grammar: "{shot caption}. sksz."   # one-sided S1 rows only (s0+s1 block); no S2 two-sided rows in this family
+role: T0/T1/T2 readout grid for the clean s0+s1 crossing retrain (runs/024-025 + base; owner terms: shots, operators, references, crossed/uncrossed). ARM-FREE (arm + eps mp4 paths + caption_key stripped); stamp/gen re-add them per arm.
+rows: 81   # 27 T0 (shot-only) + 27 T1 (designated-op ref) + 27 T2 (missing-op swap ref); one row per generated item
+prompt_corpus_sha: 7ab4e29dba61   # sha256[:12] over prompts, uniq by (cell,endpoint,reference,sided); byte-identical across all 3 arms of gen/registry_crossing_s0s1.jsonl
+renderer: none — prompts carried verbatim from the s0+s1 generation registry (captions resolved there via datasets/ctt_v2/captions.json), same convention as prompts/017_crossing_t1t2
+derived_from: misc/2026-09-13_crossing_ablation/gen/registry_crossing_s0s1.jsonl (crossed arm's 81 rows taken; content is arm-free)
+source: misc/2026-09-13_crossing_ablation/gen/build_registry_crossing_s0s1.py (gen registry builder) + eval_s0s1 close-out (arm-free family assembly, strip arm/prefix_mp4/reference_mp4/caption_key)
+notes: >
+  s0+s1 block ONLY (sided=one; the 9 dense S1 manner operators), 27 crossed shots. Sibling of
+  prompts/017_crossing_t1t2 (which was the full first-pair T1/T2 grid over s0s1 AND s2, sha
+  c0815f785004). This family drops the s2 block and adds the T0 shot-only probe cell, so its
+  prompt_corpus_sha differs. designated_operator = the shot's own/trained operator (op_class = the S1
+  manner without the spec_ prefix); T0 rows carry reference=null (shot-only), T1 rows a reference of the
+  DESIGNATED operator (another shot), T2 rows a reference of a MISSING/swap operator (never trained on
+  this shot in either arm). Scored 9-pool on eps (all 9 S1 manner pools per item), not the 2-pool margin.

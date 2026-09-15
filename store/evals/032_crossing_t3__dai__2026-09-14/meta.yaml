@@ -1,0 +1,41 @@
+id: 032_crossing_t3__dai__2026-09-14
+seq: 32
+shelf: evals
+created: 2026-09-14          # scored 2026-09-14 (interrupted pass, no meta written); finalized 2026-09-15 from the scored shards
+machine: DeltaAI ghx4 GH200 (aarch64) SCORE; gens on eps (fal H100)
+harness: transition-eval v4 (eval-v4-cert; same-day/same-instrument as evals/031_crossing_t1t2)
+status: FINALIZED-FROM-ORPHAN     # the interrupted T3 scoring left scored shards with no meta.yaml (store_fsck FAIL); this meta + summary.json + t3_aggregate_out.txt close it out (facts live in those; no separate REPORT.md)
+source: >
+  FIRST-PAIR T3 (grid-v3 zero-shot, "completely unseen" balanced 90 = 30 same / 30 cross / 30 foreign one-sided
+  cells). Arms are the FIRST crossing pair @ ck3000: crossing_crossed_2gpu (runs/022) and crossing_uncrossed_2gpu
+  (runs/023) — NOT the clean s0s1 retrain (runs/024-025). The UNCROSSED arm of this pair DIVERGED at training step
+  1392 and was tested as trained (owner decision). Each grid-v3 zero-shot row was generated on eps (xab_gen.py,
+  one_way, 121-frame one-sided rows only) and scored here on ONE machine (DeltaAI) against the referenced unseen
+  operator's pool (and within-endpoint sibling operators). Readout = app_ref (v4 M1) / ceiling. Owner terms: shots,
+  operators, references, crossed/uncrossed. This entry is CHARACTERISE-not-attribute (see caveats) and near-null.
+arms_scored:
+  crossing_crossed_2gpu__ck3000: {run: runs/022_crossing_crossed, gen: "misc/2026-09-13_crossing_ablation/gen/out_t3/crossing_crossed_2gpu__ck3000 (NOT store-registered)", rows: 1266, shards: 8}
+  crossing_uncrossed_2gpu__ck3000: {run: runs/023_crossing_uncrossed, gen: "misc/2026-09-13_crossing_ablation/gen/out_t3/crossing_uncrossed_2gpu__ck3000 (NOT store-registered)", rows: 1266, shards: 8}
+instrument:
+  eval_v4_cert: eval-v4-cert worktree; same-day same-instrument as evals/031 (cert commit 4e792c02, reference_v4 sha256 459fd9a7…, tau_copy 0.858)
+  instrument_stamp_note: reference_v4 sha / harness NOT stamped into these items.jsonl rows (ref_sha=null); rows carry ref_in_v4_population=false (out-of-population references, amendment 2)
+  ceilings: eval_ladder/ceilings_v3.json (certified; the 9 spec_* manner values equal ceilings_s1, e.g. portal 0.9753)
+  registry: misc/2026-09-13_crossing_ablation/gen/registry_crossing_t3.jsonl (270 rows; balanced-90 grid-v3 zero-shot)
+  readout: app_ref (1 - S3 rank-distance, HIGHER = more like the referenced unseen operator's pool class); pct = pool_mean / ceiling
+headline:   # %_same to the referenced unseen operator (ceiling-normalised %); levels only, no verdict
+  pct_same_ALL: {crossed: 64.0, uncrossed: 63.3}
+  pct_same_by_cell: {crossed: {same: 70.4, cross: 59.4, foreign: 61.9}, uncrossed: {same: 68.2, cross: 59.4, foreign: 62.1}}
+  paired_crossed_minus_uncrossed_pts: {same: 2.1, cross: -1.6, foreign: -0.7, ALL: -0.1}   # crossed>uncrossed 39/90
+  copy_max_mean_ALL: {crossed: 0.228, uncrossed: 0.243}
+caveats:
+  - Arms are the FIRST pair; UNCROSSED (runs/023) DIVERGED at step 1392, tested as trained — its numbers are of a diverged adapter.
+  - Design is CHARACTERISE-not-attribute (T3_DESIGN.md): the confounds (divergence favours crossed; 27-vs-216 shot-diversity favours uncrossed) make crossed-vs-uncrossed attribution impossible. A BASE (adapter=None) anchor run was specified in the design but is NOT present in this eval dir — so no zero-point here.
+  - Near-null result (paired crossed-uncrossed = -0.1 pts ALL, 39/90).
+  - The checker aggregator's within-endpoint sibling top-1 (reference-tracking) section produced NO rows for this entry as scored (empty).
+  - Single training seed per arm; references out-of-population; per-shard results.json may be absent (items.jsonl present for all 8 shards/arm).
+  - This is the FIRST-PAIR T3. The clean s0s1 retrain (runs/024-025) T1/T2/T0 are scored separately; a clean-retrain T3, if run, would be a new entry.
+notes: >
+  Numbers: summary.json beside this meta; raw checker stdout t3_aggregate_out.txt beside it; checker aggregator
+  misc/2026-09-13_crossing_ablation/eval/t3_aggregate.py; facts-only levels in summary.json + t3_aggregate_out.txt
+  beside this meta (no separate REPORT.md). Finalized by the retrain operator (claude-opus-4-8) to clear the
+  store_fsck no-meta FAIL; levels only, no verdict.
