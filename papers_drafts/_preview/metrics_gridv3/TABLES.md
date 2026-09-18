@@ -8,40 +8,40 @@ Inputs joined on `(item_id, seed)`:
 - **per_gen**: 19 file(s), 7242 rows from `base_cond_effect_v3`
 - **handoff**: 19 file(s), 7242 rows from `rows.jsonl`
 - **lens**: 0 file(s), 0 rows -- **ABSENT** (columns render `--`)
-- **copy**: 0 file(s), 0 rows -- **ABSENT** (columns render `--`)
+- **copy**: 19 file(s), 7242 rows from `rows.jsonl`
 
 ## Table A -- own arms across tiers (neutral prompt)
-| arm | Id A | Id B | Mot A | Mot B | Seam% | Smooth | Copy% | Transport | n |
-|---|---|---|---|---|---|---|---|---|---|
+| arm | Id A | Id B | Mot A | Mot B | Seam% | Smooth | Copy% | Copymax | Transport | n |
+|---|---|---|---|---|---|---|---|---|---|---|
 | **Seen** | | | | | | | | | |
-| LTX-2 (no reference) | **0.948** | n/a (n=8) | 0.633 | n/a (n=6) | 82.7 | -- | -- | 57.9 | 52 |
-| LTX-2 baseline LoRA | 0.877 | n/a (n=8) | **0.701** | n/a (n=8) | 94.2 | -- | -- | 82.2 | 52 |
-| SEGUE w/o guidance | 0.938 | n/a (n=8) | 0.679 | n/a (n=1) | 96.2 | -- | -- | 91.1 | 52 |
-| SEGUE | 0.908 | n/a (n=8) | 0.631 | n/a (n=1) | **98.1** | -- | -- | **97.1** | 52 |
+| LTX-2 (no reference) | **0.948** | n/a (n=8) | 0.633 | n/a (n=6) | 82.7 | -- | **0.0** | **0.247** | 57.9 | 52 |
+| LTX-2 baseline LoRA | 0.877 | n/a (n=8) | **0.701** | n/a (n=8) | 94.2 | -- | **0.0** | 0.332 | 82.2 | 52 |
+| SEGUE w/o guidance | 0.938 | n/a (n=8) | 0.679 | n/a (n=1) | 96.2 | -- | **0.0** | 0.340 | 91.1 | 52 |
+| SEGUE | 0.908 | n/a (n=8) | 0.631 | n/a (n=1) | **98.1** | -- | **0.0** | 0.401 | **97.1** | 52 |
 | **Unseen** | | | | | | | | | |
-| LTX-2 (no reference) | **0.935** | **0.960** (n=64) | 0.743 (n=269) | **0.695** (n=59) | 90.1 | -- | -- | 52.1 | 274 |
-| LTX-2 baseline LoRA | 0.930 | 0.931 (n=64) | **0.757** | 0.441 (n=47) | **97.8** | -- | -- | 74.6 | 274 |
-| SEGUE w/o guidance | 0.917 | 0.923 (n=64) | 0.725 (n=271) | 0.445 (n=35) | 95.6 | -- | -- | 86.3 | 274 |
-| SEGUE | 0.862 | 0.880 (n=64) | 0.710 (n=273) | 0.399 (n=20) | 92.3 | -- | -- | **92.1** | 274 |
+| LTX-2 (no reference) | **0.935** | **0.960** (n=64) | 0.743 (n=269) | **0.695** (n=59) | 90.1 | -- | **0.7** | **0.205** | 52.1 | 274 |
+| LTX-2 baseline LoRA | 0.930 | 0.931 (n=64) | **0.757** | 0.441 (n=47) | **97.8** | -- | **0.7** | 0.269 | 74.6 | 274 |
+| SEGUE w/o guidance | 0.917 | 0.923 (n=64) | 0.725 (n=271) | 0.445 (n=35) | 95.6 | -- | **0.7** | 0.348 | 86.3 | 274 |
+| SEGUE | 0.862 | 0.880 (n=64) | 0.710 (n=273) | 0.399 (n=20) | 92.3 | -- | **0.7** | 0.416 | **92.1** | 274 |
 | **Zero-shot** | | | | | | | | | |
-| LTX-2 (no reference) | **0.953** | **0.950** (n=76) | 0.718 (n=231) | **0.681** (n=63) | 64.7 | -- | -- | 45.5 | 442 |
-| LTX-2 baseline LoRA | 0.950 | 0.926 (n=76) | **0.757** (n=236) | 0.462 (n=64) | 95.9 | -- | -- | 62.2 | 442 |
-| SEGUE w/o guidance | 0.926 | 0.891 (n=76) | 0.745 (n=235) | 0.311 (n=41) | **97.1** | -- | -- | 88.5 | 442 |
-| SEGUE | 0.867 | 0.850 (n=76) | 0.741 (n=234) | 0.368 (n=44) | 94.1 | -- | -- | **93.7** | 442 |
+| LTX-2 (no reference) | **0.953** | **0.950** (n=76) | 0.718 (n=231) | **0.681** (n=63) | 64.7 | -- | **0.9** | **0.198** | 45.5 | 442 |
+| LTX-2 baseline LoRA | 0.950 | 0.926 (n=76) | **0.757** (n=236) | 0.462 (n=64) | 95.9 | -- | **0.9** | 0.252 | 62.2 | 442 |
+| SEGUE w/o guidance | 0.926 | 0.891 (n=76) | 0.745 (n=235) | 0.311 (n=41) | **97.1** | -- | 1.4 | 0.405 | 88.5 | 442 |
+| SEGUE | 0.867 | 0.850 (n=76) | 0.741 (n=234) | 0.368 (n=44) | 94.1 | -- | 1.4 | 0.472 | **93.7** | 442 |
 
 ## Table B -- comparison with previous approaches (shared one-sided zero-shot set)
 Shared set (intersection over the 6 Table-B arms): **n = 366** (target 366 = 183 triples x 2 seeds).
 Per-arm bench coverage before intersection: `{'vap': 366, 'vfxmaster': 366, 'refvfx': 366, 'ic_gen': 366, 'dualforce_control': 366, 'dualforce_dcg_w6': 366}`; rows lost in the match per arm: `{'vap': 0, 'vfxmaster': 0, 'refvfx': 0, 'ic_gen': 0, 'dualforce_control': 0, 'dualforce_dcg_w6': 0}`.
 
 **Copy rate source & frame-count caveat.** Copy rate is `100·mean(near_copy)` from the M2a copy eval (`*_copy_gridv3*`), which scores each generation against its OWN reference -- NOT per_gen's `near_copy`, which was scored against pool clips and is identical across arms (not a generation property). M2a takes the max over the generation's mid frames, so a longer generation has more chances to match: our clips are 121 f vs the externals' 49 f (VAP/VFXMaster) / 33 f (refVFX), which under-estimates the externals' copy rate -- disclosed, not corrected.
-| arm | Id A | Seam% | Smooth | Copy% | Transport | RefSim(VP) | MotFid | Aesth | n |
-|---|---|---|---|---|---|---|---|---|---|
-| Video-As-Prompt | 0.879 | 76.0 | -- | -- | 81.1 | -- | -- | -- | 366 |
-| VFXMaster | 0.964 | 85.5 | -- | -- | 85.8 | -- | -- | -- | 366 |
-| refVFX | **0.971** | 93.2 | -- | -- | 62.2 | -- | -- | -- | 366 |
-| LTX-2 baseline LoRA | 0.961 | 95.4 | -- | -- | 61.6 | -- | -- | -- | 366 |
-| SEGUE w/o guidance | 0.936 | **96.4** | -- | -- | 87.6 | -- | -- | -- | 366 |
-| SEGUE | 0.880 | 93.4 | -- | -- | **92.6** | -- | -- | -- | 366 |
+| arm | Id A | Seam% | Smooth | Copy% | Copymax | Transport | RefSim(VP) | MotFid | Aesth | n |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Video-As-Prompt | 0.879 | 76.0 | -- | 1.6 | 0.396 | 81.1 | -- | -- | -- | 366 |
+| VFXMaster | 0.964 | 85.5 | -- | **0.5** | 0.412 | 85.8 | -- | -- | -- | 366 |
+| refVFX | **0.971** | 93.2 | -- | 1.1 | 0.352 | 62.2 | -- | -- | -- | 366 |
+| LTX-2 baseline LoRA | 0.961 | 95.4 | -- | **0.5** | **0.246** | 61.6 | -- | -- | -- | 366 |
+| SEGUE w/o guidance | 0.936 | **96.4** | -- | 1.1 | 0.406 | 87.6 | -- | -- | -- | 366 |
+| SEGUE | 0.880 | 93.4 | -- | 1.1 | 0.473 | **92.6** | -- | -- | -- | 366 |
 
 ## Table C -- text dependency (same shared set)
 Shared set: **n = 366**.
@@ -61,24 +61,24 @@ Shared set: **n = 366**.
 ## Placeholder (`\ph{--}`) cells and why
 Each line is a row whose listed columns render as `--` because the backing input row set is absent or empty:
 
-- A / Seen / base_cond: smooth, copy
-- A / Seen / ic_gen: smooth, copy
-- A / Seen / dualforce_control: smooth, copy
-- A / Seen / dualforce_dcg_w6: smooth, copy
-- A / Unseen / base_cond: smooth, copy
-- A / Unseen / ic_gen: smooth, copy
-- A / Unseen / dualforce_control: smooth, copy
-- A / Unseen / dualforce_dcg_w6: smooth, copy
-- A / Zero-shot / base_cond: smooth, copy
-- A / Zero-shot / ic_gen: smooth, copy
-- A / Zero-shot / dualforce_control: smooth, copy
-- A / Zero-shot / dualforce_dcg_w6: smooth, copy
-- B / vap: smooth, copy, vpref, motfid, aes
-- B / vfxmaster: smooth, copy, vpref, motfid, aes
-- B / refvfx: smooth, copy, vpref, motfid, aes
-- B / ic_gen: smooth, copy, vpref, motfid, aes
-- B / dualforce_control: smooth, copy, vpref, motfid, aes
-- B / dualforce_dcg_w6: smooth, copy, vpref, motfid, aes
+- A / Seen / base_cond: smooth
+- A / Seen / ic_gen: smooth
+- A / Seen / dualforce_control: smooth
+- A / Seen / dualforce_dcg_w6: smooth
+- A / Unseen / base_cond: smooth
+- A / Unseen / ic_gen: smooth
+- A / Unseen / dualforce_control: smooth
+- A / Unseen / dualforce_dcg_w6: smooth
+- A / Zero-shot / base_cond: smooth
+- A / Zero-shot / ic_gen: smooth
+- A / Zero-shot / dualforce_control: smooth
+- A / Zero-shot / dualforce_dcg_w6: smooth
+- B / vap: smooth, vpref, motfid, aes
+- B / vfxmaster: smooth, vpref, motfid, aes
+- B / refvfx: smooth, vpref, motfid, aes
+- B / ic_gen: smooth, vpref, motfid, aes
+- B / dualforce_control: smooth, vpref, motfid, aes
+- B / dualforce_dcg_w6: smooth, vpref, motfid, aes
 - C / base_cond: v_neu, v_eff, v_d
 - C / ic_gen: v_neu, v_eff, v_d
 - C / dualforce_control: v_neu, v_eff, v_d

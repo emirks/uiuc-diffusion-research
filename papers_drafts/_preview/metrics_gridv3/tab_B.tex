@@ -6,19 +6,19 @@
     \label{tab:gridv3_prior}
     \footnotesize
     \setlength{\tabcolsep}{2.5pt}
-    \begin{tabular}{lcccccccc}
+    \begin{tabular}{lccccccccc}
         \toprule
-        & Input fid.\,$\uparrow$ & Seam-free\,$\uparrow$ & Smoothness\,$\uparrow$ & Copy\,$\downarrow$ & Fidelity\,$\uparrow$ & \multicolumn{3}{c}{Reference fidelity\,$\uparrow$} \\
-        \cmidrule(lr){2-2}\cmidrule(lr){3-3}\cmidrule(lr){4-4}\cmidrule(lr){5-5}\cmidrule(lr){6-6}\cmidrule(lr){7-9}
-        & \shortstack{Identity\\A} & \shortstack{Seam-\\free \%} & \shortstack{Motion\\smooth.} & \shortstack{Copy\\rate \%} & \shortstack{Transport\\ours} & \shortstack{Ref sim.\\(VideoPrism)} & \shortstack{Motion fid.\\(vs ref)} & \shortstack{Aesthetic} \\
+        & Input fid.\,$\uparrow$ & Seam-free\,$\uparrow$ & Smoothness\,$\uparrow$ & \multicolumn{2}{c}{Copy\,$\downarrow$} & Fidelity\,$\uparrow$ & \multicolumn{3}{c}{Reference fidelity\,$\uparrow$} \\
+        \cmidrule(lr){2-2}\cmidrule(lr){3-3}\cmidrule(lr){4-4}\cmidrule(lr){5-6}\cmidrule(lr){7-7}\cmidrule(lr){8-10}
+        & \shortstack{Identity\\A} & \shortstack{Seam-\\free \%} & \shortstack{Motion\\smooth.} & \shortstack{Copy\\rate \%} & \shortstack{Copy\\max} & \shortstack{Transport\\ours} & \shortstack{Ref sim.\\(VideoPrism)} & \shortstack{Motion fid.\\(vs ref)} & \shortstack{Aesthetic} \\
         \midrule
-        \vap{}~\citep{vap2025} {\tiny\color{gray}$n{=}366$} & 0.879 & 76.0 & \ph{--} & \ph{--} & 81.1 & \ph{--} & \ph{--} & \ph{--} \\
-        \vfxmaster{}~\citep{vfxmaster2025} {\tiny\color{gray}$n{=}366$} & 0.964 & 85.5 & \ph{--} & \ph{--} & 85.8 & \ph{--} & \ph{--} & \ph{--} \\
-        \refvfx{}~\citep{refvfx2026} {\tiny\color{gray}$n{=}366$} & \textbf{0.971} & 93.2 & \ph{--} & \ph{--} & 62.2 & \ph{--} & \ph{--} & \ph{--} \\
+        \vap{}~\citep{vap2025} {\tiny\color{gray}$n{=}366$} & 0.879 & 76.0 & \ph{--} & 1.6 & 0.396 & 81.1 & \ph{--} & \ph{--} & \ph{--} \\
+        \vfxmaster{}~\citep{vfxmaster2025} {\tiny\color{gray}$n{=}366$} & 0.964 & 85.5 & \ph{--} & \textbf{0.5} & 0.412 & 85.8 & \ph{--} & \ph{--} & \ph{--} \\
+        \refvfx{}~\citep{refvfx2026} {\tiny\color{gray}$n{=}366$} & \textbf{0.971} & 93.2 & \ph{--} & 1.1 & 0.352 & 62.2 & \ph{--} & \ph{--} & \ph{--} \\
         \addlinespace[2pt]
-        \ltx{} baseline LoRA {\tiny\color{gray}$n{=}366$} & 0.961 & 95.4 & \ph{--} & \ph{--} & 61.6 & \ph{--} & \ph{--} & \ph{--} \\
-        \segue{} w/o guidance {\tiny\color{gray}$n{=}366$} & 0.936 & \textbf{96.4} & \ph{--} & \ph{--} & 87.6 & \ph{--} & \ph{--} & \ph{--} \\
-        \segue{} {\tiny\color{gray}$n{=}366$} & 0.880 & 93.4 & \ph{--} & \ph{--} & \textbf{92.6} & \ph{--} & \ph{--} & \ph{--} \\
+        \ltx{} baseline LoRA {\tiny\color{gray}$n{=}366$} & 0.961 & 95.4 & \ph{--} & \textbf{0.5} & \textbf{0.246} & 61.6 & \ph{--} & \ph{--} & \ph{--} \\
+        \segue{} w/o guidance {\tiny\color{gray}$n{=}366$} & 0.936 & \textbf{96.4} & \ph{--} & 1.1 & 0.406 & 87.6 & \ph{--} & \ph{--} & \ph{--} \\
+        \segue{} {\tiny\color{gray}$n{=}366$} & 0.880 & 93.4 & \ph{--} & 1.1 & 0.473 & \textbf{92.6} & \ph{--} & \ph{--} & \ph{--} \\
         \bottomrule
     \end{tabular}
 \end{table}
