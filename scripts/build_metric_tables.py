@@ -62,6 +62,12 @@ TEXLIVE_BIN = "/taiga/illinois/eng/cs/jrehg/users/emirkisa/texlive/bin/aarch64-l
 # are not reportable point estimates.
 MIN_N = 10
 
+# Table B columns exempt from the --strict same-n assertion: their metric is NaN on
+# valid outputs (definedness), so a mixed n across arms is expected, not an error.
+# det_motion_fidelity ('motfid') is NaN where no tracklets move -- a mean over defined
+# rows, with a per-cell n, exactly like Motion A/B (coordinator rule 2026-09-18).
+STRICT_EXEMPT_B = {"motfid"}
+
 # ---------------------------------------------------------------------------
 # arm / variant identity
 # ---------------------------------------------------------------------------
@@ -551,8 +557,11 @@ def check_strict(tb: TableB, tc: TableC) -> list[str]:
     the externals set the one-sided HF frontier -- so that is reported, not failed.)
     """
     problems = []
-    # Table B: every present column must share one n across rows (all should equal shared_n).
+    # Table B: every present column must share one n across rows (all should equal shared_n),
+    # except definedness-limited columns (STRICT_EXEMPT_B), where a mixed n is valid.
     for ci, col in enumerate(TABLE_B_COLS):
+        if col.key in STRICT_EXEMPT_B:
+            continue
         ns = {cells[ci].n for (_b, _n, cells) in tb.rows if cells[ci].present}
         if len(ns) > 1:
             problems.append(f"Table B column '{col.key}' has mixed n across rows: {sorted(ns)}")
@@ -656,7 +665,8 @@ def render_table_b(tb: TableB) -> str:
         if base == "ic_gen":   # separate externals from our arms
             L.append(r"        \addlinespace[2pt]")
         label = _row_label(base, n if n else None, cite=True)
-        tex_cells = [cell_tex(cells[j], TABLE_B_COLS[j].fmt) for j in range(len(TABLE_B_COLS))]
+        # pass the row's block n so a definedness-limited cell (Motion fid.) shows its own n
+        tex_cells = [cell_tex(cells[j], TABLE_B_COLS[j].fmt, block_n=n) for j in range(len(TABLE_B_COLS))]
         L.append("        " + label + " & " + " & ".join(tex_cells) + r" \\")
     L.append(r"        \bottomrule")
     L.append(r"    \end{tabular}")
@@ -747,7 +757,7 @@ def _md_table_b(tb: TableB) -> list[str]:
     hdr = ["arm", "Id A", "Seam%", "Smooth", "Copy%", "Copymax", "Transport", "RefSim(VP)", "MotFid", "Aesth", "n"]
     out = ["| " + " | ".join(hdr) + " |", "|" + "|".join(["---"] * len(hdr)) + "|"]
     for base, n, cells in tb.rows:
-        cvals = [cell_md(cells[i], TABLE_B_COLS[i].fmt) for i in range(len(TABLE_B_COLS))]
+        cvals = [cell_md(cells[i], TABLE_B_COLS[i].fmt, block_n=n) for i in range(len(TABLE_B_COLS))]
         out.append("| " + ARM_MD[base] + " | " + " | ".join(cvals) + f" | {n or '--'} |")
     return out
 
@@ -796,6 +806,8 @@ def render_markdown(ta, tb, tc, meta) -> str:
              "longer generation has more chances to match: our clips are 121 f vs the externals' 49 f "
              "(VAP/VFXMaster) / 33 f (refVFX), which under-estimates the externals' copy rate -- disclosed, "
              "not corrected.")
+    L.append("")
+    L.append("**Motion fid.** is NaN where no tracklets move (valid); n per cell.")
     L += _md_table_b(tb)
     L.append("")
     L.append("## Table C -- text dependency (same shared set)")

@@ -264,6 +264,40 @@ def test_strict_flags_mixed_column_n():
     assert any("vpref" in p for p in problems), problems
 
 
+def test_strict_exempts_motfid_mixed_n():
+    """det_motion_fidelity is NaN on valid outputs (no moving tracklets) -> mixed n is OK."""
+    recs = []
+    triples = [("e1", "r1", "T1"), ("e2", "r2", "T2")]
+    for base in ("vap", "vfxmaster", "refvfx"):
+        for i, (ep, ref, cell) in enumerate(triples):
+            for j, s in enumerate((42, 43)):
+                extra = dict(transport_pct=50.0, videoprism_sim_ref=0.9, identity_A=0.9,
+                             near_copy=False, copy_near_copy=False, seam_free=1,
+                             motion_smoothness=0.98, aesthetic=5.0)
+                # motfid missing on exactly one refvfx row -> refvfx n=3 vs others n=4 (mixed)
+                if not (base == "refvfx" and i == 1 and j == 1):
+                    extra["det_motion_fidelity"] = 0.2
+                recs.append(_mk(base, "effect", "external", "zero_shot", "one", ep, ref, cell, s, **extra))
+    for base in ("ic_gen", "dualforce_control", "dualforce_dcg_w6"):
+        for (ep, ref, cell) in triples:
+            for s in (42, 43):
+                recs.append(_mk(base, "neutral", "hf", "zero_shot", "one", ep, ref, cell, s,
+                                transport_pct=60.0, videoprism_sim_ref=0.95, identity_A=0.92,
+                                near_copy=False, copy_near_copy=False, seam_free=1,
+                                motion_smoothness=0.99, det_motion_fidelity=0.22, aesthetic=5.2))
+    tb = B.build_table_b(recs)
+    tc = B.build_table_c(recs)
+    problems = B.check_strict(tb, tc)
+    assert not any("motfid" in p for p in problems), problems      # exempt
+    assert problems == []                                          # nothing else mixed
+    mf_idx = [i for i, c in enumerate(B.TABLE_B_COLS) if c.key == "motfid"][0]
+    refvfx_row = [r for r in tb.rows if r[0] == "refvfx"][0]
+    other_row = [r for r in tb.rows if r[0] == "vap"][0]
+    assert refvfx_row[2][mf_idx].n == 3 and refvfx_row[1] == 4     # per-cell n < block n
+    assert other_row[2][mf_idx].n == 4
+    assert "motfid" in B.STRICT_EXEMPT_B
+
+
 # --------------------------------------------------------------------------- #
 # Table A structure + neutral-only filtering
 # --------------------------------------------------------------------------- #
