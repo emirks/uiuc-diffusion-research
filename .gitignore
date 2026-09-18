@@ -91,7 +91,9 @@ datasets/
 !/store/**/SHA256SUMS
 # features (contract clause 10): arrays + manifests are regenerable artifacts, never tracked
 **/features/*/*.npz
+**/features/*/*.json
 **/features/manifest.jsonl
+**/.SHA256SUMS.stat.json
 !/store/**/grid.jsonl
 !/store/**/config.yaml
 !/store/**/*.md
