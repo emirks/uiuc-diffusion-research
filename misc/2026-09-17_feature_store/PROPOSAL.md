@@ -1,6 +1,6 @@
 # Feature store — colocated per-generation features (PROPOSAL, awaiting owner approval)
 
-**Written:** 2026-09-17 · **Status:** APPROVED 2026-09-17 (owner, all six decisions in §11) · executing P0–P3, GPU (P4) gated on a separate go
+**Written:** 2026-09-17 · **Status:** APPROVED 2026-09-17 (owner, all six decisions in §11) · **SCOPE (owner, 2026-09-17): population `gridv3` only** — see `POPULATION_gridv3.md`; every other variant, the legacy caches and P6 are deferred · executing P0–P3, GPU (P4) gated on a separate go
 
 ## 0. One paragraph
 
@@ -166,12 +166,12 @@ the frozen `rows_v3` values to 1e-6.
 | phase | work | verification | cost |
 |---|---|---|---|
 | **P0 design freeze** | approve this doc; write `store/FEATURES.md`; README contract §9 "features"; `.gitignore` (`features/**/*.npz`, `features/manifest.jsonl`); track `SHA256SUMS`, `meta.yaml` | review | — |
-| **P1 inventory (CPU)** | `sha256sums` over all store videos + corpus + conds (~30 GB read); confirm one filesystem | `sha256sum -c` on 3 variants; `stat -c %d` equal | ~30–40 min CPU |
-| **P2 migrate (CPU)** | `migrate --from probe/cache outputs/eval/cache --gens 'store/gens/*/*' --corpus --conds`; `coverage --md` | golden test: 200 random migrated files array-equal to legacy; coverage report committed | ~1–2 h CPU (350k stat+link) |
+| **P1 inventory (CPU)** | `sha256sums` over the `gridv3` population (7,242 gens + 677 corpus + 408 conds ≈ 8 GB); one filesystem confirmed 2026-09-17 (device 1808112826, cross-dir `ln` OK) | `sha256sum -c` on 3 variants; `stat -c %d` equal | ~30–40 min CPU |
+| **P2 migrate (CPU)** | `migrate --from probe/cache outputs/eval/cache --population population_gridv3.json`; `coverage --md` | golden test: 200 random migrated files array-equal to legacy; coverage report committed | ~1–2 h CPU (350k stat+link) |
 | **P3 code** | `feature_store.py`, CLI, harness + lens integration, `tests/test_feature_store.py` (path rule, atomic write, manifest rebuild, staleness, get/put) | `pytest`; dry scoring of 5 items on CPU reproduces cached scalars | dev time |
 | **P4 extract (GPU, gated)** | externals DINO/tracks/LPIPS-t (1,098 gens); `clip_b32`+`videoprism`+`raft_mag` for the table populations (~5.5k gens); `cotracker3` for 4,947 conds (9 f); `clip_l14` for the same 5.5k; bar-8 anchors for 4.0.1 | `coverage` = 100 % on table populations; bar-8 PASS | ≈ 3 + 6 + 1 + 1 + 0.5 ≈ **12 GPU-h** (bgjg/bhwp by FairShare) |
 | **P5 scores** | `per_gen.jsonl` for evals/028, 030, lenses; register lenses eval; fsck extension | `store_fsck.py` PASS | CPU |
-| **P6 cleanup** | delete the 21 `outputs/eval/cache_*` shard dirs (proven duplicates). **Legacy caches are kept indefinitely (owner decision 5)** — nothing else is deleted | `fsck` PASS before the delete | — |
+| **P6 cleanup** | **DEFERRED (scope decision 2026-09-17)** — nothing is deleted in this campaign; legacy caches kept (decision 5) | — | — |
 
 Order of execution: P0 → P1 → P2 → P3 (all CPU/dev, no approval needed beyond P0) → **stop, report coverage** → P4 on your go → P5 → P6.
 
