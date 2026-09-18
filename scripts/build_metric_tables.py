@@ -24,7 +24,9 @@ Input row sets (any may be partially present; a missing column renders ``\\ph{--
      keys: item_id, seed, arm, copy_max, near_copy, copy_gen_frame, copy_ref_frame,
            ref_core_frac, n_mid, missing   -- M2a vs the gen's OWN reference; drives Copy rate.
 
-A cell whose defining n is below MIN_N (=10) renders "n/a" (with its n) and never bolds.
+A cell whose defining n is below MIN_N (=10) is THIN: it still shows its value (owner rule
+2026-09-18: report everything we have, warn, never blank a cell) but italic with a dagger and
+its n, never bolds, and is listed on stderr / in TABLES.md as a warning.
 
 Tables (fixed column definitions -- see the module-level TABLE_* specs):
   A  own arms x {seen, unseen, zero_shot}, neutral prompt (HF + ED pooled)
@@ -57,10 +59,18 @@ PAPER_DIR = os.path.join(REPO_ROOT, "papers_drafts", "ctt_iclr2027")
 DEFAULT_OUT = os.path.join(REPO_ROOT, "papers_drafts", "_preview", "metrics_gridv3")
 TEXLIVE_BIN = "/taiga/illinois/eng/cs/jrehg/users/emirkisa/texlive/bin/aarch64-linux"
 
-# A cell whose defining n is below this renders "n/a" (with its n) and is never
-# bold (coordinator rule 2026-09-18): thin cells (e.g. seen-tier Identity/Motion B)
-# are not reportable point estimates.
+# A cell whose defining n is below this is THIN (owner rule 2026-09-18: "add all the
+# things we have, warn me, but never leave the table empty"): it still renders its
+# value, italic with a dagger and its n, is never bold, and is reported as a warning
+# (stderr + TABLES.md). Thin cells (e.g. seen-tier Identity/Motion B) are indicative
+# only, not reportable point estimates.
 MIN_N = 10
+THIN_CELLS: list[str] = []   # "Table A / seen / segue / identity_b: n=8" -- filled by the builders
+
+
+def note_thin(table: str, block: str, base: str, key: str, cell: "Cell") -> None:
+    if cell.present and cell.n < MIN_N:
+        THIN_CELLS.append(f"Table {table} / {block} / {base} / {key}: n={cell.n}")
 
 # Table B columns exempt from the --strict same-n assertion: their metric is NaN on
 # valid outputs (definedness), so a mixed n across arms is expected, not an error.
@@ -298,7 +308,7 @@ def bold_block(rows_cells: list[list[Cell]], cols: list[Col], eps: float = 1e-9)
     for ci, col in enumerate(cols):
         if col.direction == "none":
             continue
-        # thin cells (n < MIN_N) render "n/a" and are excluded from the bold contest
+        # thin cells (n < MIN_N) are shown (italic, dagger) but excluded from the bold contest
         present = [(ri, rc[ci].value) for ri, rc in enumerate(rows_cells)
                    if rc[ci].present and rc[ci].n >= MIN_N]
         if not present:
@@ -326,9 +336,9 @@ def bold_block(rows_cells: list[list[Cell]], cols: list[Col], eps: float = 1e-9)
 def cell_tex(cell: Cell, fmt: str, block_n: Optional[int] = None) -> str:
     if not cell.present:
         return r"\ph{--}"
-    if cell.n < MIN_N:                       # too thin to report -> n/a (with its n)
-        return r"n/a{\tiny\,($n{=}" + str(cell.n) + "$)}"
     s = _fmt_num(cell.value, fmt)
+    if cell.n < MIN_N:                       # thin -> shown italic + dagger + n, never bold
+        return r"\textit{" + s + r"}$^{\dagger}${\tiny\,($n{=}" + str(cell.n) + "$)}"
     if cell.bold:
         s = r"\textbf{" + s + "}"
     if block_n is not None and cell.n != block_n:
@@ -339,9 +349,9 @@ def cell_tex(cell: Cell, fmt: str, block_n: Optional[int] = None) -> str:
 def cell_md(cell: Cell, fmt: str, block_n: Optional[int] = None) -> str:
     if not cell.present:
         return "--"
-    if cell.n < MIN_N:
-        return f"n/a (n={cell.n})"
     s = _fmt_num(cell.value, fmt)
+    if cell.n < MIN_N:
+        return f"_{s}_ †(n={cell.n})"
     if cell.bold:
         s = "**" + s + "**"
     if block_n is not None and cell.n != block_n:
@@ -396,6 +406,8 @@ def build_table_a(records) -> TableA:
             scope = scope_neutral(records, base, tier)
             block_n = len(scope)
             cells = [c.extract(scope) for c in TABLE_A_COLS]
+            for c, cell in zip(TABLE_A_COLS, cells):
+                note_thin("A", tier, base, c.key, cell)
             rows.append((base, block_n, cells))
             cells_only.append(cells)
         bold_block(cells_only, TABLE_A_COLS)
@@ -493,6 +505,8 @@ def build_table_b(records) -> TableB:
         scope = [r for r in _arm_bench_scope(records, base) if _match_key(r) in shared]
         n = len(scope)
         cells = [c.extract(scope) for c in TABLE_B_COLS]
+        for c, cell in zip(TABLE_B_COLS, cells):
+            note_thin("B", "zero_shot", base, c.key, cell)
         tb.rows.append((base, n, cells))
         cells_only.append(cells)
     bold_block(cells_only, TABLE_B_COLS)
@@ -527,6 +541,8 @@ def build_table_c(records) -> TableC:
         t_d = Cell(t_eff.value - t_neu.value, min(t_neu.n, t_eff.n)) if (t_neu.present and t_eff.present) else Cell()
         v_d = Cell(v_eff.value - v_neu.value, min(v_neu.n, v_eff.n)) if (v_neu.present and v_eff.present) else Cell()
         n = max(t_neu.n, t_eff.n, v_neu.n, v_eff.n)
+        for k, cell in (("t_neu", t_neu), ("t_eff", t_eff), ("t_d", t_d), ("v_neu", v_neu), ("v_eff", v_eff), ("v_d", v_d)):
+            note_thin("C", "zero_shot", base, k, cell)
         rows.append((base, n, dict(t_neu=t_neu, t_eff=t_eff, t_d=t_d, v_neu=v_neu, v_eff=v_eff, v_d=v_d)))
         cells_only.append([t_eff, t_d, v_eff, v_d])
     for base in EXTERNAL_ARMS:
@@ -611,7 +627,8 @@ def render_table_a(ta: TableA) -> str:
               r"motion smoothness; Copy rate is lower-is-better; Transport is our metric. "
               r"Best value per column and tier in bold; $n$ per row is the block size, with a "
               r"per-cell $n$ where a column is defined on fewer rows (Identity/Motion B: "
-              r"two-sided only; Motion A: a clip was given).}")
+              r"two-sided only; Motion A: a clip was given). A cell with $n<" + str(MIN_N) + r"$ is "
+              r"shown in italics with $\dagger$: indicative only, never bold.}")
     L.append(r"    \label{tab:gridv3_own}")
     L.append(r"    \footnotesize")
     L.append(r"    \setlength{\tabcolsep}{2.5pt}")
@@ -782,7 +799,8 @@ def render_markdown(ta, tb, tc, meta) -> str:
     L.append("These are the same numbers as `tab_A.tex` / `tab_B.tex` / `tab_C.tex`, in markdown, "
              "for review. Bold marks the best value per column per block (smallest for Copy rate and for "
              "the text-dependency $\\Delta$). Numbers: transport and rates to 1 decimal, similarities to 3. "
-             f"A cell whose defining $n < {MIN_N}$ renders `n/a` (with its $n$) and never bolds.")
+             f"A cell whose defining $n < {MIN_N}$ is THIN: shown in _italics_ with † and its $n$, never bold, "
+             "and listed under **Thin cells** below (indicative only).")
     L.append("")
     L.append("Inputs joined on `(item_id, seed)`:")
     for k in ("per_gen", "handoff", "lens", "copy"):
@@ -828,6 +846,15 @@ def render_markdown(ta, tb, tc, meta) -> str:
         L += ph
     else:
         L.append("None -- every column has data.")
+    L.append("")
+    L.append(f"## Thin cells (n < {MIN_N}; shown, flagged †, never bold)")
+    thin = meta.get("thin_cells") or []
+    if thin:
+        L.append("These cells are indicative only (too few rows for a point estimate):")
+        for t in thin:
+            L.append("- " + t)
+    else:
+        L.append("- none")
     L.append("")
     L.append("## Shared-set / `--strict` checks")
     probs = meta.get("strict_problems") or []
@@ -1198,6 +1225,11 @@ def main(argv=None) -> int:
     warnings = shared_set_warnings(tb)
     meta["strict_problems"] = problems
     meta["coverage_notes"] = warnings
+    meta["thin_cells"] = list(THIN_CELLS)
+    if THIN_CELLS:
+        print(f"[thin] {len(THIN_CELLS)} cell(s) with n < {MIN_N} -- shown italic with a dagger, never bold:", file=sys.stderr)
+        for t in THIN_CELLS:
+            print("  - " + t, file=sys.stderr)
     if problems:
         print("[strict] n-assertion findings:", file=sys.stderr)
         for p in problems:

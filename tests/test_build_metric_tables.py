@@ -107,13 +107,15 @@ def test_bold_skips_placeholders():
 
 
 # --------------------------------------------------------------------------- #
-# minimum-n rule (n < MIN_N -> "n/a", excluded from bolding)
+# minimum-n rule (n < MIN_N -> THIN: shown italic + dagger + n, excluded from bolding, warned)
 # --------------------------------------------------------------------------- #
-def test_min_n_renders_na_with_n():
+def test_min_n_renders_value_flagged_with_n():
     thin = B.Cell(0.912, B.MIN_N - 1)          # e.g. n=9
     fat = B.Cell(0.912, B.MIN_N)               # n=10 exactly -> reportable
-    assert B.cell_tex(thin, "sim3") == r"n/a{\tiny\,($n{=}" + str(B.MIN_N - 1) + "$)}"
-    assert B.cell_md(thin, "sim3") == f"n/a (n={B.MIN_N - 1})"
+    assert B.cell_tex(thin, "sim3") == r"\textit{0.912}$^{\dagger}${\tiny\,($n{=}" + str(B.MIN_N - 1) + "$)}"
+    assert B.cell_md(thin, "sim3") == f"_0.912_ †(n={B.MIN_N - 1})"
+    thin.bold = True                           # a thin cell never renders bold even if marked
+    assert r"\textbf" not in B.cell_tex(thin, "sim3") and "**" not in B.cell_md(thin, "sim3")
     assert B.cell_tex(fat, "sim3") == "0.912"
     assert B.cell_md(fat, "sim3") == "0.912"
 
@@ -125,12 +127,12 @@ def test_min_n_excluded_from_bolding():
     B.bold_block(rows, cols)
     assert not rows[0][0].bold          # thin (n=3) excluded
     assert rows[1][0].bold              # only reportable candidate wins
-    # and it renders n/a, unbolded
-    assert B.cell_tex(rows[0][0], "sim3").startswith("n/a")
+    # and it renders its value, flagged, unbolded
+    assert B.cell_tex(rows[0][0], "sim3").startswith(r"\textit{0.990}$^{\dagger}$")
 
 
 def test_min_n_applies_in_table_a_two_sided_subset():
-    """Two-sided rows are few -> Identity B renders n/a, but Identity A (all rows) is a number."""
+    """Two-sided rows are few -> Identity B renders thin (flagged), Identity A (all rows) plain."""
     recs = []
     for i in range(14):                          # 14 one-sided neutral unseen rows -> block healthy
         recs.append(_mk("ic_gen", "neutral", "hf", "unseen", "one", f"e{i}", f"r{i}",
@@ -146,7 +148,8 @@ def test_min_n_applies_in_table_a_two_sided_subset():
     id_b = row[2][B.TABLE_A_COLS.index([c for c in B.TABLE_A_COLS if c.key == "identity_b"][0])]
     assert id_a.present and id_a.n == 17 and abs(id_a.value - 0.90) < 1e-9
     assert id_b.present and id_b.n == 3          # only the two-sided rows
-    assert "n/a" in B.cell_tex(id_b, "sim3")     # thin -> n/a
+    assert B.cell_tex(id_b, "sim3").startswith(r"\textit{0.880}$^{\dagger}$")   # thin -> shown, flagged
+    assert any("identity_b: n=3" in t for t in B.THIN_CELLS)                    # and warned
 
 
 # --------------------------------------------------------------------------- #

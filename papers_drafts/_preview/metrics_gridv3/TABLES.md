@@ -2,7 +2,7 @@
 
 _Generated 2026-09-18 by `scripts/build_metric_tables.py`._
 
-These are the same numbers as `tab_A.tex` / `tab_B.tex` / `tab_C.tex`, in markdown, for review. Bold marks the best value per column per block (smallest for Copy rate and for the text-dependency $\Delta$). Numbers: transport and rates to 1 decimal, similarities to 3. A cell whose defining $n < 10$ renders `n/a` (with its $n$) and never bolds.
+These are the same numbers as `tab_A.tex` / `tab_B.tex` / `tab_C.tex`, in markdown, for review. Bold marks the best value per column per block (smallest for Copy rate and for the text-dependency $\Delta$). Numbers: transport and rates to 1 decimal, similarities to 3. A cell whose defining $n < 10$ is THIN: shown in _italics_ with † and its $n$, never bold, and listed under **Thin cells** below (indicative only).
 
 Inputs joined on `(item_id, seed)`:
 - **per_gen**: 19 file(s), 7242 rows from `base_cond_effect_v3`
@@ -14,10 +14,10 @@ Inputs joined on `(item_id, seed)`:
 | arm | Id A | Id B | Mot A | Mot B | Seam% | Smooth | Copy% | Copymax | Transport | n |
 |---|---|---|---|---|---|---|---|---|---|---|
 | **Seen** | | | | | | | | | |
-| LTX-2 (no reference) | **0.948** | n/a (n=8) | 0.633 | n/a (n=6) | 82.7 | **0.991** | **0.0** | **0.247** | 57.9 | 52 |
-| LTX-2 baseline LoRA | 0.877 | n/a (n=8) | **0.701** | n/a (n=8) | 94.2 | 0.988 | **0.0** | 0.332 | 82.2 | 52 |
-| SEGUE w/o guidance | 0.938 | n/a (n=8) | 0.679 | n/a (n=1) | 96.2 | 0.986 | **0.0** | 0.340 | 91.1 | 52 |
-| SEGUE | 0.908 | n/a (n=8) | 0.631 | n/a (n=1) | **98.1** | 0.981 | **0.0** | 0.401 | **97.1** | 52 |
+| LTX-2 (no reference) | **0.948** | _0.939_ †(n=8) | 0.633 | _0.514_ †(n=6) | 82.7 | **0.991** | **0.0** | **0.247** | 57.9 | 52 |
+| LTX-2 baseline LoRA | 0.877 | _0.900_ †(n=8) | **0.701** | _0.639_ †(n=8) | 94.2 | 0.988 | **0.0** | 0.332 | 82.2 | 52 |
+| SEGUE w/o guidance | 0.938 | _0.899_ †(n=8) | 0.679 | _0.722_ †(n=1) | 96.2 | 0.986 | **0.0** | 0.340 | 91.1 | 52 |
+| SEGUE | 0.908 | _0.871_ †(n=8) | 0.631 | _0.960_ †(n=1) | **98.1** | 0.981 | **0.0** | 0.401 | **97.1** | 52 |
 | **Unseen** | | | | | | | | | |
 | LTX-2 (no reference) | **0.935** | **0.960** (n=64) | 0.743 (n=269) | **0.695** (n=59) | 90.1 | **0.990** | **0.7** | **0.205** | 52.1 | 274 |
 | LTX-2 baseline LoRA | 0.930 | 0.931 (n=64) | **0.757** | 0.441 (n=47) | **97.8** | 0.986 | **0.7** | 0.269 | 74.6 | 274 |
@@ -66,6 +66,17 @@ Each line is a row whose listed columns render as `--` because the backing input
 - C / vap: t_neu, t_d, v_neu, v_d
 - C / vfxmaster: t_neu, t_d, v_neu, v_d
 - C / refvfx: t_neu, t_d, v_neu, v_d
+
+## Thin cells (n < 10; shown, flagged †, never bold)
+These cells are indicative only (too few rows for a point estimate):
+- Table A / seen / base_cond / identity_b: n=8
+- Table A / seen / base_cond / motion_b: n=6
+- Table A / seen / ic_gen / identity_b: n=8
+- Table A / seen / ic_gen / motion_b: n=8
+- Table A / seen / dualforce_control / identity_b: n=8
+- Table A / seen / dualforce_control / motion_b: n=1
+- Table A / seen / dualforce_dcg_w6 / identity_b: n=8
+- Table A / seen / dualforce_dcg_w6 / motion_b: n=1
 
 ## Shared-set / `--strict` checks
 - No `--strict` violations: every present Table B/C column has a single $n$ across its rows.

@@ -2,7 +2,7 @@
 % Do not hand-edit; rerun the builder.  Style mirrors tables/tab_main.tex.
 \begin{table}[H]
     \centering
-    \caption{\textbf{Own arms across tiers (neutral prompt).} Grid v3, HF-121f and ED-81f pooled per tier. Input fidelity is the clip hand-off (identity and motion at the given/generated seam), plus seam-free rate and motion smoothness; Copy rate is lower-is-better; Transport is our metric. Best value per column and tier in bold; $n$ per row is the block size, with a per-cell $n$ where a column is defined on fewer rows (Identity/Motion B: two-sided only; Motion A: a clip was given).}
+    \caption{\textbf{Own arms across tiers (neutral prompt).} Grid v3, HF-121f and ED-81f pooled per tier. Input fidelity is the clip hand-off (identity and motion at the given/generated seam), plus seam-free rate and motion smoothness; Copy rate is lower-is-better; Transport is our metric. Best value per column and tier in bold; $n$ per row is the block size, with a per-cell $n$ where a column is defined on fewer rows (Identity/Motion B: two-sided only; Motion A: a clip was given). A cell with $n<10$ is shown in italics with $\dagger$: indicative only, never bold.}
     \label{tab:gridv3_own}
     \footnotesize
     \setlength{\tabcolsep}{2.5pt}
@@ -13,10 +13,10 @@
         & \shortstack{Identity\\A} & \shortstack{Identity\\B} & \shortstack{Motion\\A} & \shortstack{Motion\\B} & \shortstack{Seam-\\free \%} & \shortstack{Motion\\smooth.} & \shortstack{Copy\\rate \%} & \shortstack{Copy\\max} & \shortstack{Transport\\ours} \\
         \midrule
         \multicolumn{10}{l}{\emph{Seen}} \\
-        \ltx{} (no reference) {\tiny\color{gray}$n{=}52$} & \textbf{0.948} & n/a{\tiny\,($n{=}8$)} & 0.633 & n/a{\tiny\,($n{=}6$)} & 82.7 & \textbf{0.991} & \textbf{0.0} & \textbf{0.247} & 57.9 \\
-        \ltx{} baseline LoRA {\tiny\color{gray}$n{=}52$} & 0.877 & n/a{\tiny\,($n{=}8$)} & \textbf{0.701} & n/a{\tiny\,($n{=}8$)} & 94.2 & 0.988 & \textbf{0.0} & 0.332 & 82.2 \\
-        \segue{} w/o guidance {\tiny\color{gray}$n{=}52$} & 0.938 & n/a{\tiny\,($n{=}8$)} & 0.679 & n/a{\tiny\,($n{=}1$)} & 96.2 & 0.986 & \textbf{0.0} & 0.340 & 91.1 \\
-        \segue{} {\tiny\color{gray}$n{=}52$} & 0.908 & n/a{\tiny\,($n{=}8$)} & 0.631 & n/a{\tiny\,($n{=}1$)} & \textbf{98.1} & 0.981 & \textbf{0.0} & 0.401 & \textbf{97.1} \\
+        \ltx{} (no reference) {\tiny\color{gray}$n{=}52$} & \textbf{0.948} & \textit{0.939}$^{\dagger}${\tiny\,($n{=}8$)} & 0.633 & \textit{0.514}$^{\dagger}${\tiny\,($n{=}6$)} & 82.7 & \textbf{0.991} & \textbf{0.0} & \textbf{0.247} & 57.9 \\
+        \ltx{} baseline LoRA {\tiny\color{gray}$n{=}52$} & 0.877 & \textit{0.900}$^{\dagger}${\tiny\,($n{=}8$)} & \textbf{0.701} & \textit{0.639}$^{\dagger}${\tiny\,($n{=}8$)} & 94.2 & 0.988 & \textbf{0.0} & 0.332 & 82.2 \\
+        \segue{} w/o guidance {\tiny\color{gray}$n{=}52$} & 0.938 & \textit{0.899}$^{\dagger}${\tiny\,($n{=}8$)} & 0.679 & \textit{0.722}$^{\dagger}${\tiny\,($n{=}1$)} & 96.2 & 0.986 & \textbf{0.0} & 0.340 & 91.1 \\
+        \segue{} {\tiny\color{gray}$n{=}52$} & 0.908 & \textit{0.871}$^{\dagger}${\tiny\,($n{=}8$)} & 0.631 & \textit{0.960}$^{\dagger}${\tiny\,($n{=}1$)} & \textbf{98.1} & 0.981 & \textbf{0.0} & 0.401 & \textbf{97.1} \\
         \midrule
         \multicolumn{10}{l}{\emph{Unseen}} \\
         \ltx{} (no reference) {\tiny\color{gray}$n{=}274$} & \textbf{0.935} & \textbf{0.960}{\tiny\,($n{=}64$)} & 0.743{\tiny\,($n{=}269$)} & \textbf{0.695}{\tiny\,($n{=}59$)} & 90.1 & \textbf{0.990} & \textbf{0.7} & \textbf{0.205} & 52.1 \\
