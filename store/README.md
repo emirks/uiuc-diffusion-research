@@ -16,8 +16,10 @@ store/
   datasets/NNN_<slug>/   immutable dataset roots (or symlink stub) + meta.yaml
   prompts/NNN_<slug>/    canonical rendered prompt families: ARM-FREE grid.jsonl + meta.yaml (sha-pinned)
   runs/NNN_<slug>/       one training run:  meta.yaml · config.yaml · checkpoints/ · NOTES.md?
+  FEATURES.md            ← feature-namespace registry (pins); FEATURES_COVERAGE.md = generated coverage matrix
   gens/NNN_<arm>/KK_<variant>__<machine>/   one generation batch of one arm-variant:
-                         meta.yaml · meta.v1.yaml? · grid.jsonl · videos/*.mp4 (flat, REAL files) · scores -> its eval arm-dir
+                         meta.yaml · meta.v1.yaml? · grid.jsonl · videos/*.mp4 (flat, REAL files) · videos/SHA256SUMS
+                         · features/<item>/<ns>.npz (+ features/manifest.jsonl) · scores -> its eval arm-dir
   evals/NNN_<name>__<machine>__<date>/      one scoring pass:
                          meta.yaml · <harness_arm>/<label>/{items.jsonl,results.json}  (label = --label shard, c0..c7)
 ```
@@ -61,6 +63,13 @@ store/
 9. **Entries are immutable.** Registering = numbered dir + meta + INDEX row + CHANGELOG, **one
    commit, at close — not days later**. A re-run/re-score/fix is a NEW subentry with the next KK.
    (The 2026-08-13 migration was a one-time versioned event, not precedent.)
+10. **Features live next to their video** (since 2026-09-17; registry `FEATURES.md`). `features/` sits next
+   to `videos/` (store gens) or inside the clip folder (corpus, endpoint clips): `videos/<item>.mp4` ↔
+   `features/<item>/<ns>.npz` + `<ns>.json` sidecar, one folder per video, one file pair per pinned namespace.
+   Files are the truth, `features/manifest.jsonl` is a rebuildable index, `videos/SHA256SUMS` (tracked) pins
+   video identity, and every sidecar records the video's sha256, host, and code sha. No hash-named caches,
+   no per-campaign caches, no `--cache-dir`: scorers read and write through
+   `diffusion.feature_store.FeatureStore`. Check with `scripts/store_features.py coverage | fsck`.
 
 ## How new work flows through it
 
@@ -76,6 +85,8 @@ store/
   eval↔gen 1:1: `ln -sfn <eval arm-dir> <gen subentry>/scores` (latest scoring wins; history in
   `arms_scored:`). Prompts: the shelf has exactly TWO sources — base/external variants are
   `stamp_rows.py` transforms with derived shas recorded in the family metas.
+- **Featurize** → `scripts/store_features.py extract <ns> --gens <glob>` fills only what is missing, atomically,
+  shard-safe; `coverage --md` refreshes `FEATURES_COVERAGE.md`. Scoring never extracts into a private cache.
 - **View** → `eval_ladder/viewer/build_runs.py` entries point at store paths; `ensure_external_media()`
   symlinks serve them.
 - **Record** → one INDEX line; campaign dossiers reference store ids.

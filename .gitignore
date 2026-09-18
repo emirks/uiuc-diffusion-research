@@ -86,6 +86,12 @@ datasets/
 !/store/MIGRATION.md
 !/store/**/meta.v1.yaml
 !/store/**/meta.yaml
+!/store/FEATURES.md
+!/store/FEATURES_COVERAGE.md
+!/store/**/SHA256SUMS
+# features (contract clause 10): arrays + manifests are regenerable artifacts, never tracked
+**/features/*/*.npz
+**/features/manifest.jsonl
 !/store/**/grid.jsonl
 !/store/**/config.yaml
 !/store/**/*.md
