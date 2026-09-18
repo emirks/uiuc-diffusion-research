@@ -111,3 +111,89 @@ place; when external gen features land, the external arms fill too. The coordina
 - this report committed with `git add -f` (misc/ is gitignored).
 - All commits as emirks <emirks88@gmail.com>; pushed after each; CHANGELOG.md, the pre-existing dirty
   files, and .claude/worktrees/* left untouched.
+
+---
+
+# Follow-up — motion v2 (velocity continuity), 2026-09-18
+
+**Coordinator decision.** The v1 motion_A/motion_B (`motion_fidelity` of the gen's tracks vs the
+condition clip's tracks) was defined on only ~166/564 HF rows (motion_A) and ~22–48/148 (motion_B)
+even though gen and condition cotracker are 100% present: a 9-frame condition clip has almost no
+tracklets above `motion_fidelity`'s moving threshold. **motion_A/motion_B are redefined as hand-off
+VELOCITY CONTINUITY from the GENERATION's own cotracker3 tracks** (no condition tracks — the given
+frames inside the gen ARE the pinned condition frames):
+
+- per tracklet j visible (`vis ≥ 0.5`) on every frame of both windows: `v_before_j` = mean velocity
+  over the last 3 given steps (frames [n_pre−3, n_pre]), `v_after_j` = mean velocity over the first K
+  generated steps (frames [n_pre, n_pre+K]); `cos_j = cosine(v_before_j, v_after_j)`; weight
+  `w_j = |v_before_j|·|v_after_j|`. **motion_A = Σ w_j cos_j / Σ w_j**; NaN if Σ w_j < 1e-6 (nothing
+  moves) or **n_pre < 4** (frame-anchored: ED grids + all externals → NaN by construction, matching
+  the table's "—").
+- **motion_B** symmetric at the suffix (two-sided only): `v_before` = last K generated steps before the
+  suffix (frames [T−n_suf−K, T−n_suf]), `v_after` = first 3 given suffix steps (frames [T−n_suf,
+  T−n_suf+3]).
+- velocities in tracked-resolution pixels (the cosine and weight ratio are scale-free).
+
+The v1 values are kept as **`motion_A_mf` / `motion_B_mf`** (extra columns, low definedness, for
+reference). identity_A/B and seam_free are unchanged. The 038 meta.yaml carries `definitions_version:
+v2 (2026-09-18)`, `definitions_reason`, and the updated definitions verbatim. Re-run in place with
+`--eval-id 038_handoff_gridv3__dai__2026-09-18 --no-index` (INDEX untouched); rows now carry 15 keys
+(…, motion_A, motion_B, motion_A_mf, motion_B_mf, seam_free, missing).
+
+**Definedness gain (motion_A):** ~166/564 → ~552–562/564 (v2 vs v1_mf); **motion_B:** ~22–48/148 →
+~65–128/148. (The few NaN v2 rows: no tracklet is visible on every frame of the window / nothing moves.)
+Condition-clip dino has also fully landed since the first run, so identity_A is now 564/204/366 (complete)
+and identity_B 148/148 on the two-sided HF rows.
+
+## v2 coverage + mean per variant
+
+`idA`, `seam` = count of finite values; `idB/mA/mB` shown as finite/defined; `*_mean` = mean over
+finite values; `mA_mf/mB_mf` = the v1 reference columns (finite/defined). ED & externals: motion is —
+(n_pre<4 / one-sided). LEVELS only.
+
+```
+arm                               n    idA  idB(def)  mA(def)  mA_mean  mB(def)  mB_mean  mA_mf(def)  mB_mf(def)  seam
+ic_gen_neutral_v3                 564  564  148/148   562/564  0.752    119/148  0.466    166/564     47/148      564
+ic_gen_neutral_v3ed81             204  204  0/0       0/0      -        0/0      -        0/0         0/0         204
+ic_gen_effect_v3                  564  564  148/148   560/564  0.756    95/148   0.391    165/564     35/148      564
+ic_gen_effect_v3ed81              204  204  0/0       0/0      -        0/0      -        0/0         0/0         204
+base_cond_neutral_v3              564  564  148/148   552/564  0.722    128/148  0.679    165/564     48/148      564
+base_cond_neutral_v3ed81          204  204  0/0       0/0      -        0/0      -        0/0         0/0         204
+base_cond_effect_v3               564  564  148/148   554/564  0.725    103/148  0.598    166/564     31/148      564
+base_cond_effect_v3ed81           204  204  0/0       0/0      -        0/0      -        0/0         0/0         204
+dualforce_control_neutral_v3      564  564  148/148   558/564  0.729    77/148   0.377    166/564     22/148      564
+dualforce_control_neutral_v3ed81  204  204  0/0       0/0      -        0/0      -        0/0         0/0         204
+dualforce_control_effect_v3       564  564  148/148   559/564  0.725    76/148   0.405    164/564     24/148      564
+dualforce_control_effect_v3ed81   204  204  0/0       0/0      -        0/0      -        0/0         0/0         204
+dualforce_dcg_w6_neutral_v3       564  564  148/148   559/564  0.716    65/148   0.387    165/564     26/148      564
+dualforce_dcg_w6_neutral_v3ed81   204  204  0/0       0/0      -        0/0      -        0/0         0/0         204
+dualforce_dcg_w6_effect_v3        564  564  148/148   557/564  0.715    66/148   0.38     166/564     20/148      564
+dualforce_dcg_w6_effect_v3ed81    204  204  0/0       0/0      -        0/0      -        0/0         0/0         204
+refvfx_author_native              366  366  0/0       0/0      -        0/0      -        0/0         0/0         366
+vap_author_native                 366  366  0/0       0/0      -        0/0      -        0/0         0/0         366
+vfxmaster_author_native           366  366  0/0       0/0      -        0/0      -        0/0         0/0         366
+```
+
+motion_A means sit ~0.72–0.76 across the 8 HF arms (the generated motion tends to continue the given
+direction at the prefix hand-off); motion_B means are lower and vary more (~0.38–0.68) with fewer
+tracklets visible throughout the suffix window (effects engulf points near the clip end). These are
+levels, not verdicts.
+
+## v2 verification
+
+- `pytest tests/test_handoff_metrics.py` → **13 passed** (added `test_velocity_continuity`: identical
+  velocity before/after → 1.0, reversed → −1.0, static → NaN, a frame occluded inside the window → NaN;
+  `compute_row` and missing-feature tests updated: v2 motion_A needs only gen tracks, motion_A_mf needs
+  condA tracks).
+- motion_A hand-check: for `G-fit__ic_gen_neutral_v3__color_rain_3__ref_color_rain_1__s42` the script's
+  0.8293510671114203 reproduces a from-scratch numpy continuity computation (657 tracklets visible
+  throughout [6,17]) to 1e-9.
+- meta.yaml valid YAML: `definitions_version: v2 (2026-09-18)`, 7 definitions, 19 arms_scored with the
+  motion means + `_mf` counts in each coverage block.
+
+## v2 git
+
+- `f838576` infra: motion v2 = velocity continuity (scripts/handoff_metrics.py + tests; 13 pass) — pushed.
+- 038 meta.yaml re-committed with the v2 definitions/coverage; INDEX.md unchanged (—no-index); rows.jsonl
+  regenerated (gitignored). This report updated with `git add -f`. emirks <emirks88@gmail.com>; CHANGELOG.md,
+  the pre-existing dirty files, and .claude/worktrees/* untouched.

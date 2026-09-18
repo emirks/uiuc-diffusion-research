@@ -3,12 +3,15 @@ seq: 38
 shelf: evals
 created: '2026-09-18'
 machine: dai (login CPU, numpy over stored features)
-instrument: scripts/handoff_metrics.py @ 21bd667
+instrument: scripts/handoff_metrics.py @ f838576
+definitions_version: v2 (2026-09-18)
+definitions_reason: "v2 redefines motion_A/motion_B as hand-off velocity continuity from the gen's own cotracker3 tracks. v1 used motion_fidelity against the 9-frame condition clip, which returned NaN on most rows because a 9-frame clip has almost no tracklets above its moving threshold (motion_A defined ~165/564 HF, motion_B ~22/148, though gen and condition tracks are 100% present). The v1 values are retained as motion_A_mf / motion_B_mf. identity_A/B and seam_free are unchanged."
 definitions:
   - "Conditioning windows: HF-grid rows (121 f): n_pre = 9, n_suf = 8 if sided == \"two\" else 0. ED-grid rows (81 f, frame-0 anchor): n_pre = 1, n_suf = 0. Externals (VAP/VFXMaster 49 f, refVFX 33 f, frame-0 conditioning): n_pre = 1, n_suf = 0."
   - "Hand-off window length K = max(2, round(fps / 3)) frames (~1/3 s; 8 at 24 fps, 3 at 9.72 fps, 5 at 15 fps). fps via probe_fps(gen_video)."
   - "identity_A = mean over t in [n_pre, n_pre+K) of cos(f_gen[t], f_condA[n_pre-1]) where f_condA = dino of <endpoint>_start9.mp4 (the last GIVEN frame; for n_pre=1 that is frame 0). identity_B (two-sided only) = mean over t in [T-n_suf-K, T-n_suf) of cos(f_gen[t], f_condB[T_B - n_suf]) where f_condB = dino of <endpoint>_end9.mp4 and T_B = 9 (the first given suffix frame = frame 1 of end9). Else NaN."
-  - "motion_A = motion_fidelity between the gen's tracks/vis sliced to frames [0, n_pre+K) and the start clip's full tracks/vis (9 f) \u2014 only when n_pre >= 9 (a clip was given); NaN for n_pre = 1 (a frame has no motion). motion_B symmetric: gen frames [T-n_suf-K, T) vs the end clip's tracks; NaN unless two-sided."
+  - "motion_A / motion_B = hand-off VELOCITY CONTINUITY from the GENERATION's own cotracker3 tracks (no condition tracks needed; the given frames inside the gen ARE the condition clip's frames, pinned). Per tracklet j visible on every frame of both windows: v_before_j = mean velocity over the last 3 given steps (frames [n_pre-3, n_pre]), v_after_j = mean velocity over the first K generated steps (frames [n_pre, n_pre+K]); cos_j = cosine(v_before_j, v_after_j); weight w_j = |v_before_j|*|v_after_j|. motion_A = sum_j w_j cos_j / sum_j w_j; NaN if sum_j w_j < 1e-6 (nothing moves) or n_pre < 4 (frame-anchored rows: ED grids and all externals -> NaN by construction). motion_B symmetric at the suffix (two-sided rows only): v_before = mean over the last K generated steps before the suffix (frames [T-n_suf-K, T-n_suf]), v_after = mean over the first 3 given suffix steps (frames [T-n_suf, T-n_suf+3]). Velocities in pixels of the tracked resolution (the ratio is scale-free); visibility (vis >= 0.5) required on every frame of both windows."
+  - "motion_A_mf / motion_B_mf (reference columns) = the previous definition: motion_fidelity of the gen's tracks sliced to [0, n_pre+K) (n_pre >= 9) / [T-n_suf-K, T) (two-sided) against the condition clip's full tracks. Kept for reference; low definedness because a 9-frame condition clip has almost no tracklets above its moving threshold (the reason for the v2 redefinition)."
   - "seam_free = 1 if the relevant seam z-scores <= 3 (prefix only for one-sided; prefix and suffix for two-sided) \u2014 read prefix_seam_z, suffix_seam_z from the v4 rows (evals 028|030), from Op-2's per_gen.jsonl if present else items.jsonl."
   - "Missing feature (e.g. externals before their extraction lands) -> NaN + a `missing` entry naming the namespace/role; never crash; idempotent per gen."
 arms_scored:
@@ -17,112 +20,112 @@ arms_scored:
     rows: 564
     grid_type: HF
     seam_source: per_gen.jsonl@028_grid_v3_paper_arms__dai__2026-09-07
-    coverage: {identity_A: 314, identity_B: 74/148, motion_A: 0/564, motion_B: 0/148, seam_free: 564}
+    coverage: {identity_A: 564, identity_B: 148/148, motion_A: 562/564, motion_A_mean: 0.7521, motion_B: 119/148, motion_B_mean: 0.4656, motion_A_mf: 166/564, motion_B_mf: 47/148, seam_free: 564}
   ic_gen_neutral_v3ed81:
     gen: store/gens/001_ic_gen/04_neutral_v3ed81__dai
     rows: 204
     grid_type: ED
     seam_source: per_gen.jsonl@028_grid_v3_paper_arms__dai__2026-09-07
-    coverage: {identity_A: 100, identity_B: 0/0, motion_A: 0/0, motion_B: 0/0, seam_free: 204}
+    coverage: {identity_A: 204, identity_B: 0/0, motion_A: 0/0, motion_A_mean: None, motion_B: 0/0, motion_B_mean: None, motion_A_mf: 0/0, motion_B_mf: 0/0, seam_free: 204}
   ic_gen_effect_v3:
     gen: store/gens/001_ic_gen/05_effect_v3__dai
     rows: 564
     grid_type: HF
     seam_source: per_gen.jsonl@028_grid_v3_paper_arms__dai__2026-09-07
-    coverage: {identity_A: 314, identity_B: 74/148, motion_A: 0/564, motion_B: 0/148, seam_free: 564}
+    coverage: {identity_A: 564, identity_B: 148/148, motion_A: 560/564, motion_A_mean: 0.7563, motion_B: 95/148, motion_B_mean: 0.3913, motion_A_mf: 165/564, motion_B_mf: 35/148, seam_free: 564}
   ic_gen_effect_v3ed81:
     gen: store/gens/001_ic_gen/06_effect_v3ed81__dai
     rows: 204
     grid_type: ED
     seam_source: per_gen.jsonl@028_grid_v3_paper_arms__dai__2026-09-07
-    coverage: {identity_A: 100, identity_B: 0/0, motion_A: 0/0, motion_B: 0/0, seam_free: 204}
+    coverage: {identity_A: 204, identity_B: 0/0, motion_A: 0/0, motion_A_mean: None, motion_B: 0/0, motion_B_mean: None, motion_A_mf: 0/0, motion_B_mf: 0/0, seam_free: 204}
   refvfx_author_native:
     gen: store/gens/003_refvfx/03_author_native__dai
     rows: 366
     grid_type: external
     seam_source: per_gen.jsonl@030_external_zs_authornative__dai__2026-09-12
-    coverage: {identity_A: 92, identity_B: 0/0, motion_A: 0/0, motion_B: 0/0, seam_free: 366}
+    coverage: {identity_A: 366, identity_B: 0/0, motion_A: 0/0, motion_A_mean: None, motion_B: 0/0, motion_B_mean: None, motion_A_mf: 0/0, motion_B_mf: 0/0, seam_free: 366}
   base_cond_neutral_v3:
     gen: store/gens/005_base_cond/04_neutral_v3__dai
     rows: 564
     grid_type: HF
     seam_source: per_gen.jsonl@028_grid_v3_paper_arms__dai__2026-09-07
-    coverage: {identity_A: 314, identity_B: 74/148, motion_A: 0/564, motion_B: 0/148, seam_free: 564}
+    coverage: {identity_A: 564, identity_B: 148/148, motion_A: 552/564, motion_A_mean: 0.7224, motion_B: 128/148, motion_B_mean: 0.6794, motion_A_mf: 165/564, motion_B_mf: 48/148, seam_free: 564}
   base_cond_neutral_v3ed81:
     gen: store/gens/005_base_cond/05_neutral_v3ed81__dai
     rows: 204
     grid_type: ED
     seam_source: per_gen.jsonl@028_grid_v3_paper_arms__dai__2026-09-07
-    coverage: {identity_A: 100, identity_B: 0/0, motion_A: 0/0, motion_B: 0/0, seam_free: 204}
+    coverage: {identity_A: 204, identity_B: 0/0, motion_A: 0/0, motion_A_mean: None, motion_B: 0/0, motion_B_mean: None, motion_A_mf: 0/0, motion_B_mf: 0/0, seam_free: 204}
   base_cond_effect_v3:
     gen: store/gens/005_base_cond/06_effect_v3__dai
     rows: 564
     grid_type: HF
     seam_source: per_gen.jsonl@028_grid_v3_paper_arms__dai__2026-09-07
-    coverage: {identity_A: 314, identity_B: 74/148, motion_A: 0/564, motion_B: 0/148, seam_free: 564}
+    coverage: {identity_A: 564, identity_B: 148/148, motion_A: 554/564, motion_A_mean: 0.7248, motion_B: 103/148, motion_B_mean: 0.5985, motion_A_mf: 166/564, motion_B_mf: 31/148, seam_free: 564}
   base_cond_effect_v3ed81:
     gen: store/gens/005_base_cond/07_effect_v3ed81__dai
     rows: 204
     grid_type: ED
     seam_source: per_gen.jsonl@028_grid_v3_paper_arms__dai__2026-09-07
-    coverage: {identity_A: 100, identity_B: 0/0, motion_A: 0/0, motion_B: 0/0, seam_free: 204}
+    coverage: {identity_A: 204, identity_B: 0/0, motion_A: 0/0, motion_A_mean: None, motion_B: 0/0, motion_B_mean: None, motion_A_mf: 0/0, motion_B_mf: 0/0, seam_free: 204}
   vap_author_native:
     gen: store/gens/011_vap/05_author_native__dai
     rows: 366
     grid_type: external
     seam_source: per_gen.jsonl@030_external_zs_authornative__dai__2026-09-12
-    coverage: {identity_A: 102, identity_B: 0/0, motion_A: 0/0, motion_B: 0/0, seam_free: 366}
+    coverage: {identity_A: 366, identity_B: 0/0, motion_A: 0/0, motion_A_mean: None, motion_B: 0/0, motion_B_mean: None, motion_A_mf: 0/0, motion_B_mf: 0/0, seam_free: 366}
   vfxmaster_author_native:
     gen: store/gens/012_vfxmaster/05_author_native__dai
     rows: 366
     grid_type: external
     seam_source: per_gen.jsonl@030_external_zs_authornative__dai__2026-09-12
-    coverage: {identity_A: 92, identity_B: 0/0, motion_A: 0/0, motion_B: 0/0, seam_free: 366}
+    coverage: {identity_A: 366, identity_B: 0/0, motion_A: 0/0, motion_A_mean: None, motion_B: 0/0, motion_B_mean: None, motion_A_mf: 0/0, motion_B_mf: 0/0, seam_free: 366}
   dualforce_control_neutral_v3:
     gen: store/gens/013_dualforce_control/03_neutral_v3__dai
     rows: 564
     grid_type: HF
     seam_source: per_gen.jsonl@028_grid_v3_paper_arms__dai__2026-09-07
-    coverage: {identity_A: 314, identity_B: 74/148, motion_A: 0/564, motion_B: 0/148, seam_free: 564}
+    coverage: {identity_A: 564, identity_B: 148/148, motion_A: 558/564, motion_A_mean: 0.7292, motion_B: 77/148, motion_B_mean: 0.377, motion_A_mf: 166/564, motion_B_mf: 22/148, seam_free: 564}
   dualforce_control_neutral_v3ed81:
     gen: store/gens/013_dualforce_control/04_neutral_v3ed81__dai
     rows: 204
     grid_type: ED
     seam_source: per_gen.jsonl@028_grid_v3_paper_arms__dai__2026-09-07
-    coverage: {identity_A: 100, identity_B: 0/0, motion_A: 0/0, motion_B: 0/0, seam_free: 204}
+    coverage: {identity_A: 204, identity_B: 0/0, motion_A: 0/0, motion_A_mean: None, motion_B: 0/0, motion_B_mean: None, motion_A_mf: 0/0, motion_B_mf: 0/0, seam_free: 204}
   dualforce_control_effect_v3:
     gen: store/gens/013_dualforce_control/05_effect_v3__dai
     rows: 564
     grid_type: HF
     seam_source: per_gen.jsonl@028_grid_v3_paper_arms__dai__2026-09-07
-    coverage: {identity_A: 314, identity_B: 74/148, motion_A: 0/564, motion_B: 0/148, seam_free: 564}
+    coverage: {identity_A: 564, identity_B: 148/148, motion_A: 559/564, motion_A_mean: 0.7253, motion_B: 76/148, motion_B_mean: 0.405, motion_A_mf: 164/564, motion_B_mf: 24/148, seam_free: 564}
   dualforce_control_effect_v3ed81:
     gen: store/gens/013_dualforce_control/06_effect_v3ed81__dai
     rows: 204
     grid_type: ED
     seam_source: per_gen.jsonl@028_grid_v3_paper_arms__dai__2026-09-07
-    coverage: {identity_A: 100, identity_B: 0/0, motion_A: 0/0, motion_B: 0/0, seam_free: 204}
+    coverage: {identity_A: 204, identity_B: 0/0, motion_A: 0/0, motion_A_mean: None, motion_B: 0/0, motion_B_mean: None, motion_A_mf: 0/0, motion_B_mf: 0/0, seam_free: 204}
   dualforce_dcg_w6_neutral_v3:
     gen: store/gens/032_dualforce_dcg_w6/03_neutral_v3__dai
     rows: 564
     grid_type: HF
     seam_source: per_gen.jsonl@028_grid_v3_paper_arms__dai__2026-09-07
-    coverage: {identity_A: 314, identity_B: 74/148, motion_A: 0/564, motion_B: 0/148, seam_free: 564}
+    coverage: {identity_A: 564, identity_B: 148/148, motion_A: 559/564, motion_A_mean: 0.716, motion_B: 65/148, motion_B_mean: 0.3868, motion_A_mf: 165/564, motion_B_mf: 26/148, seam_free: 564}
   dualforce_dcg_w6_neutral_v3ed81:
     gen: store/gens/032_dualforce_dcg_w6/04_neutral_v3ed81__dai
     rows: 204
     grid_type: ED
     seam_source: per_gen.jsonl@028_grid_v3_paper_arms__dai__2026-09-07
-    coverage: {identity_A: 100, identity_B: 0/0, motion_A: 0/0, motion_B: 0/0, seam_free: 204}
+    coverage: {identity_A: 204, identity_B: 0/0, motion_A: 0/0, motion_A_mean: None, motion_B: 0/0, motion_B_mean: None, motion_A_mf: 0/0, motion_B_mf: 0/0, seam_free: 204}
   dualforce_dcg_w6_effect_v3:
     gen: store/gens/032_dualforce_dcg_w6/05_effect_v3__dai
     rows: 564
     grid_type: HF
     seam_source: per_gen.jsonl@028_grid_v3_paper_arms__dai__2026-09-07
-    coverage: {identity_A: 314, identity_B: 74/148, motion_A: 0/564, motion_B: 0/148, seam_free: 564}
+    coverage: {identity_A: 564, identity_B: 148/148, motion_A: 557/564, motion_A_mean: 0.7146, motion_B: 66/148, motion_B_mean: 0.3805, motion_A_mf: 166/564, motion_B_mf: 20/148, seam_free: 564}
   dualforce_dcg_w6_effect_v3ed81:
     gen: store/gens/032_dualforce_dcg_w6/06_effect_v3ed81__dai
     rows: 204
     grid_type: ED
     seam_source: per_gen.jsonl@028_grid_v3_paper_arms__dai__2026-09-07
-    coverage: {identity_A: 100, identity_B: 0/0, motion_A: 0/0, motion_B: 0/0, seam_free: 204}
+    coverage: {identity_A: 204, identity_B: 0/0, motion_A: 0/0, motion_A_mean: None, motion_B: 0/0, motion_B_mean: None, motion_A_mf: 0/0, motion_B_mf: 0/0, seam_free: 204}
