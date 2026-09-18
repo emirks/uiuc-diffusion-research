@@ -571,3 +571,87 @@ def test_lpips_warm_and_cached_endpoint_hit(tmp_path):
     with pytest.raises(RuntimeError):            # miss + no frames is a caller bug
         _cached_endpoint(item2, "suffix", 3, gb, None, None, None, tmp_path,
                          short_side=256)
+
+
+# --- P3c: store-model bar-8 (arg construction + cold-anchor staging) ----------
+def test_build_score_cmd_uses_store_root_not_cache_dir(tmp_path):
+    from diffusion.transition_eval.certify.run_certification import build_score_cmd
+    warm = build_score_cmd(tmp_path / "m.json", tmp_path / "corpus.json", "lbl",
+                           tmp_path / "out", "auto", tmp_path / "repo")
+    assert "--store-root" in warm and str(tmp_path / "repo") in warm
+    assert "--cache-dir" not in warm and "--lpips-cache" not in warm
+    assert warm[warm.index("--controls") + 1] == "auto"
+    assert warm[warm.index("--corpus") + 1] == str(tmp_path / "corpus.json")
+    cold_root = tmp_path / "cold"
+    cold = build_score_cmd(tmp_path / "a.json", tmp_path / "corpus.json", "cold",
+                           tmp_path / "out", "auto", cold_root)
+    assert cold[cold.index("--store-root") + 1] == str(cold_root)
+
+
+def test_stage_cold_anchors_and_cold_store_populated(tmp_path):
+    from diffusion.feature_store import FeatureStore
+    from diffusion.transition_eval import store_io
+    from diffusion.transition_eval.certify.run_certification import (
+        stage_cold_anchors, cold_store_populated)
+
+    repo = tmp_path / "repo"
+    vdir = repo / "store" / "gens" / "A" / "01_v" / "videos"
+    vdir.mkdir(parents=True)
+    gen = vdir / "g__s42.mp4"
+    gen.write_bytes(b"\x00" * 40)
+    warm = FeatureStore(repo)                            # a warm colocated feature
+    warm.put(gen, store_io.DINO_NS, {"feats": np.ones((3, 8), np.float32)},
+             {"host": "h", "origin": "extracted"})
+    warm_feat_dir = warm.path(gen, store_io.DINO_NS).parent
+    n_warm_before = len(list(warm_feat_dir.glob("*.npz")))
+
+    items = [{"item_id": "sib__aa", "generated_video": str(gen.relative_to(repo)),
+              "reference_video": "corpus/aa/ref.mp4", "style": "aa", "arm": ""}]
+    cold_root = tmp_path / "cold"
+    cold_root.mkdir()
+    staged = stage_cold_anchors(items, cold_root, repo)
+    st = staged[0]
+    # only the gen path field is rewritten; every other field is byte-identical
+    assert st["reference_video"] == items[0]["reference_video"]
+    assert st["style"] == "aa" and st["arm"] == ""
+    dst = pathlib.Path(st["generated_video"])
+    assert str(dst).startswith(str(cold_root.resolve())) and not dst.is_symlink()
+    # hard link (same inode) or, on a cross-device fallback, a byte-equal copy
+    assert (dst.stat().st_ino == gen.stat().st_ino
+            or dst.read_bytes() == gen.read_bytes())
+    # the cold store is genuinely empty (no stray features) and does NOT re-hit
+    # the warm colocated feature next to the real gen
+    assert not list(cold_root.rglob("*.npz"))
+    cold = FeatureStore(cold_root)
+    for ns in store_io.NAMESPACES:
+        assert not cold.has(dst, ns)
+    cold._relvideo(dst)                                  # staged video is under cold_root
+
+    # cold_store_populated: not-ok before extraction, ok after all three ns land
+    assert not cold_store_populated(cold_root, staged)["ok"]
+    hs = store_io.HarnessStore(cold)
+    for ns, arr in ((store_io.DINO_NS, {"feats": np.ones((3, 8), np.float32)}),
+                    (store_io.TRACK_NS, {"tracks": np.zeros((3, 2, 2), np.float32),
+                                         "vis": np.ones((3, 2), np.float32)}),
+                    (store_io.LPIPS_NS, {"d": np.ones(2, np.float32)})):
+        hs.put(store_io.RealVideo(dst), ns, arr)
+    pop = cold_store_populated(cold_root, staged)
+    assert pop["ok"] and pop["n_anchors"] == 1 and not pop["missing"]
+    # the re-extracted features land UNDER cold_root; the warm store is untouched
+    assert (cold_root / "sib__aa" / "features").exists()
+    assert len(list(warm_feat_dir.glob("*.npz"))) == n_warm_before
+
+
+def test_run_health_flags_errors_and_missing(tmp_path):
+    from diffusion.transition_eval.certify.run_certification import run_health
+    jl = tmp_path / "items.jsonl"
+    jl.write_text("\n".join(json.dumps(r) for r in [
+        {"item_id": "a", "app_ref": 0.1},
+        {"item_id": "control_lerp__a", "app_ref": 0.2},   # controls ignored for the id check
+        {"item_id": "b", "error": "ValueError: boom"},
+    ]))
+    h = run_health(jl, ["a", "b", "c"])
+    assert not h["ok"] and "b" in h["error_rows"] and h["missing"] == ["c"]
+    assert h["n_shared"] == 2
+    jl.write_text("\n".join(json.dumps(r) for r in [{"item_id": "a"}, {"item_id": "b"}]))
+    assert run_health(jl, ["a", "b"])["ok"]
