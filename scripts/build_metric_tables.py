@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """build_metric_tables.py -- Op-5 metric table builder for the CTT / SEGUE paper (grid v3).
 
-Joins three per-generation feature sources on ``(item_id, seed)`` and emits three
+Joins four per-generation feature sources on ``(item_id, seed)`` and emits three
 LaTeX tables (plus a markdown twin and a standalone preview PDF) in the paper's
 booktabs style, written ONLY under ``papers_drafts/_preview/metrics_gridv3/``.  It
 never touches Ozgur's ``papers_drafts/ctt_iclr2027/tables/*.tex``.
@@ -11,15 +11,20 @@ Input row sets (any may be partially present; a missing column renders ``\\ph{--
                               store/evals/030*/<arm>/per_gen.jsonl
      keys: item_id, seed, arm, variant_dir, gen_video, tier, sided, cell, content,
            pct_type, endpoint, reference, ref_class, n_frames, transport_pct,
-           transport_raw, transport_ceiling, transport_capped, copy_max, near_copy,
-           max_seam_z, prefix_seam_z, suffix_seam_z, prefix_dino, prefix_lpips,
-           cam_zpr, obj_csls, core_degenerate, cross_high, ref_in_v4_population
+           transport_raw, transport_ceiling, transport_capped, max_seam_z,
+           prefix_seam_z, suffix_seam_z, prefix_dino, ...
+           (its copy_max / near_copy are POOL-scored and NOT used -- see source 4).
   2. hand-off rows (Op-3):    store/evals/*_handoff_gridv3__*/<arm>/rows.jsonl
      keys: item_id, seed, arm, n_pre, n_suf, K, fps, identity_A, identity_B,
            motion_A, motion_B, seam_free, missing
   3. lens rows (later):       store/evals/*_lenses_gridv3__*/<arm>/rows.jsonl
      keys: item_id, seed, arm, motion_smoothness, videoprism_sim_ref,
            det_motion_fidelity, clip_sim_ref, dynamic_degree_mean_mag, aesthetic
+  4. copy rows (Op-6):        store/evals/*_copy_gridv3__*/<arm>/rows.jsonl
+     keys: item_id, seed, arm, copy_max, near_copy, copy_gen_frame, copy_ref_frame,
+           ref_core_frac, n_mid, missing   -- M2a vs the gen's OWN reference; drives Copy rate.
+
+A cell whose defining n is below MIN_N (=10) renders "n/a" (with its n) and never bolds.
 
 Tables (fixed column definitions -- see the module-level TABLE_* specs):
   A  own arms x {seen, unseen, zero_shot}, neutral prompt (HF + ED pooled)
@@ -51,6 +56,11 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAPER_DIR = os.path.join(REPO_ROOT, "papers_drafts", "ctt_iclr2027")
 DEFAULT_OUT = os.path.join(REPO_ROOT, "papers_drafts", "_preview", "metrics_gridv3")
 TEXLIVE_BIN = "/taiga/illinois/eng/cs/jrehg/users/emirkisa/texlive/bin/aarch64-linux"
+
+# A cell whose defining n is below this renders "n/a" (with its n) and is never
+# bold (coordinator rule 2026-09-18): thin cells (e.g. seen-tier Identity/Motion B)
+# are not reportable point estimates.
+MIN_N = 10
 
 # ---------------------------------------------------------------------------
 # arm / variant identity
@@ -177,10 +187,21 @@ HANDOFF_KEYS = ["identity_A", "identity_B", "motion_A", "motion_B", "seam_free",
                 "n_pre", "n_suf", "K", "fps", "missing"]
 LENS_KEYS = ["motion_smoothness", "videoprism_sim_ref", "det_motion_fidelity",
              "clip_sim_ref", "dynamic_degree_mean_mag", "aesthetic"]
+# M2a copy against the generation's OWN reference (Op-6).  We do NOT use per_gen's
+# near_copy/copy_max: in evals/028/030 M2a was scored against POOL clips and is
+# identical across arms on 100% of pool rows (not a generation property).
+COPY_KEYS = ["copy_max", "near_copy", "copy_gen_frame", "copy_ref_frame",
+             "ref_core_frac", "n_mid", "missing"]
 
 
-def join_records(per_gen: list[dict], handoff: dict, lens: dict) -> list[dict]:
-    """Attach hand-off and lens fields to each per-gen record by (item_id, seed)."""
+def join_records(per_gen: list[dict], handoff: dict, lens: dict,
+                 copy: Optional[dict] = None) -> list[dict]:
+    """Attach hand-off, lens and copy fields to each per-gen record by (item_id, seed).
+
+    The copy eval's near_copy / copy_max land under `copy_near_copy` / `copy_copy_max`
+    so per_gen's (invalid, pool-scored) near_copy is never read by the tables.
+    """
+    copy = copy or {}
     for rec in per_gen:
         k = _key(rec.get("item_id"), rec.get("seed"))
         h = handoff.get(k)
@@ -192,6 +213,10 @@ def join_records(per_gen: list[dict], handoff: dict, lens: dict) -> list[dict]:
         if l:
             for kk in LENS_KEYS:
                 rec[kk] = l.get(kk)
+        c = copy.get(k)
+        if c:
+            rec["copy_near_copy"] = c.get("near_copy")
+            rec["copy_copy_max"] = c.get("copy_max")
     return per_gen
 
 
@@ -267,7 +292,9 @@ def bold_block(rows_cells: list[list[Cell]], cols: list[Col], eps: float = 1e-9)
     for ci, col in enumerate(cols):
         if col.direction == "none":
             continue
-        present = [(ri, rc[ci].value) for ri, rc in enumerate(rows_cells) if rc[ci].present]
+        # thin cells (n < MIN_N) render "n/a" and are excluded from the bold contest
+        present = [(ri, rc[ci].value) for ri, rc in enumerate(rows_cells)
+                   if rc[ci].present and rc[ci].n >= MIN_N]
         if not present:
             continue
         if col.direction == "max":
@@ -293,6 +320,8 @@ def bold_block(rows_cells: list[list[Cell]], cols: list[Col], eps: float = 1e-9)
 def cell_tex(cell: Cell, fmt: str, block_n: Optional[int] = None) -> str:
     if not cell.present:
         return r"\ph{--}"
+    if cell.n < MIN_N:                       # too thin to report -> n/a (with its n)
+        return r"n/a{\tiny\,($n{=}" + str(cell.n) + "$)}"
     s = _fmt_num(cell.value, fmt)
     if cell.bold:
         s = r"\textbf{" + s + "}"
@@ -304,6 +333,8 @@ def cell_tex(cell: Cell, fmt: str, block_n: Optional[int] = None) -> str:
 def cell_md(cell: Cell, fmt: str, block_n: Optional[int] = None) -> str:
     if not cell.present:
         return "--"
+    if cell.n < MIN_N:
+        return f"n/a (n={cell.n})"
     s = _fmt_num(cell.value, fmt)
     if cell.bold:
         s = "**" + s + "**"
@@ -329,7 +360,7 @@ TABLE_A_COLS = [
     Col("smooth", r"\shortstack{Motion\\smooth.}", "sim3", "max",
         lambda rs: agg(rs, "motion_smoothness")),
     Col("copy", r"\shortstack{Copy\\rate \%}", "pct1", "min",
-        lambda rs: agg(rs, "near_copy", scale=100.0)),
+        lambda rs: agg(rs, "copy_near_copy", scale=100.0)),
     Col("transport", r"\shortstack{Transport\\ours}", "pct1", "max",
         lambda rs: agg(rs, "transport_pct")),
 ]
@@ -426,7 +457,7 @@ TABLE_B_COLS = [
     Col("smooth", r"\shortstack{Motion\\smooth.}", "sim3", "max",
         lambda rs: agg(rs, "motion_smoothness")),
     Col("copy", r"\shortstack{Copy\\rate \%}", "pct1", "min",
-        lambda rs: agg(rs, "near_copy", scale=100.0)),
+        lambda rs: agg(rs, "copy_near_copy", scale=100.0)),
     Col("transport", r"\shortstack{Transport\\ours}", "pct1", "max",
         lambda rs: agg(rs, "transport_pct")),
     Col("vpref", r"\shortstack{Ref sim.\\(VideoPrism)}", "sim3", "max",
@@ -736,10 +767,11 @@ def render_markdown(ta, tb, tc, meta) -> str:
     L.append("")
     L.append("These are the same numbers as `tab_A.tex` / `tab_B.tex` / `tab_C.tex`, in markdown, "
              "for review. Bold marks the best value per column per block (smallest for Copy rate and for "
-             "the text-dependency $\\Delta$). Numbers: transport and rates to 1 decimal, similarities to 3.")
+             "the text-dependency $\\Delta$). Numbers: transport and rates to 1 decimal, similarities to 3. "
+             f"A cell whose defining $n < {MIN_N}$ renders `n/a` (with its $n$) and never bolds.")
     L.append("")
     L.append("Inputs joined on `(item_id, seed)`:")
-    for k in ("per_gen", "handoff", "lens"):
+    for k in ("per_gen", "handoff", "lens", "copy"):
         st = meta["inputs"][k]
         L.append(f"- **{k}**: {st['files']} file(s), {st['rows']} rows"
                  + (f" from `{st['example']}`" if st.get("example") else " -- **ABSENT** (columns render `--`)"))
@@ -752,6 +784,14 @@ def render_markdown(ta, tb, tc, meta) -> str:
              f"(target 366 = 183 triples x 2 seeds).")
     L.append(f"Per-arm bench coverage before intersection: `{tb.diag.get('per_arm_n', {})}`; "
              f"rows lost in the match per arm: `{tb.diag.get('lost', {})}`.")
+    L.append("")
+    L.append("**Copy rate source & frame-count caveat.** Copy rate is `100·mean(near_copy)` from the "
+             "M2a copy eval (`*_copy_gridv3*`), which scores each generation against its OWN reference "
+             "-- NOT per_gen's `near_copy`, which was scored against pool clips and is identical across "
+             "arms (not a generation property). M2a takes the max over the generation's mid frames, so a "
+             "longer generation has more chances to match: our clips are 121 f vs the externals' 49 f "
+             "(VAP/VFXMaster) / 33 f (refVFX), which under-estimates the externals' copy rate -- disclosed, "
+             "not corrected.")
     L += _md_table_b(tb)
     L.append("")
     L.append("## Table C -- text dependency (same shared set)")
@@ -883,21 +923,26 @@ def write_preview_and_build(out_dir: str, banner: Optional[str], do_build: bool)
 # synthetic fixture (for tests and for a populated demo when inputs are absent)
 # ===========================================================================
 def write_fixture(base_dir: str) -> dict:
-    """Write a tiny, deterministic 3-source fixture under base_dir/{028,030,handoff,lens}.
+    """Write a small, deterministic 4-source fixture under base_dir/evals/*.
 
     Returns the roots dict the loaders expect.  Designed so:
       * own + external arms, all three tiers, one/two-sided, HF + ED families exist,
-      * lens rows are present for only SOME gens (so a column goes mixed-n / placeholder),
+      * blocks are healthy (>= MIN_N one-sided rows) while the two-sided subset is
+        deliberately thin (n < MIN_N) -> Identity/Motion B render "n/a" (min-n rule),
+      * lens rows are present for only SOME arms (so a column goes placeholder),
+      * a copy eval (M2a vs own reference) drives Copy rate,
       * a shared one-sided zero-shot set of a known size can be intersected.
     """
     d028 = os.path.join(base_dir, "evals", "028_fixture__dai__2026-09-18")
     d030 = os.path.join(base_dir, "evals", "030_fixture_ext__dai__2026-09-18")
     dhand = os.path.join(base_dir, "evals", "090_handoff_gridv3__dai__2026-09-18")
     dlens = os.path.join(base_dir, "evals", "091_lenses_gridv3__dai__2026-09-18")
+    dcopy = os.path.join(base_dir, "evals", "092_copy_gridv3__dai__2026-09-18")
 
     per_gen: dict[str, list[dict]] = {}
     handoff: list[dict] = []
     lens: list[dict] = []
+    copy: list[dict] = []
 
     # deterministic value knobs per base arm (so tables are legible + bolding testable)
     knob = {
@@ -936,17 +981,24 @@ def write_fixture(base_dir: str) -> dict:
         n_pre = 9 if family == "hf" else 1
         n_suf = 8 if sided == "two" else 0
         handoff.append({
-            "item_id": item_id, "seed": seed, "arm": base, "n_pre": n_pre, "n_suf": n_suf,
+            "item_id": item_id, "seed": seed, "arm": arm_dir, "n_pre": n_pre, "n_suf": n_suf,
             "K": 8, "fps": 24.0,
             "identity_A": round(0.85 + 0.1 * k, 4),
             "identity_B": round(0.80 + 0.1 * k, 4) if sided == "two" else float("nan"),
             "motion_A": round(0.5 + 0.4 * k, 4) if n_pre >= 9 else float("nan"),
             "motion_B": round(0.45 + 0.4 * k, 4) if (sided == "two" and n_pre >= 9) else float("nan"),
-            "seam_free": 1 if k > 0.6 else 0, "missing": None,
+            "seam_free": 1 if k > 0.6 else 0, "missing": [],
+        })
+        # copy eval (M2a vs the gen's OWN reference) -- present for all fixture gens
+        copy.append({
+            "item_id": item_id, "seed": seed, "arm": arm_dir,
+            "copy_max": round(0.30 - 0.1 * k, 4), "near_copy": (k < 0.6 and seed == 42),
+            "copy_gen_frame": 61, "copy_ref_frame": 15,
+            "ref_core_frac": 0.4, "n_mid": 40, "missing": [],
         })
         if lens_present:
             lens.append({
-                "item_id": item_id, "seed": seed, "arm": base,
+                "item_id": item_id, "seed": seed, "arm": arm_dir,
                 "motion_smoothness": round(0.98 + 0.01 * (k - 0.6), 4),
                 "videoprism_sim_ref": round(0.94 + 0.03 * k, 4),
                 "det_motion_fidelity": round(0.12 + 0.12 * k, 4),
@@ -955,40 +1007,37 @@ def write_fixture(base_dir: str) -> dict:
                 "aesthetic": round(4.5 + k, 4),
             })
 
-    # Own arms: seen/unseen/zero_shot for HF; zero_shot for ED. two-sided in HF unseen.
-    endpoints = ["animalization_3", "color_rain_1", "earth_wave_2", "acid_0"]
+    # endpoint/reference pools (distinct triples -> distinct match keys)
+    seen_tr = [(f"seenA_{i}", f"seenR_{i}", "seen|same") for i in range(6)]        # 6 x2 = 12/arm
+    unseen_one = [(f"unsA_{i}", f"unsR_{i}", "unseen|same") for i in range(6)]      # 6 x2 = 12/arm
+    unseen_two = [(f"unsTwoA_{i}", f"unsTwoR_{i}", "unseen|cross") for i in range(2)]  # 2 x2 = 4/arm (THIN)
+    zs_hf = [(f"zsA_{i}", f"zsR_{i}", "zero_shot|same") for i in range(8)]          # 8 x2 = 16/arm (shared)
+    zs_ed = [(f"ed.Zs_{i}", f"ed.ZsR_{i}", "zero_shot|same") for i in range(2)]     # 2 x2 = 4/arm (ED only)
+
     for base in OWN_ARMS:
-        for si, seed in enumerate((42, 43)):
-            # HF seen (one-sided)
-            emit(base, "neutral", "hf", "seen", "one", "animalization_3", "animalization_1",
-                 "seen|same", seed, lens_present=True)
-            emit(base, "effect", "hf", "seen", "one", "animalization_3", "animalization_1",
-                 "seen|same", seed, lens_present=True)
-            # HF unseen: one one-sided + one two-sided
-            emit(base, "neutral", "hf", "unseen", "one", "color_rain_1", "color_rain_0",
-                 "unseen|same", seed, lens_present=True)
-            emit(base, "effect", "hf", "unseen", "one", "color_rain_1", "color_rain_0",
-                 "unseen|same", seed, lens_present=True)
-            emit(base, "neutral", "hf", "unseen", "two", "earth_wave_2", "earth_wave_0",
-                 "unseen|cross", seed, lens_present=True)
-            # HF zero_shot one-sided (part of the shared set)
-            for ep, ref in (("acid_0", "acid_1"), ("acid_0", "acid_2"), ("earth_wave_2", "earth_wave_1")):
-                emit(base, "neutral", "hf", "zero_shot", "one", ep, ref, "zero_shot|same",
-                     seed, lens_present=(base != "base_cond"))
-                emit(base, "effect", "hf", "zero_shot", "one", ep, ref, "zero_shot|same",
-                     seed, lens_present=(base != "base_cond"))
-            # ED zero_shot one-sided (always zero_shot)
-            emit(base, "neutral", "ed", "zero_shot", "one", "ed.Acid_mist", "ed.Acid_ring",
-                 "zero_shot|same", seed, lens_present=True)
-            emit(base, "effect", "ed", "zero_shot", "one", "ed.Acid_mist", "ed.Acid_ring",
-                 "zero_shot|same", seed, lens_present=True)
+        for seed in (42, 43):
+            for ep, ref, cell in seen_tr:
+                for kind in ("neutral", "effect"):
+                    emit(base, kind, "hf", "seen", "one", ep, ref, cell, seed, lens_present=True)
+            for ep, ref, cell in unseen_one:
+                for kind in ("neutral", "effect"):
+                    emit(base, kind, "hf", "unseen", "one", ep, ref, cell, seed, lens_present=True)
+            for ep, ref, cell in unseen_two:                       # two-sided -> thin Identity/Motion B
+                emit(base, "neutral", "hf", "unseen", "two", ep, ref, cell, seed, lens_present=True)
+            for ep, ref, cell in zs_hf:                            # part of the shared set
+                for kind in ("neutral", "effect"):
+                    emit(base, kind, "hf", "zero_shot", "one", ep, ref, cell, seed,
+                         lens_present=(base != "base_cond"))
+            for ep, ref, cell in zs_ed:                            # ED, dropped by the intersection
+                for kind in ("neutral", "effect"):
+                    emit(base, kind, "ed", "zero_shot", "one", ep, ref, cell, seed, lens_present=True)
 
     # Externals: author_native (=effect), one-sided zero_shot, on the same HF triples.
     for base in EXTERNAL_ARMS:
         for seed in (42, 43):
-            for ep, ref in (("acid_0", "acid_1"), ("acid_0", "acid_2"), ("earth_wave_2", "earth_wave_1")):
-                emit(base, "author", "external", "zero_shot", "one", ep, ref, "zero_shot|same",
-                     seed, lens_present=(base != "refvfx"))
+            for ep, ref, cell in zs_hf:
+                emit(base, "author", "external", "zero_shot", "one", ep, ref, cell, seed,
+                     lens_present=(base != "refvfx"))
 
     def dump(evdir, arm_rows):
         for arm_dir, rows in arm_rows.items():
@@ -1011,11 +1060,16 @@ def write_fixture(base_dir: str) -> dict:
     with open(os.path.join(dlens, "all", "rows.jsonl"), "w") as fh:
         for r in lens:
             fh.write(json.dumps(r) + "\n")
+    os.makedirs(os.path.join(dcopy, "all"), exist_ok=True)
+    with open(os.path.join(dcopy, "all", "rows.jsonl"), "w") as fh:
+        for r in copy:
+            fh.write(json.dumps(r) + "\n")
 
     return {
         "per_gen_roots": [d028, d030],
         "handoff_globs": [os.path.join(base_dir, "evals", "*_handoff_gridv3__*", "*", "rows.jsonl")],
         "lens_globs": [os.path.join(base_dir, "evals", "*_lenses_gridv3__*", "*", "rows.jsonl")],
+        "copy_globs": [os.path.join(base_dir, "evals", "*_copy_gridv3__*", "*", "rows.jsonl")],
     }
 
 
@@ -1034,6 +1088,7 @@ def main(argv=None) -> int:
                     help="eval root(s) holding <arm>/per_gen.jsonl (default: store/evals/028*, 030*)")
     ap.add_argument("--handoff-glob", action="append", default=None)
     ap.add_argument("--lens-glob", action="append", default=None)
+    ap.add_argument("--copy-glob", action="append", default=None)
     ap.add_argument("--source", choices=["auto", "real", "fixture"], default="auto",
                     help="auto: real store if per_gen exists, else fixture (banner). "
                          "real: real store only. fixture: synthetic demo (banner).")
@@ -1069,29 +1124,35 @@ def main(argv=None) -> int:
         os.path.join(REPO_ROOT, "store", "evals", "*_handoff_gridv3__*", "*", "rows.jsonl")]
     real_lens = args.lens_glob or [
         os.path.join(REPO_ROOT, "store", "evals", "*_lenses_gridv3__*", "*", "rows.jsonl")]
+    real_copy = args.copy_glob or [
+        os.path.join(REPO_ROOT, "store", "evals", "*_copy_gridv3__*", "*", "rows.jsonl")]
 
     banner = None
     fixture_dir = None
     if args.source == "fixture":
         fixture_dir = os.path.join(args.out_dir, "_fixture_inputs")
         roots = write_fixture(fixture_dir)
-        per_gen_roots, handoff_globs, lens_globs = roots["per_gen_roots"], roots["handoff_globs"], roots["lens_globs"]
+        per_gen_roots, handoff_globs, lens_globs, copy_globs = (
+            roots["per_gen_roots"], roots["handoff_globs"], roots["lens_globs"], roots["copy_globs"])
         banner = "SYNTHETIC FIXTURE DATA -- not real results. Demonstrates layout, join, bolding, placeholders."
     else:
-        per_gen_roots, handoff_globs, lens_globs = real_per_gen, real_handoff, real_lens
+        per_gen_roots, handoff_globs, lens_globs, copy_globs = (
+            real_per_gen, real_handoff, real_lens, real_copy)
         have_per_gen = any(glob.glob(os.path.join(r, "*", "per_gen.jsonl")) for r in per_gen_roots)
         if not have_per_gen and args.source == "auto":
             fixture_dir = os.path.join(args.out_dir, "_fixture_inputs")
             roots = write_fixture(fixture_dir)
-            per_gen_roots, handoff_globs, lens_globs = roots["per_gen_roots"], roots["handoff_globs"], roots["lens_globs"]
-            banner = ("SYNTHETIC FIXTURE DATA -- Op-2/Op-3/lens inputs not yet present. "
+            per_gen_roots, handoff_globs, lens_globs, copy_globs = (
+                roots["per_gen_roots"], roots["handoff_globs"], roots["lens_globs"], roots["copy_globs"])
+            banner = ("SYNTHETIC FIXTURE DATA -- Op-2/Op-3/lens/copy inputs not yet present. "
                       "Rerun without --source fixture once they land.")
 
     # load + join
     per_gen, arm_dirs = load_per_gen(per_gen_roots)
     handoff = load_side(handoff_globs, HANDOFF_KEYS)
     lens = load_side(lens_globs, LENS_KEYS)
-    records = join_records(per_gen, handoff, lens)
+    copy = load_side(copy_globs, COPY_KEYS)
+    records = join_records(per_gen, handoff, lens, copy)
 
     def _count_files(gl):
         n = 0
@@ -1109,6 +1170,8 @@ def main(argv=None) -> int:
                         "example": "rows.jsonl" if handoff else None},
             "lens": {"files": _count_files(lens_globs), "rows": len(lens),
                      "example": "rows.jsonl" if lens else None},
+            "copy": {"files": _count_files(copy_globs), "rows": len(copy),
+                     "example": "rows.jsonl" if copy else None},
         },
     }
 
@@ -1144,7 +1207,8 @@ def main(argv=None) -> int:
     print(f"[build_metric_tables] out-dir: {args.out_dir}")
     print(f"  per_gen: {meta['inputs']['per_gen']['files']} arm files, {len(per_gen)} rows"
           + (f"  ({banner})" if banner else ""))
-    print(f"  handoff: {meta['inputs']['handoff']['rows']} rows | lens: {meta['inputs']['lens']['rows']} rows")
+    print(f"  handoff: {meta['inputs']['handoff']['rows']} rows | "
+          f"lens: {meta['inputs']['lens']['rows']} rows | copy: {meta['inputs']['copy']['rows']} rows")
     print(f"  Table B shared-set n={tb.diag.get('shared_n', 0)} (target 366); per-arm bench "
           f"{tb.diag.get('per_arm_n', {})}")
     print(f"  preview.pdf build: {'OK' if ok else 'FAILED'}")

@@ -89,9 +89,9 @@ def test_bold_block_max_min_absmin_and_ties():
         B.Col("d", "", "dpct1", "absmin", None),
     ]
     rows = [
-        [B.Cell(0.90, 3), B.Cell(10.0, 3), B.Cell(+5.0, 3)],
-        [B.Cell(0.95, 3), B.Cell(10.0, 3), B.Cell(-2.0, 3)],   # best max; ties min; best absmin
-        [B.Cell(0.80, 3), B.Cell(40.0, 3), B.Cell(+9.0, 3)],
+        [B.Cell(0.90, 12), B.Cell(10.0, 12), B.Cell(+5.0, 12)],
+        [B.Cell(0.95, 12), B.Cell(10.0, 12), B.Cell(-2.0, 12)],   # best max; ties min; best absmin
+        [B.Cell(0.80, 12), B.Cell(40.0, 12), B.Cell(+9.0, 12)],
     ]
     B.bold_block(rows, cols)
     assert rows[1][0].bold and not rows[0][0].bold          # max
@@ -101,22 +101,85 @@ def test_bold_block_max_min_absmin_and_ties():
 
 def test_bold_skips_placeholders():
     cols = [B.Col("a", "", "sim3", "max", None)]
-    rows = [[B.Cell(None, 0)], [B.Cell(0.5, 2)]]
+    rows = [[B.Cell(None, 0)], [B.Cell(0.5, 12)]]
     B.bold_block(rows, cols)
     assert rows[1][0].bold and not rows[0][0].bold
+
+
+# --------------------------------------------------------------------------- #
+# minimum-n rule (n < MIN_N -> "n/a", excluded from bolding)
+# --------------------------------------------------------------------------- #
+def test_min_n_renders_na_with_n():
+    thin = B.Cell(0.912, B.MIN_N - 1)          # e.g. n=9
+    fat = B.Cell(0.912, B.MIN_N)               # n=10 exactly -> reportable
+    assert B.cell_tex(thin, "sim3") == r"n/a{\tiny\,($n{=}" + str(B.MIN_N - 1) + "$)}"
+    assert B.cell_md(thin, "sim3") == f"n/a (n={B.MIN_N - 1})"
+    assert B.cell_tex(fat, "sim3") == "0.912"
+    assert B.cell_md(fat, "sim3") == "0.912"
+
+
+def test_min_n_excluded_from_bolding():
+    cols = [B.Col("a", "", "sim3", "max", None)]
+    # the thin cell has the largest value but must NOT win the bold
+    rows = [[B.Cell(0.99, 3)], [B.Cell(0.80, 20)]]
+    B.bold_block(rows, cols)
+    assert not rows[0][0].bold          # thin (n=3) excluded
+    assert rows[1][0].bold              # only reportable candidate wins
+    # and it renders n/a, unbolded
+    assert B.cell_tex(rows[0][0], "sim3").startswith("n/a")
+
+
+def test_min_n_applies_in_table_a_two_sided_subset():
+    """Two-sided rows are few -> Identity B renders n/a, but Identity A (all rows) is a number."""
+    recs = []
+    for i in range(14):                          # 14 one-sided neutral unseen rows -> block healthy
+        recs.append(_mk("ic_gen", "neutral", "hf", "unseen", "one", f"e{i}", f"r{i}",
+                        "unseen|same", 42, identity_A=0.90, near_copy=False, copy_near_copy=False))
+    for i in range(3):                           # 3 two-sided rows -> Identity B thin (n<10)
+        recs.append(_mk("ic_gen", "neutral", "hf", "unseen", "two", f"t{i}", f"tr{i}",
+                        "unseen|cross", 42, identity_A=0.90, identity_B=0.88,
+                        near_copy=False, copy_near_copy=False))
+    ta = B.build_table_a(recs)
+    tex = B.render_table_a(ta)
+    row = [r for r in ta.blocks["unseen"] if r[0] == "ic_gen"][0]
+    id_a = row[2][B.TABLE_A_COLS.index([c for c in B.TABLE_A_COLS if c.key == "identity_a"][0])]
+    id_b = row[2][B.TABLE_A_COLS.index([c for c in B.TABLE_A_COLS if c.key == "identity_b"][0])]
+    assert id_a.present and id_a.n == 17 and abs(id_a.value - 0.90) < 1e-9
+    assert id_b.present and id_b.n == 3          # only the two-sided rows
+    assert "n/a" in B.cell_tex(id_b, "sim3")     # thin -> n/a
+
+
+# --------------------------------------------------------------------------- #
+# copy eval join (Copy rate comes from the copy eval, NOT per_gen's near_copy)
+# --------------------------------------------------------------------------- #
+def test_copy_join_overrides_per_gen_near_copy():
+    # per_gen says near_copy True everywhere (the invalid pool-scored value);
+    # the copy eval says False everywhere -> Copy rate must be 0, not 100.
+    per_gen = [{"item_id": f"g{i}", "seed": 42, "near_copy": True, "copy_max": 0.9}
+               for i in range(12)]
+    copy = {("g{}".format(i), 42): {"near_copy": False, "copy_max": 0.1} for i in range(12)}
+    recs = B.join_records([dict(r) for r in per_gen], {}, {}, copy)
+    assert all(r["copy_near_copy"] is False for r in recs)
+    # the Copy rate column extractor reads copy_near_copy
+    copy_col = [c for c in B.TABLE_A_COLS if c.key == "copy"][0]
+    cell = copy_col.extract(recs)
+    assert cell.present and abs(cell.value - 0.0) < 1e-9   # 0%, from the copy eval
+    # per_gen's own near_copy is never aggregated
+    bad = B.agg(recs, "near_copy", scale=100.0)
+    assert abs(bad.value - 100.0) < 1e-9                   # (would be 100 if used -- proves we don't)
 
 
 # --------------------------------------------------------------------------- #
 # number formatting
 # --------------------------------------------------------------------------- #
 def test_cell_tex_formats():
-    assert B.cell_tex(B.Cell(92.55, 5), "pct1") == "92.5" or B.cell_tex(B.Cell(92.55, 5), "pct1") == "92.6"
-    assert B.cell_tex(B.Cell(0.9613, 5), "sim3") == "0.961"
-    assert B.cell_tex(B.Cell(2.0, 5), "dpct1") == "+2.0"
-    assert B.cell_tex(B.Cell(-0.01, 5), "dsim3") == "-0.010"
-    # bold + sub-n annotation
-    out = B.cell_tex(B.Cell(0.9, 3, bold=True), "sim3", block_n=5)
-    assert out == r"\textbf{0.900}{\tiny\,($n{=}3$)}"
+    assert B.cell_tex(B.Cell(92.55, 20), "pct1") in ("92.5", "92.6")
+    assert B.cell_tex(B.Cell(0.9613, 20), "sim3") == "0.961"
+    assert B.cell_tex(B.Cell(2.0, 20), "dpct1") == "+2.0"
+    assert B.cell_tex(B.Cell(-0.01, 20), "dsim3") == "-0.010"
+    # bold + sub-n annotation (n >= MIN_N but < block_n)
+    out = B.cell_tex(B.Cell(0.9, 12, bold=True), "sim3", block_n=20)
+    assert out == r"\textbf{0.900}{\tiny\,($n{=}12$)}"
 
 
 # --------------------------------------------------------------------------- #
@@ -229,15 +292,20 @@ def test_fixture_end_to_end(tmp_path):
     per_gen, arm_dirs = B.load_per_gen(roots["per_gen_roots"])
     handoff = B.load_side(roots["handoff_globs"], B.HANDOFF_KEYS)
     lens = B.load_side(roots["lens_globs"], B.LENS_KEYS)
-    recs = B.join_records(per_gen, handoff, lens)
+    copy = B.load_side(roots["copy_globs"], B.COPY_KEYS)
+    recs = B.join_records(per_gen, handoff, lens, copy)
     assert len(arm_dirs) == 19          # 16 paper-arm variants + 3 externals
     assert len(recs) == len(per_gen) > 0
+    assert copy and all("copy_near_copy" in r for r in recs)   # copy eval joined
     # every own + external arm parsed into a known base
     bases = {r["base_arm"] for r in recs}
     assert bases == set(B.OWN_ARMS) | set(B.EXTERNAL_ARMS)
     ta = B.build_table_a(recs)
     tb = B.build_table_b(recs)
     tc = B.build_table_c(recs)
+    # shared one-sided zero-shot set = 8 HF triples x 2 seeds; own arms drop their 4 ED rows
+    assert tb.diag["shared_n"] == 16
+    assert tb.diag["lost"]["ic_gen"] == 4 and tb.diag["lost"]["vap"] == 0
     # Table A renders and champion beats base on transport in every tier where both present
     tex = B.render_table_a(ta)
     assert r"\begin{tabular}" in tex and r"\ph{--}" in tex
