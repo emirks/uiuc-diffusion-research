@@ -12,13 +12,13 @@
         \cmidrule(lr){2-2}\cmidrule(lr){3-3}\cmidrule(lr){4-4}\cmidrule(lr){5-6}\cmidrule(lr){7-7}\cmidrule(lr){8-10}
         & \shortstack{Identity\\A} & \shortstack{Seam-\\free \%} & \shortstack{Motion\\smooth.} & \shortstack{Copy\\rate \%} & \shortstack{Copy\\max} & \shortstack{Transport\\ours} & \shortstack{Ref sim.\\(VideoPrism)} & \shortstack{Motion fid.\\(vs ref)} & \shortstack{Aesthetic} \\
         \midrule
-        \vap{}~\citep{vap2025} {\tiny\color{gray}$n{=}366$} & 0.879 & 76.0 & \ph{--} & 1.6 & 0.396 & 81.1 & \ph{--} & \ph{--} & \ph{--} \\
-        \vfxmaster{}~\citep{vfxmaster2025} {\tiny\color{gray}$n{=}366$} & 0.964 & 85.5 & \ph{--} & \textbf{0.5} & 0.412 & 85.8 & \ph{--} & \ph{--} & \ph{--} \\
-        \refvfx{}~\citep{refvfx2026} {\tiny\color{gray}$n{=}366$} & \textbf{0.971} & 93.2 & \ph{--} & 1.1 & 0.352 & 62.2 & \ph{--} & \ph{--} & \ph{--} \\
+        \vap{}~\citep{vap2025} {\tiny\color{gray}$n{=}366$} & 0.879 & 76.0 & 0.979 & 1.6 & 0.396 & 81.1 & 0.958 & 0.137{\tiny\,($n{=}333$)} & 4.901 \\
+        \vfxmaster{}~\citep{vfxmaster2025} {\tiny\color{gray}$n{=}366$} & 0.964 & 85.5 & 0.987 & \textbf{0.5} & 0.412 & 85.8 & 0.962 & 0.192{\tiny\,($n{=}363$)} & 4.856 \\
+        \refvfx{}~\citep{refvfx2026} {\tiny\color{gray}$n{=}366$} & \textbf{0.971} & 93.2 & 0.988 & 1.1 & 0.352 & 62.2 & 0.957 & 0.161{\tiny\,($n{=}284$)} & \textbf{5.305} \\
         \addlinespace[2pt]
-        \ltx{} baseline LoRA {\tiny\color{gray}$n{=}366$} & 0.961 & 95.4 & \ph{--} & \textbf{0.5} & \textbf{0.246} & 61.6 & \ph{--} & \ph{--} & \ph{--} \\
-        \segue{} w/o guidance {\tiny\color{gray}$n{=}366$} & 0.936 & \textbf{96.4} & \ph{--} & 1.1 & 0.406 & 87.6 & \ph{--} & \ph{--} & \ph{--} \\
-        \segue{} {\tiny\color{gray}$n{=}366$} & 0.880 & 93.4 & \ph{--} & 1.1 & 0.473 & \textbf{92.6} & \ph{--} & \ph{--} & \ph{--} \\
+        \ltx{} baseline LoRA {\tiny\color{gray}$n{=}366$} & 0.961 & 95.4 & \textbf{0.994} & \textbf{0.5} & \textbf{0.246} & 61.6 & 0.954 & 0.167{\tiny\,($n{=}312$)} & 5.227 \\
+        \segue{} w/o guidance {\tiny\color{gray}$n{=}366$} & 0.936 & \textbf{96.4} & 0.990 & 1.1 & 0.406 & 87.6 & 0.963 & 0.203{\tiny\,($n{=}364$)} & 5.193 \\
+        \segue{} {\tiny\color{gray}$n{=}366$} & 0.880 & 93.4 & 0.985 & 1.1 & 0.473 & \textbf{92.6} & \textbf{0.965} & \textbf{0.226} & 5.084 \\
         \bottomrule
     \end{tabular}
 \end{table}
