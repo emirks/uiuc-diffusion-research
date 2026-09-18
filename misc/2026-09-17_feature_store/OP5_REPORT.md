@@ -122,3 +122,5 @@ run (it fails on a half-populated lens column, which is the intended guard). To 
 layout at any time: `... --source fixture --out-dir papers_drafts/_preview/metrics_gridv3/fixture_demo`.
 The build refreshes `tab_A/B/C.tex`, `TABLES.md`, `preview.tex` and rebuilds `preview.pdf`
 (`papers_drafts/_preview/metrics_gridv3/build.sh` rebuilds just the PDF).
+
+**Follow-up 2 (2026-09-18).** Copy eval landed as `store/evals/039_copy_gridv3` (joins 1:1, 7242 rows); added a second column `Copy max` (mean `copy_max`, 3 dp, lower-is-better, bold=min, min-n rule) right after `Copy %` in Tables A and B — Copy % now shows the real small zero-shot rates (0.5–1.6%). Lens glob `*_lenses_gridv3__*` matches the coming `040_lenses_gridv3` (and not `039`); tests still 25/25.
