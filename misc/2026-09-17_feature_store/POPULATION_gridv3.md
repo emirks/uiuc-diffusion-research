@@ -8,9 +8,10 @@ resolves to exactly these files). Everything not listed here is **deferred**: th
 |---|---|---|
 | gen variants | the 4 paper arms × {neutral, effect} × {HF 121f, ED 81f} on grid v3, + the 3 author-native externals | 19 variants, 7242 mp4 |
 | corpus | the 677-clip pool corpus `corpus_manifest.json` (references + same-class pools; NOT the whole `transitions_std121/` dir, which holds 4,536 mp4) | 677 clips |
-| endpoint clips | `eval_ladder/conds/<endpoint>_{start9,end9}.mp4` for the 204 unique endpoints the 19 grids reference | 408 clips |
+| endpoint clips | `eval_ladder/conds/<endpoint>_{start9,end9}.mp4` for the 204 HF-tier endpoints the grids reference | 354 clips |
+| ED anchors | single-image anchors of the 54 EffectData-tier endpoints (`misc/refvfx_baseline/frames/<endpoint>__first.png`); frame-0 conditioning → identity-A only, no motion-A | 54 images |
 
-Missing on disk: conds 54, corpus 0.
+Missing on disk: none (the 54 'missing' conds were the ED endpoints, which are images, listed under ED anchors).
 
 ## Gen variants
 - `store/gens/001_ic_gen/03_neutral_v3__dai`
