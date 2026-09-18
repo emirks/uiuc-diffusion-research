@@ -13,22 +13,22 @@
         & \shortstack{Identity\\A} & \shortstack{Identity\\B} & \shortstack{Motion\\A} & \shortstack{Motion\\B} & \shortstack{Seam-\\free \%} & \shortstack{Motion\\smooth.} & \shortstack{Copy\\rate \%} & \shortstack{Transport\\ours} \\
         \midrule
         \multicolumn{9}{l}{\emph{Seen}} \\
-        \ltx{} (no reference) & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} \\
-        \ltx{} baseline LoRA {\tiny\color{gray}$n{=}52$} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \textbf{0.0} & \textbf{82.2} \\
-        \segue{} w/o guidance & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} \\
-        \segue{} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} \\
+        \ltx{} (no reference) {\tiny\color{gray}$n{=}52$} & \textbf{0.948} & n/a{\tiny\,($n{=}8$)} & 0.633 & n/a{\tiny\,($n{=}6$)} & 82.7 & \ph{--} & \ph{--} & 57.9 \\
+        \ltx{} baseline LoRA {\tiny\color{gray}$n{=}52$} & 0.877 & n/a{\tiny\,($n{=}8$)} & \textbf{0.701} & n/a{\tiny\,($n{=}8$)} & 94.2 & \ph{--} & \ph{--} & 82.2 \\
+        \segue{} w/o guidance {\tiny\color{gray}$n{=}52$} & 0.938 & n/a{\tiny\,($n{=}8$)} & 0.679 & n/a{\tiny\,($n{=}1$)} & 96.2 & \ph{--} & \ph{--} & 91.1 \\
+        \segue{} {\tiny\color{gray}$n{=}52$} & 0.908 & n/a{\tiny\,($n{=}8$)} & 0.631 & n/a{\tiny\,($n{=}1$)} & \textbf{98.1} & \ph{--} & \ph{--} & \textbf{97.1} \\
         \midrule
         \multicolumn{9}{l}{\emph{Unseen}} \\
-        \ltx{} (no reference) & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} \\
-        \ltx{} baseline LoRA {\tiny\color{gray}$n{=}274$} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \textbf{3.3} & \textbf{74.6} \\
-        \segue{} w/o guidance & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} \\
-        \segue{} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} \\
+        \ltx{} (no reference) {\tiny\color{gray}$n{=}274$} & \textbf{0.935} & \textbf{0.960}{\tiny\,($n{=}64$)} & 0.743{\tiny\,($n{=}269$)} & \textbf{0.695}{\tiny\,($n{=}59$)} & 90.1 & \ph{--} & \ph{--} & 52.1 \\
+        \ltx{} baseline LoRA {\tiny\color{gray}$n{=}274$} & 0.930 & 0.931{\tiny\,($n{=}64$)} & \textbf{0.757} & 0.441{\tiny\,($n{=}47$)} & \textbf{97.8} & \ph{--} & \ph{--} & 74.6 \\
+        \segue{} w/o guidance {\tiny\color{gray}$n{=}274$} & 0.917 & 0.923{\tiny\,($n{=}64$)} & 0.725{\tiny\,($n{=}271$)} & 0.445{\tiny\,($n{=}35$)} & 95.6 & \ph{--} & \ph{--} & 86.3 \\
+        \segue{} {\tiny\color{gray}$n{=}274$} & 0.862 & 0.880{\tiny\,($n{=}64$)} & 0.710{\tiny\,($n{=}273$)} & 0.399{\tiny\,($n{=}20$)} & 92.3 & \ph{--} & \ph{--} & \textbf{92.1} \\
         \midrule
         \multicolumn{9}{l}{\emph{Zero-shot}} \\
-        \ltx{} (no reference) & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} \\
-        \ltx{} baseline LoRA {\tiny\color{gray}$n{=}442$} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \textbf{0.9} & \textbf{62.2} \\
-        \segue{} w/o guidance & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} \\
-        \segue{} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} \\
+        \ltx{} (no reference) {\tiny\color{gray}$n{=}442$} & \textbf{0.953} & \textbf{0.950}{\tiny\,($n{=}76$)} & 0.718{\tiny\,($n{=}231$)} & \textbf{0.681}{\tiny\,($n{=}63$)} & 64.7 & \ph{--} & \ph{--} & 45.5 \\
+        \ltx{} baseline LoRA {\tiny\color{gray}$n{=}442$} & 0.950 & 0.926{\tiny\,($n{=}76$)} & \textbf{0.757}{\tiny\,($n{=}236$)} & 0.462{\tiny\,($n{=}64$)} & 95.9 & \ph{--} & \ph{--} & 62.2 \\
+        \segue{} w/o guidance {\tiny\color{gray}$n{=}442$} & 0.926 & 0.891{\tiny\,($n{=}76$)} & 0.745{\tiny\,($n{=}235$)} & 0.311{\tiny\,($n{=}41$)} & \textbf{97.1} & \ph{--} & \ph{--} & 88.5 \\
+        \segue{} {\tiny\color{gray}$n{=}442$} & 0.867 & 0.850{\tiny\,($n{=}76$)} & 0.741{\tiny\,($n{=}234$)} & 0.368{\tiny\,($n{=}44$)} & 94.1 & \ph{--} & \ph{--} & \textbf{93.7} \\
         \bottomrule
     \end{tabular}
 \end{table}

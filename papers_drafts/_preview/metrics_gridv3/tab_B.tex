@@ -12,13 +12,13 @@
         \cmidrule(lr){2-2}\cmidrule(lr){3-3}\cmidrule(lr){4-4}\cmidrule(lr){5-5}\cmidrule(lr){6-6}\cmidrule(lr){7-9}
         & \shortstack{Identity\\A} & \shortstack{Seam-\\free \%} & \shortstack{Motion\\smooth.} & \shortstack{Copy\\rate \%} & \shortstack{Transport\\ours} & \shortstack{Ref sim.\\(VideoPrism)} & \shortstack{Motion fid.\\(vs ref)} & \shortstack{Aesthetic} \\
         \midrule
-        \vap{}~\citep{vap2025} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} \\
-        \vfxmaster{}~\citep{vfxmaster2025} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} \\
-        \refvfx{}~\citep{refvfx2026} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} \\
+        \vap{}~\citep{vap2025} {\tiny\color{gray}$n{=}366$} & 0.879 & 76.0 & \ph{--} & \ph{--} & 81.1 & \ph{--} & \ph{--} & \ph{--} \\
+        \vfxmaster{}~\citep{vfxmaster2025} {\tiny\color{gray}$n{=}366$} & 0.964 & 85.5 & \ph{--} & \ph{--} & 85.8 & \ph{--} & \ph{--} & \ph{--} \\
+        \refvfx{}~\citep{refvfx2026} {\tiny\color{gray}$n{=}366$} & \textbf{0.971} & 93.2 & \ph{--} & \ph{--} & 62.2 & \ph{--} & \ph{--} & \ph{--} \\
         \addlinespace[2pt]
-        \ltx{} baseline LoRA {\tiny\color{gray}$n{=}366$} & \ph{--} & \ph{--} & \ph{--} & \textbf{1.1} & \textbf{61.6} & \ph{--} & \ph{--} & \ph{--} \\
-        \segue{} w/o guidance & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} \\
-        \segue{} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} & \ph{--} \\
+        \ltx{} baseline LoRA {\tiny\color{gray}$n{=}366$} & 0.961 & 95.4 & \ph{--} & \ph{--} & 61.6 & \ph{--} & \ph{--} & \ph{--} \\
+        \segue{} w/o guidance {\tiny\color{gray}$n{=}366$} & 0.936 & \textbf{96.4} & \ph{--} & \ph{--} & 87.6 & \ph{--} & \ph{--} & \ph{--} \\
+        \segue{} {\tiny\color{gray}$n{=}366$} & 0.880 & 93.4 & \ph{--} & \ph{--} & \textbf{92.6} & \ph{--} & \ph{--} & \ph{--} \\
         \bottomrule
     \end{tabular}
 \end{table}
