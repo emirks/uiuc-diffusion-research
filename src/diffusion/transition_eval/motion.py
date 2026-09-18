@@ -15,6 +15,8 @@ import hashlib
 import pathlib
 
 import numpy as np
+
+from .features import savez_atomic, load_npz_or_none
 import torch
 
 
@@ -63,14 +65,13 @@ class Tracker:
     def cached_track(self, frames: np.ndarray | None, key: str, cache_dir: pathlib.Path) -> tuple[np.ndarray, np.ndarray]:
         key = f"{key}:{self.CACHE_TAG}"
         cache = track_cache_path(key, cache_dir)
-        if cache.exists():
-            z = np.load(cache)
+        z = load_npz_or_none(cache)
+        if z is not None:
             return z["tracks"], z["vis"]
         if frames is None:
             raise RuntimeError(f"track cache miss for {key} but no frames were decoded")
         tracks, vis = self.track(frames)
-        cache.parent.mkdir(parents=True, exist_ok=True)
-        np.savez_compressed(cache, tracks=tracks, vis=vis, src=key)
+        savez_atomic(cache, tracks=tracks, vis=vis, src=key)
         return tracks, vis
 
     def free(self) -> None:

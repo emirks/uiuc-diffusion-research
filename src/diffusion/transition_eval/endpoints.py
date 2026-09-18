@@ -16,6 +16,8 @@ import hashlib
 import pathlib
 
 import numpy as np
+
+from .features import savez_atomic, load_npz_or_none
 import torch
 
 from .video_io import resize_cover_crop
@@ -39,13 +41,14 @@ def cached_temporal_lpips(frames: np.ndarray | None, key: str,
     callers may only skip decoding after checking the cache is warm."""
     p = (lpips_cache_path(f"{key}:tlpips:{LPIPS_CACHE_TAG}", cache_dir)
          if cache_dir is not None else None)
-    if p is not None and p.exists():
-        return np.load(p)["d"]
+    z = load_npz_or_none(p) if p is not None else None
+    if z is not None:
+        return z["d"]
     if frames is None:
         raise RuntimeError(f"temporal-lpips cache miss for {key} but no frames were decoded")
     d = temporal_lpips(frames, scorer)
     if p is not None:
-        np.savez_compressed(p, d=d)
+        savez_atomic(p, d=d)
     return d
 
 

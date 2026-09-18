@@ -8,6 +8,8 @@ controls) pass an explicit key instead.
 from __future__ import annotations
 
 import hashlib
+import os
+import zipfile
 import pathlib
 
 import numpy as np
@@ -51,17 +53,45 @@ def file_key(path: pathlib.Path, *parts: str) -> str:
     return hashlib.sha1(raw.encode()).hexdigest()[:16]
 
 
+def savez_atomic(path: pathlib.Path, **arrays) -> None:
+    """np.savez_compressed through a private temp file + os.replace: a concurrent reader never sees a
+    half-written archive (grid v3 amendment 2026-09-07 — 16 score shards extracting the same NEW corpus
+    clip raced on the shared cache and readers hit `EOFError: No data left in file`)."""
+    path = pathlib.Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    with open(tmp, "wb") as fh:
+        np.savez_compressed(fh, **arrays)
+    os.replace(tmp, path)
+
+
+def load_npz_or_none(path: pathlib.Path):
+    """np.load that treats a truncated/corrupt archive as a MISS (unlinks it) instead of a crash."""
+    path = pathlib.Path(path)
+    if not path.exists():
+        return None
+    try:
+        z = np.load(path)
+        _ = z.files
+        return z
+    except (EOFError, OSError, ValueError, zipfile.BadZipFile) as e:  # noqa: F841 — any unreadable archive
+        try:
+            path.unlink()
+        except OSError:
+            pass
+        return None
+
+
 def video_features(path: pathlib.Path, cache_dir: pathlib.Path, extractor: DinoExtractor,
                    short_side: int = 256) -> tuple[np.ndarray, float]:
     """Cached per-frame features for a video file. Returns (feats [T,D], fps)."""
     cache = pathlib.Path(cache_dir) / f"dino_{file_key(path, extractor.model_name, str(short_side))}.npz"
-    if cache.exists():
-        z = np.load(cache)
+    z = load_npz_or_none(cache)
+    if z is not None:
         return z["feats"], float(z["fps"])
     frames, fps = load_frames(path, short_side=short_side)
     feats = extractor.extract(frames)
-    cache.parent.mkdir(parents=True, exist_ok=True)
-    np.savez_compressed(cache, feats=feats, fps=fps, src=str(path))
+    savez_atomic(cache, feats=feats, fps=fps, src=str(path))
     return feats, fps
 
 
@@ -74,11 +104,11 @@ def array_features(frames: np.ndarray | None, key: str, cache_dir: pathlib.Path,
                    extractor: DinoExtractor) -> np.ndarray:
     """Cached features for an in-memory frame array (synthetic controls)."""
     cache = feature_cache_path(key, cache_dir)
-    if cache.exists():
-        return np.load(cache)["feats"]
+    z = load_npz_or_none(cache)
+    if z is not None:
+        return z["feats"]
     if frames is None:
         raise RuntimeError(f"feature cache miss for {key} but no frames were decoded")
     feats = extractor.extract(frames)
-    cache.parent.mkdir(parents=True, exist_ok=True)
-    np.savez_compressed(cache, feats=feats, src=key)
+    savez_atomic(cache, feats=feats, src=key)
     return feats
