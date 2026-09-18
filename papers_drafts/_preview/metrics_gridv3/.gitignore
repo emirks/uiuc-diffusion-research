@@ -1,0 +1,13 @@
+# build artifacts + synthetic fixture (only the canonical *.tex / *.md / build.sh are tracked)
+*.pdf
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+_fixture_inputs/
+# the populated demo is synthetic data -- keep it local, regenerate with --source fixture
+fixture_demo/
