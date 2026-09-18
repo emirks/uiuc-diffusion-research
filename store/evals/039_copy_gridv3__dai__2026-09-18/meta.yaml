@@ -1,0 +1,112 @@
+id: 039_copy_gridv3__dai__2026-09-18
+seq: 39
+shelf: evals
+created: '2026-09-18'
+machine: dai (login CPU, numpy over stored features)
+instrument: scripts/copy_metrics.py @ d9fbce7
+copy_score: src/diffusion/transition_eval/m2_integrity.py (reused verbatim)
+tau_copy: 0.858
+definition:
+  - "For each generation g with own reference r (the `reference` field of the gen's grid.jsonl row; r's features are in the corpus store, data/processed/transitions_std121/<class>/features/<r>/dino_cls@dinov2b-r256.npz):"
+  - "gen_mid = mid_mask(T_g, n_pre, n_suf) with the SAME n_pre/n_suf rules as handoff_metrics (HF 9/8|0 by sidedness; ED 1/0; externals 1/0)."
+  - "ref_core = the reference's core mask computed exactly as the harness computes a reference bundle: morph_profile(r_feats, n_prefix=9, n_suffix=8, n_endpoints=2) then core_mask_v3(profile, r's sidedness) (transition_eval/score.py::_ref_bundle_cache)."
+  - "copy_score(gen_feats, gen_mid, ref_feats, ref_core, TAU_COPY) -> copy_max, near_copy, copy_gen_frame, copy_ref_frame; ref_idx = the reference's NON-core (~ref_core) frames \u2014 its own scenes A/B, the content that must never appear."
+  - "Also emit ref_core_frac (fraction of reference frames in core) and n_mid (gen mid frames), and `missing` when a feature is absent."
+why: "In evals/028/030 every pool clip is an eval item, so copy_max/near_copy were scored against POOL references, never against the generation's own conditioning reference; near_copy was identical across all four paper arms on 100% of the pool rows (coordinator check 2026-09-18). This eval scores M2a against the OWN reference: did the generation replay the reference's own shots?"
+caveat: "copy_max is a max over mid frames, so longer generations (121 f) have more chances than the externals' 49 f / 33 f \u2014 the externals' copy rate is, if anything, under-estimated relative to ours; disclosed, not corrected."
+arms_scored:
+  ic_gen_neutral_v3:
+    gen: store/gens/001_ic_gen/03_neutral_v3__dai
+    rows: 564
+    grid_type: HF
+    coverage: {copy_defined: 564, near_copy: 6, copy_rate_pct: 1.06, copy_max_mean: 0.2616}
+  ic_gen_neutral_v3ed81:
+    gen: store/gens/001_ic_gen/04_neutral_v3ed81__dai
+    rows: 204
+    grid_type: ED
+    coverage: {copy_defined: 204, near_copy: 0, copy_rate_pct: 0.0, copy_max_mean: 0.2689}
+  ic_gen_effect_v3:
+    gen: store/gens/001_ic_gen/05_effect_v3__dai
+    rows: 564
+    grid_type: HF
+    coverage: {copy_defined: 564, near_copy: 8, copy_rate_pct: 1.42, copy_max_mean: 0.3665}
+  ic_gen_effect_v3ed81:
+    gen: store/gens/001_ic_gen/06_effect_v3ed81__dai
+    rows: 204
+    grid_type: ED
+    coverage: {copy_defined: 204, near_copy: 0, copy_rate_pct: 0.0, copy_max_mean: 0.4281}
+  refvfx_author_native:
+    gen: store/gens/003_refvfx/03_author_native__dai
+    rows: 366
+    grid_type: external
+    coverage: {copy_defined: 366, near_copy: 4, copy_rate_pct: 1.09, copy_max_mean: 0.3524}
+  base_cond_neutral_v3:
+    gen: store/gens/005_base_cond/04_neutral_v3__dai
+    rows: 564
+    grid_type: HF
+    coverage: {copy_defined: 564, near_copy: 6, copy_rate_pct: 1.06, copy_max_mean: 0.207}
+  base_cond_neutral_v3ed81:
+    gen: store/gens/005_base_cond/05_neutral_v3ed81__dai
+    rows: 204
+    grid_type: ED
+    coverage: {copy_defined: 204, near_copy: 0, copy_rate_pct: 0.0, copy_max_mean: 0.1944}
+  base_cond_effect_v3:
+    gen: store/gens/005_base_cond/06_effect_v3__dai
+    rows: 564
+    grid_type: HF
+    coverage: {copy_defined: 564, near_copy: 6, copy_rate_pct: 1.06, copy_max_mean: 0.3537}
+  base_cond_effect_v3ed81:
+    gen: store/gens/005_base_cond/07_effect_v3ed81__dai
+    rows: 204
+    grid_type: ED
+    coverage: {copy_defined: 204, near_copy: 0, copy_rate_pct: 0.0, copy_max_mean: 0.4429}
+  vap_author_native:
+    gen: store/gens/011_vap/05_author_native__dai
+    rows: 366
+    grid_type: external
+    coverage: {copy_defined: 366, near_copy: 6, copy_rate_pct: 1.64, copy_max_mean: 0.3963}
+  vfxmaster_author_native:
+    gen: store/gens/012_vfxmaster/05_author_native__dai
+    rows: 366
+    grid_type: external
+    coverage: {copy_defined: 366, near_copy: 2, copy_rate_pct: 0.55, copy_max_mean: 0.4117}
+  dualforce_control_neutral_v3:
+    gen: store/gens/013_dualforce_control/03_neutral_v3__dai
+    rows: 564
+    grid_type: HF
+    coverage: {copy_defined: 564, near_copy: 6, copy_rate_pct: 1.06, copy_max_mean: 0.3365}
+  dualforce_control_neutral_v3ed81:
+    gen: store/gens/013_dualforce_control/04_neutral_v3ed81__dai
+    rows: 204
+    grid_type: ED
+    coverage: {copy_defined: 204, near_copy: 2, copy_rate_pct: 0.98, copy_max_mean: 0.5009}
+  dualforce_control_effect_v3:
+    gen: store/gens/013_dualforce_control/05_effect_v3__dai
+    rows: 564
+    grid_type: HF
+    coverage: {copy_defined: 564, near_copy: 6, copy_rate_pct: 1.06, copy_max_mean: 0.3863}
+  dualforce_control_effect_v3ed81:
+    gen: store/gens/013_dualforce_control/06_effect_v3ed81__dai
+    rows: 204
+    grid_type: ED
+    coverage: {copy_defined: 204, near_copy: 4, copy_rate_pct: 1.96, copy_max_mean: 0.5381}
+  dualforce_dcg_w6_neutral_v3:
+    gen: store/gens/032_dualforce_dcg_w6/03_neutral_v3__dai
+    rows: 564
+    grid_type: HF
+    coverage: {copy_defined: 564, near_copy: 7, copy_rate_pct: 1.24, copy_max_mean: 0.4044}
+  dualforce_dcg_w6_neutral_v3ed81:
+    gen: store/gens/032_dualforce_dcg_w6/04_neutral_v3ed81__dai
+    rows: 204
+    grid_type: ED
+    coverage: {copy_defined: 204, near_copy: 1, copy_rate_pct: 0.49, copy_max_mean: 0.5655}
+  dualforce_dcg_w6_effect_v3:
+    gen: store/gens/032_dualforce_dcg_w6/05_effect_v3__dai
+    rows: 564
+    grid_type: HF
+    coverage: {copy_defined: 564, near_copy: 7, copy_rate_pct: 1.24, copy_max_mean: 0.4275}
+  dualforce_dcg_w6_effect_v3ed81:
+    gen: store/gens/032_dualforce_dcg_w6/06_effect_v3ed81__dai
+    rows: 204
+    grid_type: ED
+    coverage: {copy_defined: 204, near_copy: 1, copy_rate_pct: 0.49, copy_max_mean: 0.5842}
