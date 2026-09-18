@@ -10,6 +10,7 @@ Subcommands:
   extract    fill misses only (extractor registry keyed by namespace); GPU
 
 Targets (shared by every subcommand):
+  --population F   population JSON (gen_variants, corpus.files, conds.files) — the scoped way
   --gens GLOB...   variant dirs (store/gens/<arm>/<variant>); videos under videos/
   --corpus         data/processed/transitions_std121/*/*.mp4 (grouped per class)
   --conds          eval_ladder/conds/*.mp4
@@ -45,6 +46,11 @@ CONDS_DIR = "eval_ladder/conds"
 COVERAGE_MD = "store/FEATURES_COVERAGE.md"
 
 
+def target_videos(store: FeatureStore, t: dict) -> list[Path]:
+    """The videos of one target: the population's explicit list when present, else every mp4 in the dir."""
+    return list(t["videos"]) if t.get("videos") is not None else store.iter_videos(t["video_dir"])
+
+
 # --- provenance --------------------------------------------------------------
 def code_sha() -> str:
     """git HEAD short sha; ``+dirty`` when either feature-store file is modified."""
@@ -72,9 +78,39 @@ def _expand(pattern: str) -> list[Path]:
     return sorted(Path(p) for p in hits)
 
 
-def resolve_targets(args) -> list[dict]:
-    """-> [{label, video_dir, variant_dir|None}] — one entry per group of mp4s."""
+def _abs(p: str) -> Path:
+    q = Path(p)
+    return q if q.is_absolute() else REPO_ROOT / q
+
+
+def population_targets(pop_file: Path) -> list[dict]:
+    """Targets from a population JSON (see misc/2026-09-17_feature_store/population_gridv3.json):
+    ``gen_variants`` -> one target per variant dir; ``corpus.files`` -> one target per class dir,
+    restricted to the listed clips; ``conds.files`` -> one target restricted to the listed clips."""
+    pop = json.loads(Path(pop_file).read_text())
     targets: list[dict] = []
+    for v in pop.get("gen_variants", []):
+        vdir = _abs(v)
+        targets.append({"label": "/".join(vdir.parts[-3:]), "video_dir": vdir / "videos",
+                        "variant_dir": vdir})
+    by_dir: dict[Path, list[Path]] = {}
+    for f in pop.get("corpus", {}).get("files", []):
+        fp = _abs(f); by_dir.setdefault(fp.parent, []).append(fp)
+    for cdir, files in sorted(by_dir.items()):
+        targets.append({"label": f"corpus/{cdir.name}", "video_dir": cdir,
+                        "variant_dir": None, "videos": sorted(files)})
+    conds = [_abs(f) for f in pop.get("conds", {}).get("files", [])]
+    if conds:
+        targets.append({"label": "conds", "video_dir": conds[0].parent,
+                        "variant_dir": None, "videos": sorted(conds)})
+    return targets
+
+
+def resolve_targets(args) -> list[dict]:
+    """-> [{label, video_dir, variant_dir|None[, videos]}] — one entry per group of mp4s."""
+    targets: list[dict] = []
+    if getattr(args, "population", None):
+        targets += population_targets(_abs(args.population))
     for pat in getattr(args, "gens", None) or []:
         for vdir in _expand(pat):
             if not vdir.is_dir():
@@ -184,19 +220,29 @@ def extract_videos(store: FeatureStore, ns: str, videos, extractor, *, host, sha
     return out
 
 
-def write_sha256sums(store: FeatureStore, video_dir: Path) -> dict:
+def write_sha256sums(store: FeatureStore, video_dir: Path, videos=None) -> dict:
     """Write ``<video_dir>/SHA256SUMS`` (standard sha256sum text format), reusing
     hashes for mp4s whose size+mtime are unchanged (cached in an ignored
-    ``.SHA256SUMS.stat.json``). Returns {"n","computed","reused"}."""
+    ``.SHA256SUMS.stat.json``). With ``videos`` (a population subset) the new
+    lines are MERGED into an existing SHA256SUMS, so partial and full runs
+    compose. Returns {"n","computed","reused"}."""
     video_dir = Path(video_dir)
     stat_p = video_dir / ".SHA256SUMS.stat.json"
     try:
         cache = json.loads(stat_p.read_text())
     except Exception:
         cache = {}
-    lines, new_cache = [], {}
+    existing: dict[str, str] = {}
+    sums_p = video_dir / "SHA256SUMS"
+    if videos is not None and sums_p.exists():
+        for ln in sums_p.read_text().splitlines():
+            if "  " in ln:
+                sha, name = ln.split("  ", 1)
+                existing[name] = sha
+    new_cache = dict(cache)
     computed = reused = 0
-    for v in store.iter_videos(video_dir):
+    vids = [Path(v) for v in videos] if videos is not None else store.iter_videos(video_dir)
+    for v in vids:
         st = v.stat()
         c = cache.get(v.name)
         if c and c.get("size") == st.st_size and c.get("mtime_ns") == st.st_mtime_ns:
@@ -205,10 +251,11 @@ def write_sha256sums(store: FeatureStore, video_dir: Path) -> dict:
         else:
             sha = sha256_file(v)
             computed += 1
-        lines.append(f"{sha}  {v.name}")
+        existing[v.name] = sha
         new_cache[v.name] = {"size": st.st_size, "mtime_ns": st.st_mtime_ns,
                              "sha256": sha}
-    (video_dir / "SHA256SUMS").write_text("\n".join(lines) + ("\n" if lines else ""))
+    lines = [f"{sha}  {name}" for name, sha in sorted(existing.items())]
+    sums_p.write_text("\n".join(lines) + ("\n" if lines else ""))
     stat_p.write_text(json.dumps(new_cache, indent=0))
     return {"n": len(lines), "computed": computed, "reused": reused}
 
@@ -222,7 +269,7 @@ def cmd_coverage(args, store):
     targets = resolve_targets(args)
     rows = []
     for t in targets:
-        cov = store.coverage(t["video_dir"])
+        cov = store.coverage(t["video_dir"], videos=t.get("videos"))
         rows.append((t["label"], cov))
     cols = [_short(ns) for ns in NAMESPACES]
     w0 = max([len("target")] + [len(r[0]) for r in rows], default=6)
@@ -250,7 +297,8 @@ def cmd_fsck(args, store):
         if getattr(args, "rebuild_manifest", False):
             n = store.rebuild_manifest(t["video_dir"])
             print(f"[manifest] {t['label']}: rebuilt {n} records")
-        rep = store.fsck(t["video_dir"], rehash=getattr(args, "rehash", False))
+        rep = store.fsck(t["video_dir"], rehash=getattr(args, "rehash", False),
+                         videos=t.get("videos"))
         flags = []
         for k in ("orphan_npz", "orphan_json", "stale", "no_video"):
             if rep[k]:
@@ -275,7 +323,7 @@ def cmd_fsck(args, store):
 
 def cmd_sha256sums(args, store):
     for t in resolve_targets(args):
-        r = write_sha256sums(store, t["video_dir"])
+        r = write_sha256sums(store, t["video_dir"], videos=t.get("videos"))
         print(f"[sha256sums] {t['label']}: {r['n']} files "
               f"({r['computed']} computed, {r['reused']} reused) -> "
               f"{t['video_dir']}/SHA256SUMS")
@@ -300,7 +348,7 @@ def cmd_migrate(args, store):
           f"{'  (DRY RUN)' if args.dry_run else ''}")
     grand = {ns: {"hit": 0, "miss": 0, "linked": 0} for ns in MIGRATABLE}
     for t in targets:
-        vids = store.iter_videos(t["video_dir"])
+        vids = target_videos(store, t)
         stats = migrate_videos(store, vids, search_dirs, host=host, sha=sha,
                                dry_run=args.dry_run)
         cells = [f"{_short(ns)} {stats[ns]['hit']}/{len(vids)}" for ns in MIGRATABLE]
@@ -328,7 +376,7 @@ def cmd_extract(args, store):
         return 2
     all_videos = []
     for t in targets:
-        all_videos += [(t, v) for v in store.iter_videos(t["video_dir"])]
+        all_videos += [(t, v) for v in target_videos(store, t)]
     if args.shard:
         i, n = (int(x) for x in args.shard.split("/"))
         all_videos = all_videos[i::n]
@@ -359,6 +407,9 @@ def build_parser() -> argparse.ArgumentParser:
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     def add_targets(p):
+        p.add_argument("--population", metavar="FILE",
+                       help="population JSON (gen_variants + corpus.files + conds.files); "
+                            "restricts corpus/conds targets to the listed clips")
         p.add_argument("--gens", nargs="+", metavar="GLOB",
                        help="variant dirs (store/gens/<arm>/<variant>)")
         p.add_argument("--corpus", action="store_true")

@@ -260,3 +260,37 @@ def test_sha256sums_skip_unchanged(tmp_path):
 
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__, "-v"]))
+
+
+# --- population scoping ------------------------------------------------------
+def test_population_targets_and_subset_sha256sums(tmp_path):
+    """--population restricts corpus/conds to the listed clips; SHA256SUMS merges; fsck/coverage scope."""
+    gen = tmp_path / "gens" / "001_arm" / "01_var__x"
+    _mp4(gen / "videos" / "a__s42.mp4"); (gen / "meta.yaml").write_text("id: x\n")
+    cls = tmp_path / "corpus" / "acid"
+    for n in "acid_0 acid_1 acid_2".split():
+        _mp4(cls / f"{n}.mp4", n.encode())
+    conds = tmp_path / "conds"
+    for n in "e_start9 e_end9 f_start9".split():
+        _mp4(conds / f"{n}.mp4", n.encode())
+    pop = {"gen_variants": [str(gen)],
+           "corpus": {"files": [str(cls / "acid_0.mp4"), str(cls / "acid_2.mp4")]},
+           "conds": {"files": [str(conds / "e_start9.mp4")]}}
+    pf = tmp_path / "pop.json"; pf.write_text(json.dumps(pop))
+    targets = sf.population_targets(pf)
+    assert [x["label"] for x in targets] == ["gens/001_arm/01_var__x", "corpus/acid", "conds"]
+    assert [v.name for v in targets[1]["videos"]] == ["acid_0.mp4", "acid_2.mp4"]
+    assert [v.name for v in targets[2]["videos"]] == ["e_start9.mp4"]
+    store = FeatureStore(tmp_path)
+    r = sf.write_sha256sums(store, cls, videos=targets[1]["videos"])
+    assert r["n"] == 2 and r["computed"] == 2
+    r2 = sf.write_sha256sums(store, cls, videos=[cls / "acid_1.mp4"])
+    names = [ln.split("  ", 1)[1] for ln in (cls / "SHA256SUMS").read_text().splitlines()]
+    assert names == ["acid_0.mp4", "acid_1.mp4", "acid_2.mp4"] and r2["computed"] == 1
+    # features for a clip OUTSIDE the population must not disturb scoped fsck/coverage
+    store.put(cls / "acid_1.mp4", NS, _feats(), {"host": "h1"})
+    store.put(cls / "acid_0.mp4", NS, _feats(), {"host": "h1"})
+    cov = store.coverage(cls, videos=targets[1]["videos"])
+    assert cov[NS]["of"] == 2 and cov[NS]["have"] == 1
+    rep = store.fsck(cls, videos=targets[1]["videos"])
+    assert rep["ok"] and rep["n_videos"] == 2 and rep["n_features"] == 1

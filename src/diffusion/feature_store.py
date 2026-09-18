@@ -210,9 +210,10 @@ class FeatureStore:
     def iter_videos(self, video_dir: Path | str) -> list[Path]:
         return sorted(Path(video_dir).glob("*.mp4"))
 
-    def coverage(self, video_dir: Path | str) -> dict[str, dict]:
-        """Per-namespace ``{have, of, hosts}`` over the videos in ``video_dir``."""
-        vids = self.iter_videos(video_dir)
+    def coverage(self, video_dir: Path | str, videos=None) -> dict[str, dict]:
+        """Per-namespace ``{have, of, hosts}`` over the videos in ``video_dir``
+        (or over ``videos``, an explicit list, when a population restricts the run)."""
+        vids = [Path(v) for v in videos] if videos is not None else self.iter_videos(video_dir)
         of = len(vids)
         cov: dict[str, dict] = {}
         for ns in NAMESPACES:
@@ -232,7 +233,7 @@ class FeatureStore:
                        "hosts": sorted(hosts)}
         return cov
 
-    def fsck(self, video_dir: Path | str, rehash: bool = False) -> dict:
+    def fsck(self, video_dir: Path | str, rehash: bool = False, videos=None) -> dict:
         """Validate the features under ``video_dir``.
 
         Report keys: ``orphan_npz`` (npz with no sidecar = interrupted write),
@@ -241,13 +242,17 @@ class FeatureStore:
         ``rehash``), ``mixed_hosts`` ({ns: [hosts]} when a namespace spans >1
         host), ``manifest_drift`` (bool). ``ok`` is False on any orphan/stale/
         mixed-host (manifest drift alone is fixable and does not flip ``ok``).
+        ``videos`` (a population subset) restricts the checked items to those
+        clips; ``no_video`` is still judged against every mp4 in the dir.
         """
         video_dir = Path(video_dir)
         feat_root = self._feat_root(video_dir)
         rep = {"video_dir": str(video_dir), "orphan_npz": [], "orphan_json": [],
                "no_video": [], "stale": [], "mixed_hosts": {}, "legacy_ns": [],
                "manifest_drift": False, "n_videos": 0, "n_features": 0}
-        vids = {v.stem: v for v in self.iter_videos(video_dir)}
+        all_vids = {v.stem: v for v in self.iter_videos(video_dir)}
+        vids = ({Path(v).stem: Path(v) for v in videos} if videos is not None
+                else all_vids)
         rep["n_videos"] = len(vids)
         if not feat_root.exists():
             rep["ok"] = True
@@ -257,8 +262,10 @@ class FeatureStore:
         sidecars: list[dict] = []
         for item_dir in sorted(p for p in feat_root.iterdir() if p.is_dir()):
             stem = item_dir.name
-            if stem not in vids:
+            if stem not in all_vids:
                 rep["no_video"].append(stem)
+            if videos is not None and stem not in vids:
+                continue
             npzs = {p.stem for p in item_dir.glob("*.npz")}   # stem drops ".npz"
             jsons = {p.stem for p in item_dir.glob("*.json")}
             for ns in sorted(npzs - jsons):
