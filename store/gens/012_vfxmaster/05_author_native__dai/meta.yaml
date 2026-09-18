@@ -16,3 +16,4 @@ grid: v3 ZERO-SHOT one-sided set (183 pairs x seeds 42/43); target zs_target.jso
 code: $LAB/external/vfxmaster (worker gen_worker_vfxmaster.py); refVFX under misc/refvfx_baseline
 scores: -> ../../../evals/030_external_zs_authornative__dai__2026-09-12/vfxmaster_author_native
 notes: author-native tier — externals at their richest supported text config; one-sided zero-shot only.
+features:

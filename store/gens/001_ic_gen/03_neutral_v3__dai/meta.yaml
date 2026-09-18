@@ -14,3 +14,7 @@ grid_rows: 282
 videos: 564
 source: scripts/store_register.py over eval_ladder/registry_ic_gen_neutral_v3.jsonl
 notes: grid v3 (design 3.0.0) neutral tier, family prompts/010_ctt_v3_neutral; 139 kept rows hardlinked from gens/001_ic_gen/01_neutral__cc (byte-identical inputs); seeds 42/43; DeltaAI GH200
+features:
+  dino_cls@dinov2b-r256: {have: 564, of: 564, hosts: [], legacy: 564}
+  cotracker3@g20-m384-v2: {have: 564, of: 564, hosts: [], legacy: 564}
+  lpips_t@alex-r256: {have: 564, of: 564, hosts: [], legacy: 564}

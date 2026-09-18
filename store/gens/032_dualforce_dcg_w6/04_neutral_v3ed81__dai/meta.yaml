@@ -14,3 +14,7 @@ grid_rows: 102
 videos: 204
 source: scripts/store_register.py over eval_ladder/registry_dualforce_dcg_w6_neutral_v3ed81.jsonl
 notes: "grid v3 (design 3.0.0) neutral tier, family prompts/012_ctt_v3ed_neutral; EffectData tier: native 81 f, frame-0 anchor (GEN_FRAMES=81 GEN_PREFIX_FRAMES=1); seeds 42/43; DeltaAI GH200"
+features:
+  dino_cls@dinov2b-r256: {have: 204, of: 204, hosts: [], legacy: 204}
+  cotracker3@g20-m384-v2: {have: 204, of: 204, hosts: [], legacy: 204}
+  lpips_t@alex-r256: {have: 204, of: 204, hosts: [], legacy: 204}
