@@ -1,0 +1,132 @@
+id: 040_lenses_gridv3__dai__2026-09-18
+seq: 40
+shelf: evals
+created: '2026-09-18'
+machine: dai (login node drives GPU shards; competitor lenses via score_batch --store)
+instrument: scripts/lens_pass_gridv3.py @ a61105c -> their_metrics/score_batch.py --store (impl_sha 8a808635e8a08cb4)
+store: {root: ., mode: on}
+lenses:
+  - motion_smoothness
+  - videoprism_sim_ref
+  - videoprism_sim_input
+  - clip_sim_ref
+  - clip_sim_input
+  - det_motion_fidelity
+  - dynamic_degree_mean_mag
+  - aesthetic  # merged by scripts/aesthetic_from_store.py (LAION head on clip_l14@r224)
+join: (item_id, seed) = grid item_id + seed, from Op-2 per_gen.jsonl (evals 028|030) matched by gen path; fallback strips the __s<seed> token.
+arms_scored:
+  ic_gen_neutral_v3:
+    gen: store/gens/001_ic_gen/03_neutral_v3__dai
+    rows: 564
+    join: {pergen: 564, fallback: 0}
+    missing_input_frame: 78
+    finite: {motion_smoothness: 564, videoprism_sim_ref: 564, videoprism_sim_input: 486, clip_sim_ref: 564, clip_sim_input: 486, det_motion_fidelity: 554, dynamic_degree_mean_mag: 564}
+  ic_gen_neutral_v3ed81:
+    gen: store/gens/001_ic_gen/04_neutral_v3ed81__dai
+    rows: 204
+    join: {pergen: 204, fallback: 0}
+    missing_input_frame: 0
+    finite: {motion_smoothness: 204, videoprism_sim_ref: 204, videoprism_sim_input: 204, clip_sim_ref: 204, clip_sim_input: 204, det_motion_fidelity: 151, dynamic_degree_mean_mag: 204}
+  ic_gen_effect_v3:
+    gen: store/gens/001_ic_gen/05_effect_v3__dai
+    rows: 564
+    join: {pergen: 564, fallback: 0}
+    missing_input_frame: 78
+    finite: {motion_smoothness: 564, videoprism_sim_ref: 564, videoprism_sim_input: 486, clip_sim_ref: 564, clip_sim_input: 486, det_motion_fidelity: 558, dynamic_degree_mean_mag: 564}
+  ic_gen_effect_v3ed81:
+    gen: store/gens/001_ic_gen/06_effect_v3ed81__dai
+    rows: 204
+    join: {pergen: 204, fallback: 0}
+    missing_input_frame: 0
+    finite: {motion_smoothness: 204, videoprism_sim_ref: 204, videoprism_sim_input: 204, clip_sim_ref: 204, clip_sim_input: 204, det_motion_fidelity: 181, dynamic_degree_mean_mag: 204}
+  refvfx_author_native:
+    gen: store/gens/003_refvfx/03_author_native__dai
+    rows: 366
+    join: {pergen: 366, fallback: 0}
+    missing_input_frame: 0
+    finite: {motion_smoothness: 366, videoprism_sim_ref: 366, videoprism_sim_input: 366, clip_sim_ref: 366, clip_sim_input: 366, det_motion_fidelity: 284, dynamic_degree_mean_mag: 366}
+  base_cond_neutral_v3:
+    gen: store/gens/005_base_cond/04_neutral_v3__dai
+    rows: 564
+    join: {pergen: 564, fallback: 0}
+    missing_input_frame: 78
+    finite: {motion_smoothness: 564, videoprism_sim_ref: 564, videoprism_sim_input: 486, clip_sim_ref: 564, clip_sim_input: 486, det_motion_fidelity: 558, dynamic_degree_mean_mag: 564}
+  base_cond_neutral_v3ed81:
+    gen: store/gens/005_base_cond/05_neutral_v3ed81__dai
+    rows: 204
+    join: {pergen: 204, fallback: 0}
+    missing_input_frame: 0
+    finite: {motion_smoothness: 204, videoprism_sim_ref: 204, videoprism_sim_input: 204, clip_sim_ref: 204, clip_sim_input: 204, det_motion_fidelity: 71, dynamic_degree_mean_mag: 204}
+  base_cond_effect_v3:
+    gen: store/gens/005_base_cond/06_effect_v3__dai
+    rows: 564
+    join: {pergen: 564, fallback: 0}
+    missing_input_frame: 78
+    finite: {motion_smoothness: 564, videoprism_sim_ref: 564, videoprism_sim_input: 486, clip_sim_ref: 564, clip_sim_input: 486, det_motion_fidelity: 558, dynamic_degree_mean_mag: 564}
+  base_cond_effect_v3ed81:
+    gen: store/gens/005_base_cond/07_effect_v3ed81__dai
+    rows: 204
+    join: {pergen: 204, fallback: 0}
+    missing_input_frame: 0
+    finite: {motion_smoothness: 204, videoprism_sim_ref: 204, videoprism_sim_input: 204, clip_sim_ref: 204, clip_sim_input: 204, det_motion_fidelity: 175, dynamic_degree_mean_mag: 204}
+  vap_author_native:
+    gen: store/gens/011_vap/05_author_native__dai
+    rows: 366
+    join: {pergen: 366, fallback: 0}
+    missing_input_frame: 0
+    finite: {motion_smoothness: 366, videoprism_sim_ref: 366, videoprism_sim_input: 366, clip_sim_ref: 366, clip_sim_input: 366, det_motion_fidelity: 333, dynamic_degree_mean_mag: 366}
+  vfxmaster_author_native:
+    gen: store/gens/012_vfxmaster/05_author_native__dai
+    rows: 366
+    join: {pergen: 366, fallback: 0}
+    missing_input_frame: 0
+    finite: {motion_smoothness: 366, videoprism_sim_ref: 366, videoprism_sim_input: 366, clip_sim_ref: 366, clip_sim_input: 366, det_motion_fidelity: 363, dynamic_degree_mean_mag: 366}
+  dualforce_control_neutral_v3:
+    gen: store/gens/013_dualforce_control/03_neutral_v3__dai
+    rows: 564
+    join: {pergen: 564, fallback: 0}
+    missing_input_frame: 78
+    finite: {motion_smoothness: 564, videoprism_sim_ref: 564, videoprism_sim_input: 486, clip_sim_ref: 564, clip_sim_input: 486, det_motion_fidelity: 562, dynamic_degree_mean_mag: 564}
+  dualforce_control_neutral_v3ed81:
+    gen: store/gens/013_dualforce_control/04_neutral_v3ed81__dai
+    rows: 204
+    join: {pergen: 204, fallback: 0}
+    missing_input_frame: 0
+    finite: {motion_smoothness: 204, videoprism_sim_ref: 204, videoprism_sim_input: 204, clip_sim_ref: 204, clip_sim_input: 204, det_motion_fidelity: 202, dynamic_degree_mean_mag: 204}
+  dualforce_control_effect_v3:
+    gen: store/gens/013_dualforce_control/05_effect_v3__dai
+    rows: 564
+    join: {pergen: 564, fallback: 0}
+    missing_input_frame: 78
+    finite: {motion_smoothness: 564, videoprism_sim_ref: 564, videoprism_sim_input: 486, clip_sim_ref: 564, clip_sim_input: 486, det_motion_fidelity: 561, dynamic_degree_mean_mag: 564}
+  dualforce_control_effect_v3ed81:
+    gen: store/gens/013_dualforce_control/06_effect_v3ed81__dai
+    rows: 204
+    join: {pergen: 204, fallback: 0}
+    missing_input_frame: 0
+    finite: {motion_smoothness: 204, videoprism_sim_ref: 204, videoprism_sim_input: 204, clip_sim_ref: 204, clip_sim_input: 204, det_motion_fidelity: 203, dynamic_degree_mean_mag: 204}
+  dualforce_dcg_w6_neutral_v3:
+    gen: store/gens/032_dualforce_dcg_w6/03_neutral_v3__dai
+    rows: 564
+    join: {pergen: 564, fallback: 0}
+    missing_input_frame: 78
+    finite: {motion_smoothness: 564, videoprism_sim_ref: 564, videoprism_sim_input: 486, clip_sim_ref: 564, clip_sim_input: 486, det_motion_fidelity: 560, dynamic_degree_mean_mag: 564}
+  dualforce_dcg_w6_neutral_v3ed81:
+    gen: store/gens/032_dualforce_dcg_w6/04_neutral_v3ed81__dai
+    rows: 204
+    join: {pergen: 204, fallback: 0}
+    missing_input_frame: 0
+    finite: {motion_smoothness: 204, videoprism_sim_ref: 204, videoprism_sim_input: 204, clip_sim_ref: 204, clip_sim_input: 204, det_motion_fidelity: 204, dynamic_degree_mean_mag: 204}
+  dualforce_dcg_w6_effect_v3:
+    gen: store/gens/032_dualforce_dcg_w6/05_effect_v3__dai
+    rows: 564
+    join: {pergen: 564, fallback: 0}
+    missing_input_frame: 78
+    finite: {motion_smoothness: 564, videoprism_sim_ref: 564, videoprism_sim_input: 486, clip_sim_ref: 564, clip_sim_input: 486, det_motion_fidelity: 562, dynamic_degree_mean_mag: 564}
+  dualforce_dcg_w6_effect_v3ed81:
+    gen: store/gens/032_dualforce_dcg_w6/06_effect_v3ed81__dai
+    rows: 204
+    join: {pergen: 204, fallback: 0}
+    missing_input_frame: 0
+    finite: {motion_smoothness: 204, videoprism_sim_ref: 204, videoprism_sim_input: 204, clip_sim_ref: 204, clip_sim_input: 204, det_motion_fidelity: 204, dynamic_degree_mean_mag: 204}
