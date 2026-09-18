@@ -8,10 +8,9 @@ resolves to exactly these files). Everything not listed here is **deferred**: th
 |---|---|---|
 | gen variants | the 4 paper arms × {neutral, effect} × {HF 121f, ED 81f} on grid v3, + the 3 author-native externals | 19 variants, 7242 mp4 |
 | corpus | the 677-clip pool corpus `corpus_manifest.json` (references + same-class pools; NOT the whole `transitions_std121/` dir, which holds 4,536 mp4) | 677 clips |
-| endpoint clips | `eval_ladder/conds/<endpoint>_{start9,end9}.mp4` for the 204 HF-tier endpoints the grids reference | 354 clips |
-| ED anchors | single-image anchors of the 54 EffectData-tier endpoints (`misc/refvfx_baseline/frames/<endpoint>__first.png`); frame-0 conditioning → identity-A only, no motion-A | 54 images |
+| endpoint clips | `eval_ladder/conds/<endpoint>_start9.mp4` for all 204 endpoints the grids reference, plus `_end9.mp4` for the 150 that have one (54 endpoints — 51 EffectData-tier + 3 DAVIS — are one-sided-only and have no end clip). ED-tier rows condition on frame 0 of `start9` (`GEN_PREFIX_FRAMES=1`): identity-A is scored against that frame, motion-A is undefined | 354 clips |
 
-Missing on disk: none (the 54 'missing' conds were the ED endpoints, which are images, listed under ED anchors).
+Missing on disk: none. (Endpoint sidedness in the grids: 115 one-sided endpoints that still have both clips, 32 two-sided, 51 ED one-sided, 6 DAVIS.)
 
 ## Gen variants
 - `store/gens/001_ic_gen/03_neutral_v3__dai`
