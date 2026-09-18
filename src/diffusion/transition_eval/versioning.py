@@ -50,6 +50,7 @@ INSTRUMENT_PATHS = (
     "tests/test_transition_eval.py",
     "tests/test_transition_eval_v3.py",
     "tests/test_transition_eval_v4.py",
+    "tests/test_transition_eval_store.py",
     "tests/test_certify_v3.py",
     "tests/test_versioning.py",
 )
@@ -78,7 +79,10 @@ PINS = {
     "core_fallback_min_frames": 8,    # DRAFT — δ-expansion params set at lock
     # v4 corpus-reference artifact (SPEC §4: pinned instrument constant) —
     # sha256 of src/diffusion/transition_eval/reference_v4.npz, set at build.
-    "reference_v4_sha256": "e6ea40111a46ade630c3c56c210c2e7b12df1c9dbfd074c717cf0342a8ad2818",
+    # 4.0.1-draft.1: the grid-v3 amendment build (459fd9a7) that scored
+    # evals/028 + evals/030 replaces the 4.0.0-certified build (e6ea4011);
+    # numeric identity is re-certified by the bar-8 reproduction in P4.
+    "reference_v4_sha256": "459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8",
     "emd_lp_solver": "scipy-linprog-highs",   # observed scipy ver in env_fingerprint
 }
 

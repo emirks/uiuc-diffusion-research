@@ -27,9 +27,11 @@ import pathlib
 
 import numpy as np
 
-from . import versioning
+from . import store_io, versioning
+from ..feature_store import FeatureStore
 from .endpoints import (LPIPS_CACHE_TAG, LpipsScorer, cached_temporal_lpips,
-                        endpoint_fidelity, lpips_cache_path, seam_scores)
+                        endpoint_fidelity, lpips_cache_path, seam_scores,
+                        temporal_lpips)
 from .features import DinoExtractor, file_key, savez_atomic, load_npz_or_none
 from .reference_stats import csls_r
 from .controls import make_lerp, make_static_hold
@@ -43,7 +45,7 @@ from .manifests_v3 import (completeness, derive_tier, load_corpus_manifest,
                            load_eval_manifest, load_training_manifest,
                            sidedness_of, tags_of)
 from .motion import Tracker
-from .pipeline import process_video, process_video_file
+from .pipeline import process_video, process_video_file, process_video_store
 from .s_structure import core_mask_v3, structure_flags
 from .video_io import load_frames
 
@@ -51,14 +53,16 @@ REPO_ROOT = pathlib.Path(__file__).resolve().parents[3]  # src/diffusion/transit
 SHORT_SIDE = versioning.PINS["feature_short_side"]
 
 
-def _ref_bundle_cache(corpus: dict, cache_dir, extractor, tracker):
+def _ref_bundle_cache(corpus: dict, store, extractor, tracker):
     """Process every corpus clip once: bundles + per-class core-feature pools
-    (M2b needs ALL classes, not just the item's)."""
+    (M2b needs ALL classes, not just the item's). ``store`` is a HarnessStore —
+    references read from the feature store by path; a warm clip (dino+tracks
+    present) skips decoding entirely (need_frames=False)."""
     root = REPO_ROOT / corpus["corpus_root"]
     bundles, pools = {}, {}
     for key in sorted(corpus["clips"]):
         cls = corpus["clips"][key]["class"]
-        b, _ = process_video_file(root / key, cache_dir, extractor, tracker,
+        b, _ = process_video_file(root / key, store, extractor, tracker,
                                   short_side=SHORT_SIDE, need_frames=False)
         mask, _meta = core_mask_v3(b.profile, corpus["classes"][cls]["sidedness"])
         bundles[key] = (b, mask)
@@ -131,9 +135,24 @@ def lpips_warm(item, gen_key: str, cache_dir: pathlib.Path | None,
     return True
 
 
+def _temporal_lpips_stored(hstore, identity, frames, scorer):
+    """temporal-LPIPS d(t) = LPIPS(frame_t, frame_{t+1}) through the feature
+    store (``lpips_t@alex-r256``, SPEC §9). A store hit returns the persisted
+    array (byte-identical to the old ``:tlpips:`` cache); a miss computes and
+    persists it. ``frames`` may be None only on a hit (caller's decode skip)."""
+    got = hstore.get(identity, store_io.LPIPS_NS)
+    if got is not None:
+        return got["d"]
+    if frames is None:
+        raise RuntimeError(f"temporal-lpips miss for {identity} but no frames were decoded")
+    d = temporal_lpips(frames, scorer)
+    hstore.put(identity, store_io.LPIPS_NS, {"d": d})
+    return d
+
+
 def score_item(item, sidedness, gen_bundle, gen_frames, ref_bundle, ref_core,
                pools, lpips_scorer, extractor, ref_key, v4pack,
-               training_pools=None, lpips_cache_dir=None):
+               training_pools=None, hstore=None):
     n_pre = item.condition_prefix.num_frames if item.condition_prefix else 9
     n_suf = item.condition_suffix.num_frames if item.condition_suffix else 0
     T = len(gen_bundle.feats)
@@ -186,14 +205,15 @@ def score_item(item, sidedness, gen_bundle, gen_frames, ref_bundle, ref_core,
     }
     if training_pools:
         row.update(memorization_score(gen_bundle.feats, gmid, training_pools))
-    # M3
+    # M3 — endpoint fidelity is recomputed fresh every run (the endpoint-LPIPS
+    # pair cache is dropped, P3b; cache_dir=None => compute, write nothing).
     if item.condition_prefix:
         row.update(_cached_endpoint(item, "prefix", n_pre, gen_bundle, gen_frames,
-                                    extractor, lpips_scorer, lpips_cache_dir))
+                                    extractor, lpips_scorer, None))
     if item.condition_suffix:
         row.update(_cached_endpoint(item, "suffix", n_suf, gen_bundle, gen_frames,
-                                    extractor, lpips_scorer, lpips_cache_dir))
-    d = cached_temporal_lpips(gen_frames, gen_bundle.key, lpips_cache_dir, lpips_scorer)
+                                    extractor, lpips_scorer, None))
+    d = _temporal_lpips_stored(hstore, gen_bundle.identity, gen_frames, lpips_scorer)
     row.update(seam_scores(d, n_pre, max(n_suf, 1)))
     return row
 
@@ -240,9 +260,12 @@ def main() -> int:
                     help="auto: synthesize the degenerate control arm per item "
                          "(SPEC §4); off: skip (probe suites that carry no "
                          "floor claim, e.g. splices/swaps/hard-cuts)")
-    ap.add_argument("--cache-dir", default="outputs/eval/cache",
-                    help="feature/track cache (stability's cold-anchor rerun "
-                         "points this at a fresh directory)")
+    ap.add_argument("--store-root", default=None,
+                    help="feature store root (default: the repo root). Features "
+                         "for the three cached namespaces (dino_cls, cotracker3, "
+                         "lpips_t) are read from / written to the store BY VIDEO "
+                         "PATH (store/FEATURES.md); synthetic controls persist "
+                         "next to the gen's features as <ns>.ctl-<name> (SPEC §9)")
     ap.add_argument("--reference-corpus", default=None,
                     help="AMENDMENT grid-v3 (2026-09-07): the manifest the reference_v4 populations are certified "
                          "on (the 222-clip corpus_manifest_v1_222.json) when --corpus is a STRICT SUPERSET of it "
@@ -250,12 +273,6 @@ def main() -> int:
                          "styles, sidedness, pools and reference bundles; the per-corpus v4 pack (M1c corpus "
                          "profiles, camera fits) is built over the reference keys so the certified population is "
                          "unchanged. Superset-ness (every reference clip present, same class + sidedness) is asserted.")
-    ap.add_argument("--lpips-cache", choices=("on", "off"), default="on",
-                    help="cache temporal/endpoint LPIPS in --cache-dir keyed by "
-                         "stat-based video identity (numeric no-op: a miss "
-                         "computes exactly what uncached code computed); off "
-                         "never reads or writes it — certification's warm rerun "
-                         "uses off so bar 8 keeps recomputing LPIPS end-to-end")
     args = ap.parse_args()
 
     stamp = versioning.stamp(args.corpus)
@@ -285,8 +302,12 @@ def main() -> int:
 
     out_dir = REPO_ROOT / args.out_root / args.label
     out_dir.mkdir(parents=True, exist_ok=True)
-    cache_dir = REPO_ROOT / args.cache_dir
-    cache_dir.mkdir(parents=True, exist_ok=True)
+    store_root = pathlib.Path(args.store_root).resolve() if args.store_root else REPO_ROOT
+    code_sha = stamp["git"].get("commit_short") or ""
+    hstore = store_io.HarnessStore(FeatureStore(store_root), code_sha=code_sha)
+    stamp["feature_store"] = {"root": str(store_root),
+                              "namespaces": list(store_io.NAMESPACES),
+                              "code_sha": code_sha}
 
     import torch
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -294,8 +315,7 @@ def main() -> int:
     tracker = Tracker(device=device)
     lpips_scorer = LpipsScorer(device=device)
 
-    lpips_cache_dir = cache_dir if args.lpips_cache == "on" else None
-    ref_bundles, pools = _ref_bundle_cache(corpus, cache_dir, extractor, tracker)
+    ref_bundles, pools = _ref_bundle_cache(corpus, hstore, extractor, tracker)
     # v4: the frozen reference artifact (pinned instrument constant) + per-run
     # corpus precomputations. Corpus mismatch refuses loudly (SPEC §4/§7).
     ref_stats = load_reference(expect_corpus_sha=pin_sha)
@@ -321,16 +341,15 @@ def main() -> int:
                 raise ValueError(f"reference {ref_key} not in corpus manifest")
             rb, rcore = ref_bundles[ref_key]
             gpath = pathlib.Path(it.generated_video)
-            gkey = file_key(gpath, extractor.model_name, str(SHORT_SIDE))
-            # decode only if some consumer needs pixels: feature/track cache
-            # misses decode inside process_video_file regardless; LPIPS misses
-            # are pre-checked here (numeric no-op — a miss always decodes)
+            # gens are always decoded: endpoint fidelity is recomputed fresh
+            # (the endpoint-LPIPS pair cache is dropped, P3b), so the endpoint
+            # needs pixels regardless of which features the store already holds.
             gb, gframes = process_video_file(
-                gpath, cache_dir, extractor, tracker, short_side=SHORT_SIDE,
-                need_frames=not lpips_warm(it, gkey, lpips_cache_dir))
+                gpath, hstore, extractor, tracker, short_side=SHORT_SIDE,
+                need_frames=True)
             row = score_item(it, side, gb, gframes, rb, rcore, pools,
                              lpips_scorer, extractor, ref_key, v4pack,
-                             training_pools, lpips_cache_dir=lpips_cache_dir)
+                             training_pools, hstore=hstore)
             row["tier"] = derive_tier(it, corpus, training)
             row["tags"] = tags_of(it.style, corpus)
             row["provenance"] = {"harness": stamp["harness"], "certified": stamp["certified"]}
@@ -338,11 +357,13 @@ def main() -> int:
 
             if args.controls == "auto" and it.condition_prefix:  # control arm through the identical pipeline
                 cframes, cname = control_frames(it, side, len(gb.feats))
-                cb = process_video(cframes, gb.key + f":{cname}", cache_dir,
-                                   extractor, tracker)
+                # persist next to the gen's features as <ns>.ctl-<name> (SPEC §9)
+                ctl_name = cname[len("control_"):] if cname.startswith("control_") else cname
+                cb = process_video_store(cframes, store_io.Control(gpath, ctl_name),
+                                         hstore, extractor, tracker)
                 crow = score_item(it, side, cb, cframes, rb, rcore, pools,
                                   lpips_scorer, extractor, ref_key, v4pack,
-                                  None, lpips_cache_dir=lpips_cache_dir)
+                                  None, hstore=hstore)
                 crow.update({"item_id": f"{cname}__{it.item_id}", "arm": cname,
                              "twin_of": None, "provenance": row["provenance"]})
                 rows.append(crow)

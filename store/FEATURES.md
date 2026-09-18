@@ -36,6 +36,14 @@ Two files per (video, namespace):
   Writes are atomic (`<file>.tmp-<pid>` → `rename`); the `.json` is written last, so a `.npz` without its `.json` is an
   interrupted write and `fsck` reports it.
 
+**Synthetic controls** (v4 harness, `eval/4.0.1`): the lerp / static-hold degenerate control for a gen is synthesized
+at scoring and has no video of its own, so its features persist NEXT TO the gen's, as `<ns>.ctl-<name>.npz` +
+`<ns>.ctl-<name>.json` in the gen's feature folder (e.g. `dino_cls@dinov2b-r256.ctl-lerp.npz`; `name` ∈ {`lerp`,
+`hold`}). Same atomic + sidecar-last convention; the sidecar adds `"control": "<name>"`, sets `"origin":
+"control:<name>"`, and carries the **gen video's** identity (`video`/`video_sha256`/`video_size`/`video_mtime_ns`) so
+`fsck` — which stats each item folder's gen mp4 — reads a control as fresh. Written by
+`diffusion.transition_eval.store_io.HarnessStore` (the scoring path), not by `scripts/store_features.py`.
+
 `features/manifest.jsonl`: the concatenation of the sidecars, one per line. Rebuilt from the files by
 `scripts/store_features.py fsck --rebuild-manifest`; never hand-edited.
 
