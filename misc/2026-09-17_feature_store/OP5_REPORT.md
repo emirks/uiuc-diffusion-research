@@ -124,3 +124,5 @@ The build refreshes `tab_A/B/C.tex`, `TABLES.md`, `preview.tex` and rebuilds `pr
 (`papers_drafts/_preview/metrics_gridv3/build.sh` rebuilds just the PDF).
 
 **Follow-up 2 (2026-09-18).** Copy eval landed as `store/evals/039_copy_gridv3` (joins 1:1, 7242 rows); added a second column `Copy max` (mean `copy_max`, 3 dp, lower-is-better, bold=min, min-n rule) right after `Copy %` in Tables A and B — Copy % now shows the real small zero-shot rates (0.5–1.6%). Lens glob `*_lenses_gridv3__*` matches the coming `040_lenses_gridv3` (and not `039`); tests still 25/25.
+
+**Follow-up 3 (2026-09-18).** Lens eval landed (`store/evals/040_lenses_gridv3`, joins 1:1) so Motion smooth./Ref sim./Motion fid./Aesthetic now populate and reproduce the paper's kept numbers. `det_motion_fidelity` (Motion fid.) is treated like Motion A/B — mean over defined rows (NaN where no tracklets move, valid), per-cell "(n=…)" shown, and exempt from the `--strict` same-n assertion (`STRICT_EXEMPT_B`); every other Table B/C column stays strict. `--strict` now **exits 0** with all four inputs present. 26 tests pass (added `test_strict_exempts_motfid_mixed_n`).
