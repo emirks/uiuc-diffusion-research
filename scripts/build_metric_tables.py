@@ -361,6 +361,8 @@ TABLE_A_COLS = [
         lambda rs: agg(rs, "motion_smoothness")),
     Col("copy", r"\shortstack{Copy\\rate \%}", "pct1", "min",
         lambda rs: agg(rs, "copy_near_copy", scale=100.0)),
+    Col("copymax", r"\shortstack{Copy\\max}", "sim3", "min",
+        lambda rs: agg(rs, "copy_copy_max")),
     Col("transport", r"\shortstack{Transport\\ours}", "pct1", "max",
         lambda rs: agg(rs, "transport_pct")),
 ]
@@ -458,6 +460,8 @@ TABLE_B_COLS = [
         lambda rs: agg(rs, "motion_smoothness")),
     Col("copy", r"\shortstack{Copy\\rate \%}", "pct1", "min",
         lambda rs: agg(rs, "copy_near_copy", scale=100.0)),
+    Col("copymax", r"\shortstack{Copy\\max}", "sim3", "min",
+        lambda rs: agg(rs, "copy_copy_max")),
     Col("transport", r"\shortstack{Transport\\ours}", "pct1", "max",
         lambda rs: agg(rs, "transport_pct")),
     Col("vpref", r"\shortstack{Ref sim.\\(VideoPrism)}", "sim3", "max",
@@ -605,8 +609,8 @@ def render_table_a(ta: TableA) -> str:
     L.append(r"    \begin{tabular}{l" + "c" * len(TABLE_A_COLS) + "}")
     L.append(r"        \toprule")
     L.append(r"        & \multicolumn{4}{c}{Input fidelity\,$\uparrow$} & "
-              r"Seam-free\,$\uparrow$ & Smoothness\,$\uparrow$ & Copy\,$\downarrow$ & Fidelity\,$\uparrow$ \\")
-    L.append(r"        \cmidrule(lr){2-5}\cmidrule(lr){6-6}\cmidrule(lr){7-7}\cmidrule(lr){8-8}\cmidrule(lr){9-9}")
+              r"Seam-free\,$\uparrow$ & Smoothness\,$\uparrow$ & \multicolumn{2}{c}{Copy\,$\downarrow$} & Fidelity\,$\uparrow$ \\")
+    L.append(r"        \cmidrule(lr){2-5}\cmidrule(lr){6-6}\cmidrule(lr){7-7}\cmidrule(lr){8-9}\cmidrule(lr){10-10}")
     L.append("        & " + " & ".join(c.header for c in TABLE_A_COLS) + r" \\")
     L.append(r"        \midrule")
     for ti, tier in enumerate(TIERS):
@@ -643,9 +647,9 @@ def render_table_b(tb: TableB) -> str:
     L.append(r"    \begin{tabular}{l" + "c" * len(TABLE_B_COLS) + "}")
     L.append(r"        \toprule")
     L.append(r"        & Input fid.\,$\uparrow$ & Seam-free\,$\uparrow$ & Smoothness\,$\uparrow$ & "
-              r"Copy\,$\downarrow$ & Fidelity\,$\uparrow$ & \multicolumn{3}{c}{Reference fidelity\,$\uparrow$} \\")
-    L.append(r"        \cmidrule(lr){2-2}\cmidrule(lr){3-3}\cmidrule(lr){4-4}\cmidrule(lr){5-5}"
-              r"\cmidrule(lr){6-6}\cmidrule(lr){7-9}")
+              r"\multicolumn{2}{c}{Copy\,$\downarrow$} & Fidelity\,$\uparrow$ & \multicolumn{3}{c}{Reference fidelity\,$\uparrow$} \\")
+    L.append(r"        \cmidrule(lr){2-2}\cmidrule(lr){3-3}\cmidrule(lr){4-4}\cmidrule(lr){5-6}"
+              r"\cmidrule(lr){7-7}\cmidrule(lr){8-10}")
     L.append("        & " + " & ".join(c.header for c in TABLE_B_COLS) + r" \\")
     L.append(r"        \midrule")
     for i, (base, n, cells) in enumerate(tb.rows):
@@ -728,7 +732,7 @@ def _placeholder_report(ta: TableA, tb: TableB, tc: TableC) -> list[str]:
 
 
 def _md_table_a(ta: TableA) -> list[str]:
-    hdr = ["arm", "Id A", "Id B", "Mot A", "Mot B", "Seam%", "Smooth", "Copy%", "Transport", "n"]
+    hdr = ["arm", "Id A", "Id B", "Mot A", "Mot B", "Seam%", "Smooth", "Copy%", "Copymax", "Transport", "n"]
     out = ["| " + " | ".join(hdr) + " |", "|" + "|".join(["---"] * len(hdr)) + "|"]
     for tier in TIERS:
         out.append(f"| **{TIER_LABEL[tier]}** | | | | | | | | | |")
@@ -740,7 +744,7 @@ def _md_table_a(ta: TableA) -> list[str]:
 
 
 def _md_table_b(tb: TableB) -> list[str]:
-    hdr = ["arm", "Id A", "Seam%", "Smooth", "Copy%", "Transport", "RefSim(VP)", "MotFid", "Aesth", "n"]
+    hdr = ["arm", "Id A", "Seam%", "Smooth", "Copy%", "Copymax", "Transport", "RefSim(VP)", "MotFid", "Aesth", "n"]
     out = ["| " + " | ".join(hdr) + " |", "|" + "|".join(["---"] * len(hdr)) + "|"]
     for base, n, cells in tb.rows:
         cvals = [cell_md(cells[i], TABLE_B_COLS[i].fmt) for i in range(len(TABLE_B_COLS))]
