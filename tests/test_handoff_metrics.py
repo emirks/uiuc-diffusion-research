@@ -78,6 +78,30 @@ def test_motion_fidelity_identical_vs_reversed():
     assert motion_fidelity(tracks, vis, rev, vis) == pytest.approx(-1.0, abs=1e-3)
 
 
+def test_velocity_continuity():
+    # boundary=9, before window [6,9] (3 steps), after window [9,15] (6 steps).
+    T, N = 20, 12
+    p0 = np.random.default_rng(3).uniform(50, 300, size=(N, 2)).astype(np.float32)
+    step = np.zeros((N, 2), np.float32)
+    step[:, 0] = 2.0                                   # +x, constant
+    t = np.arange(T)[:, None, None]
+    const = (p0[None] + step[None] * t).astype(np.float32)     # constant velocity
+    vis = np.ones((T, N), np.float32)
+    # identical velocity before/after -> 1.0
+    assert hm._velocity_continuity(const, vis, 6, 9, 15) == pytest.approx(1.0, abs=1e-6)
+    # velocity reverses at the boundary -> -1.0
+    rev = const.copy()
+    for f in range(10, T):                             # after frame 9, walk back in -x
+        rev[f] = rev[9] - step * (f - 9)
+    assert hm._velocity_continuity(rev, vis, 6, 9, 15) == pytest.approx(-1.0, abs=1e-6)
+    # static (no motion) -> NaN (total weight 0)
+    static = np.tile(p0, (T, 1, 1)).astype(np.float32)
+    assert math.isnan(hm._velocity_continuity(static, vis, 6, 9, 15))
+    # a tracklet occluded inside the window is dropped; if all occluded -> NaN
+    vis0 = vis.copy(); vis0[8, :] = 0.0
+    assert math.isnan(hm._velocity_continuity(const, vis0, 6, 9, 15))
+
+
 # --- store-backed compute_row ----------------------------------------------
 def _unit(dim=8):
     u = np.zeros(dim, np.float32)
@@ -152,7 +176,9 @@ def test_compute_row_one_sided_identity_and_motion(tmp_path, monkeypatch):
     assert row["identity_A"] == pytest.approx(1.0, abs=1e-6)
     assert math.isnan(row["identity_B"])           # one-sided
     assert math.isnan(row["motion_B"])
-    assert row["motion_A"] == pytest.approx(1.0, abs=1e-3)
+    assert row["motion_A"] == pytest.approx(1.0, abs=1e-6)   # v2 continuity, constant velocity
+    assert not math.isnan(row["motion_A_mf"])      # v1 reference computed (coherent tracks)
+    assert math.isnan(row["motion_B_mf"])          # one-sided
     assert row["seam_free"] == 1.0                 # prefix 1.0 <= 3
     assert row["missing"] == []
 
@@ -176,8 +202,10 @@ def test_compute_row_two_sided_identity_B(tmp_path, monkeypatch):
     assert (row["n_pre"], row["n_suf"]) == (9, 8)
     assert row["identity_A"] == pytest.approx(1.0, abs=1e-6)
     assert row["identity_B"] == pytest.approx(1.0, abs=1e-6)
-    assert row["motion_A"] == pytest.approx(1.0, abs=1e-3)
-    assert row["motion_B"] == pytest.approx(1.0, abs=1e-3)
+    assert row["motion_A"] == pytest.approx(1.0, abs=1e-6)   # v2 continuity
+    assert row["motion_B"] == pytest.approx(1.0, abs=1e-6)   # v2 continuity, suffix side
+    assert not math.isnan(row["motion_A_mf"])      # v1 references computed
+    assert not math.isnan(row["motion_B_mf"])
     assert row["seam_free"] == 1.0                 # prefix 1.0 & suffix 2.0 both <= 3
     assert row["missing"] == []
 
@@ -212,7 +240,10 @@ def test_missing_features(tmp_path, monkeypatch):
     feats = hm.Feats(fs)
     r = hm.compute_row(feats, gen, "acid_0", "one", "HF", {gen.stem: (1.0, 0.0)})
     assert math.isnan(r["identity_A"]) and f"{DINO}:condA" in r["missing"]
-    assert math.isnan(r["motion_A"]) and f"{TRACK}:condA" in r["missing"]
+    # v2 motion_A needs only the GEN's tracks (present) -> computed, no condA needed.
+    assert not math.isnan(r["motion_A"])
+    # v1 reference motion_A_mf needs condA tracks (absent) -> NaN + missing.
+    assert math.isnan(r["motion_A_mf"]) and f"{TRACK}:condA" in r["missing"]
     assert r["seam_free"] == 1.0                    # seam still available
 
 
@@ -228,7 +259,7 @@ def test_missing_gen_features(tmp_path, monkeypatch):
 
 
 def test_ed_row_motion_a_undefined(tmp_path, monkeypatch):
-    # ED grid: n_pre = 1 -> identity_A defined against frame 0; motion_A NaN by definition.
+    # ED grid: n_pre = 1 -> identity_A defined against frame 0; motion_A NaN by construction (n_pre<4).
     T = 81
     u = _unit()
     gen_feats = np.tile(u, (T, 1))
@@ -240,8 +271,9 @@ def test_ed_row_motion_a_undefined(tmp_path, monkeypatch):
     r = hm.compute_row(feats, gen, "acid_0", "one", "ED", {gen.stem: (1.0, 0.0)})
     assert (r["n_pre"], r["n_suf"]) == (1, 0)
     assert r["identity_A"] == pytest.approx(1.0, abs=1e-6)
-    assert math.isnan(r["motion_A"])               # n_pre < 9: undefined, NOT missing
-    assert f"{TRACK}:condA" not in r["missing"]
+    assert math.isnan(r["motion_A"])               # n_pre < 4: undefined by construction, NOT missing
+    assert math.isnan(r["motion_A_mf"])            # n_pre < 9: v1 reference also undefined
+    assert f"{TRACK}:condA" not in r["missing"]    # neither needs condA tracks here
 
 
 def test_append_index_idempotent(tmp_path, monkeypatch):

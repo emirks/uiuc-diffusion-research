@@ -69,16 +69,36 @@ DEFINITIONS = [
     "identity_B (two-sided only) = mean over t in [T-n_suf-K, T-n_suf) of cos(f_gen[t], "
     "f_condB[T_B - n_suf]) where f_condB = dino of <endpoint>_end9.mp4 and T_B = 9 (the first given "
     "suffix frame = frame 1 of end9). Else NaN.",
-    "motion_A = motion_fidelity between the gen's tracks/vis sliced to frames [0, n_pre+K) and the "
-    "start clip's full tracks/vis (9 f) — only when n_pre >= 9 (a clip was given); NaN for n_pre = 1 "
-    "(a frame has no motion). motion_B symmetric: gen frames [T-n_suf-K, T) vs the end clip's "
-    "tracks; NaN unless two-sided.",
+    "motion_A / motion_B = hand-off VELOCITY CONTINUITY from the GENERATION's own cotracker3 tracks "
+    "(no condition tracks needed; the given frames inside the gen ARE the condition clip's frames, "
+    "pinned). Per tracklet j visible on every frame of both windows: v_before_j = mean velocity over "
+    "the last 3 given steps (frames [n_pre-3, n_pre]), v_after_j = mean velocity over the first K "
+    "generated steps (frames [n_pre, n_pre+K]); cos_j = cosine(v_before_j, v_after_j); weight w_j = "
+    "|v_before_j|*|v_after_j|. motion_A = sum_j w_j cos_j / sum_j w_j; NaN if sum_j w_j < 1e-6 "
+    "(nothing moves) or n_pre < 4 (frame-anchored rows: ED grids and all externals -> NaN by "
+    "construction). motion_B symmetric at the suffix (two-sided rows only): v_before = mean over the "
+    "last K generated steps before the suffix (frames [T-n_suf-K, T-n_suf]), v_after = mean over the "
+    "first 3 given suffix steps (frames [T-n_suf, T-n_suf+3]). Velocities in pixels of the tracked "
+    "resolution (the ratio is scale-free); visibility (vis >= 0.5) required on every frame of both "
+    "windows.",
+    "motion_A_mf / motion_B_mf (reference columns) = the previous definition: motion_fidelity of the "
+    "gen's tracks sliced to [0, n_pre+K) (n_pre >= 9) / [T-n_suf-K, T) (two-sided) against the "
+    "condition clip's full tracks. Kept for reference; low definedness because a 9-frame condition "
+    "clip has almost no tracklets above its moving threshold (the reason for the v2 redefinition).",
     "seam_free = 1 if the relevant seam z-scores <= 3 (prefix only for one-sided; prefix and suffix "
     "for two-sided) — read prefix_seam_z, suffix_seam_z from the v4 rows (evals 028|030), from "
     "Op-2's per_gen.jsonl if present else items.jsonl.",
     "Missing feature (e.g. externals before their extraction lands) -> NaN + a `missing` entry "
     "naming the namespace/role; never crash; idempotent per gen.",
 ]
+
+DEFINITIONS_VERSION = "v2 (2026-09-18)"
+DEFINITIONS_REASON = (
+    "v2 redefines motion_A/motion_B as hand-off velocity continuity from the gen's own cotracker3 "
+    "tracks. v1 used motion_fidelity against the 9-frame condition clip, which returned NaN on most "
+    "rows because a 9-frame clip has almost no tracklets above its moving threshold (motion_A "
+    "defined ~165/564 HF, motion_B ~22/148, though gen and condition tracks are 100% present). The "
+    "v1 values are retained as motion_A_mf / motion_B_mf. identity_A/B and seam_free are unchanged.")
 
 NAN = float("nan")
 
@@ -116,6 +136,38 @@ def _cos_window(gen_feats: np.ndarray, anchor: np.ndarray, lo: int, hi: int) -> 
     if cos.size == 0:
         return NAN
     return float(cos.mean())
+
+
+def _velocity_continuity(tracks: np.ndarray, vis: np.ndarray,
+                         b_lo: int, boundary: int, a_hi: int, thr: float = 0.5) -> float:
+    """Hand-off velocity continuity from a single track set (the gen's own).
+
+    ``v_before`` is the mean per-frame velocity over the contiguous window ``[b_lo, boundary]``
+    (``boundary - b_lo`` steps) and ``v_after`` over ``[boundary, a_hi]`` (``a_hi - boundary``
+    steps); the two windows share the ``boundary`` frame. Over tracklets visible (``vis >= thr``)
+    on EVERY frame of ``[b_lo, a_hi]``, returns the weight-averaged cosine between the two
+    velocities, weight ``|v_before|*|v_after|``. NaN if out of range, no fully-visible tracklet,
+    or total weight < 1e-6 (nothing moves). Velocities are in tracked-resolution pixels; the
+    cosine and the weight RATIO are scale-free."""
+    T = tracks.shape[0]
+    if b_lo < 0 or a_hi > T - 1 or boundary <= b_lo or a_hi <= boundary:
+        return NAN
+    keep = (vis[b_lo:a_hi + 1] >= thr).all(axis=0)          # visible throughout both windows
+    if not keep.any():
+        return NAN
+    tr = tracks[:, keep, :].astype(np.float64)
+    vb = (tr[boundary] - tr[b_lo]) / (boundary - b_lo)      # [M,2] mean px/frame before
+    va = (tr[a_hi] - tr[boundary]) / (a_hi - boundary)      # [M,2] mean px/frame after
+    nb = np.linalg.norm(vb, axis=1)
+    na = np.linalg.norm(va, axis=1)
+    w = nb * na
+    W = float(w.sum())
+    if W < 1e-6:
+        return NAN
+    with np.errstate(invalid="ignore", divide="ignore"):
+        cos = (vb * va).sum(axis=1) / (nb * na)
+    cos = np.where(w > 0, cos, 0.0)                         # 0-magnitude tracklets carry no weight
+    return float((w * cos).sum() / W)
 
 
 def _parse_stem(video_stem: str) -> tuple[str, int]:
@@ -256,6 +308,7 @@ def compute_row(feats: Feats, gen_video: Path, endpoint: str, sided: str,
 
     missing: set[str] = set()
     identity_A = identity_B = motion_A = motion_B = NAN
+    motion_A_mf = motion_B_mf = NAN
     Kok = math.isfinite(K)
 
     condA = CONDS_DIR / f"{endpoint}_start9.mp4"
@@ -299,7 +352,23 @@ def compute_row(feats: Feats, gen_video: Path, endpoint: str, sided: str,
             if 0 <= bi < fB.shape[0]:
                 identity_B = _cos_window(fg, fB[bi], T - n_suf - K, T - n_suf)
 
-    # motion_A (n_pre >= 9 only) ---------------------------------------------
+    # motion_A / motion_B (v2: hand-off velocity continuity from the gen's OWN tracks) --------
+    # defined for motion_A when n_pre >= 4 (HF), motion_B when two-sided; needs only gen cotracker.
+    mA_def = Kok and n_pre >= 4
+    mB_def = Kok and two_sided
+    if mA_def or mB_def:
+        g_tr = gen(TRACK_NS) if feats.has(gen_video, TRACK_NS) else None
+        if g_tr is None:
+            missing.add(f"{TRACK_NS}:gen")
+        else:
+            tr, vs = g_tr["tracks"], g_tr["vis"]
+            if mA_def:
+                motion_A = _velocity_continuity(tr, vs, n_pre - 3, n_pre, n_pre + K)
+            if mB_def:
+                T = tr.shape[0]
+                motion_B = _velocity_continuity(tr, vs, T - n_suf - K, T - n_suf, T - n_suf + 3)
+
+    # motion_A_mf / motion_B_mf (v1 reference: motion_fidelity vs the condition clip's tracks) --
     if Kok and n_pre >= 9:
         cA_tr = feats.get(condA, TRACK_NS, cache=True) if condA.exists() else None
         g_ok = feats.has(gen_video, TRACK_NS)
@@ -310,10 +379,8 @@ def compute_row(feats: Feats, gen_video: Path, endpoint: str, sided: str,
         if cA_tr is not None and g_ok:
             g_tr = gen(TRACK_NS)
             hi = n_pre + K
-            motion_A = motion_fidelity(g_tr["tracks"][0:hi], g_tr["vis"][0:hi],
-                                       cA_tr["tracks"], cA_tr["vis"])
-
-    # motion_B (two-sided only) ----------------------------------------------
+            motion_A_mf = motion_fidelity(g_tr["tracks"][0:hi], g_tr["vis"][0:hi],
+                                          cA_tr["tracks"], cA_tr["vis"])
     if two_sided and Kok:
         cB_tr = feats.get(condB, TRACK_NS, cache=True) if condB.exists() else None
         g_ok = feats.has(gen_video, TRACK_NS)
@@ -325,8 +392,8 @@ def compute_row(feats: Feats, gen_video: Path, endpoint: str, sided: str,
             g_tr = gen(TRACK_NS)
             T = g_tr["tracks"].shape[0]
             lo = T - n_suf - K
-            motion_B = motion_fidelity(g_tr["tracks"][lo:T], g_tr["vis"][lo:T],
-                                       cB_tr["tracks"], cB_tr["vis"])
+            motion_B_mf = motion_fidelity(g_tr["tracks"][lo:T], g_tr["vis"][lo:T],
+                                          cB_tr["tracks"], cB_tr["vis"])
 
     # seam_free (from the v4 rows) -------------------------------------------
     seam_free = NAN
@@ -357,6 +424,8 @@ def compute_row(feats: Feats, gen_video: Path, endpoint: str, sided: str,
         "identity_B": identity_B,
         "motion_A": motion_A,
         "motion_B": motion_B,
+        "motion_A_mf": motion_A_mf,
+        "motion_B_mf": motion_B_mf,
         "seam_free": seam_free,
         "missing": sorted(missing),
     }
@@ -405,11 +474,17 @@ def process_variant(fs: FeatureStore, feats: Feats, variant_rel: str) -> dict:
 
 def _coverage(rows: list[dict]) -> dict:
     def fin(key):
-        return sum(1 for r in rows if isinstance(r[key], float) and math.isfinite(r[key]))
+        return sum(1 for r in rows if isinstance(r[key], (int, float))
+                   and math.isfinite(r[key]))
+
+    def avg(key):
+        xs = [r[key] for r in rows if isinstance(r[key], (int, float)) and math.isfinite(r[key])]
+        return round(sum(xs) / len(xs), 4) if xs else None
 
     n = len(rows)
-    n_two = sum(1 for r in rows if r["n_suf"] > 0)
-    n_motionA = sum(1 for r in rows if r["n_pre"] >= 9)
+    n_two = sum(1 for r in rows if r["n_suf"] > 0)          # motion_B / motion_B_mf defined set
+    n_motionA = sum(1 for r in rows if r["n_pre"] >= 4)     # v2 motion_A defined set
+    n_motionA_mf = sum(1 for r in rows if r["n_pre"] >= 9)  # v1 motion_A_mf defined set
     return {
         "n": n,
         "identity_A": fin("identity_A"),
@@ -417,8 +492,14 @@ def _coverage(rows: list[dict]) -> dict:
         "identity_B_defined": n_two,
         "motion_A": fin("motion_A"),
         "motion_A_defined": n_motionA,
+        "motion_A_mean": avg("motion_A"),
         "motion_B": fin("motion_B"),
         "motion_B_defined": n_two,
+        "motion_B_mean": avg("motion_B"),
+        "motion_A_mf": fin("motion_A_mf"),
+        "motion_A_mf_defined": n_motionA_mf,
+        "motion_B_mf": fin("motion_B_mf"),
+        "motion_B_mf_defined": n_two,
         "seam_free": fin("seam_free"),
     }
 
@@ -462,6 +543,8 @@ def write_meta(eval_dir: Path, eval_id: str, seq: int, created: str,
         f"created: '{created}'",
         "machine: dai (login CPU, numpy over stored features)",
         f"instrument: scripts/handoff_metrics.py @ {_git_sha()}",
+        f"definitions_version: {DEFINITIONS_VERSION}",
+        f"definitions_reason: {json.dumps(DEFINITIONS_REASON)}",
         "definitions:",
     ]
     for d in DEFINITIONS:
@@ -478,7 +561,11 @@ def write_meta(eval_dir: Path, eval_id: str, seq: int, created: str,
             f"identity_A: {c['identity_A']}",
             f"identity_B: {c['identity_B']}/{c['identity_B_defined']}",
             f"motion_A: {c['motion_A']}/{c['motion_A_defined']}",
+            f"motion_A_mean: {c['motion_A_mean']}",
             f"motion_B: {c['motion_B']}/{c['motion_B_defined']}",
+            f"motion_B_mean: {c['motion_B_mean']}",
+            f"motion_A_mf: {c['motion_A_mf']}/{c['motion_A_mf_defined']}",
+            f"motion_B_mf: {c['motion_B_mf']}/{c['motion_B_mf_defined']}",
             f"seam_free: {c['seam_free']}",
         ]) + "}")
     meta_p = eval_dir / "meta.yaml"
@@ -552,7 +639,9 @@ def main(argv=None) -> int:
         c = res["coverage"]
         print(f"[arm] {res['harness_arm']:<34} n={c['n']:>4}  "
               f"idA={c['identity_A']}  idB={c['identity_B']}/{c['identity_B_defined']}  "
-              f"mA={c['motion_A']}/{c['motion_A_defined']}  mB={c['motion_B']}/{c['motion_B_defined']}  "
+              f"mA={c['motion_A']}/{c['motion_A_defined']}(mean {c['motion_A_mean']})  "
+              f"mB={c['motion_B']}/{c['motion_B_defined']}(mean {c['motion_B_mean']})  "
+              f"mA_mf={c['motion_A_mf']}/{c['motion_A_mf_defined']} mB_mf={c['motion_B_mf']}/{c['motion_B_mf_defined']}  "
               f"seam={c['seam_free']}  [{c['grid_type']}] seam_src={c['seam_source']}")
 
     if args.dry_run:
