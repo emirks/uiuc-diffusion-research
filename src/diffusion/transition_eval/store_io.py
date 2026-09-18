@@ -27,14 +27,12 @@ extractor / tracker / scorer calls stay in ``features.py`` / ``motion.py`` /
 
 from __future__ import annotations
 
-import datetime
-import os
 import pathlib
 import socket
 
 import numpy as np
 
-from ..feature_store import FeatureStore, NS_ARRAYS
+from ..feature_store import FeatureStore
 
 # The three namespaces the scoring path reads / writes (store/FEATURES.md).
 DINO_NS = "dino_cls@dinov2b-r256"
@@ -71,21 +69,14 @@ class Control:
         return f"Control({self.gen}, {self.name!r})"
 
 
-def _now_iso() -> str:
-    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-
-
-def _primary_array(ns: str, files) -> str | None:
-    return next((a for a in NS_ARRAYS.get(ns, ()) if a in files),
-                files[0] if files else None)
-
-
 class HarnessStore:
     """Adapter over :class:`FeatureStore` for the scoring path. Reads / writes
     the three eval namespaces by *identity* — a real video path, or a control
-    persisted next to its gen. Real-video writes go through ``FeatureStore.put``
-    (self-describing sidecar, atomic, sidecar-last); control writes mirror the
-    same conventions in :meth:`_put_control`."""
+    persisted next to its gen. Both routes go through the library: a real video
+    is ``store.put(path, ns, …)``; a control is ``store.put(gen, ns, …,
+    variant=name)``, which writes ``<ns>.ctl-<name>`` with the gen's identity in
+    the sidecar (self-describing, atomic, sidecar-last). No I/O is reimplemented
+    here — the store owns the control-file layout."""
 
     def __init__(self, store: FeatureStore | pathlib.Path | str, code_sha: str = ""):
         self.store = store if isinstance(store, FeatureStore) else FeatureStore(store)
@@ -98,29 +89,34 @@ class HarnessStore:
     # -- presence / read / write, routed by identity --------------------------
     def has(self, identity, ns: str) -> bool:
         if isinstance(identity, Control):
-            npz, side = self._control_paths(identity, ns)
-            return npz.exists() and side.exists()
+            return self.store.has(identity.gen, ns, variant=identity.name)
         return self.store.has(identity.path, ns)
 
     def get(self, identity, ns: str) -> dict[str, np.ndarray] | None:
         """Arrays for (identity, ns), or ``None`` on a miss."""
         if isinstance(identity, Control):
-            npz, side = self._control_paths(identity, ns)
-            if not (npz.exists() and side.exists()):
+            if not self.store.has(identity.gen, ns, variant=identity.name):
                 return None
-            z = np.load(npz)
-            return {k: z[k] for k in z.files}
+            return self.store.get(identity.gen, ns, variant=identity.name)
         if not self.store.has(identity.path, ns):
             return None
         return self.store.get(identity.path, ns)
 
     def put(self, identity, ns: str, arrays: dict[str, np.ndarray]) -> pathlib.Path:
         if isinstance(identity, Control):
-            return self._put_control(identity, ns, arrays)
+            # the gen's identity carried in the control sidecar; reuse the gen's
+            # already-known sha (its sidecar, else SHA256SUMS) — never re-hash.
+            return self.store.put(
+                identity.gen, ns, arrays,
+                {"origin": f"control:{identity.name}", "code_sha": self.code_sha,
+                 "host": socket.gethostname()},
+                variant=identity.name,
+                video_sha256=self._gen_sha(identity.gen, ns))
         return self.store.put(
             identity.path, ns, arrays,
             {"origin": "extracted", "code_sha": self.code_sha,
-             "host": socket.gethostname()})
+             "host": socket.gethostname()},
+            video_sha256=self.store.sha_from_sums(identity.path))
 
     def key_str(self, identity) -> str:
         """A stable human-readable bundle key (persistence no longer uses it)."""
@@ -128,64 +124,16 @@ class HarnessStore:
             return f"control:{identity.name}:{identity.gen.stem}"
         return str(identity.path)
 
-    # -- control file layout + atomic write (mirrors FeatureStore.put) --------
-    def _control_paths(self, identity: "Control", ns: str) -> tuple[pathlib.Path, pathlib.Path]:
-        base = self.store.path(identity.gen, ns)          # <feat_dir>/<ns>.npz
-        d = base.parent
-        return d / f"{ns}.ctl-{identity.name}.npz", d / f"{ns}.ctl-{identity.name}.json"
-
-    def _gen_video_identity(self, gen: pathlib.Path, ns: str) -> dict:
-        """The gen video's identity fields (sha/size/mtime) reused for the
-        control sidecar so ``FeatureStore.fsck`` (which stats the item dir's
-        gen video) reads a control as fresh. Prefer the gen's own sidecar
-        (already migrated) over a fresh stat; never re-hashes the video."""
+    def _gen_sha(self, gen: pathlib.Path, ns: str) -> str | None:
+        """The gen video's sha, reused for the control sidecar so ``fsck``
+        (stats the item folder's gen mp4) reads a control as fresh WITHOUT
+        re-hashing. Prefer the gen's own sidecar, then ``SHA256SUMS``; ``None``
+        lets the store hash the gen (only when neither exists)."""
         try:
             if self.store.has(gen, ns):
-                m = self.store.read_meta(gen, ns)
-                return {"video_sha256": m.get("video_sha256"),
-                        "video_size": m.get("video_size"),
-                        "video_mtime_ns": m.get("video_mtime_ns")}
+                s = self.store.read_meta(gen, ns).get("video_sha256")
+                if s:
+                    return s
         except Exception:
             pass
-        st = gen.stat()
-        return {"video_sha256": None, "video_size": st.st_size,
-                "video_mtime_ns": st.st_mtime_ns}
-
-    def _put_control(self, identity: "Control", ns: str,
-                     arrays: dict[str, np.ndarray]) -> pathlib.Path:
-        import json
-        npz, side = self._control_paths(identity, ns)
-        d = npz.parent
-        d.mkdir(parents=True, exist_ok=True)
-        pid = os.getpid()
-
-        tmp_npz = d / f"{npz.name}.tmp-{pid}"
-        if tmp_npz.exists():
-            tmp_npz.unlink()
-        with open(tmp_npz, "wb") as f:
-            np.savez_compressed(f, **arrays)
-        os.replace(tmp_npz, npz)                          # atomic move into place
-
-        z = np.load(npz)
-        prim = _primary_array(ns, z.files)
-        rel_gen = str(identity.gen.resolve().relative_to(self.store.root))
-        vid = self._gen_video_identity(identity.gen, ns)
-        sc = {
-            "ns": ns,
-            "video": rel_gen,                             # the gen this control derives from
-            "video_sha256": vid["video_sha256"],
-            "video_size": vid["video_size"],
-            "video_mtime_ns": vid["video_mtime_ns"],
-            "host": socket.gethostname(),                 # synthesized here, this run
-            "control": identity.name,
-            "code_sha": self.code_sha,
-            "created": _now_iso(),
-            "origin": f"control:{identity.name}",
-            "shape": list(z[prim].shape) if prim is not None else [],
-            "dtype": str(z[prim].dtype) if prim is not None else "",
-            "bytes": npz.stat().st_size,
-        }
-        tmp_json = d / f"{side.name}.tmp-{pid}"
-        tmp_json.write_text(json.dumps(sc, indent=2))
-        os.replace(tmp_json, side)                        # sidecar written LAST
-        return npz
+        return self.store.sha_from_sums(gen)

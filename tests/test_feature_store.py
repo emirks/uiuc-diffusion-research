@@ -294,3 +294,88 @@ def test_population_targets_and_subset_sha256sums(tmp_path):
     assert cov[NS]["of"] == 2 and cov[NS]["have"] == 1
     rep = store.fsck(cls, videos=targets[1]["videos"])
     assert rep["ok"] and rep["n_videos"] == 2 and rep["n_features"] == 1
+
+
+# --- control variants (<ns>.ctl-<name>) first-class in put/coverage/fsck ------
+def test_put_control_variant_roundtrip_and_sidecar(tmp_path):
+    store = FeatureStore(tmp_path)
+    videos = tmp_path / "gens" / "A" / "01_v__x" / "videos"
+    gen = _mp4(videos / "g__s42.mp4", b"genbytes")
+    store.put(gen, NS, _feats(), {"host": "dai", "code_sha": "c0", "origin": "extracted"})
+    gsha = json.loads(store.sidecar(gen, NS).read_text())["video_sha256"]
+    ctl = {"feats": np.ones((5, 8), np.float32)}
+    p = store.put(gen, NS, ctl, {"host": "dai", "code_sha": "c0",
+                                 "origin": "control:lerp"}, variant="lerp",
+                  video_sha256=gsha)
+    assert p.name == f"{NS}.ctl-lerp.npz"
+    assert store.has(gen, NS, variant="lerp") and store.has(gen, NS)   # separate files
+    assert np.array_equal(store.get(gen, NS, variant="lerp")["feats"], ctl["feats"])
+    sc = store.read_meta(gen, NS, variant="lerp")
+    assert sc["control"] == "lerp" and sc["origin"] == "control:lerp"
+    assert sc["video"] == "gens/A/01_v__x/videos/g__s42.mp4"
+    assert sc["video_sha256"] == gsha and sc["shape"] == [5, 8]
+    # coverage: the real-ns cell counts only the real file; controls report apart
+    cov = store.coverage(videos)
+    assert cov[NS]["have"] == 1
+    assert cov["controls"]["have"] == 1 and cov["controls"]["names"] == ["lerp"]
+    # fsck: control is first-class + clean + counted apart; the ".ctl-lerp"
+    # pseudo-namespace never enters the host tracking (no spurious mixed/legacy)
+    rep = store.fsck(videos, rehash=True)
+    assert rep["ok"] and rep["n_features"] == 1 and rep["n_controls"] == 1
+    assert not rep["stale"] and not rep["mixed_hosts"] and not rep["legacy_ns"]
+
+
+def test_control_orphan_npz_is_flagged(tmp_path):
+    store = FeatureStore(tmp_path)
+    videos = tmp_path / "g" / "v" / "videos"
+    gen = _mp4(videos / "g__s42.mp4")
+    store.put(gen, NS, _feats(), {"host": "h", "code_sha": "x", "origin": "extracted"})
+    store.put(gen, NS, {"feats": np.ones((2, 8), np.float32)},
+              {"host": "h", "origin": "control:hold"}, variant="hold")
+    store.sidecar(gen, NS, variant="hold").unlink()       # interrupted control write
+    assert not store.has(gen, NS, variant="hold")
+    rep = store.fsck(videos)
+    assert f"g__s42/{NS}.ctl-hold.npz" in rep["orphan_npz"] and not rep["ok"]
+
+
+def test_control_stale_against_gen_identity(tmp_path):
+    store = FeatureStore(tmp_path)
+    videos = tmp_path / "g" / "v" / "videos"
+    gen = _mp4(videos / "g__s42.mp4", b"orig")
+    store.put(gen, NS, _feats(), {"host": "h", "origin": "extracted"})
+    gsha = json.loads(store.sidecar(gen, NS).read_text())["video_sha256"]
+    store.put(gen, NS, {"feats": np.ones((3, 8), np.float32)},
+              {"host": "h", "origin": "control:lerp"}, variant="lerp", video_sha256=gsha)
+    assert store.fsck(videos)["ok"]
+    gen.write_bytes(b"changed-after-extract")             # gen video changes
+    rep = store.fsck(videos)                              # control stale-checks vs the gen mp4
+    assert any(".ctl-lerp (stat drift)" in s for s in rep["stale"]) and not rep["ok"]
+
+
+# --- sha_from_sums + precomputed-sha put (skip re-hash) ------------------------
+def test_sha_from_sums_and_skip_rehash(tmp_path):
+    store = FeatureStore(tmp_path)
+    vd = tmp_path / "g" / "v" / "videos"
+    v = _mp4(vd / "a__s42.mp4", b"payload")
+    assert store.sha_from_sums(v) is None                 # no SHA256SUMS yet
+    sf.write_sha256sums(store, vd)
+    assert store.sha_from_sums(v) == sha256_file(v)
+    # an explicit (deliberately wrong) sha is honored verbatim => no re-hash
+    store.put(v, NS, _feats(), {"host": "h", "origin": "extracted"},
+              video_sha256="deadbeef")
+    assert store.read_meta(v, NS)["video_sha256"] == "deadbeef"
+    # feeding sha_from_sums matches a fresh hash
+    v2 = _mp4(vd / "b__s42.mp4", b"payload2")
+    sf.write_sha256sums(store, vd)
+    store.put(v2, NS, _feats(), {"host": "h", "origin": "extracted"},
+              video_sha256=store.sha_from_sums(v2))
+    assert store.read_meta(v2, NS)["video_sha256"] == sha256_file(v2)
+
+
+def test_sha_from_sums_clip_folder(tmp_path):
+    """corpus clips (not under a videos/ dir) read the folder's own SHA256SUMS."""
+    store = FeatureStore(tmp_path)
+    cls = tmp_path / "corpus" / "acid"
+    c = _mp4(cls / "acid_0.mp4", b"acidbytes")
+    sf.write_sha256sums(store, cls)
+    assert store.sha_from_sums(c) == sha256_file(c)
