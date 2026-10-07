@@ -14,7 +14,7 @@ set -uo pipefail
 source ~/.bashrc || true
 LAB=/taiga/illinois/eng/cs/jrehg/users/emirkisa
 DR=$LAB/diffusion-research
-ARM="${ARM:?}"; REG="${REG:?}"; OUT="${OUT:?}"; NCHUNKS="${NCHUNKS:?}"; W="${W:-6.0}"
+ARM="${ARM:?}"; REG="${REG:?}"; OUT="${OUT:?}"; NCHUNKS="${NCHUNKS:?}"; W="${W:-6.0}"; NULLKIND="${NULLKIND:-crossfade}"
 ID=${SLURM_ARRAY_TASK_ID:-0}; SEED=$(( 42 + ID / NCHUNKS )); CHUNK=$(( ID % NCHUNKS ))
 sleep $(( (ID % 16) * 8 ))
 source "$LAB/envs-aarch64/activate"
@@ -24,8 +24,8 @@ export HF_HOME=$LAB/cache/huggingface TOKENIZERS_PARALLELISM=false
 export DCG_SCRATCH=/tmp/$USER/dcg_v3_${SLURM_JOB_ID:-0}
 mkdir -p "$DR/$OUT/videos" "$DCG_SCRATCH"
 cd "$DR"
-echo "[v3-dcg] host=$(hostname) arm=$ARM w=$W seed=$SEED chunk=$CHUNK/$NCHUNKS frames=${GEN_FRAMES:-121} prefix=${GEN_PREFIX_FRAMES:-9} $(date -Is)"
-python scripts/grid_v3/gen_dcg_v3.py --registry "$REG" --arm "$ARM" --w "$W" --seed "$SEED" --chunk "$CHUNK" --num-chunks "$NCHUNKS" --out-root "$OUT"
+echo "[v3-dcg] host=$(hostname) arm=$ARM w=$W null=$NULLKIND seed=$SEED chunk=$CHUNK/$NCHUNKS frames=${GEN_FRAMES:-121} prefix=${GEN_PREFIX_FRAMES:-9} $(date -Is)"
+python scripts/grid_v3/gen_dcg_v3.py --registry "$REG" --arm "$ARM" --w "$W" --null-kind "$NULLKIND" --seed "$SEED" --chunk "$CHUNK" --num-chunks "$NCHUNKS" --out-root "$OUT"
 rc=$?
 echo "[v3-dcg] done $(date -Is)"
 exit $rc

@@ -74,7 +74,7 @@ def register():
                "--run", spec["run"], "--code", spec["code"], "--notes",
                f"grid v3 (design 3.0.0) {tier} tier, family prompts/{FAMILIES[tier][FAMKEY[fam]]}; "
                + ("EffectData tier: native 81 f, frame-0 anchor (GEN_FRAMES=81 GEN_PREFIX_FRAMES=1); " if fam == "ed" else
-                  f"139 kept rows hardlinked from gens/{spec['old'][tier]} (byte-identical inputs); ")
+                  (f"139 kept rows hardlinked from gens/{spec['old'][tier]} (byte-identical inputs); " if spec.get("old", {}).get(tier) else ""))
                + "seeds 42/43; DeltaAI GH200"]
         if spec.get("step"):
             cmd += ["--step", str(spec["step"])]

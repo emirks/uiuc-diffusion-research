@@ -72,10 +72,19 @@ def main() -> None:
     ap.add_argument("--registry", required=True)
     ap.add_argument("--arm", required=True)
     ap.add_argument("--w", type=float, default=6.0)
+    ap.add_argument("--null-kind", default="crossfade",
+                    choices=["crossfade", "vae_lerp", "identity", "endpoint_only", "target_x0", "hold_swap", "hold_start"],
+                    help="DCG null construction (default crossfade = pixel dissolve of the reference's endpoints; "
+                         "hold_swap = hold-start / short centered crossfade / hold-end; hold_start = the reference's first frame held for all frames).")
+    ap.add_argument("--holdswap-window", type=int, default=8,
+                    help="hold_swap null only: crossfade window width in frames (default 8; n-1 == crossfade).")
     ap.add_argument("--seed", type=int, required=True)
     ap.add_argument("--chunk", type=int, default=0)
     ap.add_argument("--num-chunks", type=int, default=1)
     ap.add_argument("--out-root", required=True)
+    ap.add_argument("--dry-run", action="store_true",
+                    help="List pending rows + resolved conditioning paths (prefix/suffix/reference), then exit "
+                         "WITHOUT loading any model.")
     args = ap.parse_args()
 
     rows = [json.loads(l) for l in Path(args.registry).read_text().splitlines() if l.strip()]
@@ -87,15 +96,45 @@ def main() -> None:
     vids.mkdir(parents=True, exist_ok=True)
     scratch = Path(os.environ.get("DCG_SCRATCH", str(out / "_runner"))) / f"s{args.seed}_c{args.chunk}"
     pending = [r for r in todo if not (vids / f"{r['item_id']}__s{args.seed}.mp4").exists()]
-    print(f"[dcg-v3] arm={args.arm} w={args.w} seed={args.seed} chunk={args.chunk}/{args.num_chunks} "
+    wtag = f" hsW={args.holdswap_window}" if args.null_kind == "hold_swap" else ""
+    print(f"[dcg-v3] arm={args.arm} w={args.w} null={args.null_kind}{wtag} seed={args.seed} chunk={args.chunk}/{args.num_chunks} "
           f"rows={len(todo)} pending={len(pending)} frames={FRAMES} prefix={ec.prefix_frames()} gs={GS} stg={STG} adapter={ADAPTER.name}", flush=True)
+
+    if args.dry_run:
+        # List every row in this (arm, chunk) with its resolved conditioning paths; no model load.
+        n_missing = 0
+        for r in todo:
+            done = (vids / f"{r['item_id']}__s{args.seed}.mp4").exists()
+            checks: list[tuple[str, str, bool]] = []  # (role, path_or_err, ok)
+            try:
+                paths = ec.cond_paths(r["endpoint"], r["sided"])  # raises FileNotFoundError if a window is missing
+                checks.append(("prefix", str(paths["prefix"]), Path(paths["prefix"]).exists()))
+                if r["sided"] == "two":
+                    checks.append(("suffix", str(paths["suffix"]), Path(paths["suffix"]).exists()))
+            except Exception as e:  # noqa: BLE001
+                checks.append(("prefix/suffix", f"ERROR: {e}", False))
+            try:
+                ref = ref_clip_path(r["reference"])
+                checks.append(("reference", ref, Path(ref).exists()))
+            except Exception as e:  # noqa: BLE001
+                checks.append(("reference", f"ERROR: {e}", False))
+            miss = [nm for nm, _, ok in checks if not ok]
+            n_missing += len(miss)
+            status = "DONE " if done else "PEND "
+            print(f"[dry] {status}{r['item_id']} arm={r['arm']} ep={r['endpoint']} sided={r['sided']} ref={r['reference']}", flush=True)
+            for nm, pth, ok in checks:
+                print(f"        {nm:12s} [{'ok' if ok else 'MISSING'}] {pth}", flush=True)
+        print(f"[dry] arm={args.arm} rows={len(todo)} pending={len(pending)} missing_cond_paths={n_missing}", flush=True)
+        return
+
     if not pending:
         return
 
     samples = [make_sample(r) for r in pending]
     cfg = ValidationConfig(samples=samples, video_dims=RES, frame_rate=24.0, seed=args.seed,
                            inference_steps=30, guidance_scale=GS, stg_scale=STG, stg_blocks=[29], stg_mode="stg_v",
-                           generate_audio=False, dcg_scale=args.w, dcg_null_kind="crossfade")
+                           generate_audio=False, dcg_scale=args.w, dcg_null_kind=args.null_kind,
+                           dcg_holdswap_window=args.holdswap_window)
     cfg.dcg_use_null_as_reference = False
     cfg.dcg_rescale = 0.0
     device = torch.device("cuda")

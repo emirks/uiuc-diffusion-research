@@ -21,9 +21,30 @@
   "store/gens/032_dualforce_dcg_w6/03_neutral_v3__dai",
   "store/gens/032_dualforce_dcg_w6/04_neutral_v3ed81__dai",
   "store/gens/032_dualforce_dcg_w6/05_effect_v3__dai",
-  "store/gens/032_dualforce_dcg_w6/06_effect_v3ed81__dai"
+  "store/gens/032_dualforce_dcg_w6/06_effect_v3ed81__dai",
+  "store/gens/030_dualforce_dcg_w1p5/03_neutral_v3__dai",
+  "store/gens/030_dualforce_dcg_w1p5/04_neutral_v3ed81__dai",
+  "store/gens/031_dualforce_dcg_w3/03_neutral_v3__dai",
+  "store/gens/031_dualforce_dcg_w3/04_neutral_v3ed81__dai",
+  "store/gens/003_refvfx/04_effect_v3__cc",
+  "store/gens/042_wan_flf2v/01_effect_v3__cc",
+  "store/gens/043_wan_vace/01_effect_v3__cc",
+  "store/gens/011_vap/06_neutral_v3__dai",
+  "store/gens/012_vfxmaster/06_neutral_v3__dai",
+  "store/gens/003_refvfx/05_neutral_v3__dai",
+  "store/gens/003_refvfx/06_neutral_v3_teg__cc",
+  "store/gens/042_wan_flf2v/02_neutral_v3__cc",
+  "store/gens/043_wan_vace/02_neutral_v3__cc",
+  "store/gens/040_dualforce_dcg_emptynull_w6/05_neutral_v3zs__dai",
+  "store/gens/040_dualforce_dcg_emptynull_w6/04_neutral_v3ed81__dai",
+  "store/gens/040_dualforce_dcg_emptynull_w6/03_neutral_v3__dai",
+  "store/gens/030_dualforce_dcg_w1p5/05_effect_v3__dai",
+  "store/gens/030_dualforce_dcg_w1p5/06_effect_v3ed81__dai",
+  "store/gens/031_dualforce_dcg_w3/06_effect_v3ed81__dai",
+  "store/gens/031_dualforce_dcg_w3/05_effect_v3__dai",
+  "store/gens/044_dualforce_dcg_holdstart_w6/01_neutral_v3zs10__dai"
  ],
- "n_gens": 7242,
+ "n_gens": 13316,
  "corpus": {
   "manifest": "data/processed/transitions_std121/corpus_manifest.json",
   "n": 677,
@@ -1066,5 +1087,81 @@
    "eval_ladder/conds/x_ray_1_start9.mp4"
   ],
   "note": "start9 for all 204 endpoints; end9 only for the 150 endpoints that have one. The 54 without end9 (51 EffectData-tier + 3 DAVIS) are one-sided-only endpoints \u2014 nothing is missing. ED-tier rows condition on frame 0 of start9 (GEN_PREFIX_FRAMES=1), so identity-A for them is scored against that frame; motion-A is undefined there."
- }
+ },
+ "appended": [
+  {
+   "date": "2026-09-19",
+   "variants": [
+    "store/gens/030_dualforce_dcg_w1p5/03_neutral_v3__dai",
+    "store/gens/030_dualforce_dcg_w1p5/04_neutral_v3ed81__dai"
+   ],
+   "why": "DCG w-sweep arms (misc/2026-09-19_dcg_sweep_metrics)"
+  },
+  {
+   "date": "2026-09-19",
+   "variants": [
+    "store/gens/031_dualforce_dcg_w3/03_neutral_v3__dai"
+   ],
+   "why": "DCG w-sweep (misc/2026-09-19_dcg_sweep_metrics)"
+  },
+  {
+   "date": "2026-09-19",
+   "variants": [
+    "store/gens/031_dualforce_dcg_w3/06_effect_v3ed81__dai"
+   ],
+   "why": "DCG w-sweep (misc/2026-09-19_dcg_sweep_metrics)"
+  },
+  {
+   "date": "2026-09-19",
+   "variants": [
+    "store/gens/031_dualforce_dcg_w3/04_neutral_v3ed81__dai"
+   ],
+   "why": "DCG w-sweep (misc/2026-09-19_dcg_sweep_metrics)"
+  },
+  {
+   "date": "2026-09-20",
+   "variants": [
+    "store/gens/003_refvfx/04_effect_v3__cc",
+    "store/gens/042_wan_flf2v/01_effect_v3__cc",
+    "store/gens/043_wan_vace/01_effect_v3__cc"
+   ],
+   "why": "TEG baselines, two-sided zero-shot scoring (misc/2026-09-20_teg_baselines)"
+  },
+  {
+   "date": "2026-09-23",
+   "variants": [
+    "store/gens/011_vap/06_neutral_v3__dai",
+    "store/gens/012_vfxmaster/06_neutral_v3__dai",
+    "store/gens/003_refvfx/05_neutral_v3__dai",
+    "store/gens/003_refvfx/06_neutral_v3_teg__cc",
+    "store/gens/042_wan_flf2v/02_neutral_v3__cc",
+    "store/gens/043_wan_vace/02_neutral_v3__cc"
+   ],
+   "why": "neutral twins of the six prior works (misc/2026-09-21_neutral_baselines) for metrics v5 Round 2"
+  },
+  {
+   "date": "2026-09-24",
+   "variants": [
+    "store/gens/040_dualforce_dcg_emptynull_w6/05_neutral_v3zs__dai",
+    "store/gens/040_dualforce_dcg_emptynull_w6/04_neutral_v3ed81__dai"
+   ],
+   "n": 442,
+   "why": "empty-null w6 zero-shot round (misc/2026-09-24_dcg_emptynull_gridv3)"
+  },
+  {
+   "date": "2026-09-25",
+   "gen_variants": [
+    "store/gens/044_dualforce_dcg_holdstart_w6/01_neutral_v3zs10__dai"
+   ],
+   "n_gens": 10,
+   "note": "hold_start null 10-row probe (misc/2026-09-24_dcg_emptynull_gridv3/holdstart_probe)"
+  }
+ ],
+ "removed": [
+  {
+   "date": "2026-09-20",
+   "variant": "store/gens/031_dualforce_dcg_w3/06_effect_v3ed81__dai",
+   "why": "owner: neutral arms only (no effect arms) \u2014 misc/2026-09-19_dcg_sweep_metrics"
+  }
+ ]
 }

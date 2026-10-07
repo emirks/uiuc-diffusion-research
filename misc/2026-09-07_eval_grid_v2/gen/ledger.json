@@ -158,5 +158,121 @@
   "family": "013_ctt_v3ed_effect",
   "submitted": "2026-09-07",
   "dependency": null
+ },
+ "dualforce_dcg_w1p5_neutral_v3": {
+  "job": "3173571",
+  "subentry": "store/gens/030_dualforce_dcg_w1p5/03_neutral_v3__dai",
+  "tasks": 72,
+  "account": "bgjg-dtai-gh",
+  "tier": "neutral",
+  "family": "010_ctt_v3_neutral",
+  "submitted": "2026-09-18",
+  "dependency": null
+ },
+ "dualforce_dcg_w1p5_neutral_v3ed81": {
+  "job": "3173572",
+  "subentry": "store/gens/030_dualforce_dcg_w1p5/04_neutral_v3ed81__dai",
+  "tasks": 14,
+  "account": "bgjg-dtai-gh",
+  "tier": "neutral",
+  "family": "012_ctt_v3ed_neutral",
+  "submitted": "2026-09-18",
+  "dependency": null
+ },
+ "dualforce_dcg_w3_neutral_v3": {
+  "job": "3173573",
+  "subentry": "store/gens/031_dualforce_dcg_w3/03_neutral_v3__dai",
+  "tasks": 72,
+  "account": "bgjg-dtai-gh",
+  "tier": "neutral",
+  "family": "010_ctt_v3_neutral",
+  "submitted": "2026-09-18",
+  "dependency": null
+ },
+ "dualforce_dcg_w3_neutral_v3ed81": {
+  "job": "3173574",
+  "subentry": "store/gens/031_dualforce_dcg_w3/04_neutral_v3ed81__dai",
+  "tasks": 14,
+  "account": "bgjg-dtai-gh",
+  "tier": "neutral",
+  "family": "012_ctt_v3ed_neutral",
+  "submitted": "2026-09-18",
+  "dependency": null
+ },
+ "dualforce_dcg_w1p5_effect_v3": {
+  "job": "3173575",
+  "subentry": "store/gens/030_dualforce_dcg_w1p5/05_effect_v3__dai",
+  "tasks": 72,
+  "account": "bgjg-dtai-gh",
+  "tier": "effect",
+  "family": "011_ctt_v3_effect",
+  "submitted": "2026-09-18",
+  "dependency": null,
+  "resumed_job_2026-09-24": "3203646"
+ },
+ "dualforce_dcg_w1p5_effect_v3ed81": {
+  "job": "3173576",
+  "subentry": "store/gens/030_dualforce_dcg_w1p5/06_effect_v3ed81__dai",
+  "tasks": 14,
+  "account": "bgjg-dtai-gh",
+  "tier": "effect",
+  "family": "013_ctt_v3ed_effect",
+  "submitted": "2026-09-18",
+  "dependency": null,
+  "resumed_job_2026-09-24": "3203647"
+ },
+ "dualforce_dcg_w3_effect_v3": {
+  "job": "3173577",
+  "subentry": "store/gens/031_dualforce_dcg_w3/05_effect_v3__dai",
+  "tasks": 72,
+  "account": "bgjg-dtai-gh",
+  "tier": "effect",
+  "family": "011_ctt_v3_effect",
+  "submitted": "2026-09-18",
+  "dependency": null,
+  "resumed_job_2026-09-24": "3203648"
+ },
+ "dualforce_dcg_w3_effect_v3ed81": {
+  "job": "3173578",
+  "subentry": "store/gens/031_dualforce_dcg_w3/06_effect_v3ed81__dai",
+  "tasks": 14,
+  "account": "bgjg-dtai-gh",
+  "tier": "effect",
+  "family": "013_ctt_v3ed_effect",
+  "submitted": "2026-09-18",
+  "dependency": null
+ },
+ "dualforce_dcg_emptynull_w6_neutral_v3": {
+  "job": "3203643",
+  "jobs": {
+   "zero_shot": "3203643",
+   "seen_unseen": "3203645",
+   "superseded": [
+    "3203457",
+    "3203459"
+   ]
+  },
+  "subentry": "store/gens/040_dualforce_dcg_emptynull_w6/03_neutral_v3__dai",
+  "tasks": 94,
+  "account": "bgms-dtai-gh (zs) + bgjg-dtai-gh (seen/unseen, --nice=500)",
+  "tier": "neutral",
+  "family": "010_ctt_v3_neutral",
+  "submitted": "2026-09-24",
+  "dependency": null,
+  "note": "misc/2026-09-24_dcg_emptynull_gridv3: split registries reg_hf_zs (119 rows, NCHUNKS=20) + reg_hf_rest (163 rows, NCHUNKS=27); 30 seed-42 zs clips hardlinked from gens/040/01"
+ },
+ "dualforce_dcg_emptynull_w6_neutral_v3ed81": {
+  "job": "3203644",
+  "subentry": "store/gens/040_dualforce_dcg_emptynull_w6/04_neutral_v3ed81__dai",
+  "tasks": 26,
+  "account": "bgms-dtai-gh",
+  "tier": "neutral",
+  "family": "012_ctt_v3ed_neutral",
+  "submitted": "2026-09-24",
+  "dependency": null,
+  "note": "misc/2026-09-24_dcg_emptynull_gridv3: NCHUNKS=13; 30 seed-42 zs clips hardlinked from gens/040/02",
+  "superseded": [
+   "3203458"
+  ]
  }
 }
