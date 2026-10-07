@@ -1,0 +1,18 @@
+id: 026_wan_flf2v
+seq: 26
+shelf: runs
+external: true
+created: 2026-09-20
+machine: n/a (not trained by us)
+source: Wan-AI/Wan2.1-FLF2V-14B-720P — official Wan2.1 release, run as BASE (no refVFX LoRA, no CausVid)
+inputs: {}
+model: Wan2.1-FLF2V-14B-720P base (14B first-last-frame-to-video). Same bundle as runs/003_refvfx's base model.
+steps_trained: n/a (released checkpoint)
+checkpoints: symlink -> $LAB/cache/refvfx/weights/Wan2.1-FLF2V-14B-720P (durable; also at /work/nvme/bgms/emirkisa/refvfx/weights on DeltaAI)
+env: aarch64 $LAB/envs-aarch64/refvfx ; x86/CC $LAB/envs/refvfx-x86 (both editable-install the vendored DiffSynth-Studio)
+code: worker misc/2026-09-20_teg_baselines/gen_worker_flf2v.py (mirrors refVFX authors' run_base_model.py::build_base_pipeline); DiffSynth vendored at misc/refvfx_baseline/code/refVFX_trainer/DiffSynth-Studio
+notes: >
+  Two-endpoint (TEG) baseline: pure first-last-frame interpolation under the effect prompt, NO
+  reference/demo video (use_reference: false). Wan2.1 flf2v defaults: 50 steps, cfg 5.0,
+  sigma_shift 16, 81 f, 480x640, output 16 fps, no offload. Negative = DiffSynth's canonical Wan
+  default (Chinese). Disclosure: 480p on a 720p-trained model.

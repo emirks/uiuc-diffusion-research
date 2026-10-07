@@ -1,0 +1,16 @@
+id: gens/037_vfxmaster_dcg_w6/02_neutral_v3ed81zs__dai
+seq: 2
+shelf: gens
+arm: vfxmaster_dcg_w6
+harness_arm: vfxmaster_dcg_w6_v3ed81zs   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral_v3ed81zs
+machine: dai
+created: 2026-09-15
+inputs: {run: runs/011_vfxmaster (external)}
+code: misc/2026-09-14_vfxmaster_dcg DCG worker: VfxMasterDCGPipeline, w=6 pixel-dissolve null (model/ @ 0632c5a)
+prompt_family: prompts/012_ctt_v3ed_neutral
+prompt_sha: 423ea86ce085
+grid_rows: 102
+videos: 102
+source: scripts/store_register.py over misc/2026-09-14_vfxmaster_dcg/eval/single/vfxmaster_dcg_w6_v3ed81zs.jsonl
+notes: VFXMaster (external, runs/011) + test-time DCG w=6, pixel-dissolve null; ED81 full neutral zero-shot (102 rows, native 81f, frame-0 anchor), seed 42; DeltaAI GH200. gen manifest preserved as gen_manifest.jsonl + misc/2026-09-14_vfxmaster_dcg/manifest_ed_dai.jsonl. harness arm vfxmaster_dcg_w6_v3ed81zs; item_ids join by grid pool (same rows as vae_lerp gens/036/02).

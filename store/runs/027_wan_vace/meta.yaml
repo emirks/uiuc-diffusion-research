@@ -1,0 +1,20 @@
+id: 027_wan_vace
+seq: 27
+shelf: runs
+external: true
+created: 2026-09-20
+machine: n/a (not trained by us)
+source: Wan-AI/Wan2.1-VACE-14B — official Wan2.1 release (VACE all-in-one video creation/editing), run as BASE
+inputs: {}
+model: Wan2.1-VACE-14B (14B; DiT + VACE control branch in the same shards). from_pretrained loads both wan_video_dit and wan_video_vace from the 7 DiT shards.
+steps_trained: n/a (released checkpoint)
+checkpoints: symlink -> $LAB/cache/wan_vace/Wan2.1-VACE-14B (7 DiT shards, 63.3 GB durable; DeltaAI read copy at /work/nvme/bgms/emirkisa/wan_vace/Wan2.1-VACE-14B). T5/VAE reused from the FLF2V bundle ($LAB/cache/refvfx/weights/Wan2.1-FLF2V-14B-720P) — sha256-verified byte-identical (T5 7cace0da..., VAE 38071ab5...); tokenizer = FLF2V bundle's google/umt5-xxl.
+env: aarch64 $LAB/envs-aarch64/refvfx ; x86/CC $LAB/envs/refvfx-x86 (vendored DiffSynth-Studio)
+code: worker misc/2026-09-20_teg_baselines/gen_worker_vace.py (stock DiffSynth VACE path, provenance examples/wanvideo/model_training/validate_full/Wan2.1-VACE-14B.py); DiffSynth vendored at misc/refvfx_baseline/code/refVFX_trainer/DiffSynth-Studio
+notes: >
+  Two-endpoint (TEG) baseline: VACE first-last CLIP extension, NO reference/demo (use_reference: false).
+  Endpoints resampled to 16 fps and given as 6 start frames (start9 idx [0,2,3,5,6,8] -> out 0..5) + 4 end
+  frames (end9 idx [4,5,7,8] -> out 77..80), gray fill (127,127,127) elsewhere; mask keep(0) on the 10 given
+  frames, generate(1) elsewhere; VACE pools to 21 latents (latents 0,1,20 fully given & keep). vace_reference_image=None,
+  vace_scale=1.0. Wan2.1 vace defaults: 50 steps, cfg 5.0, sigma_shift 16, 81 f, 480x640, 16 fps, tiled VAE, no offload.
+  Negative = DiffSynth/Wan canonical default (Chinese). Given frames also saved at misc/2026-09-20_teg_baselines/conds_16fps/.

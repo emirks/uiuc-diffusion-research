@@ -1,0 +1,178 @@
+id: 048_seam_gridv3__dai__2026-09-23
+seq: 48
+shelf: evals
+created: '2026-09-23'
+machine: dai (login CPU, numpy over stored features)
+instrument: scripts/metrics_v5/seam_eval.py @ fbf9e00
+namespace: lpips_t@alex-r256
+window: store_eval_common.windows (physical given windows)
+definition:
+  - "Per generation read ``lpips_t@alex-r256`` ``d`` (the consecutive-frame temporal LPIPS the v4 harness"
+  - "cached), the physical window (n_pre, n_suf) = store_eval_common.windows(grid_type, sided), and"
+  - "seam_scores(d, n_pre, max(n_suf, 1)) from diffusion.transition_eval.endpoints. This recomputes the"
+  - "seam entirely from stored features, bit-identical to v4 where v4 used the physical window, and CORRECTS"
+  - "evals/030's 9-frame planned prefix on the one-sided prior works to their 1-frame physical prefix"
+  - "(owner 2026-09-23). Rows -> store/evals/<EVAL_ID>/<harness_arm>/rows.jsonl (+ meta.yaml). CPU, Pool(8)."
+why: "Seam-free share and seam z from the stored temporal LPIPS at the physical given windows; the v5 replacement for the v4 harness seam, correcting evals/030's 9-frame prefix on the one-sided prior works."
+caveat: "seam_scores robust z of the handoff step vs the video's own steps (median/MAD); one-sided rows use the prefix seam only, two-sided the max of prefix and suffix. Missing lpips_t (e.g. the neutral twins, Round 2) -> seam None + a `missing` entry."
+arms_scored:
+  base_cond_neutral_v3:
+    gen: store/gens/005_base_cond/04_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, gtype: HF, seam_free_pct: 88.65, seam_z_med: 0.2123}
+  base_cond_neutral_v3ed81:
+    gen: store/gens/005_base_cond/05_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, gtype: ED, seam_free_pct: 37.25, seam_z_med: 4.9855}
+  base_cond_effect_v3:
+    gen: store/gens/005_base_cond/06_effect_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, gtype: HF, seam_free_pct: 87.77, seam_z_med: -0.4311}
+  base_cond_effect_v3ed81:
+    gen: store/gens/005_base_cond/07_effect_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, gtype: ED, seam_free_pct: 99.51, seam_z_med: -0.7573}
+  ic_gen_neutral_v3:
+    gen: store/gens/001_ic_gen/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, gtype: HF, seam_free_pct: 95.92, seam_z_med: -0.5835}
+  ic_gen_neutral_v3ed81:
+    gen: store/gens/001_ic_gen/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, gtype: ED, seam_free_pct: 98.04, seam_z_med: -0.8255}
+  dualforce_control_neutral_v3:
+    gen: store/gens/013_dualforce_control/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, gtype: HF, seam_free_pct: 95.92, seam_z_med: -0.6804}
+  dualforce_control_neutral_v3ed81:
+    gen: store/gens/013_dualforce_control/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, gtype: ED, seam_free_pct: 98.04, seam_z_med: -1.0475}
+  dualforce_dcg_w1p5_neutral_v3:
+    gen: store/gens/030_dualforce_dcg_w1p5/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, gtype: HF, seam_free_pct: 95.92, seam_z_med: -0.7177}
+  dualforce_dcg_w1p5_neutral_v3ed81:
+    gen: store/gens/030_dualforce_dcg_w1p5/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, gtype: ED, seam_free_pct: 98.04, seam_z_med: -1.0485}
+  dualforce_dcg_w3_neutral_v3:
+    gen: store/gens/031_dualforce_dcg_w3/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, gtype: HF, seam_free_pct: 95.39, seam_z_med: -0.8182}
+  dualforce_dcg_w3_neutral_v3ed81:
+    gen: store/gens/031_dualforce_dcg_w3/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, gtype: ED, seam_free_pct: 99.02, seam_z_med: -1.138}
+  dualforce_dcg_w6_neutral_v3:
+    gen: store/gens/032_dualforce_dcg_w6/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, gtype: HF, seam_free_pct: 92.38, seam_z_med: -0.8191}
+  dualforce_dcg_w6_neutral_v3ed81:
+    gen: store/gens/032_dualforce_dcg_w6/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, gtype: ED, seam_free_pct: 97.55, seam_z_med: -1.0895}
+  dualforce_dcg_emptynull_w6_neutral_v3zs:
+    gen: store/gens/040_dualforce_dcg_emptynull_w6/05_neutral_v3zs__dai
+    rows: 238
+    coverage: {defined: 238, missing: 0, gtype: HF, seam_free_pct: 88.24, seam_z_med: -0.304}
+  dualforce_dcg_emptynull_w6_neutral_v3ed81:
+    gen: store/gens/040_dualforce_dcg_emptynull_w6/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, gtype: ED, seam_free_pct: 97.55, seam_z_med: -0.9127}
+  dualforce_dcg_emptynull_w6_neutral_v3:
+    gen: store/gens/040_dualforce_dcg_emptynull_w6/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, gtype: HF, seam_free_pct: 88.65, seam_z_med: -0.6194}
+  ic_gen_effect_v3:
+    gen: store/gens/001_ic_gen/05_effect_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, gtype: HF, seam_free_pct: 96.28, seam_z_med: -0.6545}
+  ic_gen_effect_v3ed81:
+    gen: store/gens/001_ic_gen/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, gtype: ED, seam_free_pct: 100.0, seam_z_med: -1.2677}
+  dualforce_control_effect_v3:
+    gen: store/gens/013_dualforce_control/05_effect_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, gtype: HF, seam_free_pct: 94.86, seam_z_med: -0.6955}
+  dualforce_control_effect_v3ed81:
+    gen: store/gens/013_dualforce_control/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, gtype: ED, seam_free_pct: 98.53, seam_z_med: -1.0995}
+  dualforce_dcg_w6_effect_v3:
+    gen: store/gens/032_dualforce_dcg_w6/05_effect_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, gtype: HF, seam_free_pct: 91.84, seam_z_med: -0.7568}
+  dualforce_dcg_w6_effect_v3ed81:
+    gen: store/gens/032_dualforce_dcg_w6/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, gtype: ED, seam_free_pct: 97.55, seam_z_med: -0.969}
+  dualforce_dcg_w1p5_effect_v3:
+    gen: store/gens/030_dualforce_dcg_w1p5/05_effect_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, gtype: HF, seam_free_pct: 94.5, seam_z_med: -0.7307}
+  dualforce_dcg_w1p5_effect_v3ed81:
+    gen: store/gens/030_dualforce_dcg_w1p5/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, gtype: ED, seam_free_pct: 98.53, seam_z_med: -1.1928}
+  dualforce_dcg_w3_effect_v3:
+    gen: store/gens/031_dualforce_dcg_w3/05_effect_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, gtype: HF, seam_free_pct: 94.68, seam_z_med: -0.7663}
+  dualforce_dcg_w3_effect_v3ed81:
+    gen: store/gens/031_dualforce_dcg_w3/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, gtype: ED, seam_free_pct: 99.02, seam_z_med: -1.1415}
+  vap_author_native:
+    gen: store/gens/011_vap/05_author_native__dai
+    rows: 366
+    coverage: {defined: 366, missing: 0, gtype: external, seam_free_pct: 93.17, seam_z_med: -0.9939}
+  vap_neutral_v3:
+    gen: store/gens/011_vap/06_neutral_v3__dai
+    rows: 366
+    coverage: {defined: 366, missing: 0, gtype: external, seam_free_pct: 92.08, seam_z_med: -0.665}
+  vfxmaster_author_native:
+    gen: store/gens/012_vfxmaster/05_author_native__dai
+    rows: 366
+    coverage: {defined: 366, missing: 0, gtype: external, seam_free_pct: 99.73, seam_z_med: -1.1483}
+  vfxmaster_neutral_v3:
+    gen: store/gens/012_vfxmaster/06_neutral_v3__dai
+    rows: 366
+    coverage: {defined: 366, missing: 0, gtype: external, seam_free_pct: 96.72, seam_z_med: -0.4482}
+  refvfx_author_native:
+    gen: store/gens/003_refvfx/03_author_native__dai
+    rows: 366
+    coverage: {defined: 366, missing: 0, gtype: external, seam_free_pct: 94.54, seam_z_med: -0.6241}
+  refvfx_neutral_v3:
+    gen: store/gens/003_refvfx/05_neutral_v3__dai
+    rows: 366
+    coverage: {defined: 366, missing: 0, gtype: external, seam_free_pct: 66.67, seam_z_med: 0.9171}
+  refvfx_effect_v3:
+    gen: store/gens/003_refvfx/04_effect_v3__cc
+    rows: 148
+    coverage: {defined: 76, missing: 72, gtype: external, seam_free_pct: 97.37, seam_z_med: -0.4645}
+  refvfx_neutral_v3_teg:
+    gen: store/gens/003_refvfx/06_neutral_v3_teg__cc
+    rows: 148
+    coverage: {defined: 148, missing: 0, gtype: external, seam_free_pct: 89.86, seam_z_med: -0.3192}
+  wan_flf2v_effect_v3:
+    gen: store/gens/042_wan_flf2v/01_effect_v3__cc
+    rows: 148
+    coverage: {defined: 76, missing: 72, gtype: external, seam_free_pct: 100.0, seam_z_med: -0.5572}
+  wan_flf2v_neutral_v3:
+    gen: store/gens/042_wan_flf2v/02_neutral_v3__cc
+    rows: 148
+    coverage: {defined: 148, missing: 0, gtype: external, seam_free_pct: 95.27, seam_z_med: 0.1529}
+  wan_vace_effect_v3:
+    gen: store/gens/043_wan_vace/01_effect_v3__cc
+    rows: 148
+    coverage: {defined: 76, missing: 72, gtype: VACE16, seam_free_pct: 93.42, seam_z_med: -0.1084}
+  wan_vace_neutral_v3:
+    gen: store/gens/043_wan_vace/02_neutral_v3__cc
+    rows: 148
+    coverage: {defined: 148, missing: 0, gtype: VACE16, seam_free_pct: 91.22, seam_z_med: 0.0739}
+  dualforce_dcg_holdstart_w6_neutral_v3zs10:
+    gen: store/gens/044_dualforce_dcg_holdstart_w6/01_neutral_v3zs10__dai
+    rows: 10
+    coverage: {defined: 10, missing: 0, gtype: HF, seam_free_pct: 80.0, seam_z_med: -0.7123}

@@ -131,5 +131,100 @@ champion's single `{S1}.sksz.{EFFECT}` — more effect-text exposure, accepted a
 
 ---
 
-_Last updated 2026-08-14. Change here + the source workers together; this doc is documentation, not the
-contract (store/README.md is the contract). Per-arm rows: `store/ARMS.md`. Ledger: `store/INDEX.md`._
+## 7. Two-endpoint (TEG) baselines — grid-v3 TWO-SIDED rows (added 2026-09-20)
+
+A separate baseline family for the paper's "both endpoints given" (TEG) block: prior-work / base
+backbones run over the grid-v3 **two-sided** rows (`sided=="two"`) — 38 zero-shot + 36 seen/unseen =
+74 rows × seeds {42,43} = 148 clips per system. The paper TEG block uses the **zero-shot n=76** subset;
+seen+unseen is supplementary (queued behind ZS with a Slurm `afterok`). Campaign record + workers/manifests:
+`misc/2026-09-20_teg_baselines/RECORD.md`.
+
+**Prompt (all TEG baselines): the EFFECT prompt byte-equal to what the LTX-2 `base_cond` arm received**
+— pulled verbatim from `store/gens/005_base_cond/06_effect_v3__dai/grid.jsonl` ("<start scene>. <effect
+clause>. <end scene>.", trained token stripped), keyed by (endpoint, reference, cell, sided, ref_novelty).
+No prompt extension/rewriting. fsck corpus_sha over the 148-row grid = `6b55919bcb5e` (ZS-76 subset =
+`35b81da20630`). This is a **text-budget-matched** choice (same text every TEG system gets), so it differs
+from the refVFX one-sided `author_native` tier (§6), which uses refVFX's own template.
+
+**Endpoint conditioning (all TEG baselines):** `input_image` = frame 0 of `eval_ladder/conds/<endpoint>_start9.mp4`
+(the prefix our own arms condition on); `end_image` = last frame of `<endpoint>_end9.mp4` (= `end9[8]` =
+frame 120 of the 121-frame target). Geometry 480 wide × 640 tall.
+
+| arm / gen | backbone | reference? | recipe | frames · out fps | negative prompt |
+|---|---|---|---|---|---|
+| **refvfx** `refvfx_effect_v3` (`gens/003_refvfx/04_effect_v3__dai`) | Wan2.1-FLF2V-14B-720P + refVFX LoRA(step-10000) + CausVid | **yes** (121→33, uniform, by the FROZEN worker) | refVFX fast path (unchanged): 6 steps, cfg 6.0, cfg_ref 2.0, cfg_input 0.0, sigma_shift 5.0, strict_end_image | 33 f · 6.5455 fps | "static, blurry, worst quality, low quality" (refVFX's own) |
+| **wan_flf2v** `wan_flf2v_effect_v3` (`gens/042_wan_flf2v/01_effect_v3__<machine>`) | Wan2.1-FLF2V-14B-720P **BASE** (no LoRA, no CausVid) | **no** (pure first-last interpolation, `use_reference:false`) | Wan2.1 flf2v defaults: 50 steps, cfg 5.0, sigma_shift 16, no offload, tiled VAE; `control_video=None` | 81 f · 16 fps | DiffSynth/Wan canonical default (Chinese, 137 chars) |
+| **wan_vace** `wan_vace_effect_v3` (`gens/043_wan_vace/01_effect_v3__<machine>`) | Wan2.1-VACE-14B **BASE** (DiT+VACE from the 7 shards), first-last CLIP extension | **no** (`use_reference:false`; endpoints baked into `vace_video`+mask) | Wan2.1 vace defaults: 50 steps, cfg 5.0, sigma_shift 16, no offload, tiled VAE; `vace_reference_image=None`, `vace_scale=1.0` | 81 f · 16 fps | DiffSynth/Wan canonical default (Chinese) |
+
+- **refVFX two-sided** reuses the frozen worker `misc/refvfx_baseline/gen_worker.py` verbatim (same recipe
+  as the existing refVFX arms); only the manifest (two-sided rows, base_cond effect prompt) is new.
+- **wan_flf2v** worker `misc/2026-09-20_teg_baselines/gen_worker_flf2v.py` mirrors the refVFX authors' own
+  base-model runner (`run_base_model.py::build_base_pipeline`): a plain `WanVideoPipeline.from_pretrained`
+  over the FLF2V bundle (DiT shards + T5 + VAE + CLIP image encoder + umt5 tokenizer), default units, no
+  LoRA; call = the `--pure_flf2v` branch (input+end image, `control_video=None`). Deviations from that
+  script's argparse defaults (documented in the campaign RECORD): negative → Wan canonical default; sigma_shift
+  5.0 → 16 (the official DiffSynth FLF2V inference example's value); fps 15 → 16; geometry 480×832 → 480×640.
+- **Disclosures:** refVFX = UNOFFICIAL CMU reimpl of arXiv:2601.07833 (as §1). wan_flf2v = 480p on a
+  720p-trained model. Both run at their own native output length (refVFX 33 f, wan_flf2v 81 f), fps chosen to
+  hold the 5.04 s duration (refVFX) / per Wan's flf2v convention (wan_flf2v).
+- **wan_vace** worker `misc/2026-09-20_teg_baselines/gen_worker_vace.py` = the stock DiffSynth VACE path
+  (provenance `examples/wanvideo/model_training/validate_full/Wan2.1-VACE-14B.py`): `from_pretrained` loads DiT+VACE
+  from the 7 VACE shards (`$LAB/cache/wan_vace/Wan2.1-VACE-14B`, 63.3 GB), reusing the FLF2V bundle's T5/VAE
+  (sha256 byte-identical: T5 `7cace0da…`, VAE `38071ab5…`) and its umt5 tokenizer; no CLIP. **Endpoint
+  conditioning** (owner decision): endpoints resampled to 16 fps and given as `vace_video` (81 frames) —
+  out 0..5 = start9 idx [0,2,3,5,6,8], out 77..80 = end9 idx [4,5,7,8] (end9[8]=target frame 120), frames
+  6..76 = mid-gray (127,127,127); `vace_video_mask` keep(0=black) on the 10 given frames, generate(1=white)
+  elsewhere. The VACE unit pools the mask to (81+3)//4=21 latents (nearest-exact): latents 0,1 fully given &
+  keep, latent 20 fully given & keep. The 6 start + 4 end given frames per endpoint are saved at
+  `misc/2026-09-20_teg_baselines/conds_16fps/` (PNGs + small mp4s) for the metrics. Disclosure: 480p portrait,
+  base VACE (no fine-tune), effect conveyed by text only, endpoints downsampled to 16 fps.
+
+## 8. NEUTRAL-prompt twins of every grid-v3 external arm (added 2026-09-21)
+
+The paper compares every system under two text conditions — **neutral** (the start-scene caption only, no
+effect text; the reference video, where the system takes one, is the only effect signal) and **effect**.
+Until 2026-09-21 the prior works had only their *effect-side* grid-v3 entries (`author_native` on the
+one-sided zero-shot set, `effect_v3` on the two-sided TEG rows). This section adds their neutral twins.
+Campaign record, builder, manifests and sbatch files: `misc/2026-09-21_neutral_baselines/` (RECORD.md).
+
+**Construction rule — everything identical, only the text changes.** Each neutral manifest is a row-by-row
+clone of the frozen manifest that produced the existing entry (`build_neutral_manifests.py` asserts that the
+only differing keys are the text channels plus `harness_arm`/`arm`/`variant`/`item_id`/`out_name`):
+same rows, seeds {42,43}, endpoint frames/clips, reference clips, geometry, frame counts, fps, recipe,
+negative prompts and FROZEN workers.
+
+- `prompt` ← the NEUTRAL text the LTX-2 `base_cond` arm received, verbatim (`store/gens/005_base_cond/04_neutral_v3__dai/grid.jsonl`
+  for HF rows, `05_neutral_v3ed81__dai` for EffectData rows; = `prompts/010` with the task token stripped),
+  keyed by (cell, endpoint, reference). One-sided rows: the start-scene caption S1. Two-sided rows: "S1 S2"
+  (both scene captions, no effect clause). Identical to the grid-v2 neutral text where the endpoints overlap
+  (checked: 224/224 VAP rows).
+- VAP `prompt_mot_ref` ← `""`, VFXMaster `ref_prompt` ← `""` (zero effect text in ANY channel — the same rule as
+  the grid-v2 neutral entries `gens/011_vap/01`, `gens/012_vfxmaster/01`, §6).
+- refVFX: the prompt is the base_cond neutral text ONLY. Its own template clause ("Make it so that the
+  beginning of the scene is unchanged, but during the video the visual effect is applied") used by the grid-v2
+  `refvfx_B` entry is NOT added — this keeps the one-sided neutral twin text-identical to VAP's/VFXMaster's and
+  the two-sided twin consistent with `refvfx_effect_v3`, which already uses base_cond text without the template.
+  (Disclose: differs from `gens/003_refvfx/02_neutral`.)
+
+| arm / gen | twin of | rows | prompt channels | machine |
+|---|---|---|---|---|
+| **vap** `vap_neutral_v3` (`gens/011_vap/06_neutral_v3__dai`) | `05_author_native` | one-sided ZS 183 pairs × 2 = 366 (81 HF + 102 ED) | prompt = S1; prompt_mot_ref = "" | dai (same as its twin) |
+| **vfxmaster** `vfxmaster_neutral_v3` (`gens/012_vfxmaster/06_neutral_v3__dai`) | `05_author_native` | 366 | prompt = S1; ref_prompt = "" | dai |
+| **refvfx** `refvfx_neutral_v3` (`gens/003_refvfx/05_neutral_v3__dai`) | `03_author_native` (first frame + reference, end_image None) | 366 | prompt = S1 | dai |
+| **refvfx** `refvfx_neutral_v3_teg` (`gens/003_refvfx/06_neutral_v3_teg__cc`) | `04_effect_v3__cc` (reference + first + last frame) | two-sided 74 pairs × 2 = 148 (76 zs + 72 su) | prompt = S1 S2 | cc (same as its twin) |
+| **wan_flf2v** `wan_flf2v_neutral_v3` (`gens/042_wan_flf2v/02_neutral_v3__cc`) | `01_effect_v3__cc` (first + last frame, no reference) | 148 | prompt = S1 S2 | cc |
+| **wan_vace** `wan_vace_neutral_v3` (`gens/043_wan_vace/02_neutral_v3__cc`) | `01_effect_v3__cc` (6+4 given frames at 16 fps, no reference) | 148 | prompt = S1 S2 | cc |
+
+- Each twin is generated on the SAME machine as the entry it mirrors, so neutral-vs-effect within an arm carries
+  no cross-machine confound (scoring stays on one machine regardless).
+- Two-sided twins follow the TEG rule: zero-shot arrays first; seen/unseen arrays only after every zero-shot
+  array of every arm is complete.
+- For the metrics nothing new is needed: `scripts/store_eval_common.grid_type` keys the given windows on the
+  store arm (`refvfx`/`vap`/`vfxmaster`/`wan_flf2v` → 1 (+1) frame, `wan_vace` → VACE16 6 (+4)), which the
+  twins share. `scripts/family_tables.py` needs the new harness arms added to its GENS/EXT maps to render them.
+
+---
+
+_Last updated 2026-09-21 (added §8 neutral twins of every grid-v3 external arm; 2026-09-20: §7 TEG baselines). Change here + the source workers together; this doc is
+documentation, not the contract (store/README.md is the contract). Per-arm rows: `store/ARMS.md`. Ledger:
+`store/INDEX.md`._

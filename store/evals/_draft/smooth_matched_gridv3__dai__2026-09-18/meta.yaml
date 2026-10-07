@@ -1,0 +1,120 @@
+id: smooth_matched_gridv3__dai__2026-09-18
+seq: null  # DRAFT: unnumbered until finalized
+shelf: evals/_draft
+created: '2026-09-20'
+machine: dai (login CPU, numpy over stored features)
+instrument: scripts/smooth_matched.py @ fbf9e00
+namespace: clip_b32@r256
+target_fps: 8.0
+definition:
+  - "(namespace clip_b32@r256) of frames ~1/TARGET_FPS apart, stride = max(1, round(fps / TARGET_FPS)), TARGET_FPS = 8:"
+  - "stride 3 for our 24-fps clips, 1 for the prior works (6.55-9.72 fps). Removes the frame-rate confound of the"
+  - "consecutive-frame lens (motion_smoothness in eval 040), which favours higher-fps videos. Also emits the native-spacing"
+  - "value for reference. fps per generation from eval 038 rows."
+why: "The prior works' motion smoothness compares consecutive frames, so a 24-fps clip takes smaller steps than a 10-fps one; matched spacing makes the arms comparable."
+caveat: "Still rewards videos that do not move (a static video scores 1); descriptive quality metric, not a ranking target. Spacing is 125 ms for ours vs 103-153 ms for the prior works (their native step)."
+arms_scored:
+  ic_gen_neutral_v3:
+    gen: store/gens/001_ic_gen/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, stride: 3, smooth_matched_mean: 0.9713}
+  ic_gen_neutral_v3ed81:
+    gen: store/gens/001_ic_gen/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, stride: 3, smooth_matched_mean: 0.9879}
+  ic_gen_effect_v3:
+    gen: store/gens/001_ic_gen/05_effect_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, stride: 3, smooth_matched_mean: 0.9671}
+  ic_gen_effect_v3ed81:
+    gen: store/gens/001_ic_gen/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, stride: 3, smooth_matched_mean: 0.9831}
+  refvfx_author_native:
+    gen: store/gens/003_refvfx/03_author_native__dai
+    rows: 366
+    coverage: {defined: 366, missing: 0, stride: 1, smooth_matched_mean: 0.9879}
+  base_cond_neutral_v3:
+    gen: store/gens/005_base_cond/04_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, stride: 3, smooth_matched_mean: 0.9762}
+  base_cond_neutral_v3ed81:
+    gen: store/gens/005_base_cond/05_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, stride: 3, smooth_matched_mean: 0.9961}
+  base_cond_effect_v3:
+    gen: store/gens/005_base_cond/06_effect_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, stride: 3, smooth_matched_mean: 0.968}
+  base_cond_effect_v3ed81:
+    gen: store/gens/005_base_cond/07_effect_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, stride: 3, smooth_matched_mean: 0.98}
+  vap_author_native:
+    gen: store/gens/011_vap/05_author_native__dai
+    rows: 366
+    coverage: {defined: 366, missing: 0, stride: 1, smooth_matched_mean: 0.9787}
+  vfxmaster_author_native:
+    gen: store/gens/012_vfxmaster/05_author_native__dai
+    rows: 366
+    coverage: {defined: 366, missing: 0, stride: 1, smooth_matched_mean: 0.987}
+  dualforce_control_neutral_v3:
+    gen: store/gens/013_dualforce_control/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, stride: 3, smooth_matched_mean: 0.9659}
+  dualforce_control_neutral_v3ed81:
+    gen: store/gens/013_dualforce_control/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, stride: 3, smooth_matched_mean: 0.9752}
+  dualforce_control_effect_v3:
+    gen: store/gens/013_dualforce_control/05_effect_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, stride: 3, smooth_matched_mean: 0.9635}
+  dualforce_control_effect_v3ed81:
+    gen: store/gens/013_dualforce_control/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, stride: 3, smooth_matched_mean: 0.974}
+  dualforce_dcg_w6_neutral_v3:
+    gen: store/gens/032_dualforce_dcg_w6/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, stride: 3, smooth_matched_mean: 0.9573}
+  dualforce_dcg_w6_neutral_v3ed81:
+    gen: store/gens/032_dualforce_dcg_w6/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, stride: 3, smooth_matched_mean: 0.9663}
+  dualforce_dcg_w6_effect_v3:
+    gen: store/gens/032_dualforce_dcg_w6/05_effect_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, stride: 3, smooth_matched_mean: 0.9564}
+  dualforce_dcg_w6_effect_v3ed81:
+    gen: store/gens/032_dualforce_dcg_w6/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, stride: 3, smooth_matched_mean: 0.9666}
+  dualforce_dcg_w1p5_neutral_v3:
+    gen: store/gens/030_dualforce_dcg_w1p5/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, stride: 3, smooth_matched_mean: 0.9641}
+  dualforce_dcg_w1p5_neutral_v3ed81:
+    gen: store/gens/030_dualforce_dcg_w1p5/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, stride: 3, smooth_matched_mean: 0.973}
+  dualforce_dcg_w3_neutral_v3:
+    gen: store/gens/031_dualforce_dcg_w3/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, stride: 3, smooth_matched_mean: 0.9609}
+  dualforce_dcg_w3_neutral_v3ed81:
+    gen: store/gens/031_dualforce_dcg_w3/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, stride: 3, smooth_matched_mean: 0.97}
+  refvfx_effect_v3:
+    gen: store/gens/003_refvfx/04_effect_v3__cc
+    rows: 148
+    coverage: {defined: 148, missing: 0, stride: 1, smooth_matched_mean: 0.9645}
+  wan_flf2v_effect_v3:
+    gen: store/gens/042_wan_flf2v/01_effect_v3__cc
+    rows: 148
+    coverage: {defined: 148, missing: 0, stride: 2, smooth_matched_mean: 0.9424}
+  wan_vace_effect_v3:
+    gen: store/gens/043_wan_vace/01_effect_v3__cc
+    rows: 148
+    coverage: {defined: 148, missing: 0, stride: 2, smooth_matched_mean: 0.9553}

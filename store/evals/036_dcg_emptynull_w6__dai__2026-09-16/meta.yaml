@@ -1,0 +1,18 @@
+id: 036_dcg_emptynull_w6__dai__2026-09-16
+seq: 36
+shelf: evals
+created: '2026-09-16'
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh
+harness: transition-eval v4.0.0 (eval-v4-cert worktree) — IDENTICAL instrument to eval 028/033 (--reference-corpus 222 pin, split_v1.3 pool)
+instrument:
+  reference_corpus: data/processed/transitions_std121/corpus_manifest_v1_222.json  # certified 222-clip pin
+  corpus: data/processed/transitions_std121/corpus_manifest.json                   # 677-clip grid-v3 pool superset
+  matrix: m1a_S3
+  split: split_v1.3.json  # pinned via plan_driver pool_refs filter = eval 028's Sep-7 pool (seatbelt: 0 pool/ref mismatches)
+  job: misc/2026-09-07_eval_grid_v2/score_v3.sbatch (16 shards/arm; ED GEN_PREFIX_FRAMES=1)
+  env: envs-aarch64/refvfx (module miniforge3_pytorch/2.10.0); PYTHONPATH=.claude/worktrees/eval-v4-cert/src
+grid:
+  registry: misc/2026-09-16_dcg_emptynull/eval/registries/ (30 arm rows + 384 base twins from eval_ladder/registry_v3.jsonl)
+  cells: advisor-picked 60-row zero-shot subset (20 reference triplets = 10 per tier x content cell); one seed (42)
+source: 'test-time DCG empty-null (--null-kind endpoint_only, reference dropped), w=6, on runs/012_dualforce_control @ step 1000 (gs4/stg1, 30 steps). Gens store/gens/040_dualforce_dcg_emptynull_w6. PAIRED head-to-head vs crossfade-w6 (eval 028 dcg_w6_neutral) and vae_lerp-w6 (eval 033) on the SAME 60 item_ids / same split_v1.3 pool. Levels only; STAGE-3 paired comparison is a separate step.'
+arms_scored: {}   # finalized post-scoring (items_scored, pct_same_headline per arm)

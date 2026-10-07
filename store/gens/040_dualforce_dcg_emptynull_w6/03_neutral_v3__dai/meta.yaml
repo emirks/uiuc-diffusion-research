@@ -1,0 +1,26 @@
+id: gens/040_dualforce_dcg_emptynull_w6/03_neutral_v3__dai
+seq: 3
+shelf: gens
+arm: dualforce_dcg_emptynull_w6
+harness_arm: dualforce_dcg_emptynull_w6_neutral_v3   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral_v3
+machine: dai
+created: 2026-09-24
+inputs: {run: runs/012_dualforce_control, step: 1000}
+code: src/LTX-2-ctt-v2-train packages + scripts/grid_v3/gen_dcg_v3.py --null-kind endpoint_only (reference-dropped null, gs4/stg1, w=6)
+prompt_family: prompts/010_ctt_v3_neutral
+prompt_sha: d8b0f6d3502b
+grid_rows: 282
+videos: 564
+source: scripts/store_register.py over misc/2026-09-24_dcg_emptynull_gridv3/registries/single_dualforce_dcg_emptynull_w6_neutral_v3.jsonl
+notes: grid v3 (design 3.0.0) neutral tier, family prompts/010_ctt_v3_neutral; 30 seed-42 zero-shot clips hardlinked from gens/040/01_neutral_v3zs60__dai (same rows/seed/code); seeds 42/43; DeltaAI GH200; zero-shot cells also registered early as 040/05 (same videos); misc/2026-09-24_dcg_emptynull_gridv3
+features:
+  dino_cls@dinov2b-r256: {have: 564, of: 564, hosts: [gh016.hsn.cm.delta.internal.ncsa.edu, gh019.hsn.cm.delta.internal.ncsa.edu, gh039.hsn.cm.delta.internal.ncsa.edu, gh067.hsn.cm.delta.internal.ncsa.edu, gh094.hsn.cm.delta.internal.ncsa.edu, gh104.hsn.cm.delta.internal.ncsa.edu, gh105.hsn.cm.delta.internal.ncsa.edu, gh106.hsn.cm.delta.internal.ncsa.edu, gh110.hsn.cm.delta.internal.ncsa.edu, gh127.hsn.cm.delta.internal.ncsa.edu, gh129.hsn.cm.delta.internal.ncsa.edu, gh143.hsn.cm.delta.internal.ncsa.edu, gh149.hsn.cm.delta.internal.ncsa.edu]}
+  cotracker3@g20-m384-v2: {have: 564, of: 564, hosts: [gh016.hsn.cm.delta.internal.ncsa.edu, gh019.hsn.cm.delta.internal.ncsa.edu, gh039.hsn.cm.delta.internal.ncsa.edu, gh067.hsn.cm.delta.internal.ncsa.edu, gh094.hsn.cm.delta.internal.ncsa.edu, gh104.hsn.cm.delta.internal.ncsa.edu, gh105.hsn.cm.delta.internal.ncsa.edu, gh106.hsn.cm.delta.internal.ncsa.edu, gh110.hsn.cm.delta.internal.ncsa.edu, gh127.hsn.cm.delta.internal.ncsa.edu, gh129.hsn.cm.delta.internal.ncsa.edu, gh143.hsn.cm.delta.internal.ncsa.edu, gh149.hsn.cm.delta.internal.ncsa.edu]}
+  lpips_t@alex-r256: {have: 564, of: 564, hosts: [gh016.hsn.cm.delta.internal.ncsa.edu, gh019.hsn.cm.delta.internal.ncsa.edu, gh039.hsn.cm.delta.internal.ncsa.edu, gh067.hsn.cm.delta.internal.ncsa.edu, gh094.hsn.cm.delta.internal.ncsa.edu, gh104.hsn.cm.delta.internal.ncsa.edu, gh105.hsn.cm.delta.internal.ncsa.edu, gh106.hsn.cm.delta.internal.ncsa.edu, gh110.hsn.cm.delta.internal.ncsa.edu, gh127.hsn.cm.delta.internal.ncsa.edu, gh129.hsn.cm.delta.internal.ncsa.edu, gh143.hsn.cm.delta.internal.ncsa.edu, gh149.hsn.cm.delta.internal.ncsa.edu]}
+  clip_b32@r256: {have: 564, of: 564, hosts: [gh016.hsn.cm.delta.internal.ncsa.edu, gh019.hsn.cm.delta.internal.ncsa.edu, gh039.hsn.cm.delta.internal.ncsa.edu, gh067.hsn.cm.delta.internal.ncsa.edu, gh094.hsn.cm.delta.internal.ncsa.edu, gh104.hsn.cm.delta.internal.ncsa.edu, gh105.hsn.cm.delta.internal.ncsa.edu, gh106.hsn.cm.delta.internal.ncsa.edu, gh110.hsn.cm.delta.internal.ncsa.edu, gh127.hsn.cm.delta.internal.ncsa.edu, gh129.hsn.cm.delta.internal.ncsa.edu, gh143.hsn.cm.delta.internal.ncsa.edu, gh149.hsn.cm.delta.internal.ncsa.edu]}
+  videoprism@f16r288: {have: 564, of: 564, hosts: [gh016.hsn.cm.delta.internal.ncsa.edu, gh019.hsn.cm.delta.internal.ncsa.edu, gh039.hsn.cm.delta.internal.ncsa.edu, gh067.hsn.cm.delta.internal.ncsa.edu, gh094.hsn.cm.delta.internal.ncsa.edu, gh104.hsn.cm.delta.internal.ncsa.edu, gh105.hsn.cm.delta.internal.ncsa.edu, gh106.hsn.cm.delta.internal.ncsa.edu, gh110.hsn.cm.delta.internal.ncsa.edu, gh127.hsn.cm.delta.internal.ncsa.edu, gh129.hsn.cm.delta.internal.ncsa.edu, gh143.hsn.cm.delta.internal.ncsa.edu, gh149.hsn.cm.delta.internal.ncsa.edu]}
+  raft_mag@r256: {have: 564, of: 564, hosts: [gh016.hsn.cm.delta.internal.ncsa.edu, gh019.hsn.cm.delta.internal.ncsa.edu, gh039.hsn.cm.delta.internal.ncsa.edu, gh067.hsn.cm.delta.internal.ncsa.edu, gh094.hsn.cm.delta.internal.ncsa.edu, gh104.hsn.cm.delta.internal.ncsa.edu, gh105.hsn.cm.delta.internal.ncsa.edu, gh106.hsn.cm.delta.internal.ncsa.edu, gh110.hsn.cm.delta.internal.ncsa.edu, gh127.hsn.cm.delta.internal.ncsa.edu, gh129.hsn.cm.delta.internal.ncsa.edu, gh143.hsn.cm.delta.internal.ncsa.edu, gh149.hsn.cm.delta.internal.ncsa.edu]}
+  trackdesc@cotracker3-s64-v1: {have: 564, of: 564, hosts: [gh-login01.delta.ncsa.illinois.edu]}
+  flow_u32@raft-r256-g24x32: {have: 564, of: 564, hosts: [gh061.hsn.cm.delta.internal.ncsa.edu, gh067.hsn.cm.delta.internal.ncsa.edu, gh129.hsn.cm.delta.internal.ncsa.edu, gh143.hsn.cm.delta.internal.ncsa.edu]}
+  action@swin3db-k400-u32: {have: 564, of: 564, hosts: [gh061.hsn.cm.delta.internal.ncsa.edu, gh067.hsn.cm.delta.internal.ncsa.edu, gh129.hsn.cm.delta.internal.ncsa.edu, gh143.hsn.cm.delta.internal.ncsa.edu]}

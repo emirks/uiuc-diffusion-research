@@ -1,0 +1,16 @@
+id: gens/041_ctt_v2_dcg_nulls/08_holdswap8_w3_v3ed81zs60__dai
+seq: 8
+shelf: gens
+arm: ctt_v2_dcg_nulls
+harness_arm: ctt_v2_dcg_holdswap8_w3_v3ed81zs60   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: holdswap8_w3_v3ed81zs60
+machine: dai
+created: 2026-09-17
+inputs: {run: runs/002_ctt_v2, step: 10000}
+code: scripts/grid_v3/gen_dcg_v3.py --null-kind hold_swap --holdswap-window 8 w3, DCG_ADAPTER=runs/002_ctt_v2@10000, gs4/stg1/30
+prompt_family: prompts/012_ctt_v3ed_neutral
+prompt_sha: 57862d0f71fd
+grid_rows: 30
+videos: 30
+source: scripts/store_register.py over misc/2026-09-17_dcg_nulls_cttv2/eval/single/ctt_v2_dcg_holdswap8_w3_v3ed81zs60.jsonl
+notes: test-time DCG hold-swap null (W=8 centered ramp), w=3; ctt_v2 60-row zero-shot subset (30 ED, 81f/GEN_PREFIX_FRAMES=1); split_v1.3 pool

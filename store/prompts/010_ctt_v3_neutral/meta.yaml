@@ -13,3 +13,6 @@ source: eval_ladder/build_registry_v3.py
 notes: rows are ARM-FREE — arm/item_id/video_key + arm-contract fields stripped; stamp_rows.py re-adds them per arm. STAGED under misc/ until registered (store/README.md §5).
 derived:   # deterministic transforms (stamp_rows.py flags)
   strip_sksz: 30edd3dc8c4f        # base arms: ' sksz.' removed (registry_base_cond_neutral_v3)
+  zs_subset: fb18bfc4b0a6         # zero-shot cells only (119/282), prompts BYTE-IDENTICAL -- row subset, not a text transform (dcg vae_lerp w6 zero-shot scoring, misc/2026-09-14_dcg_vae_lerp)
+  zs_subset60: 4492328e6b96       # advisor-picked 60-row subset, HF 30 rows (row subset, prompts BYTE-IDENTICAL) -- dcg empty-null w6 scoring, misc/2026-09-16_dcg_emptynull
+  zs_one_sided10: 2fe98d758e67    # 10-row one-sided zero-shot probe subset (4 cross/3 foreign/3 same, distinct refs; row subset, prompts BYTE-IDENTICAL) -- dcg hold_start null w6, misc/2026-09-24_dcg_emptynull_gridv3/holdstart_probe (2026-09-25)

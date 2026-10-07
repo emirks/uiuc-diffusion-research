@@ -13,3 +13,4 @@ source: eval_ladder/build_registry_v3.py
 notes: rows are ARM-FREE — arm/item_id/video_key + arm-contract fields stripped; stamp_rows.py re-adds them per arm. STAGED under misc/ until registered (store/README.md §5).
 derived:   # deterministic transforms (stamp_rows.py flags)
   strip_sksz: 6e2b9d5dd6da        # base arms: ' sksz.' removed (registry_base_cond_neutral_v3ed81)
+  zs_subset60: 57862d0f71fd       # advisor-picked 60-row subset, ED 30 rows (row subset, prompts BYTE-IDENTICAL) -- dcg empty-null w6 scoring, misc/2026-09-16_dcg_emptynull

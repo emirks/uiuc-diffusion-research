@@ -1,0 +1,126 @@
+id: viclip_text_gridv3__dai__2026-09-19
+seq: null  # DRAFT: unnumbered until finalized
+shelf: evals/_draft
+created: '2026-09-20'
+machine: dai (login CPU, numpy over stored features)
+instrument: scripts/viclip_text.py @ fbf9e00
+namespace: viclip@l14-f8
+text_tower: ViCLIP ViT-L/14 InternVid-10M-FLT (same checkpoint)
+trigger_removed: sksz
+definition:
+  - "Video side: the stored ViCLIP embedding of each generation (namespace viclip@l14-f8, VBench recipe: 8 middle-sampled"
+  - "frames, ViT-L/14 InternVid-10M-FLT). Text side: the same model's text tower on the prompt, L2-normalised. Score = cosine."
+  - "Two prompt pairings per generation:"
+  - "text_own     the prompt the generation was actually conditioned on (neutral / effect / author-native), LoRA trigger"
+  - "token \" sksz.\" removed -- this is VBench's definition (prompt vs. its own video)"
+  - "text_effect  the effect description of the same grid row (the effect-variant prompt of our arms for that row, trigger"
+  - "removed) -- \"does the output show the intended transition\", comparable across arms whatever they were"
+  - "prompted with; NaN when no effect row exists for that (cell, endpoint, reference)"
+  - "Rows -> store/evals/_draft/<EVAL_ID>/<harness_arm>/rows.jsonl (+ meta.yaml). CPU: the text tower runs on the login node."
+why: "VBench overall consistency: which system's output is most consistent with its text; for a reference-driven method a LOW value on the neutral prompt is the intended isolation from text."
+caveat: "ViCLIP is trained on InternVid captions: coarse video-text similarity in a narrow range (~0.1-0.35). The prior works run on their author-native prompt, our arms on the neutral (or effect) prompt; text_effect scores every arm against the same effect description of the row."
+arms_scored:
+  ic_gen_neutral_v3:
+    gen: store/gens/001_ic_gen/03_neutral_v3__dai
+    rows: 564
+    coverage: {own_defined: 564, effect_defined: 564, missing: 0, text_own_mean: 0.2541, text_effect_mean: 0.2478}
+  ic_gen_neutral_v3ed81:
+    gen: store/gens/001_ic_gen/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {own_defined: 204, effect_defined: 204, missing: 0, text_own_mean: 0.2223, text_effect_mean: 0.2216}
+  ic_gen_effect_v3:
+    gen: store/gens/001_ic_gen/05_effect_v3__dai
+    rows: 564
+    coverage: {own_defined: 564, effect_defined: 564, missing: 0, text_own_mean: 0.2363, text_effect_mean: 0.2363}
+  ic_gen_effect_v3ed81:
+    gen: store/gens/001_ic_gen/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {own_defined: 204, effect_defined: 204, missing: 0, text_own_mean: 0.1904, text_effect_mean: 0.1904}
+  refvfx_author_native:
+    gen: store/gens/003_refvfx/03_author_native__dai
+    rows: 366
+    coverage: {own_defined: 366, effect_defined: 366, missing: 0, text_own_mean: 0.2299, text_effect_mean: 0.2329}
+  base_cond_neutral_v3:
+    gen: store/gens/005_base_cond/04_neutral_v3__dai
+    rows: 564
+    coverage: {own_defined: 564, effect_defined: 564, missing: 0, text_own_mean: 0.2646, text_effect_mean: 0.2561}
+  base_cond_neutral_v3ed81:
+    gen: store/gens/005_base_cond/05_neutral_v3ed81__dai
+    rows: 204
+    coverage: {own_defined: 204, effect_defined: 204, missing: 0, text_own_mean: 0.2259, text_effect_mean: 0.225}
+  base_cond_effect_v3:
+    gen: store/gens/005_base_cond/06_effect_v3__dai
+    rows: 564
+    coverage: {own_defined: 564, effect_defined: 564, missing: 0, text_own_mean: 0.2349, text_effect_mean: 0.2349}
+  base_cond_effect_v3ed81:
+    gen: store/gens/005_base_cond/07_effect_v3ed81__dai
+    rows: 204
+    coverage: {own_defined: 204, effect_defined: 204, missing: 0, text_own_mean: 0.1913, text_effect_mean: 0.1913}
+  vap_author_native:
+    gen: store/gens/011_vap/05_author_native__dai
+    rows: 366
+    coverage: {own_defined: 366, effect_defined: 366, missing: 0, text_own_mean: 0.2163, text_effect_mean: 0.1658}
+  vfxmaster_author_native:
+    gen: store/gens/012_vfxmaster/05_author_native__dai
+    rows: 366
+    coverage: {own_defined: 366, effect_defined: 366, missing: 0, text_own_mean: 0.2481, text_effect_mean: 0.2103}
+  dualforce_control_neutral_v3:
+    gen: store/gens/013_dualforce_control/03_neutral_v3__dai
+    rows: 564
+    coverage: {own_defined: 564, effect_defined: 564, missing: 0, text_own_mean: 0.241, text_effect_mean: 0.2434}
+  dualforce_control_neutral_v3ed81:
+    gen: store/gens/013_dualforce_control/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {own_defined: 204, effect_defined: 204, missing: 0, text_own_mean: 0.187, text_effect_mean: 0.1871}
+  dualforce_control_effect_v3:
+    gen: store/gens/013_dualforce_control/05_effect_v3__dai
+    rows: 564
+    coverage: {own_defined: 564, effect_defined: 564, missing: 0, text_own_mean: 0.2337, text_effect_mean: 0.2337}
+  dualforce_control_effect_v3ed81:
+    gen: store/gens/013_dualforce_control/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {own_defined: 204, effect_defined: 204, missing: 0, text_own_mean: 0.1766, text_effect_mean: 0.1766}
+  dualforce_dcg_w6_neutral_v3:
+    gen: store/gens/032_dualforce_dcg_w6/03_neutral_v3__dai
+    rows: 564
+    coverage: {own_defined: 564, effect_defined: 564, missing: 0, text_own_mean: 0.2215, text_effect_mean: 0.2289}
+  dualforce_dcg_w6_neutral_v3ed81:
+    gen: store/gens/032_dualforce_dcg_w6/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {own_defined: 204, effect_defined: 204, missing: 0, text_own_mean: 0.1734, text_effect_mean: 0.1741}
+  dualforce_dcg_w6_effect_v3:
+    gen: store/gens/032_dualforce_dcg_w6/05_effect_v3__dai
+    rows: 564
+    coverage: {own_defined: 564, effect_defined: 564, missing: 0, text_own_mean: 0.2273, text_effect_mean: 0.2273}
+  dualforce_dcg_w6_effect_v3ed81:
+    gen: store/gens/032_dualforce_dcg_w6/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {own_defined: 204, effect_defined: 204, missing: 0, text_own_mean: 0.1756, text_effect_mean: 0.1756}
+  dualforce_dcg_w1p5_neutral_v3:
+    gen: store/gens/030_dualforce_dcg_w1p5/03_neutral_v3__dai
+    rows: 564
+    coverage: {own_defined: 564, effect_defined: 564, missing: 0, text_own_mean: 0.2365, text_effect_mean: 0.24}
+  dualforce_dcg_w1p5_neutral_v3ed81:
+    gen: store/gens/030_dualforce_dcg_w1p5/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {own_defined: 204, effect_defined: 204, missing: 0, text_own_mean: 0.1829, text_effect_mean: 0.1831}
+  dualforce_dcg_w3_neutral_v3:
+    gen: store/gens/031_dualforce_dcg_w3/03_neutral_v3__dai
+    rows: 564
+    coverage: {own_defined: 564, effect_defined: 564, missing: 0, text_own_mean: 0.2286, text_effect_mean: 0.2344}
+  dualforce_dcg_w3_neutral_v3ed81:
+    gen: store/gens/031_dualforce_dcg_w3/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {own_defined: 204, effect_defined: 204, missing: 0, text_own_mean: 0.1774, text_effect_mean: 0.1777}
+  refvfx_effect_v3:
+    gen: store/gens/003_refvfx/04_effect_v3__cc
+    rows: 148
+    coverage: {own_defined: 148, effect_defined: 148, missing: 0, text_own_mean: 0.2634, text_effect_mean: 0.2634}
+  wan_flf2v_effect_v3:
+    gen: store/gens/042_wan_flf2v/01_effect_v3__cc
+    rows: 148
+    coverage: {own_defined: 148, effect_defined: 148, missing: 0, text_own_mean: 0.2179, text_effect_mean: 0.2179}
+  wan_vace_effect_v3:
+    gen: store/gens/043_wan_vace/01_effect_v3__cc
+    rows: 148
+    coverage: {own_defined: 148, effect_defined: 148, missing: 0, text_own_mean: 0.2386, text_effect_mean: 0.2386}

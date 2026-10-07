@@ -3,12 +3,12 @@ seq: 39
 shelf: evals
 created: '2026-09-18'
 machine: dai (login CPU, numpy over stored features)
-instrument: scripts/copy_metrics.py @ d9fbce7
+instrument: scripts/copy_metrics.py @ fbf9e00
 copy_score: src/diffusion/transition_eval/m2_integrity.py (reused verbatim)
 tau_copy: 0.858
 definition:
   - "For each generation g with own reference r (the `reference` field of the gen's grid.jsonl row; r's features are in the corpus store, data/processed/transitions_std121/<class>/features/<r>/dino_cls@dinov2b-r256.npz):"
-  - "gen_mid = mid_mask(T_g, n_pre, n_suf) with the SAME n_pre/n_suf rules as handoff_metrics (HF 9/8|0 by sidedness; ED 1/0; externals 1/0)."
+  - "gen_mid = mid_mask(T_g, n_pre, n_suf) with the SAME n_pre/n_suf rules as handoff_metrics (HF 9/8|0 by sidedness; ED 1/0; externals 1/0). TEG baselines (2026-09-20, two-sided rows): frame-conditioned externals (refVFX two-sided, Wan FLF2V) 1/1; the VACE first-last CLIP baseline (grid type VACE16) 6/4."
   - "ref_core = the reference's core mask computed exactly as the harness computes a reference bundle: morph_profile(r_feats, n_prefix=9, n_suffix=8, n_endpoints=2) then core_mask_v3(profile, r's sidedness) (transition_eval/score.py::_ref_bundle_cache)."
   - "copy_score(gen_feats, gen_mid, ref_feats, ref_core, TAU_COPY) -> copy_max, near_copy, copy_gen_frame, copy_ref_frame; ref_idx = the reference's NON-core (~ref_core) frames \u2014 its own scenes A/B, the content that must never appear."
   - "Also emit ref_core_frac (fraction of reference frames in core) and n_mid (gen mid frames), and `missing` when a feature is absent."
@@ -110,3 +110,68 @@ arms_scored:
     rows: 204
     grid_type: ED
     coverage: {copy_defined: 204, near_copy: 1, copy_rate_pct: 0.49, copy_max_mean: 0.5842}
+  dualforce_dcg_w1p5_neutral_v3:
+    gen: store/gens/030_dualforce_dcg_w1p5/03_neutral_v3__dai
+    rows: 564
+    grid_type: HF
+    coverage: {copy_defined: 564, near_copy: 6, copy_rate_pct: 1.06, copy_max_mean: 0.3553}
+  dualforce_dcg_w1p5_neutral_v3ed81:
+    gen: store/gens/030_dualforce_dcg_w1p5/04_neutral_v3ed81__dai
+    rows: 204
+    grid_type: ED
+    coverage: {copy_defined: 204, near_copy: 6, copy_rate_pct: 2.94, copy_max_mean: 0.5302}
+  dualforce_dcg_w3_neutral_v3:
+    gen: store/gens/031_dualforce_dcg_w3/03_neutral_v3__dai
+    rows: 564
+    grid_type: HF
+    coverage: {copy_defined: 564, near_copy: 6, copy_rate_pct: 1.06, copy_max_mean: 0.3863}
+  dualforce_dcg_w3_neutral_v3ed81:
+    gen: store/gens/031_dualforce_dcg_w3/04_neutral_v3ed81__dai
+    rows: 204
+    grid_type: ED
+    coverage: {copy_defined: 204, near_copy: 4, copy_rate_pct: 1.96, copy_max_mean: 0.565}
+  refvfx_effect_v3:
+    gen: store/gens/003_refvfx/04_effect_v3__cc
+    rows: 148
+    grid_type: external
+    coverage: {copy_defined: 76, near_copy: 2, copy_rate_pct: 2.63, copy_max_mean: 0.2937}
+  wan_flf2v_effect_v3:
+    gen: store/gens/042_wan_flf2v/01_effect_v3__cc
+    rows: 148
+    grid_type: external
+    coverage: {copy_defined: 76, near_copy: 2, copy_rate_pct: 2.63, copy_max_mean: 0.3377}
+  wan_vace_effect_v3:
+    gen: store/gens/043_wan_vace/01_effect_v3__cc
+    rows: 148
+    grid_type: VACE16
+    coverage: {copy_defined: 148, near_copy: 2, copy_rate_pct: 1.35, copy_max_mean: 0.3286}
+  vap_neutral_v3:
+    gen: store/gens/011_vap/06_neutral_v3__dai
+    rows: 366
+    grid_type: external
+    coverage: {copy_defined: 366, near_copy: 2, copy_rate_pct: 0.55, copy_max_mean: 0.1851}
+  vfxmaster_neutral_v3:
+    gen: store/gens/012_vfxmaster/06_neutral_v3__dai
+    rows: 366
+    grid_type: external
+    coverage: {copy_defined: 366, near_copy: 2, copy_rate_pct: 0.55, copy_max_mean: 0.1875}
+  refvfx_neutral_v3:
+    gen: store/gens/003_refvfx/05_neutral_v3__dai
+    rows: 366
+    grid_type: external
+    coverage: {copy_defined: 366, near_copy: 2, copy_rate_pct: 0.55, copy_max_mean: 0.1893}
+  refvfx_neutral_v3_teg:
+    gen: store/gens/003_refvfx/06_neutral_v3_teg__cc
+    rows: 148
+    grid_type: external
+    coverage: {copy_defined: 148, near_copy: 2, copy_rate_pct: 1.35, copy_max_mean: 0.2732}
+  wan_flf2v_neutral_v3:
+    gen: store/gens/042_wan_flf2v/02_neutral_v3__cc
+    rows: 148
+    grid_type: external
+    coverage: {copy_defined: 148, near_copy: 2, copy_rate_pct: 1.35, copy_max_mean: 0.2824}
+  wan_vace_neutral_v3:
+    gen: store/gens/043_wan_vace/02_neutral_v3__cc
+    rows: 148
+    grid_type: VACE16
+    coverage: {copy_defined: 148, near_copy: 2, copy_rate_pct: 1.35, copy_max_mean: 0.2634}

@@ -1,0 +1,38 @@
+id: gens/003_refvfx/05_neutral_v3__dai
+seq: 5
+shelf: gens
+arm: refvfx
+harness_arm: refvfx_neutral_v3   # frozen stamp in items.jsonl/item_ids
+variant: neutral_v3
+machine: dai   # same machine as the entry it twins (gens/003_refvfx/03_author_native__dai) — no cross-machine confound inside the arm
+created: 2026-09-21
+inputs: {run: runs/003_refvfx (external), step: n/a}
+prompt_family: base_cond NEUTRAL grid (04_neutral_v3 + 05_neutral_v3ed81; = prompts/010 neutral ·strip-token = S1), byte-equal to what LTX-2 base_cond received; NO refVFX template clause (differs from gens/003_refvfx/02_neutral = prompts/001 swap_token_refvfx)
+prompt_sha: b86eeb228f33   # fsck corpus_sha over the 366-row grid
+grid_rows: 366
+videos: 366
+geometry: 480x640x33f @ fps 6.5455 (duration-matched to 121f@24; native aspect off — disclosed)
+grid: v3 ZERO-SHOT one-sided set (183 pairs x seeds 42/43 = 366 clips; 81 HF + 102 EffectData pairs) — the SAME rows as 03_author_native
+twin_of: gens/003_refvfx/03_author_native__dai (row-by-row clone; only the text channels + names differ — build_neutral_manifests.py asserts it)
+code: refVFX vendored @ e62c2c0 (misc/refvfx_baseline/code); FROZEN worker misc/refvfx_baseline/gen_worker.py; env $LAB/envs-aarch64/refvfx
+recipe: refVFX LoRA(step-10000) + CausVid, 6 steps, cfg 6.0, cfg_ref 2.0, cfg_input 0.0, sigma_shift 5.0, strict_end_image; reference uniformly subsampled to 33 f by the worker (identical to 03_author_native)
+conditioning: one-sided — input_image = frame 0 of <endpoint>_start9.mp4; end_image = None (native I2V); reference_video = the effect demo clip
+negative_prompt: "static, blurry, worst quality, low quality" (refVFX's own recipe negative — unchanged)
+disclosures: 480p portrait; refVFX = UNOFFICIAL CMU reimpl of arXiv:2601.07833; neutral = start caption only, the reference video is the only effect signal
+jobs: DeltaAI ghx4 bgms-dtai-gh — one-sided ZS array 3190252 (12 shards 0-11, NSHARDS 12), all rc=0. Original submit 19:47 CDT; kept whole on bgms (nearly self-completing, not redistributed). No CC involvement.
+timing: GH200 median ~42.8 s/clip (per-shard final medians 41.9-43.8 s); 12 shards ran 20:02-21:07 CDT
+verification: all 366 clips probed (PyAV, verify_entry.py) 480x640, 33 frames, 72/11 fps; names == grid.jsonl out_names (set-equal, 366 unique); parse_stem round-trip OK; no .part/.tmp; videos/SHA256SUMS written (366 lines, sorted) (2026-09-21 21:37 CDT)
+status: COMPLETE (366/366; .inflight removed 2026-09-21)
+notes: NEUTRAL-prompt twin (campaign misc/2026-09-21_neutral_baselines, RECORD.md; construction rule in store/gens/EXTERNAL_BASELINES.md §8). Settings hand-off for the scoring agent: SCORING_HANDOFF.md in the campaign folder (written at close-out).
+features:
+  dino_cls@dinov2b-r256: {have: 366, of: 366, hosts: [gh053.hsn.cm.delta.internal.ncsa.edu, gh080.hsn.cm.delta.internal.ncsa.edu]}
+  cotracker3@g20-m384-v2: {have: 366, of: 366, hosts: [gh012.hsn.cm.delta.internal.ncsa.edu, gh065.hsn.cm.delta.internal.ncsa.edu, gh080.hsn.cm.delta.internal.ncsa.edu, gh095.hsn.cm.delta.internal.ncsa.edu, gh119.hsn.cm.delta.internal.ncsa.edu, gh132.hsn.cm.delta.internal.ncsa.edu, gh138.hsn.cm.delta.internal.ncsa.edu]}
+  lpips_t@alex-r256: {have: 366, of: 366, hosts: [gh053.hsn.cm.delta.internal.ncsa.edu, gh080.hsn.cm.delta.internal.ncsa.edu]}
+  clip_b32@r256: {have: 366, of: 366, hosts: [gh030.hsn.cm.delta.internal.ncsa.edu, gh145.hsn.cm.delta.internal.ncsa.edu, gh147.hsn.cm.delta.internal.ncsa.edu]}
+  videoprism@f16r288: {have: 366, of: 366, hosts: [gh004.hsn.cm.delta.internal.ncsa.edu, gh012.hsn.cm.delta.internal.ncsa.edu, gh048.hsn.cm.delta.internal.ncsa.edu, gh065.hsn.cm.delta.internal.ncsa.edu, gh145.hsn.cm.delta.internal.ncsa.edu]}
+  raft_mag@r256: {have: 366, of: 366, hosts: [gh004.hsn.cm.delta.internal.ncsa.edu, gh012.hsn.cm.delta.internal.ncsa.edu, gh048.hsn.cm.delta.internal.ncsa.edu, gh065.hsn.cm.delta.internal.ncsa.edu, gh145.hsn.cm.delta.internal.ncsa.edu]}
+  clip_l14@r224: {have: 366, of: 366, hosts: [gh030.hsn.cm.delta.internal.ncsa.edu, gh145.hsn.cm.delta.internal.ncsa.edu, gh147.hsn.cm.delta.internal.ncsa.edu]}
+  viclip@l14-f8: {have: 366, of: 366, hosts: [gh030.hsn.cm.delta.internal.ncsa.edu, gh145.hsn.cm.delta.internal.ncsa.edu, gh147.hsn.cm.delta.internal.ncsa.edu]}
+  trackdesc@cotracker3-s64-v1: {have: 366, of: 366, hosts: [gh-login03.delta.ncsa.illinois.edu]}
+  flow_u32@raft-r256-g24x32: {have: 366, of: 366, hosts: [gh012.hsn.cm.delta.internal.ncsa.edu, gh017.hsn.cm.delta.internal.ncsa.edu, gh053.hsn.cm.delta.internal.ncsa.edu, gh065.hsn.cm.delta.internal.ncsa.edu, gh086.hsn.cm.delta.internal.ncsa.edu, gh090.hsn.cm.delta.internal.ncsa.edu, gh092.hsn.cm.delta.internal.ncsa.edu, gh096.hsn.cm.delta.internal.ncsa.edu, gh097.hsn.cm.delta.internal.ncsa.edu, gh125.hsn.cm.delta.internal.ncsa.edu, gh135.hsn.cm.delta.internal.ncsa.edu, gh146.hsn.cm.delta.internal.ncsa.edu]}
+  action@swin3db-k400-u32: {have: 366, of: 366, hosts: [gh012.hsn.cm.delta.internal.ncsa.edu, gh015.hsn.cm.delta.internal.ncsa.edu, gh023.hsn.cm.delta.internal.ncsa.edu, gh033.hsn.cm.delta.internal.ncsa.edu, gh044.hsn.cm.delta.internal.ncsa.edu, gh065.hsn.cm.delta.internal.ncsa.edu, gh084.hsn.cm.delta.internal.ncsa.edu, gh087.hsn.cm.delta.internal.ncsa.edu, gh095.hsn.cm.delta.internal.ncsa.edu, gh096.hsn.cm.delta.internal.ncsa.edu, gh097.hsn.cm.delta.internal.ncsa.edu, gh130.hsn.cm.delta.internal.ncsa.edu, gh132.hsn.cm.delta.internal.ncsa.edu, gh139.hsn.cm.delta.internal.ncsa.edu]}
