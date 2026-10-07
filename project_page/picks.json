@@ -1,0 +1,79 @@
+{
+  "_comment": "Owner-editable list of what appears on the project page. Edit, then rebuild with: /usr/bin/python3.12 project_page/build_page.py . 'Visible' = not hidden in eval_ladder/viewer/collections/site_plan.json. Run build_page.py --candidates to regenerate CANDIDATES.md (the menu of every visible block/cell/row). hero cells and comparison item_ids are resolved; see CANDIDATES.md for the full choices.",
+  "hero": [],
+  "teg": [
+    {
+      "block": "teg_ref__shadow_smoke_0",
+      "cells": null
+    },
+    {
+      "block": "teg_ref__firelava_1",
+      "cells": null
+    },
+    {
+      "block": "teg_ref__flying_cam_transition_1",
+      "cells": null
+    },
+    {
+      "block": "teg_ref__water_bending_3",
+      "cells": null
+    },
+    {
+      "block": "teg_ref__flame_transition_3",
+      "cells": null
+    },
+    {
+      "block": "teg_ref__earth_wave_3",
+      "cells": null
+    },
+    {
+      "block": "teg_ref__air_bending_1",
+      "cells": null
+    }
+  ],
+  "vet": [
+    {
+      "block": "vfx_ref__ed.Bile_aura_hands.ac198e9b1922c8b5.M",
+      "cells": null
+    },
+    {
+      "block": "vfx_ref__train_rush_0",
+      "cells": null
+    },
+    {
+      "block": "vfx_ref__ed.Amber_roots_from_feet.b1c41aca9ebede4f.M",
+      "cells": null
+    },
+    {
+      "block": "vfx_ref__ed.Chest_Erupting_Shield.958f2642980d32df.M",
+      "cells": null
+    },
+    {
+      "block": "vfx_ref__earth_element_4",
+      "cells": null
+    },
+    {
+      "block": "vfx_ref__super_fast_run_0",
+      "cells": null
+    },
+    {
+      "block": "vfx_ref__animalization_0",
+      "cells": null
+    },
+    {
+      "block": "vfx_ref__portal_1",
+      "cells": null
+    }
+  ],
+  "teg_cmp": [
+    "418iqdn6",
+    "byogszpf",
+    "knppfe3u"
+  ],
+  "vet_cmp": [
+    "lpuo5slp",
+    "ym1f1505",
+    "j89any4p"
+  ],
+  "nrg": "nrg_color_rain_3_gfit"
+}
