@@ -1,0 +1,209 @@
+model:
+  model_path: /projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors
+  text_encoder_path: /projects/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized
+  training_mode: lora
+lora:
+  rank: 32
+  alpha: 32
+  dropout: 0.0
+  target_modules:
+  - attn1.to_k
+  - attn1.to_q
+  - attn1.to_v
+  - attn1.to_out.0
+  - attn2.to_k
+  - attn2.to_q
+  - attn2.to_v
+  - attn2.to_out.0
+  - ff.net.0.proj
+  - ff.net.2
+training_strategy:
+  name: flexible
+  video:
+    is_generated: true
+    latents_dir: latents
+    cond_clean_latents_dir: cond_clean_latents
+    conditions:
+    - type: reference
+      latents_dir: reference_latents
+      probability: 0.9
+      attention: bidirectional
+    - type: mask
+      mask_dir: masks
+      probability: 1.0
+optimization:
+  learning_rate: 0.0002
+  steps: 68500
+  batch_size: 1
+  gradient_accumulation_steps: 1
+  max_grad_norm: 1.0
+  optimizer_type: adamw
+  scheduler_type: linear
+  scheduler_params: {}
+  enable_gradient_checkpointing: true
+acceleration:
+  mixed_precision_mode: bf16
+  quantization: null
+  load_text_encoder_in_8bit: false
+  offload_optimizer_during_validation: false
+data:
+  preprocessed_data_root: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/ctt_v2/roots/ctt_v2_mix
+  num_dataloader_workers: 2
+validation:
+  interval: 2500
+  skip_initial_validation: false
+  samples:
+  - conditions:
+    - type: prefix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/hero_flight_0_start9.mp4
+      num_frames: 9
+      audio: null
+      duration: null
+    - type: suffix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/hero_flight_0_end9.mp4
+      num_frames: 8
+      audio: null
+      duration: null
+    - type: reference
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/hero_flight/hero_flight_7.mp4
+      audio: null
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+    prompt: A muscular, bearded man with long blonde hair stands on a rooftop under a clear blue sky, wearing a sparkly pink
+      and blue bodysuit and a voluminous pink feathered cape with a city skyline in the background. sksz. a first-person perspective
+      shows a clenched fist in a light blue sleeve with pink dots extended over a city street and skyline under a bright,
+      sunny sky.
+    seed: null
+    video_dims: null
+  - conditions:
+    - type: prefix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/hero_flight_0_start9.mp4
+      num_frames: 9
+      audio: null
+      duration: null
+    - type: suffix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/hero_flight_0_end9.mp4
+      num_frames: 8
+      audio: null
+      duration: null
+    - type: reference
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ctt_v2_s2/full/videos/s2_0865_c00.mp4
+      audio: null
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+    prompt: A muscular, bearded man with long blonde hair stands on a rooftop under a clear blue sky, wearing a sparkly pink
+      and blue bodysuit and a voluminous pink feathered cape with a city skyline in the background. sksz. a first-person perspective
+      shows a clenched fist in a light blue sleeve with pink dots extended over a city street and skyline under a bright,
+      sunny sky.
+    seed: null
+    video_dims: null
+  - conditions:
+    - type: prefix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/hero_flight_0_start9.mp4
+      num_frames: 9
+      audio: null
+      duration: null
+    - type: suffix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/hero_flight_0_end9.mp4
+      num_frames: 8
+      audio: null
+      duration: null
+    - type: reference
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/shadow_smoke/shadow_smoke_3.mp4
+      audio: null
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+    prompt: A muscular, bearded man with long blonde hair stands on a rooftop under a clear blue sky, wearing a sparkly pink
+      and blue bodysuit and a voluminous pink feathered cape with a city skyline in the background. sksz. a first-person perspective
+      shows a clenched fist in a light blue sleeve with pink dots extended over a city street and skyline under a bright,
+      sunny sky.
+    seed: null
+    video_dims: null
+  - conditions:
+    - type: prefix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/money_rain_2_start9.mp4
+      num_frames: 9
+      audio: null
+      duration: null
+    - type: reference
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/money_rain/money_rain_0.mp4
+      audio: null
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+    prompt: A man in sunglasses and a dark green work shirt stands in a wood-paneled room, hands in pockets. sksz.
+    seed: null
+    video_dims: null
+  - conditions:
+    - type: prefix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/money_rain_2_start9.mp4
+      num_frames: 9
+      audio: null
+      duration: null
+    - type: reference
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/videos/ctt_v2_s2/full/videos/s2_0096_c01.mp4
+      audio: null
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+    prompt: A man in sunglasses and a dark green work shirt stands in a wood-paneled room, hands in pockets. sksz.
+    seed: null
+    video_dims: null
+  - conditions:
+    - type: prefix
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/money_rain_2_start9.mp4
+      num_frames: 9
+      audio: null
+      duration: null
+    - type: reference
+      video: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/color_rain/color_rain_8.mp4
+      audio: null
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+    prompt: A man in sunglasses and a dark green work shirt stands in a wood-paneled room, hands in pockets. sksz.
+    seed: null
+    video_dims: null
+  frame_rate: 24.0
+  guidance_scale: 4.0
+  inference_steps: 30
+  negative_prompt: worst quality, inconsistent motion, distorted, jittery
+  generate_audio: false
+  generate_video: true
+  images: null
+  prompts: []
+  reference_videos: null
+  reference_downscale_factor: 1
+  include_reference_in_output: false
+  seed: 42
+  video_dims:
+  - 480
+  - 640
+  - 121
+checkpoints:
+  interval: 2500
+  keep_last_n: -1
+  precision: bfloat16
+  no_resume: false
+flow_matching:
+  timestep_sampling_mode: shifted_logit_normal
+  timestep_sampling_params: {}
+hub:
+  push_to_hub: false
+  hub_model_id: null
+wandb:
+  enabled: false
+  project: ctt_v2
+  entity: null
+  tags:
+  - ltx2
+  - ctt_v2
+  - armA
+  - bidir
+  - ic_lora
+  log_validation_videos: true
+seed: 42
+output_dir: /projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/training/ctt_v2/armA_bidir
