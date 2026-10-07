@@ -40,6 +40,17 @@ NS_ARRAYS: dict[str, tuple[str, ...]] = {
     "videoprism@f16r288": ("feats",),
     "raft_mag@r256": ("mag",),
     "clip_l14@r224": ("feats",),
+    "raft_flow_win@r256": ("flow_start", "flow_end"),
+    "viclip@l14-f8": ("feat", "frame_idx"),
+    # derived from the stored cotracker3 tracks (metrics v5): unit velocity
+    # directions (dirs [M,64,2]) + whole-field track descriptor (px [31,18]).
+    "trackdesc@cotracker3-s64-v1": ("dirs", "px"),
+    # metrics v5 Round 4 (eval 049): whole-video optical-flow signature over
+    # T=32 uniform steps reduced to a 24x32 grid (flow [32,24,32,2] f16, idx
+    # [33] i32) and the Video Swin-B Kinetics-400 action distribution over 32
+    # uniformly sampled frames (prob/logit [400] f32, idx [32] i32).
+    "flow_u32@raft-r256-g24x32": ("flow", "idx"),
+    "action@swin3db-k400-u32": ("prob", "logit", "idx"),
 }
 NAMESPACES: tuple[str, ...] = tuple(NS_ARRAYS)
 
@@ -110,7 +121,7 @@ class FeatureStore:
 
     # -- path rule (the one rule from store/FEATURES.md) ----------------------
     def _feat_dir(self, video: Path | str) -> Path:
-        video = Path(video)
+        video = Path(video).resolve()   # symlink-safe: a gen reached through a link (eval gens dirs) still lands in <variant>/features/
         base = video.parent.parent if video.parent.name == "videos" else video.parent
         return base / "features" / video.stem
 
@@ -128,7 +139,7 @@ class FeatureStore:
 
     @staticmethod
     def _feat_root(video_dir: Path | str) -> Path:
-        video_dir = Path(video_dir)
+        video_dir = Path(video_dir).resolve()
         base = video_dir.parent if video_dir.name == "videos" else video_dir
         return base / "features"
 
@@ -236,6 +247,11 @@ class FeatureStore:
             "dtype": str(z[prim].dtype) if prim is not None else "",
             "bytes": npz.stat().st_size,
         })
+        # a DERIVED namespace (built from another namespace's arrays, not from
+        # the video) names its source namespace in the sidecar (store/FEATURES.md
+        # "One rule, two cases"); the only such caller today is trackdesc.
+        if meta.get("source_ns"):
+            sc["source_ns"] = meta["source_ns"]
 
         tmp_json = d / f"{name}.json.tmp-{pid}"
         tmp_json.write_text(json.dumps(sc, indent=2))
@@ -402,6 +418,13 @@ class FeatureStore:
         block_text = "\n".join(block)
 
         lines = meta_p.read_text().splitlines()
+        if not any(ln.startswith("id:") for ln in lines):
+            # Empty / partial meta (a concurrent writer mid-write, or an unregistered entry):
+            # never rewrite it -- a features-only meta.yaml is how 13 gen metas got clobbered
+            # on 2026-09-19 (non-atomic write_text + a concurrent shard's read). Leave it.
+            import warnings
+            warnings.warn(f"write_meta_block: {meta_p} has no top-level 'id:' -- left untouched")
+            return cov
         out, i, replaced = [], 0, False
         while i < len(lines):
             if lines[i].startswith("features:"):
@@ -418,5 +441,7 @@ class FeatureStore:
                 out.append(block_text)
             else:
                 out.append(block_text)
-        meta_p.write_text("\n".join(out) + "\n")
+        tmp = meta_p.with_name(f"meta.yaml.tmp-{os.getpid()}")   # atomic: a concurrent reader never sees a truncated file
+        tmp.write_text("\n".join(out) + "\n")
+        os.replace(tmp, meta_p)
         return cov

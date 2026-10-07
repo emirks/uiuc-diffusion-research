@@ -184,6 +184,212 @@ class RaftMagExtractor:
         return {"mag": np.asarray(mags, dtype=np.float32)}
 
 
+class RaftFlowWinExtractor(RaftMagExtractor):
+    """Dense RAFT flow FIELDS for the given windows only (endpoint-motion metrics):
+    ``flow_start`` f16 [8,H,W,2] = steps of frames 0..8 (the 9-frame given start clip /
+    the output's pinned start window); ``flow_end`` f16 [7,H,W,2] = steps of the LAST 8
+    frames (end9 frames 1..8 / the output's pinned end window). Same decode (short side
+    256), resize (dims divisible by 8) and RAFT-large pin as ``raft_mag@r256``; flow in
+    pixels of the resized frame, stored (y,x)-> [..., (dx, dy)]."""
+
+    NS = "raft_flow_win@r256"
+    START_FRAMES = 9
+    END_FRAMES = 8
+
+    def _flow(self, f_a: np.ndarray, f_b: np.ndarray) -> np.ndarray:
+        import torchvision.transforms.functional as TF
+        f1 = TF.to_tensor(self._resize(f_a)).unsqueeze(0)
+        f2 = TF.to_tensor(self._resize(f_b)).unsqueeze(0)
+        f1t, f2t = self.transforms(f1, f2)
+        flow = self.model(f1t.to(self.device), f2t.to(self.device))[-1]   # [1,2,H,W]
+        return flow[0].permute(1, 2, 0).float().cpu().numpy().astype(np.float16)
+
+    def extract(self, video) -> dict[str, np.ndarray]:
+        frames = _load_frames(video)
+        T = len(frames)
+        if T < 2:
+            raise ValueError(f"{video}: {T} frames < 2")
+        # a given clip shorter than the window (the 16-fps 6/4-frame VACE endpoints, 2026-09-20) IS its window:
+        # flow_start = all its steps, flow_end = the steps of its last min(8, T) frames; T >= 9 unchanged
+        n_start, n_end = min(self.START_FRAMES, T), min(self.END_FRAMES, T)
+        with torch.no_grad():
+            start = np.stack([self._flow(frames[i], frames[i + 1])
+                              for i in range(n_start - 1)])
+            e0 = T - n_end
+            end = np.stack([self._flow(frames[i], frames[i + 1])
+                            for i in range(e0, T - 1)])
+        return {"flow_start": start, "flow_end": end}
+
+
+class FlowU32Extractor(RaftMagExtractor):
+    """Whole-video optical-flow signature (metrics v5, eval 049): RAFT-large flow over T=32
+    uniform steps (33 uniformly sampled frames), each step's dense flow field reduced to a 24x32
+    grid of the frame-diagonal fraction. SAME decode (short side 256), ``_resize`` (dims /8),
+    transforms and RAFT-large pin as ``raft_mag@r256``. ``flow`` f16 [32,24,32,2] (last axis
+    ``(dx, dy)`` like ``raft_flow_win``; pixels of the resized frame divided by that frame's
+    diagonal, so a fraction of the frame diagonal per step); ``idx`` i32 [33] (the sampled frame
+    indices). idx = np.round(np.linspace(0, T-1, 33)); T >= 33 for every video of the gridv3
+    population, so idx is strictly increasing there. If T < 33 the linspace round REPEATS indices
+    (a slower rate); the repeats are recorded in the stored ``idx`` array (the sidecar schema is
+    fixed by FeatureStore.put). ~100 KB/video."""
+
+    NS = "flow_u32@raft-r256-g24x32"
+    N_STEPS = 32
+    GRID = (24, 32)
+
+    def extract(self, video) -> dict[str, np.ndarray]:
+        import torch.nn.functional as F
+        import torchvision.transforms.functional as TF
+        frames = _load_frames(video)
+        T = len(frames)
+        idx = np.round(np.linspace(0, T - 1, self.N_STEPS + 1)).astype(np.int32)   # [33]
+        steps = []
+        with torch.no_grad():
+            for k in range(self.N_STEPS):
+                f1 = TF.to_tensor(self._resize(frames[idx[k]])).unsqueeze(0)
+                f2 = TF.to_tensor(self._resize(frames[idx[k + 1]])).unsqueeze(0)
+                f1t, f2t = self.transforms(f1, f2)
+                flow = self.model(f1t.to(self.device), f2t.to(self.device))[-1]     # [1,2,h,w]
+                h, w = flow.shape[-2], flow.shape[-1]
+                diag = float((h * h + w * w) ** 0.5)                                # resized-frame diagonal (px)
+                f = flow[0] / diag                                                  # [2,h,w] frame-diagonal fraction
+                g = F.adaptive_avg_pool2d(f, self.GRID)                             # [2,24,32]
+                steps.append(g.permute(1, 2, 0).float().cpu().numpy())             # [24,32,2] (dx,dy)
+        return {"flow": np.stack(steps).astype(np.float16),                         # [32,24,32,2]
+                "idx": idx}
+
+
+class ActionSwinExtractor:
+    """Video Swin-B action-class signature (metrics v5, eval 049): Kinetics-400 logits / probs of
+    32 uniformly sampled frames (the model's native clip length). Weights
+    ``Swin3D_B_Weights.KINETICS400_IMAGENET22K_V1`` (``swin3d_b_22k-7c6ae6fa.pth``, 81.6 top-1 K400),
+    loaded from TORCH_HOME (the compute nodes run HF_HUB_OFFLINE=1 and must not download). Frames
+    decoded short side 256 (a no-op resize under the shipped ``VideoClassification`` transform, which
+    expects [..., T, C, H, W] float in [0,1], resizes short side 256, center-crops 224, applies
+    ImageNet mean/std and permutes to [C,T,H,W]); batch of 1, no_grad. ``prob`` f32 [400] (softmax of
+    the logits), ``logit`` f32 [400], ``idx`` i32 [32]. idx = np.round(np.linspace(0, T-1, 32)); T >= 32
+    for every video here, so idx is strictly increasing; if T < 32 the round repeats indices (recorded
+    in the stored ``idx`` array)."""
+
+    NS = "action@swin3db-k400-u32"
+    N_FRAMES = 32
+
+    def __init__(self, device: str = "cuda"):
+        from torchvision.models.video import Swin3D_B_Weights, swin3d_b
+        self.device = device
+        weights = Swin3D_B_Weights.KINETICS400_IMAGENET22K_V1
+        self.model = swin3d_b(weights=weights).to(device).eval()
+        self.transforms = weights.transforms()
+
+    def extract(self, video) -> dict[str, np.ndarray]:
+        frames = _load_frames(video)
+        T = len(frames)
+        idx = np.round(np.linspace(0, T - 1, self.N_FRAMES)).astype(np.int32)       # [32]
+        sel = np.ascontiguousarray(frames[idx])                                      # [32,H,W,3] uint8
+        t = torch.from_numpy(sel).permute(0, 3, 1, 2).float().div(255.0)            # [T,C,H,W] in [0,1]
+        with torch.no_grad():
+            inp = self.transforms(t.unsqueeze(0)).to(self.device)                    # [1,3,32,224,224]
+            logits = self.model(inp)[0].float()                                      # [400]
+            prob = torch.softmax(logits, dim=-1)
+        return {"prob": prob.cpu().numpy().astype(np.float32),
+                "logit": logits.cpu().numpy().astype(np.float32),
+                "idx": idx}
+
+
+class TrackDescExtractor:
+    """Track descriptors DERIVED from the stored CoTracker3 tracks (metrics v5).
+    Reads ``cotracker3@g20-m384-v2`` (tracks/vis) from the feature store and emits
+      dirs = _velocity_directions(tracks, vis, 64, 0.2, 0.1, 0.05).astype(f32)   [M,64,2]
+      px   = step_features(tracks, vis).astype(f32)                              [31,18]
+    exactly the ``dirs_for`` / ``px_for`` recipes of
+    misc/2026-09-02_temporal_dynamics_metric/score_v3_mf.py (the PX channel's
+    whole-field descriptor from run_motion_descriptors.step_features). CPU-only:
+    the ``device`` argument is accepted and ignored (no backbone). Raises when the
+    source tracks are absent."""
+
+    NS = "trackdesc@cotracker3-s64-v1"
+    SOURCE_NS = "cotracker3@g20-m384-v2"
+    N_STEPS = 64
+
+    def __init__(self, device: str = "cuda"):
+        import pathlib as _pl
+        import sys as _sys
+        from diffusion.feature_store import FeatureStore
+        from diffusion.transition_eval.motion import _velocity_directions
+        # step_features lives in the campaign script; import it the way blend_grid does.
+        repo = _pl.Path(__file__).resolve().parents[2]
+        misc = str(repo / "misc" / "2026-09-02_temporal_dynamics_metric")
+        if misc not in _sys.path:
+            _sys.path.insert(0, misc)
+        from run_motion_descriptors import step_features
+        self._fs = FeatureStore(repo)
+        self._veldir = _velocity_directions
+        self._stepf = step_features
+
+    def extract(self, video) -> dict[str, np.ndarray]:
+        if not self._fs.has(video, self.SOURCE_NS):
+            raise FileNotFoundError(
+                f"{video}: source namespace {self.SOURCE_NS} absent; trackdesc "
+                f"is derived from the stored cotracker3 tracks")
+        z = self._fs.get(video, self.SOURCE_NS)
+        dirs = self._veldir(z["tracks"], z["vis"], self.N_STEPS, 0.2, 0.1, 0.05).astype(np.float32)
+        px = self._stepf(z["tracks"], z["vis"]).astype(np.float32)
+        return {"dirs": dirs, "px": px}
+
+
+class ViClipExtractor:
+    """VBench `overall_consistency` video side: ViCLIP ViT-L/14 (InternVid-10M-FLT) video embedding of 8 frames
+    sampled the VBench way (`sample="middle"`: the middle frame of 8 equal segments), preprocessed exactly as
+    VBench's `clip_transform(224)` (bicubic resize of the short side to 224 without antialias, center crop,
+    CLIP mean/std) on frames decoded at NATIVE resolution. `feat [768] f32`, L2-normalised; `frame_idx [8] i32`.
+    Text side (`encode_text`) is the same model's text tower, used by the scoring script (prompt -> [768])."""
+
+    NS = "viclip@l14-f8"
+    N_FRAMES = 8
+    MEAN = (0.48145466, 0.4578275, 0.40821073)
+    STD = (0.26862954, 0.26130258, 0.27577711)
+
+    def __init__(self, device: str = "cuda"):
+        from diffusion.third_party.viclip.viclip import ViCLIP
+        from diffusion.third_party.viclip.simple_tokenizer import SimpleTokenizer
+        self.device = device
+        self.tokenizer = SimpleTokenizer()
+        self.model = ViCLIP(tokenizer=self.tokenizer).to(device).eval()
+
+    @staticmethod
+    def frame_indices(vlen: int, n: int = 8) -> list[int]:
+        intervals = np.linspace(start=0, stop=vlen, num=min(n, vlen) + 1).astype(int)
+        idx = [(a + (b - 1)) // 2 for a, b in zip(intervals[:-1], intervals[1:])]
+        while len(idx) < n:
+            idx.append(idx[-1])
+        return idx
+
+    def _transform(self, frames: np.ndarray) -> torch.Tensor:
+        import torchvision.transforms.functional as TF
+        from torchvision.transforms import InterpolationMode
+        t = torch.from_numpy(np.ascontiguousarray(frames)).permute(0, 3, 1, 2)          # [T,3,H,W] uint8
+        t = TF.resize(t, 224, interpolation=InterpolationMode.BICUBIC, antialias=False)   # short side -> 224
+        t = TF.center_crop(t, 224).float().div(255.0)
+        return TF.normalize(t, self.MEAN, self.STD)
+
+    def extract(self, video) -> dict[str, np.ndarray]:
+        frames = _load_frames(video, short_side=None)                                     # native resolution
+        idx = self.frame_indices(len(frames), self.N_FRAMES)
+        x = self._transform(frames[idx]).unsqueeze(0).to(self.device)                    # [1,T,3,224,224]
+        with torch.no_grad():
+            feat = self.model.encode_vision(x, test=True).float()
+            feat = feat / feat.norm(dim=-1, keepdim=True)
+        return {"feat": feat[0].cpu().numpy().astype(np.float32), "frame_idx": np.asarray(idx, dtype=np.int32)}
+
+    def encode_text(self, texts: list[str]) -> np.ndarray:
+        out = []
+        with torch.no_grad():
+            for t in texts:
+                f = self.model.encode_text(t).float()
+                out.append((f / f.norm(dim=-1, keepdim=True))[0].cpu().numpy())
+        return np.stack(out).astype(np.float32)
+
+
 # --- namespace -> factory(device) -> extractor -------------------------------
 REGISTRY: dict[str, "callable"] = {
     "dino_cls@dinov2b-r256": lambda device="cuda": DinoClsExtractor(device),
@@ -195,4 +401,9 @@ REGISTRY: dict[str, "callable"] = {
         "clip_l14@r224", "openai/clip-vit-large-patch14", device),
     "videoprism@f16r288": lambda device="cuda": VideoPrismExtractor(device),
     "raft_mag@r256": lambda device="cuda": RaftMagExtractor(device),
+    "raft_flow_win@r256": lambda device="cuda": RaftFlowWinExtractor(device),
+    "viclip@l14-f8": lambda device="cuda": ViClipExtractor(device),
+    "trackdesc@cotracker3-s64-v1": lambda device="cuda": TrackDescExtractor(device),
+    "flow_u32@raft-r256-g24x32": lambda device="cuda": FlowU32Extractor(device),
+    "action@swin3db-k400-u32": lambda device="cuda": ActionSwinExtractor(device),
 }

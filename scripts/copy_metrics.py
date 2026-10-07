@@ -61,7 +61,9 @@ from diffusion.transition_eval.s_structure import core_mask_v3  # noqa: E402
 # --- fixed pins -------------------------------------------------------------
 DINO_NS = "dino_cls@dinov2b-r256"
 CORPUS_MANIFEST = REPO_ROOT / "data" / "processed" / "transitions_std121" / "corpus_manifest.json"
-EXTERNAL_ARMS = ("refvfx", "vap", "vfxmaster")
+sys.path.insert(0, str(REPO_ROOT / "scripts"))
+import store_eval_common as _common  # noqa: E402  (the single window rule: EXTERNAL_ARMS / CLIP16_ARMS / windows)
+EXTERNAL_ARMS = _common.EXTERNAL_ARMS
 NAN = float("nan")
 
 # The DEFINITION block, verbatim from BRIEF_OP6_copy.md — copied into the eval meta.yaml.
@@ -70,7 +72,8 @@ DEFINITION = [
     "row; r's features are in the corpus store, "
     "data/processed/transitions_std121/<class>/features/<r>/dino_cls@dinov2b-r256.npz):",
     "gen_mid = mid_mask(T_g, n_pre, n_suf) with the SAME n_pre/n_suf rules as handoff_metrics "
-    "(HF 9/8|0 by sidedness; ED 1/0; externals 1/0).",
+    "(HF 9/8|0 by sidedness; ED 1/0; externals 1/0). TEG baselines (2026-09-20, two-sided rows): frame-conditioned "
+    "externals (refVFX two-sided, Wan FLF2V) 1/1; the VACE first-last CLIP baseline (grid type VACE16) 6/4.",
     "ref_core = the reference's core mask computed exactly as the harness computes a reference "
     "bundle: morph_profile(r_feats, n_prefix=9, n_suffix=8, n_endpoints=2) then "
     "core_mask_v3(profile, r's sidedness) (transition_eval/score.py::_ref_bundle_cache).",
@@ -109,7 +112,9 @@ def _parse_stem(video_stem: str) -> tuple[str, int]:
 
 
 def grid_type(arm: str, variant: str) -> str:
-    """``external`` / ``ED`` / ``HF`` — the tier that fixes n_pre/n_suf (as handoff_metrics)."""
+    """``external`` / ``VACE16`` / ``ED`` / ``HF`` — the tier that fixes n_pre/n_suf (as handoff_metrics)."""
+    if arm in _common.CLIP16_ARMS:
+        return "VACE16"
     if arm in EXTERNAL_ARMS:
         return "external"
     if "ed81" in variant:
@@ -118,11 +123,8 @@ def grid_type(arm: str, variant: str) -> str:
 
 
 def windows(gtype: str, sided: str) -> tuple[int, int]:
-    """(n_pre, n_suf) per the FIXED rule (identical to handoff_metrics.windows)."""
-    if gtype == "HF":
-        return 9, (8 if sided == "two" else 0)
-    # ED and externals both condition on frame 0.
-    return 1, 0
+    """(n_pre, n_suf) per the FIXED rule (store_eval_common.windows; identical to handoff_metrics.windows)."""
+    return _common.windows(gtype, sided)
 
 
 # --- reference resolution (grid.jsonl `reference` -> corpus clip + sidedness) -

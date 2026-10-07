@@ -51,17 +51,24 @@ from diffusion.transition_eval.video_io import probe_fps  # noqa: E402
 DINO_NS = "dino_cls@dinov2b-r256"
 TRACK_NS = "cotracker3@g20-m384-v2"
 CONDS_DIR = REPO_ROOT / "eval_ladder" / "conds"
-EXTERNAL_ARMS = ("refvfx", "vap", "vfxmaster")
-# v4 evals that carry the seam z-scores: internal (028) and externals (030).
+sys.path.insert(0, str(REPO_ROOT / "scripts"))
+import store_eval_common as _common  # noqa: E402  (the single window rule: EXTERNAL_ARMS / CLIP16_ARMS / windows / cond_clips)
+EXTERNAL_ARMS = _common.EXTERNAL_ARMS
+# v4 evals that carry the seam z-scores: internal (028), externals (030), the DCG sweep (041), the TEG baselines (042).
 SEAM_EVALS = ("028_grid_v3_paper_arms__dai__2026-09-07",
-              "030_external_zs_authornative__dai__2026-09-12")
+              "030_external_zs_authornative__dai__2026-09-12",
+              "041_grid_v3_dcg_w_sweep__dai__2026-09-19",     # DCG w-sweep arms (misc/2026-09-19_dcg_sweep_metrics)
+              "042_teg_zs_baselines__dai__2026-09-20")        # TEG baselines, two-sided zero-shot (misc/2026-09-20_teg_baselines)
 SEED_SUFFIXES = ("__s42", "__s43")  # the two grid-v3 seeds (fast path for the stem match)
 
 # The DEFINITIONS block, verbatim from BRIEF_OP3_handoff.md — copied into the eval meta.yaml.
 DEFINITIONS = [
     "Conditioning windows: HF-grid rows (121 f): n_pre = 9, n_suf = 8 if sided == \"two\" else 0. "
     "ED-grid rows (81 f, frame-0 anchor): n_pre = 1, n_suf = 0. Externals (VAP/VFXMaster 49 f, "
-    "refVFX 33 f, frame-0 conditioning): n_pre = 1, n_suf = 0.",
+    "refVFX 33 f, frame-0 conditioning): n_pre = 1, n_suf = 0. TEG baselines (2026-09-20, two-sided rows): "
+    "frame-conditioned externals (refVFX two-sided, Wan FLF2V; frame 0 of start9 / frame 8 of end9 given) n_pre = 1, "
+    "n_suf = 1; the VACE first-last CLIP baseline (grid type VACE16, 16 fps) n_pre = 6, n_suf = 4 against the resampled "
+    "given clips misc/2026-09-20_teg_baselines/conds_16fps/<endpoint>_{start6,end4}.mp4 (store_eval_common.cond_clips).",
     "Hand-off window length K = max(2, round(fps / 3)) frames (~1/3 s; 8 at 24 fps, 3 at 9.72 fps, "
     "5 at 15 fps). fps via probe_fps(gen_video).",
     "identity_A = mean over t in [n_pre, n_pre+K) of cos(f_gen[t], f_condA[n_pre-1]) where f_condA "
@@ -180,7 +187,9 @@ def _parse_stem(video_stem: str) -> tuple[str, int]:
 
 # --- grid classification + window rule --------------------------------------
 def grid_type(arm: str, variant: str) -> str:
-    """``external`` / ``ED`` / ``HF`` — the tier that fixes n_pre/n_suf."""
+    """``external`` / ``VACE16`` / ``ED`` / ``HF`` — the tier that fixes n_pre/n_suf."""
+    if arm in _common.CLIP16_ARMS:
+        return "VACE16"
     if arm in EXTERNAL_ARMS:
         return "external"
     if "ed81" in variant:
@@ -189,11 +198,8 @@ def grid_type(arm: str, variant: str) -> str:
 
 
 def windows(gtype: str, sided: str) -> tuple[int, int]:
-    """(n_pre, n_suf) per the FIXED rule."""
-    if gtype == "HF":
-        return 9, (8 if sided == "two" else 0)
-    # ED and externals both condition on frame 0.
-    return 1, 0
+    """(n_pre, n_suf) per the FIXED rule (store_eval_common.windows)."""
+    return _common.windows(gtype, sided)
 
 
 # --- seam z-score source ----------------------------------------------------
@@ -311,8 +317,7 @@ def compute_row(feats: Feats, gen_video: Path, endpoint: str, sided: str,
     motion_A_mf = motion_B_mf = NAN
     Kok = math.isfinite(K)
 
-    condA = CONDS_DIR / f"{endpoint}_start9.mp4"
-    condB = CONDS_DIR / f"{endpoint}_end9.mp4"
+    condA, condB = _common.cond_clips(gtype, endpoint)   # start9/end9, or the 16-fps start6/end4 resamples for VACE16
 
     # lazy, memoized gen-feature loader: a gen npz is read ONLY once its matching condition
     # feature is present (so a pre-extraction run touches no gen npz).

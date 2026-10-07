@@ -27,6 +27,7 @@ from __future__ import annotations
 import argparse
 import glob
 import json
+import os
 import socket
 import subprocess
 import sys
@@ -424,6 +425,12 @@ def cmd_extract(args, store):
             touched[t["label"]] = t
         for b in r["bad"]:
             print(f"    BAD: {b}")
+    # FS_NO_REFRESH=1 (2026-09-23): skip the per-target manifest/meta refresh in sharded GPU runs -- with 24 shards
+    # touching the same ~40 targets it took >25 min per shard on Taiga and timed the tasks out after the data was
+    # complete; run the refresh ONCE afterwards (`store_features.py refresh --population ...`).
+    if os.environ.get("FS_NO_REFRESH") == "1":
+        print(f"[extract] {ns}: filled {len(to_fill)} (touched {len(touched)} targets; refresh SKIPPED, FS_NO_REFRESH=1)")
+        return 0
     for t in touched.values():
         _refresh(store, t)
     print(f"[extract] {ns}: filled {len(to_fill)} (touched {len(touched)} targets)")

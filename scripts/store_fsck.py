@@ -111,6 +111,8 @@ def check_runs():
 
 def check_evals():
     for ev in sorted((STORE / "evals").iterdir()):
+        if ev.name.startswith("_draft"):   # draft evals (unnumbered, no INDEX line; owner rule 2026-09-18) live here until finalized
+            continue
         if not ev.is_dir():
             continue
         if not (ev / "meta.yaml").exists():

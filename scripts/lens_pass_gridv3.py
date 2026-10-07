@@ -62,7 +62,9 @@ LENS_NS = ("clip_b32@r256", "videoprism@f16r288", "raft_mag@r256", "cotracker3@g
 
 # v4 evals that carry Op-2's per_gen.jsonl (internal paper arms + externals).
 PERGEN_EVALS = ("028_grid_v3_paper_arms__dai__2026-09-07",
-                "030_external_zs_authornative__dai__2026-09-12")
+                "030_external_zs_authornative__dai__2026-09-12",
+                "041_grid_v3_dcg_w_sweep__dai__2026-09-19",
+                "042_teg_zs_baselines__dai__2026-09-20")      # TEG baselines, two-sided zero-shot (misc/2026-09-20_teg_baselines)
 
 
 # --- score_batch import (single source of the metric arithmetic + impl_sha) --
