@@ -1,0 +1,20 @@
+id: prompts/017_crossing_t1t2
+seq: 17
+shelf: prompts
+created: 2026-09-14
+family: crossing_t1t2   # T1 (designated-operator, matched reference) + T2 (missing-operator swap reference); crossed & uncrossed share this arm-free family
+grammar: "{shot caption}. sksz."   # S2 two-sided: "{shot A caption}. sksz. {shot B caption}."
+role: T1/T2 readout grid for the crossing ablation (owner terms: shots, operators, references, crossed/uncrossed). ARM-FREE (arm/item_id/video_key stripped); stamp_rows.py re-adds them per arm.
+rows: 117   # 39 T1 (one row each) + 39 T2 items x 2 pool rows (t2_role missing|designated, distinct gt_pool_class); 78 unique generated items
+prompt_corpus_sha: c0815f785004   # sha256[:12] over prompts, uniq by (cell,endpoint,reference,sided), byte-identical to the gen registry prompts
+renderer: none — prompts are carried verbatim from the T1/T2 generation registry (captions were resolved there via datasets/ctt_v2/captions.json)
+derived_from: misc/2026-09-13_crossing_ablation/gen/registry_crossing_t1t2.jsonl (sha256[:12] 4dcc6d6cfa64; 156 rows = 78 items x 2 arms; crossed arm's rows taken, content is arm-free)
+source: misc/2026-09-13_crossing_ablation/gen/build_registry_crossing_t1t2.py (gen registry builder) + misc/2026-09-13_crossing_ablation/eval/build_prompts_family_017.py (arm-free family assembly by the scoring operator)
+notes: >
+  T1 rows carry gt_pool_class = the designated operator's class (S1: manner name without the spec_ prefix;
+  S2: s2_<shader>), pct_type=same. Each T2 item is TWO rows sharing one generated video (added at stamp time
+  via video_key): t2_role=missing (gt_pool_class = swap/missing operator's class, pct_type=proxy) and
+  t2_role=designated (gt_pool_class = designated operator's class, pct_type=same). endpoint_class = the
+  designated operator's class (the endpoint is that operator's render of the shot). gen_item carries the
+  arm-free generation filename stem so stamp-time video_key = "<harness_arm>/<gen_item>" resolves to the clip.
+  no_twin is added per arm at stamp time (there is no base twin on this grid).

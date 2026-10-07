@@ -1,0 +1,43 @@
+id: 010_ic_gen_effect
+seq: 10
+shelf: gens
+created: 2026-08-06
+machine: DeltaAI GH200 (ghx4)   # same box as gens 006-009's scoring lane; scored in evals/005
+source: misc/2026-08-06_metric_eval/gen campaign (eval_ladder/run_gen.py, arm ic_gen_effect, via job_gen.sbatch)
+code: >
+  envs-aarch64/activate (ltx2 env) + PYTHONPATH -> src/LTX-2-ctt-v2-train/packages
+  (branch ctt-v2-train, commit db69ca7cd00f6c8e34cd0e8673ba36c948463362). run_gen.py always passes
+  attention= to ReferenceConditionConfig; the venv's editable LTX-2-official REJECTS that kwarg, so
+  the ctt-v2-train packages (which carry the `attention` field and accept 'bidirectional' ==
+  ic_gen's training default, behaviourally identical to official for bidirectional) are used with
+  PYTHONPATH shadowing site-packages. NOT a one_way override — ic_gen is bidirectional.
+inputs:
+  run: 001_ic_gen
+  step: 5000
+  adapter_sha256: 6e37fca7f6336656e8d600265e42c2799d25ce5c8e9836df556ed6941a97b6f0   # MEASURED; == runs/001_ic_gen@5000 (byte-identical adapter to gens/001_ic_gen)
+  base_model: cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors
+grid: grid.jsonl (152 rows x seeds [42,43] = 304 clips; = misc/2026-08-06_metric_eval/gen/registry_ic_gen_effect.jsonl)
+prompt_rule: >-
+  '"{S1}. sksz. {EFFECT}."' — the ctt_v2_leaky prompt convention: the trained sksz token followed by
+  the per-reference effect clause (prompt_variant leaky_effect_after_token). The ONLY change vs
+  gens/001_ic_gen (plain "{S1}. sksz. [{S2}.]") is the prompt — the adapter is byte-identical. This is
+  the "adapter x effect-in-text" cell, directly comparable to gens/005_ctt_v2_leaky (same leaky prompts).
+resolution: 480x640x121f @ 24 fps
+inference: steps 30, guidance_scale 4.0, stg_scale 1.0, stg_blocks [29], stg_mode stg_v; --rank 32 --alpha 32; attention bidirectional
+conditioning: prefix 9f (+ suffix 8f if two-sided) + the reference clip (IC-LoRA reads the demo; ref_novelty=seen)
+role: >
+  The missing adapter x text 2x2 cell of the metric_eval campaign (ic_gen adapter + effect described
+  in the prompt). Twin of the effect-free gens/001_ic_gen; a TREATMENT (uses the reference), not a
+  baseline. Read against the two neutral no-demo baselines gens/011 + gens/012.
+caveats:
+  - >-
+    item_ids share the ladder2 CTT grid convention with gens/011_base_cond_neutral,
+    gens/012_base_prompt_neutral (byte-identical item_id sets across the three arms) but do NOT
+    collide with eval_ladder/registry.jsonl (measured 0/152). The harness `arm` stamp is the only
+    field separating the three arms — key on (arm, item_id).
+  - >-
+    scored in evals/005_ic_effect_neutral__dai__2026-08-07. In that eval this arm carries the ladder
+    plan's `twin_of` values to its effect-free ic_gen base twins, but those base twins are NOT scored
+    in evals/005, so the twin_of references dangle there — the entry reports LEVELS, not paired margins.
+health: 304/304 clips present (152 rows x 2 seeds). Decode health: 0 error / 0 null rows across all 36 v4 scoring shards (evals/005).
+runner_note: _runner/ holds the per-shard validation-sample scratch left by run_gen's trainer harness; kept in place, not part of the deliverable.

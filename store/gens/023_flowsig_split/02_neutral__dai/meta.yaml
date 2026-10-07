@@ -1,0 +1,16 @@
+id: gens/023_flowsig_split/02_neutral__dai
+seq: 2
+shelf: gens
+arm: flowsig_split
+harness_arm: flowsig_split_neutral   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral
+machine: dai
+created: 2026-08-25
+inputs: {run: runs/019_flowsig_split, step: 10000}
+code: src/LTX-2-flowsig @ 9135ead + step2eval inference program port (token stream)
+prompt_family: prompts/001_ctt152_neutral
+prompt_sha: 0d708175fbfe
+grid_rows: 152
+videos: 304
+source: scripts/store_register.py over misc/2026-08-24_flow_signal_conditioning/step2eval/gen/registry_flowsig_split_neutral.jsonl
+notes: STANDARD arm treatment of the SEQUENCE-TOKEN injection arm, the arm's INTENDED inference regime: mode=both (pixel reference in context + MATCHED transition program), neutral prompt, w=1 (no signal-CFG => byte-identical to none). The FIELD rides the sequence as 1,280 RoPE-positioned tokens (2x pooled 16x10x8, co-located with the target block, learned type embedding); only the tempo rides the adaLN cond_proj hook. Inference layout [target | ref | program], oneway_ref_tokens = n_ref + n_prog = 6080, T = 10880 - bit-for-bit the training-side G2 gate. Grid is ROW-IDENTICAL to gens/022_flowsig_ball/01_neutral__dai (same 152 rows, seeds 42/43, prompts, program sources), so the two injection routes pair exactly and differ only in the route. Program store eval_v2_c18_20x15; NORM.json reused verbatim from training. Gen array 3023223 (32 tasks = 2 seeds x 16 chunks) on DeltaAI bhwp. Model = recipe variant textdrop-coupled (see runs/019 meta).

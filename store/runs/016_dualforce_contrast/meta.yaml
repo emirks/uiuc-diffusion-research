@@ -1,0 +1,60 @@
+id: 016_dualforce_contrast
+seq: 16
+shelf: runs
+created: 2026-08-21          # trained this session on DeltaAI GH200 (aarch64), job 2998010,2999095,2999096,2999097,2999098
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh; 2 GPU × grad_accum 2
+source: >
+  Campaign 2026-08-21_contrastive_training — the CONTRASTIVE treatment over the plain-FM control 012
+  (owner: "the exact same thing but with contrastive training — each step converge to a transition and
+  escape from a wrong transition"). 012's exact objective/sampler/warm-start/schedule PLUS ONE paired-
+  preference term per step on a cell-uniform same-content×different-operator S0+S1 pair sharing ε and
+  σ∼U[0.5,0.9]: win=(state A, cond_A, demo A)→v_A vs lose=(state B, cond_B, demo A)→v_B (sample axis),
+  seam-masked FM losses ℓ_w/ℓ_l, Δ=(ℓ_w−ℓ_w^ref)−(ℓ_l−ℓ_l^ref) with ref = the FROZEN warm-start adapter
+  (second PEFT adapter, Δ≡0 at step 0), L_con=(2/β)(softplus(βΔ)−log 2) — gradient ≈ ∇ℓ_w−∇ℓ_l near Δ=0,
+  saturating once the margin is won (bounded repel). loss = L_FM + λ_con·L_con, λ_con 0.25 warmup 250,
+  β 8.0 (default; no probe). Registered at the STEP-1000 checkpoint
+  (2000-step config), shipped for evaluation vs 012@1000 and 015@1000.
+inputs:
+  dataset: datasets/002_ctt_v2        # SAME 56,368-pair CTT v2 set as runs/002/012/015; not rebuilt
+  cell_index: misc/2026-08-20_s0s1_counterfactual/build/s0s1_cell_index.json   # 149 S0+S1 cells (reused from 015)
+warm_start:
+  from: runs/002_ctt_v2               # ctt_v2 shipped checkpoint, step 10000 (SAME init as 012/013/014/015)
+  checkpoint: store/runs/002_ctt_v2/checkpoints/lora_weights_step_10000.safetensors
+  note: config.model.load_checkpoint pins runs/002 step-10000 as the initialization AND as the frozen contrast reference
+trainer:
+  checkout: src/LTX-2-contrast        # linked worktree, branch `contrast` (from dualforce@5dfdcee)
+  branch: contrast
+  commit: 83d266d                  # CLEAN working tree at register time
+  entry: RESUMABLE CHUNK CHAIN (singleton, 1h30 chunks, ckpt every 100, resume = weights + optimizer + WSD scheduler + data position; ref pinned via twin.ref_checkpoint) jobs 2998010,2999095,2999096,2999097,2999098 (accelerate launch --num_processes 2 scripts/train.py df_contrast_chunk.yaml); config.yaml here
+  smoke: none (owner: run full directly); step-0 checks read off the full log — Δ≡0 (ref==policy), eps_gap≈0, DDP clean
+model: LTX-2 19B dev (frozen)
+adapter: IC-LoRA r128/a128; one-way reference attention; RAW video reference (reference latents concatenated as tokens — no bottleneck). target_modules attn_ffn (10 modules): attn1/attn2 {to_k,to_q,to_v,to_out.0} + ff.net.0.proj + ff.net.2.
+rank: 128
+alpha: 128
+dropout: 0.0
+reference_attention: one_way
+lr: 1e-4, WSD schedule (scheduler_type: wsd, warmup 100 / decay_frac 0.25 / end_factor 0.1), 2000-step config
+timesteps: shifted_logit_normal (primary row); contrast pair σ∼U[0.5,0.9]
+seed: 42
+effective_batch: 4                     # batch_size 1 × grad_accum 2 × 2 GPU (= 014/015's protocol)
+steps_config: 2000
+shipped_step: 1000
+twin:
+  variant: s0s1_contrast
+  contrast_axis: sample
+  strata: [S0, S1]
+  beta: 8.0
+  lambda_con: 0.25
+  lambda_warmup_steps: 250
+  ref_anchor: true                     # frozen 002@10000 as the DPO-style reference
+  band: [0.50, 0.90]
+  seam_frames: 1
+  batch_rule: one grad forward/step (DDP-safe) batch-3 [matched|win|lose] when primary geometry=16 frames; batch-1 [matched] on S4 (pair skipped); + one no-grad ref forward (batch-2)
+checkpoint_sha256:
+  lora_weights_step_01000.safetensors: a39d800a5e3571d24d6cdd008d33321aee7d27c9f7755fc113ad4b6286964a18
+source_location: outputs/dualforce/contrast_2gpu/checkpoints (scratch; training_state kept in scratch, not copied per contract §6)
+notes: >
+  Architecturally identical to ctt_v2/012/013/014/015 (plain r128 attn_ffn LoRA, one_way; the 'ref' adapter
+  is never saved — checkpoint carries the 'default' adapter only) — generation uses the proven one_way
+  IC-LoRA inference stack (eval_ladder/run_gen.py, src/LTX-2-ctt-v2-train packages, --rank 128 --alpha 128).
+  Controls = 012@1000 (plain FM) and 015@1000 (redirect null).

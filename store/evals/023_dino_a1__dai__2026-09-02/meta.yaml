@@ -1,0 +1,69 @@
+id: 023_dino_a1__dai__2026-09-02
+seq: 23
+shelf: evals
+created: 2026-09-02            # scored on DeltaAI GH200 (bhwp-dtai-gh)
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh
+harness: transition-eval v4.0.0 (eval-v4-cert worktree @ eval/v4.0.0-18-g258a990, [UNCERTIFIED] by design)
+instrument:
+  reference_v4_sha256: 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8  # MEASURED at score time (matches evals/001, 012, 019, 020, 021, 022 — same instrument)
+  corpus: data/processed/transitions_std121/corpus_manifest.json  # 222 clips
+  tau_copy: 0.858
+  matrix: m1a_S3
+  cache: misc/refvfx_baseline/probe/cache        # warm 222-clip corpus cache (shared -> comparable)
+  env: envs-aarch64/refvfx (module miniforge3_pytorch/2.10.0); PYTHONPATH=.claude/worktrees/eval-v4-cert/src
+  torch: 2.10.0+cu129                            # MEASURED from score .out logs (miniforge3_pytorch/2.10.0, CUDA 12.9)
+source: >
+  Campaign 2026-08-27_dino_signal_training — A1 channels-target arm, FULL PRODUCTION grid, MATCHED
+  case only: reference (pixel demo) + per-row DINO signal (A1, channels route) + prompt, single seed
+  42, all 152 rows, both prompts neutral (family 001) + effect (family 002). A1 through the
+  LTX-2-armA fork (@32d6e3f), the SAME fork/inference path as the A2/A0 (evals/021) and A5
+  (evals/022) passes: route=channels (SPEC §2) — the per-row appearance-free 44-ch DINO signal is
+  projected to the model inner dim by a Linear(44, inner_dim) and ADDED onto the target token
+  embeddings (placement=target, token_pool=2, signal-guidance=1.0, hidden 256, channels 44, 1
+  signal.proj.weight key loaded strict, norm db47be88, inner_dim 4096). rank/alpha 128, step 10000,
+  dataset 005_ctt_v2plus_s6reshape (SAME dataset as A2 and A5 — A1-vs-A2-vs-A5 is a CLEAN
+  same-dataset route comparison; A0 stays on 004 and is dataset-confounded). Row-identical grid,
+  seeds, prompts and instrument to the ctt_v2 / dcg / flowsig / evals-021 / evals-022 passes (same
+  reference_v4 459fd9a7, same warm cache) -> directly comparable, one machine.
+  INFERENCE SETTINGS: guidance_scale 4.0, resolution 480x640x121, frame_rate 24.0, stg (scale 1.0 /
+  blocks [29] / mode stg_v), seed 42, and the signal port (route=channels, token_pool 2, guidance
+  1.0, hidden 256, channels 44, norm db47be88) all MATCH the A1_channels_target.yaml validation
+  block. As with evals/021 and evals/022, gen used the arms.yaml global num_inference_steps 30 vs 20
+  at training-validation — a sampler-discretisation knob (not a training-distribution property; all
+  distribution-bearing settings match), kept at 30 for consistency with the evals/021-022
+  comparators and the ctt_v2/dcg/flowsig lineage (all scored at 30). Flagged for owner.
+arms_scored:
+  dino_a1_channels_neutral:
+    gen: gens/027_dino_a1_channels/01_neutral__dai
+    run: "staged A1_channels_target @ step 10000 (sha 1093362b; LTX-2-armA @32d6e3f); dataset 005_ctt_v2plus_s6reshape"
+    step: 10000
+    rows: 152
+  dino_a1_channels_effect:
+    gen: gens/027_dino_a1_channels/02_effect__dai
+    run: "staged A1_channels_target @ step 10000 (sha 1093362b; LTX-2-armA @32d6e3f); dataset 005_ctt_v2plus_s6reshape"
+    step: 10000
+    rows: 152
+plan:
+  seeds: [42]
+  chunks: 16
+  keyed_join: >
+    base twins found for all 152 rows. Neutral arm twins base directly; the EFFECT arm (family 002,
+    whose own input_key has no base twin) is re-keyed to its geometry twin's NEUTRAL input_key
+    (matched on cell/endpoint/reference/sided/pct_type — 152/152 unique, DCG/A2/A5-precedent
+    eval/build_eval_arms_a1.py). The harness `arm` stamp is unchanged.
+headline:                                      # MEASURED via eval/report_dino_a1.py (pool-yardstick, tau_copy 0.858) — NEUTRAL numbers only, no comparison settled
+  a1_channels_neutral: {pooled_same_pct: 84.8, ref_dep_gap_pp: 29.5, g_fit_pct: 92.9, g_unseen_same_pct: 91.1, g_zs_same_pct: 81.5, g_ref_control_pct: 63.4, core_degenerate: "10/152", near_copy: "0/152", copy_max_mean: 0.3915}
+  a1_channels_effect:  {pooled_same_pct: 89.6, ref_dep_gap_pp: 33.7, g_fit_pct: 95.8, g_unseen_same_pct: 100.4, g_zs_same_pct: 86.5, g_ref_control_pct: 62.1, core_degenerate: "5/152", near_copy: "0/152", copy_max_mean: 0.4499}
+  comparators_same_machine_cross_pass: >   # from evals/022 (A5) + evals/021 (A2/A0) + evals/001 (ctt_v2), re-summarised by report_dino_a1.py
+    pooled-same: A1n 84.8 / A1e 89.6 · A5n 84.9 / A5e 89.8 · A2n 86.0 / A2e 90.1 · A0n 84.6 / A0e 86.8 · ctt_v2 82.5.
+    ref-dep gap: A1n +29.5 / A1e +33.7 · A5n +26.4 / A5e +32.7 · A2n +33.0 / A2e +27.1 · A0n +34.1 / A0e +29.8 · ctt_v2 +21.3.
+    A1-vs-A2-vs-A5 is a CLEAN same-dataset (005) route comparison; A0 is 004-confounded.
+  err_rows_note: >     # per-arm app_ref=None decode failures (EOFError/BadZipFile on a minority of pool-reference comparisons; every one of the 152 gens still landed a pooled score): a1n 30, a1e 20 (of 921 pool-rows/arm). Data-quality note, NOT re-scored (matches the evals/021-022 pattern).
+caveats: >
+  A1 shares dataset 005 with A2 and A5, so A1-vs-A2-vs-A5 is a CLEAN same-dataset ROUTE comparison
+  (channels vs tokens vs signal-as-Q xattn); A0 is on 004, so A1-vs-A0 stays dataset-confounded.
+  Cross-pass comparison to evals/022 (A5), evals/021 (A2/A0) and ctt_v2/dcg/flowsig is same-machine
+  + same instrument sha (459fd9a7) but a different scoring pass (cross-pass caveat). Bars NOT pre-set
+  for this production case; a bar-setting consult is owed before interpreting. The claim-bearing
+  within-arm contrast (A1-matched vs A1-shufsignal) is NOT part of this production pass (matched
+  only, per owner FINAL 2026-09-01). NEUTRAL numbers — no branch/family verdict.

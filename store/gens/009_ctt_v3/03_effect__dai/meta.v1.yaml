@@ -1,0 +1,10 @@
+id: 021_ctt_v2_pushA_effect
+seq: 21
+shelf: gens
+created: 2026-08-12
+machine: DeltaAI ghx4 (co-located effect 2x2; gen+score same machine)
+inputs: {run: runs/008_ctt_v3_wsd, step: 6000, arm: ctt_v2_pushA_effect, prompt: effect}
+grid: registry_ctt_v2_pushA_effect.jsonl (152-row CTT grid; effect prompt; effect manifest = registry_ctt_v2_leaky verbatim)
+video_layout: outputs/videos/ctt_v2_push_effect/ctt_v2_pushA_effect__ck6000/<item_id>__s<seed>.mp4
+scored_in: evals/008_ctt_v2_effect_2x2__dai__2026-08-12
+notes: champion×effect; headline 91.54. video_key stripped from effect registries (else gendir collides on ctt_v2_leaky).

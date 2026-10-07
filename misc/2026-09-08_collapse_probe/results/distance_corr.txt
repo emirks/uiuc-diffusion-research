@@ -1,0 +1,36 @@
+distance descriptives by tier, median [IQR]  (anchor frame 8 vs anchor frame 120):
+  high DINO 0.98 [0.96,1.01]  CLIP 0.50 [0.45,0.57]  pixel 0.93 [0.86,1.03]
+  low  DINO 0.45 [0.29,0.64]  CLIP 0.22 [0.16,0.29]  pixel 0.75 [0.67,0.90]
+
+Spearman rho(distance, outcome)  — negative = more distant endpoints -> lower DR (closer to the line):
+
+ [all 120]
+   R3 DR  both anchors, captions only   DINO -0.24 (p=0.009, n=120)     CLIP -0.19 (p=0.034, n=120)     pixel -0.34 (p=0.000, n=120)
+   R2 DR  both anchors, full text       DINO -0.08 (p=0.407, n=120)     CLIP -0.02 (p=0.797, n=120)     pixel -0.26 (p=0.004, n=120)
+   R1 DR  start only, full text         DINO -0.07 (p=0.434, n=120)     CLIP -0.01 (p=0.904, n=120)     pixel -0.23 (p=0.013, n=120)
+   dDR R3-R2  (text removed)            DINO -0.24 (p=0.009, n=120)     CLIP -0.28 (p=0.002, n=120)     pixel +0.07 (p=0.430, n=120)
+   dDR R2-R1  (anchor added)            DINO +0.06 (p=0.481, n=120)     CLIP +0.10 (p=0.271, n=120)     pixel -0.16 (p=0.073, n=120)
+
+ [scene-change only (90)]
+   R3 DR  both anchors, captions only   DINO -0.12 (p=0.256, n=90)      CLIP -0.04 (p=0.678, n=90)      pixel -0.29 (p=0.005, n=90)
+   R2 DR  both anchors, full text       DINO -0.33 (p=0.001, n=90)      CLIP -0.21 (p=0.049, n=90)      pixel -0.32 (p=0.002, n=90)
+   R1 DR  start only, full text         DINO -0.36 (p=0.000, n=90)      CLIP -0.22 (p=0.041, n=90)      pixel -0.31 (p=0.003, n=90)
+   dDR R3-R2  (text removed)            DINO +0.16 (p=0.141, n=90)      CLIP +0.10 (p=0.370, n=90)      pixel +0.19 (p=0.075, n=90)
+   dDR R2-R1  (anchor added)            DINO +0.09 (p=0.422, n=90)      CLIP +0.13 (p=0.230, n=90)      pixel -0.17 (p=0.117, n=90)
+
+ [in-place only (30)]
+   R3 DR  both anchors, captions only   DINO +0.23 (p=0.226, n=30)      CLIP +0.20 (p=0.295, n=30)      pixel -0.18 (p=0.340, n=30)
+   R2 DR  both anchors, full text       DINO +0.18 (p=0.332, n=30)      CLIP +0.15 (p=0.426, n=30)      pixel -0.26 (p=0.164, n=30)
+   R1 DR  start only, full text         DINO +0.27 (p=0.146, n=30)      CLIP +0.18 (p=0.330, n=30)      pixel -0.15 (p=0.423, n=30)
+   dDR R3-R2  (text removed)            DINO +0.14 (p=0.448, n=30)      CLIP -0.05 (p=0.778, n=30)      pixel +0.31 (p=0.099, n=30)
+   dDR R2-R1  (anchor added)            DINO -0.11 (p=0.553, n=30)      CLIP -0.12 (p=0.540, n=30)      pixel -0.16 (p=0.413, n=30)
+
+R3 by distance tercile (pooled 120):
+  realized_dino  on-line share near=5%, mid=28%, far=30%        DR_R3 median near=0.29, mid=0.21, far=0.20 dDR(R3-R2) median near=-0.01, mid=-0.11, far=-0.05
+  clip_dist      on-line share near=10%, mid=30%, far=22%       DR_R3 median near=0.29, mid=0.17, far=0.22 dDR(R3-R2) median near=-0.01, mid=-0.09, far=-0.06
+  pixel_gap      on-line share near=5%, mid=25%, far=32%        DR_R3 median near=0.28, mid=0.22, far=0.16 dDR(R3-R2) median near=-0.05, mid=-0.03, far=-0.03
+
+within scene-change: R3 by CLIP tercile (DINO is saturated there):
+  on-line share {'near': '33%', 'mid': '20%', 'far': '30%'}  DR_R3 median {'near': '0.16', 'mid': '0.24', 'far': '0.20'}  CLIP range {'near': '0.20-0.46', 'mid': '0.46-0.54', 'far': '0.54-0.68'}
+
+wrote results/paired_with_distances.csv

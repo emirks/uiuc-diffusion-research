@@ -1,0 +1,35 @@
+id: 012_base_prompt_neutral
+seq: 12
+shelf: gens
+created: 2026-08-06
+machine: DeltaAI GH200 (ghx4)
+source: misc/2026-08-06_metric_eval/gen campaign (eval_ladder/run_gen.py, arm base_prompt_neutral, via job_gen_neutral.sbatch)
+code: envs-aarch64/activate (ltx2 env) -> src/LTX-2-official packages (standard; NO reference, NO conditioning => no attention-kwarg issue, no PYTHONPATH override)
+inputs:
+  run: null                      # NO adapter — the LTX-2 19B base model
+  base_model: cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors
+  adapter_sha256: null
+grid: grid.jsonl (152 rows x seeds [42,43] = 304 clips; = misc/2026-08-06_metric_eval/gen/registry_base_prompt_neutral.jsonl)
+prompt_rule: >-
+  V-NEUTRAL, identical to gens/011_base_cond_neutral: the start-scene sentence ONLY ("{S1}."), with
+  the trained " sksz." token AND the effect clause both removed. No transition described, no demo.
+  Differs from gens/006_base_prompt_ctt, whose prompt STATES the effect; the two are NOT interchangeable.
+resolution: 480x640x121f @ 24 fps
+inference: steps 30, guidance_scale 4.0, stg_scale 1.0, stg_blocks [29], stg_mode stg_v; no adapter
+conditioning: NONE (conditioning: none) — no prefix, no suffix, no reference. Prompt only. The cleanest zero.
+role: >
+  Neutral no-demo control 2 of 2 (metric_eval). Paired with gens/011_base_cond_neutral, which differs
+  in exactly one field (the endpoint conditioning) — 011 vs 012 prices the anchors under a V-neutral
+  prompt. Read against the treatment gens/010_ic_gen_effect.
+caveats:
+  - >-
+    rows keep `reference` and set `use_reference: false`. The model never sees the demo; the field is
+    SCORING identity — run_eval.pool_refs() bans the row's reference from the GT pool, so dropping it
+    would give this arm a different pool than the arms it is read against.
+  - >-
+    un-twinned by design (`no_twin: true`): it IS a baseline, contributes a LEVEL, never a paired margin.
+  - >-
+    item_ids are byte-identical to gens/010 + gens/011 (share the ladder2 CTT grid) but do NOT collide
+    with eval_ladder/registry.jsonl (0/152). Key on (arm, item_id).
+health: 304/304 clips present (152 rows x 2 seeds). Decode health: 0 error / 0 null rows across all 36 v4 scoring shards (evals/005).
+runner_note: _runner/ holds run_gen's per-shard validation-sample scratch; kept in place, not part of the deliverable.

@@ -1,0 +1,16 @@
+id: gens/019_dualforce_twin/01_neutral__dai
+seq: 1
+shelf: gens
+arm: dualforce_twin
+harness_arm: dualforce_twin_neutral   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral
+machine: dai
+created: 2026-08-20
+inputs: {run: runs/014_dualforce_twin, step: 1000}
+code: src/LTX-2-dualforce @ 6dc2f68
+prompt_family: prompts/001_ctt152_neutral
+prompt_sha: 0d708175fbfe
+grid_rows: 152
+videos: 304
+source: scripts/store_register.py over misc/2026-08-19_counterfactual_training/build/gen/registry_dualforce_twin_neutral.jsonl
+notes: counterfactual-twin treatment neutral; arm dualforce_twin_neutral; same 152 grid + prompt_sha 0d708175 as control 012

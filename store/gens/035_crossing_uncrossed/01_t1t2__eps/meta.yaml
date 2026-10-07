@@ -1,0 +1,16 @@
+id: gens/035_crossing_uncrossed/01_t1t2__eps
+seq: 1
+shelf: gens
+arm: crossing_uncrossed
+harness_arm: crossing_uncrossed_t1t2   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: t1t2
+machine: eps
+created: 2026-09-14
+inputs: {run: runs/023_crossing_uncrossed, step: 3000}
+code: misc/2026-09-13_crossing_ablation/gen/xab_gen.py (fork of eps ctt_v2 repo run_gen.py) @ 3184f77f6aa5
+prompt_family: prompts/017_crossing_t1t2
+prompt_sha: c0815f785004
+grid_rows: 117
+videos: 156
+source: scripts/store_register.py over /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/misc/2026-09-13_crossing_ablation/eval/registries/crossing_uncrossed_t1t2.stamped.jsonl
+notes: crossing ablation T1/T2 (owner terms: shots/operators/references/crossed-uncrossed); one_way ref attn, rank128/alpha128, 30 steps cfg4 STG1 blk29, 480x640x121@24; prefix 9 (+suffix 8 for the 12 two-sided S2 items); machine eps (fal-h100 H100); 78 items x seeds 42/43 = 156 clips; scoring registry has 117 rows (T2 doubled by pool)

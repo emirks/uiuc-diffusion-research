@@ -1,0 +1,132 @@
+id: 050_endpoint_pixel_gridv3__dai__2026-09-24
+seq: 50
+shelf: evals
+created: '2026-09-24'
+machine: dai (ghx4 array + login CPU race; LPIPS cuda/cpu, decode/PSNR/SSIM CPU)
+instrument: scripts/metrics_v5/pixel_endpoint_eval.py @ fbf9e00
+namespaces: []  # pixels only (PyAV rgb24), no feature-store namespace
+definition:
+  - "MAIN (frame-level, comparable across EVERY system): the single given START frame and, on two-sided rows,"
+  - "the single given END frame. out frame 0 vs start9 frame 0; out frame T-1 vs end9 frame 8 (target frame 120)."
+  - "start9/end9 are eval_ladder/conds/<endpoint>_{start9,end9}.mp4 (480x640, 24 fps, 9 frames) for EVERY grid"
+  - "type, VACE16 included -- this is the cross-system comparison."
+  - "SECONDARY (window mean, the clip-conditioned systems; a stricter self-check, NOT the comparison): the mean"
+  - "over the whole given window with the eval-043 pairing. (n_pre, n_suf) = store_eval_common.windows(gtype, sided):"
+  - "HF 9/8|0, VACE16 6/4|0, ED + externals 1/1|0 (window IS the frame there). out[t] vs start clip[t] for t<n_pre;"
+  - "out[T-n_suf+j] vs end clip[len-n_suf+j] for j<n_suf. Start/end clips = start9/end9 mp4 everywhere except"
+  - "VACE16, whose given frames are the lossless PNGs misc/2026-09-20_teg_baselines/conds_16fps/<endpoint>_start6_NN.png"
+  - "/ _end4_NN.png (what the pipeline consumed)."
+  - "Metrics (uint8 [0,255], full native resolution, PyAV rgb24, no resize; if a pair's shapes differ the GIVEN frame"
+  - "is bilinear-resized to the output's size and resized:true is recorded -- expected never, all frames 640x480):"
+  - "PSNR (dB): 10*log10(255^2/MSE) over all pixels+3 channels; MSE==0 -> 100.0."
+  - "SSIM: Wang et al. 2004, 11x11 Gaussian window sigma 1.5, K1 0.01, K2 0.03, L 255, 'valid' padding, per RGB channel"
+  - "averaged over 3 channels (torch conv2d groups=3, float64; verified against a numpy sliding-window loop < 1e-6)."
+  - "LPIPS: lpips.LPIPS(net='alex', version='0.1'), input (x/127.5 - 1) float32, full resolution, no_grad."
+  - "Caveat: PSNR is capped by the H.264 encoding of both the output and the given clips (~40-45 dB ceiling; a perfect"
+  - "copy through a VAE lands lower). The frame-level numbers are the cross-system comparison; the window means are defined"
+  - "only for clip-conditioned systems and are NOT comparable across grid types."
+why: "Prior works take an image input; this reports the pixel fidelity (PSNR/SSIM/LPIPS) of the given endpoint frames, comparably across every system (frame-level, start9[0] / end9[8]) plus a within-system window mean for the clip-conditioned arms. Complements the DINO identity of eval 043 (a perceptual/pixel counterpart)."
+caveat: "PSNR is capped by the H.264 encoding of BOTH the output and the given clips (~40-45 dB ceiling; a perfect copy through a VAE lands lower -- see the re-encoding reference in the R6 RECORD). The frame-level numbers (psnr_A/ssim_A/lpips_A, and _B on two-sided rows) are the cross-system comparison; the window means (psnr_Aw.. / psnr_Bw..) are defined only for clip-conditioned systems and are NOT comparable across grid types (HF 9/8, VACE16 6/4 from the lossless PNGs, ED/externals 1/1 = the frame). GPU-vs-CPU LPIPS differ at ~1e-6 (device recorded per row)."
+arms_scored:
+  base_cond_effect_v3:
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, resized: 0, device: "cpu", psnr_A_mean: 29.8114, ssim_A_mean: 0.8934, lpips_A_mean: 0.0425, psnr_B_mean: 26.271, ssim_B_mean: 0.7931, lpips_B_mean: 0.1139}
+  base_cond_effect_v3ed81:
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 32.5864, ssim_A_mean: 0.9348, lpips_A_mean: 0.0263, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  base_cond_neutral_v3:
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, resized: 0, device: "cpu", psnr_A_mean: 29.8138, ssim_A_mean: 0.8934, lpips_A_mean: 0.0424, psnr_B_mean: 26.2769, ssim_B_mean: 0.7944, lpips_B_mean: 0.1135}
+  base_cond_neutral_v3ed81:
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, resized: 0, device: "cpu", psnr_A_mean: 32.5902, ssim_A_mean: 0.9349, lpips_A_mean: 0.026, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  dualforce_control_effect_v3:
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, resized: 0, device: "cpu", psnr_A_mean: 29.8002, ssim_A_mean: 0.8931, lpips_A_mean: 0.0428, psnr_B_mean: 25.0345, ssim_B_mean: 0.7521, lpips_B_mean: 0.1282}
+  dualforce_control_effect_v3ed81:
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, resized: 0, device: "cpu", psnr_A_mean: 32.4308, ssim_A_mean: 0.9331, lpips_A_mean: 0.0334, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  dualforce_control_neutral_v3:
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 29.8016, ssim_A_mean: 0.8931, lpips_A_mean: 0.0427, psnr_B_mean: 25.0338, ssim_B_mean: 0.7519, lpips_B_mean: 0.1277}
+  dualforce_control_neutral_v3ed81:
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, resized: 0, device: "cpu", psnr_A_mean: 32.4426, ssim_A_mean: 0.9332, lpips_A_mean: 0.0331, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  dualforce_dcg_emptynull_w6_neutral_v3ed81:
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 32.3168, ssim_A_mean: 0.9315, lpips_A_mean: 0.0377, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  dualforce_dcg_emptynull_w6_neutral_v3zs:
+    rows: 238
+    coverage: {A_defined: 238, B_defined: 76, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 30.0504, ssim_A_mean: 0.8941, lpips_A_mean: 0.0432, psnr_B_mean: 24.1234, ssim_B_mean: 0.7165, lpips_B_mean: 0.1495}
+  dualforce_dcg_w1p5_neutral_v3:
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 29.7988, ssim_A_mean: 0.8931, lpips_A_mean: 0.0428, psnr_B_mean: 25.0358, ssim_B_mean: 0.7527, lpips_B_mean: 0.1282}
+  dualforce_dcg_w1p5_neutral_v3ed81:
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, resized: 0, device: "cpu", psnr_A_mean: 32.4238, ssim_A_mean: 0.933, lpips_A_mean: 0.0336, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  dualforce_dcg_w3_neutral_v3:
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, resized: 0, device: "cpu", psnr_A_mean: 29.7882, ssim_A_mean: 0.8928, lpips_A_mean: 0.043, psnr_B_mean: 24.9124, ssim_B_mean: 0.7501, lpips_B_mean: 0.1303}
+  dualforce_dcg_w3_neutral_v3ed81:
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 32.3617, ssim_A_mean: 0.9322, lpips_A_mean: 0.035, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  dualforce_dcg_w6_effect_v3:
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, resized: 0, device: "cpu", psnr_A_mean: 29.7588, ssim_A_mean: 0.8921, lpips_A_mean: 0.0434, psnr_B_mean: 24.7297, ssim_B_mean: 0.747, lpips_B_mean: 0.1369}
+  dualforce_dcg_w6_effect_v3ed81:
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 32.2255, ssim_A_mean: 0.9304, lpips_A_mean: 0.0383, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  dualforce_dcg_w6_neutral_v3:
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 29.7568, ssim_A_mean: 0.8921, lpips_A_mean: 0.0434, psnr_B_mean: 24.7134, ssim_B_mean: 0.7469, lpips_B_mean: 0.1373}
+  dualforce_dcg_w6_neutral_v3ed81:
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 32.2326, ssim_A_mean: 0.9304, lpips_A_mean: 0.038, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  ic_gen_effect_v3:
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 29.7983, ssim_A_mean: 0.893, lpips_A_mean: 0.0428, psnr_B_mean: 25.4251, ssim_B_mean: 0.7667, lpips_B_mean: 0.1219}
+  ic_gen_effect_v3ed81:
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 32.5148, ssim_A_mean: 0.9343, lpips_A_mean: 0.0288, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  ic_gen_neutral_v3:
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 29.5112, ssim_A_mean: 0.886, lpips_A_mean: 0.0497, psnr_B_mean: 25.4188, ssim_B_mean: 0.7661, lpips_B_mean: 0.1213}
+  ic_gen_neutral_v3ed81:
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 32.505, ssim_A_mean: 0.9341, lpips_A_mean: 0.0284, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  refvfx_author_native:
+    rows: 366
+    coverage: {A_defined: 366, B_defined: 0, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 25.5992, ssim_A_mean: 0.8486, lpips_A_mean: 0.0811, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  refvfx_effect_v3:
+    rows: 148
+    coverage: {A_defined: 148, B_defined: 148, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 24.2959, ssim_A_mean: 0.7942, lpips_A_mean: 0.099, psnr_B_mean: 25.2284, ssim_B_mean: 0.8365, lpips_B_mean: 0.108}
+  refvfx_neutral_v3:
+    rows: 366
+    coverage: {A_defined: 366, B_defined: 0, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 21.9683, ssim_A_mean: 0.7545, lpips_A_mean: 0.1161, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  refvfx_neutral_v3_teg:
+    rows: 148
+    coverage: {A_defined: 148, B_defined: 148, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 23.0116, ssim_A_mean: 0.745, lpips_A_mean: 0.1131, psnr_B_mean: 24.52, ssim_B_mean: 0.8214, lpips_B_mean: 0.1197}
+  vap_author_native:
+    rows: 366
+    coverage: {A_defined: 366, B_defined: 0, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 33.9904, ssim_A_mean: 0.9333, lpips_A_mean: 0.0437, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  vap_neutral_v3:
+    rows: 366
+    coverage: {A_defined: 366, B_defined: 0, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 34.4772, ssim_A_mean: 0.9359, lpips_A_mean: 0.0399, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  vfxmaster_author_native:
+    rows: 366
+    coverage: {A_defined: 366, B_defined: 0, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 23.5216, ssim_A_mean: 0.799, lpips_A_mean: 0.0877, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  vfxmaster_neutral_v3:
+    rows: 366
+    coverage: {A_defined: 366, B_defined: 0, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 23.2671, ssim_A_mean: 0.7951, lpips_A_mean: 0.0897, psnr_B_mean: None, ssim_B_mean: None, lpips_B_mean: None}
+  wan_flf2v_effect_v3:
+    rows: 148
+    coverage: {A_defined: 148, B_defined: 148, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 31.9286, ssim_A_mean: 0.9154, lpips_A_mean: 0.0403, psnr_B_mean: 30.3401, ssim_B_mean: 0.8782, lpips_B_mean: 0.0633}
+  wan_flf2v_neutral_v3:
+    rows: 148
+    coverage: {A_defined: 148, B_defined: 148, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 31.6418, ssim_A_mean: 0.9134, lpips_A_mean: 0.0405, psnr_B_mean: 29.8383, ssim_B_mean: 0.8724, lpips_B_mean: 0.0663}
+  wan_vace_effect_v3:
+    rows: 148
+    coverage: {A_defined: 148, B_defined: 148, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 30.1501, ssim_A_mean: 0.9089, lpips_A_mean: 0.0409, psnr_B_mean: 29.3283, ssim_B_mean: 0.8756, lpips_B_mean: 0.061}
+  wan_vace_neutral_v3:
+    rows: 148
+    coverage: {A_defined: 148, B_defined: 148, missing: 0, resized: 0, device: "cuda", psnr_A_mean: 29.8458, ssim_A_mean: 0.9067, lpips_A_mean: 0.0417, psnr_B_mean: 29.0, ssim_B_mean: 0.8712, lpips_B_mean: 0.0618}

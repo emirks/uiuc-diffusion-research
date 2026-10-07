@@ -1,0 +1,61 @@
+id: 042_teg_zs_baselines__dai__2026-09-20
+seq: 42
+shelf: evals
+created: '2026-09-20'
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bgjg-dtai-gh (generation on the campus cluster H100, machine tag __cc; scored on ONE machine as every arm)
+harness: transition-eval 4.0.1-draft.1 (branch feature-store, main checkout; --store-root feature-store I/O) — reference pin 459fd9a7 identical to evals/028/041
+store: {root: ., mode: on}   # dino_cls/cotracker3/lpips_t + lerp/hold controls written into features/ next to each gen (store/README.md clause 10)
+scoring_path: 'feature-store path (harness 4.0.1-draft.1, --store-root .), the job of evals/041 (misc/2026-09-20_teg_baselines/eval/score_store.sbatch); manifests misc/2026-09-20_teg_baselines/eval/build_teg_manifests.py'
+instrument:
+  reference_v4_sha256: 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8
+  reference_corpus: 'data/processed/transitions_std121/corpus_manifest_v1_222.json  # the certified 222-clip pin'
+  corpus: 'data/processed/transitions_std121/corpus_manifest.json  # 677 clips / 97 classes — supplies the pool references'
+  ceilings: certified matrix m1a_S3 + eval_ladder/ceilings_v3.json overlay (same as evals/028)
+  tau_copy: 0.858
+  matrix: m1a_S3
+  env: envs-aarch64/refvfx (module miniforge3_pytorch/2.10.0); PYTHONPATH=src (main checkout)
+  code: repo @ fbf9e00
+grid:
+  rows: grid v3 (design 3.0.0) TWO-SIDED zero-shot rows only — 38 items (21 endpoints x 10 references; cells G-zs-cross 15 / G-zs-foreign 15 / G-zs-same 8) x seeds 42/43 = 76 gens per arm
+  prompt: the grid-v3 EFFECT prompt with the task token stripped, byte-equal to gens/005_base_cond/06_effect_v3__dai (the LTX-2 effect-prompt row of the same block)
+  pools: same-class corpus clips minus {reference, endpoint}, first 8 by name, restricted to split_v1.3 — ASSERTED identical per (endpoint, reference, seed) to evals/028 base_cond_effect_v3 (0 mismatches)
+  windows:   # SCORING_HANDOFF.md section 4 — condition_prefix/suffix per arm (scripts/store_eval_common.windows: external two-sided (1,1); VACE16 (6,4))
+    refvfx_effect_v3: start9[0] / end9[8] (1 + 1 frame)
+    wan_flf2v_effect_v3: start9[0] / end9[8] (1 + 1 frame)
+    wan_vace_effect_v3: conds_16fps start6 / end4 (6 + 4 frames at 16 fps)
+  seeds:
+  - 42
+  - 43
+source: 'Two-endpoint (TEG, start AND end given) adapted baselines for the paper main table, zero-shot tier: refVFX two-sided (reference + first/last frame), Wan2.1-FLF2V-14B base (first/last frame, text only), Wan2.1-VACE-14B first-last CLIP (6+4 frames at 16 fps, text only). Levels only, untwinned. Campaign misc/2026-09-20_teg_baselines (RECORD.md section 6).'
+arms:
+- refvfx_effect_v3
+- wan_flf2v_effect_v3
+- wan_vace_effect_v3
+arms_scored:
+  refvfx_effect_v3:
+    gen: gens/003_refvfx/04_effect_v3__cc
+    run: runs/003_refvfx (external)
+    chunks: 6/6
+    rows: 552
+    gens: 76
+    headline_transport_zs_two_sided: 44.6   # mean capped transport_pct over the 76 gens (per_gen.jsonl); a level
+  wan_flf2v_effect_v3:
+    gen: gens/042_wan_flf2v/01_effect_v3__cc
+    run: runs/026_wan_flf2v (external)
+    chunks: 6/6
+    rows: 552
+    gens: 76
+    headline_transport_zs_two_sided: 84.3   # mean capped transport_pct over the 76 gens (per_gen.jsonl); a level
+  wan_vace_effect_v3:
+    gen: gens/043_wan_vace/01_effect_v3__cc
+    run: runs/027_wan_vace (external)
+    chunks: 6/6
+    rows: 552
+    gens: 76
+    headline_transport_zs_two_sided: 75.1   # mean capped transport_pct over the 76 gens (per_gen.jsonl); a level
+caveats:
+  - Zero-shot two-sided rows only (owner 2026-09-20); the 72 seen/unseen gens of each entry are NOT v4-scored (features/lenses only, as population by-products).
+  - Frame counts / rates differ (refVFX 33 f @ 6.55 fps, Wan 81 f @ 16 fps, LTX-2 121 f @ 24 fps): seam/copy windows are frame-count sensitive; transport's judge samples at 8 fps; disclosed, not corrected.
+  - The text-only baselines (FLF2V, VACE) never see the reference; Transport still scores their output against the reference's operator pool (the paper's 'adapted baselines receive the effect as text').
+  - Given windows are the physical ones (1/1 frame; VACE 6/4 at 16 fps); evals/030's one-sided externals were planned with a 9-frame prefix window (observation, unchanged).
+  - Levels only; no twins, no margins.

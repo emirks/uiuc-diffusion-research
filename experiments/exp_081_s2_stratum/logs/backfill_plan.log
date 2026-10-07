@@ -1,0 +1,10 @@
+/projects/illinois/eng/cs/jrehg/users/emirkisa/envs/diffusion/lib/python3.10/site-packages/torch/amp/autocast_mode.py:266: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
+  warnings.warn(
+[bf] blacklisting 6: ['PuzzleRight', 'SimpleZoom', 'SimpleZoomOut', 'StripDatamoshGlitch', 'splitSlideOutHorizontal', 'swap']
+[bf] surviving trainable shaders: 56
+[bf] wrote D2_POLICY_V2.json (blacklist 40 -> 46, keep 72 -> 66)
+[bf] retired 78 ops / 420 clips (840 media files moved to retired_blacklisted/)
+[bf] remaining: 713 complete ops / 7130 clips
+[bf] need 87 new ops -> mean per surviving shader 14.3; alloc min/max 1/4
+[bf] sampled 87 backfill ops in 8s (115 draws, 24% gate-2 rejected)
+[bf] PLAN_S2.json now holds 887 ops (713 rendered + 87 to render = 800)

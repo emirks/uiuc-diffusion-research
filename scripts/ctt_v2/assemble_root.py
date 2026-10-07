@@ -33,6 +33,7 @@ in the root that is not in it, and creates only what is missing.  Re-running is 
 from __future__ import annotations
 
 import argparse
+import collections
 import json
 import os
 import sys
@@ -62,14 +63,49 @@ assert set(_S_PRESENT) == set(rc.MIX_STRATA), (
     "_S_PRESENT and rc.MIX_STRATA must name exactly the same strata"
 )
 
+#: Per-contract root path (a new dataset writes a NEW root; never overwrites 002's).
+CONTRACT_ROOTS = {
+    "002_ctt_v2": DEFAULT_ROOT,
+    "003_ctt_v2plus": REPO / "outputs/ctt_v2/roots/ctt_v2plus_mix",
+    "005_ctt_v2plus_s6reshape": REPO / "outputs/ctt_v2/roots/ctt_v2plus_s6reshape_mix",
+}
+#: `present` is a disk FACT. S6 becomes present once its encode + conditions land.
+_CONTRACT_PRESENT = {
+    "002_ctt_v2": dict(_S_PRESENT),
+    "003_ctt_v2plus": {**_S_PRESENT, "S6": True},
+    # S1 restored 2026-08-29 (disk fact — 003's manifest carries S1 present by hand-edit;
+    # 005 encodes it in code).
+    "005_ctt_v2plus_s6reshape": {**_S_PRESENT, "S1": True, "S6": True},
+}
+#: S6 pairing reads each clip's shape + subject from a FROZEN per-contract ROSTER (never the
+#: env-dependent ShapeCache). 005 re-encodes S6 at the r832 grids ⇒ a distinct roster.
+CONTRACT_S6_ROSTER = {
+    "002_ctt_v2": None,  # native (no S6 in 002; kept for symmetry, unused)
+    "003_ctt_v2plus": REPO / "outputs/ctt_v2/encodes/EFFECTDATA/ROSTER.json",
+    "005_ctt_v2plus_s6reshape": REPO / "outputs/ctt_v2/encodes/EFFECTDATA_r832/ROSTER.json",
+}
+#: Per-contract S6 inventory basename override (005's S6 latents live at r832 grids).
+CONTRACT_S6_INVENTORY = {
+    "005_ctt_v2plus_s6reshape": {"S6": "S6_r832.json"},
+}
+#: Per-contract code-side VERSION string.
+CONTRACT_VERSION = {
+    "005_ctt_v2plus_s6reshape": "3.1.0-ctt_v2plus_s6reshape-codeside",
+}
+
 
 # --------------------------------------------------------------------------------------
-def default_manifest() -> dict:
+def default_manifest(contract_id: str = "002_ctt_v2") -> dict:
+    c = rc.mix_contract(contract_id)               # weights / prorata / mix_strata / absent
+    present = _CONTRACT_PRESENT[contract_id]
+    assert set(present) == set(c["mix_strata"]), (
+        f"{contract_id}: _CONTRACT_PRESENT != contract mix_strata")
     inv = REPO / "outputs/ctt_v2/inventories"
     return {
         "schema": rc.STRATA_MANIFEST_SCHEMA,
-        "authority": "A5 RULING 2/3/4 (misc/ctt_v2_final/advisors/A5_SYNTHESIS_RULING_VERBATIM.md)",
-        "root": str(DEFAULT_ROOT),
+        "contract": contract_id,
+        "authority": c["authority"],
+        "root": str(CONTRACT_ROOTS[contract_id]),
         "seed": rc.SEED,
         "pairing": {"rule": rc.PAIRING_RULE, "max_refs_per_target": rc.MAX_REFS_PER_TARGET},
         "mix_tolerance_pp": rc.MIX_TOLERANCE_PP,
@@ -83,8 +119,8 @@ def default_manifest() -> dict:
         # that a forced-equal share would require.  The split is computed at assembly time
         # from the counts the assembler produces, and its inputs are frozen in
         # `misc/ctt_v2_final/PREREG_mix_inputs.json`.
-        "stratum_weights_pct": dict(rc.STRATUM_WEIGHTS_PCT),
-        "prorata_groups": {k: list(v) for k, v in rc.PRORATA_GROUPS.items()},
+        "stratum_weights_pct": dict(c["weights"]),
+        "prorata_groups": {k: list(v) for k, v in c["prorata"].items()},
         "mix_contract_authority":
             "A9 §4 + A11 item 3 (S2 total 69) + A12 (split derived pro-rata to the "
             "assembled post-exclusion base pair counts; A1b: uniform per-sample weight "
@@ -103,8 +139,7 @@ def default_manifest() -> dict:
         #   S1 fails its gates       -> S0 15 / S2 total 73 / S4 12
         #   S4 misses the cutoff     -> A5's 15 / 6 / S2 total 79, unchanged
         #   both                     -> A5's registered 15 / S2 total 85
-        "absent_weight_overrides": {k: dict(v)
-                                    for k, v in rc.ABSENT_BRANCH_WEIGHTS_PCT.items()},
+        "absent_weight_overrides": {k: dict(v) for k, v in c["absent"].items()},
         "absent_weight_overrides_authority":
             "A9 §4, ratified verbatim by A11 item 3 and restated in mix-contract space by "
             "A12 — root_common.ABSENT_BRANCH_WEIGHTS_PCT (each branch guarded to sum to "
@@ -127,19 +162,18 @@ def default_manifest() -> dict:
         #   S4  — reinstated by A9; extraction + encode in flight, captions blocked.
         "strata": {
             s: {
-                "present": _S_PRESENT[s],
+                "present": present[s],
                 # the mix-contract weight this stratum draws from.  For a pro-rata member
                 # `weight_pct` is deliberately null — the number does not exist until the
                 # counts do.
                 "weight_group": rc.weight_owner(s),
-                "weight_pct": (rc.STRATUM_WEIGHTS_PCT[s]
-                               if s in rc.STRATUM_WEIGHTS_PCT else None),
-                "weight_rule": ("fixed (ruled)" if s in rc.STRATUM_WEIGHTS_PCT else
+                "weight_pct": (c["weights"][s] if s in c["weights"] else None),
+                "weight_rule": ("fixed (ruled)" if s in c["weights"] else
                                 f"DERIVED pro-rata within {rc.weight_owner(s)} from the "
                                 f"assembled post-exclusion base pair counts (A12)"),
-                "inventory": str(inv / f"{s}.json"),
+                "inventory": str(inv / CONTRACT_S6_INVENTORY.get(contract_id, {}).get(s, f"{s}.json")),
             }
-            for s in rc.MIX_STRATA
+            for s in c["mix_strata"]
         },
     }
 
@@ -248,10 +282,25 @@ def apply_exclusions(inv: dict, ex: rc.Exclusions) -> tuple[dict, dict]:
     return kept, {"dropped_groups": dropped_groups, "dropped_clips": dropped_clips}
 
 
-def build_samples(inv: dict, groups: dict, max_refs: int) -> list[dict]:
+def build_samples(inv: dict, groups: dict, max_refs: int, shape_of: dict | None = None) -> list[dict]:
+    """Ring-offset pairs within each group. When `shape_of` is given (S6 only), pairing is
+    restricted to SAME-SHAPE: each effect group is sub-grouped by the clip's frozen ROSTER shape
+    and ring_pairs runs within each shape-subgroup independently. A shape-subgroup of size 1
+    produces nothing (ring_pairs n<2 -> []), so that clip is dropped (no same-shape same-effect
+    partner). Every resulting pair is same-shape by construction. shape_of=None leaves the path
+    byte-identical to the original (all non-S6 strata are single-shape anyway)."""
     out = []
     for gid, g in sorted(groups.items()):
-        for tgt, ref in rc.ring_pairs(g["clips"], max_refs):
+        if shape_of is None:
+            pairs = rc.ring_pairs(g["clips"], max_refs)
+        else:
+            by_shape: dict = {}
+            for c in g["clips"]:
+                by_shape.setdefault(shape_of[c], []).append(c)
+            pairs = []
+            for shp in sorted(by_shape):                       # sorted shape-key order (determinism)
+                pairs += rc.ring_pairs(sorted(by_shape[shp]), max_refs)
+        for tgt, ref in pairs:
             out.append({"stratum": inv["stratum"], "group": gid, "target": tgt,
                         "reference": ref, "sided": g["sided"],
                         "name": f"{tgt}__ref_{ref}.pt"})
@@ -401,6 +450,10 @@ def main() -> None:
     ap.add_argument("--manifest")
     ap.add_argument("--init-manifest", metavar="PATH",
                     help="write a default strata manifest and exit")
+    ap.add_argument("--contract", default="002_ctt_v2",
+                    help="mix contract id for --init-manifest (root_common.MIX_CONTRACTS). "
+                         "DEFAULT 002_ctt_v2 so no existing command silently builds a new mix; "
+                         "003_ctt_v2plus must be asked for by name (adds EffectData S6 at 20 pp).")
     ap.add_argument("--root", help="override the root path from the manifest")
     ap.add_argument("--set-present", action="append", default=[], metavar="S4=true",
                     help="toggle a stratum in/out without editing the manifest")
@@ -424,10 +477,14 @@ def main() -> None:
                     help="do not delete root entries that are no longer desired")
     ap.add_argument("--plan-only", action="store_true",
                     help="compute everything, write no symlinks and no manifest")
+    ap.add_argument("--code-side", action="store_true",
+                    help="CODE-SIDE root: write samples.jsonl with ABSOLUTE realpaths + the "
+                         "_mask_store only; NO per-row symlink trees (the trainer's SampleListDataset "
+                         "resolves dataset_root/abspath == abspath). Skips materialize entirely.")
     args = ap.parse_args()
 
     if args.init_manifest:
-        rc.write_json(args.init_manifest, default_manifest())
+        rc.write_json(args.init_manifest, default_manifest(args.contract))
         print(f"[assemble] wrote default strata manifest -> {args.init_manifest}")
         return
     if not args.manifest:
@@ -437,6 +494,11 @@ def main() -> None:
     man = rc.read_json(args.manifest)
     if man.get("schema") != rc.STRATA_MANIFEST_SCHEMA:
         raise SystemExit(f"bad manifest schema: {man.get('schema')!r}")
+    # A manifest's own `contract` field is authoritative: never let mix.json / ROOT_MANIFEST
+    # record a contract other than the one the manifest was built for.
+    if man.get("contract") and man["contract"] != args.contract:
+        raise SystemExit(
+            f"[assemble] manifest contract {man['contract']!r} != --contract {args.contract!r}")
     for spec in args.set_present:
         k, _, v = spec.partition("=")
         if k not in man["strata"]:
@@ -491,10 +553,34 @@ def main() -> None:
                 f"the owner-ratified file.")
 
     # ---- exclusions + pairing ---------------------------------------------------------
+    # S6 same-shape pairing needs each clip's shape + subject from the FROZEN ROSTER (never the
+    # env-dependent ShapeCache). S6 pairs are restricted to same-shape same-effect; the lone
+    # subject of a shape within an effect has no same-shape partner and is DROPPED (recorded).
+    s6_shape, s6_subject = {}, {}
+    if "S6" in invs:
+        _roster_p = CONTRACT_S6_ROSTER[man.get("contract", args.contract)]
+        _rj = rc.read_json(_roster_p)
+        s6_shape = {c["stem"]: tuple(c["latent_fhw"]) for c in _rj["clips"]}
+        s6_subject = {c["stem"]: c["subject"] for c in _rj["clips"]}
     kept_groups, drops, samples = {}, {}, {}
     for s, inv in invs.items():
         kept_groups[s], drops[s] = apply_exclusions(inv, ex)
-        samples[s] = build_samples(inv, kept_groups[s], max_refs)
+        samples[s] = build_samples(inv, kept_groups[s], max_refs,
+                                   shape_of=s6_shape if s == "S6" else None)
+        if s == "S6":
+            # invariants (advisor build-gates): every pair same-shape + different-subject
+            for p in samples[s]:
+                assert s6_shape[p["target"]] == s6_shape[p["reference"]], \
+                    f"[assemble] S6 cross-shape pair leaked: {p['target']} vs {p['reference']}"
+                assert s6_subject[p["target"]] != s6_subject[p["reference"]], \
+                    f"[assemble] S6 same-subject pair: {p['target']} vs {p['reference']}"
+            # record the shape-singleton drops (clips consumed nowhere) into build_drops
+            grp_of = {c: gid for gid, g in kept_groups[s].items() for c in g["clips"]}
+            consumed = {p["target"] for p in samples[s]} | {p["reference"] for p in samples[s]}
+            for stem in sorted(set(grp_of) - consumed):
+                drops[s]["dropped_clips"].append(
+                    {"clip": stem, "group": grp_of[stem], "stratum": "S6",
+                     "reasons": ["no_same_shape_same_effect_partner"]})
         print(f"[assemble] {s}: {len(kept_groups[s])}/{len(inv['groups'])} groups kept, "
               f"{len(drops[s]['dropped_clips'])} clips dropped, {len(samples[s])} base pairs")
 
@@ -683,9 +769,10 @@ def main() -> None:
         shape_counts[key] = shape_counts.get(key, 0) + r["replicas"]
         shape_by_stratum.setdefault(r["stratum"], set()).add(key)
     shapes_block = {
-        "note": "A9 §3/§5 — the root holds TWO SHAPES; tokens and shift are DERIVED from "
-                "the latent shape via ltx_trainer/timestep_samplers.py, never restated. "
-                "A9's prose figures (1,500 tokens / shift 1.120) are wrong; see DOSSIER §13.2.",
+        "note": f"the root holds {len(shape_counts)} shape classes; tokens and shift are "
+                f"DERIVED from the latent shape via ltx_trainer/timestep_samplers.py, never "
+                f"restated (A9's prose figures 1,500 tokens / shift 1.120 are wrong; see "
+                f"DOSSIER §13.2)",
         "per_shape": [dict(rc.shape_record(k), n_samples=v,
                            strata=sorted(s for s, v2 in shape_by_stratum.items() if k in v2))
                       for k, v in sorted(shape_counts.items())],
@@ -704,6 +791,87 @@ def main() -> None:
         print(f"[assemble] PLAN ONLY: {len(desired)} files across {len(rc.ROOT_DIRS)} dirs, "
               f"{len(desired)//len(rc.ROOT_DIRS)} samples, {len(captions)} distinct captions "
               f"({time.time() - t0:.1f}s)")
+        return
+
+    if args.code_side:
+        # CODE-SIDE: no per-row symlink trees. samples.jsonl carries the ABSOLUTE realpaths that
+        # `desired` already resolved; the only materialized artifact is _mask_store (generated in
+        # the loop above). The trainer reads dataset_root/abspath == abspath.
+        TREES = list(rc.ROOT_DIRS)
+        rc.write_json(root / "CAPTIONS.json", captions)
+        if not (root / "captions.json").exists():
+            (root / "captions.json").symlink_to("CAPTIONS.json")
+        # PORTABILITY: samples.jsonl carries paths RELATIVE to the dataset root, so the same file
+        # works on any device. Source tensors resolve through ONE re-pointable directory symlink
+        # `_src` -> the repo (every source path is under $LAB/diffusion-research); masks live in the
+        # in-root `_mask_store`. On a new device: copy the root + point `_src` at that device's repo.
+        REPO_ABS = str(root.parents[3])                     # root = <repo>/outputs/ctt_v2/roots/<name>
+        MASK_ABS = str(root / "_mask_store")
+
+        def portable(p: str) -> str:
+            if p.startswith(MASK_ABS):
+                return "_mask_store/" + os.path.basename(p)
+            if not p.startswith(REPO_ABS + "/"):
+                raise SystemExit(f"[code-side] source path not under repo (not portable): {p}")
+            return "_src/" + p[len(REPO_ABS) + 1:]
+
+        srclink = root / "_src"
+        if not (srclink.is_symlink() or srclink.exists()):
+            srclink.symlink_to("../../../..")               # = <repo> here; re-point per device
+        n = 0
+        with (root / "samples.jsonl").open("w") as out:
+            for r in rows:
+                rel = r["rel"]
+                out.write(json.dumps({
+                    "id": f"{r['stratum']}/{r['group_slug']}/{r['target']}__ref_{r['reference']}",
+                    "stratum": r["stratum"], "group": r["group"], "group_slug": r["group_slug"],
+                    "target": r["target"], "reference": r["reference"], "sided": r["sided"],
+                    "caption_key": r["caption_key"], "shape": r["shape"],
+                    "paths": {t: portable(desired[f"{t}/{rel}"]) for t in TREES},   # root-relative
+                    "endpoints": r["endpoints"], "caption_sources": r["caption_sources"],
+                }) + "\n")
+                n += 1
+        s6_prov = ({"s6_rule": "ring_offset_within_op_shape__k=min(3,n-1)__s6_drop_shape_singletons",
+                    "s6_same_shape_pairs": len(samples["S6"]),
+                    "s6_shape_singletons_dropped": sum(
+                        1 for d in drops["S6"]["dropped_clips"]
+                        if "no_same_shape_same_effect_partner" in d.get("reasons", [])),
+                    "s6_per_shape_census": {str(list(k)): v for k, v in sorted(collections.Counter(
+                        s6_shape[p["target"]] for p in samples["S6"]).items())}}
+                   if "S6" in present else {})
+        rc.write_json(root / "mix.json", {
+            "schema": "ctt_v2plus_mix/v2_code_side", "contract": args.contract,
+            "form": "code_side — ROOT-RELATIVE paths in samples.jsonl (source via the re-pointable _src symlink; masks in _mask_store); no per-row symlink trees",
+            "stratum_weights_pct": mix["intended_pct"], "prorata_split": mix.get("prorata_split"),
+            "strata_present": present, "strata_absent": absent,
+            "authority": "root_common.MIX_CONTRACTS; StratifiedEpochSampler realizes intended_pct"})
+        # samples.jsonl is fully written and closed above; stamp its byte-sha + row count
+        # into the manifest NATIVELY (identical names/types to the post-assembly stamp used
+        # for ROOT4/ROOT5 in earlier rounds — see DOSSIER Round 4 §3 / Round 6 §1).
+        samples_sha256 = rc.sha256_file(root / "samples.jsonl")
+        samples_rows = n
+        rc.write_json(root / "ROOT_MANIFEST.json", {
+            "schema": rc.ROOT_MANIFEST_SCHEMA, "form": "code_side",
+            "created": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "root": str(root),
+            "contract": args.contract, "seed": man.get("seed", rc.SEED),
+            "strata_present": present, "strata_absent": absent, "total_samples": n,
+            "samples_sha256": samples_sha256, "samples_rows": samples_rows,
+            "pairing": {"rule": rc.PAIRING_RULE, "max_refs_per_target": max_refs, **s6_prov},
+            "weights": {"note": weight_note, "intended_pct": mix["intended_pct"]},
+            "shapes": shapes_block,
+            "mask_store": {"dir": str(root / "_mask_store"),
+                           "files": sorted(p.name for p in (root / "_mask_store").glob("*.pt"))},
+            "drops": {s: {"n_clips": len(drops[s]["dropped_clips"]),
+                          "clips": drops[s]["dropped_clips"]} for s in present},
+            "note": "CODE-SIDE root: the per-row symlink trees are NOT materialized; samples.jsonl "
+                    "carries ROOT-RELATIVE paths (source via _src symlink -> repo, re-point per device). Filesystem-count asserts (assert_root.py) do not "
+                    "apply; verification is the trainer's own _verify_files + fewer-files-to-audit.",
+        })
+        (root / "VERSION").write_text(
+            CONTRACT_VERSION.get(args.contract, "3.0.0-ctt_v2plus-codeside") + "\n")
+        print(f"[assemble] CODE-SIDE: samples.jsonl {n} rows (absolute realpaths) + mix.json + "
+              f"ROOT_MANIFEST + {len(list((root / '_mask_store').glob('*.pt')))} masks; "
+              f"NO symlink trees ({time.time() - t0:.1f}s)")
         return
 
     root.mkdir(parents=True, exist_ok=True)
@@ -733,7 +901,17 @@ def main() -> None:
         # placeholder aligns perfectly.  `assert_root.py:A1c` reads this block and compares the
         # ACTUAL distinct symlink-target count per stratum against `n_distinct_expected`.
         "conditions_provenance": conditions_provenance(present, samples, invs),
-        "pairing": {"rule": rc.PAIRING_RULE, "max_refs_per_target": max_refs},
+        "pairing": {"rule": rc.PAIRING_RULE, "max_refs_per_target": max_refs,
+                    **({"s6_rule": "ring_offset_within_op_shape__k=min(3,n-1)__s6_drop_shape_singletons",
+                        "s6_same_shape_pairs": len(samples["S6"]),
+                        "s6_shape_singletons_dropped": sum(
+                            1 for d in drops["S6"]["dropped_clips"]
+                            if "no_same_shape_same_effect_partner" in d.get("reasons", [])),
+                        "s6_per_shape_census": {
+                            str(list(k)): v for k, v in sorted(collections.Counter(
+                                s6_shape[p["target"]] for p in samples["S6"]).items())},
+                        "s6_zero_same_subject_verified": True}
+                       if "S6" in present else {})},
         "weights": {
             "note": weight_note,
             "contract": "S0 15 / S1 6 / S2 total 69 / S4 10; the S2a:S2b split is DERIVED "

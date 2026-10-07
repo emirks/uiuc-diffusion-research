@@ -42,6 +42,24 @@ Do **not** dump raw chat transcript. Write clean, factual notes a future reader 
 
 ---
 
+## Reporting discipline (neutral by default)
+
+Memories, notes, and the MEMORY.md index record per-experiment RESULTS — what ran, the
+numbers, the metric, and the bar — stated neutrally. They do NOT extrapolate one result into
+a branch/family/approach verdict, and do NOT carry forward-looking prohibitions. The metric
+and bar are recorded, not trusted as ground truth. Broader interpretations stay in the
+campaign DOSSIER (mirroring `NEUTRAL_REPORT.md` / `FACTS_ONLY_MAP.md` kept separate from
+advisor rulings); a bold/general claim is carefully proposed to the owner after adequate
+signal and, if accepted, recorded in owner-gated `docs/FINDINGS.md` — never written into the
+knowledge layer as settled fact on its own.
+
+Every leading agent treats prior results as inputs, not decisions. Re-reason from the neutral
+numbers; stay skeptical — question whether the metric/bar was appropriate, look for
+confounds, and decide branch-level questions yourself rather than inheriting a prior agent's
+verdict — especially before stopping or redirecting a line of work.
+
+---
+
 ## Repo layout (never violate)
 
 - `src/diffusion/` — reusable, importable library code only. No CLI, no plotting, no dataset downloads.
@@ -163,16 +181,33 @@ skill first — they are the source of truth for this workflow:**
   transition-eval harness (`eval/v3.0.0`): certified-checkout rule,
   plan→infer→score, trust map, certification protocol; SPEC.md in
   `src/diffusion/transition_eval/` is the authority
-- `lora-flow` — the END-TO-END LoRA/IC-LoRA pipeline: dataset → train →
-  generate → evaluate (v4 default) → viewer → artifact-store bookkeeping.
-  Check it before ANY of those stages. Storage contract: `store/README.md`;
-  ledger: `store/INDEX.md` — entries are `NNN_<slug>` dirs, highest number
-  = latest.
+- `lora-flow` — **MUST-READ before ANY training, generation, scoring, store
+  registration, or viewer-arm step** — the END-TO-END pipeline: dataset →
+  train → generate → evaluate (v4 default) → viewer → store. Storage
+  contract v2 (2026-08-13): `store/README.md` — gens are
+  `NNN_<arm>/KK_<variant>__<machine>`, `ARMS.md` = naming authority,
+  `MIGRATION.md` resolves old ids; ledger `store/INDEX.md`; validate every
+  registration with `scripts/store_fsck.py`.
+- `viewer` — serving result pages (:8017) + creating/fixing viewers. The
+  arm-comparison page (`iclora_neutral_effect_v2`; the un-suffixed slug is the
+  archived v1 page since 2026-09-22) is the cornerstone and is ruled strictly —
+  arms enter the store first (`lora-flow`), then the page via its two-edit
+  builder recipe.
 
 Since 2026-07-22 the project also runs on **NCSA DeltaAI** (`gh-login*`,
-aarch64 GH200) — load the `deltaai` skill there (+ `deltaai-throughput` for
-queueing). One Taiga filesystem serves both clusters: `/taiga/illinois/...`
-resolves on BOTH; `/projects/illinois/...` is Campus-Cluster-only.
+aarch64 GH200). **Before running ANYTHING on DeltaAI (any `sbatch`/`srun`,
+account choice, or queue decision) READ the `deltaai` skill AND the
+`deltaai-throughput` skill first** — they are the source of truth for
+partitions, SU accounting, and account/priority strategy. One Taiga filesystem
+serves both clusters: `/taiga/illinois/...` resolves on BOTH;
+`/projects/illinois/...` is Campus-Cluster-only.
+
+**DeltaAI account rule (owner directive 2026-09-12): charge ONLY `bgjg-dtai-gh`
+(CIS260255, proactive streaming video foundation models) or `bhwp-dtai-gh` (CIS261307,
+scalable & universal immunization against deepfakes).** `bgms-dtai-gh` is NO LONGER permitted
+(it was allowed before 2026-09-12; owner restricted to the two projects above).
+Pick between bgjg/bhwp by FairShare per `deltaai-throughput`; balance is only a don't-drain ceiling.
+`--account=` is mandatory on every job.
 
 Hard rules: long runs go through `sbatch` (never park `srun ... bash`);
 `-high` queues require a `#cluster_high_priority` Slack announcement;

@@ -1,0 +1,147 @@
+id: 043_endpoint_identity_gridv3__dai__2026-09-23
+seq: 43
+shelf: evals
+created: '2026-09-23'
+machine: dai (login CPU, numpy over stored features)
+instrument: scripts/endpoint_identity.py @ fbf9e00
+namespace: dino_cls@dinov2b-r256
+definition:
+  - "given frames and the given frames themselves (same index):"
+  - "A_given_clip_mean  = mean_t<n_pre cos(out[t], start9[t])            (9 frames on HF rows; the single frame 0 on ED rows / prior works)"
+  - "A_given_last_frame = cos(out[n_pre-1], start9[n_pre-1])"
+  - "B_given_clip_mean  = mean_j<n_suf cos(out[T-n_suf+j], end9[1+j])     (two-sided rows only; 8 frames)"
+  - "TEG baselines (two-sided externals, 2026-09-20): refVFX / Wan FLF2V compare frame 0 with start9[0] and the last frame"
+  - "with end9[8]; the VACE first-last CLIP baseline (VACE16) compares out[0..5] / out[77..80] with the 16-fps resamples"
+  - "conds_16fps/<endpoint>_start6 / _end4 (start9 idx 0,2,3,5,6,8 / end9 idx 4,5,7,8)."
+  - "B_given_first_frame= cos(out[T-n_suf], end9[1])"
+why: "Endpoint fidelity, identity half: the given frames must survive conditioning (a VAE/conditioning round-trip check, complements the hand-off identity of eval 038)."
+caveat: "Whole-frame DINO CLS (no subject mask). Values near 1 are expected for every arm; the prior works and ED rows are one-frame conditioned, so A averages one frame there and B does not exist."
+arms_scored:
+  ic_gen_neutral_v3:
+    gen: store/gens/001_ic_gen/03_neutral_v3__dai
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, A_given_clip_mean: 0.9684, B_given_clip_mean: 0.9394}
+  ic_gen_neutral_v3ed81:
+    gen: store/gens/001_ic_gen/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, A_given_clip_mean: 0.9863, B_given_clip_mean: None}
+  ic_gen_effect_v3:
+    gen: store/gens/001_ic_gen/05_effect_v3__dai
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, A_given_clip_mean: 0.9768, B_given_clip_mean: 0.9381}
+  ic_gen_effect_v3ed81:
+    gen: store/gens/001_ic_gen/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, A_given_clip_mean: 0.9858, B_given_clip_mean: None}
+  refvfx_author_native:
+    gen: store/gens/003_refvfx/03_author_native__dai
+    rows: 366
+    coverage: {A_defined: 366, B_defined: 0, missing: 0, A_given_clip_mean: 0.9687, B_given_clip_mean: None}
+  base_cond_neutral_v3:
+    gen: store/gens/005_base_cond/04_neutral_v3__dai
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, A_given_clip_mean: 0.977, B_given_clip_mean: 0.9547}
+  base_cond_neutral_v3ed81:
+    gen: store/gens/005_base_cond/05_neutral_v3ed81__dai
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, A_given_clip_mean: 0.9875, B_given_clip_mean: None}
+  base_cond_effect_v3:
+    gen: store/gens/005_base_cond/06_effect_v3__dai
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, A_given_clip_mean: 0.977, B_given_clip_mean: 0.9544}
+  base_cond_effect_v3ed81:
+    gen: store/gens/005_base_cond/07_effect_v3ed81__dai
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, A_given_clip_mean: 0.987, B_given_clip_mean: None}
+  vap_author_native:
+    gen: store/gens/011_vap/05_author_native__dai
+    rows: 366
+    coverage: {A_defined: 366, B_defined: 0, missing: 0, A_given_clip_mean: 0.9782, B_given_clip_mean: None}
+  vfxmaster_author_native:
+    gen: store/gens/012_vfxmaster/05_author_native__dai
+    rows: 366
+    coverage: {A_defined: 366, B_defined: 0, missing: 0, A_given_clip_mean: 0.9733, B_given_clip_mean: None}
+  dualforce_control_neutral_v3:
+    gen: store/gens/013_dualforce_control/03_neutral_v3__dai
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, A_given_clip_mean: 0.9769, B_given_clip_mean: 0.9334}
+  dualforce_control_neutral_v3ed81:
+    gen: store/gens/013_dualforce_control/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, A_given_clip_mean: 0.9841, B_given_clip_mean: None}
+  dualforce_control_effect_v3:
+    gen: store/gens/013_dualforce_control/05_effect_v3__dai
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, A_given_clip_mean: 0.9767, B_given_clip_mean: 0.9324}
+  dualforce_control_effect_v3ed81:
+    gen: store/gens/013_dualforce_control/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, A_given_clip_mean: 0.984, B_given_clip_mean: None}
+  dualforce_dcg_w6_neutral_v3:
+    gen: store/gens/032_dualforce_dcg_w6/03_neutral_v3__dai
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, A_given_clip_mean: 0.9756, B_given_clip_mean: 0.9261}
+  dualforce_dcg_w6_neutral_v3ed81:
+    gen: store/gens/032_dualforce_dcg_w6/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, A_given_clip_mean: 0.9811, B_given_clip_mean: None}
+  dualforce_dcg_w6_effect_v3:
+    gen: store/gens/032_dualforce_dcg_w6/05_effect_v3__dai
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, A_given_clip_mean: 0.9756, B_given_clip_mean: 0.9243}
+  dualforce_dcg_w6_effect_v3ed81:
+    gen: store/gens/032_dualforce_dcg_w6/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, A_given_clip_mean: 0.9818, B_given_clip_mean: None}
+  dualforce_dcg_w1p5_neutral_v3:
+    gen: store/gens/030_dualforce_dcg_w1p5/03_neutral_v3__dai
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, A_given_clip_mean: 0.9768, B_given_clip_mean: 0.933}
+  dualforce_dcg_w1p5_neutral_v3ed81:
+    gen: store/gens/030_dualforce_dcg_w1p5/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, A_given_clip_mean: 0.9835, B_given_clip_mean: None}
+  dualforce_dcg_w3_neutral_v3:
+    gen: store/gens/031_dualforce_dcg_w3/03_neutral_v3__dai
+    rows: 564
+    coverage: {A_defined: 564, B_defined: 148, missing: 0, A_given_clip_mean: 0.9764, B_given_clip_mean: 0.9306}
+  dualforce_dcg_w3_neutral_v3ed81:
+    gen: store/gens/031_dualforce_dcg_w3/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {A_defined: 204, B_defined: 0, missing: 0, A_given_clip_mean: 0.983, B_given_clip_mean: None}
+  refvfx_effect_v3:
+    gen: store/gens/003_refvfx/04_effect_v3__cc
+    rows: 148
+    coverage: {A_defined: 76, B_defined: 76, missing: 72, A_given_clip_mean: 0.9677, B_given_clip_mean: 0.9502}
+  wan_flf2v_effect_v3:
+    gen: store/gens/042_wan_flf2v/01_effect_v3__cc
+    rows: 148
+    coverage: {A_defined: 76, B_defined: 76, missing: 72, A_given_clip_mean: 0.9868, B_given_clip_mean: 0.9729}
+  wan_vace_effect_v3:
+    gen: store/gens/043_wan_vace/01_effect_v3__cc
+    rows: 148
+    coverage: {A_defined: 148, B_defined: 148, missing: 0, A_given_clip_mean: 0.9881, B_given_clip_mean: 0.979}
+  vap_neutral_v3:
+    gen: store/gens/011_vap/06_neutral_v3__dai
+    rows: 366
+    coverage: {A_defined: 366, B_defined: 0, missing: 0, A_given_clip_mean: 0.9821, B_given_clip_mean: None}
+  vfxmaster_neutral_v3:
+    gen: store/gens/012_vfxmaster/06_neutral_v3__dai
+    rows: 366
+    coverage: {A_defined: 366, B_defined: 0, missing: 0, A_given_clip_mean: 0.974, B_given_clip_mean: None}
+  refvfx_neutral_v3:
+    gen: store/gens/003_refvfx/05_neutral_v3__dai
+    rows: 366
+    coverage: {A_defined: 366, B_defined: 0, missing: 0, A_given_clip_mean: 0.961, B_given_clip_mean: None}
+  refvfx_neutral_v3_teg:
+    gen: store/gens/003_refvfx/06_neutral_v3_teg__cc
+    rows: 148
+    coverage: {A_defined: 148, B_defined: 148, missing: 0, A_given_clip_mean: 0.9619, B_given_clip_mean: 0.9395}
+  wan_flf2v_neutral_v3:
+    gen: store/gens/042_wan_flf2v/02_neutral_v3__cc
+    rows: 148
+    coverage: {A_defined: 148, B_defined: 148, missing: 0, A_given_clip_mean: 0.9843, B_given_clip_mean: 0.9678}
+  wan_vace_neutral_v3:
+    gen: store/gens/043_wan_vace/02_neutral_v3__cc
+    rows: 148
+    coverage: {A_defined: 148, B_defined: 148, missing: 0, A_given_clip_mean: 0.9881, B_given_clip_mean: 0.9777}

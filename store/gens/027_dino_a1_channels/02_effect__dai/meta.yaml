@@ -1,0 +1,16 @@
+id: gens/027_dino_a1_channels/02_effect__dai
+seq: 2
+shelf: gens
+arm: dino_a1_channels
+harness_arm: dino_a1_channels_effect   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: effect
+machine: dai
+created: 2026-09-02
+inputs: {run: staged A1_channels_target @ step 10000 (sha 1093362b; LTX-2-armA @32d6e3f); dataset 005_ctt_v2plus_s6reshape, step: 10000}
+code: src/LTX-2-armA @ 32d6e3f
+prompt_family: prompts/002_ctt152_effect
+prompt_sha: 35930d7d7453
+grid_rows: 152
+videos: 152
+source: scripts/store_register.py over /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/misc/2026-08-27_dino_signal_training/gen/registry_dino_a1_channels_effect.jsonl
+notes: A1 channels-route DINO-signal, effect prompt (family 002). Same port as neutral (route=channels placement=target token_pool=2 signal-guidance=1.0, 1 signal.proj.weight strict, norm db47be88). Matched signal_id=eval__<own ref>. Production MATCHED case, seed 42. gen num_inference_steps 30 vs 20 at training-validation — sampler knob, flagged for owner.

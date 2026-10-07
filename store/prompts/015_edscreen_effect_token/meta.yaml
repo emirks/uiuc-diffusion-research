@@ -1,0 +1,13 @@
+id: prompts/015_edscreen_effect_token
+seq: 15
+shelf: prompts
+created: 2026-09-09
+family: B
+grammar: "{S1}. sksz. {EFFECT}."
+role: EFFECT prompts WITH the transition token for adapter arms on the EffectData gapper screen stage B (40 lowest prompt-only effects, one same-content row each = the screen's first endpoint; native 81 f, frame-0 anchor)
+rows: 40
+prompt_corpus_sha: 75ff2bea6a12   # sha256[:12] over prompts concatenated in (cell,endpoint,reference,sided) order, unique items
+renderer: scripts/ed_screen/stage_b.py rows (the prompts/014 base prompt with "sksz." inserted after S1 — same S1 and clause byte-for-byte)
+derived_from: store/prompts/014_edscreen_effect (subset: 40 of 900 rows) + misc/2026-09-08_ed_gapper_screen/eval/screen_levels.csv (lowest 40)
+source: scripts/ed_screen/stage_b.py
+notes: side lane of grid v3 (misc/2026-09-08_ed_gapper_screen/PLAN.md). Rows are ARM-FREE. Paired by row with prompts/014 for the base-vs-DCG contrast.

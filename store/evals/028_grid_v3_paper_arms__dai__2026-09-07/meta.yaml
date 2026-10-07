@@ -1,0 +1,228 @@
+id: 028_grid_v3_paper_arms__dai__2026-09-07
+seq: 28
+shelf: evals
+created: '2026-09-08'
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh + bgjg-dtai-gh
+harness: transition-eval v4.0.0 (eval-v4-cert worktree, branch eval/v4-metrics @a2b97c6 — the --reference-corpus amendment; [UNCERTIFIED] by design)
+instrument:
+  reference_v4_sha256: 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8
+  reference_corpus: 'data/processed/transitions_std121/corpus_manifest_v1_222.json  # the certified 222-clip manifest the reference pin is verified
+    against'
+  corpus: 'data/processed/transitions_std121/corpus_manifest.json  # 677 clips / 97 classes (datasets/006) — supplies the grid-v3 pool references'
+  ceilings: certified matrix m1a_S3 for the original classes + eval_ladder/ceilings_v3.json overlay (deployed kernel vs frozen populations; calibration
+    ratio 0.9965 on 5 classes)
+  tau_copy: 0.858
+  matrix: m1a_S3
+  cache: misc/refvfx_baseline/probe/cache
+  env: envs-aarch64/refvfx (module miniforge3_pytorch/2.10.0); PYTHONPATH=.claude/worktrees/eval-v4-cert/src
+  job: misc/2026-09-07_eval_grid_v2/score_v3.sbatch (16 shards/arm; EffectData arms GEN_PREFIX_FRAMES=1)
+grid:
+  design: misc/2026-09-07_eval_grid_v2/PROPOSAL.md (v3.0.0)
+  registry: 'eval_ladder/registry_v3.jsonl (384 rows: 139 kept from the 152-row grid + 245 new)'
+  families:
+    neutral_hf: prompts/010_ctt_v3_neutral
+    effect_hf: prompts/011_ctt_v3_effect
+    neutral_ed: prompts/012_ctt_v3ed_neutral
+    effect_ed: prompts/013_ctt_v3ed_effect
+  cells: reference novelty {seen, unseen, zs_higgsfield, zs_effectdata} x endpoint content {same, cross, foreign}; %_same headline, %_proxy ranking-only
+  seeds:
+  - 42
+  - 43
+source: 'Grid v3 (superset of the 152-row CTT grid) scored for the four paper arms x neutral/effect prompt tiers x Higgsfield-121f / EffectData-81f
+  families in ONE pass, one machine. Kept rows reuse the byte-identical earlier generations (hardlinks) and are RE-SCORED here against the enlarged
+  pools (datasets/006 caveat: 17 topped-up classes). The EffectData tier is zero-shot for every arm here (none trained on S6). Levels only; margins
+  are computed by the paper tables.'
+arms_scored:
+  base_cond_neutral_v3:
+    gen: gens/005_base_cond/04_neutral_v3__dai
+    run: base weights (no adapter)
+    step: null
+    rows: 282
+    items_scored: 282
+    pct_same_headline: 0.6141
+    n_same: 90
+    frames: 121
+    prefix_frames: 9
+    prompt_family: prompts/010_ctt_v3_neutral
+    slurm_job: '3109631'
+  base_cond_neutral_v3ed81:
+    gen: gens/005_base_cond/05_neutral_v3ed81__dai
+    run: base weights (no adapter)
+    step: null
+    rows: 102
+    items_scored: 102
+    pct_same_headline: 0.3534
+    n_same: 34
+    frames: 81
+    prefix_frames: 1
+    prompt_family: prompts/012_ctt_v3ed_neutral
+    slurm_job: '3109950'
+  base_cond_effect_v3:
+    gen: gens/005_base_cond/06_effect_v3__dai
+    run: base weights (no adapter)
+    step: null
+    rows: 282
+    items_scored: 282
+    pct_same_headline: 0.9262
+    n_same: 90
+    frames: 121
+    prefix_frames: 9
+    prompt_family: prompts/011_ctt_v3_effect
+    slurm_job: '3110854'
+  base_cond_effect_v3ed81:
+    gen: gens/005_base_cond/07_effect_v3ed81__dai
+    run: base weights (no adapter)
+    step: null
+    rows: 102
+    items_scored: 102
+    pct_same_headline: 0.8881
+    n_same: 34
+    frames: 81
+    prefix_frames: 1
+    prompt_family: prompts/013_ctt_v3ed_effect
+    slurm_job: '3110796'
+  ic_gen_neutral_v3:
+    gen: gens/001_ic_gen/03_neutral_v3__dai
+    run: runs/001_ic_gen
+    step: 5000
+    rows: 282
+    items_scored: 282
+    pct_same_headline: 0.8509
+    n_same: 90
+    frames: 121
+    prefix_frames: 9
+    prompt_family: prompts/010_ctt_v3_neutral
+    slurm_job: '3110072'
+  ic_gen_neutral_v3ed81:
+    gen: gens/001_ic_gen/04_neutral_v3ed81__dai
+    run: runs/001_ic_gen
+    step: 5000
+    rows: 102
+    items_scored: 102
+    pct_same_headline: 0.5726
+    n_same: 34
+    frames: 81
+    prefix_frames: 1
+    prompt_family: prompts/012_ctt_v3ed_neutral
+    slurm_job: '3109954'
+  ic_gen_effect_v3:
+    gen: gens/001_ic_gen/05_effect_v3__dai
+    run: runs/001_ic_gen
+    step: 5000
+    rows: 282
+    items_scored: 282
+    pct_same_headline: 0.9498
+    n_same: 90
+    frames: 121
+    prefix_frames: 9
+    prompt_family: prompts/011_ctt_v3_effect
+    slurm_job: '3110193'
+  ic_gen_effect_v3ed81:
+    gen: gens/001_ic_gen/06_effect_v3ed81__dai
+    run: runs/001_ic_gen
+    step: 5000
+    rows: 102
+    items_scored: 102
+    pct_same_headline: 0.8914
+    n_same: 34
+    frames: 81
+    prefix_frames: 1
+    prompt_family: prompts/013_ctt_v3ed_effect
+    slurm_job: '3109951'
+  dualforce_control_neutral_v3:
+    gen: gens/013_dualforce_control/03_neutral_v3__dai
+    run: runs/012_dualforce_control
+    step: 1000
+    rows: 282
+    items_scored: 282
+    pct_same_headline: 0.9611
+    n_same: 90
+    frames: 121
+    prefix_frames: 9
+    prompt_family: prompts/010_ctt_v3_neutral
+    slurm_job: '3109955'
+  dualforce_control_neutral_v3ed81:
+    gen: gens/013_dualforce_control/04_neutral_v3ed81__dai
+    run: runs/012_dualforce_control
+    step: 1000
+    rows: 102
+    items_scored: 102
+    pct_same_headline: 0.9689
+    n_same: 34
+    frames: 81
+    prefix_frames: 1
+    prompt_family: prompts/012_ctt_v3ed_neutral
+    slurm_job: '3109956'
+  dualforce_control_effect_v3:
+    gen: gens/013_dualforce_control/05_effect_v3__dai
+    run: runs/012_dualforce_control
+    step: 1000
+    rows: 282
+    items_scored: 282
+    pct_same_headline: 1.0022
+    n_same: 90
+    frames: 121
+    prefix_frames: 9
+    prompt_family: prompts/011_ctt_v3_effect
+    slurm_job: '3111140'
+  dualforce_control_effect_v3ed81:
+    gen: gens/013_dualforce_control/06_effect_v3ed81__dai
+    run: runs/012_dualforce_control
+    step: 1000
+    rows: 102
+    items_scored: 102
+    pct_same_headline: 0.9845
+    n_same: 34
+    frames: 81
+    prefix_frames: 1
+    prompt_family: prompts/013_ctt_v3ed_effect
+    slurm_job: '3110797'
+  dualforce_dcg_w6_neutral_v3:
+    gen: gens/032_dualforce_dcg_w6/03_neutral_v3__dai
+    run: runs/012_dualforce_control
+    step: 1000
+    rows: 282
+    items_scored: 282
+    pct_same_headline: 0.9952
+    n_same: 90
+    frames: 121
+    prefix_frames: 9
+    prompt_family: prompts/010_ctt_v3_neutral
+    slurm_job: '3110532'
+  dualforce_dcg_w6_neutral_v3ed81:
+    gen: gens/032_dualforce_dcg_w6/04_neutral_v3ed81__dai
+    run: runs/012_dualforce_control
+    step: 1000
+    rows: 102
+    items_scored: 102
+    pct_same_headline: 0.9903
+    n_same: 34
+    frames: 81
+    prefix_frames: 1
+    prompt_family: prompts/012_ctt_v3ed_neutral
+    slurm_job: '3109957'
+  dualforce_dcg_w6_effect_v3:
+    gen: gens/032_dualforce_dcg_w6/05_effect_v3__dai
+    run: runs/012_dualforce_control
+    step: 1000
+    rows: 282
+    items_scored: 282
+    pct_same_headline: 1.0191
+    n_same: 90
+    frames: 121
+    prefix_frames: 9
+    prompt_family: prompts/011_ctt_v3_effect
+    slurm_job: '3112836'
+  dualforce_dcg_w6_effect_v3ed81:
+    gen: gens/032_dualforce_dcg_w6/06_effect_v3ed81__dai
+    run: runs/012_dualforce_control
+    step: 1000
+    rows: 102
+    items_scored: 102
+    pct_same_headline: 1.0029
+    n_same: 34
+    frames: 81
+    prefix_frames: 1
+    prompt_family: prompts/013_ctt_v3ed_effect
+    slurm_job: '3111019'
+summary: 'summary.json (per arm x cell: pool-% level, n, sd, copy_max mean); misc/2026-09-07_eval_grid_v2/eval/REPORT.md'

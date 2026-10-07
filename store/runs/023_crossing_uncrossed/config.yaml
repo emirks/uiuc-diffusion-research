@@ -1,0 +1,139 @@
+model:
+  model_path: /storage/ozgur/ctt_v2/models/ltx-2-19b-dev.safetensors
+  text_encoder_path: /storage/ozgur/ctt_v2/models/gemma-3-12b-it-qat-q4_0-unquantized
+  training_mode: lora
+  load_checkpoint: /storage/ozgur/crossing_ablation/outputs/uncrossed_2gpu/checkpoints
+lora:
+  rank: 128
+  alpha: 128
+  dropout: 0.0
+  target_modules:
+  - attn1.to_k
+  - attn1.to_q
+  - attn1.to_v
+  - attn1.to_out.0
+  - attn2.to_k
+  - attn2.to_q
+  - attn2.to_v
+  - attn2.to_out.0
+  - ff.net.0.proj
+  - ff.net.2
+training_strategy:
+  name: flexible
+  video:
+    is_generated: true
+    latents_dir: latents
+    cond_clean_latents_dir: cond_clean_latents
+    conditions:
+    - type: reference
+      latents_dir: reference_latents
+      probability: 1.0
+      attention: one_way
+    - type: mask
+      mask_dir: masks
+      probability: 1.0
+optimization:
+  learning_rate: 0.0002
+  steps: 3000
+  batch_size: 1
+  gradient_accumulation_steps: 1
+  max_grad_norm: 1.0
+  optimizer_type: adamw
+  scheduler_type: wsd
+  scheduler_params:
+    warmup_steps: 100
+    decay_frac: 0.25
+    end_factor: 0.1
+  enable_gradient_checkpointing: true
+acceleration:
+  mixed_precision_mode: bf16
+  quantization: null
+  load_text_encoder_in_8bit: false
+  offload_optimizer_during_validation: true
+data:
+  sample_list: /storage/ozgur/crossing_ablation/datasets/crossing_allbutone/uncrossed/samples.jsonl
+  stratum_weights_pct: null
+  sampler_seed: 42
+  sampler_epoch_size: null
+  resume_data_position: true
+  verify_sample_files: true
+  num_dataloader_workers: 4
+validation:
+  samples:
+  - prompt: A young man wearing a grey and white hooded jacket stands on a grassy hill, holding his collar up to his face, with a city skyline visible in the background under a bright sky. sksz.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/crossing_ablation/validation/id_prefix9.mp4
+      num_frames: 9
+    - type: reference
+      video: /storage/ozgur/crossing_ablation/validation/id_reference.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+  - prompt: A man with short brown hair, wearing a beige long-sleeved shirt, light blue jeans, and white sneakers, balances on one hand on a grey gravel driveway while kicking one leg high into the air
+      in front of a stone wall lined with potted purple flowers. sksz.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/crossing_ablation/validation/ood1_prefix9.mp4
+      num_frames: 9
+    - type: reference
+      video: /storage/ozgur/crossing_ablation/validation/ood1_reference.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+  - prompt: A curly-haired man in a grey collared shirt holds a small tool while standing beside an orange and black motorcycle resting on a lift in a workshop illuminated by cool indoor lighting. sksz.
+      a golden retriever standing outdoors in a park, reaching up toward a person in a plaid shirt and green t-shirt.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/crossing_ablation/validation/ood2_prefix9.mp4
+      num_frames: 9
+    - type: suffix
+      video: /storage/ozgur/crossing_ablation/validation/ood2_suffix8.mp4
+      num_frames: 8
+    - type: reference
+      video: /storage/ozgur/crossing_ablation/validation/ood2_reference.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+  - prompt: A man with short brown hair, wearing a beige long-sleeved shirt, light blue jeans, and white sneakers, balances on one hand on a grey gravel driveway while kicking one leg high into the air
+      in front of a stone wall lined with potted purple flowers.
+    conditions: []
+  negative_prompt: worst quality, inconsistent motion, distorted, jittery
+  video_dims:
+  - 480
+  - 640
+  - 121
+  frame_rate: 24.0
+  seed: 42
+  inference_steps: 30
+  interval: 500
+  guidance_scale: 4.0
+  stg_scale: 1.0
+  stg_blocks:
+  - 29
+  stg_mode: stg_v
+  generate_audio: false
+  skip_initial_validation: false
+checkpoints:
+  interval: 250
+  keep_last_n: -1
+  precision: bfloat16
+  no_resume: false
+flow_matching:
+  timestep_sampling_mode: shifted_logit_normal
+  timestep_sampling_params: {}
+hub:
+  push_to_hub: false
+  hub_model_id: null
+wandb:
+  enabled: true
+  project: crossing_ablation
+  entity: null
+  tags:
+  - crossing_allbutone
+  - uncrossed
+  - r128_3k_eb2_wsd
+  - 2gpu_eb2
+  log_validation_videos: true
+seed: 42
+output_dir: /storage/ozgur/crossing_ablation/outputs/uncrossed_2gpu

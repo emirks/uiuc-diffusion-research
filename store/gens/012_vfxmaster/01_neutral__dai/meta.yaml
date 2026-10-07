@@ -1,0 +1,17 @@
+id: gens/012_vfxmaster/01_neutral__dai
+seq: 1
+shelf: gens
+arm: vfxmaster
+harness_arm: vfxmaster_neutral   # frozen stamp in items.jsonl item_ids
+variant: neutral
+machine: dai
+created: 2026-08-14
+inputs: {run: runs/011_vfxmaster (external)}
+prompt_family: prompts/001_ctt152_neutral (ext-derived: `prompt`=endpoint S1, ref_prompt=""; one-sided; INPUT_MAPPING.md)
+prompt_sha: 911c8db067fd
+grid_rows: 224
+videos: 224
+geometry: 480x640x49f @ fps 9.719 (duration-matched to 121f@24; native 480x720 aspect off — disclosed)
+code: $LAB/external/vfxmaster @ 0632c5a9979586adc1d4f96632e5b808ee11712f (worker gen_worker_vfxmaster.py)
+scores: -> ../../../evals/010_external_baselines__dai__2026-08-14/vfxmaster_neutral
+notes: one-sided CTT baseline, 112 rows x seeds 42/43. neutral = ZERO effect text in any channel.

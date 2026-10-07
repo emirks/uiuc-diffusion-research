@@ -68,7 +68,7 @@ def build_sample(row: dict) -> ValidationSample:
     conds = []
     if row.get("conditioning") != "none" and row["endpoint"] is not None:
         paths = ec.cond_paths(row["endpoint"], row["sided"])
-        conds.append(PrefixConditionConfig(video=str(paths["prefix"]), num_frames=ec.PX_PREFIX))
+        conds.append(PrefixConditionConfig(video=str(paths["prefix"]), num_frames=ec.prefix_frames()))
         if row["sided"] == "two":
             conds.append(SuffixConditionConfig(video=str(paths["suffix"]),
                                                num_frames=ec.SUFFIX_GEN_FRAMES))
@@ -93,18 +93,44 @@ def build_sample(row: dict) -> ValidationSample:
         # campaign's behaviour byte-identical.
         model_ref = (build_sample.const_code_clip
                      or row.get("code_source_reference") or row["reference"])
-        # authoritative clip -> class (clip names do NOT reliably encode the class)
-        ref_path = STD / prompts.clip_class(model_ref) / f"{model_ref}.mp4"
+        # `reference_path` (campaign 2026-08-14_timing_relay): an explicit clip path fed to the model,
+        # bypassing the STD/class/name resolution — for retimed reference demos that live OUTSIDE the
+        # std121 tree and are not in split_v1.2. Absent on every pre-existing row → behaviour
+        # byte-identical. The row's `reference` field is left as the clip identity (pool_refs still
+        # excludes it); only the fed video differs.
+        if row.get("reference_path"):
+            ref_path = Path(row["reference_path"])
+            if not ref_path.is_absolute():
+                ref_path = REPO_ROOT / ref_path
+        else:
+            # authoritative clip -> class (clip names do NOT reliably encode the class)
+            ref_path = STD / prompts.clip_class(model_ref) / f"{model_ref}.mp4"
         assert ref_path.exists(), f"reference clip not found: {ref_path}"
         # `attention` MUST match what the adapter was TRAINED with. ReferenceConditionConfig
         # defaults to "bidirectional", so omitting it silently runs a one-way-trained adapter
         # bidirectionally — a train/inference mismatch the config's own docstring warns about.
         # Every arm through b1/m1lite was trained bidirectionally, so the default keeps them
         # byte-identical; ctt_v2 sets `attention: one_way` in arms.yaml.
-        conds.append(ReferenceConditionConfig(video=str(ref_path),
-                                              downscale_factor=build_sample.ref_downscale,
-                                              attention=build_sample.ref_attention,
-                                              temporal_scale_factor=1, include_in_output=False))
+        # DINO-signal id (campaign 2026-08-27_dino_signal_training, SPEC 1.2 `eval__<stem>`): when a
+        # SIGNAL_CONFIG is active, stamp the reference's signal_id = id_prefix + the source clip. The
+        # source is `row[source_field]` (e.g. the shufsig registry's deranged `signal_source`) or, when
+        # that column is absent (the matched arm), the model_ref = the row's own reference. Absent
+        # SIGNAL_CONFIG => None => baseline behaviour, byte-identical to every other campaign.
+        _scfg = getattr(build_sample, "signal_cfg", None)
+        _sig_id = None
+        if _scfg is not None:
+            _sig_id = _scfg["id_prefix"] + (row.get(_scfg["source_field"]) or model_ref)
+        # Only pass signal_id when a SIGNAL_CONFIG is active — the ctt-v2-train / ctt_v2-lineage
+        # ReferenceConditionConfig has no signal_id field (added only in the DINO-signal fork), so
+        # passing signal_id=None trips pydantic extra_forbidden on those stacks (e.g. the dualforce
+        # plain-FM arms). Omitting it when None restores pre-2026-08-27 behaviour, byte-identical.
+        _ref_kw = dict(video=str(ref_path),
+                       downscale_factor=build_sample.ref_downscale,
+                       attention=build_sample.ref_attention,
+                       temporal_scale_factor=1, include_in_output=False)
+        if _sig_id is not None:
+            _ref_kw["signal_id"] = _sig_id
+        conds.append(ReferenceConditionConfig(**_ref_kw))
     return ValidationSample(prompt=row["prompt"], conditions=conds)
 
 
@@ -164,10 +190,25 @@ def main() -> None:
                     help="additional jsonl of registry rows, appended to the frozen registry")
     ap.add_argument("--out-root", default=None,
                     help="override outputs/videos/ladder2 (side lanes write their own tree)")
+    ap.add_argument("--videos-dir", action="store_true",
+                    help="contract v2: --out-root is a store gen subentry; write clips flat "
+                         "into <out-root>/videos/ (no <arm>__ck<step> dir — step lives in meta)")
     ap.add_argument("--const-code-clip", default=None,
                     help="Calibrator A (bneck_coupling/A10): force every row's code source to this "
                          "ONE clip, making matched and shuffled registries identical by "
                          "construction — the must-DEAD control. Use with --out-root.")
+    ap.add_argument("--posshuf-seed", type=int, default=None,
+                    help="D3 rider (bneck_redesign, DESIGN_LOCK §3): for a bottleneck arm, apply ONE "
+                         "fixed permutation (torch.randperm with this seed) of the K operator "
+                         "tokens' grid-cell assignment BEFORE RoPE positions are stamped. Content "
+                         "otherwise identical. Diagnostic ONLY — use with --out-root.")
+    ap.add_argument("--zero-context-adapter", action="store_true",
+                    help="Dead-channel calibrator (bneck_redesign Idea 1): for an inject=context arm, "
+                         "zero the ContextAdapter output head AFTER loading, so it emits all-zero "
+                         "context tokens. The code's ONLY route to the output is then severed, so a "
+                         "matched arm and its deranged twin must produce BITWISE-identical video "
+                         "(proves no hidden leak / the reference never enters the sequence). "
+                         "Diagnostic ONLY — use with --out-root.")
     args = ap.parse_args()
 
     global OUT_ROOT
@@ -183,7 +224,30 @@ def main() -> None:
         assert args.out_root, "--const-code-clip must write to its own --out-root (it is a " \
                               "calibrator, not a scored arm) or it would overwrite real videos"
         print(f"[gen] CALIBRATOR A: code source forced to '{args.const_code_clip}' for EVERY row")
+    # flowsig hook (campaign 2026-08-24_flow_signal_conditioning, Step-2 EVAL). Read here because
+    # the conditioning MODE decides whether the pixel reference is attached, and that decision has
+    # to land before build_sample() runs. Unset FLOWSIG_CONFIG => byte-identical to every other
+    # campaign; the reference field itself is never touched, only `use_reference` (which run_eval
+    # ignores), so the GT pool composition is identical across the four modes.
+    _flowsig_cfg = None
+    if os.environ.get("FLOWSIG_CONFIG"):
+        _flowsig_cfg = json.loads(Path(os.environ["FLOWSIG_CONFIG"]).read_text())
+        assert args.out_root, "FLOWSIG_CONFIG must write to its own --out-root"
+    # DINO-signal hook (campaign 2026-08-27_dino_signal_training, SPEC 8 + R1.3/R1.4). Read here so
+    # build_sample() can stamp each reference's `signal_id` before samples are constructed. Unset
+    # SIGNAL_CONFIG => byte-identical to every other campaign (signal_id stays None, no port attached).
+    # The port itself is attached after the runner+adapter are built (see below).
+    _signal_cfg = None
+    if os.environ.get("SIGNAL_CONFIG"):
+        _signal_cfg = json.loads(Path(os.environ["SIGNAL_CONFIG"]).read_text())
+        assert args.out_root, "SIGNAL_CONFIG must write to its own --out-root"
+    build_sample.signal_cfg = _signal_cfg
     rows = load_rows(args.arm, args.priority, args.cells, args.extra_registry)
+    if _flowsig_cfg is not None and _flowsig_cfg["mode"] not in ("both", "ref_only"):
+        for _r in rows:
+            _r["use_reference"] = False
+        print(f"[gen] flowsig mode={_flowsig_cfg['mode']}: pixel reference DROPPED from the model "
+              f"on all {len(rows)} rows (row identity `reference` untouched)")
 
     def out_path(r: dict) -> Path:
         # Baseline rows share one canonical video per (endpoint, sided) through
@@ -192,6 +256,10 @@ def main() -> None:
         vk = r.get("video_key")
         d, name = vk.split("/", 1) if vk else (r["arm"], r["item_id"])
         suffix = f"__ck{args.step}" if args.step else ""
+        if args.videos_dir:
+            # contract v2: --out-root IS a store gen subentry — clips land flat in
+            # videos/, the step lives in meta.yaml, never in a path
+            return OUT_ROOT / "videos" / f"{name}__s{args.seed}.mp4"
         return OUT_ROOT / (d + suffix) / f"{name}__s{args.seed}.mp4"
 
     # dedup by canonical path BEFORE chunk slicing, so two array tasks can never race on the
@@ -213,9 +281,20 @@ def main() -> None:
 
     adapter, target_modules = resolve_adapter(args.arm, arms_cfg, args.step)
     inf = arms_cfg["inference"]
+    # env-gated inference-steps override (no-op when unset → byte-identical for all existing
+    # campaigns; mirrors the RELAY_CONFIG env gate below). Used by the lerp-collapse x0-hat probe:
+    # a 1-step Euler generation from noise IS the model's x0-hat = x_1 - v_pred (conditional mean).
+    if os.environ.get("GEN_INFERENCE_STEPS"):
+        inf = {**inf, "steps": int(os.environ["GEN_INFERENCE_STEPS"])}
+        print(f"[gen] GEN_INFERENCE_STEPS override → inference_steps={inf['steps']}")
     # ValidationSample.video_dims is (WIDTH, HEIGHT, FRAMES) — the corpus is portrait
     # 480x640, so this reads 480 wide by 640 high (same tuple exp_074 generated with).
     vw, vh, vf = arms_cfg["resolution"]
+    # GEN_FRAMES (grid v3, 2026-09-07): the EffectData tier generates at its NATIVE 81 frames (81 = 8k+1) as its own
+    # arm-variant run; unset => arms.yaml resolution, byte-identical to every prior generation.
+    if os.environ.get("GEN_FRAMES"):
+        vf = int(os.environ["GEN_FRAMES"])
+        print(f"[gen] GEN_FRAMES override → frames={vf}")
     val_cfg = ValidationConfig(
         samples=[build_sample(r) for r in todo],
         negative_prompt="worst quality, inconsistent motion, distorted, jittery",
@@ -227,6 +306,24 @@ def main() -> None:
 
     device = torch.device("cuda")
     runner = ValidationRunner(config=val_cfg, model_path=MODEL, text_encoder_path=GEMMA)
+    # relay hook (campaign misc/2026-08-14_timing_relay, Wave-2): install a Prompt-Relay cross-attention
+    # bias when RELAY_CONFIG points to a config json. Monkeypatches ltx_core Attention.forward at class
+    # level (affects the transformer built next). No-op when the env var is unset → byte-identical.
+    if os.environ.get("RELAY_CONFIG"):
+        _rc = Path(os.environ["RELAY_CONFIG"])
+        _relay_cfg = json.loads(_rc.read_text())
+        sys.path.insert(0, str(_rc.parent))
+        import relay_hook
+        relay_hook.install(_relay_cfg)
+    # rope hook (campaign misc/2026-08-14_timing_relay, Wave-3): warp the TEMPORAL RoPE coordinate of the
+    # target middle frames when ROPE_CONFIG points to a config json. Monkeypatches ltx_core
+    # TransformerArgsPreprocessor._prepare_positional_embeddings at class level. No-op when unset.
+    if os.environ.get("ROPE_CONFIG"):
+        _pc = Path(os.environ["ROPE_CONFIG"])
+        _rope_cfg = json.loads(_pc.read_text())
+        sys.path.insert(0, str(_pc.parent))
+        import rope_hook
+        rope_hook.install(_rope_cfg)
     transformer = load_transformer(MODEL, device="cpu", dtype=torch.bfloat16)
     if adapter is not None:
         print(f"[gen] adapter {adapter.name} ({len(target_modules)} target modules)")
@@ -243,10 +340,42 @@ def main() -> None:
     # SAME checkpoint file (saved under its own prefix) and attach it, so inference mirrors
     # training: the demo is compressed to K tokens before it ever enters the sequence.
     bspec = arms_cfg["arms"][args.arm].get("bottleneck")
-    if bspec is not None:
-        from ltx_trainer.operator_encoder import OperatorTokenEncoder
+    if bspec is not None and bspec.get("encoder_class") == "vjepa":
+        # Campaign `bneck_redesign`, Idea 3: vjepa gen is backbone-free — the trained projector
+        # (loaded from the coupling checkpoint's operator_encoder.projector.*) runs on PRECOMPUTED
+        # eval-reference V-JEPA residual features (bspec['vjepa_gen_feats'], keyed by the reference
+        # mp4 path validation_runner passes as cond.video). Mirrors the training/validation vjepa path.
+        from ltx_trainer.vjepa_projector_encoder import VJEPAProjectorEncoder  # noqa: PLC0415
+        from ltx_trainer.bneck_contract import compute_spanning_factors  # noqa: PLC0415
         f, h, w = bspec["token_shape"]
-        encoder = OperatorTokenEncoder(
+        gf = bspec["vjepa_gen_feats"]
+        gen_feats = Path(gf) if os.path.isabs(gf) else REPO_ROOT / gf
+        encoder = VJEPAProjectorEncoder(val_feats_path=str(gen_feats))  # gen mode: no training bank
+        raw = load_file(str(adapter))
+        enc_sd = {k[len("operator_encoder."):]: v for k, v in raw.items() if k.startswith("operator_encoder.")}
+        if "projector.fc1.weight" not in enc_sd:
+            raise RuntimeError(f"arm '{args.arm}' declares a vjepa bottleneck but checkpoint "
+                               f"{adapter} has no operator_encoder.projector.* tensors — refusing "
+                               "to generate without the trained projector")
+        encoder.load_state_dict(enc_sd, strict=False)  # loads the trained projector.*
+        encoder = encoder.to(device=device, dtype=torch.float32).eval()
+        th, tw, tf = vh // 32, vw // 32, (vf - 1) // 8 + 1
+        dsf, tsf = compute_spanning_factors((f, h, w), tf, th, tw)  # 5.7735 / 1.0 on the 121f grid
+        if not encoder._val_feats:
+            raise RuntimeError(f"vjepa_gen_feats {gen_feats} loaded 0 features — precompute them first")
+        runner.attach_operator_encoder(encoder, downscale_factor=dsf, temporal_scale_factor=tsf)
+        print(f"[gen] vjepa projector bottleneck ATTACHED: K={f*h*w} shape=({f},{h},{w}) "
+              f"scale=(spatial {dsf:.4f}, temporal {tsf:.4f}), {len(enc_sd)} projector tensors, "
+              f"{len(encoder._val_feats)} precomputed gen-ref features", flush=True)
+    elif bspec is not None:
+        # Campaign `bneck_redesign`, Idea 2: 'hrc' reconstructs the HRCEncoder; default the certified
+        # OperatorTokenEncoder. Same kwargs, same encode_reference contract.
+        if bspec.get("encoder_class", "operator") == "hrc":
+            from ltx_trainer.hrc_encoder import HRCEncoder as _EncoderClass
+        else:
+            from ltx_trainer.operator_encoder import OperatorTokenEncoder as _EncoderClass
+        f, h, w = bspec["token_shape"]
+        encoder = _EncoderClass(
             token_shape=(f, h, w), width=bspec.get("width", 512), depth=bspec.get("depth", 2),
             num_heads=bspec.get("num_heads", 8),
             prefix_latent_frames=bspec.get("prefix_latent_frames", 2),
@@ -270,7 +399,12 @@ def main() -> None:
         # target-independent; 'commensurate' infers them and needs a uniform scale. A mismatch here
         # is silent and would corrupt every generation — gate PP-1 exists to catch it.
         pos_mode = bspec.get("positional_mode", "commensurate")
-        if pos_mode == "fixed":
+        if bspec.get("spanning_positions", False):
+            # Campaign `bneck_redesign`, Idea 2 §3: FLOAT spanning factors, identical to the training
+            # path (bneck_contract.compute_spanning_factors). Valid for any grid.
+            from ltx_trainer.bneck_contract import compute_spanning_factors
+            dsf, tsf = compute_spanning_factors((f, h, w), tf, th, tw)
+        elif pos_mode == "fixed":
             dsf, tsf = 1, 1
         else:
             dsf, tsf = th // h, (tf - 1) // (f - 1)
@@ -285,7 +419,137 @@ def main() -> None:
         print(f"[gen] operator-token bottleneck ATTACHED: K={f*h*w} shape=({f},{h},{w}) "
               f"scale=(spatial {dsf}, temporal {tsf}), {len(enc_sd)} encoder tensors", flush=True)
 
-    tmp = OUT_ROOT / "_runner" / f"{args.arm}_s{args.seed}_c{args.chunk}"
+        # D3 rider (campaign `bneck_redesign`): one fixed permutation of the K=f*h*w token->cell
+        # assignment before RoPE stamping. Seeded here so the permutation is identical across every
+        # array task and every seed of the sweep; the runner reorders ref_latent's cells (see
+        # ValidationRunner.attach_position_shuffle). Diagnostic only — refuses to write into a
+        # scored tree by requiring --out-root, exactly like the calibrator flags.
+        if args.posshuf_seed is not None:
+            assert args.out_root, "--posshuf-seed must write to its own --out-root (it is a " \
+                                  "positional-diagnostic arm, not a scored one)"
+            k_tokens = f * h * w
+            g = torch.Generator().manual_seed(args.posshuf_seed)
+            perm = torch.randperm(k_tokens, generator=g)
+            runner.attach_position_shuffle(perm)
+            n_fixed = int((perm == torch.arange(k_tokens)).sum())
+            print(f"[gen] D3 POSITION-SHUFFLE armed: seed={args.posshuf_seed} K={k_tokens} "
+                  f"fixed_points={n_fixed} perm={perm.tolist()}", flush=True)
+
+        # Idea 1 (campaign `bneck_redesign`): inject='context' routes the code through a trained
+        # ContextAdapter into the CROSS-attention context stream instead of the latent sequence. The
+        # encoder above still runs (it produces the code); the adapter, loaded from the SAME
+        # checkpoint under its own prefix, maps that code to K' context tokens. d_ctx / width / K' are
+        # READ from the saved tensors, so no model dim is hardcoded and a shape drift fails loudly.
+        if bspec.get("inject", "reference") == "context":
+            from ltx_trainer.context_adapter import ContextAdapter
+            adapter_sd = {k[len("context_adapter."):]: v
+                          for k, v in raw.items() if k.startswith("context_adapter.")}
+            if not adapter_sd:
+                raise RuntimeError(f"arm '{args.arm}' declares inject='context' but the checkpoint "
+                                   f"{adapter} has no context_adapter.* tensors — refusing to "
+                                   "generate with an empty context port")
+            d_ctx = adapter_sd["output_proj.weight"].shape[0]
+            adapter_width = adapter_sd["output_proj.weight"].shape[1]
+            context_tokens = adapter_sd["queries"].shape[0]
+            adapter_mod = ContextAdapter(
+                d_ctx=d_ctx, token_shape=(f, h, w), context_tokens=context_tokens,
+                width=adapter_width, num_heads=bspec.get("num_heads", 8),
+                zero_init_output=False,  # weights are loaded next.
+            )
+            adapter_mod.load_state_dict(adapter_sd, strict=True)
+            # Dead-channel calibrator (bneck_redesign Idea 1): zero the output head so the adapter
+            # emits all-zero context tokens regardless of the code. With the reference off the latent
+            # sequence in context mode, this severs the code's ONLY route to the output — matched and
+            # deranged twins must then be BITWISE identical. Refuses to write a scored tree.
+            if args.zero_context_adapter:
+                assert args.out_root, "--zero-context-adapter must write to its own --out-root " \
+                                      "(it is a calibrator, not a scored arm)"
+                adapter_mod.zero_init_output_head()
+                print("[gen] DEAD-CHANNEL calibrator: ContextAdapter output head ZEROED "
+                      "(A_out == 0 for every code; twins must be bitwise identical)", flush=True)
+            # fp32 island (as at training): bneck_contract keeps autocast off around encode_reference,
+            # and the adapter forces fp32 internally, so the code path stays fp32 end to end.
+            adapter_mod = adapter_mod.to(device=device, dtype=torch.float32).eval()
+            runner.attach_context_adapter(adapter_mod)
+            print(f"[gen] context port ATTACHED (Idea 1): K'={context_tokens} width={adapter_width} "
+                  f"d_ctx={d_ctx}, {len(adapter_sd)} adapter tensors", flush=True)
+
+    # Scratch dir MUST be unique per running task: the runner writes step_000000_N.mp4 here and we
+    # rename them to <item_id>. Two concurrent SUBMISSIONS sharing (arm, seed, chunk, out-root) — e.g.
+    # a campaign fanned across rope configs — would otherwise clobber each other's samples mid-rename
+    # (FileNotFoundError). Slurm job/array ids disambiguate; empty (bare arm_s_c) for local single runs.
+    if _flowsig_cfg is not None:
+        _fc = Path(os.environ["FLOWSIG_CONFIG"])
+        # the hook module normally sits beside the config (RELAY_CONFIG/ROPE_CONFIG precedent);
+        # `hook_dir` lets a campaign keep configs in gen/cfg/ and code in build/ without a symlink.
+        for _d in (_flowsig_cfg.get("hook_dir"), str(_fc.parent)):
+            if _d:
+                sys.path.insert(0, str(Path(_d) if os.path.isabs(str(_d)) else REPO_ROOT / str(_d)))
+        import flowsig_hook  # noqa: PLC0415
+        _flowsig_cfg.setdefault("checkpoint", str(adapter))
+        flowsig_hook.install(_flowsig_cfg, runner, transformer,
+                             samples=val_cfg.samples, rows=todo)
+
+    # DINO-signal port (campaign 2026-08-27_dino_signal_training). Attach the trainer's SignalModule
+    # + SignalStore to the runner, exactly as training did, so the appended signal tokens re-enter
+    # the sequence at inference. Env-gated: no SIGNAL_CONFIG => this whole block is skipped and the
+    # generator is byte-identical to every other campaign.
+    if _signal_cfg is not None:
+        from ltx_trainer.signal import SignalStore, SIGNAL_PREFIX  # noqa: PLC0415
+        from ltx_trainer.signal_module import SignalModule  # noqa: PLC0415
+        # (3) ONE source of truth: the config's checkpoint MUST be the arms.yaml-resolved adapter.
+        _sc_ckpt = Path(_signal_cfg["checkpoint"])
+        if adapter is None or _sc_ckpt.resolve() != Path(adapter).resolve():
+            raise RuntimeError(
+                f"SIGNAL_CONFIG checkpoint {_sc_ckpt} != arms.yaml-resolved adapter {adapter} — "
+                "refusing to attach a signal module from a checkpoint the LoRA did not come from")
+        # (2) store + norm pin: verify() raises unless the norm file's sha256 == the pinned value.
+        _sig_store = SignalStore(_signal_cfg["signal_root"], _signal_cfg["norm_path"],
+                                 norm_sha256=_signal_cfg["norm_sha256"])
+        _sig_store.verify()
+        # dims READ FROM THE MODEL, never hard-coded (patchify_proj in/out features).
+        _base = transformer.get_base_model() if hasattr(transformer, "get_base_model") else transformer
+        _route = _signal_cfg["route"]
+        # Route-aware construction, mirroring Trainer._signal_attach (trainer.py ~1901). dims are
+        # READ FROM THE MODEL (patchify_proj in/out features), never hard-coded. channels/tokens use
+        # `signal.hidden`; `xattn` (SPEC R1.4) uses `signal.xattn.hidden` (passed as `hidden`) plus
+        # its SDPA head count (`heads`). Threading `channels`/`heads` from the config keeps the module
+        # byte-identical to the one training built, so the strict signal.* load below is exact for
+        # EVERY route (tokens = 5 keys, xattn = 13 keys, channels = 1). Unset SIGNAL_CONFIG or a
+        # tokens/channels config is byte-identical to before (heads unused; channels default 44).
+        _sm_kwargs = dict(inner_dim=int(_base.patchify_proj.out_features),
+                          token_dim=int(_base.patchify_proj.in_features),
+                          hidden=int(_signal_cfg.get("hidden", 256)),
+                          channels=int(_signal_cfg.get("channels", 44)))
+        if _route == "xattn":
+            _sm_kwargs["heads"] = int(_signal_cfg.get("heads", 4))
+        _sig_module = SignalModule(route=_route, **_sm_kwargs)
+        # load the signal.* keys from the RAW safetensors (the PEFT set_peft_model_state_dict path
+        # above drops them) and assert EXACTLY the module's key set, strict.
+        _raw = load_file(str(_sc_ckpt))
+        _ssd = {k[len(SIGNAL_PREFIX):]: v for k, v in _raw.items() if k.startswith(SIGNAL_PREFIX)}
+        _sig_module.load_state_dict(_ssd, strict=True)  # raises on any missing/unexpected/shape drift
+        _want_keys = set(_sig_module.state_dict().keys())
+        if set(_ssd.keys()) != _want_keys:
+            raise RuntimeError(f"signal.* key set mismatch: got {sorted(_ssd)} want {sorted(_want_keys)}")
+        _ref_param = next(_base.parameters())
+        _sig_module = _sig_module.to(device=_ref_param.device, dtype=torch.float32).eval()
+        _sig_module.requires_grad_(False)
+        runner.attach_signal(_sig_module, _sig_store, route=_route,
+                             placement=_signal_cfg.get("placement", "target"),
+                             token_pool=int(_signal_cfg.get("token_pool", 2)),
+                             guidance=float(_signal_cfg.get("guidance", 1.0)))
+        print(f"[signal] DINO-signal port ATTACHED: route={_route} "
+              f"placement={_signal_cfg.get('placement', 'target')} "
+              f"token_pool={_signal_cfg.get('token_pool', 2)} guidance={_signal_cfg.get('guidance', 1.0)} "
+              f"keys={len(_ssd)}/{len(_want_keys)} strict={sorted(_ssd)} "
+              f"inner_dim={_base.patchify_proj.out_features} token_dim={_base.patchify_proj.in_features} "
+              f"norm_sha={_signal_cfg['norm_sha256'][:8]} store={_signal_cfg['signal_root']} "
+              f"checkpoint={_sc_ckpt}", flush=True)
+
+    _jid = os.environ.get("SLURM_JOB_ID", "")
+    _suffix = f"_{_jid}" if _jid else ""
+    tmp = OUT_ROOT / "_runner" / f"{args.arm}_s{args.seed}_c{args.chunk}{_suffix}"
     saved = runner.run(transformer=transformer, step=0, output_dir=tmp, device=device,
                        progress=TrainingProgress(enabled=True, total_steps=1))
     for idx, path in saved:

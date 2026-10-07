@@ -1,0 +1,13 @@
+id: prompts/014_edscreen_effect
+seq: 14
+shelf: prompts
+created: 2026-09-08
+family: B
+grammar: "{S1}. {EFFECT}."
+role: prompt-only EFFECT prompts for the EffectData gapper screen (stage A; base arm, token-free by construction; 300 effects x 3 same-content rows, native 81 f, frame-0 anchor)
+rows: 900
+prompt_corpus_sha: 1fe0d1860631   # sha256[:12] over prompts concatenated in (cell,endpoint,reference,sided) order, unique items
+renderer: scripts/ed_screen/build_screen.py rows ("{S1}. {clause}." with S1 = store/captions/004_effectdata <subject>|A, clause = misc/refvfx_baseline/reference_effects.json via build_ref_effects_v3.one)
+derived_from: misc/2026-09-08_ed_gapper_screen/selection.json (sha256[:12] 81850b2f58ed; scripts/ed_screen/select_effects.py: 150 exploit / 140 explore / 10 anchors)
+source: scripts/ed_screen/build_screen.py
+notes: side lane of grid v3 (misc/2026-09-08_ed_gapper_screen/PLAN.md). Rows are ARM-FREE. Classes live in split_screen.json (LADDER_SPLIT_FILE) and corpus_manifest_screen.json (CORPUS), never in the pinned v1.3 / datasets/006 files.

@@ -38,6 +38,7 @@ import root_common as rc  # noqa: E402
 
 LOCKED = REPO / "outputs/ctt_v2/captions/CAPTION_STORE.json"
 S4_STORE = REPO / "outputs/ctt_v2/captions/S4_CAPTION_STORE.json"
+S6_STORE = REPO / "store/captions/004_effectdata/EFFECTDATA_CAPTION_STORE.json"
 OUTDIR = REPO / "outputs/ctt_v2/conditions_inputs"
 
 
@@ -45,11 +46,13 @@ def sha_text(s: str) -> str:
     return hashlib.sha256(s.encode()).hexdigest()
 
 
-def assembled_for(stratum: str, locked: dict, s4: dict) -> dict[str, str]:
+def assembled_for(stratum: str, locked: dict, s4: dict, s6: dict) -> dict[str, str]:
     """{clip_stem: assembled training caption} for one stratum, from its inventory."""
     inv = json.loads((REPO / f"outputs/ctt_v2/inventories/{stratum}.json").read_text())
     kind = inv.get("kind", "synthetic_op")
-    store = s4 if stratum == "S4" else locked
+    # S6 (EffectData) draws A-descriptions from its per-subject store (keyed '<subject>|A',
+    # reached via each clip's explicit caption_sources=[[subject,"A"]]); S4 from the S4 store.
+    store = {"S4": s4, "S6": s6}.get(stratum, locked)
     out: dict[str, str] = {}
     for stem, entry in inv["clips"].items():
         # The inventory's own `caption` is AUTHORITATIVE when present: it is the exact string
@@ -94,6 +97,8 @@ def main() -> None:
     locked = locked_doc["descriptions"]
     s4_doc = json.loads(S4_STORE.read_text())
     s4 = s4_doc["descriptions"]
+    s6_doc = json.loads(S6_STORE.read_text()) if S6_STORE.exists() else {"descriptions": {}, "content_hash": None}
+    s6 = s6_doc["descriptions"]
 
     filt = rc.leak_filter()
     manifest = {
@@ -108,6 +113,9 @@ def main() -> None:
             "s4_store": {"path": str(S4_STORE.relative_to(REPO)),
                          "content_hash": s4_doc["content_hash"],
                          "file_sha256": rc.sha256_file(S4_STORE)},
+            "s6_store": {"path": str(S6_STORE.relative_to(REPO)),
+                         "content_hash": s6_doc["content_hash"],
+                         "file_sha256": rc.sha256_file(S6_STORE)} if S6_STORE.exists() else None,
         },
         "encoder": "LTX-2-cond-bleed-fix/packages/ltx-trainer/scripts/process_captions.py",
         "encoder_flags_forbidden": {
@@ -125,7 +133,7 @@ def main() -> None:
 
     total = 0
     for st in strata:
-        caps = assembled_for(st, locked, s4)
+        caps = assembled_for(st, locked, s4, s6)
         bad = {k: v for k, v in ((k, rc.caption_violations(c, filt)) for k, c in caps.items()) if v}
         if bad:
             raise SystemExit(f"[{st}] {len(bad)} assembled caption(s) violate RULING 9, first 3: "

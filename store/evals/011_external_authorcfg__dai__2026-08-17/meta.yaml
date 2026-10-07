@@ -1,0 +1,22 @@
+id: 011_external_authorcfg__dai__2026-08-17
+seq: 11
+shelf: evals
+created: 2026-08-17
+machine: DeltaAI ghx4 (aarch64 GH200) — GEN + SCORE both on DeltaAI (one machine)
+instrument: transition-eval v4 (eval-v4-cert worktree); reference_v4 sha256 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8; corpus 222; tau_copy 0.858
+source: >
+  VAP + VFXMaster re-run under the authors' intended full two-channel prompting (authorcfg) plus an
+  ablation (tgtfull_refempty: identical target text, empty reference channel). One-sided CTT grid
+  (112 rows x 2 seeds). Snapshot campaign misc/2026-08-13_baseline_metric_table (DOSSIER.md).
+  Prompt shelf prompts/008_ext112_authorcfg; registry = manifest_<model>_authorcfg.jsonl.
+arms_scored:
+  vap_authorcfg: {gen: gens/011_vap/03_authorcfg__dai, run: runs/010_vap, rows: 2876}
+  vap_tgtfull_refempty: {gen: gens/011_vap/04_tgtfull_refempty__dai, run: runs/010_vap, rows: 2876}
+  vfxmaster_authorcfg: {gen: gens/012_vfxmaster/03_authorcfg__dai, run: runs/011_vfxmaster, rows: 2876}
+  vfxmaster_tgtfull_refempty: {gen: gens/012_vfxmaster/04_tgtfull_refempty__dai, run: runs/011_vfxmaster, rows: 2876}
+result: >
+  Paired stratified bootstrap (10k, Unseen appearance tier-blend, one-sided) vs evals/010 v1-neutral:
+  VAP +22.4956pp (95% CI [+16.8,+27.9]); VFXMaster +22.5015pp (95% CI [+16.6,+28.5]); both exclude 0.
+  'text-inert' (v1) refuted. Channel decomposition (03 authorcfg - 04 tgtfull_refempty): ref-text channel
+  contributes only VAP +0.4pp / VFX +1.5pp -> gain is the target/generation prompt naming the effect.
+notes: competitor-metric lenses (their_metrics/rows_<model>_authorcfg, impl_sha d63935f4) live in the campaign dir, not this eval.

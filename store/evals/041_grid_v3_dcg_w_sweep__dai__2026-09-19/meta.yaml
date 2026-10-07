@@ -1,0 +1,50 @@
+id: 041_grid_v3_dcg_w_sweep__dai__2026-09-19
+seq: 41
+shelf: evals
+created: '2026-09-19'
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bgjg-dtai-gh
+harness: transition-eval 4.0.1-draft.1 (branch feature-store, main checkout; --store-root feature-store I/O) — reference pin 459fd9a7 identical to evals/028; supersedes the 4.0.0 eval-v4-cert worktree/--cache-dir path
+store: {root: ., mode: on}   # feature-store I/O: dino_cls/cotracker3/lpips_t + lerp/hold controls written into features/ next to each gen (store/README.md clause 10, store/FEATURES.md)
+scoring_path: 'feature-store path (harness 4.0.1-draft.1, --store-root .), evals/040-style; 028-identical pools via the split_v1.3 plan_driver; the legacy 4.0.0/--cache-dir run of 030/04 (job 3175675) is kept under _legacy_4.0.0/dualforce_dcg_w1p5_neutral_v3ed81/ for bit-identity acceptance'
+instrument:   # mirrors evals/028 (same worktree, same reference pin, same corpus): the DCG w-sweep (w=1.5, w=3) is a drop-in head-to-head vs crossfade-w6 (evals/028)
+  reference_v4_sha256: 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8   # inherited from evals/028 instrument (same cert worktree/pin)
+  reference_corpus: 'data/processed/transitions_std121/corpus_manifest_v1_222.json  # the certified 222-clip manifest the reference pin is verified against'
+  corpus: 'data/processed/transitions_std121/corpus_manifest.json  # 677 clips / 97 classes (datasets/006) — supplies the grid-v3 pool references'
+  ceilings: certified matrix m1a_S3 + eval_ladder/ceilings_v3.json overlay (same as evals/028)
+  tau_copy: 0.858
+  matrix: m1a_S3
+  cache: misc/refvfx_baseline/probe/cache
+  env: envs-aarch64/refvfx (module miniforge3_pytorch/2.10.0); PYTHONPATH=.claude/worktrees/eval-v4-cert/src
+  job: misc/2026-09-18_dcg_w_sweep_v3/eval/score_store.sbatch (16 shards/arm; feature-store --store-root; ED81 GEN_PREFIX_FRAMES=1)
+grid:
+  arms: DCG w-sweep on dualforce_control @ runs/012 step 1000 (r128/a128, one_way) + test-time DCG, crossfade null; guidance weights {1.5, 3.0} to sit beside w6 (evals/028) and w1/plain
+  gens: gens/030_dualforce_dcg_w1p5, gens/031_dualforce_dcg_w3 (seeds 42/43)
+  roster: grid v3, dualforce_control neutral/effect x HF-121 + ED81-81; 8 arm subdirs added as scored (STAGE B pipelined)
+  families:
+    neutral_hf: prompts/010_ctt_v3_neutral
+    effect_hf: prompts/011_ctt_v3_effect
+    neutral_ed: prompts/012_ctt_v3ed_neutral
+    effect_ed: prompts/013_ctt_v3ed_effect
+  pools: reproduce evals/028's Sep-7 pool EXACTLY — pool references restricted to split_v1.3 members
+    (STD gained ed.* clips on 2026-09-08 via the ed_gapper_screen, absent from split_v1.3; the plan
+    driver misc/2026-09-18_dcg_w_sweep_v3/eval/plan_driver.py filters pool_refs to split_v1.3, VALIDATED
+    per-row against evals/028 dcg_w6 manifests = 0 pool-set / reference-path mismatches, 102/102 ED81)
+  cells: reference-novelty {seen, unseen, zero_shot} x endpoint content {same, cross, foreign}; %_same headline, %_proxy ranking-only
+  seeds:
+  - 42
+  - 43
+source: 'DCG guidance-weight sweep (w=1.5, w=3.0) on the dualforce_control arm, grid v3. Scored on the SAME
+  instrument as evals/028 so w=1.5/w=3.0 are directly comparable to the crossfade-w6 null (gens/032,
+  scored in evals/028) and to w=1 (plain dualforce_control, evals/028). Pools reproduce evals/028 exactly
+  (split_v1.3-restricted). Levels only; margins (Δpp vs base) are computed by the paper tables.'
+arms:
+- dualforce_dcg_w1p5_neutral_v3ed81
+- dualforce_dcg_w1p5_neutral_v3
+arms_scored: {}   # placeholder — filled by the scoring chunks / STAGE-D finalize (per-arm gen/run/rows/items_scored/headline)
+caveats:
+  - Both seeds (42, 43) scored, matching evals/028's ED81 arms (c0-c7 = s42, c8-c15 = s43); differs from
+    evals/033/035 which were seed-42-only.
+  - Pool references restricted to split_v1.3 (evals/028's Sep-7 population) to stay a fair head-to-head vs
+    crossfade-w6 despite post-028 STD growth; no generation row was dropped.
+  - Levels only; margins (Δpp vs base) are computed by the paper tables, not here.
+  - Scoring charged to bgjg-dtai-gh (evals/028's dcg_w6 used bgms-dtai-gh, no longer permitted).

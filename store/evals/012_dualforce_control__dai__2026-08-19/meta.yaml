@@ -1,0 +1,48 @@
+id: 012_dualforce_control__dai__2026-08-19
+seq: 12
+shelf: evals
+created: 2026-08-19
+machine: DeltaAI ghx4 (aarch64 GH200) — GEN + SCORE both on DeltaAI (one machine)
+instrument: >
+  transition-eval v4.0.0 (eval-v4-cert worktree, branch eval/v4-metrics @ 258a990; [UNCERTIFIED] by
+  design — v4 branch is untagged and reference_v4.npz is the accepted working-tree mod that IS the v4
+  lane). reference_v4 sha256 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8 (== evals/001-011).
+  corpus data/processed/transitions_std121 = 222 clips / 39 classes
+  (raw-file sha256 5a7a8be9f8a0…; canonical-json sha256 dc2e139a2a82…). tau_copy 0.858.
+source: >
+  dualforce_control_neutral = the DUAL-FORCE plain-FM CONTROL arm (rank128 one_way, warm-start ctt_v2,
+  step 1000; adapter code src/LTX-2-dualforce @ a403323), neutral (leak-free) prompt variant over the CTT
+  grid (152 rows x seeds 42/43 = 304 gens; gens/013_dualforce_control/01_neutral__dai, prompt_sha 0d708175).
+  Plan: eval_ladder/run_eval.py --mode plan --arms dualforce_control_neutral --extra-registry
+  build/dualforce_control/registry_dualforce_control_neutral.jsonl (same-class GT pool, MAX 8 refs,
+  copy-guarded; exact keyed join to base twins in eval_ladder/registry.jsonl, 152/152 present).
+  Score: job 2976649, 16 shards on ghx4 (account bhwp-dtai-gh) via
+  misc/2026-08-19_dualforce_score/score_dualforce.sbatch (refvfx env, warm 222 cache
+  misc/refvfx_baseline/probe/cache).
+arms_scored:
+  dualforce_control_neutral: {gen: gens/013_dualforce_control/01_neutral__dai, run: runs/012_dualforce_control, rows: 1842}
+headline:   # v4 pool-yardstick: raw app_ref . GT-class ceiling . achieved-% ; n = items (seed-averaged)
+  pooled_same:  {n: 60, raw: 0.7757, ceiling: 0.8722, pct_same: 89.6}   # ALL 5 same-typed cells (incl. 2 diagnostic)
+  pooled_proxy: {n: 92, raw: 0.7145, ceiling: 0.8729, pct_proxy: 82.2}  # cross/foreign, content-capped, ranking-only
+  by_cell:
+    G-fit:            {ptype: same,  n: 13, raw: 0.7899, ceil: 0.8735, pct: 90.7}
+    G-unseen-same:    {ptype: same,  n: 13, raw: 0.8452, ceil: 0.8735, pct: 97.1}
+    G-zs-same:        {ptype: same,  n: 8,  raw: 0.8026, ceil: 0.8635, pct: 93.7}
+    G-memo-probe:     {ptype: same,  n: 13, raw: 0.8477, ceil: 0.8735, pct: 98.6}   # DIAGNOSTIC: heldin memorization probe
+    G-ref-control:    {ptype: same,  n: 13, raw: 0.6034, ceil: 0.8735, pct: 69.3}   # DIAGNOSTIC: mismatched-reference control
+    G-zs-cross:       {ptype: proxy, n: 20, raw: 0.8212, ceil: 0.8722, pct: 95.6}
+    G-unseen-cross:   {ptype: proxy, n: 26, raw: 0.7554, ceil: 0.8735, pct: 86.7}
+    G-zs-foreign:     {ptype: proxy, n: 20, raw: 0.6237, ceil: 0.8722, pct: 70.4}
+    G-unseen-foreign: {ptype: proxy, n: 26, raw: 0.6615, ceil: 0.8735, pct: 76.4}
+  copy_guard: {copy_max_mean: 0.4113, copy_max_max: 0.8141, copy_max_p95: 0.6450, near_copy_tau858: 0, core_degenerate: 8, n_gen: 304}
+  delta_pp_vs_base: unpaired   # 152/152 base twins registered but NOT co-scored into this out-root; parent pairs later
+caveats:
+  - 73/1842 dualforce eval-rows are EOFError error-rows (app_ref None) from the concurrent-cache-write race
+    (the same symmetric race as evals/006/007/008). All 152 registry items retain a pool-mean (no item lost
+    all refs); pool means are over surviving refs (mean 5.8/gen). This is NOT "0 error-rows" — a re-score of
+    the affected shards against the now-warm cache is available if a zero-error record is required.
+  - This arm-subdir's shards (c0-c15) ALSO contain the coordinator's co-scored non-model controls
+    control_hold (1322 rows) and control_lerp (364 rows), mixed into the same items.jsonl. They are out of
+    this eval's scope; headline + arms_scored cover dualforce_control_neutral ONLY (auto-filtered by loading
+    only the dualforce registry). Their gen/run pins are the coordinator's to register.
+  - [UNCERTIFIED] v4 instrument (owner directive: v4 is the default lane; v3 only for pre-registered claims).

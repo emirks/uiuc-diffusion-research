@@ -1,0 +1,306 @@
+{
+ "_doc": "metrics v5 roster = the TABLE roster (single input of scripts/metrics_v5/v5.py). One entry per arm row. role: own_base (the LTX-2 no-reference rows) | own | own_effect (an own arm at its effect prompt; a paper-table N/E pair with its neutral twin, added 2026-09-23; NEVER selected by family_tables._roster_rows, so Tables 1/2/3 and paper_table_v5 stay identical; read by scripts/metrics_v5/paper_tables.py for the E columns) | prior (one-sided visual-effect transfer, Table 2) | prior_teg (both endpoints given, Table 3); prompt: neutral | effect | author_native; gens: store gens variants (HF + ED for own arms); label: the table row text; tex: LaTeX row text (defaults to label); twin: the paired arm (a neutral prior work names its author-native effect twin; an own_effect arm names its neutral twin); sweep: true = only in the _sweep tables. Every stage is skip-if-done, so arms that are already featurized / cached / scored cost nothing beyond a table row.",
+ "headline": {
+  "column": "bl_333",
+  "header": "Transport",
+  "weights": [
+   0.3333333333333333,
+   0.3333333333333333,
+   0.3333333333333333
+  ],
+  "note": "appearance (Mu) / semantic transport (D) / pixel transport (PX) blended at equal thirds, % of the class ceiling; replaces the v4 transport_pct"
+ },
+ "seam": {
+  "source": "lpips_t@alex-r256",
+  "window": "scripts/store_eval_common.windows (physical given windows)",
+  "note": "seam z recomputed from the stored temporal LPIPS with the physical window rule; bit-identical to v4 where v4 used the physical window; corrects evals/030's 9-frame prefix on the one-sided prior works (owner 2026-09-23)"
+ },
+ "arms": [
+  {
+   "id": "base_cond_neutral",
+   "label": "LTX-2 (no reference)",
+   "role": "own_base",
+   "prompt": "neutral",
+   "gens": [
+    "store/gens/005_base_cond/04_neutral_v3__dai",
+    "store/gens/005_base_cond/05_neutral_v3ed81__dai"
+   ]
+  },
+  {
+   "id": "base_cond_effect",
+   "label": "LTX-2 (no ref., effect prompt)",
+   "role": "own_base",
+   "prompt": "effect",
+   "gens": [
+    "store/gens/005_base_cond/06_effect_v3__dai",
+    "store/gens/005_base_cond/07_effect_v3ed81__dai"
+   ]
+  },
+  {
+   "id": "ic_gen",
+   "label": "LTX-2 baseline LoRA",
+   "role": "own",
+   "prompt": "neutral",
+   "gens": [
+    "store/gens/001_ic_gen/03_neutral_v3__dai",
+    "store/gens/001_ic_gen/04_neutral_v3ed81__dai"
+   ]
+  },
+  {
+   "id": "dualforce_control",
+   "label": "SEGUE w/o guidance",
+   "tex": "\\segue{} w/o guidance",
+   "role": "own",
+   "prompt": "neutral",
+   "gens": [
+    "store/gens/013_dualforce_control/03_neutral_v3__dai",
+    "store/gens/013_dualforce_control/04_neutral_v3ed81__dai"
+   ]
+  },
+  {
+   "id": "dualforce_dcg_w1p5",
+   "label": "SEGUE (w=1.5)",
+   "tex": "\\segue{} ($w{=}1.5$)",
+   "role": "own",
+   "prompt": "neutral",
+   "sweep": true,
+   "gens": [
+    "store/gens/030_dualforce_dcg_w1p5/03_neutral_v3__dai",
+    "store/gens/030_dualforce_dcg_w1p5/04_neutral_v3ed81__dai"
+   ]
+  },
+  {
+   "id": "dualforce_dcg_w3",
+   "label": "SEGUE (w=3)",
+   "tex": "\\segue{} ($w{=}3$)",
+   "role": "own",
+   "prompt": "neutral",
+   "sweep": true,
+   "gens": [
+    "store/gens/031_dualforce_dcg_w3/03_neutral_v3__dai",
+    "store/gens/031_dualforce_dcg_w3/04_neutral_v3ed81__dai"
+   ]
+  },
+  {
+   "id": "dualforce_dcg_w6",
+   "label": "SEGUE",
+   "tex": "\\segue{}",
+   "role": "own",
+   "prompt": "neutral",
+   "gens": [
+    "store/gens/032_dualforce_dcg_w6/03_neutral_v3__dai",
+    "store/gens/032_dualforce_dcg_w6/04_neutral_v3ed81__dai"
+   ]
+  },
+  {
+   "id": "dualforce_dcg_emptynull_w6_zs",
+   "label": "SEGUE (empty null, zero-shot)",
+   "tex": "\\segue{} (empty null)",
+   "role": "own",
+   "prompt": "neutral",
+   "sweep": true,
+   "gens": [
+    "store/gens/040_dualforce_dcg_emptynull_w6/05_neutral_v3zs__dai",
+    "store/gens/040_dualforce_dcg_emptynull_w6/04_neutral_v3ed81__dai"
+   ]
+  },
+  {
+   "id": "dualforce_dcg_emptynull_w6",
+   "label": "SEGUE (empty null)",
+   "tex": "\\segue{} (empty null)",
+   "role": "own",
+   "prompt": "neutral",
+   "sweep": true,
+   "gens": [
+    "store/gens/040_dualforce_dcg_emptynull_w6/03_neutral_v3__dai",
+    "store/gens/040_dualforce_dcg_emptynull_w6/04_neutral_v3ed81__dai"
+   ]
+  },
+  {
+   "id": "ic_gen_effect",
+   "label": "LTX-2 baseline LoRA (effect prompt)",
+   "role": "own_effect",
+   "prompt": "effect",
+   "twin": "ic_gen",
+   "gens": [
+    "store/gens/001_ic_gen/05_effect_v3__dai",
+    "store/gens/001_ic_gen/06_effect_v3ed81__dai"
+   ]
+  },
+  {
+   "id": "dualforce_control_effect",
+   "label": "SEGUE w/o guidance (effect prompt)",
+   "tex": "\\segue{} w/o guidance (effect prompt)",
+   "role": "own_effect",
+   "prompt": "effect",
+   "twin": "dualforce_control",
+   "gens": [
+    "store/gens/013_dualforce_control/05_effect_v3__dai",
+    "store/gens/013_dualforce_control/06_effect_v3ed81__dai"
+   ]
+  },
+  {
+   "id": "dualforce_dcg_w6_effect",
+   "label": "SEGUE (effect prompt)",
+   "tex": "\\segue{} (effect prompt)",
+   "role": "own_effect",
+   "prompt": "effect",
+   "twin": "dualforce_dcg_w6",
+   "gens": [
+    "store/gens/032_dualforce_dcg_w6/05_effect_v3__dai",
+    "store/gens/032_dualforce_dcg_w6/06_effect_v3ed81__dai"
+   ]
+  },
+  {
+   "id": "dualforce_dcg_w1p5_effect",
+   "label": "SEGUE (w=1.5, effect prompt)",
+   "tex": "\\segue{} ($w{=}1.5$, effect prompt)",
+   "role": "own_effect",
+   "prompt": "effect",
+   "twin": "dualforce_dcg_w1p5",
+   "gens": [
+    "store/gens/030_dualforce_dcg_w1p5/05_effect_v3__dai",
+    "store/gens/030_dualforce_dcg_w1p5/06_effect_v3ed81__dai"
+   ]
+  },
+  {
+   "id": "dualforce_dcg_w3_effect",
+   "label": "SEGUE (w=3, effect prompt)",
+   "tex": "\\segue{} ($w{=}3$, effect prompt)",
+   "role": "own_effect",
+   "prompt": "effect",
+   "twin": "dualforce_dcg_w3",
+   "gens": [
+    "store/gens/031_dualforce_dcg_w3/05_effect_v3__dai",
+    "store/gens/031_dualforce_dcg_w3/06_effect_v3ed81__dai"
+   ]
+  },
+  {
+   "id": "vap_author_native",
+   "label": "Video-As-Prompt",
+   "role": "prior",
+   "prompt": "author_native",
+   "gens": [
+    "store/gens/011_vap/05_author_native__dai"
+   ]
+  },
+  {
+   "id": "vap_neutral",
+   "label": "Video-As-Prompt (neutral prompt)",
+   "role": "prior",
+   "prompt": "neutral",
+   "twin": "vap_author_native",
+   "gens": [
+    "store/gens/011_vap/06_neutral_v3__dai"
+   ]
+  },
+  {
+   "id": "vfxmaster_author_native",
+   "label": "VFXMaster",
+   "role": "prior",
+   "prompt": "author_native",
+   "gens": [
+    "store/gens/012_vfxmaster/05_author_native__dai"
+   ]
+  },
+  {
+   "id": "vfxmaster_neutral",
+   "label": "VFXMaster (neutral prompt)",
+   "role": "prior",
+   "prompt": "neutral",
+   "twin": "vfxmaster_author_native",
+   "gens": [
+    "store/gens/012_vfxmaster/06_neutral_v3__dai"
+   ]
+  },
+  {
+   "id": "refvfx_author_native",
+   "label": "refVFX",
+   "role": "prior",
+   "prompt": "author_native",
+   "gens": [
+    "store/gens/003_refvfx/03_author_native__dai"
+   ]
+  },
+  {
+   "id": "refvfx_neutral",
+   "label": "refVFX (neutral prompt)",
+   "role": "prior",
+   "prompt": "neutral",
+   "twin": "refvfx_author_native",
+   "gens": [
+    "store/gens/003_refvfx/05_neutral_v3__dai"
+   ]
+  },
+  {
+   "id": "refvfx_teg",
+   "label": "refVFX (ref. + both endpoints)",
+   "tex": "refVFX (ref.\\ + both endpoints)",
+   "role": "prior_teg",
+   "prompt": "effect",
+   "gens": [
+    "store/gens/003_refvfx/04_effect_v3__cc"
+   ]
+  },
+  {
+   "id": "refvfx_teg_neutral",
+   "label": "refVFX (ref. + both endpoints, neutral)",
+   "tex": "refVFX (ref.\\ + both endpoints, neutral)",
+   "role": "prior_teg",
+   "prompt": "neutral",
+   "twin": "refvfx_teg",
+   "gens": [
+    "store/gens/003_refvfx/06_neutral_v3_teg__cc"
+   ]
+  },
+  {
+   "id": "wan_flf2v",
+   "label": "Wan2.1-FLF2V (text only)",
+   "role": "prior_teg",
+   "prompt": "effect",
+   "gens": [
+    "store/gens/042_wan_flf2v/01_effect_v3__cc"
+   ]
+  },
+  {
+   "id": "wan_flf2v_neutral",
+   "label": "Wan2.1-FLF2V (neutral prompt)",
+   "role": "prior_teg",
+   "prompt": "neutral",
+   "twin": "wan_flf2v",
+   "gens": [
+    "store/gens/042_wan_flf2v/02_neutral_v3__cc"
+   ]
+  },
+  {
+   "id": "wan_vace",
+   "label": "Wan2.1-VACE clip (text only)",
+   "role": "prior_teg",
+   "prompt": "effect",
+   "gens": [
+    "store/gens/043_wan_vace/01_effect_v3__cc"
+   ]
+  },
+  {
+   "id": "wan_vace_neutral",
+   "label": "Wan2.1-VACE clip (neutral prompt)",
+   "role": "prior_teg",
+   "prompt": "neutral",
+   "twin": "wan_vace",
+   "gens": [
+    "store/gens/043_wan_vace/02_neutral_v3__cc"
+   ]
+  },
+  {
+   "id": "dualforce_dcg_holdstart_w6_zs10",
+   "label": "SEGUE (hold-start null, 10-row probe)",
+   "tex": "\\segue{} (hold-start null)",
+   "role": "own",
+   "prompt": "neutral",
+   "sweep": true,
+   "gens": [
+    "store/gens/044_dualforce_dcg_holdstart_w6/01_neutral_v3zs10__dai"
+   ]
+  }
+ ]
+}

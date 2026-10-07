@@ -62,8 +62,9 @@ EXTRA_REGISTRY: Path | None = None
 
 def load_registry() -> list[dict]:
     text = REGISTRY.read_text()
-    if EXTRA_REGISTRY is not None:
-        text += EXTRA_REGISTRY.read_text()
+    extras = EXTRA_REGISTRY if isinstance(EXTRA_REGISTRY, (list, tuple)) else ([EXTRA_REGISTRY] if EXTRA_REGISTRY else [])
+    for extra in extras:                       # grid v3 (2026-09-07): the viewer wires several extra registries
+        text += Path(extra).read_text()
     return [json.loads(x) for x in text.splitlines() if x.strip()]
 
 
@@ -147,7 +148,7 @@ def plan(seeds: list[int], chunks: int, arms: set[str] | None = None) -> None:
                 # never of the class label.
                 paths = ec.cond_paths(row["endpoint"], row["sided"])
                 cond["condition_prefix"] = {"video": str(paths["prefix"].relative_to(REPO_ROOT)),
-                                            "num_frames": ec.PX_PREFIX}
+                                            "num_frames": ec.prefix_frames()}
                 if row["sided"] == "two":
                     cond["condition_suffix"] = {"video": str(paths["suffix"].relative_to(REPO_ROOT)),
                                                 "num_frames": ec.SUFFIX_GEN_FRAMES}
@@ -202,6 +203,17 @@ def ceilings() -> dict[str, float]:
             continue
         block = sim[np.ix_(idx, idx)]
         out[cls] = float(block[~np.eye(len(idx), dtype=bool)].mean())
+    # grid v3 (2026-09-07): classes ABSENT from the certified matrix (the 7 new Higgsfield zero-shot classes, the
+    # EffectData `ed.*` classes) take their scorer-path ceiling from eval_ladder/ceilings_v3.json
+    # (scripts/grid_v3/ceilings_manifest.py --aggregate). Certified classes are never overridden.
+    extra = HERE / "ceilings_v3.json"
+    # side lanes (e.g. the 2026-09-08 EffectData gapper screen) add their own kernel-ceiling files via
+    # LADDER_CEILINGS_EXTRA=<file>[:<file>...]; certified classes are still never overridden.
+    extras = [extra] + [Path(p) for p in os.environ.get("LADDER_CEILINGS_EXTRA", "").split(":") if p]
+    for f in extras:
+        if f.exists():
+            for cls, v in json.loads(f.read_text())["ceilings"].items():
+                out.setdefault(cls, float(v["ceiling"]))
     return out
 
 
@@ -259,10 +271,12 @@ def report() -> None:
         row = rows[item_id]
         if row["arm"] == "base":
             continue
-        if row["arm"] in ("text_floor", "base_prompt", "base_cond"):
+        if row["arm"] in ("text_floor", "base_prompt", "base_cond") or row.get("no_twin"):
             # un-twinned by design (plan() excludes them from twinning too): text_floor is the
             # leak-proof floor, base_prompt/base_cond ARE the clean baselines other rows margin
-            # against. They contribute a LEVEL, not a margin.
+            # against. They contribute a LEVEL, not a margin. `no_twin: true` says the same
+            # structurally (mirrors plan()'s no_twin handling) — e.g. a standalone effect baseline
+            # whose effect input_key has no base twin.
             cells[row["cell"]].append((row["donor_class"], value, None))
             continue
         twin = base_by_key.get(row["input_key"])

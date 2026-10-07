@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="light" name="color-scheme"/>
+  <title>
+    SEGUE: One-Shot Transition Effect Generation
+  </title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/bulma.min.css">
+  <link rel="stylesheet" href="assets/css/index.css">
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <style id="pp-light-hero">
+  /* ---- SEGUE light variant: adapted from a light-theme academic project-page template. ----
+     The template's green accent is swapped to the config accent (--accent / --accent-dark,
+     injected by build_page.py --theme light). The scrolling teaser, comparison tables/tabs and
+     other template-specific sections are dropped; only the hero / title / authors / affiliations
+     / btn-fancy rules are kept. */
+  :root {
+    --accent: __ACCENT__;
+    --accent-dark: __ACCENT_DARK__;
+    --accent-color: var(--accent);
+    --primary-gradient: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    --page-bg: #fcfcfc;
+  }
+  body { font-family:'Noto Sans',sans-serif; background-color:var(--page-bg); color:#1a1a1a; }
+  .hero { background:#fff; }
+
+  .box-fancy { border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,.1); transition:transform .2s;
+    border:1px solid #f0f0f0; padding:1.5rem; background:#fff; position:relative; overflow:hidden; }
+  .box-fancy::before { content:""; position:absolute; top:0; left:0; width:100%; height:4px; background:var(--primary-gradient); }
+  .box-fancy:hover { transform:translateY(-5px); box-shadow:0 10px 15px rgba(0,0,0,.1); }
+  .box-fancy img { border-radius:8px; border:none !important; box-shadow:none !important; }
+
+  .hero-fancy { background-color:#fff; position:relative; overflow:hidden; padding:1.5rem 0 1rem; color:#1a1a1a; }
+  .hero-body { position:relative; z-index:1; }
+
+  .publication-title-fancy { font-family:'Google Sans',sans-serif; font-weight:500; font-size:2.4rem;
+    line-height:1.12; color:#1a1a1a; margin-bottom:1.5rem; letter-spacing:-0.03em; }
+  .publication-title-fancy .pp-accent { background:var(--primary-gradient); background-clip:text;
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; color:transparent; display:inline-block; }
+
+  .authors-fancy { font-family:'Google Sans',sans-serif; color:var(--accent); font-size:1.2rem; margin-bottom:1rem; line-height:1.9; }
+  .authors-fancy .author-block { display:inline-block; margin:0 9px; white-space:nowrap; color:var(--accent); }
+  .author-sup { color:#0a0a0a; margin-left:2px; font-size:.68em; }
+
+  .affiliations-fancy { font-family:'Noto Sans',sans-serif; color:#666; font-size:1.05rem; margin-bottom:1.75rem; font-weight:400; }
+  .affiliations-fancy .aff-item { margin:0 10px; display:inline-flex; align-items:center; }
+  .affiliations-fancy .aff-marker { color:var(--accent-dark); margin-right:6px;
+    background:color-mix(in srgb, var(--accent) 14%, #fff); border-radius:999px; width:24px; height:24px;
+    display:inline-flex; align-items:center; justify-content:center; font-weight:600; font-size:.9rem; }
+
+  .btn-fancy-container { display:flex; justify-content:center; gap:14px; margin-top:20px; flex-wrap:wrap; }
+  .btn-fancy { background:#1a1a1a; border:1px solid #1a1a1a; color:#fff !important; padding:12px 28px;
+    border-radius:30px; font-weight:600; transition:all .3s cubic-bezier(.4,0,.2,1); display:inline-flex;
+    align-items:center; text-decoration:none; font-size:1rem; box-shadow:0 4px 6px rgba(0,0,0,.1); }
+  .btn-fancy:hover { background:var(--accent); border-color:var(--accent); transform:translateY(-2px);
+    box-shadow:0 6px 12px color-mix(in srgb, var(--accent) 30%, transparent); color:#fff !important; }
+  .btn-fancy .icon { margin-right:10px; }
+  .btn-fancy .icon svg.hf { width:1.1em; height:1.1em; vertical-align:-0.15em; }
+  .btn-fancy.btn-fancy-disabled { background:#eceef1; border:1px solid #e2e5e9; color:#8a9099 !important;
+    box-shadow:none; cursor:default; pointer-events:none; }
+  .btn-fancy.btn-fancy-disabled:hover { transform:none; box-shadow:none; }
+  .btn-fancy .pp-soon { font-size:10px; letter-spacing:.04em; text-transform:uppercase; color:#aab0b8; margin-left:8px; }
+
+  @media screen and (max-width:768px) {
+    .publication-title-fancy { font-size:1.9rem; }
+    .btn-fancy-container { flex-wrap:wrap; }
+  }
+  </style>
+<style id="segue-layout">
+/* ---- SEGUE supplementary layout (added; VAP CSS above is verbatim) ---- */
+.seg-section{--seg-h:300px;--seg-gap:6px;margin:24px 0 8px}
+.seg-strip{display:flex;flex-wrap:wrap;align-items:flex-start;gap:14px;
+  margin:18px 0;padding-bottom:18px;border-bottom:1px solid #1e1e1e}
+.seg-strip .seg-rowlabel{flex:0 0 100%;font-size:14px;color:#ddd;margin:2px 0 4px}
+.seg-tier{color:#8a8a8a;font-size:12px;margin-left:8px}
+.seg-block{display:flex;align-items:flex-start;gap:16px;
+  margin:18px 0;padding-bottom:18px;border-bottom:1px solid #1e1e1e}
+.seg-cells{display:flex;flex-wrap:wrap;gap:18px}
+.seg-cell{display:flex;align-items:flex-start;gap:8px}
+.seg-cellwrap{display:flex;flex-direction:column;align-items:center;gap:6px}
+.seg-celllabel{max-width:calc(var(--seg-h)*0.75 + var(--seg-h)*0.375 + 8px);
+  overflow-wrap:anywhere}
+.seg-unit{display:flex;flex-direction:column;align-items:center;gap:6px}
+.seg-media{position:relative;background:#000;border-radius:8px;overflow:hidden;aspect-ratio:3/4}
+.seg-media video{width:100%;height:100%;object-fit:cover;display:block}
+.seg-media img.seg-still{width:100%;height:100%;object-fit:cover;display:block}
+.seg-ref .seg-media,.seg-gen .seg-media,.seg-startfull .seg-media{height:var(--seg-h)}
+.seg-stack{display:flex;flex-direction:column;gap:var(--seg-gap)}
+.seg-stack .seg-media{height:calc((var(--seg-h) - var(--seg-gap))/2)}
+.seg-endpoint{}
+.seg-badge{position:absolute;top:3px;left:3px;z-index:3;padding:2px 6px;font-size:9px;
+  line-height:1;border-radius:6px;background:rgba(0,0,0,.6);color:#fff;pointer-events:none}
+.seg-noend{height:calc((var(--seg-h) - var(--seg-gap))/2);aspect-ratio:3/4;border-radius:8px;
+  border:1px dashed #555;display:flex;align-items:center;justify-content:center;
+  background-image:linear-gradient(45deg,transparent 47%,#555 48%,#555 52%,transparent 53%),
+    linear-gradient(-45deg,transparent 47%,#555 48%,#555 52%,transparent 53%)}
+.seg-noend .seg-xlabel{font-size:10px;color:#999;text-align:center;background:rgba(0,0,0,.55);
+  padding:2px 5px;border-radius:5px}
+.seg-label{font-size:13px;color:#aaa;text-align:center;line-height:1.3}
+@media (max-width:768px){.seg-section{--seg-h:220px}}
+/* comparison rows: keep all arms (incl. refVFX) on ONE row — horizontal overflow ok */
+.seg-cellsrow{display:flex;flex-wrap:nowrap;gap:14px;align-items:flex-start;width:100%;overflow-x:auto;padding-bottom:6px}
+.seg-strip>.seg-cellsrow{flex:0 0 100%}
+/* gallery blocks: one human reference-class heading above each grouped block */
+.seg-blockwrap{margin:18px 0;padding-bottom:18px;border-bottom:1px solid #1e1e1e}
+.seg-blockwrap>.seg-rowlabel{flex:none;font-size:14px;color:#ddd;margin:0 0 6px}
+.seg-blockwrap .seg-block{margin:0;padding:0;border-bottom:none}
+/* input vs generation box styles: inputs (reference + endpoints) tinted; generations muted/greyer */
+.seg-ref,.seg-endstack,.seg-startfull{background:rgba(96,150,230,.10);border:1px solid rgba(120,170,255,.40);border-radius:10px;padding:7px}
+.seg-gen{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.13);border-radius:10px;padding:7px}
+.seg-toc{max-width:720px;margin:10px auto 30px;padding:16px 22px;border:1px solid #2a2a2a;border-radius:10px;background:#0d0d0d}
+.seg-toc-title{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:8px}
+.seg-toc ul{list-style:none;padding:0;margin:0}
+.seg-toc li{margin:4px 0;font-size:16px}
+.seg-toc li ul{margin:2px 0 4px 18px}
+.seg-toc li ul li{font-size:14px;color:#bbb}
+.seg-toc a{color:#9cc3ff;text-decoration:none}
+@media(hover:hover){.seg-toc a:hover{text-decoration:underline}}
+.seg-subtitle{margin:26px 0 8px;text-align:center}
+.seg-placeholder{border:1px dashed #444;border-radius:10px;padding:34px;text-align:center;color:#777;font-size:14px;margin:6px 0 30px;background:repeating-linear-gradient(45deg,#0a0a0a,#0a0a0a 10px,#101010 10px,#101010 20px)}
+.seg-legend{display:flex;flex-wrap:wrap;gap:8px 26px;align-items:center;justify-content:center;font-size:13px;color:#bbb;margin:8px 0 26px}
+.seg-legend .sw{display:inline-block;width:26px;height:16px;border-radius:5px;vertical-align:middle;margin-right:7px}
+.seg-legend .sw-in{background:rgba(96,150,230,.10);border:1px solid rgba(120,170,255,.40)}
+.seg-legend .sw-gen{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.13)}
+/* ---- class grouping (one shared heading per class) + hidden markup ---- */
+.seg-classgroup{margin:0 0 6px}
+.seg-classhead{font-size:20px;font-weight:600;color:#fff;margin:34px 0 12px;padding-bottom:6px;border-bottom:1px solid #262626}
+.seg-refidx{display:inline-block;font-size:11px;letter-spacing:.04em;color:#8a8a8a;background:#141414;border:1px solid #262626;border-radius:6px;padding:2px 8px;margin:0 0 6px}
+/* hidden blocks/rows/cells: NOT rendered on the public host (no JS runs); the localhost overlay un-hides+dims */
+
+
+/* ---- project page: header / buttons / text (added for project_page) ---- */
+.pp-header{text-align:center;padding:40px 0 6px}
+.pp-title{font-size:30px;font-weight:600;line-height:1.28;margin:10px auto 0;max-width:980px}
+@media(max-width:768px){.pp-title{font-size:22px}}
+.pp-authors{margin-top:22px;font-size:19px;color:#ededed}
+.pp-authors .author{display:inline-block;white-space:nowrap;margin:0 10px 4px}
+.pp-authors sup{font-size:.62em;margin-left:1px;color:#9cc3ff}
+.pp-affil{font-size:14px;color:#aaa;margin-top:12px}
+.pp-affil .a{margin:0 10px;white-space:nowrap}
+.pp-affil sup{margin-right:3px;color:#9cc3ff}
+.btn.btn-disabled{background:#0f0f0f;border-color:#232323;color:#666;cursor:default;pointer-events:none}
+.btn.btn-disabled .pp-soon{font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:#555;margin-left:4px}
+.btn .icon{font-size:15px;opacity:.85}
+.pp-supp-line{text-align:center;font-size:15px;margin:18px 0 4px;color:#bbb}
+.pp-supp-line a{color:#9cc3ff;text-decoration:none}
+@media(hover:hover){.pp-supp-line a:hover{text-decoration:underline}}
+.pp-lead{max-width:880px;margin:0 auto 26px;text-align:center;font-size:17px;line-height:1.7;color:#e6e6e6}
+.pp-cap{text-align:center;color:#aaa;font-size:14px;margin:-16px 0 12px}
+.pp-note{text-align:center;color:#aaa;font-size:14px;margin:16px 0 6px}
+.pp-blockhead{font-size:16px;font-weight:600;color:#fff;margin:24px 0 2px}
+.pp-method{margin:18px auto 24px;max-width:1000px}
+.pp-method img{width:100%;height:auto;border-radius:8px;display:block}
+.pp-figcap{text-align:center;color:#aaa;font-size:13px;margin-top:10px}
+.pp-footer-supp{margin:46px 0 12px;padding:22px 24px;border:1px solid #2a2a2a;border-radius:12px;background:#0d0d0d;text-align:center}
+.pp-footer-supp a{color:#9cc3ff;text-decoration:none;font-size:18px;font-weight:600}
+@media(hover:hover){.pp-footer-supp a:hover{text-decoration:underline}}
+.seg-section.pp-hero{--seg-h:360px;margin-top:12px}
+@media(max-width:768px){.seg-section.pp-hero{--seg-h:240px}}
+.pp-hero .seg-blockwrap:last-child{border-bottom:none}
+.btn .icon.hf{width:1.15em;height:1.15em;vertical-align:-0.2em;margin-right:8px}
+</style>
+<style id="segue-light-overrides">
+/* ---- Light restyle of the SEGUE .seg-* / .pp-* layout for the #fcfcfc background. ----
+   The seg-layout block above is copied verbatim from template.html (dark); these rules sit
+   after it and recolour it for the light theme without touching any layout semantics. */
+.section { padding:3.25rem 1.5rem; }
+.title.is-3 { font-family:'Google Sans',sans-serif; color:#1a1a1a; margin-bottom:1.5rem; letter-spacing:-0.01em; }
+.seg-section { margin:8px 0; }
+
+/* each reference block + each comparison / guidance strip = white rounded card */
+.seg-blockwrap, .seg-strip { background:#fff; border:1px solid #ececf0; border-radius:14px;
+  box-shadow:0 4px 10px rgba(16,24,40,.06); padding:18px 20px; margin:22px 0; }
+.seg-blockwrap .seg-block { border-bottom:none; }
+
+/* reference-class headings -> small grey uppercase labels */
+.pp-blockhead, .seg-classhead { font-size:12px; font-weight:700; letter-spacing:.09em;
+  text-transform:uppercase; color:#6b7280; border-bottom:none; margin:26px 0 8px; padding:0; }
+.seg-refidx { color:#6b7280; background:#f3f4f6; border:1px solid #e5e7eb; }
+
+/* input (reference + endpoints) tint vs generation grey; legend recoloured to match */
+.seg-ref, .seg-endstack, .seg-startfull { background:color-mix(in srgb, var(--accent) 7%, #fff);
+  border:1px solid color-mix(in srgb, var(--accent) 35%, #fff); border-radius:10px; padding:7px; }
+.seg-gen { background:#fafafb; border:1px solid #e5e7eb; border-radius:10px; padding:7px; }
+.seg-ref, .seg-endstack, .seg-startfull { background:#fff; border:1px solid #d1d5db; }
+.seg-gen.seg-ours { background:color-mix(in srgb, var(--accent) 6%, #fff); border:2px solid var(--accent); padding:6px; }
+.seg-gen.seg-ours>.seg-label { color:#fff; background:var(--accent); border-radius:999px; padding:2px 10px; font-weight:600; font-size:12px; }
+.seg-arrow { align-self:flex-start; display:flex; align-items:center; height:var(--seg-h); color:#9ca3af; font-size:22px; line-height:1; padding:0 2px; flex:none; }
+.seg-legend { color:#4b5563; }
+.seg-legend .sw-in { background:color-mix(in srgb, var(--accent) 7%, #fff); border:1px solid color-mix(in srgb, var(--accent) 35%, #fff); }
+.seg-legend .sw-gen { background:#fafafb; border:1px solid #e5e7eb; }
+
+/* video / still boxes: thin light border, 10px radius */
+.seg-media { background:#0b0b0d; border:1px solid #e5e7eb; border-radius:10px; }
+.seg-label { color:#6b7280; }
+.seg-noend { border:1px dashed #cbd0d6;
+  background-image:linear-gradient(45deg,transparent 47%,#cbd0d6 48%,#cbd0d6 52%,transparent 53%),
+    linear-gradient(-45deg,transparent 47%,#cbd0d6 48%,#cbd0d6 52%,transparent 53%); }
+.seg-noend .seg-xlabel { color:#6b7280; background:rgba(255,255,255,.72); }
+
+/* TL;DR + captions + notes */
+.pp-lead { color:#374151; font-size:18px; max-width:820px; }
+.pp-cap { color:#6b7280; margin:4px 0 14px; }
+.pp-note { color:#6b7280; }
+
+/* method figure on a white card */
+.pp-method { background:#fff; border:1px solid #ececf0; border-radius:14px;
+  box-shadow:0 4px 10px rgba(16,24,40,.06); padding:18px; max-width:1000px; }
+.pp-method img { border-radius:10px; }
+.pp-method-p { color:#374151; max-width:900px; margin:0 auto 16px; font-size:16px; line-height:1.72; }
+.emph { color:#111827; font-weight:700; }
+
+/* supplementary footer box = accent-tinted card */
+.pp-footer-supp { background:color-mix(in srgb, var(--accent) 7%, #fff);
+  border:1px solid color-mix(in srgb, var(--accent) 30%, #fff); border-radius:14px; }
+.pp-footer-supp a { color:var(--accent-dark); }
+.pp-supp-line { color:#6b7280; }
+.pp-supp-line a { color:var(--accent-dark); }
+
+/* BibTeX block: white, grey border, dark copy button */
+.bibtex-block { position:relative; background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+  padding:18px 20px; color:#374151;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace; }
+.bibtex-block pre { white-space:pre; overflow:auto; margin:0; }
+.copy-btn { position:absolute; top:10px; right:10px; border:none; border-radius:8px; padding:6px 12px;
+  background:#1a1a1a; color:#fff; cursor:pointer; font-size:12px; font-weight:600; }
+@media(hover:hover){ .copy-btn:hover { background:var(--accent); } }
+
+@media (max-width:768px){ .seg-blockwrap, .seg-strip { padding:13px 13px; } .section { padding:2.25rem 1rem; } }
+@media (max-width:390px){ .seg-blockwrap, .seg-strip { padding:10px 10px; } }
+</style>
+
+ </head>
+ <body>
+  {{HEADER}}
+  {{SECTIONS}}
+  <div aria-hidden="true" class="lightbox" id="lightbox">
+   <div aria-modal="true" class="lightbox-content" role="dialog">
+    <button aria-label="Close" class="close-btn" id="lightboxClose">
+     &times;
+    </button>
+    <video controls="" id="lightboxVideo" playsinline="">
+    </video>
+   </div>
+  </div>
+  <script>
+   (function(){ const previews = document.querySelectorAll('video.preview'); const lightbox = document.getElementById('lightbox'); const lightboxVideo = document.getElementById('lightboxVideo'); const closeBtn = document.getElementById('lightboxClose'); function openLightbox(src){ if(!src) return; lightboxVideo.src = src; lightbox.classList.add('show'); document.body.style.overflow = 'hidden'; const playPromise = lightboxVideo.play(); if (playPromise && typeof playPromise.catch === 'function') { playPromise.catch(() => {/* ignore */}); } } function closeLightbox(){ if(!lightbox.classList.contains('show')) return; lightboxVideo.pause(); lightboxVideo.removeAttribute('src'); lightbox.classList.remove('show'); document.body.style.overflow = ''; } previews.forEach(v => { v.addEventListener('click', () => { const sourceEl = v.querySelector('source'); const src = sourceEl ? sourceEl.getAttribute('src') : v.getAttribute('src'); openLightbox(src); }); }); closeBtn.addEventListener('click', closeLightbox); lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); }); document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); }); const copyBtn = document.getElementById('copyBib'); if(copyBtn){ copyBtn.addEventListener('click', () => { const pre = document.querySelector('#bibtex pre'); if(!pre) return; const text = pre.textContent; navigator.clipboard.writeText(text).then(() => { const old = copyBtn.textContent; copyBtn.textContent = 'Copied!'; setTimeout(() => { copyBtn.textContent = old; }, 1200); }).catch(() => {/* ignore */}); }); } })();
+  </script>
+
+  <script>
+    (function(){
+      const inView = new IntersectionObserver((entries)=>{
+        for (const e of entries){
+          const v = e.target;
+          if (e.isIntersecting){
+
+            const sources = v.querySelectorAll('source[data-src]');
+            sources.forEach(s=>{
+              s.src = s.dataset.src;
+              s.removeAttribute('data-src');
+            });
+
+            if (v.preload === 'none') v.preload = 'metadata';
+            v.load();
+            v.addEventListener('canplay', ()=>{
+              if (v.dataset.autoplay === 'true' || v.autoplay){
+
+                v.play().catch(()=>{ /* 忽略自动播放失败 */ });
+              }
+            }, { once:true });
+          }else{
+
+            if (!v.paused) v.pause();
+          }
+        }
+      }, { rootMargin: '200px 0px' });
+
+      document.querySelectorAll('video.lazy-video').forEach(v=>{
+
+        v.preload = 'none';
+        inView.observe(v);
+      });
+
+    })();
+    </script>
+ </body>
+</html>

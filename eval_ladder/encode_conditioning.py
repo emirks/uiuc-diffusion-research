@@ -51,6 +51,19 @@ _SELECT_SUFFIX = f"select='gte(n,{STD_FRAMES - PX_SUFFIX})'"
 
 
 # ----------------------------------------------------------------- inference-side windows
+def prefix_frames() -> int:
+    """Pixel frames of the PREFIX anchor handed to the model AND to the scorer's mask (one rule, both sides).
+
+    Default PX_PREFIX (9 px = 2 latent frames), the corpus contract. `GEN_PREFIX_FRAMES=1` = the frame-0 anchor
+    (1 latent frame) that the S4 and S6 (EffectData) training strata used (`root_common.prefix_latents`): grid v3's
+    EffectData tier generates and is scored under it, because those effects start at frame 0 and a 9-frame window
+    would already contain the effect's onset. Must satisfy n % 8 == 1 (the causal VAE's frame grouping).
+    """
+    n = int(os.environ.get("GEN_PREFIX_FRAMES", PX_PREFIX))
+    assert n % 8 == 1, f"GEN_PREFIX_FRAMES must be 8k+1, got {n}"
+    return n
+
+
 def cond_paths(clip: str, sided: str) -> dict[str, Path]:
     """Conditioning mp4s for a generation row. `sided` in {'one','two'}."""
     out = {"prefix": CONDS / f"{clip}_start9.mp4"}

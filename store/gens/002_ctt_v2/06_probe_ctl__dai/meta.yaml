@@ -1,0 +1,16 @@
+id: gens/002_ctt_v2/06_probe_ctl__dai
+seq: 6
+shelf: gens
+arm: ctt_v2
+harness_arm: ctt_v2_ctl   # controllability-probe stamp; conditions in per-row ctl_cond/ctl_axis
+variant: probe_ctl
+machine: dai
+created: 2026-08-13
+inputs: {run: runs/002_ctt_v2, step: 10000}
+code: eval_ladder/run_gen.py --videos-dir via misc/2026-08-13_controllability/job_gen_ctl.sbatch (arrays 2941709-11, 24/24 exit 0)
+prompt_family: probe (prompts/007_ctl_probe, file sha dfcbb07b926a)
+prompt_sha: n/a (probe — conditions share row keys; frozen phrase table in the campaign DOSSIER)
+grid_rows: 68
+videos: 136
+source: misc/2026-08-13_controllability advised campaign (pre-registered contradiction probe; 5 axes x 3 arms)
+notes: anchors + modified + congruent + graft; base arm carries conditioning=prefix use_reference=false no_twin=true

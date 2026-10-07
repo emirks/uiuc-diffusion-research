@@ -1,0 +1,19 @@
+id: prompts/008_ext112_authorcfg
+seq: 8
+shelf: prompts
+created: 2026-08-14
+family: ext-authorcfg (external baselines, author-intended two-channel prompting)
+grammar: "target = {S1_endpoint}. {EFFECT}.  |  reference = {S1_reference}. {EFFECT}.  (both S1+effect; one-sided)"
+role: author-intended full-caption prompting for VAP + VFXMaster one-sided baselines (Phase-2 re-run)
+rows: 112   # one-sided 112-row projection; ARM-FREE, TWO text channels (target_text, ref_text)
+prompt_corpus_sha: 73787305eb4a   # sha256[:12] over target_text\x1fref_text concat, unique (cell,endpoint,reference,sided) order
+channels: {target: prompt (both models), reference: prompt_mot_ref (vap) / ref_prompt (vfxmaster)}
+renderer: build_authorcfg.py::build_texts (S1 from eval_ladder/prompts.split_caption for BOTH endpoint & reference; EFFECT = misc/refvfx_baseline/reference_effects.json[reference], capitalized; SAME clause in both channels)
+derived: {tgtfull_refempty: ref_text blanked at manifest stage (channel-decomposition ablation)}
+note: >
+  NON-001/002 shelf entry (like 007_ctl_probe): genuinely new content (effect-bearing reference channel), NOT a
+  stamp_rows transform of the two canonical sources, pinned as its own source. OWNER DIRECTIVE 2026-08-14 supersedes
+  the advisor's (A) full-caption reference: BOTH channels = {S1}. {EFFECT}. because the eval_ladder captions() are
+  motion-blind and miss the effect for overlay/particle/camera classes. Parity note (advisor's original concern,
+  now a DISCLOSURE): the effect clause now appears in BOTH channels vs the champion's single {S1}.sksz.{EFFECT} —
+  more effect-text exposure, accepted as the author-faithful choice for one-sided demo+text baselines.

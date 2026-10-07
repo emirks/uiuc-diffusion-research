@@ -1,0 +1,48 @@
+id: 015_dcg_sweep_effect__dai__2026-08-19
+seq: 15
+shelf: evals
+created: 2026-08-19
+machine: DeltaAI ghx4 (aarch64 GH200) — GEN + SCORE both on DeltaAI (one machine)
+instrument: >
+  transition-eval v4 (eval-v4-cert worktree; [UNCERTIFIED] by design — reference_v4.npz is the
+  accepted working-tree v4-lane mod). reference_v4 sha256 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8
+  (== evals/001-014). corpus data/processed/transitions_std121 = 222 clips / 39 classes; tau_copy 0.858.
+  refvfx env (module miniforge3_pytorch/2.10.0 + envs-aarch64/refvfx), warm 222 cache misc/refvfx_baseline/probe/cache.
+source: >
+  DCG conditioning-ablation Phase-2 EFFECT (misc/2026-08-14_dcg_conditioning/DOSSIER.md R7-R10). Question:
+  does adding test-time Demonstration-Contrastive Guidance (DCG, crossfade null) to the DEPLOYED ctt_v2
+  champion (runs/002_ctt_v2 step 10000, config gs=4/stg=1) improve eval-v4 when the EFFECT prompt already
+  describes the transition? Four arms = DCG strength w in {1.0,1.5,3.0,6.0}, EFFECT prompt (prompts/002
+  sha 35930d7d7453), seed 42, over the 152-row ic_gen roster (gens/015_dcg_w1/02_effect__dai ..
+  018_dcg_w6/02_effect__dai). DCG@w=1 = plain demo branch (parity cell). Gen array 2977744; score array
+  2978445 (16 shards, score_dcg_effect.sbatch); demo-copy job 2978481 (score_copy.py --prompt effect).
+caveat: >
+  ~7% of (gen x pool-ref) rows dropped to corrupt/racing entries in the shared warm feature cache
+  (EOFError/BadZipFile); drop is arm-UNIFORM (dcg_w1_e..w6_e = 928/936/952/958 rows), does not bias the
+  per-w comparison. Single seed (42). PARITY note: app%same(w1_e) headline recipe (excl G-ref-control) =
+  96.0; the store baseline 90.21 (evals/008 / gens/002_ctt_v2/03_effect) was aggregated INCLUDING
+  G-ref-control — recomputed the SAME way, w1_e = 90.4 ≈ 90.21 (parity holds; the 5.8pp gap is a
+  ref-control aggregation-recipe mismatch, NOT a divergence). NOT independently certified.
+arms_scored:
+  dcg_w1_e:   {gen: gens/015_dcg_w1/02_effect__dai,   run: runs/002_ctt_v2, step: 10000, dcg_w: 1.0, rows: 928}
+  dcg_w1p5_e: {gen: gens/016_dcg_w1p5/02_effect__dai, run: runs/002_ctt_v2, step: 10000, dcg_w: 1.5, rows: 936}
+  dcg_w3_e:   {gen: gens/017_dcg_w3/02_effect__dai,   run: runs/002_ctt_v2, step: 10000, dcg_w: 3.0, rows: 952}
+  dcg_w6_e:   {gen: gens/018_dcg_w6/02_effect__dai,   run: runs/002_ctt_v2, step: 10000, dcg_w: 6.0, rows: 958}
+headline:   # appearance %same, same-type cells (G-ref-control mismatch-control EXCLUDED), n-weighted; effect prompt
+  dcg_w1_e:   {pct_same: 96.0}   # = w=1 parity cell (incl-ref-control 90.4 ≈ 90.21 baseline)
+  dcg_w1p5_e: {pct_same: 96.0}   # +0.0 vs w1 — REDUNDANT: effect text already saturated appearance
+  dcg_w3_e:   {pct_same: 98.9}   # ceiling; not headlined (replication cell)
+  dcg_w6_e:   {pct_same: 98.5}   # ceiling; not headlined
+copy_guard:   # copy_max = copy-to-GT (clean); demo_copy GT-exceed = gen-vs-CONDITIONED-DEMO (the discriminator)
+  copy_max_to_gt:  {dcg_w1_e: 0.358, dcg_w1p5_e: 0.344, dcg_w3_e: 0.351, dcg_w6_e: 0.356}   # near_copy(tau858)=0 all w; FLAT
+  core_degenerate: {dcg_w1_e: 3, dcg_w1p5_e: 4, dcg_w3_e: 2, dcg_w6_e: 0}
+  demo_copy_GT_exceed_pct: {dcg_w1_e: 30, dcg_w1p5_e: 34, dcg_w3_e: 36, dcg_w6_e: 36}   # FLATTER than neutral (16->18->27->34)
+verdict: >
+  REDUNDANT-BUT-SAFE @ w=1.5 (advisor, confidence HIGH ~0.9). When the EFFECT text already describes the
+  transition, adding DCG at w=1.5 changes appearance %same by ~0 (96.0->96.0 excl-refctl; 90.4->90.3
+  incl-refctl; paired per-item median +0.28pp), with demo-copy CLEAN (Δmean +0.014, Δmax +0.013, exceed 6%)
+  and all harm rails clear. Additivity lens formally VOID at this ceiling (w1=96.0 >= 95). Headroom-share 0%
+  (<7% band) => the effect text largely SUBSTITUTES for demo guidance (neutral was 20%). w3/w6 demo-copy
+  max-of-max FAILS (intrusion replicates) but ~3x flatter than neutral (hypothesis-grade). Cross-phase: DCG@
+  w1.5 is a substitute for missing text, not a complement — gate ON for neutral/underspecified prompts
+  (neutral +3.3pp), OFF when text already specifies the effect. Full analysis: DOSSIER.md R7-R10.

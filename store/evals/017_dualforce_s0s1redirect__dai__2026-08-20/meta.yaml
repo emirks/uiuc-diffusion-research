@@ -1,0 +1,37 @@
+id: 017_dualforce_s0s1redirect__dai__2026-08-20
+seq: 17
+shelf: evals
+created: 2026-08-20            # scored on DeltaAI GH200 (rescore array 2990974, 8 shards; compliance job 2989756); meta/HEADLINE written 2026-08-22 (contrastive_training close-out)
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh
+harness: transition-eval v4.0.0 (eval-v4-cert worktree, [UNCERTIFIED] by design)
+instrument:
+  reference_v4_sha256: 459fd9a71bb5…
+  corpus: data/processed/transitions_std121/corpus_manifest.json  # 222 clips
+  tau_copy: 0.858
+  matrix: m1a_S3
+  cache: misc/refvfx_baseline/probe/cache
+  env: envs-aarch64/refvfx; PYTHONPATH=.claude/worktrees/eval-v4-cert/src
+source: >
+  Campaign 2026-08-20_s0s1_counterfactual — v4 scoring of the S0+S1 redirect-only treatment (dualforce_s0s1redirect_neutral)
+  vs the plain-FM control eval (evals/012): same instrument/corpus/cache/152-grid/prompt_sha. The first scoring pass raced on the
+  cache (kept as `dualforce_s0s1redirect_neutral__pass1_raced/`); the clean rescore is `dualforce_s0s1redirect_neutral/`.
+arms_scored:
+  dualforce_s0s1redirect_neutral:
+    gen: gens/020_dualforce_s0s1redirect/01_neutral__dai
+    run: runs/015_dualforce_s0s1redirect
+    step: 1000
+    rows: 1842
+plan:
+  rows: 1842
+  seeds: [42, 43]
+headline:
+  ref_dep_gap_pp: 20.7                         # control +21.4
+  pooled_same_pct: 88.1                       # control 89.6
+  swapped_compliance: 0.8246                  # P3a, control 0.8305
+  core_degenerate: 8                             # /304 (control 8)
+  near_copy: 0
+error_rows: 0
+caveats: >
+  Effective batch 4 (2 GPU × accum 2) vs the control's 8. QUALITY-CLEAN NULL by the pre-registered bars (gap −0.7pp vs control, all
+  quality bars held). Written by a different session than the one that ran the campaign; numbers reproduced with
+  misc/2026-08-20_s0s1_counterfactual/build/eval/report_headline_redirect.py (read-only).

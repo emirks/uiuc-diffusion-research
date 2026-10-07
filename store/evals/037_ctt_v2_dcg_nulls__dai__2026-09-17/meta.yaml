@@ -1,0 +1,18 @@
+id: 037_ctt_v2_dcg_nulls__dai__2026-09-17
+seq: 37
+shelf: evals
+created: '2026-09-17'
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bgjg-dtai-gh
+harness: transition-eval v4.0.0 (eval-v4-cert worktree) — IDENTICAL instrument to eval 028/033/036 (--reference-corpus 222 pin, split_v1.3 pool)
+instrument:
+  reference_corpus: data/processed/transitions_std121/corpus_manifest_v1_222.json  # certified 222-clip pin
+  corpus: data/processed/transitions_std121/corpus_manifest.json                   # 677-clip grid-v3 pool superset
+  matrix: m1a_S3
+  split: split_v1.3.json  # pinned via plan_driver pool_refs filter = eval 028/036's Sep-7 pool (seatbelt: 0 pool/ref mismatches vs eval 036)
+  job: misc/2026-09-07_eval_grid_v2/score_v3.sbatch (16 shards/arm; ED GEN_PREFIX_FRAMES=1)
+  env: envs-aarch64/refvfx (module miniforge3_pytorch/2.10.0); PYTHONPATH=.claude/worktrees/eval-v4-cert/src
+grid:
+  registry: misc/2026-09-17_dcg_nulls_cttv2/eval/registries/ (30 arm rows + 384 base twins from eval_ladder/registry_v3.jsonl)
+  cells: same advisor-picked 60-row zero-shot subset (20 reference triplets = 10 per tier x content cell) as the empty-null / dualforce nulls; one seed (42)
+source: 'test-time DCG 3-null CORE on ctt_v2 (runs/002_ctt_v2 @ step 10000, gs4/stg1, 30 steps; DCG_ADAPTER). 8 arms = 4 nulls x 2 tiers. HF-121: base_w1 (crossfade null, w=1 = plain demo branch), crossfade_w3, empty_w3 (endpoint_only), holdswap8_w3 (hold_swap W=8). ED-81 (GEN_PREFIX_FRAMES=1) mirror. Only the DCG null reference differs across crossfade/empty/holdswap8 at w=3; all else byte-identical. Gens store/gens/041_ctt_v2_dcg_nulls. Clips keyed by the SAME 60 grid item_ids as the dualforce/empty-null arms -> PAIRED head-to-head on the SAME split_v1.3 pool as eval 028/033/036. Levels only; STAGE-3 paired comparison is a separate step (scoring in flight).'
+arms_scored: {}   # finalized post-scoring (items_scored, pct_same_headline per arm)

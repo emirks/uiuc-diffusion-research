@@ -1,0 +1,10 @@
+id: 025_ctt_v2_plain_regen
+seq: 25
+shelf: gens
+created: 2026-08-12
+machine: DeltaAI ghx4 (co-located effect 2x2; gen+score same machine)
+inputs: {run: runs/002_ctt_v2, step: 10000, arm: ctt_v2_plain_regen, prompt: plain}
+grid: registry_ctt_v2_plain_regen.jsonl (152-row CTT grid; plain prompt; effect manifest = registry_ctt_v2_leaky verbatim)
+video_layout: outputs/videos/ctt_v2_push_effect/ctt_v2_plain_regen__ck10000/<item_id>__s<seed>.mp4
+scored_in: evals/008_ctt_v2_effect_2x2__dai__2026-08-12
+notes: ctt_v2×plain DeltaAI regen; 82.95 (vs pub 82.5). video_key stripped from effect registries (else gendir collides on ctt_v2_leaky).

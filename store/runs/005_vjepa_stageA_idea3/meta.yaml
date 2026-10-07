@@ -1,0 +1,36 @@
+id: 005_vjepa_stageA_idea3
+seq: 5
+created: 2026-08-04
+machine: NCSA DeltaAI GH200 (ghx4, aarch64) — extraction + Stage-A; scaffolded on gh-login02
+source: misc/bneck_redesign campaign — Idea 3 (advisors/IDEA3_DESIGN.md)
+kind: feature-cache + projector warm-start (pre-coupling Stage-A go/no-go)
+
+# NOTE for coordinator: seq 5 chosen as max(runs)+1 at scaffold time (runs 001-004 existed).
+# If the parallel Idea-2 work also mints a runs/ entry, renumber one of them at commit time.
+# Not git-pushed by the Idea-3 agent (coordinator owns commits).
+
+inputs:
+  - datasets/002_ctt_v2   # the 18,800 unique reference demos (transition clips) + their base labels
+  - misc/bneck_redesign/stage0/cache/meta.pt      # demo_base_idx, endpoint_feat, base flags (reused, same demo order)
+  - misc/bneck_redesign/stage0/{op_to_base,manner_bank}.json   # 146 base-manner labels
+
+extractor:
+  model: facebook/vjepa2-vitl-fpc64-256   # frozen, 326M params, offline from $LAB/cache/huggingface
+  frozen: true                            # 0 trainable params; per-shard sha256 weight-hash logged (identical every shard)
+  input: full demo mp4 -> uniform 64 frames -> VJEPA2VideoProcessor default (resize 292 / center-crop 256^2)
+  grid: "[T=32,H=16,W=16,D=1024]  (tubelet 2x16x16, 8192 patches)"
+  canonicalization: "residual-trajectory (training-free): P=mean t in [0,4), S=mean t in [28,32), a_t=t/31, R=X-((1-a_t)P+a_t S); adaptive-avg-pool R 32x16x16 -> 16x3x3"
+  cached: feats/feats_shard_*.npy   # fp16 [n,16,3,3,1024] per shard + *.json (demo_idx, weight_hash, finite); ~5.5 GB total
+
+projector:
+  arch: "shared per-token MLP  LN -> 1024 -> 512 -> GELU -> 128  (0.593M params)"
+  train: "Stage-A SupCon tau=0.1 on POOLED projected code (mean over 144 tokens, L2-norm); labels = 146 base manners; hold out 30 bases (23 eval + 4 multi + 3 non-eval singleton, seed 42) — same split as sibling gates"
+  ckpt: projector_stageA.pt            # seed-0 state_dict + all-seed states
+  go_no_go: "median-over-seeds held-out base macro top-1 >= 7% (10x the 0.685% chance)"
+  report: stageA_report.json           # go/no-go + controls A/B/C + endpoint leak probe (live numbers)
+
+coupling_contract:   # reusable to_latent_video() in idea3/vjepa_residual.py — coordinator wires this into coupling later
+  shape: "projected tokens [16,3,3,128] -> tiny latent video (C=128, F=16, H=3, W=3) = 144 tokens"
+  standardize: "per-clip per-channel (mean 0 / std 1 over the 144 F*H*W positions, population std + 1e-6), fp32, autocast off"
+
+code: misc/bneck_redesign/idea3/   # vjepa_residual.py, extract_features.py, stageA_train.py, stageA_lib.py, build_manifest.py, test_cpu.py, job_*.sbatch

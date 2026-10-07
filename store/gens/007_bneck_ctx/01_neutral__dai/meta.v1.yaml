@@ -1,0 +1,45 @@
+id: 013_bneck_ctx_v2
+seq: 13
+shelf: gens
+created: 2026-08-06
+machine: DeltaAI GH200 (ghx4)   # SAME box as the scoring lane (evals/004) and as gens/014
+source: misc/bneck_redesign campaign (eval_ladder/run_gen.py via build/job_gen_dai.sbatch)
+code: >
+  envs-aarch64 + PYTHONPATH -> src/LTX-2-bneck-coupling/packages (branch bneck_redesign,
+  commit 7ffbe95546722f35c2571b482412750fe0642ae3). This checkout reconstructs the FROZEN
+  certified operator_encoder AND the co-trained ContextAdapter and reads inject=context.
+  Generating from src/LTX-2-official would silently drop the context bottleneck.
+inputs:
+  run: 006_bneck_ctx_v2
+  step: 10000
+  adapter_sha256: 844ee248eb91ca52f9ab987d3d66efdb72bf7746d61f526472a13cde4a518534
+grid: grid.jsonl (152 rows x seeds [42,43] = 304 clips; registry_bneck_ctx_v2.jsonl)
+prompt_rule: '"{S1}. sksz. [{S2}.]" — byte-identical to gens/002_ctt_v2 and gens/008; item_id, reference and input_key are byte-identical to registry_ctt_v2'
+resolution: 480x640x121f @ 24 fps
+inference: steps 30, guidance_scale 4.0, stg_scale 1.0, stg_blocks [29], stg_mode stg_v; --rank 128 --alpha 128; attention one_way
+
+bottleneck:
+  inject: context               # the redesign vs gens/008: code injected as cross-attention CONTEXT
+  token_shape: [6, 4, 3]        # K = 72 operator tokens emitted by the frozen encoder
+  context_tokens: 16            # K' — the ContextAdapter compresses 72 -> 16 learned context tokens
+  encoder: the certified transition encoder, FROZEN; reconstructed from THIS checkpoint's own
+    operator_encoder.* (50 tensors) and context_adapter.* (31 tensors), loaded in fp32
+  skip_scale: 0.0               # no raw pooled demo may leak in
+  provenance_guard: run_gen REFUSES to generate under this arm name if the checkpoint carries no
+    operator_encoder.* / context_adapter.* tensors, so a raw-reference video can never be labelled a bottleneck one
+
+twin: 014_bneck_ctx_v2_shufcode   # the paired corpse; same adapter file, deranged code source
+caveats:
+  - >-
+    The row's `reference` is what the encoder sees here. Its twin (gens/014) overrides ONLY the
+    model-facing clip via `code_source_reference`, leaving `reference` untouched — so run_eval's
+    pool_refs() builds a BYTE-IDENTICAL GT pool for both (measured: same item_ids, same references),
+    and every paired delta is uncontaminated.
+  - >-
+    Inherits runs/006's training conditions (mix S0/S1/S2a/S2b/S4, effective batch 8, step 10000).
+    Levels carry no pre-registered bar; read this arm ONLY against its deranged twin (gens/014).
+liveness: >
+  G5 / P3 GREEN, measured paired matched-vs-deranged: R_full 0.5839 and R_first48 0.5368 against a
+  0.10 bar; both claim cells >= 0.53 (G-unseen-same 0.532, G-unseen-cross 0.603). The context code
+  carries real leverage on the output; whether the model DECODES it is the eval question (evals/004).
+health: 304/304 clips, 0 failed jobs

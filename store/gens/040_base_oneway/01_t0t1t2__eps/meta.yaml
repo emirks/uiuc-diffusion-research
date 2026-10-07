@@ -1,0 +1,16 @@
+id: gens/040_base_oneway/01_t0t1t2__eps
+seq: 1
+shelf: gens
+arm: base_oneway
+harness_arm: base_oneway   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: t0t1t2
+machine: eps
+created: 2026-09-15
+inputs: {run: base weights (no adapter)}
+code: misc/2026-09-13_crossing_ablation/gen/xab_gen.py (fork of eps ctt_v2 run_gen.py) @ 3184f77f6aa5
+prompt_family: prompts/018_crossing_s0s1
+prompt_sha: 7ab4e29dba61
+grid_rows: 81
+videos: 162
+source: scripts/store_register.py over misc/2026-09-13_crossing_ablation/eval_s0s1/registries/base_oneway.gen.jsonl
+notes: crossing ablation CLEAN s0+s1 retrain ZERO-POINT: base LTX-2 19B dev, adapter=None (no LoRA), one_way ref attn, same T0/T1/T2 rows and gen settings as runs/024-025. The adapter-minus-base contrast baseline. eps (fal-h100). 81 items x seeds 42/43 = 162 clips. Scored 9-pool on eps (evals/034_crossing_s0s1__eps__2026-09-15).

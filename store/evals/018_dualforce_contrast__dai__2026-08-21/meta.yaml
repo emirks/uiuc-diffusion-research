@@ -1,0 +1,37 @@
+id: 018_dualforce_contrast__dai__2026-08-21
+seq: 18
+shelf: evals
+created: 2026-08-22            # scored on DeltaAI GH200 (score array 3004137, 16 shards; compliance job 3004138)
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh
+harness: transition-eval v4.0.0 (eval-v4-cert worktree, [UNCERTIFIED] by design)
+instrument:
+  reference_v4_sha256: 459fd9a71bb5…            # MEASURED at score time (matches the ctt_v2 baselines/012/013/016/017)
+  corpus: data/processed/transitions_std121/corpus_manifest.json  # 222 clips
+  tau_copy: 0.858
+  matrix: m1a_S3
+  cache: misc/refvfx_baseline/probe/cache        # warm 222-clip corpus cache (shared with 012/013/016/017 → comparable)
+  env: envs-aarch64/refvfx (NOT the ltx2 gen env); PYTHONPATH=.claude/worktrees/eval-v4-cert/src
+source: >
+  Campaign 2026-08-21_contrastive_training — v4 scoring of the CONTRASTIVE treatment arm (dualforce_contrast_neutral).
+  SAME instrument + corpus + warm cache + 152-row grid + prompt_sha 0d708175 as the plain-FM control eval (evals/012)
+  and the redirect eval (evals/017) → %same directly comparable. One machine.
+arms_scored:
+  dualforce_contrast_neutral:
+    gen: gens/021_dualforce_contrast/01_neutral__dai
+    run: runs/016_dualforce_contrast
+    step: 1000
+    rows: 1842
+plan:
+  rows: 1842                                  # (generation × pool-reference) rows / 16 chunks
+  seeds: [42, 43]
+  keyed_join: base twins found for all rows
+headline:                                        # see HEADLINE.md
+  ref_dep_gap_pp: 18.1                         # G-fit 81.5 − G-ref-control 63.3 (control +21.4, redirect +20.7)
+  pooled_same_pct: 78.5                       # control 89.6, redirect 88.1
+  swapped_compliance: 0.6718                  # P3a, control 0.8305 (misc/2026-08-21_contrastive_training/build/eval/compliance_scores)
+  core_degenerate: 21                            # /304 (control 8)
+  near_copy: 0                                  # /304 @ τ0.858
+error_rows: 7                                   # /1842 app_ref-None (control 73)
+caveats: >
+  Effective batch 4 (2 GPU × accum 2, the 014/015 protocol) vs the control's 8 — same caveat as evals/017. Training-side
+  telemetry showed the contrast margin widening to Δ=−0.065 by step 1000 with L_FM flat; this eval is the sampled verdict.

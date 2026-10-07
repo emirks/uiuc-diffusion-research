@@ -1,0 +1,23 @@
+{
+ "title": "SEGUE: Visual Signal as Exclusive Guidance for One-Shot Transition Effect Generation",
+ "authors": [
+  {"name": "Emir Kisa", "aff": [1]},
+  {"name": "Victor Escorcia", "aff": [2]},
+  {"name": "Junho Kim", "aff": [1]},
+  {"name": "Alexander G. Schwing", "aff": [1]},
+  {"name": "James M. Rehg", "aff": [1]},
+  {"name": "Ozgur Kara", "aff": [1]}
+ ],
+ "affiliations": {
+  "1": "UIUC",
+  "2": "MacondoLabs"
+ },
+ "links": {
+  "paper": "",
+  "code": "",
+  "model": "",
+  "dataset": "",
+  "supplementary": "../../supplementary/site/index.html"
+ },
+ "bibtex": "@article{kisa2026segue,\n  title={SEGUE: Visual Signal as Exclusive Guidance for One-Shot Transition Effect Generation},\n  author={Kisa, Emir and Escorcia, Victor and Kim, Junho and Schwing, Alexander G. and Rehg, James M. and Kara, Ozgur},\n  journal={arXiv preprint},\n  year={2026}\n}"
+}

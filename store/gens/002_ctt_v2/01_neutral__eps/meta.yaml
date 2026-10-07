@@ -1,0 +1,14 @@
+id: gens/002_ctt_v2/01_neutral__eps
+seq: 1
+shelf: gens
+arm: ctt_v2
+harness_arm: ctt_v2   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral
+machine: eps
+created: 2026-07-30          # migrated into store; generated on the training box (ship/bin/05_gen.sh)
+migrated: 2026-08-13 from gens/002_ctt_v2 (contract v2 — store/MIGRATION.md; full v1 provenance in meta.v1.yaml)
+inputs: {run: runs/002_ctt_v2, step: 10000}
+prompt_family: prompts/001_ctt152_neutral
+prompt_sha: 0d708175fbfe
+grid_rows: 152
+videos: 304

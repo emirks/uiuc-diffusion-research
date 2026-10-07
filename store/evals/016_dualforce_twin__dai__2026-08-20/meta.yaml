@@ -1,0 +1,37 @@
+id: 016_dualforce_twin__dai__2026-08-20
+seq: 16
+shelf: evals
+created: 2026-08-20            # scored this session on DeltaAI GH200 (job 2984092, 16-shard array)
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh
+harness: transition-eval v4.0.0 (eval-v4-cert worktree, [UNCERTIFIED] by design)
+instrument:
+  reference_v4_sha256: 459fd9a71bb5…            # MEASURED at score time (matches the ctt_v2 baselines/012/013)
+  corpus: data/processed/transitions_std121/corpus_manifest.json  # 222 clips
+  tau_copy: 0.858
+  matrix: m1a_S3
+  cache: misc/refvfx_baseline/probe/cache        # warm 222-clip corpus cache (shared with 012/013 → comparable)
+  env: envs-aarch64/refvfx (NOT the ltx2 gen env); PYTHONPATH=.claude/worktrees/eval-v4-cert/src
+source: >
+  COUNTERFACTUAL_TRAINING campaign — v4 scoring of the counterfactual-twin TREATMENT arm
+  (dualforce_twin_neutral). SAME instrument + corpus + warm cache + 152-row grid + prompt_sha 0d708175
+  as the plain-FM control eval (evals/012) → %same directly comparable. One machine.
+arms_scored:
+  dualforce_twin_neutral:
+    gen: gens/019_dualforce_twin/01_neutral__dai
+    run: runs/014_dualforce_twin
+    step: 1000
+    rows: 1896                                   # co-scored control_hold (1377) / control_lerp (375) are out of scope, auto-filtered
+plan:
+  rows: 1842                                     # NEW (generation × pool-reference) rows / 16 chunks
+  seeds: [42, 43]
+  keyed_join: base twins found for all rows (no KEYED-JOIN FAILURE)
+headline:                                        # see HEADLINE.md for the full table + control deltas
+  ref_dep_gap_pp: 15.2                           # G-fit 83.7 − G-ref-control 68.5 (control baseline +21.4)
+  pooled_same_pct: 80.3                          # control 89.6
+  core_degenerate: 21                            # /304 (control 8)
+  near_copy: 0                                   # /304 @ τ0.858
+error_rows: 36                                   # /1842 app_ref-None (control 73/1842); twin fewer → comparison not voided
+caveats: >
+  Forward vs sampled divergence: the frozen α-probe on the trained checkpoint rose (α(0.85) 0.0164→0.0511
+  @ step250, gate passed) yet every same-typed SAMPLED cell fell vs the control and degeneracy rose —
+  off-path redirect-read ↑, on-path sampled quality ↓. Verdict adjudication = advisor R3 (dossier).

@@ -1,0 +1,233 @@
+model:
+  model_path: /storage/ozgur/ctt_v2/models/ltx-2-19b-dev.safetensors
+  text_encoder_path: /storage/ozgur/ctt_v2/models/gemma-3-12b-it-qat-q4_0-unquantized
+  training_mode: lora
+  load_checkpoint: null
+lora:
+  rank: 128
+  alpha: 128
+  dropout: 0.0
+  target_modules:
+  - attn1.to_k
+  - attn1.to_q
+  - attn1.to_v
+  - attn1.to_out.0
+  - attn2.to_k
+  - attn2.to_q
+  - attn2.to_v
+  - attn2.to_out.0
+  - ff.net.0.proj
+  - ff.net.2
+training_strategy:
+  name: flexible
+  video:
+    is_generated: true
+    latents_dir: latents
+    cond_clean_latents_dir: cond_clean_latents
+    conditions:
+    - type: reference
+      latents_dir: reference_latents
+      probability: 0.9
+      attention: one_way
+      bottleneck:
+        token_shape:
+        - 16
+        - 3
+        - 3
+        encoder_class: vjepa
+        spanning_positions: true
+        freeze_encoder: false
+        load_encoder: /storage/ozgur/bneck_redesign/vjepa_stageA_raw/projector_stageA_raw.pt
+        load_encoder_sha256: 6f0c10ffac86421954149eeef582fdb43842c06b53524540876c32d95be7cb03
+        vjepa_feats_dir: /storage/ozgur/bneck_redesign/vjepa_stageA_raw/feats_raw
+        vjepa_manifest: /storage/ozgur/bneck_redesign/vjepa_stageA_raw/demos_manifest.jsonl
+        vjepa_val_feats: /storage/ozgur/bneck_redesign/vjepa_stageA_raw/val_feats_raw.pt
+    - type: mask
+      mask_dir: masks
+      probability: 1.0
+optimization:
+  learning_rate: 0.0001
+  steps: 4500
+  batch_size: 1
+  gradient_accumulation_steps: 1   # eps 8xH100: 8 procs x bs1 x accum1 = eff-batch 8 (ctt_v2 parity), ~2x faster
+  max_grad_norm: 1.0
+  optimizer_type: adamw
+  scheduler_type: wsd
+  # WSD (warmup-stable-decay), num_processes-corrected in trainer._create_scheduler.
+  # steps are OPTIMIZER steps; the curve is identical at any GPU count (verified P=1==P=4).
+  # warmup 0->100 (1e-6->1e-4), stable 1e-4 on [100,3375), linear decay to 1e-5 on [3375,4500].
+  scheduler_params:
+    warmup_steps: 100
+    decay_frac: 0.25
+    end_factor: 0.1
+  enable_gradient_checkpointing: true
+acceleration:
+  mixed_precision_mode: bf16
+  quantization: null
+  load_text_encoder_in_8bit: false
+  offload_optimizer_during_validation: true
+data:
+  sample_list: /storage/ozgur/ctt_v2/datasets/ctt_v2/samples.jsonl
+  stratum_weights_pct:
+    S0: 5.0
+    S1: 12.0
+    S2a: 34.36059
+    S2b: 35.63941
+    S4: 13.0
+  sampler_seed: 42
+  sampler_epoch_size: null
+  resume_data_position: true
+  verify_sample_files: true
+  num_dataloader_workers: 4
+  bneck_timing: /storage/ozgur/bneck_redesign/build/ref_timing.json
+checkpoints:
+  interval: 250
+  keep_last_n: -1
+  precision: bfloat16
+  save_training_state: full
+validation:
+  samples:
+  - prompt: A hiker in a light purple shirt and olive trousers carrying a large black
+      backpack walks across a bright rocky mountain slope. sksz.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/davis_hike_start9.mp4
+      num_frames: 9
+    - type: reference
+      video: /storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/animalization/animalization_0.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: "A man in a green sweater and pink beanie stands outside a Parisian caf\xE9\
+      \ holding a shopping bag and a pink jacket. sksz. a first-person aerial view\
+      \ above a narrow European street, a green-sleeved arm stretched out ahead."
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/hero_flight_6_start9.mp4
+      num_frames: 9
+    - type: suffix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/hero_flight_6_end9.mp4
+      num_frames: 8
+    - type: reference
+      video: /storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/hero_flight/hero_flight_5.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: A woman in a red bomber jacket poses against a blue studio backdrop, hands
+      on hips. sksz.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/animalization_0_start9.mp4
+      num_frames: 9
+    - type: reference
+      video: /storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/cotton_cloud/cotton_cloud_1.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: A figure in a white knit balaclava and bright red hoodie leans against
+      the hood of a blue car in a dusky parking lot, cradling a black motorcycle helmet
+      in red-gloved hands. sksz. a young man with dark hair in an oversized brown
+      shirt smoking a cigarette against a white railing inside a green-lit pedestrian
+      tunnel at night.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/air_bending_1_start9.mp4
+      num_frames: 9
+    - type: suffix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/air_bending_1_end9.mp4
+      num_frames: 8
+    - type: reference
+      video: /storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/raven_transition/raven_transition_0.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: A woman with long black hair and large sunglasses stands in a warm-lit
+      kitchen, wearing a brown leather jacket, a light blue button-down shirt, and
+      a brown skirt while holding a white telephone receiver to her ear. sksz.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/color_rain_0_start9.mp4
+      num_frames: 9
+    - type: reference
+      video: /storage/ozgur/ctt_v2/datasets/ctt_v2/encodes/S2a/clips/s2_0023_c00.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  negative_prompt: worst quality, inconsistent motion, distorted, jittery
+  video_dims:
+  - 480
+  - 640
+  - 121
+  frame_rate: 24.0
+  seed: 42
+  inference_steps: 30
+  interval: 100000
+  guidance_scale: 4.0
+  stg_scale: 1.0
+  stg_blocks:
+  - 29
+  stg_mode: stg_v
+  generate_audio: false
+  skip_initial_validation: true
+flow_matching:
+  timestep_sampling_mode: shifted_logit_normal
+  timestep_sampling_params: {}
+hub:
+  push_to_hub: false
+  hub_model_id: null
+wandb:
+  enabled: true
+  project: bneck_redesign
+  entity: null
+  tags:
+  - bneck_redesign
+  - idea3_vjepa_raw
+  - one_way
+  - rank128
+  - lr1e-4
+  - spanning_positions
+  - code_dropout_0.9
+  - wsd
+  - steps4500
+  - fresh_restart
+  log_validation_videos: true
+seed: 42
+output_dir: /storage/ozgur/surg/vjepa_raw_surg1_wsd
+surgery:
+  enabled: true
+  high_sigma_mixture:
+    enabled: true
+    sigma_max: 1.0
+    bands:
+    - - 0.9
+      - 1.0
+      - 0.6
+    - - 0.7
+      - 0.9
+      - 0.15
+  gap_loss:
+    enabled: true
+    lambda_target: 10.0
+    lambda_warmup_steps: 1000
+    delta_file: /storage/ozgur/surg/surg1_build/delta_launch.json
+    demo_class_map: /storage/ozgur/surg/surg1_build/demo_class_map.json
+    derange_policy: cross_class
+    high_band_sigma: 0.9
+  per_sigma_loss_norm:
+    enabled: true
+    weight_file: /storage/ozgur/surg/surg1_build/persigma_weights.json
+  probe:
+    enabled: true
+    triples_file: /storage/ozgur/surg/surg1_build/probe_triples_vjepa.json
+    vjepa_manifest: /storage/ozgur/bneck_redesign/vjepa_stageA_raw/demos_manifest.jsonl
+    dataset_root: /storage/ozgur/ctt_v2/datasets/ctt_v2
+    interval_steps: 500
+    max_targets: 64
+    top_band_sigma: 0.9
+    flag_dsame_se: 3.0
+    flag_dsame_ratio: 0.5

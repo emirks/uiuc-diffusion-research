@@ -1,0 +1,14 @@
+id: gens/001_ic_gen/02_effect__dai
+seq: 2
+shelf: gens
+arm: ic_gen
+harness_arm: ic_gen_effect   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: effect
+machine: dai
+created: 2026-08-06
+migrated: 2026-08-13 from gens/010_ic_gen_effect (contract v2 — store/MIGRATION.md; full v1 provenance in meta.v1.yaml)
+inputs: {run: runs/001_ic_gen, step: 5000}
+prompt_family: prompts/002_ctt152_effect
+prompt_sha: 35930d7d7453
+grid_rows: 152
+videos: 304

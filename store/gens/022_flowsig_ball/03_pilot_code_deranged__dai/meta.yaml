@@ -1,0 +1,16 @@
+id: gens/022_flowsig_ball/03_pilot_code_deranged__dai
+seq: 3
+shelf: gens
+arm: flowsig_ball
+harness_arm: flowsig_ball_pilot   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: pilot_code_deranged
+machine: dai
+created: 2026-08-25
+inputs: {run: runs/018_flowsig_ball, step: 10000}
+code: src/LTX-2-flowsig @ 7735546 (+ step2eval inference program port)
+prompt_family: prompts/001_ctt152_neutral
+prompt_sha: ccef2bac84da
+grid_rows: 13
+videos: 26
+source: scripts/store_register.py over /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/misc/2026-08-24_flow_signal_conditioning/step2eval/gen/registry_flowsig_ball_pilot.jsonl
+notes: Phase-A pilot DERANGED twin of 02: identical rows/seeds/prompts, the ONLY difference is that the fed program comes from a different-operator demo (fixed rotation-by-6 over the 13 operator classes, no fixed points; mapping in the grid.jsonl field program_source_deranged). Gen array 3022868 (8 tasks) on DeltaAI bhwp.

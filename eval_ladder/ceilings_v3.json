@@ -1,0 +1,478 @@
+{
+ "calibration": {
+  "cotton_cloud": {
+   "certified": 0.981,
+   "kernel_222clips": 0.9808,
+   "kernel_all_clips": 0.9758,
+   "n_pairs_222": 30,
+   "ratio": 0.9999
+  },
+  "hero_flight": {
+   "certified": 0.9294,
+   "kernel_222clips": 0.9001,
+   "kernel_all_clips": 0.9001,
+   "n_pairs_222": 90,
+   "ratio": 0.9685
+  },
+  "portal": {
+   "certified": 0.9753,
+   "kernel_222clips": 0.9753,
+   "kernel_all_clips": 0.9753,
+   "n_pairs_222": 156,
+   "ratio": 0.9999
+  },
+  "shadow": {
+   "certified": 0.6572,
+   "kernel_222clips": 0.6668,
+   "kernel_all_clips": 0.6668,
+   "n_pairs_222": 210,
+   "ratio": 1.0147
+  },
+  "shadow_smoke": {
+   "certified": 0.9833,
+   "kernel_222clips": 0.9827,
+   "kernel_all_clips": 0.9827,
+   "n_pairs_222": 90,
+   "ratio": 0.9994
+  }
+ },
+ "calibration_ratio_mean": 0.9965,
+ "ceilings": {
+  "acid": {
+   "ceiling": 0.7612328715269892,
+   "n_clips": 8,
+   "n_pairs": 56,
+   "sd_pairs": 0.16131847971875968,
+   "sidedness": "onesided"
+  },
+  "cotton_cloud": {
+   "ceiling": 0.9758180125827186,
+   "n_clips": 9,
+   "n_pairs": 72,
+   "sd_pairs": 0.035295408914810096,
+   "sidedness": "onesided"
+  },
+  "display_transition": {
+   "ceiling": 0.9807998043292163,
+   "n_clips": 4,
+   "n_pairs": 12,
+   "sd_pairs": 0.011535492972726276,
+   "sidedness": "twosided"
+  },
+  "earth_wave": {
+   "ceiling": 0.9817971817971819,
+   "n_clips": 6,
+   "n_pairs": 30,
+   "sd_pairs": 0.013895526546611806,
+   "sidedness": "twosided"
+  },
+  "ed.Acid_mist_limb_transformation": {
+   "ceiling": 0.9836891189832365,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.017261232918378607,
+   "sidedness": "onesided"
+  },
+  "ed.Amber_crystal_wings_on_back": {
+   "ceiling": 0.8995601936778408,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.1312670608661609,
+   "sidedness": "onesided"
+  },
+  "ed.Amber_roots_from_feet": {
+   "ceiling": 0.9510107392460333,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.07133940398795748,
+   "sidedness": "onesided"
+  },
+  "ed.Amber_streams_from_eyes": {
+   "ceiling": 0.9337287513758102,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.10664222678237407,
+   "sidedness": "onesided"
+  },
+  "ed.Amethyst_sword_from_palm": {
+   "ceiling": 0.9707648825295883,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.05088921499216752,
+   "sidedness": "onesided"
+  },
+  "ed.Ants_flow_from_eyes": {
+   "ceiling": 0.969397451750393,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.036669473986532565,
+   "sidedness": "onesided"
+  },
+  "ed.Arm_chip_serpent": {
+   "ceiling": 0.9792362498244853,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.035340617644487635,
+   "sidedness": "onesided"
+  },
+  "ed.Arm_data_corruption": {
+   "ceiling": 0.8584050113461876,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.12273956143196699,
+   "sidedness": "onesided"
+  },
+  "ed.Avocado_Pulp_Aura": {
+   "ceiling": 0.8634204340086694,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.16533432571796566,
+   "sidedness": "onesided"
+  },
+  "ed.Avocado_Seed_Pendant": {
+   "ceiling": 0.7468246527070057,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.2632293754702347,
+   "sidedness": "onesided"
+  },
+  "ed.Back_Born_Letter_Wings": {
+   "ceiling": 0.9822899822899822,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.023057323416942766,
+   "sidedness": "onesided"
+  },
+  "ed.Back_bubble_cloak": {
+   "ceiling": 0.9845786963434022,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.03304720833151614,
+   "sidedness": "onesided"
+  },
+  "ed.Back_laser_wings": {
+   "ceiling": 0.9604391722038782,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.06306373696750912,
+   "sidedness": "onesided"
+  },
+  "ed.Bamboo_shield_in_front": {
+   "ceiling": 0.8514446573270104,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.15803961116967621,
+   "sidedness": "onesided"
+  },
+  "ed.Bile_aura_hands": {
+   "ceiling": 0.8431195901784138,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.283927131309135,
+   "sidedness": "onesided"
+  },
+  "ed.Body_Meteorite_Crystal": {
+   "ceiling": 0.989301065771654,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.012592021965226819,
+   "sidedness": "onesided"
+  },
+  "ed.Body_gear_field": {
+   "ceiling": 0.955748508689685,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.07786975313991473,
+   "sidedness": "onesided"
+  },
+  "ed.Brass_serpent_coil": {
+   "ceiling": 0.9946978652861007,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.0038720372661406694,
+   "sidedness": "onesided"
+  },
+  "ed.Chaotic_wings_from_shoulders": {
+   "ceiling": 0.952622305563482,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.08442140238373687,
+   "sidedness": "onesided"
+  },
+  "ed.Chest_Burst_Ribbons": {
+   "ceiling": 0.9751434692611162,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.0407719644532995,
+   "sidedness": "onesided"
+  },
+  "ed.Chest_Erupting_Shield": {
+   "ceiling": 0.9882022293786998,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.015533984429355406,
+   "sidedness": "onesided"
+  },
+  "ed.Chest_Laser_Burst": {
+   "ceiling": 0.8003614474202709,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.2557933736737931,
+   "sidedness": "onesided"
+  },
+  "ed.Chest_fish_burst": {
+   "ceiling": 0.9940700881877353,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.00579460258916535,
+   "sidedness": "onesided"
+  },
+  "ed.Chest_light_field": {
+   "ceiling": 0.9068670480435186,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.0853619559958751,
+   "sidedness": "onesided"
+  },
+  "ed.Chest_sigil": {
+   "ceiling": 0.7509735980324217,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.2744333586509679,
+   "sidedness": "onesided"
+  },
+  "ed.Confetti_Burst_from_Hands": {
+   "ceiling": 0.898257533551651,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.1622677802063553,
+   "sidedness": "onesided"
+  },
+  "ed.Cucumber_seeds_from_chest": {
+   "ceiling": 0.9270347270347271,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.10683833708263217,
+   "sidedness": "onesided"
+  },
+  "ed.Dark_mist_from_mouth": {
+   "ceiling": 0.8670806553159496,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.1661951321675199,
+   "sidedness": "onesided"
+  },
+  "ed.Dark_mist_wings_from_back": {
+   "ceiling": 0.9073353896883307,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.1764217421374364,
+   "sidedness": "onesided"
+  },
+  "ed.Diamond_Footpath": {
+   "ceiling": 0.9363191245544188,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.08434004925335543,
+   "sidedness": "onesided"
+  },
+  "ed.Electric_Clothes_Glow": {
+   "ceiling": 0.968986633692516,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.04363521997601071,
+   "sidedness": "onesided"
+  },
+  "ed.Eye_Meteor_Burst": {
+   "ceiling": 0.8049361578773343,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.2441195764717294,
+   "sidedness": "onesided"
+  },
+  "ed.Eye_Shard_Stream": {
+   "ceiling": 0.8821432292020527,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.1990797341734175,
+   "sidedness": "onesided"
+  },
+  "ed.Fist_heat_blast": {
+   "ceiling": 0.9070391658626955,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.157397615764286,
+   "sidedness": "onesided"
+  },
+  "explosion": {
+   "ceiling": 0.9721386544915956,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.03439499617502466,
+   "sidedness": "onesided"
+  },
+  "fire_element": {
+   "ceiling": 0.9813582813582814,
+   "n_clips": 5,
+   "n_pairs": 20,
+   "sd_pairs": 0.014243590403330075,
+   "sidedness": "onesided"
+  },
+  "flame": {
+   "ceiling": 0.9978598508010273,
+   "n_clips": 5,
+   "n_pairs": 20,
+   "sd_pairs": 0.0017734538933675593,
+   "sidedness": "twosided"
+  },
+  "flying_cam_transition": {
+   "ceiling": 0.582332558803147,
+   "n_clips": 5,
+   "n_pairs": 20,
+   "sd_pairs": 0.19447015277226934,
+   "sidedness": "twosided"
+  },
+  "giant_grab": {
+   "ceiling": 0.5048102401043578,
+   "n_clips": 6,
+   "n_pairs": 30,
+   "sd_pairs": 0.276418322873012,
+   "sidedness": "twosided"
+  },
+  "glitch": {
+   "ceiling": 0.6143341952165482,
+   "n_clips": 8,
+   "n_pairs": 56,
+   "sd_pairs": 0.24282114065181215,
+   "sidedness": "onesided"
+  },
+  "hero_flight": {
+   "ceiling": 0.9000824353765527,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.16109816010003292,
+   "sidedness": "twosided"
+  },
+  "luminous_gaze": {
+   "ceiling": 0.9853145000203826,
+   "n_clips": 5,
+   "n_pairs": 20,
+   "sd_pairs": 0.012229353504885666,
+   "sidedness": "onesided"
+  },
+  "melt_transition": {
+   "ceiling": 0.561110431698667,
+   "n_clips": 5,
+   "n_pairs": 20,
+   "sd_pairs": 0.1860410887071437,
+   "sidedness": "twosided"
+  },
+  "monstrosity": {
+   "ceiling": 0.8440986235103883,
+   "n_clips": 4,
+   "n_pairs": 12,
+   "sd_pairs": 0.116502202695945,
+   "sidedness": "onesided"
+  },
+  "mystification": {
+   "ceiling": 0.755989020694903,
+   "n_clips": 6,
+   "n_pairs": 30,
+   "sd_pairs": 0.2416376128630244,
+   "sidedness": "onesided"
+  },
+  "nature_bloom": {
+   "ceiling": 0.978904243610126,
+   "n_clips": 3,
+   "n_pairs": 6,
+   "sd_pairs": 0.015297728200773972,
+   "sidedness": "onesided"
+  },
+  "northern_lights": {
+   "ceiling": 0.8500174382527325,
+   "n_clips": 9,
+   "n_pairs": 72,
+   "sd_pairs": 0.12563867987464808,
+   "sidedness": "onesided"
+  },
+  "plasma_explosion": {
+   "ceiling": 0.932838041661571,
+   "n_clips": 5,
+   "n_pairs": 20,
+   "sd_pairs": 0.08150739807505485,
+   "sidedness": "onesided"
+  },
+  "point_cloud": {
+   "ceiling": 0.8759424234537355,
+   "n_clips": 13,
+   "n_pairs": 156,
+   "sd_pairs": 0.08767046525118821,
+   "sidedness": "onesided"
+  },
+  "portal": {
+   "ceiling": 0.975288985469981,
+   "n_clips": 13,
+   "n_pairs": 156,
+   "sd_pairs": 0.03403815334514517,
+   "sidedness": "onesided"
+  },
+  "saint_glow": {
+   "ceiling": 0.9543292160939221,
+   "n_clips": 5,
+   "n_pairs": 20,
+   "sd_pairs": 0.0400830210765757,
+   "sidedness": "onesided"
+  },
+  "sakura_petals": {
+   "ceiling": 0.9060916119739648,
+   "n_clips": 3,
+   "n_pairs": 6,
+   "sd_pairs": 0.06800795510089468,
+   "sidedness": "onesided"
+  },
+  "shadow": {
+   "ceiling": 0.6667843020784198,
+   "n_clips": 15,
+   "n_pairs": 210,
+   "sd_pairs": 0.24494751952582686,
+   "sidedness": "onesided"
+  },
+  "shadow_smoke": {
+   "ceiling": 0.982707141530671,
+   "n_clips": 10,
+   "n_pairs": 90,
+   "sd_pairs": 0.01260919612156719,
+   "sidedness": "twosided"
+  },
+  "train_rush": {
+   "ceiling": 0.9731274086477708,
+   "n_clips": 13,
+   "n_pairs": 156,
+   "sd_pairs": 0.04125998247662376,
+   "sidedness": "onesided"
+  },
+  "water_element": {
+   "ceiling": 0.9856209150326797,
+   "n_clips": 6,
+   "n_pairs": 30,
+   "sd_pairs": 0.015756269562568575,
+   "sidedness": "onesided"
+  },
+  "wonderland": {
+   "ceiling": 0.8959208076855134,
+   "n_clips": 3,
+   "n_pairs": 6,
+   "sd_pairs": 0.07405818285364064,
+   "sidedness": "onesided"
+  },
+  "x_ray": {
+   "ceiling": 0.9757607720843015,
+   "n_clips": 16,
+   "n_pairs": 240,
+   "sd_pairs": 0.035216596213529294,
+   "sidedness": "onesided"
+  }
+ },
+ "method": "deployed pool-score kernel (m1_transfer.appearance_s3 / reference_stats.m1a_pair) against the FROZEN reference_v4 populations, core_mask_v3 by class sidedness, mean app_ref over ordered same-class pairs of corpus clips. Classes absent from the certified matrix take this value (run_eval.ceilings() overlay); certified classes keep theirs.",
+ "n_classes": 62
+}

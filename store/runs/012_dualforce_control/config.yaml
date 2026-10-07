@@ -1,0 +1,230 @@
+acceleration:
+  load_text_encoder_in_8bit: false
+  mixed_precision_mode: bf16
+  offload_optimizer_during_validation: true
+  quantization: null
+checkpoints:
+  interval: 1000
+  keep_last_n: -1
+  no_resume: false
+  precision: bfloat16
+  save_training_state: full
+data:
+  bneck_timing: null
+  num_dataloader_workers: 4
+  preprocessed_data_root: null
+  resume_data_position: true
+  sample_list: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/datasets/ctt_v2/samples.jsonl
+  sampler_epoch_size: null
+  sampler_seed: 42
+  stratum_weights_pct:
+    S0: 5.0
+    S1: 12.0
+    S2a: 34.36059
+    S2b: 35.63941
+    S4: 13.0
+  verify_sample_files: true
+flow_matching:
+  timestep_sampling_mode: shifted_logit_normal
+  timestep_sampling_params: {}
+hub:
+  hub_model_id: null
+  push_to_hub: false
+kd:
+  derive_effect_from: conditions
+  effect_conditions_dir: conditions_effect
+  enabled: false
+  high_band_sigma: 0.7
+  lambda_target: 0.3
+  lambda_warmup_steps: 500
+lora:
+  alpha: 128
+  dropout: 0.0
+  rank: 128
+  target_modules:
+  - attn1.to_k
+  - attn1.to_q
+  - attn1.to_v
+  - attn1.to_out.0
+  - attn2.to_k
+  - attn2.to_q
+  - attn2.to_v
+  - attn2.to_out.0
+  - ff.net.0.proj
+  - ff.net.2
+model:
+  load_checkpoint: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/store/runs/002_ctt_v2/checkpoints/lora_weights_step_10000.safetensors
+  model_path: /taiga/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors
+  text_encoder_path: /taiga/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized
+  training_mode: lora
+optimization:
+  batch_size: 1
+  enable_gradient_checkpointing: true
+  gradient_accumulation_steps: 2
+  learning_rate: 0.0001
+  max_grad_norm: 1.0
+  optimizer_type: adamw
+  scheduler_params: {}
+  scheduler_type: wsd
+  steps: 2000
+output_dir: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/dualforce/control
+seed: 42
+surgery:
+  enabled: false
+  gap_loss:
+    delta_file: null
+    demo_class_map: null
+    derange_policy: cross_class
+    enabled: false
+    high_band_sigma: 0.9
+    lambda_target: 10.0
+    lambda_warmup_steps: 1000
+  high_sigma_mixture:
+    bands:
+    - !!python/tuple
+      - 0.9
+      - 1.0
+      - 0.6
+    - !!python/tuple
+      - 0.7
+      - 0.9
+      - 0.15
+    enabled: false
+    sigma_max: 1.0
+  per_sigma_loss_norm:
+    enabled: false
+    weight_file: null
+  probe:
+    dataset_root: datasets/ctt_v2
+    enabled: false
+    flag_dsame_ratio: 0.5
+    flag_dsame_se: 3.0
+    interval_steps: 500
+    max_targets: 64
+    top_band_sigma: 0.9
+    triples_file: null
+    vjepa_manifest: null
+training_strategy:
+  audio: null
+  name: flexible
+  video:
+    cond_clean_latents_dir: cond_clean_latents
+    conditions:
+    - attention: one_way
+      bottleneck: null
+      latents_dir: reference_latents
+      probability: 1.0
+      type: reference
+    - mask_dir: masks
+      probability: 1.0
+      type: mask
+    is_generated: true
+    latents_dir: latents
+validation:
+  frame_rate: 24.0
+  generate_audio: false
+  generate_video: true
+  guidance_scale: 4.0
+  images: null
+  include_reference_in_output: false
+  inference_steps: 30
+  interval: 1500
+  negative_prompt: worst quality, inconsistent motion, distorted, jittery
+  prompts: []
+  reference_downscale_factor: 1
+  reference_videos: null
+  samples:
+  - conditions:
+    - audio: null
+      duration: null
+      num_frames: 9
+      type: prefix
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/davis_hike_start9.mp4
+    - attention: one_way
+      audio: null
+      downscale_factor: 1
+      include_in_output: false
+      temporal_scale_factor: 1
+      type: reference
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/animalization/animalization_0.mp4
+    prompt: A hiker in a light purple shirt and olive trousers carrying a large black
+      backpack walks across a bright rocky mountain slope. sksz.
+    seed: null
+    video_dims: null
+  - conditions:
+    - audio: null
+      duration: null
+      num_frames: 9
+      type: prefix
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/animalization_0_start9.mp4
+    - attention: one_way
+      audio: null
+      downscale_factor: 1
+      include_in_output: false
+      temporal_scale_factor: 1
+      type: reference
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/cotton_cloud/cotton_cloud_1.mp4
+    prompt: A woman in a red bomber jacket poses against a blue studio backdrop, hands
+      on hips. sksz.
+    seed: null
+    video_dims: null
+  - conditions:
+    - audio: null
+      duration: null
+      num_frames: 9
+      type: prefix
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/air_bending_1_start9.mp4
+    - audio: null
+      duration: null
+      num_frames: 8
+      type: suffix
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/air_bending_1_end9.mp4
+    - attention: one_way
+      audio: null
+      downscale_factor: 1
+      include_in_output: false
+      temporal_scale_factor: 1
+      type: reference
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/raven_transition/raven_transition_0.mp4
+    prompt: A figure in a white knit balaclava and bright red hoodie leans against
+      the hood of a blue car in a dusky parking lot. sksz.
+    seed: null
+    video_dims: null
+  - conditions:
+    - audio: null
+      duration: null
+      num_frames: 9
+      type: prefix
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/color_rain_0_start9.mp4
+    - attention: one_way
+      audio: null
+      downscale_factor: 1
+      include_in_output: false
+      temporal_scale_factor: 1
+      type: reference
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/datasets/ctt_v2/encodes/S2a/clips/s2_0023_c00.mp4
+    prompt: A woman with long black hair and large sunglasses stands in a warm-lit
+      kitchen holding a white telephone receiver. sksz.
+    seed: null
+    video_dims: null
+  seed: 42
+  skip_initial_validation: false
+  stg_blocks:
+  - 29
+  stg_mode: stg_v
+  stg_scale: 1.0
+  video_dims: !!python/tuple
+  - 480
+  - 640
+  - 121
+wandb:
+  enabled: true
+  entity: null
+  log_validation_videos: true
+  project: dualforce
+  tags:
+  - dualforce
+  - control
+  - cttv2warm
+  - rank128
+  - wsd6k

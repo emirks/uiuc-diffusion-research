@@ -225,6 +225,106 @@ del _absent_key, _branch, _gone, _gone_w, _g
 #: Fallback for an absent-set A9 did NOT pre-register a branch for (e.g. S2b alone).
 ABSENT_POLICY = "renormalize_proportionally"
 
+# ══════════════════════════════════════════════════════════════════════════════════════
+# MULTI-DATASET MIX CONTRACTS (advisor 2026-08-28, misc/2026-08-28_effectdata_s6/BUILD.md §7)
+# ══════════════════════════════════════════════════════════════════════════════════════
+# The globals ABOVE are, and remain, the certified 002_ctt_v2 contract (A5/A9/A11/A12). A new
+# dataset registers its OWN contract here WITHOUT mutating them, so 002's ROOT_MANIFEST always
+# re-verifies against source at HEAD and assert A3 never becomes a liar (the exact drift class
+# this file already fought twice). `assemble_root --contract` selects one, DEFAULT 002_ctt_v2 —
+# no existing command can silently build a new mix. Every registered contract runs the SAME
+# guard battery as the globals. Derive, never restate: 003 is a pure function of 002.
+def _scale_add_stratum(base_w: dict, base_absent: dict, new: str, w_new: float):
+    """Additive contract: every base weight x (1 - w_new/100), plus `new` at w_new pp. Absent
+    branches map by the same rule; the `new`-absent branch renormalizes back to EXACTLY base."""
+    f = (100.0 - w_new) / 100.0
+    weights = {s: round(v * f, 6) for s, v in base_w.items()}
+    weights[new] = float(w_new)
+    absent = {}
+    for k, br in base_absent.items():                 # base branches, scaled, + new
+        absent[k] = {s: round(v * f, 6) for s, v in br.items()}
+        absent[k][new] = float(w_new)
+    absent[new] = {s: float(v) for s, v in base_w.items()}   # new absent -> exactly base
+    return weights, absent
+
+
+_S6_W, _S6_ABSENT = _scale_add_stratum(STRATUM_WEIGHTS_PCT, ABSENT_BRANCH_WEIGHTS_PCT, "S6", 20.0)
+
+MIX_CONTRACTS = {
+    "002_ctt_v2": {
+        "weights": dict(STRATUM_WEIGHTS_PCT),
+        "prorata": {k: tuple(v) for k, v in PRORATA_GROUPS.items()},
+        "mix_strata": tuple(MIX_STRATA),
+        "absent": {k: dict(v) for k, v in ABSENT_BRANCH_WEIGHTS_PCT.items()},
+        "authority": "A5/A9/A11/A12 — the certified contract; identical to the module globals.",
+    },
+    "003_ctt_v2plus": {
+        "weights": _S6_W,                              # S0 12 / S1 4.8 / S2 55.2 / S4 8 / S6 20
+        "prorata": {"S2": ("S2a", "S2b")},
+        "mix_strata": ("S0", "S1", "S2a", "S2b", "S4", "S6"),
+        "absent": _S6_ABSENT,
+        "authority": "advisor 2026-08-28: additive one-sided EffectData (S6) at 20 pp (owner "
+                     "ceiling <=25-30); 002 weights x0.80, DERIVED not restated; S6-absent -> "
+                     "exactly 002. Escalation to 25-28 pre-registered iff the paired-arm gate "
+                     "shows breadth benefit absent AND core non-regression.",
+    },
+    "005_ctt_v2plus_s6reshape": {
+        "weights": _S6_W,                              # IDENTICAL to 003_ctt_v2plus
+        "prorata": {"S2": ("S2a", "S2b")},
+        "mix_strata": ("S0", "S1", "S2a", "S2b", "S4", "S6"),
+        "absent": _S6_ABSENT,
+        "authority": "S6 reshape (misc/2026-08-30_s6_reshape DOSSIER Round 1, advisor "
+                     "2026-08-30): weights IDENTICAL to 003_ctt_v2plus; S6 re-encoded at two "
+                     "orientation grids (11,16,26)/(11,26,16) and paired within effect x grid",
+    },
+}
+
+
+def _validate_contract(cid: str, c: dict) -> None:
+    w, pr, ms, ab = c["weights"], c["prorata"], c["mix_strata"], c["absent"]
+
+    def owner(s):
+        return next((g for g, mem in pr.items() if s in mem), s)
+
+    def expand(names):
+        out = []
+        for n in names:
+            out.extend(pr.get(n, (n,)))
+        return tuple(out)
+
+    assert abs(sum(w.values()) - 100.0) < 1e-9, f"{cid}: weights sum {sum(w.values())} != 100"
+    assert set(pr) <= set(w), f"{cid}: a pro-rata group owns no declared weight"
+    assert set(expand(w)) == set(ms), f"{cid}: mix_strata != expand(weights)"
+    assert len(expand(w)) == len(ms), f"{cid}: a stratum is in >1 pro-rata group"
+    for ak, br in ab.items():
+        gone = set(ak.split(","))
+        assert gone <= set(ms), f"{cid}: unknown stratum in branch key {ak!r}"
+        gone_w = {owner(s) for s in gone}
+        for g in gone_w:
+            assert set(pr.get(g, (g,))) <= gone, (
+                f"{cid}: branch {ak!r} removes only part of pro-rata group {g!r}")
+        assert set(br) == set(w) - gone_w, (
+            f"{cid}: branch {ak!r} names {sorted(br)} != {sorted(set(w) - gone_w)}")
+        assert abs(sum(br.values()) - 100.0) < 1e-9, (
+            f"{cid}: branch {ak!r} sums to {sum(br.values())} != 100")
+
+
+for _cid, _c in MIX_CONTRACTS.items():
+    _validate_contract(_cid, _c)
+#: the 002 registry entry MUST equal the module globals — they can never drift apart
+assert MIX_CONTRACTS["002_ctt_v2"]["weights"] == STRATUM_WEIGHTS_PCT
+assert MIX_CONTRACTS["002_ctt_v2"]["mix_strata"] == tuple(MIX_STRATA)
+assert MIX_CONTRACTS["002_ctt_v2"]["absent"] == ABSENT_BRANCH_WEIGHTS_PCT
+del _cid, _c
+
+
+def mix_contract(dataset_id: str = "002_ctt_v2") -> dict:
+    """The mix contract (weights / prorata / mix_strata / absent) for a dataset id."""
+    if dataset_id not in MIX_CONTRACTS:
+        raise KeyError(f"no mix contract for {dataset_id!r}; known: {sorted(MIX_CONTRACTS)}")
+    return MIX_CONTRACTS[dataset_id]
+
+
 TRIGGER = "sksz"
 TRIGGER_SENTENCE = f" {TRIGGER}."
 OUTCOME_MARKER = "The scene transforms into "
@@ -262,6 +362,34 @@ RULED_SHAPES = {
                   "prefix_latents": 1,
                   "authority": "DOSSIER §13.2 — verified on disk; 832x448 is a pure "
                                "16-row centre crop, 464 is not a multiple of 32"},
+    # EffectData (S6) — one-sided breadth stratum, 81f/24fps clips whose NATIVE resolutions are
+    # already VAE-legal (no crop, unlike S4).  The top-2k roster has exactly these 4 native shapes
+    # (two transpose pairs).  prefix_latents=1 conditions video frame 0 ALONE, as S4 does — a 9-frame
+    # prefix (the 121f default of 2) would reach into the effect onset and mismatch the frame-0
+    # caption.  Same frame-0 rationale as S4's owner decision 2026-07-28; see TEXT_LIFECYCLE.md §8.1.
+    (11, 22, 39): {"name": "effd_1248x704_81f", "px": (1248, 704, 81), "fps": 24.0,
+                   "strata": ("S6",), "prefix_latents": 1,
+                   "authority": "EffectData native (VAE-legal); frame-0 anchor per S4 precedent"},
+    (11, 39, 22): {"name": "effd_704x1248_81f", "px": (704, 1248, 81), "fps": 24.0,
+                   "strata": ("S6",), "prefix_latents": 1,
+                   "authority": "EffectData native (VAE-legal); frame-0 anchor per S4 precedent"},
+    (11, 33, 22): {"name": "effd_704x1056_81f", "px": (704, 1056, 81), "fps": 24.0,
+                   "strata": ("S6",), "prefix_latents": 1,
+                   "authority": "EffectData native (VAE-legal); frame-0 anchor per S4 precedent"},
+    (11, 22, 33): {"name": "effd_1056x704_81f", "px": (1056, 704, 81), "fps": 24.0,
+                   "strata": ("S6",), "prefix_latents": 1,
+                   "authority": "EffectData native (VAE-legal); frame-0 anchor per S4 precedent"},
+    # EffectData S6 RESHAPE (dataset 005) — the 4 native S6 grids re-encoded to 2 orientation grids
+    # at 832x512 / 512x832 px x 81f: 4,576 tokens (95.3% of corpus 4,800), shift 2.222, ~half the
+    # per-row compute of the native 7,986-9,438-token zoo, and same-orientation pairing returns
+    # 2,286 of the 004 shape-singletons.  Aspect-preserving scale-to-COVER + center-crop (<=4.13%/edge),
+    # frame-0 anchor unchanged (prefix_latents=1, sided one), as the native S6 grids.
+    (11, 16, 26): {"name": "effd_832x512_81f", "px": (832, 512, 81), "fps": 24.0,
+                   "strata": ("S6",), "prefix_latents": 1,
+                   "authority": "S6 reshape spec, misc/2026-08-30_s6_reshape/DOSSIER.md Round 1"},
+    (11, 26, 16): {"name": "effd_512x832_81f", "px": (512, 832, 81), "fps": 24.0,
+                   "strata": ("S6",), "prefix_latents": 1,
+                   "authority": "S6 reshape spec, misc/2026-08-30_s6_reshape/DOSSIER.md Round 1"},
 }
 
 #: Fallback for an unruled shape.  2 is the 121f value, so an unruled shape behaves like the

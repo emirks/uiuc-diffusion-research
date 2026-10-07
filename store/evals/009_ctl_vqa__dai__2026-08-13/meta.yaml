@@ -1,0 +1,29 @@
+id: evals/009_ctl_vqa__dai__2026-08-13
+seq: 9
+shelf: evals
+created: 2026-08-13
+machine: DeltaAI (VQA via Gemini API from gh-login02; all scored clips DAI-generated)
+instrument: gemini-3.6-flash forced-choice VQA (temp 0, video+question only, prompt never shown) + pre-registered HSV hue-band corroborator + density pixel proxies
+source: misc/2026-08-13_controllability advised campaign — pre-registration frozen in DOSSIER.md BEFORE generation
+arms_scored:
+  ctt_v3_ctl: {gen: gens/009_ctt_v3/05_probe_ctl__dai, run: runs/008_ctt_v3_wsd, rows: 76}
+  ctt_v2_ctl: {gen: gens/002_ctt_v2/06_probe_ctl__dai, run: runs/002_ctt_v2, rows: 68}
+  base_ctl: {gen: gens/005_base_cond/03_probe_ctl__dai, run: base weights, rows: 62}
+calibration: 14/20 (70%) axis agreement vs pre-VQA operator labels — BELOW the 85% bar; the
+  pre-registered DEMOTION CLAUSE fired (advisor ad0251e9 ruling: tables are DESCRIPTIVE; color
+  rescued to corroborated standing by the hue instrument; verdict authority = owner adjudication)
+stability: 47/48 (98%) self-agreement (bar 90) PASS
+result: |
+  CONFIRMATORY NOT DECLARED: paired 48-cell color, v2 60.4% vs v3 58.3% (VQA) — +2.1pp, p=0.50;
+  under the OBJECTIVE hue instrument v3 87.5% vs v2 81.2% (discordants 5:2 v3-ahead) — the
+  champion pays NO attribute-controllability penalty. Axis stratification (descriptive-corroborated):
+  color controllable everywhere (hue: base 97.9 / v3 87.5 / v2 81.2); shape partial (base 68.8 >
+  v2 50 > v3 37.5, n=16); density/speed/direction text-inert on ALL arms incl. base (retention
+  70-100%) EXCEPT measurable sub-categorical thinning on shadow_smoke density (12/12 pixel-drop).
+  GRAFT: attribute text w/o effect clause transfers onto demo effect — v3 6/6, hue-corroborated 11/12.
+  Replication (unseen rows): 87.5% vs 58.3% held-in — generalizes. Integrity re-VQA (fixed gists,
+  disclosed wording-only revision): gas 61->98% (gist artifact); ee0 0-17% incl. ANCHORS on all arms
+  (row-level fragility, quarantined by the failed congruent gate).
+caveats: [VQA demoted per pre-registration, hue instrument does not gate integrity/localization,
+  speed+direction n<=10 PROVISIONAL, ee0 excluded by congruent gate, owner adjudication pending
+  (outputs/reports/ctl_probe/adjudicate.html, 41 clips)]

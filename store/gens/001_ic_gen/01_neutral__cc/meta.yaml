@@ -1,0 +1,14 @@
+id: gens/001_ic_gen/01_neutral__cc
+seq: 1
+shelf: gens
+arm: ic_gen
+harness_arm: ic_gen   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral
+machine: cc
+created: 2026-07-30          # migrated into store; generated earlier in the ladder2 campaign
+migrated: 2026-08-13 from gens/001_ic_gen (contract v2 — store/MIGRATION.md; full v1 provenance in meta.v1.yaml)
+inputs: {run: runs/001_ic_gen, step: 5000}
+prompt_family: prompts/001_ctt152_neutral
+prompt_sha: 0d708175fbfe
+grid_rows: 152
+videos: 304

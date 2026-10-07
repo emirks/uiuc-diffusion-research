@@ -1,0 +1,44 @@
+id: 014_bneck_ctx_v2_shufcode
+seq: 14
+shelf: gens
+created: 2026-08-06
+machine: DeltaAI GH200 (ghx4)   # SAME box as gens/013 and the scoring lane (evals/004)
+source: misc/bneck_redesign campaign (eval_ladder/run_gen.py via build/job_gen_dai.sbatch)
+code: >
+  envs-aarch64 + PYTHONPATH -> src/LTX-2-bneck-coupling/packages (branch bneck_redesign,
+  commit 7ffbe95546722f35c2571b482412750fe0642ae3). Reconstructs the FROZEN operator_encoder +
+  ContextAdapter and reads inject=context — identical stack to gens/013.
+inputs:
+  run: 006_bneck_ctx_v2          # the SAME adapter file as gens/013; the corpse is generation-only, never trained
+  step: 10000
+  adapter_sha256: 844ee248eb91ca52f9ab987d3d66efdb72bf7746d61f526472a13cde4a518534
+grid: grid.jsonl (152 rows x seeds [42,43] = 304 clips; registry_bneck_ctx_v2_shufcode.jsonl)
+prompt_rule: '"{S1}. sksz. [{S2}.]" — byte-identical to gens/013; item_id, reference and input_key are byte-identical to registry_bneck_ctx_v2'
+resolution: 480x640x121f @ 24 fps
+inference: steps 30, guidance_scale 4.0, stg_scale 1.0, stg_blocks [29], stg_mode stg_v; --rank 128 --alpha 128; attention one_way
+
+derangement:
+  map: misc/bneck_coupling/build/shufcode_map.json   # the SAME class-level derangement reused from bneck_coupling
+  field: code_source_reference   # overrides ONLY the clip the encoder sees; `reference` is left untouched
+  fixed_points: 0                # 152/152 mapped to a different class; verified pool-identity TRUE vs gens/013
+
+bottleneck:
+  inject: context
+  token_shape: [6, 4, 3]        # K = 72
+  context_tokens: 16            # K' via the ContextAdapter
+  encoder: the certified transition encoder, FROZEN; reconstructed from THIS checkpoint's own
+    operator_encoder.* (50) and context_adapter.* (31), loaded in fp32; fed the DERANGED clip
+  skip_scale: 0.0
+
+twin: 013_bneck_ctx_v2          # the matched treatment
+caveats:
+  - >-
+    This is the CONTROL half of a paired experiment and is meaningless alone. It shares gens/013's
+    adapter file, prompt, `reference` and seeds field-for-field; the ONLY difference is which clip
+    the frozen encoder saw (a class-level derangement carried in `code_source_reference`). Because
+    `reference` is untouched, both twins are scored against a BYTE-IDENTICAL GT pool (measured).
+  - >-
+    Levels carry NO pass/fail bar. In particular the corpse scoring the SAME as the matched arm is
+    the finding, not a defect (evals/004 verdict: null). Do NOT read any level gap as "shuffled
+    codes help".
+health: 304/304 clips, 0 failed jobs

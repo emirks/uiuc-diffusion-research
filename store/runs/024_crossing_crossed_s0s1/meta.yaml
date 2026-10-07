@@ -1,0 +1,53 @@
+id: 024_crossing_crossed_s0s1
+seq: 24
+shelf: runs
+created: 2026-09-15          # trained 2026-09-14 22:09:46Z -> 2026-09-15 01:01:19Z (DONE) on eps; ~2h51m wall
+machine: eps fal-h100 2xH100 DDP eff-batch 2   # data-parallel batch 1/GPU x 2 GPUs (cards 0,1); no grad accumulation
+source: >
+  Campaign 2026-09-13_crossing_ablation — CLEAN S0+S1 RETRAIN, arm CROSSED. From-scratch IC-LoRA on LTX-2 19B
+  dev. Crossed = every shot is trained under all operators of its block BUT ONE (the shot says nothing about the
+  operator; only the reference names it). This is the clean re-run of the pair (runs/022 crossed + runs/023
+  uncrossed): the first pair's UNCROSSED arm DIVERGED at step 1392 at lr 2e-4, confounding the comparison, and it
+  was trained on the full 1,392-pair set (S1+S2). This retrain removes both variables — lr lowered to 1e-4 (proven
+  stable r128 point) and the data restricted to the S0+S1 block ONLY (sided=="one"): 864 pairs, the 9 S1 spec-render
+  manners. Paired with runs/025 (UNCROSSED), identical in every setting, differing ONLY in data layout (each shot
+  under exactly one operator). Reason for the retrain + pre-registered bars: RETRAIN_S0S1.md. Owner terms: shots,
+  operators, pairs, references, crossed/uncrossed.
+inputs:
+  dataset: datasets/008_crossing_allbutone     # S0+S1 block ONLY (sided=="one"): 864 pairs, 9 S1 operators, 27 crossed shots x 8 operators x 4 refs; sample_list crossed/samples_s0s1.jsonl (filtered from samples.jsonl; equal-cell-exposure verified 96 pairs/operator both arms)
+trainer:
+  checkout: src/LTX-2-surg
+  commit: a403323            # eps copy has no .git; content-verified identical to a4033230 at training time (same trainer as runs/022-023)
+  entry: accelerate launch --num_processes 2 (DDP, 2 GPUs) via misc/2026-09-13_crossing_ablation/eps/{launch_lane_s0s1.sh, run_arm_s0s1.sh}; config.yaml (the eps crossed_s0s1.yaml) copied here; logs/training_config.yaml is the trainer-written record
+recipe: LTX-2 19B dev; IC-LoRA rank 128 / alpha 128 on attn1+attn2+FF (10 modules, target_modules attn_ffn); one_way reference attention + mask, cond_clean latents; lr 1e-4; batch 1/GPU x 2 GPU (eff-batch 2, no accumulation); WSD (warmup 100 / decay_frac 0.25 / end 0.1, num_processes-corrected); grad checkpointing; bf16; uniform pair sampler seed 42; checkpoint every 500 (all 6 kept); inline validation every 500 incl. step 0, attention=one_way on all reference conditions (HANDOFF §6 fix — representative this time)
+rank: 128
+alpha: 128
+dropout: 0.0
+reference_attention: one_way
+lr: 1e-4, WSD (warmup 100 / decay_frac 0.25 / end 0.1)     # peak reached by step ~100, stable to 2250, linear decay to 1e-5 at 3000
+seed: 42
+effective_batch: 2          # batch_size 1 x 2 GPU, gradient_accumulation_steps 1
+steps: 3000
+checkpoints:                 # every 500, all kept; each 1,308,756,384 B
+  - lora_weights_step_00500.safetensors
+  - lora_weights_step_01000.safetensors
+  - lora_weights_step_01500.safetensors
+  - lora_weights_step_02000.safetensors
+  - lora_weights_step_02500.safetensors
+  - lora_weights_step_03000.safetensors
+checkpoint_sha256:
+  lora_weights_step_03000.safetensors: 7d8d966853b402269f3c4ed423ac48de61995b5f83fc0191c117286ff0ea1b27
+wandb:
+  project: crossing_ablation      # entity ozgur-personal
+  run_id: u0yupb1y
+  run_name: crossing_s0s1__crossed__r128_3k_eb2_lr1e4_wsd__eps
+health: >
+  CLEAN. Reached step 3000, 6 checkpoints, 7 validation rounds, 0 error lines (no nan/OOM/CUDA/Killed). Per-step
+  loss stays in a healthy band throughout (overall mean 0.307, last-10 logged mean 0.277, min 0.101, max 1.290 =
+  one transient high-noise step at 380 that recovered next step — NOT a divergence). Last step line:
+  Step 3000/3000 - Loss 0.3650, LR 1.00e-05. Sailed through step 1392 (where the first pair's uncrossed diverged
+  at lr 2e-4) with low loss (0.10-0.19). Inline validation representative this run (attention=one_way wired).
+notes: >
+  Setup + gate record: misc/2026-09-13_crossing_ablation/logs/retrain_s0s1_setup.md. Filter + equal-cell-exposure
+  audit: misc/2026-09-13_crossing_ablation/retrain_s0s1/{filter_s0s1.py, filter_audit.json}. Paired with runs/025.
+  T0(shot-only)/T1/T2 gens -> gens (next id) via misc/2026-09-13_crossing_ablation/gen/xab_launch_s0s1.sh.

@@ -1,0 +1,35 @@
+# SEGUE supplementary website — ignore the large / regenerable pieces.
+# Paths are relative to this file (supplementary/).
+
+# The pristine Video-As-Prompt gh-pages clone (107 MB, kept as the read-only
+# reference; never edited). This also covers vap_gh_pages/.git — do NOT rm it.
+vap_gh_pages/
+
+# Re-encoded media and the media manifest: large and fully regenerable with
+#   /usr/bin/python3.12 build_site.py --media
+site/videos/
+site/stills/
+site/media_manifest.json
+
+# Tracked-eligible (intentionally NOT ignored):
+#   site/index.html        the generated page
+#   template.html          VAP index.html with hero swapped + {{SECTIONS}}
+#   build_site.py          the generator
+#   site_manifest.json     the resolved row/section selection
+#   README.md, .gitignore
+
+# ---- internal picker (supplementary/picker/) ----
+# Regenerable relative symlinks placed by build_picker.py (the same viewer-mount trick):
+# they let the page play the ORIGINAL store/outputs/eval_ladder/data clips + read
+# collections.json / write picks.json without copying anything into the tree.
+picker/site/store
+picker/site/outputs
+picker/site/data
+picker/site/eval_ladder
+picker/site/collections.json
+picker/site/picks.json
+# Tracked-eligible (intentionally NOT ignored):
+#   picker/build_picker.py   the generator
+#   picker/template.html     VAP template copy + picker hero/bar/CSS/JS
+# The generated picker page is 12 MB and rebuilt in seconds by build_picker.py: ignored.
+picker/site/index.html

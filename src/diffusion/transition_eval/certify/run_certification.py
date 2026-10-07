@@ -19,13 +19,15 @@ import argparse
 import json
 import os
 import pathlib
+import shutil
 import subprocess
 import sys
 
 import numpy as np
 import yaml
 
-from .. import versioning
+from .. import store_io, versioning
+from ...feature_store import FeatureStore
 from ..manifests_v3 import load_corpus_manifest
 from ..m1_transfer import camera_trajectory
 from ..pipeline import process_video_file
@@ -61,30 +63,134 @@ class ScoreError(RuntimeError):
     """A score.py subprocess exited nonzero (tail of its log attached)."""
 
 
+def _short(ns: str) -> str:
+    return ns.split("@", 1)[0]
+
+
+def _sig(e: Exception) -> str:
+    """G4: label a store-root mismatch (a video outside ``--store-root`` that the
+    store refused to write) so it can never hide as a generic error."""
+    s = f"{type(e).__name__}: {e}"
+    return (f"STORE-ROOT MISMATCH (video outside --store-root) | {s}"
+            if "is not in the subpath of" in s else s)
+
+
+def build_score_cmd(manifest: pathlib.Path, corpus: pathlib.Path, label: str,
+                    out_root: pathlib.Path, controls: str,
+                    store_root: pathlib.Path) -> list[str]:
+    """The score.py CLI for one manifest — the feature-store model (P3c): the
+    removed ``--cache-dir`` / ``--lpips-cache`` are gone; ``--store-root``
+    selects the feature store. Warm runs pass the shared store root (REPO_ROOT);
+    the cold-anchor run passes a fresh (empty) store root so the anchors
+    re-extract. Pure — unit-tested for exactly these flags."""
+    return [sys.executable, "-m", "diffusion.transition_eval.score",
+            "--manifest", str(manifest),
+            "--corpus", str(corpus),
+            "--label", label, "--out-root", str(out_root),
+            "--controls", controls,
+            "--store-root", str(store_root)]
+
+
 def start_score(manifest: pathlib.Path, label: str, out_root: pathlib.Path,
-                controls: str, cache_dir: str | None = None,
-                lpips_cache: str | None = None) -> dict:
+                controls: str, store_root: pathlib.Path) -> dict:
     """Launch score.py through its real CLI — certification exercises the
     shipped entrypoint, not a private shim. Independent manifests run
-    concurrently (disjoint item sets -> disjoint cache writes; per-item math
-    is untouched, so outputs are identical to sequential runs — and bar 8's
-    warm/cold comparisons verify that at run time). Output goes to
-    <out_root>/<label>.score.log; wait_score() collects the items.jsonl."""
-    cmd = [sys.executable, "-m", "diffusion.transition_eval.score",
-           "--manifest", str(manifest),
-           "--corpus", str(CORPUS_PATH),
-           "--label", label, "--out-root", str(out_root),
-           "--controls", controls]
-    if cache_dir:
-        cmd += ["--cache-dir", cache_dir]
-    if lpips_cache:
-        cmd += ["--lpips-cache", lpips_cache]
+    concurrently (disjoint item sets -> disjoint feature-store writes; per-item
+    math is untouched, so outputs are identical to sequential runs — and bar 8's
+    warm/cold comparisons verify that at run time). ``store_root`` is the feature
+    store root: REPO_ROOT for warm runs, an empty cold-store root for the cold
+    anchors. Output goes to <out_root>/<label>.score.log; wait_score() collects
+    the items.jsonl."""
+    cmd = build_score_cmd(manifest, CORPUS_PATH, label, out_root, controls, store_root)
     env = {**os.environ, "PYTHONPATH": str(REPO_ROOT / "src")}
     logf = open(REPO_ROOT / out_root / f"{label}.score.log", "w")
-    log(f"score: {label} ({controls=}) started")
+    log(f"score: {label} ({controls=}, store_root={store_root}) started")
     proc = subprocess.Popen(cmd, cwd=REPO_ROOT, env=env,
                             stdout=logf, stderr=subprocess.STDOUT)
     return {"proc": proc, "logf": logf, "label": label, "out_root": out_root}
+
+
+# --- cold-anchor staging (bar 8 cold reproduction, store model) --------------
+# The pre-store cold check pointed score.py at an empty --cache-dir so the six
+# anchors re-extracted. In the store model features are COLOCATED with their
+# video (not under the store root), so a bare empty store root would re-HIT the
+# warm colocated features (no real cold test) and, on any genuine miss, error
+# (its video is outside the temp root -> `_relvideo` refuses). Instead we STAGE
+# each anchor's generated video (hard link, copy fallback — never a symlink:
+# the store `.resolve()`s paths) into <cold_root>/<item_id>/videos/<name> and
+# point --store-root at <cold_root>. Only the gen path field is rewritten; the
+# gen's features + its synthesized control now land UNDER cold_root (a genuine
+# cold re-extract), while reference/condition clips stay warm at their real
+# paths (identical files -> identical numbers). Advisor-approved narrow scope.
+def stage_cold_anchors(items: list[dict], cold_root: pathlib.Path,
+                       repo_root: pathlib.Path) -> list[dict]:
+    """Stage each anchor's ``generated_video`` under ``cold_root`` and return the
+    manifest with ONLY that field rewritten. Per-file invariants (G1): the
+    staged file is not a symlink, resolves under ``cold_root``, and has the
+    source's size. The colocated warm store is never touched."""
+    import shutil
+    staged = []
+    cold_root = cold_root.resolve()
+    for it in items:
+        src = pathlib.Path(it["generated_video"])
+        if not src.is_absolute():
+            src = repo_root / src
+        src = src.resolve()
+        dst_dir = cold_root / it["item_id"] / "videos"
+        dst_dir.mkdir(parents=True, exist_ok=True)
+        dst = dst_dir / src.name
+        if dst.exists() or dst.is_symlink():
+            dst.unlink()
+        try:
+            os.link(src, dst)                       # hard link (same inode)
+        except OSError:
+            shutil.copy2(src, dst)                  # cross-device fallback
+        assert not dst.is_symlink(), f"staged {dst} is a symlink"
+        assert dst.resolve() == dst and str(dst).startswith(str(cold_root)), \
+            f"staged {dst} escaped {cold_root}"
+        assert dst.stat().st_size == src.stat().st_size, f"size drift staging {dst}"
+        new = dict(it)
+        new["generated_video"] = str(dst)
+        staged.append(new)
+    return staged
+
+
+def cold_store_populated(cold_root: pathlib.Path, staged: list[dict]) -> dict:
+    """G2 — proof the cold run genuinely RE-EXTRACTED (never hit a stray warm
+    file): every staged anchor must have all three eval namespaces present UNDER
+    ``cold_root`` with ``origin == "extracted"`` (a store hit never writes, so a
+    populated 'extracted' sidecar is the proof of fresh extraction)."""
+    store = FeatureStore(cold_root)
+    missing = []
+    for it in staged:
+        g = pathlib.Path(it["generated_video"])
+        for ns in store_io.NAMESPACES:
+            if not store.has(g, ns):
+                missing.append(f"{it['item_id']}:{_short(ns)}:absent")
+            elif store.read_meta(g, ns).get("origin") != "extracted":
+                o = store.read_meta(g, ns).get("origin")
+                missing.append(f"{it['item_id']}:{_short(ns)}:origin={o}")
+    return {"ok": not missing, "missing": missing, "n_anchors": len(staged)}
+
+
+def run_health(items_jsonl: pathlib.Path, expected_ids) -> dict:
+    """G3 — a score run's items.jsonl is healthy iff every expected (non-control)
+    id is present, no row carries an ``error``, and the scored headline id set is
+    exactly the expected set. Closes the silent mode where per-item isolation
+    turns a store-root mismatch into an error row (exit 0) that ``compare_runs``
+    then drops."""
+    rows = {}
+    for ln in pathlib.Path(items_jsonl).read_text().splitlines():
+        if ln.strip():
+            r = json.loads(ln)
+            rows[r["item_id"]] = r
+    errs = {i: r["error"] for i, r in rows.items() if r.get("error")}
+    present = {i for i in rows if not i.startswith("control_")}
+    expected = set(expected_ids)
+    missing = sorted(expected - present)
+    return {"ok": not errs and not missing, "error_rows": errs,
+            "missing": missing, "n_shared": len(present & expected),
+            "n_expected": len(expected)}
 
 
 def wait_score(h: dict) -> pathlib.Path:
@@ -169,12 +275,15 @@ def main() -> int:
     from ..motion import Tracker
     extractor = DinoExtractor(versioning.PINS["dino_model"], device=device)
     tracker = Tracker(device=device)
-    cache_dir = REPO_ROOT / "outputs/eval/cache"
+    # port to the store model (P3c): the driver's own corpus / reversed-ref
+    # bundles go through the feature store rooted at REPO_ROOT, the same store
+    # score.py reads — no split-brain with a legacy outputs/eval/cache.
+    warm_store = FeatureStore(REPO_ROOT)
 
     keys = sorted(corpus["clips"])
     bundles_by_key: dict[str, dict] = {}
     for i, key in enumerate(keys):
-        b, _ = process_video_file(REPO_ROOT / probe_root / key, cache_dir,
+        b, _ = process_video_file(REPO_ROOT / probe_root / key, warm_store,
                                   extractor, tracker,
                                   short_side=versioning.PINS["feature_short_side"],
                                   need_frames=False)
@@ -249,7 +358,7 @@ def main() -> int:
     for p in rev_pairs:
         vp = probes.build_reversed_video(REPO_ROOT / probe_root / p["ref"],
                                          probe_dir / f"rev__{p['class']}.mp4")
-        rb, _ = process_video_file(vp, cache_dir, extractor, tracker,
+        rb, _ = process_video_file(vp, warm_store, extractor, tracker,
                                    short_side=versioning.PINS["feature_short_side"],
                                    need_frames=False)
         rev_cams[p["ref"]] = camera_trajectory(rb["tracks"], rb["vis"])
@@ -293,9 +402,9 @@ def main() -> int:
             return default
 
     GRADER_CRASH = {"pass": False, "reason": "grader crashed (see bar8.crashes)"}
-    h_sib = start_score(man_dir / "siblings.json", "cert_siblings", out, "auto")
-    h_prb = start_score(man_dir / "probes.json", "cert_probes", out, "off")
-    h_blc = start_score(man_dir / "blockc.json", "cert_blockc", out, "off")
+    h_sib = start_score(man_dir / "siblings.json", "cert_siblings", out, "auto", REPO_ROOT)
+    h_prb = start_score(man_dir / "probes.json", "cert_probes", out, "off", REPO_ROOT)
+    h_blc = start_score(man_dir / "blockc.json", "cert_blockc", out, "off", REPO_ROOT)
     try:
         sib_items = wait_score(h_sib)
     except ScoreError as e:
@@ -397,43 +506,71 @@ def main() -> int:
                  "not computed — crashed")
 
     # ---- Block D (warm rerun + cold anchors, concurrent) --------------------------------
-    # The rerun scores with --lpips-cache off: bar 8's warm comparison keeps
-    # recomputing LPIPS end-to-end, so a stale/corrupt LPIPS cache entry from
-    # the first pass shows up as a warm delta instead of passing silently.
+    # Warm rerun = a store-hit rerun at the shared store root: dino/tracks/lpips_t
+    # all served from the store, endpoint LPIPS recomputed fresh — proves the
+    # deployed path is deterministic. Cold anchors = the six anchor gens STAGED
+    # into an empty cold store root (stage_cold_anchors) so they re-extract from
+    # nothing; the stale-feature detection the pre-store `--lpips-cache off` rerun
+    # gave now lives here (P3c: lpips_t is a stored namespace, so the warm rerun
+    # hits it). Guards G1-G4 (staging invariants, cold-populated proof, per-run
+    # health, store-root-mismatch signature) close the mode where a store-root
+    # mismatch becomes an isolated error row that compare_runs silently drops.
     log("Block D: stability")
     warm_cmp = cold_cmp = None
+    warm_health = cold_health = cold_populated = None
+    cold_root = out / "cold_store"
+    anchors, staged = [], []
     if sib_items:
         h_rerun = h_cold = None
         try:
             h_rerun = start_score(man_dir / "siblings.json", "cert_siblings_rerun",
-                                  out, "auto", lpips_cache="off")
+                                  out, "auto", REPO_ROOT)
         except Exception as e:  # noqa: BLE001 — the record must still be written
-            crashed.append(f"warm rerun: {type(e).__name__}: {e}")
+            crashed.append(f"warm rerun: {_sig(e)}")
         try:
             anchors = anchor_ids(pairs, corpus, e57_items, bars)
             anchor_man = [it for it in (sib_man + c_items) if it["item_id"] in anchors]
-            (man_dir / "anchors.json").write_text(json.dumps(anchor_man, indent=1))
+            if cold_root.exists():
+                shutil.rmtree(cold_root)                # G1: start from empty
+            cold_root.mkdir(parents=True)
+            staged = stage_cold_anchors(anchor_man, cold_root, REPO_ROOT)
+            assert not list(cold_root.rglob("*.npz")), "cold store not empty before run"
+            for orig, st in zip(anchor_man, staged):    # G1: only the gen path moved
+                for k, v in orig.items():
+                    if k != "generated_video":
+                        assert st[k] == v, f"cold staging mutated {k} of {orig['item_id']}"
+            (man_dir / "anchors.json").write_text(json.dumps(staged, indent=1))
             h_cold = start_score(man_dir / "anchors.json", "cert_anchors_cold", out,
-                                 "auto", cache_dir=str(out / "cold_cache"))
+                                 "auto", cold_root)
         except Exception as e:  # noqa: BLE001
-            crashed.append(f"cold anchors: {type(e).__name__}: {e}")
+            crashed.append(f"cold anchors: {_sig(e)}")
         if h_rerun:
             try:
                 sib2 = wait_score(h_rerun)
+                warm_ids = [i for i in load_rows(sib_items) if not i.startswith("control_")]
+                warm_health = run_health(sib2, warm_ids)   # G3
+                if not warm_health["ok"]:
+                    crashed.append(f"warm rerun health: {warm_health}")
                 warm_cmp = compare_runs(sib_items, sib2,
                                         tolerance=bars["stability"]["bar8"]["warm_max_abs_delta"])
             except Exception as e:  # noqa: BLE001
-                crashed.append(f"warm rerun: {type(e).__name__}: {e}")
+                crashed.append(f"warm rerun: {_sig(e)}")
         if h_cold:
             try:
                 cold_jsonl = wait_score(h_cold)
+                cold_health = run_health(cold_jsonl, anchors)   # G3
+                if not cold_health["ok"]:
+                    crashed.append(f"cold anchors health: {cold_health}")
+                cold_populated = cold_store_populated(cold_root, staged)   # G2
+                if not cold_populated["ok"]:
+                    crashed.append(f"cold store not populated: {cold_populated['missing']}")
                 base = {i: r for i, r in {**rows, **c_rows}.items() if i in anchors}
                 base_path = out / "anchors_warm.jsonl"
                 base_path.write_text("\n".join(json.dumps(r) for r in base.values()))
                 cold_cmp = compare_runs(base_path, cold_jsonl,
                                         tolerance=bars["stability"]["bar8"]["anchors"]["reproduction_tolerance"])
             except Exception as e:  # noqa: BLE001
-                crashed.append(f"cold anchors: {type(e).__name__}: {e}")
+                crashed.append(f"cold anchors: {_sig(e)}")
 
     floors = {}
     for side in ("twosided", "onesided"):
@@ -451,10 +588,17 @@ def main() -> int:
     bar8 = {"no_crash": bool(not crashed and not error_rows),
             "crashes": crashed, "error_rows": error_rows,
             "warm": warm_cmp, "cold_anchors": cold_cmp,
+            "warm_health": warm_health, "cold_health": cold_health,
+            "warm_scope": "store-hit rerun; lpips_t served from store, "
+                          "endpoint LPIPS recomputed",
+            "cold_store": {"root": str(cold_root), "populated": cold_populated,
+                           "scope": "gen+control re-extracted from empty store; "
+                                    "references warm (store-colocated)"},
             "reference_rebuild_parity": rebuild_parity,   # v4: committed artifact matches rebuild
             "pass": bool(not crashed and not error_rows
                          and warm_cmp and warm_cmp["pass"]
                          and cold_cmp and cold_cmp["pass"]
+                         and cold_populated and cold_populated["ok"]
                          and rebuild_parity["pass"])}
     verdicts = {
         "bar1_m1a_floor": exam_res["bar1"]["pass"],

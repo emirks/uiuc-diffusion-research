@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="light dark" name="color-scheme"/>
+  <title>
+    SEGUE — Supplementary Material
+  </title>
+  <style>
+   *{margin:0;padding:0;box-sizing:border-box} body{ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:#000;color:#fff;line-height:1.6} .container{max-width:1200px;margin:0 auto;padding:0 20px} header{text-align:center;padding:48px 0 24px} .date{font-size:14px;color:#aaa;margin-bottom:12px} h1{font-size:48px;margin:60px 0 16px;font-weight:500;line-height:1} .tagline{font-size:24px;color:#fff;margin:24px 0 0;font-style:italic;font-weight:600} .authors{margin-top:24px;font-size:20px;color:#aaa} .authors sup{font-size:0.7em;margin-left:2px;margin-right:0} .authors a{color:inherit;text-decoration:none} .authors a:hover{text-decoration:underline} .authors .author{display:inline-block;white-space:nowrap;margin-right:16px} .authors .author:last-child{margin-right:0} .affiliations{font-size:14px;color:#aaa;margin-top:18px} .affiliations sup{margin-left:16px} .affiliations sup:first-child{margin-left:0} .footnotes{font-size:12px;color:#888;margin-top:14px} .cta-buttons{margin-top:28px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap} .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;border:1px solid #333;background:#151515;color:#fff;text-decoration:none;font-weight:600;font-size:14px} @media(hover:hover){.btn:hover{background:#1f1f1f;border-color:#3a3a3a}} .btn .icon{font-size:16px;opacity:0.85} .media-grid{display:flex;gap:20px;margin:40px 0;align-items:stretch;flex-wrap:nowrap;justify-content:center} .media-grid.wrap{flex-wrap:wrap} .media-grid.four-cols{display:flex;gap:6px 20px;justify-content:flex-start;flex-wrap:wrap;overflow:visible} .media-grid.four-cols .media-item{flex:0 0 calc((100% - 40px)/3)} .media-item{display:flex;flex-direction:column;align-items:center} .image-container{height:240px;width:100%;display:flex;justify-content:center;align-items:center;overflow:hidden;margin-bottom:0} .media-item video,.media-item img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px} .media-caption{margin-top:15px;font-size:14px;color:#aaa;text-align:center;width:100%} .section-title{font-size:28px;margin:60px 0 30px;font-weight:500;text-align:center} p{margin-bottom:20px;font-size:16px;color:#ddd} .emph{color:#fff !important} .figure{margin:30px 0} .figure img,.figure video{width:100%;height:auto;border-radius:8px;display:block} .figure .fig-caption{margin-top:12px;font-size:14px;color:#aaa;text-align:center} .bibtex-block{position:relative;background:#0f0f0f;border:1px solid #222;border-radius:8px;padding:16px;margin:50px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;color:#ddd} .bibtex-block pre{white-space:pre;overflow:auto;margin:0} .copy-btn{position:absolute;top:10px;right:10px;border:none;border-radius:6px;padding:6px 10px;background:#222;color:#ddd;cursor:pointer;font-size:12px} @media(hover:hover){.copy-btn:hover{background:#2f2f2f}} .media-grid.different-widths .media-item:nth-child(1){flex:1.8} .media-grid.different-widths .media-item:nth-child(2){flex:2} .media-grid.different-widths .media-item:nth-child(3), .media-grid.different-widths .media-item:nth-child(4){flex:1} @media (max-width:992px){ } @media (max-width:768px){ h1{font-size:32px} .authors{font-size:18px} .media-grid{flex-direction:column} .media-grid.four-cols{flex-direction:row} .media-grid.four-cols .media-item{flex:0 0 calc((100% - 20px)/2)} .image-container{height:auto;max-height:360px} .section-title{font-size:24px} } @media (max-width:480px){ .media-grid.four-cols .media-item{flex:0 0 100%} } .media-item video.preview{cursor:pointer} .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px} .lightbox.show{display:flex} .lightbox-content{max-width:90vw;max-height:90vh;position:relative} .lightbox video{width:100%;height:auto;max-height:90vh;border-radius:8px} .lightbox .close-btn{position:absolute;top:-12px;right:-12px;width:40px;height:40px;border:none;border-radius:50%;background:rgba(255,255,255,0.15);color:#fff;font-size:28px;line-height:40px;text-align:center;cursor:pointer}
+  
+
+.compare{display:flex;position:relative;overflow:hidden;justify-content:left;width:100%;height:100%;}
+.slidervideo{display:flex;position:relative;width:100%;height:100%;transition:0.2s ease;object-fit:contain;background:#000;}
+.slider{position:absolute;cursor:ew-resize;height:100%;width:0px;background-color:rgba(255,255,255,0.6);z-index:10}
+.prompt-wrap{position:relative}
+.prompt{max-width:calc(100% - 20px);position:absolute;background:rgba(0,0,0,0.5);color:rgba(255,255,255,0.9);font-size:10px;backdrop-filter:blur(10px);bottom:10px;left:10px;padding:5px 10px;border-radius:15px;opacity:0;pointer-events:none;transition:opacity .5s;box-sizing:border-box}
+@media(hover:hover){.prompt-wrap:hover .prompt{opacity:1;pointer-events:auto}}
+
+
+.prompt-wrap .container{
+  display:flex;position:relative;overflow:hidden;justify-content:left;width:100%;height:100%;
+}
+.prompt-wrap .slidervideo{
+  display:flex;position:relative;width:100%;height:100%;transition:0.2s ease;object-fit:contain;background:#000;
+  aspect-ratio:16/9;
+}
+.prompt-wrap .slider{
+  position:absolute;cursor:ew-resize;height:100%;background-color:rgba(255,255,255,0.5);z-index:10;
+
+  width: 0px;}
+
+.prompt-wrap .prompt{
+  max-width:calc(100% - 20px);position:absolute;background:rgba(0,0,0,0.5);color:rgba(255,255,255,0.9);font-size:10px;
+  backdrop-filter:blur(10px);bottom:10px;left:10px;padding:5px 10px;border-radius:15px;opacity:0;pointer-events:none;
+  transition:opacity .5s;box-sizing:border-box;
+}
+@media(hover:hover){.prompt-wrap:hover .prompt{opacity:1;pointer-events:auto}}
+
+
+.media-grid .image-container{height:auto;max-height:none}
+
+
+.prompt {
+  
+  max-width: calc(100% - 20px);
+  position: absolute;
+  background: rgba(0,0,0,0.5);
+  color: rgba(255,255,255,0.9);
+  font-size: 10px;
+  backdrop-filter: blur(10px);
+  bottom: 10px;
+  left: 10px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+  box-sizing: border-box;
+  
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.4;
+}
+@media (hover: hover) {
+  .prompt-wrap:hover .prompt { opacity: 1; pointer-events: auto; }
+}
+
+
+.prompt-wrap { position: relative; }
+.prompt-wrap .prompt { z-index: 20; }
+
+.prompt-wrap .slider { z-index: 15; width: 0px !important; }
+
+.prompt-wrap .container:hover + .prompt,
+.prompt-wrap:hover .prompt { opacity: 1 !important; pointer-events: auto !important; }
+
+
+.media-grid .subsection-header{flex:0 0 100%; margin:22px 0 10px; padding-top:8px; border-top:1px solid #1e1e1e}
+.subsection-title{font-size:20px; font-weight:600; color:#fff; line-height:1.25}
+.subsection-desc{font-size:14px; color:#aaa; margin-top:6px}
+@media (max-width:768px){
+  .subsection-title{font-size:18px}
+  .subsection-desc{font-size:13px}
+}
+
+
+.media-grid .image-container {
+  
+  aspect-ratio: 3 / 2;
+  width: 100%;
+  height: auto;          
+  position: relative;
+  overflow: hidden;      
+}
+
+
+.prompt-wrap .container {
+  width: 100%;
+  height: 100%;
+}
+
+
+.prompt-wrap .slidervideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;     
+}
+
+
+.prompt-wrap { --prompt-w: 540px; }   
+
+.prompt-wrap .prompt{
+  
+  left: 50% !important;
+  transform: translateX(-50%);   
+  width: var(--prompt-w);        
+  max-width: calc(100% - 32px);  
+  box-sizing: border-box;        
+  text-align: center;
+  
+}
+
+
+@media (max-width: 640px){
+  .prompt-wrap { --prompt-w: 88vw; }   
+}
+
+.prompt-wrap .container{
+  position: relative;
+  
+  --cut: 40%; 
+}
+
+
+.prompt-wrap .container #media1{
+  position: relative;
+  z-index: 0;
+}
+.prompt-wrap .container #media2{
+  position: relative;
+  z-index: 2;
+  margin-left: -100%; 
+  clip-path: inset(0 var(--cut) 0 0) !important; 
+}
+
+
+.prompt-wrap .container .slider{
+  position: absolute;
+  z-index: 15;
+}
+
+
+.prompt-wrap .container::before,
+.prompt-wrap .container::after{ content: none !important; }
+
+
+.prompt-wrap .container .gen-clip,
+.prompt-wrap .container .ref-clip{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;                   
+  transition: opacity .2s ease;
+  z-index: 12;                  
+}
+@media (hover:hover){
+  .prompt-wrap .container:hover .gen-clip,
+  .prompt-wrap .container:hover .ref-clip{ opacity: 1; }
+}
+
+
+.prompt-wrap .container .ref-clip{
+  clip-path: inset(0 var(--cut) 0 0);
+}
+.prompt-wrap .container .ref-clip .ref-badge{
+  position: absolute;
+  top: 8px;
+  left: 20px;
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 1;
+  background: rgba(128,128,128,.5);
+  color: #fff;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+
+.prompt-wrap .container .gen-clip{
+  
+  clip-path: inset(0 0 0 calc(100% - var(--cut)));
+}
+.prompt-wrap .container .gen-clip .gen-badge{
+  position: absolute;
+  top: 8px;
+  right: 20px;
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 1;
+  background: rgba(128,128,128,.5);
+  color: #fff;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+
+@media (hover:none){
+  .prompt-wrap .container .gen-clip,
+  .prompt-wrap .container .ref-clip{ opacity: 1; }
+}
+
+
+.media-grid.cols-4 .media-item { 
+  flex: 0 0 calc((100% - 60px) / 4); 
+}
+
+
+.col-heads {
+  display: flex;
+  gap: 20px;
+  margin: 6px 0 10px;
+  font-size: 14px;
+  color: #bbb;
+}
+.col-heads.cols-4 .col-head {
+  flex: 0 0 calc((100% - 60px) / 4);
+  text-align: center;
+  font-weight: 600;
+}
+
+
+.image-container .fill-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   
+  border-radius: 8px;
+}
+
+
+.no-badges .gen-clip,
+.no-badges .ref-clip { display: none !important; }
+
+
+#same-ref-video-diff-img{
+  
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 20px;
+  row-gap: 20px;
+}
+
+
+#same-ref-video-diff-img .subsection-header{
+  grid-column: 1 / -1;
+  margin-bottom: 4px;
+}
+
+
+#same-ref-video-diff-img .col-heads{
+  display: contents !important; 
+}
+
+
+#same-ref-video-diff-img .col-head{
+  text-align: center;
+  font-weight: 600;
+  font-size: 20px;
+  color: #ffffff;
+  padding-bottom: 6px;
+}
+
+
+#same-ref-video-diff-img .media-item{
+  margin: 0;          
+  width: auto;
+  flex: initial !important;
+}
+
+
+
+
+.media-grid .overlay-card .overlay-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.media-grid .overlay-card .gen-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 18px;
+  display: block;
+}
+
+
+.media-grid .overlay-card .ref-thumb-wrap {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 33%;
+  z-index: 3;
+  pointer-events: auto; 
+}
+
+.media-grid .overlay-card .ref-thumb {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 12px;
+  opacity: .5;                   
+  transition: opacity .2s ease;
+  display: block;
+}
+
+
+.media-grid .overlay-card .ref-thumb-wrap:hover .ref-thumb {
+  opacity: 1;
+}
+
+
+.media-grid .overlay-card .corner-badge {
+  position: absolute;
+  z-index: 4;
+  padding: 4px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: 999px;
+  background: rgba(0,0,0,.6);
+  color: #fff;
+  user-select: none;
+  pointer-events: none; 
+}
+
+.media-grid .overlay-card .corner-badge.gen {
+  top: 10px;
+  right: 10px;
+}
+
+.media-grid .overlay-card .corner-badge.ref {
+  top: 2px;
+  left: 25px;
+  font-size: 12px;
+  background: rgba(0,0,0,.65);
+}
+
+
+
+
+
+#srviump-block .ref-pair{
+  
+  flex: 0 0 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin: 10px 0 4px;
+}
+#srviump-block .ref-card .ref-title{
+  text-align: center;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: -50px;
+  font-size: 20px;
+}
+#srviump-block .ref-card .image-container{
+  aspect-ratio: 3 / 2;
+}
+#srviump-block .ref-card .image-container video,
+#srviump-block .ref-card .image-container img{
+  width: 70%;
+  height: 70%;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+
+#srviump-block .prompt-block{
+  margin-top: 10px;
+  font-size: 14px;
+  color: #bbb;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+
+
+@media (max-width: 768px){
+  #srviump-block .ref-pair{ grid-template-columns: 1fr; }
+}
+
+.yt-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1600px;      
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+}
+.yt-wrapper #player, .yt-wrapper iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+
+</style>
+<style id="segue-layout">
+/* ---- SEGUE supplementary layout (added; VAP CSS above is verbatim) ---- */
+.seg-section{--seg-h:300px;--seg-gap:6px;margin:24px 0 8px}
+.seg-strip{display:flex;flex-wrap:wrap;align-items:flex-start;gap:14px;
+  margin:18px 0;padding-bottom:18px;border-bottom:1px solid #1e1e1e}
+.seg-strip .seg-rowlabel{flex:0 0 100%;font-size:14px;color:#ddd;margin:2px 0 4px}
+.seg-tier{color:#8a8a8a;font-size:12px;margin-left:8px}
+.seg-block{display:flex;align-items:flex-start;gap:16px;
+  margin:18px 0;padding-bottom:18px;border-bottom:1px solid #1e1e1e}
+.seg-cells{display:flex;flex-wrap:wrap;gap:18px}
+.seg-cell{display:flex;align-items:flex-start;gap:8px}
+.seg-cellwrap{display:flex;flex-direction:column;align-items:center;gap:6px}
+.seg-celllabel{max-width:calc(var(--seg-h)*0.75 + var(--seg-h)*0.375 + 8px);
+  overflow-wrap:anywhere}
+.seg-unit{display:flex;flex-direction:column;align-items:center;gap:6px}
+.seg-media{position:relative;background:#000;border-radius:8px;overflow:hidden;aspect-ratio:3/4}
+.seg-media video{width:100%;height:100%;object-fit:cover;display:block}
+.seg-media img.seg-still{width:100%;height:100%;object-fit:cover;display:block}
+.seg-ref .seg-media,.seg-gen .seg-media,.seg-startfull .seg-media{height:var(--seg-h)}
+.seg-stack{display:flex;flex-direction:column;gap:var(--seg-gap)}
+.seg-stack .seg-media{height:calc((var(--seg-h) - var(--seg-gap))/2)}
+.seg-endpoint{}
+.seg-badge{position:absolute;top:3px;left:3px;z-index:3;padding:2px 6px;font-size:9px;
+  line-height:1;border-radius:6px;background:rgba(0,0,0,.6);color:#fff;pointer-events:none}
+.seg-noend{height:calc((var(--seg-h) - var(--seg-gap))/2);aspect-ratio:3/4;border-radius:8px;
+  border:1px dashed #555;display:flex;align-items:center;justify-content:center;
+  background-image:linear-gradient(45deg,transparent 47%,#555 48%,#555 52%,transparent 53%),
+    linear-gradient(-45deg,transparent 47%,#555 48%,#555 52%,transparent 53%)}
+.seg-noend .seg-xlabel{font-size:10px;color:#999;text-align:center;background:rgba(0,0,0,.55);
+  padding:2px 5px;border-radius:5px}
+.seg-label{font-size:13px;color:#aaa;text-align:center;line-height:1.3}
+@media (max-width:768px){.seg-section{--seg-h:220px}}
+/* comparison rows: keep all arms (incl. refVFX) on ONE row — horizontal overflow ok */
+.seg-cellsrow{display:flex;flex-wrap:nowrap;gap:14px;align-items:flex-start;width:100%;overflow-x:auto;padding-bottom:6px}
+.seg-strip>.seg-cellsrow{flex:0 0 100%}
+/* gallery blocks: one human reference-class heading above each grouped block */
+.seg-blockwrap{margin:18px 0;padding-bottom:18px;border-bottom:1px solid #1e1e1e}
+.seg-blockwrap>.seg-rowlabel{flex:none;font-size:14px;color:#ddd;margin:0 0 6px}
+.seg-blockwrap .seg-block{margin:0;padding:0;border-bottom:none}
+/* input vs generation box styles: inputs (reference + endpoints) tinted; generations muted/greyer */
+.seg-ref,.seg-endstack,.seg-startfull{background:rgba(96,150,230,.10);border:1px solid rgba(120,170,255,.40);border-radius:10px;padding:7px}
+.seg-gen{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.13);border-radius:10px;padding:7px}
+.seg-toc{max-width:720px;margin:10px auto 30px;padding:16px 22px;border:1px solid #2a2a2a;border-radius:10px;background:#0d0d0d}
+.seg-toc-title{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:8px}
+.seg-toc ul{list-style:none;padding:0;margin:0}
+.seg-toc li{margin:4px 0;font-size:16px}
+.seg-toc li ul{margin:2px 0 4px 18px}
+.seg-toc li ul li{font-size:14px;color:#bbb}
+.seg-toc a{color:#9cc3ff;text-decoration:none}
+@media(hover:hover){.seg-toc a:hover{text-decoration:underline}}
+.seg-subtitle{margin:26px 0 8px;text-align:center}
+.seg-placeholder{border:1px dashed #444;border-radius:10px;padding:34px;text-align:center;color:#777;font-size:14px;margin:6px 0 30px;background:repeating-linear-gradient(45deg,#0a0a0a,#0a0a0a 10px,#101010 10px,#101010 20px)}
+.seg-legend{display:flex;flex-wrap:wrap;gap:8px 26px;align-items:center;justify-content:center;font-size:13px;color:#bbb;margin:8px 0 26px}
+.seg-legend .sw{display:inline-block;width:26px;height:16px;border-radius:5px;vertical-align:middle;margin-right:7px}
+.seg-legend .sw-in{background:rgba(96,150,230,.10);border:1px solid rgba(120,170,255,.40)}
+.seg-legend .sw-gen{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.13)}
+/* ---- class grouping (one shared heading per class) + hidden markup ---- */
+.seg-classgroup{margin:0 0 6px}
+.seg-classhead{font-size:20px;font-weight:600;color:#fff;margin:34px 0 12px;padding-bottom:6px;border-bottom:1px solid #262626}
+.seg-refidx{display:inline-block;font-size:11px;letter-spacing:.04em;color:#8a8a8a;background:#141414;border:1px solid #262626;border-radius:6px;padding:2px 8px;margin:0 0 6px}
+/* hidden blocks/rows/cells: NOT rendered on the public host (no JS runs); the localhost overlay un-hides+dims */
+/*OVERLAY-CSS-BEGIN*/
+[data-hidden="1"]{display:none !important}
+/* ---- curation overlay (localhost only: controls are created by JS; nothing here shows without body.seg-ov) ---- */
+body.seg-ov .ovh{position:relative;opacity:.3}
+body.seg-ov .ovh::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:10px;z-index:6;
+  background:repeating-linear-gradient(45deg,rgba(0,0,0,0) 0,rgba(0,0,0,0) 9px,rgba(255,90,90,.16) 9px,rgba(255,90,90,.16) 18px)}
+/* "Hide hidden" preview mode: hidden items vanish entirely (mirrors the public page) */
+body.seg-ov.seg-ov-hide .ovh{display:none !important}
+.seg-ov-hidden{font-size:12px;color:#c9a24a;margin-left:12px}
+.seg-ov-toggle{font:inherit;font-size:12px;padding:6px 12px;border-radius:8px;border:1px solid #333;background:#151515;color:#ddd;cursor:pointer;margin-left:12px}
+@media(hover:hover){.seg-ov-toggle:hover{background:#242424}}
+.seg-ov-ctl{display:inline-flex;gap:4px;vertical-align:middle;margin-right:8px}
+.seg-ov-ctl button{font:inherit;font-size:11px;line-height:1;padding:3px 7px;border-radius:6px;border:1px solid #333;background:#151515;color:#ddd;cursor:pointer}
+@media(hover:hover){.seg-ov-ctl button:hover{background:#242424}}
+.seg-ov-ctl .seg-ov-hidebtn.on{background:#3a1414;border-color:#7a3333;color:#f2b8b8}
+.seg-ov-judge{display:inline-block;font-size:11px;color:#a6e6a9;background:#122a0f;border:1px solid #2f5f27;border-radius:6px;padding:2px 7px;margin-left:8px;vertical-align:middle}
+.seg-cellwrap{position:relative}
+.seg-ov-cellctl{position:absolute;top:4px;right:4px;z-index:7}
+.seg-ov-cellctl button{font:inherit;font-size:10px;line-height:1;padding:3px 6px;border-radius:6px;border:1px solid #333;background:rgba(10,10,10,.85);color:#ddd;cursor:pointer}
+.seg-ov-cellctl button.on{background:#3a1414;border-color:#7a3333;color:#f2b8b8}
+.seg-ov-bar{position:fixed;left:0;right:0;bottom:0;z-index:1200;display:none;align-items:center;justify-content:space-between;
+  gap:16px;padding:10px 18px;background:rgba(12,12,12,.95);border-top:1px solid #262626;backdrop-filter:blur(6px)}
+.seg-ov-bar.show{display:flex}
+.seg-ov-bar .seg-ov-msg{font-size:13px;color:#ddd}
+.seg-ov-bar .seg-ov-status{font-size:12px;color:#999;margin-left:auto;margin-right:12px}
+.seg-ov-bar button.seg-ov-save{font:inherit;font-size:13px;font-weight:600;padding:8px 18px;border-radius:8px;border:1px solid #2f5f27;background:#13290f;color:#bff0bf;cursor:pointer}
+.seg-ov-bar button.seg-ov-save:disabled{opacity:.45;cursor:default}
+.seg-ov-bar.err{border-top-color:#7a3333}
+.seg-ov-bar.err .seg-ov-status{color:#f2b8b8}
+/*OVERLAY-CSS-END*/
+</style>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+referrerpolicy="no-referrer">
+ </head>
+ <body>
+  <div class="container">
+   <header>
+    <h1>
+      SEGUE
+    </h1>
+    <div class="tagline">
+      Visual Signal as Exclusive Guidance for One-Shot Transition Effect Generation
+    </div>
+    <div class="affiliations">
+      <sup>
+       #
+      </sup>
+      This page contains many high-fidelity video demonstrations; we recommend waiting until all videos have completely loaded to ensure smooth and accurate visualization.
+     </div>
+   </header>
+   {{SECTIONS}}
+  </div>
+  </div>
+  <div aria-hidden="true" class="lightbox" id="lightbox">
+   <div aria-modal="true" class="lightbox-content" role="dialog">
+    <button aria-label="Close" class="close-btn" id="lightboxClose">
+     &times;
+    </button>
+    <video controls="" id="lightboxVideo" playsinline="">
+    </video>
+   </div>
+  </div>
+  <script>
+   (function(){ const previews = document.querySelectorAll('video.preview'); const lightbox = document.getElementById('lightbox'); const lightboxVideo = document.getElementById('lightboxVideo'); const closeBtn = document.getElementById('lightboxClose'); function openLightbox(src){ if(!src) return; lightboxVideo.src = src; lightbox.classList.add('show'); document.body.style.overflow = 'hidden'; const playPromise = lightboxVideo.play(); if (playPromise && typeof playPromise.catch === 'function') { playPromise.catch(() => {/* ignore */}); } } function closeLightbox(){ if(!lightbox.classList.contains('show')) return; lightboxVideo.pause(); lightboxVideo.removeAttribute('src'); lightbox.classList.remove('show'); document.body.style.overflow = ''; } previews.forEach(v => { v.addEventListener('click', () => { const sourceEl = v.querySelector('source'); const src = sourceEl ? sourceEl.getAttribute('src') : v.getAttribute('src'); openLightbox(src); }); }); closeBtn.addEventListener('click', closeLightbox); lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); }); document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); }); const copyBtn = document.getElementById('copyBib'); if(copyBtn){ copyBtn.addEventListener('click', () => { const pre = document.querySelector('#bibtex pre'); if(!pre) return; const text = pre.textContent; navigator.clipboard.writeText(text).then(() => { const old = copyBtn.textContent; copyBtn.textContent = 'Copied!'; setTimeout(() => { copyBtn.textContent = old; }, 1200); }).catch(() => {/* ignore */}); }); } })();
+  </script>
+  <script>
+
+(function(){
+  const containers = document.querySelectorAll('.prompt-wrap .container');
+  containers.forEach(container => {
+    let isDragging = true;
+    const slider = container.querySelector('.slider');
+    const media2 = container.querySelector('#media2');
+    container.addEventListener('mousedown', () => { isDragging = true; });
+    container.addEventListener('mouseup', () => { isDragging = true; });
+    container.addEventListener('mousemove', (event) => {
+      if (!isDragging) return;
+      const {clientX} = event;
+      const {left, width} = container.getBoundingClientRect();
+      let percentage = (clientX - left) / width * 100;
+      percentage = Math.max(0, Math.min(100, percentage));
+      media2.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
+      container.style.setProperty('--cut', `${100 - percentage}%`);
+      slider.style.left = `${percentage}%`;
+      container.style.setProperty('--cut', `${100 - percentage}%`);
+
+    });
+    slider.style.left = '40%';
+    container.style.setProperty('--cut', '40%'); 
+  });
+})();
+  </script>
+  <script>
+    (function(){
+      document.querySelectorAll('.prompt-wrap .container').forEach(container=>{
+        /* Generation 角标层（在两段视频之间） */
+        if(!container.querySelector('.gen-clip')){
+          const genClip = document.createElement('div');
+          genClip.className = 'gen-clip';
+          const g = document.createElement('div');
+          g.className = 'gen-badge';
+          g.textContent = 'Generation';
+          genClip.appendChild(g);
+          container.appendChild(genClip);
+        }
+    
+        /* Reference 角标层（在 #media2 上方，随同裁切） */
+        if(!container.querySelector('.ref-clip')){
+          const refClip = document.createElement('div');
+          refClip.className = 'ref-clip';
+          const r = document.createElement('div');
+          r.className = 'ref-badge';
+          r.textContent = 'Reference';
+          refClip.appendChild(r);
+          container.appendChild(refClip);
+        }
+    
+        /* 初始化 --cut 与当前 slider 一致（默认为 40% 左 / 40% 右） */
+        const slider = container.querySelector('.slider');
+        const leftPct = slider && slider.style.left ? parseFloat(slider.style.left) : 60;
+        container.style.setProperty('--cut', (100 - leftPct) + '%');
+      });
+    })();
+    </script>
+  
+  <script>
+
+
+    
+    (function(){
+      function transformSection(sectionTitleEl){
+        const header = sectionTitleEl.closest('.subsection-header');
+        if (!header) return;
+    
+
+        let node = header.nextElementSibling;
+        const items = [];
+        while (node && !node.classList.contains('subsection-header')) {
+          if (node.classList && node.classList.contains('media-item')) items.push(node);
+          node = node.nextElementSibling;
+        }
+    
+
+        items.forEach(item => {
+          const container = item.querySelector('.image-container');
+          if (!container) return;
+    
+
+          const vSources = item.querySelectorAll('video source');
+          if (vSources.length < 2) return;
+          const oursSrc = vSources[0].getAttribute('src');
+          const refSrc  = vSources[1].getAttribute('src');
+    
+
+          const overlay = document.createElement('div');
+          overlay.className = 'image-container overlay-frame';
+          overlay.innerHTML = `
+            <video class="gen-video fill-video" autoplay muted loop playsinline>
+              <source src="${oursSrc}" type="video/mp4"/>
+            </video>
+            <div class="ref-thumb-wrap" title="Hover to hide the reference video">
+              <video class="ref-thumb" autoplay muted loop playsinline>
+                <source src="${refSrc}" type="video/mp4"/>
+              </video>
+              <div class="corner-badge ref">Reference</div>
+            </div>
+            <div class="corner-badge gen">Generation</div>
+          `;
+    
+
+          const old = container.querySelector('.prompt-wrap') || container.firstElementChild;
+          if (old) {
+            container.replaceChild(overlay, old);
+          } else {
+            container.innerHTML = overlay.outerHTML;
+          }
+          item.classList.add('overlay-card');
+        });
+      }
+    
+      document.addEventListener('DOMContentLoaded', () => {
+
+        document.querySelectorAll('.subsection-title.dvsi-enabled').forEach(transformSection);
+    
+
+        function tryPlayAll(scope){
+          scope.querySelectorAll('.overlay-card video').forEach(v => {
+            v.muted = true;
+            const p = v.play();
+            if (p && typeof p.catch === 'function') { p.catch(()=>{}); }
+          });
+        }
+        tryPlayAll(document);
+        window.addEventListener('click', () => tryPlayAll(document), { once: true });
+      });
+    })();
+    </script>
+  
+  <script>
+    (function(){
+
+      const TEMP_REF_IMAGE_SRC = 'videos/application/same_ref_img_ref_video_edit_caption/ref.png';
+    
+      function setupSRVIUMP(){
+        const grid = document.getElementById('srviump-block');
+        if (!grid) return;
+    
+
+        const header = grid.querySelector('.subsection-header');
+        if (header && !grid.querySelector('.ref-pair')) {
+
+          const firstItem = grid.querySelector('.media-item');
+          let refSrc = null;
+          if (firstItem) {
+            const vids = firstItem.querySelectorAll('video source');
+            if (vids.length >= 2) {
+              refSrc = vids[1].getAttribute('src'); 
+            }
+          }
+          const pair = document.createElement('div');
+          pair.className = 'ref-pair';
+          pair.innerHTML = `
+            <div class="ref-card">
+              <div class="ref-title">Reference Video</div>
+              <div class="image-container">
+                ${refSrc ? `
+                  <video class="fill-video" autoplay muted loop playsinline>
+                    <source src="${refSrc}" type="video/mp4"/>
+                  </video>` : `
+                  <div class="media-caption">Reference video missing</div>`}
+              </div>
+            </div>
+            <div class="ref-card">
+              <div class="ref-title">Reference Image</div>
+              <div class="image-container">
+                <img src="${TEMP_REF_IMAGE_SRC}" alt="Reference Image"/>
+              </div>
+            </div>`;
+          grid.insertBefore(pair, header.nextSibling);
+        }
+    
+
+        grid.querySelectorAll('.media-item').forEach(item => {
+          const wrapper = item.querySelector('.image-container');
+          if (!wrapper) return;
+    
+
+          let oursSrc = null;
+          const ours = item.querySelector('video#media1 source') || item.querySelectorAll('video source')[0];
+          if (ours) oursSrc = ours.getAttribute('src');
+    
+
+          const promptEl = item.querySelector('.prompt');
+          const promptText = promptEl ? promptEl.textContent.trim() : '';
+    
+
+          if (oursSrc) {
+            wrapper.innerHTML = `
+              <video class="fill-video" autoplay muted loop playsinline>
+                <source src="${oursSrc}" type="video/mp4"/>
+              </video>`;
+          } else {
+
+            wrapper.innerHTML = '';
+          }
+    
+
+          item.querySelectorAll('.prompt-wrap,.container,.slider,.gen-clip,.ref-clip').forEach(n => n.remove());
+    
+
+          if (promptText) {
+            let block = item.querySelector('.prompt-block');
+            if (!block) {
+              block = document.createElement('div');
+              block.className = 'prompt-block';
+              item.appendChild(block);
+            }
+            const promptHTML = promptEl ? promptEl.innerHTML.trim() : '';
+
+            block.innerHTML = promptHTML;
+
+          }
+        });
+      }
+    
+      document.addEventListener('DOMContentLoaded', setupSRVIUMP);
+    })();
+    </script>
+  <script>
+    (function(){
+      const inView = new IntersectionObserver((entries)=>{
+        for (const e of entries){
+          const v = e.target;
+          if (e.isIntersecting){
+
+            const sources = v.querySelectorAll('source[data-src]');
+            sources.forEach(s=>{
+              s.src = s.dataset.src;
+              s.removeAttribute('data-src');
+            });
+
+            if (v.preload === 'none') v.preload = 'metadata';
+            v.load();
+            v.addEventListener('canplay', ()=>{
+              if (v.dataset.autoplay === 'true' || v.autoplay){
+
+                v.play().catch(()=>{ /* 忽略自动播放失败 */ });
+              }
+            }, { once:true });
+          }else{
+
+            if (!v.paused) v.pause();
+          }
+        }
+      }, { rootMargin: '200px 0px' }); 
+    
+
+      document.querySelectorAll('video.lazy-video').forEach(v=>{
+
+        v.preload = 'none';
+        inView.observe(v);
+      });
+    
+
+    })();
+    </script>
+    
+<!--OVERLAY-JS-BEGIN-->
+  <script>
+  /* ---- SEGUE supplementary curation overlay (LOCALHOST ONLY) ----
+     The static HTML is byte-identical on every host; this script builds all controls at runtime
+     and only when served from localhost / 127.0.0.1. It reads the curation plan from
+     site_plan.json (a symlink to eval_ladder/viewer/collections/site_plan.json), un-hides the
+     data-hidden markup (dims it with a striped overlay + unhide button so the owner can bring it
+     back), and lets the owner reorder classes / blocks / rows and hide-unhide blocks / rows /
+     cells. "Save plan" POSTs the plan rebuilt from the current DOM with optimistic concurrency
+     (X-Base-Updated); on 409 it re-fetches, rebuilds on top, retries once; on failure it keeps a
+     localStorage mirror and shows the error. DOM updates immediately; no rebuild needed to preview
+     — the public build applies the same plan server-side. */
+  (function(){
+    var host = location.hostname;
+    var LOCAL = (host === "localhost" || host === "127.0.0.1");
+    /* 2026-09-25 (owner): the curation page is also published at /curate.html so a co-author can review;
+       there the overlay runs READ-ONLY against the published plan copy — "Save" downloads the plan JSON
+       to send back (no server to POST to on GitHub Pages). */
+    var PUBLIC_CURATE = !LOCAL && /curate\.html$/.test(location.pathname);
+    if (!LOCAL && !PUBLIC_CURATE) return;
+    document.body.classList.add("seg-ov");   /* activates the .ovh dim / hide rules (was missing: nothing ever dimmed or hid) */
+    var PLAN_URL = "site_plan.json";
+    var LS_KEY   = "segue_siteplan_mirror";
+    var GALLERY  = {C:1, D:1};
+    var base     = {schema:1, updated:"", sections:{}};   /* last server plan (updated + merge_into) */
+    var unsaved  = 0, saving = false, planLoaded = false;  /* Save stays disabled until the server plan loads, so a stale DOM can never overwrite it */
+
+    function E(tag, cls, txt){ var e=document.createElement(tag); if(cls)e.className=cls; if(txt!=null)e.textContent=txt; return e; }
+    function bump(){ unsaved++; refreshBar(); }
+
+    /* --- move a node past its same-kind siblings --- */
+    function adj(node, dir, sel){
+      var s = dir<0 ? node.previousElementSibling : node.nextElementSibling;
+      while (s && !s.matches(sel)) s = dir<0 ? s.previousElementSibling : s.nextElementSibling;
+      return s;
+    }
+    function moveWithin(node, dir, sel){
+      var sib = adj(node, dir, sel); if(!sib) return;
+      if (dir<0) node.parentNode.insertBefore(node, sib);
+      else node.parentNode.insertBefore(sib, node);
+      bump();
+    }
+    function setHidden(node, on){
+      node.classList.toggle("ovh", on);
+      node.removeAttribute("data-hidden");
+      /* hide -> send the item to the END of its container (block for a cell, class group for a
+         block/row) so it lands last in cell_order/block_order/row_order on save; unhide leaves it
+         in place so the owner can then move it with the arrows. */
+      if (on) node.parentNode.appendChild(node);
+      /* class heading follows its content: a class whose blocks/rows are all hidden is hidden too
+         (mirrors the builder's data-hidden on the group); unhiding anything inside brings it back */
+      var grp = node.classList.contains("seg-classgroup") ? null : node.closest(".seg-classgroup");
+      if (grp && !node.classList.contains("seg-cellwrap")) {
+        var kids = grp.querySelectorAll(":scope > .seg-blockwrap, :scope > [data-item]");
+        var anyVis = false; kids.forEach(function(k){ if (!k.classList.contains("ovh")) anyVis = true; });
+        grp.classList.toggle("ovh", kids.length > 0 && !anyVis);
+      }
+      bump();
+    }
+
+    /* --- APPLY the fetched server plan to the DOM (authority once fetched; the render-time baked
+       order + data-hidden markup must not fight it). Reorders + marks hidden, never bumps. --- */
+    function reorder(nodes, idOf, order){
+      if (!nodes.length) return;
+      var parent = nodes[0].parentNode, byId = {}, seen = {}, seq = [];
+      nodes.forEach(function(n){ byId[idOf(n)] = n; });
+      (order || []).forEach(function(id){ if (byId[id] && !seen[id]){ seq.push(byId[id]); seen[id]=1; } });
+      nodes.forEach(function(n){ var id=idOf(n); if(!seen[id]){ seq.push(n); seen[id]=1; } });
+      seq.forEach(function(n){ parent.appendChild(n); });   /* re-append in order; other children (classhead) stay put */
+    }
+    function markOvh(node, on){ node.classList.toggle("ovh", on); node.removeAttribute("data-hidden"); }
+    function idClass(n){ return n.dataset.class; }
+    function idBlock(n){ return n.dataset.block; }
+    function idItem(n){ return n.dataset.item; }
+    function applyPlan(plan){
+      var secs = (plan && plan.sections) || {};
+      ["C","D","A","B"].forEach(function(S){
+        var ps = secs[S] || {};
+        var groups = [].slice.call(document.querySelectorAll('.seg-classgroup[data-section="'+S+'"]'));
+        reorder(groups, idClass, ps.class_order);
+        if (GALLERY[S]){
+          var hb={}; (ps.hidden_blocks||[]).forEach(function(x){hb[x]=1;});
+          var hc=ps.hidden_cells||{}, bo=ps.block_order||{}, co=ps.cell_order||{};
+          groups.forEach(function(g){
+            var cls=g.dataset.class;
+            var blocks=[].slice.call(g.querySelectorAll('.seg-blockwrap'));
+            reorder(blocks, idBlock, bo[cls]);
+            blocks.forEach(function(b){
+              var bid=b.dataset.block;
+              markOvh(b, !!hb[bid]);
+              var cells=[].slice.call(b.querySelectorAll('.seg-cellwrap'));
+              reorder(cells, idItem, co[bid]);
+              var hcs={}; (hc[bid]||[]).forEach(function(x){hcs[x]=1;});
+              cells.forEach(function(c){ markOvh(c, !!hcs[c.dataset.item]); });
+            });
+          });
+        } else {
+          var hr={}; (ps.hidden_rows||[]).forEach(function(x){hr[x]=1;});
+          var ro=ps.row_order||{};
+          groups.forEach(function(g){
+            var cls=g.dataset.class;
+            var rows=[].slice.call(g.querySelectorAll('.seg-strip'));
+            reorder(rows, idItem, ro[cls]);
+            rows.forEach(function(r){ markOvh(r, !!hr[r.dataset.item]); });
+          });
+        }
+      });
+    }
+
+    /* --- build the plan from the current DOM (+ merge_into carried from the server plan) --- */
+    function buildPlan(){
+      var sections = {};
+      ["A","B","C","D"].forEach(function(S){
+        var groups = document.querySelectorAll('.seg-classgroup[data-section="'+S+'"]');
+        var class_order = [];
+        if (GALLERY[S]){
+          var block_order={}, cell_order={}, hidden_blocks=[], hidden_cells={};
+          groups.forEach(function(g){
+            var cls=g.dataset.class; class_order.push(cls); var lst=[];
+            g.querySelectorAll('.seg-blockwrap').forEach(function(b){
+              lst.push(b.dataset.block);
+              if (b.classList.contains("ovh")) hidden_blocks.push(b.dataset.block);
+              var hc=[], co=[];
+              b.querySelectorAll('.seg-cellwrap').forEach(function(c){
+                co.push(c.dataset.item);
+                if (c.classList.contains("ovh")) hc.push(c.dataset.item);
+              });
+              if (hc.length) hidden_cells[b.dataset.block]=hc;
+              cell_order[b.dataset.block]=co;
+            });
+            block_order[cls]=lst;
+          });
+          var mi = (base.sections && base.sections[S] && base.sections[S].merge_into) || {};
+          sections[S] = {class_order:class_order, block_order:block_order, cell_order:cell_order,
+                         hidden_blocks:hidden_blocks, hidden_cells:hidden_cells, merge_into:mi};
+        } else {
+          var row_order={}, hidden_rows=[];
+          groups.forEach(function(g){
+            var cls=g.dataset.class; class_order.push(cls); var lst=[];
+            g.querySelectorAll('.seg-strip').forEach(function(r){
+              lst.push(r.dataset.item);
+              if (r.classList.contains("ovh")) hidden_rows.push(r.dataset.item);
+            });
+            row_order[cls]=lst;
+          });
+          sections[S] = {class_order:class_order, row_order:row_order, hidden_rows:hidden_rows};
+        }
+      });
+      return {schema:1, updated:base.updated, sections:sections};
+    }
+
+    /* --- server load / save (optimistic concurrency; 409 -> refetch, rebuild, retry once) --- */
+    function mirror(p){ try{ localStorage.setItem(LS_KEY, JSON.stringify(p)); }catch(e){} }
+    function post(plan, baseUpdated){
+      return fetch(PLAN_URL, {method:"POST",
+        headers:{"Content-Type":"application/json","X-Base-Updated":baseUpdated||""},
+        body:JSON.stringify(plan)});
+    }
+    function downloadPlan(){
+      var plan = buildPlan(); plan.schema = 1; plan.updated = new Date().toISOString(); plan.exported_by = "curate.html (public, read-only)";
+      var blob = new Blob([JSON.stringify(plan, null, 1)], {type: "application/json"});
+      var a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+      a.download = "site_plan." + plan.updated.replace(/[:.]/g, "-") + ".json";
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+      unsaved = 0; setStatus("plan downloaded " + hhmm() + " — send the file to the owner", ""); refreshBar();
+    }
+    function savePlan(){
+      if (PUBLIC_CURATE){ downloadPlan(); return; }
+      if (saving) return;
+      if (!planLoaded){ setStatus("plan not loaded — Save disabled (refresh the page)","err"); return; }
+      saving=true; setStatus("saving…","");
+      var plan = buildPlan(); mirror(plan);
+      post(plan, base.updated).then(function(r){
+        if (r.status===409){ return r.json().then(function(j){
+          /* server changed under us: sync the DOM to the server's latest, then re-apply my edits on
+             top, then retry once — never overwrite blindly from a stale DOM. */
+          var cur = (j && j.current) || {};
+          if (typeof cur.updated==="string") base.updated=cur.updated;
+          base.sections = cur.sections || base.sections;
+          applyPlan(cur);
+          applyPlan(plan);
+          var again = buildPlan(); mirror(again);
+          return post(again, base.updated);
+        }); }
+        return r;
+      }).then(function(r){
+        if(!r.ok) throw new Error("HTTP "+r.status); return r.json();
+      }).then(function(j){
+        base.updated = j.updated || base.updated; unsaved=0; saving=false; setStatus("saved "+hhmm(),"");
+        refreshBar();
+      }).catch(function(e){
+        saving=false; mirror(buildPlan()); setStatus("save FAILED — kept a local copy ("+e+")","err"); refreshBar();
+      });
+    }
+    function hhmm(){ var d=new Date(),p=function(n){return(n<10?"0":"")+n;}; return p(d.getHours())+":"+p(d.getMinutes()); }
+
+    /* --- sticky bottom bar --- */
+    var LS_SHOW = "segue_siteplan_showhidden";           /* "1" show dimmed, "0" hide (default: owner 2026-09-25 "it does not hide things when i click hide?") */
+    var bar, barMsg, barHidden, barToggle, barStatus, barSave;
+    function showHidden(){ try{ return localStorage.getItem(LS_SHOW)==="1"; }catch(e){ return false; } }
+    function applyShowHidden(){
+      var show = showHidden();
+      document.body.classList.toggle("seg-ov-hide", !show);
+      if (barToggle) barToggle.textContent = show ? "Hide hidden" : "Show hidden";
+    }
+    function makeBar(){
+      bar = E("div","seg-ov-bar");
+      barMsg = E("span","seg-ov-msg", PUBLIC_CURATE ? "curation review (read-only copy: reorder/hide here, then Download plan and send it back)" : "curation overlay");
+      barHidden = E("span","seg-ov-hidden","");
+      barToggle = E("button","seg-ov-toggle","");
+      barToggle.addEventListener("click", function(){
+        try{ localStorage.setItem(LS_SHOW, showHidden() ? "0" : "1"); }catch(e){}
+        applyShowHidden();
+      });
+      barStatus = E("span","seg-ov-status","");
+      barSave = E("button","seg-ov-save", PUBLIC_CURATE ? "Download plan" : "Save plan");
+      barSave.addEventListener("click", savePlan);
+      bar.appendChild(barMsg); bar.appendChild(barHidden); bar.appendChild(barToggle);
+      bar.appendChild(barStatus); bar.appendChild(barSave);
+      document.body.appendChild(bar);
+      applyShowHidden();
+      refreshBar();
+    }
+    function setStatus(t, cls){ if(barStatus) barStatus.textContent=t; if(bar) bar.classList.toggle("err", cls==="err"); }
+    function refreshBar(){
+      if(!bar) return;
+      bar.classList.add("show");
+      barMsg.textContent = unsaved+" unsaved change"+(unsaved===1?"":"s");
+      var nh = document.querySelectorAll(".ovh").length;
+      barHidden.textContent = nh+" hidden";
+      barSave.disabled = (!planLoaded) || (unsaved===0) || saving;
+    }
+
+    /* --- inject controls --- */
+    function arrowGroup(node, sel){
+      var g=E("span","seg-ov-ctl");
+      var up=E("button",null,"▲"), dn=E("button",null,"▼");
+      up.title="move up"; dn.title="move down";
+      up.addEventListener("click",function(){moveWithin(node,-1,sel);});
+      dn.addEventListener("click",function(){moveWithin(node,1,sel);});
+      g.appendChild(up); g.appendChild(dn); return g;
+    }
+    function hideBtn(node){
+      var g=E("span","seg-ov-ctl");
+      var b=E("button","seg-ov-hidebtn", node.classList.contains("ovh")?"unhide":"hide");
+      if(node.classList.contains("ovh")) b.classList.add("on");
+      b.addEventListener("click",function(){
+        var nowHidden=!node.classList.contains("ovh");
+        setHidden(node, nowHidden);
+        b.textContent=nowHidden?"unhide":"hide"; b.classList.toggle("on",nowHidden);
+      });
+      g.appendChild(b); return g;
+    }
+
+    function build(){
+      /* un-hide the data-hidden markup, mark dimmed */
+      document.querySelectorAll('[data-hidden="1"]').forEach(function(n){ n.classList.add("ovh"); n.removeAttribute("data-hidden"); });
+      /* class heads: reorder the whole classgroup */
+      document.querySelectorAll('.seg-classhead').forEach(function(h){
+        h.insertBefore(arrowGroup(h.closest('.seg-classgroup'), '.seg-classgroup'), h.firstChild);
+      });
+      /* gallery blocks (C/D): reorder within class + hide/unhide */
+      document.querySelectorAll('.seg-blockwrap').forEach(function(b){
+        var ctl=E("span","seg-ov-ctl-wrap");
+        ctl.appendChild(arrowGroup(b,'.seg-blockwrap')); ctl.appendChild(hideBtn(b));
+        b.insertBefore(ctl, b.firstChild);
+        b.querySelectorAll('.seg-cellwrap').forEach(function(c){
+          var cc=E("span","seg-ov-cellctl");
+          var lf=E("button",null,"◀"), rt=E("button",null,"▶");
+          lf.title="move earlier"; rt.title="move later";
+          lf.addEventListener("click",function(){moveWithin(c,-1,'.seg-cellwrap');});
+          rt.addEventListener("click",function(){moveWithin(c,1,'.seg-cellwrap');});
+          var hb=E("button", c.classList.contains("ovh")?"on":null, c.classList.contains("ovh")?"unhide":"hide");
+          hb.addEventListener("click",function(){
+            var nh=!c.classList.contains("ovh"); setHidden(c,nh);
+            hb.textContent=nh?"unhide":"hide"; hb.classList.toggle("on",nh);
+          });
+          cc.appendChild(lf); cc.appendChild(rt); cc.appendChild(hb); c.appendChild(cc);
+        });
+      });
+      /* comparison rows (A/B): reorder within class + hide/unhide + judge badge */
+      document.querySelectorAll('.seg-strip').forEach(function(r){
+        var ctl=E("span","seg-ov-ctl-wrap");
+        ctl.appendChild(arrowGroup(r,'.seg-strip')); ctl.appendChild(hideBtn(r));
+        if (r.dataset.judge){
+          try{ var jv=JSON.parse(r.dataset.judge); var parts=[];
+            Object.keys(jv).forEach(function(k){ parts.push(k+(jv[k]>=1?" ✓":" "+jv[k])); });
+            ctl.appendChild(E("span","seg-ov-judge","judge win vs "+parts.join(", ")));
+          }catch(e){}
+        }
+        r.insertBefore(ctl, r.firstChild);
+      });
+      makeBar();
+    }
+
+    fetch(PLAN_URL+"?t="+Date.now(), {cache:"no-store"}).then(function(r){
+      if(!r.ok) throw new Error("HTTP "+r.status); return r.json();
+    }).then(function(j){
+      if (j && typeof j==="object" && j.sections){
+        base.updated=j.updated||""; base.sections=j.sections; planLoaded=true;
+        applyPlan(j);                       /* AUTHORITY: sync the DOM to the saved plan before controls */
+      } else { throw new Error("bad plan"); }
+    }).catch(function(e){ planLoaded=false; })
+      .then(function(){
+        build();
+        unsaved=0;
+        if (!planLoaded) setStatus("plan load FAILED — Save disabled; refresh the page","err");
+        refreshBar();
+      });
+  })();
+  </script>
+<!--OVERLAY-JS-END-->
+
+ </body>
+</html>

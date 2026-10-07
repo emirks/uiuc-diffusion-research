@@ -1,0 +1,16 @@
+id: gens/033_dino_a7_repa44/02_shufref_neutral__dai
+seq: 2
+shelf: gens
+arm: dino_a7_repa44
+harness_arm: dino_a7_repa44_shufref_neutral   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: shufref_neutral
+machine: dai
+created: 2026-09-05
+inputs: {run: runs/021_dino_a7_repa44, step: 6000}
+code: src/LTX-2-armA @ 08bdbc8
+prompt_family: prompts/001_ctt152_neutral
+prompt_sha: 0d708175fbfe
+grid_rows: 152
+videos: 152
+source: scripts/store_register.py over /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/misc/2026-08-27_dino_signal_training/gen/registry_dino_a7_repa44_shufref_neutral.jsonl
+notes: SHUFREF control: A2 rotation-by-2 derangement on the FED reference via code_source_reference; row reference unchanged => byte-identical GT pool vs 01_neutral.

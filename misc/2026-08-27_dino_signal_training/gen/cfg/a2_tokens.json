@@ -1,0 +1,13 @@
+{
+  "route": "tokens",
+  "placement": "target",
+  "token_pool": 2,
+  "guidance": 1.0,
+  "hidden": 256,
+  "checkpoint": "/taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/misc/2026-08-27_dino_signal_training/staged_adapters/A2_tokens/lora_weights_step_10000.safetensors",
+  "signal_root": "/taiga/illinois/eng/cs/jrehg/users/emirkisa/cache/armA_signals_005/feat",
+  "norm_path": "/taiga/illinois/eng/cs/jrehg/users/emirkisa/cache/armA_signals_005/NORM_dino_v4.json",
+  "norm_sha256": "db47be8890ea84ad7b89aa3a858ab4b0e941d0159f5a7142120742be771fe622",
+  "id_prefix": "eval__",
+  "source_field": "signal_source"
+}

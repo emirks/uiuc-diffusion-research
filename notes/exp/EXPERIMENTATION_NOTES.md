@@ -295,3 +295,16 @@ For each block index `l` in `layer_indices`, forward hooks are registered on:
     7- Does training-time conditioning exactly match the inference time conditioning?
         - seems like it, but need to check! 
 
+
+
+
+# Training 18 & 19
+## Problems:
+* One-sided examples' novelty is correct? start or both? 
+
+
+
+## 
+* Continue existings
+* Optical Flow Feature.
+* Cross attention.

@@ -1,0 +1,183 @@
+id: 049_transition_flow_action_gridv3__dai__2026-09-23
+seq: 49
+shelf: evals
+created: '2026-09-23'
+machine: dai (login CPU, numpy over stored features)
+instrument: scripts/metrics_v5/flow_action_eval.py @ fbf9e00
+flow_namespace: flow_u32@raft-r256-g24x32
+action_namespace: action@swin3db-k400-u32
+reference: data/processed/transitions_std121/<clip_class(reference)>/<reference>.mp4
+definition:
+  - "Two transition-fidelity metrics of the reference clip vs the generated video, over the WHOLE video"
+  - "(not the transition window), both sampled on their own at fixed fractions of their duration and"
+  - "featurized once (pairing is a store lookup by the grid row's `reference`):"
+  - "flow_mse      = mean over [32,24,32,2] of (100*(flow_gen - flow_ref))^2   -- (% of frame diagonal)^2"
+  - "flow_mse_mag  = mean over [32,24,32]   of (100*(|flow_gen| - |flow_ref|))^2   -- magnitude-only (cached)"
+  - "action_kl     = KL(p_ref || p_gen) = sum p_ref * (log p_ref - log p_gen), log-probs via log_softmax"
+  - "action_kl_rev = KL(p_gen || p_ref) ;  action_js = Jensen-Shannon (nats)"
+  - "flow from `flow_u32@raft-r256-g24x32`, action prob/logit from `action@swin3db-k400-u32`. Reference clip"
+  - "= data/processed/transitions_std121/<clip_class(reference)>/<reference>.mp4 (the same resolver"
+  - "`scripts/grid_v3/gen_dcg_v3.ref_clip_path` uses; grid.jsonl field `reference`). Rows ->"
+why: "Whole-video transition-fidelity metrics of the reference clip vs the generated video: optical-flow MSE (Flow MSE) and Kinetics-400 action-class KL (Action KL), both from stored features (evals 049)."
+caveat: "Whole-video comparison (not the transition window), scene-layout dependent for flow (the pooled 24x32 flow grid assumes a shared frame layout; gens are duration- and resolution-matched to their reference); the Kinetics-400 action classes are a video-motion SIGNATURE, not effect names. KL is asymmetric: action_kl = KL(p_ref||p_gen); action_kl_rev / action_js also stored."
+arms_scored:
+  base_cond_neutral_v3:
+    gen: store/gens/005_base_cond/04_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, flow_mse_mean: 23.1866, action_kl_mean: 5.7821}
+  base_cond_neutral_v3ed81:
+    gen: store/gens/005_base_cond/05_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, flow_mse_mean: 0.6614, action_kl_mean: 5.2863}
+  base_cond_effect_v3:
+    gen: store/gens/005_base_cond/06_effect_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, flow_mse_mean: 27.7723, action_kl_mean: 4.8978}
+  base_cond_effect_v3ed81:
+    gen: store/gens/005_base_cond/07_effect_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, flow_mse_mean: 1.2313, action_kl_mean: 4.1009}
+  ic_gen_neutral_v3:
+    gen: store/gens/001_ic_gen/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, flow_mse_mean: 21.3933, action_kl_mean: 5.4306}
+  ic_gen_neutral_v3ed81:
+    gen: store/gens/001_ic_gen/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, flow_mse_mean: 0.6883, action_kl_mean: 5.0701}
+  dualforce_control_neutral_v3:
+    gen: store/gens/013_dualforce_control/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, flow_mse_mean: 16.976, action_kl_mean: 4.9697}
+  dualforce_control_neutral_v3ed81:
+    gen: store/gens/013_dualforce_control/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, flow_mse_mean: 0.851, action_kl_mean: 4.0979}
+  dualforce_dcg_w1p5_neutral_v3:
+    gen: store/gens/030_dualforce_dcg_w1p5/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, flow_mse_mean: 17.6162, action_kl_mean: 4.861}
+  dualforce_dcg_w1p5_neutral_v3ed81:
+    gen: store/gens/030_dualforce_dcg_w1p5/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, flow_mse_mean: 0.8739, action_kl_mean: 4.0105}
+  dualforce_dcg_w3_neutral_v3:
+    gen: store/gens/031_dualforce_dcg_w3/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, flow_mse_mean: 18.3173, action_kl_mean: 4.7269}
+  dualforce_dcg_w3_neutral_v3ed81:
+    gen: store/gens/031_dualforce_dcg_w3/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, flow_mse_mean: 0.9634, action_kl_mean: 3.8285}
+  dualforce_dcg_w6_neutral_v3:
+    gen: store/gens/032_dualforce_dcg_w6/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, flow_mse_mean: 17.7094, action_kl_mean: 4.5622}
+  dualforce_dcg_w6_neutral_v3ed81:
+    gen: store/gens/032_dualforce_dcg_w6/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, flow_mse_mean: 1.0388, action_kl_mean: 3.6766}
+  dualforce_dcg_emptynull_w6_neutral_v3zs:
+    gen: store/gens/040_dualforce_dcg_emptynull_w6/05_neutral_v3zs__dai
+    rows: 238
+    coverage: {defined: 238, missing: 0, flow_mse_mean: 12.9047, action_kl_mean: 4.522}
+  dualforce_dcg_emptynull_w6_neutral_v3ed81:
+    gen: store/gens/040_dualforce_dcg_emptynull_w6/04_neutral_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, flow_mse_mean: 0.929, action_kl_mean: 3.5477}
+  dualforce_dcg_emptynull_w6_neutral_v3:
+    gen: store/gens/040_dualforce_dcg_emptynull_w6/03_neutral_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, flow_mse_mean: 13.4097, action_kl_mean: 4.3921}
+  ic_gen_effect_v3:
+    gen: store/gens/001_ic_gen/05_effect_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, flow_mse_mean: 21.2464, action_kl_mean: 4.8814}
+  ic_gen_effect_v3ed81:
+    gen: store/gens/001_ic_gen/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, flow_mse_mean: 0.7599, action_kl_mean: 4.1295}
+  dualforce_control_effect_v3:
+    gen: store/gens/013_dualforce_control/05_effect_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, flow_mse_mean: 19.4507, action_kl_mean: 4.7427}
+  dualforce_control_effect_v3ed81:
+    gen: store/gens/013_dualforce_control/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, flow_mse_mean: 0.8697, action_kl_mean: 3.9616}
+  dualforce_dcg_w6_effect_v3:
+    gen: store/gens/032_dualforce_dcg_w6/05_effect_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, flow_mse_mean: 19.0772, action_kl_mean: 4.4624}
+  dualforce_dcg_w6_effect_v3ed81:
+    gen: store/gens/032_dualforce_dcg_w6/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, flow_mse_mean: 1.0585, action_kl_mean: 3.5911}
+  dualforce_dcg_w1p5_effect_v3:
+    gen: store/gens/030_dualforce_dcg_w1p5/05_effect_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, flow_mse_mean: 18.4517, action_kl_mean: 4.6563}
+  dualforce_dcg_w1p5_effect_v3ed81:
+    gen: store/gens/030_dualforce_dcg_w1p5/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, flow_mse_mean: 0.8963, action_kl_mean: 3.852}
+  dualforce_dcg_w3_effect_v3:
+    gen: store/gens/031_dualforce_dcg_w3/05_effect_v3__dai
+    rows: 564
+    coverage: {defined: 564, missing: 0, flow_mse_mean: 19.1131, action_kl_mean: 4.5457}
+  dualforce_dcg_w3_effect_v3ed81:
+    gen: store/gens/031_dualforce_dcg_w3/06_effect_v3ed81__dai
+    rows: 204
+    coverage: {defined: 204, missing: 0, flow_mse_mean: 1.0066, action_kl_mean: 3.7742}
+  vap_author_native:
+    gen: store/gens/011_vap/05_author_native__dai
+    rows: 366
+    coverage: {defined: 366, missing: 0, flow_mse_mean: 11.3146, action_kl_mean: 4.4149}
+  vap_neutral_v3:
+    gen: store/gens/011_vap/06_neutral_v3__dai
+    rows: 366
+    coverage: {defined: 366, missing: 0, flow_mse_mean: 2.645, action_kl_mean: 5.6924}
+  vfxmaster_author_native:
+    gen: store/gens/012_vfxmaster/05_author_native__dai
+    rows: 366
+    coverage: {defined: 366, missing: 0, flow_mse_mean: 1.7406, action_kl_mean: 4.5}
+  vfxmaster_neutral_v3:
+    gen: store/gens/012_vfxmaster/06_neutral_v3__dai
+    rows: 366
+    coverage: {defined: 366, missing: 0, flow_mse_mean: 1.7918, action_kl_mean: 5.4776}
+  refvfx_author_native:
+    gen: store/gens/003_refvfx/03_author_native__dai
+    rows: 366
+    coverage: {defined: 366, missing: 0, flow_mse_mean: 1.6724, action_kl_mean: 4.7464}
+  refvfx_neutral_v3:
+    gen: store/gens/003_refvfx/05_neutral_v3__dai
+    rows: 366
+    coverage: {defined: 366, missing: 0, flow_mse_mean: 1.6251, action_kl_mean: 5.6044}
+  refvfx_effect_v3:
+    gen: store/gens/003_refvfx/04_effect_v3__cc
+    rows: 148
+    coverage: {defined: 148, missing: 0, flow_mse_mean: 34.0239, action_kl_mean: 5.2061}
+  refvfx_neutral_v3_teg:
+    gen: store/gens/003_refvfx/06_neutral_v3_teg__cc
+    rows: 148
+    coverage: {defined: 148, missing: 0, flow_mse_mean: 33.5319, action_kl_mean: 5.5662}
+  wan_flf2v_effect_v3:
+    gen: store/gens/042_wan_flf2v/01_effect_v3__cc
+    rows: 148
+    coverage: {defined: 148, missing: 0, flow_mse_mean: 85.323, action_kl_mean: 5.0264}
+  wan_flf2v_neutral_v3:
+    gen: store/gens/042_wan_flf2v/02_neutral_v3__cc
+    rows: 148
+    coverage: {defined: 148, missing: 0, flow_mse_mean: 68.3907, action_kl_mean: 5.5498}
+  wan_vace_effect_v3:
+    gen: store/gens/043_wan_vace/01_effect_v3__cc
+    rows: 148
+    coverage: {defined: 148, missing: 0, flow_mse_mean: 66.4624, action_kl_mean: 5.2058}
+  wan_vace_neutral_v3:
+    gen: store/gens/043_wan_vace/02_neutral_v3__cc
+    rows: 148
+    coverage: {defined: 148, missing: 0, flow_mse_mean: 44.9989, action_kl_mean: 5.6622}
+  dualforce_dcg_holdstart_w6_neutral_v3zs10:
+    gen: store/gens/044_dualforce_dcg_holdstart_w6/01_neutral_v3zs10__dai
+    rows: 10
+    coverage: {defined: 10, missing: 0, flow_mse_mean: 5.1465, action_kl_mean: 4.1694}

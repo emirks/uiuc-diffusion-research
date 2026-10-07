@@ -1,0 +1,16 @@
+id: gens/013_dualforce_control/02_effect__dai
+seq: 2
+shelf: gens
+arm: dualforce_control
+harness_arm: dualforce_control_effect   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: effect
+machine: dai
+created: 2026-09-03
+inputs: {run: runs/012_dualforce_control, step: 1000}
+code: src/LTX-2-dualforce @ a403323
+prompt_family: prompts/002_ctt152_effect
+prompt_sha: 35930d7d7453
+grid_rows: 152
+videos: 304
+source: scripts/store_register.py over build/dualforce_control/registry_dualforce_control_effect.jsonl
+notes: dual-force plain-FM control, EFFECT prompt variant (mirrors 01_neutral); seeds 42/43, 304 clips. Completes the base arm neutral+effect. Gen used the fixed run_gen.py (signal_id omit).

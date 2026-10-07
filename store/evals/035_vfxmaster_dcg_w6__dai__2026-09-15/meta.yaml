@@ -1,0 +1,75 @@
+id: 035_vfxmaster_dcg_w6__dai__2026-09-15
+seq: 35
+shelf: evals
+created: '2026-09-15'
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh
+harness: transition-eval v4.0.0 (eval-v4-cert worktree; the --reference-corpus amendment) — SAME instrument as evals/028 and evals/033
+instrument:   # mirrors evals/028 (same worktree, same reference pin, same corpus): VFXMaster-DCG-w6 is a drop-in head-to-head vs the LTX DCG arms (evals/028 crossfade-w6, evals/033 vae_lerp-w6)
+  reference_v4_sha256: 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8   # inherited from evals/028 instrument (same cert worktree/pin)
+  reference_corpus: 'data/processed/transitions_std121/corpus_manifest_v1_222.json  # the certified 222-clip manifest the reference pin is verified against'
+  corpus: 'data/processed/transitions_std121/corpus_manifest.json  # 677 clips / 97 classes (datasets/006) — supplies the grid-v3 pool references'
+  ceilings: certified matrix m1a_S3 + eval_ladder/ceilings_v3.json overlay (same as evals/028)
+  tau_copy: 0.858
+  matrix: m1a_S3
+  cache: misc/refvfx_baseline/probe/cache
+  env: envs-aarch64/refvfx (module miniforge3_pytorch/2.10.0); PYTHONPATH=.claude/worktrees/eval-v4-cert/src
+  job: misc/2026-09-07_eval_grid_v2/score_v3.sbatch (16 shards/arm; ED81 GEN_PREFIX_FRAMES=1)
+grid:
+  arm: VFXMaster (external, runs/011_vfxmaster; CogVideoX-Fun-V1.1-2b-InP aux + 5B VFXMaster transformer ckpt-40000) + test-time DCG w=6, pixel-dissolve null (reference's OWN first/last frame RGB crossfade)
+  code: misc/2026-09-14_vfxmaster_dcg DCG worker (VfxMasterDCGPipeline, pipeline_vfxmaster_dcg.py / gen_worker_vfxmaster_dcg.py); model/ @ 0632c5a
+  gens: gens/037_vfxmaster_dcg_w6 (seed 42 only)
+  roster: zero-shot grid v3, VFXMaster neutral (target=endpoint S1 with token stripped, ref_prompt="") — HF-121 (119 rows) + ED81-81 (102 rows)
+  families:
+    neutral_hf: prompts/010_ctt_v3_neutral (zs_subset 119/282, byte-identical grid rows; item_ids carry dualforce_control_neutral_v3 so clips join the shared pool)
+    neutral_ed: prompts/012_ctt_v3ed_neutral (full 102 rows; EffectData is zero-shot for every arm)
+  pools: reproduce evals/028's Sep-7 pool EXACTLY — pool references restricted to split_v1.3 members
+    (STD gained ed.* clips on 2026-09-08 via the ed_gapper_screen, absent from split_v1.3; the plan
+    driver misc/2026-09-14_vfxmaster_dcg/eval/plan_driver.py filters pool_refs to split_v1.3). VALIDATED
+    per-row against evals/033 (vae_lerp, itself validated against evals/028 dcg_w6): 0 pool-set /
+    reference-path mismatches, 119/119 HF + 102/102 ED81 (identical pool-ref sets and 644/816 pool items)
+  cells: reference-novelty zero_shot only; endpoint content {same, cross, foreign}; %_same headline, %_proxy ranking-only
+  seeds:
+  - 42
+source: 'Paper A3 ("guidance on prior systems") for VFXMaster: test-time DCG w=6 with a pixel-dissolve
+  null on the external VFXMaster baseline, zero-shot grid v3 only. Scored on the SAME instrument as
+  evals/028 so VFXMaster-DCG-w6 is directly comparable to the LTX DCG arms (crossfade-w6 gens/032 in
+  evals/028; vae_lerp-w6 gens/036 in evals/033). Pools reproduce evals/028 exactly (split_v1.3-restricted).
+  Levels only.'
+arms_scored:
+  vfxmaster_dcg_w6_v3zs:
+    gen: gens/037_vfxmaster_dcg_w6/01_neutral_v3zs__dai
+    run: runs/011_vfxmaster (external)
+    rows: 119
+    frames: 49
+    prefix_frames: 0
+    prompt_family: prompts/010_ctt_v3_neutral
+    planned_pool_items: 644
+    slurm_job: '3155784'
+    items_scored: 1288   # 16 shards (c0..c15): 12x80 + 4x82; all present
+    headline: # metric = mean(app_ref over GT pool)/ceiling %, effect-appearance axis (run_eval pool_means/item_pct); levels only, seed 42
+      pct_same_all_zs: 40.8   # ALL zero-shot cells (119 rows) — misc/2026-09-14_vfxmaster_dcg/eval/compare_3way.py
+      by_cell: {G-zs-same: 50.2, G-zs-cross: 41.0, G-zs-foreign: 33.9}   # (31 / 44 / 44 rows)
+  vfxmaster_dcg_w6_v3ed81zs:
+    gen: gens/037_vfxmaster_dcg_w6/02_neutral_v3ed81zs__dai
+    run: runs/011_vfxmaster (external)
+    rows: 102
+    frames: 49
+    prefix_frames: 1
+    prompt_family: prompts/012_ctt_v3ed_neutral
+    planned_pool_items: 816
+    slurm_job: '3155785'
+    items_scored: 1632   # 16 shards (c0..c15): 16x102; all present
+    headline: # metric = mean(app_ref over GT pool)/ceiling %, effect-appearance axis (run_eval pool_means/item_pct); levels only, seed 42
+      pct_same_all_zs: 37.2   # ALL zero-shot cells (102 rows) — misc/2026-09-14_vfxmaster_dcg/eval/compare_3way.py
+      by_cell: {G-zs-same: 32.3, G-zs-cross: 32.5, G-zs-foreign: 46.8}   # (34 / 34 / 34 rows)
+caveats:
+  - Seed 42 only (matches crossfade-w6 gens/032 and vae_lerp-w6 gens/036, both seed-42-only).
+  - Pool references restricted to split_v1.3 (evals/028's Sep-7 population) to stay a fair head-to-head
+    despite post-028 STD growth; no generation row was dropped.
+  - VFXMaster is a one-sided I2V model conditioned on the START endpoint only. The 38 two-sided HF rows
+    use start-frame-only conditioning (suffix ignored); they have no directly-comparable non-DCG
+    two-sided VFXMaster baseline (the established one-sided externals never populated two-sided cells).
+  - VFXMaster geometry is 480x640x49f @ fps 9.719 (duration-matched to 121f@24; native aspect off — as in
+    gens/012_vfxmaster); scored via the same v4 pipeline (frame-count/geometry robust). GEN_PREFIX_FRAMES=1
+    on ED matches how the model was conditioned.
+  - Levels only; margins (Δpp vs base) are computed by the paper tables, not here.

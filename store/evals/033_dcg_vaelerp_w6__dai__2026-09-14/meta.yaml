@@ -1,0 +1,61 @@
+id: 033_dcg_vaelerp_w6__dai__2026-09-14
+seq: 33
+shelf: evals
+created: '2026-09-14'
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh
+harness: transition-eval v4.0.0 (eval-v4-cert worktree; the --reference-corpus amendment) — SAME instrument as evals/028
+instrument:   # mirrors evals/028 (same worktree, same reference pin, same corpus): vae_lerp-w6 is a drop-in head-to-head vs crossfade-w6 (evals/028)
+  reference_v4_sha256: 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8   # inherited from evals/028 instrument (same cert worktree/pin)
+  reference_corpus: 'data/processed/transitions_std121/corpus_manifest_v1_222.json  # the certified 222-clip manifest the reference pin is verified against'
+  corpus: 'data/processed/transitions_std121/corpus_manifest.json  # 677 clips / 97 classes (datasets/006) — supplies the grid-v3 pool references'
+  ceilings: certified matrix m1a_S3 + eval_ladder/ceilings_v3.json overlay (same as evals/028)
+  tau_copy: 0.858
+  matrix: m1a_S3
+  cache: misc/refvfx_baseline/probe/cache
+  env: envs-aarch64/refvfx (module miniforge3_pytorch/2.10.0); PYTHONPATH=.claude/worktrees/eval-v4-cert/src
+  job: misc/2026-09-07_eval_grid_v2/score_v3.sbatch (16 shards/arm; ED81 GEN_PREFIX_FRAMES=1)
+grid:
+  arm: dualforce_control @ runs/012 step 1000 (r128/a128, one_way) + test-time DCG w=6, null_kind=vae_lerp (VAE-latent dissolve)
+  gens: gens/036_dualforce_dcg_vaelerp_w6 (seed 42 only)
+  roster: zero-shot grid v3, dualforce_control neutral — HF-121 (119 rows) + ED81-81 (102 rows)
+  families:
+    neutral_hf: prompts/010_ctt_v3_neutral (zs_subset 119/282, byte-identical rows)
+    neutral_ed: prompts/012_ctt_v3ed_neutral (full 102 rows; EffectData is zero-shot for every arm)
+  pools: reproduce evals/028's Sep-7 pool EXACTLY — pool references restricted to split_v1.3 members
+    (STD gained ed.* clips on 2026-09-08 via the ed_gapper_screen, absent from split_v1.3; the plan
+    driver misc/2026-09-14_dcg_vae_lerp/eval/plan_driver.py filters pool_refs to split_v1.3, VALIDATED
+    per-row against evals/028 dcg_w6 manifests: 0 pool-set / reference-path mismatches, 102/102 ED81 + 119/119 HF)
+  cells: reference-novelty zero_shot only; endpoint content {same, cross, foreign}; %_same headline, %_proxy ranking-only
+  seeds:
+  - 42
+source: 'DCG vae_lerp (VAE-latent dissolve) null at w=6 on the dualforce_control arm, zero-shot grid v3 only.
+  Scored on the SAME instrument as evals/028 so vae_lerp-w6 is directly comparable to the crossfade-w6
+  null (gens/032, scored in evals/028). Pools reproduce evals/028 exactly (split_v1.3-restricted). Levels only.'
+arms_scored:
+  dualforce_dcg_vaelerp_w6_v3zs:
+    gen: gens/036_dualforce_dcg_vaelerp_w6/01_neutral_v3zs__dai
+    run: runs/012_dualforce_control
+    step: 1000
+    rows: 119
+    frames: 121
+    prefix_frames: 9
+    prompt_family: prompts/010_ctt_v3_neutral
+    planned_pool_items: 644
+    slurm_job: '3151239'
+    items_scored: pending (scoring array in flight)
+  dualforce_dcg_vaelerp_w6_v3ed81zs:
+    gen: gens/036_dualforce_dcg_vaelerp_w6/02_neutral_v3ed81zs__dai
+    run: runs/012_dualforce_control
+    step: 1000
+    rows: 102
+    frames: 81
+    prefix_frames: 1
+    prompt_family: prompts/012_ctt_v3ed_neutral
+    planned_pool_items: 816
+    slurm_job: '3151240'
+    items_scored: pending (scoring array in flight)
+caveats:
+  - Seed 42 only (matches crossfade-w6 gens/032, also seed-42-only).
+  - Pool references restricted to split_v1.3 (evals/028's Sep-7 population) to stay a fair head-to-head
+    vs crossfade-w6 despite post-028 STD growth; no generation row was dropped.
+  - Levels only; margins (Δpp vs base) are computed by the paper tables, not here.

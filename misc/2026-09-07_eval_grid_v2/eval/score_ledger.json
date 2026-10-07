@@ -1,0 +1,20 @@
+{
+ "base_cond_neutral_v3": "3109631",
+ "base_cond_neutral_v3#p2": "3109949",
+ "base_cond_neutral_v3ed81": "3109950",
+ "ic_gen_effect_v3ed81": "3109951",
+ "ic_gen_neutral_v3ed81": "3109954",
+ "dualforce_control_neutral_v3": "3109955",
+ "dualforce_control_neutral_v3ed81": "3109956",
+ "dualforce_dcg_w6_neutral_v3ed81": "3109957",
+ "ic_gen_neutral_v3": "3110072",
+ "ic_gen_effect_v3": "3110193",
+ "dualforce_dcg_w6_neutral_v3": "3110532",
+ "base_cond_effect_v3ed81": "3110796",
+ "dualforce_control_effect_v3ed81": "3110797",
+ "base_cond_effect_v3": "3110854",
+ "dualforce_dcg_w6_effect_v3ed81": "3111019",
+ "dualforce_control_effect_v3": "3111140",
+ "dualforce_dcg_w6_effect_v3": "3112836",
+ "dualforce_dcg_w6_effect_v3#p2": "3112962"
+}

@@ -1,0 +1,67 @@
+id: 021_dino_a7_repa44
+seq: 21
+shelf: runs
+created: 2026-09-05          # trained 2026-09-04 03:57 -> 2026-09-05 10:38 CDT on DeltaAI GH200 (aarch64); resumable singleton chunk chain
+machine: dai — NCSA DeltaAI GH200 (aarch64), ghx4, bhwp-dtai-gh + bgms-dtai-gh (chunks split by FairShare); 2 GPU × grad_accum 4 (eff batch 8)
+source: >
+  Campaign 2026-08-27_dino_signal_training — arm A7_repa44, the TRANSPORT-REPA arm. A7 = A0_baseline recipe
+  (dataset 005_ctt_v2plus_s6reshape, owner mix, seed 42, rank 128, lr 1e-4, batch 1 × accum 4, 2×GH200,
+  reference.probability 1.0, WSD warmup 100 / decay_frac 0.25) with exactly: steps 6000 + an auxiliary
+  transport-REPA loss. `signal.enabled: false` — NOTHING is injected (the injection forward is bitwise A0);
+  A7 changes the OBJECTIVE, not the input. Every step the VIDEO hidden after transformer block 16 (output),
+  at the generated target tokens only, is passed through a small head (LayerNorm(4096) -> Linear(4096,1024)
+  -> SiLU -> Linear(1024,44) zero-init) and regressed onto the TARGET clip's OWN 44-ch NORM-v4 z-scored DINO
+  transition program (group-balanced MSE over the 5 channel groups). total = fm_loss + 0.25·aux + Σ probe;
+  λ=0.25 constant, all σ uniform. Detached depth probes at blocks 8/24/32 (telemetry only). A reference probe
+  (matched/deranged/nodemo, 8 pinned rows × σ∈{0.2,0.5,0.8}) runs every 500 steps. INFERENCE IS UNCHANGED:
+  the aux head is train-only. Registered at the FINAL step-6000 checkpoint (target reached; no earlier ship).
+  Implementation record: misc/2026-08-27_dino_signal_training/A7_IMPL.md; pre-registration A7_PREREG.md.
+inputs:
+  dataset: datasets/005_ctt_v2plus_s6reshape   # 138,147-pair; NORM_dino_v4 (pin db47be88…771fe622); aux target = each row's OWN target-clip 44-ch signal (cache/armA_signals_005/feat)
+trainer:
+  checkout: src/LTX-2-armA              # fork, branch arma-train (upstream Lightricks; NOT pushed)
+  branch: arma-train
+  commit: 08bdbc8                        # base f53c8a6 + one commit "signal(repa): transport-REPA aux loss (A7_repa44)"
+  entry: RESUMABLE SINGLETON CHUNK CHAIN (CHUNK_STEPS=500 per chunk) via misc/2026-08-27_dino_signal_training/build/submit_chain.sh + train_chunk.sbatch (accelerate launch --num_processes 2 scripts/train.py); config.yaml copied here
+  cpu_gate: build/gate_a7_cpu.py 31 PASS / 0 FAIL; pytest packages/ltx-trainer 27 passed
+chunk_jobs: [3082126, 3082127, 3082128, 3082130, 3082131, 3082132, 3082133, 3082140, 3082141, 3082142, 3082143, 3082144, 3089110]
+  # 3082141 died at 4480 (NCCL allreduce watchdog timeout, infrastructure); chain self-healed — 3082142 resumed from 4250. 3089110 = top-up chunk that reached 06000 (rc=0, "[chunk] DONE step 06000"). 3089111 exited in 14 s (target already existed).
+wandb:
+  run_id: e8chid1d                       # offline; run name A7_repa44__08bdbc8__6k, project dino_signal, tags [dino_signal, A7_repa44, transport_repa, coldstart, rank128, ctt_v2plus_s6reshape]
+  dirs: src/LTX-2-armA/packages/ltx-trainer/wandb/run-*-e8chid1d (13 chunk dirs); parsed CSV misc/2026-08-27_dino_signal_training/eval/telemetry_2026-09-02/A7_repa44/e8chid1d.csv (6466 rows, global_step 0..6000)
+model: LTX-2 19B dev (frozen)
+adapter: IC-LoRA r128/a128; one-way reference attention; RAW video reference. target_modules attn_ffn (10 modules). Saved safetensors carries 960 LoRA + 16 aux_program.* (fp32) keys; the aux head is train-only and IGNORED at inference (run_gen peft loader strict=False).
+rank: 128
+alpha: 128
+dropout: 0.0
+reference_attention: one_way
+lr: 1e-4, WSD schedule (warmup 100 / decay_frac 0.25)
+seed: 42
+effective_batch: 8                       # batch_size 1 × grad_accum 4 × 2 GPU
+steps: 6000                              # cold start (coldstart tag); NO warm start
+aux_program:
+  block: 16                              # 0-based, block OUTPUT hidden, generated target tokens only
+  target: each row's OWN target-clip 44-ch NORM-v4 DINO signal (SignalStore id_for(stratum, target))
+  head: LayerNorm(4096, affine=False) -> Linear(4096,1024) -> SiLU -> Linear(1024,44) (last layer zero-init, fp32)
+  loss: mean of 5 per-group means (G1 32 / G2 4 / G3 2 / G4 3 / G5 3), MSE
+  lambda: 0.25                           # constant, all σ uniform
+  depth_probes: [8, 24, 32]              # detached (no trunk grad), telemetry only
+checkpoint_sha256:
+  lora_weights_step_06000.safetensors: 575a32f354c9fc51f670586d386f2912a72622203c237a0e3d16b3839cc3b5d9
+source_location: outputs/dino_signal_005/A7_repa44/keep (working tree; arms.yaml gen pins this path — final copied here via dd, sha-verified identical)
+telemetry:                               # NEUTRAL numbers (advisor owns B1/B2/B3 verdicts); parse_wandb over e8chid1d
+  fm_loss_5900_6000_mean: 0.3139
+  aux_loss_5900_6000_mean: 0.3258
+  ref_probe_B1_window:                   # matched / Δderanged / Δnodemo / ratio(Δder÷matched) ; fm matched / fm Δderanged
+    step_4500: {aux_matched: 0.28191, aux_delta_deranged: 0.00105, aux_delta_nodemo: 0.00484, ratio: 0.0037, fm_matched: 0.36085, fm_delta_deranged: 0.00591}
+    step_5000: {aux_matched: 0.27841, aux_delta_deranged: 0.00134, aux_delta_nodemo: 0.00607, ratio: 0.0048, fm_matched: 0.36005, fm_delta_deranged: 0.00659}
+    step_5500: {aux_matched: 0.27105, aux_delta_deranged: 0.00097, aux_delta_nodemo: 0.00667, ratio: 0.0036, fm_matched: 0.35940, fm_delta_deranged: 0.00654}
+    step_6000: {aux_matched: 0.26690, aux_delta_deranged: 0.00135, aux_delta_nodemo: 0.00578, ratio: 0.0051, fm_matched: 0.35822, fm_delta_deranged: 0.00748}
+  depth_aux_at_6000: {b8: 0.4587, b16: 0.3503, b24: 0.3453, b32: 0.3263}
+  peak_gpu_memory_gb: 63.59
+  step_time_median_s: 12.79
+notes: >
+  B1 bar (advisor, A7_PREREG.md) is aux_delta_deranged/aux_matched ≥ 0.30 over probes 4500-6000 — recomputed
+  and read by the advisor, NOT here. loss guard: fm_loss last-1k 0.314 (A2 was 0.317 @10k). Inference path is
+  identical to A0 (reference-only, no signal port). Comparators are the EXISTING A0 (dataset 004, 10k) and A2
+  (dataset 005, 10k) — cross-arm cells carry the 004-vs-005 / 10k-vs-6k confounds (owner: no A0-005 twin).

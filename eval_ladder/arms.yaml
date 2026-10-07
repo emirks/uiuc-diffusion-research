@@ -5,7 +5,10 @@
 # (fixed-ckpt selection, pre-registered — no post-hoc best-checkpoint picking).
 
 token: sksz            # transition-slot token; probe-gated (fallback qvtr). Set by train/token_verdict.py.
-seeds: [42, 43, 44, 45]   # >=2 seeds per eval item. 44/45 added by exp_078 for the
+seeds: [42, 43, 44, 45, 46, 47, 48, 49]   # >=2 seeds per eval item. 44/45 added by exp_078 for the
+                          # (46-49 added 2026-08-14 by campaign misc/2026-08-14_timing_relay for the
+                          #  advisor-specified 8-seed color-sweep; seed only drives the noise generator,
+                          #  arms_cfg["seeds"] is used solely as a soft guard in run_gen.py:203.)
                           # advisor-specified NOISE FLOOR: two independent proxy evals of
                           # ic_gen@5000 ({42,43} vs {44,45}) give the per-cell SD that the
                           # promote bar must be >=2x. Claim-bearing runs still use 42/43.
@@ -73,6 +76,43 @@ arms:
     note: "prompt + endpoint conditioning (prefix, and suffix if two-sided), no reference.
       Baseline 2 — the honest no-adapter twin of the IC-LoRA arms."
 
+  # ---- metric-eval campaign (2026-08-06): NEUTRAL no-demo controls = the specificity ZERO anchor
+  # AND the caption V-neutral probe. Same as base_*_ctt but prompt = V-neutral (start scene only,
+  # sksz + effect clause BOTH removed), no demo. base_cond_neutral keeps endpoint conditioning;
+  # base_prompt_neutral is unconditional. Rows via --extra-registry (arm-filtered).
+  base_cond_neutral:
+    kind: base
+    adapter: null
+    targets: null
+    note: "endpoint conditioning + V-neutral prompt, NO effect clause, NO demo. The specificity zero anchor."
+  base_prompt_neutral:
+    kind: base
+    adapter: null
+    targets: null
+    conditioning: none
+    note: "V-neutral prompt only, no conditioning, no demo. Cleanest zero."
+
+  # --- controllability probe (misc/2026-08-13_controllability, pre-registered) ---
+  ctt_v3_ctl:
+    kind: generalist
+    targets: attn_ffn
+    step: 6000
+    attention: one_way
+    adapter_template: store/runs/008_ctt_v3_wsd/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "champion, controllability probe rows (registry_ctl_ctt_v3). rank/alpha 128."
+  ctt_v2_ctl:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: store/runs/002_ctt_v2/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "ctt_v2 comparison arm, controllability probe rows. rank/alpha 128."
+  base_ctl:
+    kind: base
+    adapter: null
+    targets: null
+    note: "base LTX-2, controllability probe rows (effect prompts + endpoint conditioning, NO demo)."
+
   spec_animalization:      {kind: specialist, class: animalization,      targets: attn, step: 2000}
   spec_color_rain:         {kind: specialist, class: color_rain,         targets: attn, step: 2000}
   spec_gas_transformation: {kind: specialist, class: gas_transformation, targets: attn, step: 2000}
@@ -90,6 +130,17 @@ arms:
     targets: attn_ffn
     step: 5000
     note: IC-LoRA; the reference clip carries the transition. Trained on held-in classes only.
+
+  # ---- metric-eval campaign (2026-08-06): the missing adapter x text 2x2 cell = ic_gen + effect-in-prompt.
+  # ADDITIVE — ic_gen above is untouched. SAME adapter as ic_gen (explicit path so a new arm name does not
+  # break adapter_template); the ONLY difference vs ic_gen is the prompt (effect clause after the sksz token,
+  # supplied via --extra-registry registry_ic_gen_effect.jsonl). bidirectional ref attention (ic_gen default),
+  # rank/alpha 32. Twin of the effect-free ic_gen; scored against ctt_v2 / ctt_v2_leaky for the 2x2.
+  ic_gen_effect:
+    kind: generalist
+    targets: attn_ffn
+    adapter: outputs/training/ladder2/ic_gen/checkpoints/lora_weights_step_05000.safetensors
+    note: "ic_gen adapter, effect described in prompt (the missing adapter x text 2x2 cell)."
 
   # ---- exp_077: the D2 generalist. ADDITIVE — ic_gen above is untouched, and this arm's rows
   # live in registry_d2gen.jsonl (a field-for-field copy of ic_gen's four claim cells with only
@@ -153,6 +204,313 @@ arms:
     attention: one_way
     note: "IC-LoRA on the CTT v2 dataset (56,368 pairs, 1,670 operators, 5 strata). rank 128,
       lr 1e-4, one-way reference attention, mix S0 5 / S1 12 / S2a 34.36 / S2b 35.64 / S4 13."
+
+  ctt_v2_pushA_effect:
+    kind: generalist
+    targets: attn_ffn
+    step: 6000
+    attention: one_way
+    adapter_template: store/runs/008_ctt_v3_wsd/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "ctt_v3 champion adapter, EFFECT prompt (registry_ctt_v2_pushA_effect). Primary: vs ctt_v2_leaky_regen."
+  ctt_v2_pushB_effect:
+    kind: generalist
+    targets: attn_ffn
+    step: 6000
+    attention: one_way
+    adapter_template: store/runs/009_pushB_wsd_hs302050/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "Arm B (+high-sigma) adapter, EFFECT prompt. B's last audition."
+  ctt_v2_pushA_plain:
+    kind: generalist
+    targets: attn_ffn
+    step: 6000
+    attention: one_way
+    adapter_template: store/runs/008_ctt_v3_wsd/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "ctt_v3 champion, PLAIN prompt, DeltaAI regen (co-located 2x2 cell)."
+  ctt_v2_leaky_regen:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: store/runs/002_ctt_v2/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "ctt_v2 champion adapter, EFFECT prompt, DeltaAI regen = the co-located leaky baseline (vs published 91.3 eps-gen)."
+  ctt_v2_plain_regen:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: store/runs/002_ctt_v2/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "ctt_v2 champion adapter, PLAIN prompt, DeltaAI regen (co-located 2x2 cell; vs published 82.5 eps-gen)."
+
+  # ---- DUAL-FORCE control arm (campaign `dualforce`, trained on DeltaAI GH200 this session, job 2975760).
+  # The plain-FM CONTROL: the ctt_v2 IC-LoRA recipe warm-started from runs/002@10000 with the dual-force
+  # trainer's surgery/KD objectives DISABLED (surgery.enabled=false, kd.enabled=false). Registered at the
+  # STEP-1000 checkpoint. Architecturally identical to ctt_v2/ctt_v3 (960 plain LoRA tensors, r128, attn_ffn,
+  # no encoder/bottleneck) — generated with the same proven one_way stack (src/LTX-2-ctt-v2-train packages).
+  # `adapter` is an EXPLICIT store path (--step cannot override; step lives in run/gen meta). Two variant keys
+  # (neutral/effect) share one checkpoint — canonical arm `dualforce_control` (store/ARMS.md).
+  # rank/alpha 128 — pass --rank 128 --alpha 128 (run_gen defaults to 32). attention one_way REQUIRED.
+  dualforce_control_neutral:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "dual-force plain-FM control, NEUTRAL prompt (registry_dualforce_control_neutral). runs/012@1000, r128/a128, one_way."
+  dualforce_control_effect:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "dual-force plain-FM control, EFFECT prompt (registry_dualforce_control_effect). runs/012@1000, r128/a128, one_way."
+
+  # ---- GRID v3 (design 3.0.0, 2026-09-07): the SAME runs/012@1000 adapter on the v3 families. `_v3` = prompts/010 (neutral) /
+  # 011 (effect): Higgsfield + reserve rows at the corpus 121 f. `_v3ed81` = prompts/012 / 013: the EffectData tier at its NATIVE
+  # 81 f with the frame-0 anchor — generate AND plan with GEN_FRAMES=81 GEN_PREFIX_FRAMES=1 (encode_conditioning.prefix_frames()).
+  # base_cond twins: no adapter, prefix conditioning, no reference (stamped with --strip-token; rows carry use_reference=false, no_twin=true).
+  dualforce_control_neutral_v3:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 neutral, prompts/010_ctt_v3_neutral sha d8b0f6d3502b (registry_dualforce_control_neutral_v3). runs/012@1000, r128/a128, one_way."
+  dualforce_control_effect_v3:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 effect, prompts/011_ctt_v3_effect sha 896afdd33e40 (registry_dualforce_control_effect_v3)."
+  dualforce_control_neutral_v3ed81:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 EffectData tier neutral, prompts/012_ctt_v3ed_neutral sha 423ea86ce085; NATIVE 81 f + frame-0 anchor: GEN_FRAMES=81 GEN_PREFIX_FRAMES=1."
+  dualforce_control_effect_v3ed81:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 EffectData tier effect, prompts/013_ctt_v3ed_effect sha d896a41b5ae0; GEN_FRAMES=81 GEN_PREFIX_FRAMES=1."
+  base_cond_neutral_v3:
+    kind: base
+    adapter: null
+    targets: null
+    note: "grid v3 base twin (prompt + prefix/suffix conditioning, NO reference), prompts/010 strip_sksz sha 30edd3dc8c4f (registry_base_cond_neutral_v3)."
+  base_cond_neutral_v3ed81:
+    kind: base
+    adapter: null
+    targets: null
+    note: "grid v3 EffectData-tier base twin, prompts/012 strip_sksz sha 6e2b9d5dd6da; GEN_FRAMES=81 GEN_PREFIX_FRAMES=1."
+
+  # ---- GRID v3 paper arms (2026-09-07, scripts/grid_v3/launch_gen.py stamp): the four arms x neutral/effect x families
+  base_cond_effect_v3:
+    kind: base
+    adapter: null
+    targets: null
+    note: "grid v3 effect, prompts/011_ctt_v3_effect (strip_sksz)"
+  base_cond_effect_v3ed81:
+  base_cond_effect_edscreen:
+    kind: base
+    adapter: null
+    targets: null
+    note: "EffectData gapper screen (misc/2026-09-08_ed_gapper_screen): prompt-only effect arm, 300 effects x 3 same rows, seed 42; native 81 f + frame-0 anchor: GEN_FRAMES=81 GEN_PREFIX_FRAMES=1; prompts_effect_edscreen sha 282660f3f940"
+    kind: base
+    adapter: null
+    targets: null
+    note: "grid v3 effect, prompts/013_ctt_v3ed_effect (strip_sksz); EffectData tier NATIVE 81 f + frame-0 anchor: GEN_FRAMES=81 GEN_PREFIX_FRAMES=1"
+  ic_gen_neutral_v3:
+    kind: generalist
+    targets: attn_ffn
+    step: 5000
+    adapter: store/runs/001_ic_gen/checkpoints/lora_weights_step_05000.safetensors
+    note: "grid v3 neutral, prompts/010_ctt_v3_neutral (runs/001@5000, r32/a32, bidirectional)"
+  ic_gen_neutral_v3ed81:
+    kind: generalist
+    targets: attn_ffn
+    step: 5000
+    adapter: store/runs/001_ic_gen/checkpoints/lora_weights_step_05000.safetensors
+    note: "grid v3 neutral, prompts/012_ctt_v3ed_neutral; EffectData tier NATIVE 81 f + frame-0 anchor: GEN_FRAMES=81 GEN_PREFIX_FRAMES=1 (runs/001@5000, r32/a32, bidirectional)"
+  ic_gen_effect_v3:
+    kind: generalist
+    targets: attn_ffn
+    step: 5000
+    adapter: store/runs/001_ic_gen/checkpoints/lora_weights_step_05000.safetensors
+    note: "grid v3 effect, prompts/011_ctt_v3_effect (runs/001@5000, r32/a32, bidirectional)"
+  ic_gen_effect_v3ed81:
+    kind: generalist
+    targets: attn_ffn
+    step: 5000
+    adapter: store/runs/001_ic_gen/checkpoints/lora_weights_step_05000.safetensors
+    note: "grid v3 effect, prompts/013_ctt_v3ed_effect; EffectData tier NATIVE 81 f + frame-0 anchor: GEN_FRAMES=81 GEN_PREFIX_FRAMES=1 (runs/001@5000, r32/a32, bidirectional)"
+  dualforce_dcg_w6_neutral_v3:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 neutral, prompts/010_ctt_v3_neutral (runs/012@1000 + test-time DCG w=6, crossfade null, gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py)"
+  dualforce_dcg_w6_neutral_v3ed81:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 neutral, prompts/012_ctt_v3ed_neutral; EffectData tier NATIVE 81 f + frame-0 anchor: GEN_FRAMES=81 GEN_PREFIX_FRAMES=1 (runs/012@1000 + test-time DCG w=6, crossfade null, gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py)"
+  dualforce_dcg_w6_effect_v3:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 effect, prompts/011_ctt_v3_effect (runs/012@1000 + test-time DCG w=6, crossfade null, gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py)"
+  dualforce_dcg_w6_effect_v3ed81:
+  dualforce_dcg_w6_effect_edscreen:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "EffectData gapper screen stage B: DCG w=6 (crossfade null, gs4/stg1) on the 40 lowest prompt-only effects, one row each (screen endpoint 0), seed 42, native 81 f + frame-0 anchor; prompt = base prompt + token"
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 effect, prompts/013_ctt_v3ed_effect; EffectData tier NATIVE 81 f + frame-0 anchor: GEN_FRAMES=81 GEN_PREFIX_FRAMES=1 (runs/012@1000 + test-time DCG w=6, crossfade null, gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py)"
+
+  # ---- DUAL-FORCE treatment arm (campaign `dualforce`, trained on DeltaAI GH200 this session, job 2976278).
+  # The text-crutch-distillation TREATMENT: the SAME ctt_v2 IC-LoRA recipe / SAME warm-start (runs/002@10000) as
+  # dualforce_control above, with the dual-force trainer's KD objective ENABLED (kd.enabled=true, surgery.enabled=false).
+  # KD = text-crutch self-distillation — an effect-TEACHER (conditions_effect; derive_effect_from=null) supervises the
+  # neutral-STUDENT with λ_target 0.3 in the high-σ band (high_band_sigma 0.7, warmup 500). The ONLY delta vs the control
+  # is the training objective; the checkpoint is byte-for-byte a plain r128 attn_ffn LoRA (960 tensors, no encoder/bottleneck),
+  # so it GENERATES exactly like the control — same one_way stack (src/LTX-2-ctt-v2-train packages), --rank 128 --alpha 128.
+  # `adapter` is an EXPLICIT store path (--step cannot override; step lives in run/gen meta). Canonical arm `dualforce_kd`.
+  dualforce_kd_neutral:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/013_dualforce_kd/checkpoints/lora_weights_step_01000.safetensors
+    note: "dual-force text-crutch KD treatment, NEUTRAL prompt (registry_dualforce_kd_neutral). runs/013@1000, r128/a128, one_way."
+  dualforce_kd_effect:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/013_dualforce_kd/checkpoints/lora_weights_step_01000.safetensors
+    note: "dual-force text-crutch KD treatment, EFFECT prompt (registry_dualforce_kd_effect). runs/013@1000, r128/a128, one_way."
+
+  # ---- COUNTERFACTUAL-TWIN treatment arm (campaign `counterfactual_training`, trained DeltaAI GH200, job 2982505).
+  # Counterfactual twin supervision: SAME ctt_v2 IC-LoRA recipe / SAME warm-start (runs/002@10000) as
+  # dualforce_control/kd, with the trainer's twin objective ENABLED (redirect + differential on S2 same-endpoint
+  # counterfactuals; band σ∈[0.5,0.9]; surgery/kd OFF). The ONLY delta vs the control is the training objective;
+  # the checkpoint is byte-for-byte a plain r128 attn_ffn LoRA (960 tensors, no encoder/bottleneck) — so it
+  # GENERATES exactly like the control — same one_way stack, --rank 128 --alpha 128. Canonical arm `dualforce_twin`.
+  dualforce_twin_neutral:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/014_dualforce_twin/checkpoints/lora_weights_step_01000.safetensors
+    note: "counterfactual-twin treatment, NEUTRAL prompt (registry_dualforce_twin_neutral). runs/014@1000, r128/a128, one_way."
+
+  # ---- campaign 2026-08-20_s0s1_counterfactual: the REDESIGNED redirect on S0+S1 (runs/015, job 2988156).
+  # Single-variable over 012: 012's objective/sampler/warm-start PLUS a redirect-only twin term on
+  # same-content×different-operator S0+S1 cells (L_diff dropped, matched=pure FM, cond_A, seam-masked,
+  # σ_red∼U[0.5,0.9], λ_red 0.25). Plain r128 attn_ffn LoRA → same one_way inference stack. --rank 128 --alpha 128.
+  dualforce_s0s1redirect_neutral:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/015_dualforce_s0s1redirect/checkpoints/lora_weights_step_01000.safetensors
+    note: "S0+S1 counterfactual redirect treatment, NEUTRAL prompt (registry_dualforce_s0s1redirect_neutral). runs/015@1000, r128/a128, one_way."
+
+  # ---- campaign 2026-08-21_contrastive_training: CONTRASTIVE treatment over 012 (runs/016, job 2998010,2999095,2999096,2999097,2999098).
+  # 012's recipe + one paired-preference (DPO-style, ref = frozen warm-start) term per step on S0+S1 same-content
+  # pairs: converge to the demonstrated transition / escape from a wrong one; β 8.0, λ 0.25, σ∼U[0.5,0.9].
+  # Plain r128 attn_ffn LoRA → same one_way inference stack. --rank 128 --alpha 128.
+  flowsig_split_neutral:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter: store/runs/019_flowsig_split/checkpoints/lora_weights_step_10000.safetensors
+    note: >-
+      flowsig arm SPLIT @10000 in its INTENDED inference regime (`both`): pixel reference in
+      context + matched transition program, with the FIELD as 1,280 RoPE-positioned sequence
+      tokens and the tempo on the adaLN cond_proj hook. The standard neutral 152-grid arm
+      treatment, row-identical to flowsig_ball_neutral so the two injection routes pair exactly.
+      Program + token stream attached at inference by FLOWSIG_CONFIG (cfg/02_neutral_split.json).
+  flowsig_split_pilot:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter: store/runs/019_flowsig_split/checkpoints/lora_weights_step_10000.safetensors
+    note: >-
+      flowsig arm SPLIT @10000 — the same 18-ch transition program as b_all, but the FIELD rides
+      the sequence as 1,280 RoPE-positioned tokens (2x spatially pooled, co-located with the
+      target block, learned type embedding) while only the tempo rides the adaLN cond_proj hook.
+      Same recipe variant `textdrop-coupled`. Generated in the production setting (mode `both`:
+      pixel reference in context + matched program + neutral caption). Program + token stream are
+      attached at inference by FLOWSIG_CONFIG (step2eval/gen/cfg/06_split_both_matched.json).
+  flowsig_ball_neutral:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter: store/runs/018_flowsig_ball/checkpoints/lora_weights_step_10000.safetensors
+    note: >-
+      flowsig arm b_all @10000 in its INTENDED inference regime (`both`): the pixel reference
+      stays in context AND the matched transition program is injected through the per-token
+      adaLN cond_proj hook. The standard neutral 152-grid arm treatment. The program is attached
+      at inference by FLOWSIG_CONFIG (step2eval/gen/cfg/01_neutral.json), not by this file.
+  flowsig_ball_pilot:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter: store/runs/018_flowsig_ball/checkpoints/lora_weights_step_10000.safetensors
+    note: >-
+      flowsig arm b_all @10000 (transition-PROGRAM through the per-token adaLN cond_proj hook).
+      r128/a128 one_way. The program itself is NOT in arms.yaml: it is attached at inference by
+      FLOWSIG_CONFIG (misc/2026-08-24_flow_signal_conditioning/step2eval/build/flowsig_hook.py),
+      because the conditioning MODE (both/code_only/ref_only/none), the program source (matched
+      vs deranged), signal-CFG w and the T5 shuffle all vary per generated variant while the
+      adapter does not. Registry rows carry program_source / program_source_deranged.
+  dualforce_contrast_neutral:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/016_dualforce_contrast/checkpoints/lora_weights_step_01000.safetensors
+    note: "contrastive treatment over 012, NEUTRAL prompt (registry_dualforce_contrast_neutral). runs/016@1000, r128/a128, one_way."
+
+  # ---- campaign `2026-09-02_null_contrast`. FOLDED "control + lose" (contrast_axis=control_null): the plain-FM
+  # control 012 PLUS one lose term = the same row/target with reference := lerp-dissolve of the demo's own endpoints
+  # (the DCG null, moved into training). Architecturally identical to ctt_v2/012/016 (plain r128 attn_ffn one_way,
+  # 960 tensors) → same one_way IC-LoRA inference stack. Compare @1000 vs dualforce_control@1000 (co-scored A/B).
+  dualforce_null_contrast_neutral:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/020_dualforce_null_contrast/checkpoints/lora_weights_step_01000.safetensors
+    note: "control+lose (lerp-null reference), NEUTRAL prompt (registry_dualforce_null_contrast_neutral). runs/020@1000, r128/a128, one_way."
+  dualforce_null_contrast_effect:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/020_dualforce_null_contrast/checkpoints/lora_weights_step_01000.safetensors
+    note: "control+lose (lerp-null reference), EFFECT prompt (registry_dualforce_null_contrast_effect). runs/020@1000, r128/a128, one_way."
 
   # ---- campaign `bneck_coupling` (2026-07-31). The certified transition encoder, FROZEN, coupled
   # into the same CTT v2 IC-LoRA recipe as `ctt_v2` above. The ONLY delta versus `ctt_v2` is the
@@ -229,5 +587,565 @@ arms:
     note: "Calibrator B / must-ALIVE anchor. ctt_v2's own adapter, raw reference deranged. Pixel
       measurement only — never scored."
 
-adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors
+  # ---- campaign `bneck_redesign` RIDE-ALONGS (advisors/DESIGN_LOCK.md §3). All three pin an
+  # EXISTING checkpoint via a per-arm adapter_template override and are GENERATION-only (never
+  # trained). rank/alpha 128 — pass --rank 128 --alpha 128 (run_gen.py defaults to 32).
 
+  # RAW-reference paired-read control — the BAND-SETTER. The incumbent ctt_v2 IC-LoRA with its
+  # NORMAL raw reference. MATCHED = the row's own reference. The deranged twin is a separate arm
+  # (below) that re-points ONLY the model-fed clip via `code_source_reference`, leaving `reference`
+  # (the GT-pool key run_eval.pool_refs() bans) untouched, so both twins score against a
+  # byte-identical pool. No `bottleneck` block: full-resolution demo path, exactly like ctt_v2.
+  ctt_v2_rawpair:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way          # ctt_v2 was trained one-way; the default is bidirectional.
+    adapter_template: outputs/training/ladder2/ctt_v2/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "RAW-reference control MATCHED. ctt_v2 adapter, row's own reference. Band-setter for the
+      redesign's P1/P2 bars (DESIGN_LOCK §3)."
+
+  ctt_v2_rawpair_shufref:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/ladder2/ctt_v2/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "RAW-reference control DERANGED. Same ctt_v2 adapter; each row's raw reference is
+      class-deranged via `code_source_reference` (the SAME shufcode_map table the bneck corpse
+      used). `reference` untouched -> byte-identical GT pool. The matched twin's corpse."
+
+  # D3 RoPE position-shuffle rider. The existing 004_bneck_frozen bottleneck LoRA in its normal
+  # reference/RoPE path; run_gen's --posshuf-seed 1234 permutes the 72 operator tokens' grid-cell
+  # assignment BEFORE RoPE positions are stamped (content otherwise identical). Pixel-measured only,
+  # never scored. The `bottleneck` block is byte-identical to bneck_frozen — run_gen rebuilds and
+  # attaches the same frozen encoder, then the position-shuffle hook reorders the 72 cells.
+  bneck_frozen_posshuf:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/ladder2/bneck_frozen/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      skip_scale: 0.0
+    note: "D3 rider. bneck_frozen's adapter+encoder; positional shuffle applied at gen via
+      --posshuf-seed 1234. Pixel measurement only, never scored."
+
+  # ---- campaign `bneck_redesign` IDEA 1 "context-port" (bneck_ctx), 2026-08-05. The SAME frozen
+  # certified encoder (armPm_seed42, sha d2b22693) as bneck_frozen produces the 72-token operator
+  # code, but a TRAINED ContextAdapter (context_adapter.* in the checkpoint) maps that code to K'=16
+  # pseudo-text tokens appended to the POSITIVE cross-attention context — the reference NEVER enters
+  # the latent sequence (validation_runner: the self-attention reference port is skipped when a
+  # ContextAdapter is attached). `inject: context` is what triggers this path in run_gen.py:351.
+  # Otherwise identical to bneck_frozen (run-004): rank/alpha 128, attn_ffn, one_way, step 10000,
+  # same encoder geometry. K'/adapter_width/d_ctx are READ from the checkpoint tensors (run_gen.py
+  # 360-361), so they are NOT restated here. MATCHED + DERANGED-code twin (code_source_reference
+  # re-points only the model-fed clip; `reference` — the GT-pool key — untouched, so both score
+  # against a byte-identical pool). rank/alpha 128 — pass --rank 128 --alpha 128.
+  bneck_ctx:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/bneck_ctx/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      skip_scale: 0.0
+      inject: context
+    note: "Idea 1 context-port MATCHED. Frozen certified encoder (armPm, sha d2b22693) + trained
+      ContextAdapter routing the code to K'=16 context tokens. Row's own reference. Judged vs the
+      FROZEN BANDS.json bars (G-unseen-same >=9/13, G-unseen-cross >=8/13, P2 >=0.1016)."
+
+  bneck_ctx_shufcode:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/bneck_ctx/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      skip_scale: 0.0
+      inject: context
+    note: "Shuffled-code corpse of bneck_ctx. SAME adapter + encoder; code source deranged via
+      code_source_reference (same shufcode_map table as the band-setter). `reference` untouched ->
+      byte-identical GT pool. Its PASSING (~= bneck_ctx) would prove the context channel dead."
+
+  # ---- campaign `bneck_redesign` IDEA 1 "context-port" CLEAN RE-RUN (bneck_ctx_v2), 2026-08-06.
+  # IDENTICAL to bneck_ctx / bneck_ctx_shufcode above EXCEPT the checkpoint: this arm trained
+  # FULL-COVERAGE (resume_data_position fix) on eps, so the first pass's coverage confound is gone.
+  # Same frozen certified encoder (armPm_seed42, sha d2b22693), same trained ContextAdapter geometry
+  # (K'/width/d_ctx read from the checkpoint), inject=context, rank/alpha 128, step 10000. DISTINCT
+  # gen tree (bneck_ctx_v2__ck10000) — never overwrites the confounded bneck_ctx gens. Judged vs the
+  # SAME FROZEN BANDS.json bars (G-unseen-same >=9/13, G-unseen-cross >=8/13, P2 >=0.1016).
+  bneck_ctx_v2:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/bneck_ctx_v2/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      skip_scale: 0.0
+      inject: context
+    note: "Idea 1 context-port MATCHED, CLEAN full-coverage checkpoint. Frozen certified encoder
+      (armPm, sha d2b22693) + trained ContextAdapter routing the code to context tokens. Row's own
+      reference. Judged vs FROZEN BANDS.json (G-unseen-same >=9/13, G-unseen-cross >=8/13, P2 >=0.1016)."
+
+  bneck_ctx_v2_shufcode:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/bneck_ctx_v2/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      skip_scale: 0.0
+      inject: context
+    note: "Shuffled-code corpse of bneck_ctx_v2. SAME adapter + encoder; code source deranged via
+      code_source_reference (same shufcode_map table as the band-setter). `reference` untouched ->
+      byte-identical GT pool. Its PASSING (~= bneck_ctx_v2) would prove the context channel dead."
+
+  # ---- campaign `bneck_redesign` COUPLING ARMS (Ideas 2 & 3), 2026-08-04. Each is a MATCHED +
+  # DERANGED-code twin sharing one adapter; the twin differs ONLY in the registry (code_source_
+  # reference re-points the model-fed clip while `reference` — the GT-pool key — is untouched, so
+  # both score against a byte-identical pool). rank/alpha 128 — pass --rank 128 --alpha 128.
+  # attention one_way (trained one-way). Adapters pinned at step 10000 (filled once the runs finish).
+
+  # Idea 2 HRC "Storyboard Code": standard bottleneck gen (VAE-encode reference -> encode_reference
+  # on the HRC encoder rebuilt from THIS checkpoint's operator_encoder.*).
+  hrc_coupling:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/hrc_coupling/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: hrc
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      spanning_positions: true
+    note: "Idea 2 HRC coupling MATCHED (hrc_l10 encoder rebuilt from the checkpoint). Row's own reference."
+
+  hrc_coupling_shufcode:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/hrc_coupling/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: hrc
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      spanning_positions: true
+    note: "Shuffled-code corpse of hrc_coupling. SAME adapter + encoder; code source deranged via
+      code_source_reference. Its PASSING (~= hrc_coupling) would prove the channel dead."
+
+  # Idea 2 HRC-RAW control (bneck_redesign ROUND 4): single-delta ablation of hrc_coupling — L_local
+  # target = the RAW pooled region x_std (no residual/endpoint-crossfade subtraction). Encoder from
+  # runs/hrc_raw/ckpt_08000.pt (gate: same-op retrieval 0.906, locality R^2 0.837, leak 0.411).
+  # Identical bottleneck geometry to hrc_coupling. AUTHORITATIVE adapter = eps CONTINUOUS 0->10000 run
+  # (single process, 0 resumes -> coverage-bug-immune; sha256 b58fc1aa...3916; owner call 2026-08-07 to
+  # use eps over the GH200 resume). Adapter carries 960 LoRA + 52 operator_encoder keys (self-contained).
+  hrc_raw_coupling:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/hrc_raw_coupling_epsfinal/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: hrc
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      spanning_positions: true
+    note: "Idea 2 HRC-RAW coupling MATCHED (raw-target encoder rebuilt from the checkpoint). Row's own reference."
+
+  hrc_raw_coupling_shufcode:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/hrc_raw_coupling_epsfinal/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: hrc
+      token_shape: [6, 4, 3]
+      width: 512
+      depth: 2
+      num_heads: 8
+      prefix_latent_frames: 2
+      suffix_latent_frames: 1
+      spanning_positions: true
+    note: "Shuffled-code corpse of hrc_raw_coupling. SAME adapter + encoder; code source deranged via
+      code_source_reference. Its PASSING (~= hrc_raw_coupling) would prove the channel dead."
+
+  # Idea 3 V-JEPA-2 residual + trainable projector: BACKBONE-FREE gen. run_gen's vjepa branch loads
+  # the TRAINED projector from operator_encoder.projector.* and runs it on PRECOMPUTED eval-reference
+  # features (vjepa_gen_feats, keyed by cond.video). Reference probability 0.9 at TRAIN (code dropout).
+  vjepa_coupling:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/vjepa_coupling/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: vjepa
+      token_shape: [16, 3, 3]
+      spanning_positions: true
+      vjepa_gen_feats: store/runs/005_vjepa_stageA_idea3/gen_feats.pt
+    note: "Idea 3 vjepa coupling MATCHED. Trained projector from the checkpoint + precomputed eval-ref
+      features. Row's own reference."
+
+  vjepa_coupling_shufcode:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/vjepa_coupling/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: vjepa
+      token_shape: [16, 3, 3]
+      spanning_positions: true
+      vjepa_gen_feats: store/runs/005_vjepa_stageA_idea3/gen_feats.pt
+    note: "Shuffled-code corpse of vjepa_coupling. SAME adapter + projector; code source deranged via
+      code_source_reference (same GT-pool-preserving map). reference untouched."
+
+  # ---- campaign `bneck_redesign` ROUND-4 NON-RESIDUAL control (2026-08-05). V-JEPA-RAW = the owner's
+  # literal idea 3: raw pretrained features (raw_canon pools X directly, NO residual subtraction) ->
+  # projector -> IC-LoRA. SINGLE-DELTA ablation of vjepa_coupling above: byte-identical in every respect
+  # EXCEPT the feature canon (residual->raw). Backbone-free gen like the residual arm — the trained
+  # projector (operator_encoder.projector.*) runs on PRECOMPUTED RAW eval-reference features
+  # (gen_feats_raw.pt). Adapter pinned at step 10000 (filled once the raw coupling finishes — the
+  # launch is operator-gated on the residual vjepa coupling reaching step 10000 healthy).
+  vjepa_raw_coupling:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/vjepa_raw_coupling/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: vjepa
+      token_shape: [16, 3, 3]
+      spanning_positions: true
+      vjepa_gen_feats: store/runs/005_vjepa_stageA_idea3/gen_feats_raw.pt
+    note: "Idea 3 V-JEPA-RAW coupling MATCHED (single-delta ablation of vjepa_coupling; raw_canon, no
+      residual). Trained raw projector from the checkpoint + precomputed RAW eval-ref features. Row's own reference."
+
+  vjepa_raw_coupling_shufcode:
+    kind: generalist
+    targets: attn_ffn
+    step: 10000
+    attention: one_way
+    adapter_template: outputs/training/bneck_redesign/vjepa_raw_coupling/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: vjepa
+      token_shape: [16, 3, 3]
+      spanning_positions: true
+      vjepa_gen_feats: store/runs/005_vjepa_stageA_idea3/gen_feats_raw.pt
+    note: "Shuffled-code corpse of vjepa_raw_coupling. SAME adapter + raw projector; code source deranged
+      via code_source_reference (same GT-pool-preserving map). reference untouched."
+
+  # ---- campaign 2026-08-10_encoder_branch_redteam SURG-1 (objective surgery on the V-JEPA-raw cell):
+  # high-σ mixture + code-swap contrastive gap loss + num_processes-correct WSD, step 4500, eps 8xH100.
+  # store/runs/007_surg1_wsd. Gate A resolved PASS (advisor) → Gate B (odds 0.15). SAME vjepa-raw
+  # bottleneck as vjepa_raw_coupling; ONLY the checkpoint differs. Backbone-free gen (trained projector
+  # from the ckpt's operator_encoder.projector.* + precomputed RAW eval-ref features).
+  surg1_wsd:
+    kind: generalist
+    targets: attn_ffn
+    step: 4500
+    attention: one_way
+    adapter_template: store/runs/007_surg1_wsd/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: vjepa
+      token_shape: [16, 3, 3]
+      spanning_positions: true
+      vjepa_gen_feats: store/runs/005_vjepa_stageA_idea3/gen_feats_raw.pt
+    note: "SURG-1 WSD MATCHED. Trained raw projector from the step-4500 checkpoint + precomputed RAW
+      eval-ref features. Row's own reference. Gate B (advisor-greenlit)."
+
+  surg1_wsd_shufcode:
+    kind: generalist
+    targets: attn_ffn
+    step: 4500
+    attention: one_way
+    adapter_template: store/runs/007_surg1_wsd/checkpoints/lora_weights_step_{step:05d}.safetensors
+    bottleneck:
+      encoder_class: vjepa
+      token_shape: [16, 3, 3]
+      spanning_positions: true
+      vjepa_gen_feats: store/runs/005_vjepa_stageA_idea3/gen_feats_raw.pt
+    note: "Shuffled-code corpse of surg1_wsd (must-fail leakage guard). SAME adapter + raw projector;
+      code source deranged via code_source_reference (same GT-pool-preserving map). reference untouched."
+
+  # ---- DINO-signal arms (campaign 2026-08-27_dino_signal_training). Both arms run through the
+  # LTX-2-armA fork; A2 attaches the SIGNAL_CONFIG token port (env-gated in run_gen.py), A0 is the
+  # plain reference-only IC-LoRA (no signal). Explicit staged adapter paths (sha-verified == the eps
+  # source): A2 33afbd86, A0 8ab6e2d3. rank/alpha 128, one_way ref attention (trained one-way), KEEP
+  # sksz (stamped from family 001_ctt152_neutral / 002_ctt152_effect without --strip-token). A0's 10k
+  # is the 004-dataset A0 (005 rerun deferred) => A2-vs-A0 is dataset-confounded; the claim-bearing
+  # contrast is A2-matched vs A2-shufsig (within-arm). See PROTOCOL_LOCKED.md.
+  dino_a2_tokens_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A2_tokens/lora_weights_step_10000.safetensors
+    note: "A2 tokens-route DINO-signal, neutral prompt (family 001). SIGNAL_CONFIG=gen/cfg/a2_tokens.json.
+      Matched signal_id=eval__<own ref>. rank/alpha 128."
+  dino_a2_tokens_effect:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A2_tokens/lora_weights_step_10000.safetensors
+    note: "A2 tokens-route DINO-signal, effect prompt (family 002). Full grid only, no shufsignal. rank/alpha 128."
+  dino_a2_tokens_shufsig_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A2_tokens/lora_weights_step_10000.safetensors
+    note: "A2 tokens-route DINO-signal, DERANGED signal (primary within-arm control). SAME adapter +
+      SIGNAL_CONFIG; rows carry a `signal_source` column (rotation-by-2 derangement of the 36 sorted
+      refs); pixel reference UNCHANGED. rank/alpha 128."
+  dino_a0_baseline_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A0_baseline/lora_weights_step_10000.safetensors
+    note: "A0 reference-only IC-LoRA baseline, neutral prompt (family 001). NO signal port (SIGNAL_CONFIG
+      unset). dataset=004_ctt_v2plus (005 rerun deferred) => A2-vs-A0 dataset-confounded. rank/alpha 128."
+  dino_a0_baseline_effect:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A0_baseline/lora_weights_step_10000.safetensors
+    note: "A0 reference-only IC-LoRA baseline, effect prompt (family 002). Full grid only. NO signal port.
+      dataset=004_ctt_v2plus (005 rerun deferred). rank/alpha 128."
+  # A5 xattn-route DINO-signal (signal-as-Q cross-attention, SPEC R1.4). Adapter lives in the DeltaAI-
+  # visible outputs/ tree (Taiga), NOT staged. SIGNAL_CONFIG=gen/cfg/a5_xattn.json (route=xattn,
+  # xattn.hidden 256, xattn.heads 4, token_pool 2, guidance 1.0; 13 signal.* keys, strict). dataset
+  # 005_ctt_v2plus_s6reshape (SAME as A2). Matched signal_id=eval__<own ref>.
+  dino_a5_xattn_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: outputs/dino_signal_005/A5_xattn_fusion/checkpoints/lora_weights_step_10000.safetensors
+    note: "A5 xattn-route DINO-signal, neutral prompt (family 001). SIGNAL_CONFIG=gen/cfg/a5_xattn.json.
+      Matched signal_id=eval__<own ref>. rank/alpha 128, LTX-2-armA @32d6e3f, step 10000, dataset 005."
+  dino_a5_xattn_effect:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: outputs/dino_signal_005/A5_xattn_fusion/checkpoints/lora_weights_step_10000.safetensors
+    note: "A5 xattn-route DINO-signal, effect prompt (family 002). Full grid only, no shufsignal. rank/alpha 128."
+  # A1 channels-route DINO-signal (signal projected to the model inner dim by Linear(44,inner_dim),
+  # added onto the target token embeddings, SPEC §2). Adapter STAGED on Taiga (misc staged_adapters,
+  # A1 10k sha 1093362b, 961 tensors = 960 LoRA + 1 signal.proj.weight). SIGNAL_CONFIG=gen/cfg/
+  # a1_channels.json (route=channels, channels 44, hidden 256, token_pool 2, guidance 1.0, placement
+  # target; loads the 1 signal.* key strict). dataset 005_ctt_v2plus_s6reshape (SAME as A2/A5 =>
+  # A1-vs-A2-vs-A5 is a clean same-dataset route comparison). Matched signal_id=eval__<own ref>.
+  dino_a1_channels_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A1_channels_target/lora_weights_step_10000.safetensors
+    note: "A1 channels-route DINO-signal, neutral prompt (family 001). SIGNAL_CONFIG=gen/cfg/a1_channels.json.
+      Matched signal_id=eval__<own ref>. rank/alpha 128, LTX-2-armA @32d6e3f, step 10000, dataset 005."
+  dino_a1_channels_effect:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A1_channels_target/lora_weights_step_10000.safetensors
+    note: "A1 channels-route DINO-signal, effect prompt (family 002). Full grid only, no shufsignal. rank/alpha 128."
+  dino_a1_channels_shufsig_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A1_channels_target/lora_weights_step_10000.safetensors
+    note: "A1 channels-route DINO-signal, DERANGED signal (within-arm control). SAME adapter + SIGNAL_CONFIG
+      gen/cfg/a1_channels.json; rows carry `signal_source` (rotation-by-2 derangement of the 36 sorted refs,
+      PROTOCOL_LOCKED §28); pixel reference UNCHANGED. rank/alpha 128."
+  dino_a5_xattn_shufsig_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: outputs/dino_signal_005/A5_xattn_fusion/checkpoints/lora_weights_step_10000.safetensors
+    note: "A5 xattn-route DINO-signal, DERANGED signal (within-arm control): the donor's pooled signal is the
+      QUERY, the row's OWN reference stays the K/V (SPEC R1.4 derangement swaps the signal only). SAME adapter +
+      SIGNAL_CONFIG gen/cfg/a5_xattn.json; `signal_source` rotation-by-2. rank/alpha 128."
+  # A7_repa44 = A0_baseline recipe + transport-REPA aux LOSS (block-16 hidden -> target's own 44-ch
+  # DINO program). signal.enabled=false: NOTHING injected at inference, so the gen path is IDENTICAL
+  # to A0 (reference-only IC-LoRA, NO SIGNAL_CONFIG). dataset 005, step 6000, rank/alpha 128.
+  dino_a7_repa44_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: outputs/dino_signal_005/A7_repa44/keep/lora_weights_step_06000.safetensors
+    note: "A7 transport-REPA reference-only IC-LoRA, neutral prompt (family 001). NO signal port
+      (SIGNAL_CONFIG unset). aux head is train-only and NOT loaded at inference. dataset 005, step 6000,
+      LTX-2-armA @08bdbc8. rank/alpha 128."
+  dino_a7_repa44_shufref_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: outputs/dino_signal_005/A7_repa44/keep/lora_weights_step_06000.safetensors
+    note: "A7 SHUFREF control: A2's rotation-by-2 derangement applied to the FED reference clip via the
+      registry `code_source_reference` column (run_gen feeds the deranged partner while `reference` — the
+      row identity used by pool_refs — stays unchanged => matched and shufref scored against byte-identical
+      pools). NO signal port. SAME step-6000 adapter. rank/alpha 128."
+  dino_a0_baseline_shufref_neutral:
+    kind: generalist
+    targets: attn_ffn
+    attention: one_way
+    adapter: misc/2026-08-27_dino_signal_training/staged_adapters/A0_baseline/lora_weights_step_10000.safetensors
+    note: "A0 SHUFREF control (A7's same-permutation paired comparator): rotation-by-2 derangement of the
+      fed reference via `code_source_reference`, `reference` unchanged. A0 10k adapter (sha 8ab6e2d3),
+      NO signal port, dataset 004_ctt_v2plus. rank/alpha 128."
+
+  # ---- crossing ablation (campaign 2026-09-13_crossing_ablation): from-scratch T1/T2 arms, one_way, r128/a128.
+  #      Generated on eps via misc/2026-09-13_crossing_ablation/gen/xab_gen.py; these entries are the store record.
+  crossing_crossed_t1t2:
+    kind: generalist
+    targets: attn_ffn
+    step: 3000
+    attention: one_way
+    adapter_template: store/runs/022_crossing_crossed/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "crossing ablation CROSSED arm (runs/022, clean). T1/T2 readout, family prompts/017_crossing_t1t2. rank/alpha 128, downscale 1."
+  crossing_uncrossed_t1t2:
+    kind: generalist
+    targets: attn_ffn
+    step: 3000
+    attention: one_way
+    adapter_template: store/runs/023_crossing_uncrossed/checkpoints/lora_weights_step_{step:05d}.safetensors
+    note: "crossing ablation UNCROSSED arm (runs/023, diverged step 1392, tested as trained). T1/T2 readout, family prompts/017_crossing_t1t2. rank/alpha 128, downscale 1."
+
+  # ---- GRID v3 dcg w1.5/w3 (2026-09-18, misc/2026-09-18_dcg_w_sweep_v3): test-time DCG w=1.5/w=3 x neutral/effect x families
+  dualforce_dcg_w1p5_neutral_v3:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 neutral, prompts/010_ctt_v3_neutral (runs/012@1000 + test-time DCG w=1.5, crossfade null, gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py)"
+  dualforce_dcg_w1p5_neutral_v3ed81:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 neutral, prompts/012_ctt_v3ed_neutral; EffectData tier NATIVE 81 f + frame-0 anchor: GEN_FRAMES=81 GEN_PREFIX_FRAMES=1 (runs/012@1000 + test-time DCG w=1.5, crossfade null, gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py)"
+  dualforce_dcg_w1p5_effect_v3:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 effect, prompts/011_ctt_v3_effect (runs/012@1000 + test-time DCG w=1.5, crossfade null, gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py)"
+  dualforce_dcg_w1p5_effect_v3ed81:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 effect, prompts/013_ctt_v3ed_effect; EffectData tier NATIVE 81 f + frame-0 anchor: GEN_FRAMES=81 GEN_PREFIX_FRAMES=1 (runs/012@1000 + test-time DCG w=1.5, crossfade null, gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py)"
+  dualforce_dcg_w3_neutral_v3:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 neutral, prompts/010_ctt_v3_neutral (runs/012@1000 + test-time DCG w=3, crossfade null, gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py)"
+  dualforce_dcg_w3_neutral_v3ed81:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 neutral, prompts/012_ctt_v3ed_neutral; EffectData tier NATIVE 81 f + frame-0 anchor: GEN_FRAMES=81 GEN_PREFIX_FRAMES=1 (runs/012@1000 + test-time DCG w=3, crossfade null, gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py)"
+  dualforce_dcg_w3_effect_v3:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 effect, prompts/011_ctt_v3_effect (runs/012@1000 + test-time DCG w=3, crossfade null, gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py)"
+  dualforce_dcg_w3_effect_v3ed81:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 effect, prompts/013_ctt_v3ed_effect; EffectData tier NATIVE 81 f + frame-0 anchor: GEN_FRAMES=81 GEN_PREFIX_FRAMES=1 (runs/012@1000 + test-time DCG w=3, crossfade null, gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py)"
+  # ---- GRID v3 paper arms (2026-09-07, scripts/grid_v3/launch_gen.py stamp): the four arms x neutral/effect x families
+  dualforce_dcg_holdstart_w6_neutral_v3zs10:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 neutral, prompts/010_ctt_v3_neutral, 10-row one-sided zero-shot PROBE subset (seed 42 only): runs/012@1000 + test-time DCG w=6, hold_start null (reference's first frame held for all frames), gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py --null-kind hold_start; misc/2026-09-24_dcg_emptynull_gridv3/holdstart_probe (2026-09-25)"
+  dualforce_dcg_emptynull_w6_neutral_v3:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 neutral, prompts/010_ctt_v3_neutral (runs/012@1000 + test-time DCG w=6, endpoint_only null, gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py)"
+  dualforce_dcg_emptynull_w6_neutral_v3ed81:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 neutral, prompts/012_ctt_v3ed_neutral; EffectData tier NATIVE 81 f + frame-0 anchor: GEN_FRAMES=81 GEN_PREFIX_FRAMES=1 (runs/012@1000 + test-time DCG w=6, endpoint_only null, gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py)"
+  dualforce_dcg_emptynull_w6_effect_v3:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 effect, prompts/011_ctt_v3_effect (runs/012@1000 + test-time DCG w=6, endpoint_only null, gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py)"
+  dualforce_dcg_emptynull_w6_effect_v3ed81:
+    kind: generalist
+    targets: attn_ffn
+    step: 1000
+    attention: one_way
+    adapter: store/runs/012_dualforce_control/checkpoints/lora_weights_step_01000.safetensors
+    note: "grid v3 effect, prompts/013_ctt_v3ed_effect; EffectData tier NATIVE 81 f + frame-0 anchor: GEN_FRAMES=81 GEN_PREFIX_FRAMES=1 (runs/012@1000 + test-time DCG w=6, endpoint_only null, gs4/stg1; generated by scripts/grid_v3/gen_dcg_v3.py)"
+
+adapter_template: outputs/training/ladder2/{arm}/checkpoints/lora_weights_step_{step:05d}.safetensors

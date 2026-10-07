@@ -1,0 +1,16 @@
+id: gens/022_flowsig_ball/01_neutral__dai
+seq: 1
+shelf: gens
+arm: flowsig_ball
+harness_arm: flowsig_ball_neutral   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral
+machine: dai
+created: 2026-08-25
+inputs: {run: runs/018_flowsig_ball, step: 10000}
+code: src/LTX-2-flowsig @ 7735546 (+ step2eval inference program port)
+prompt_family: prompts/001_ctt152_neutral
+prompt_sha: 0d708175fbfe
+grid_rows: 152
+videos: 304
+source: scripts/store_register.py over /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/misc/2026-08-24_flow_signal_conditioning/step2eval/gen/registry_flowsig_ball_neutral.jsonl
+notes: STANDARD arm treatment, the arm's INTENDED inference regime: mode=both (pixel reference in context + MATCHED transition program through the per-token adaLN cond_proj hook), neutral prompt, w=1 (no signal-CFG => byte-identical to no signal-CFG). Program store eval_v2_c18_20x15 (223 std121 clips, v2 desc, 18ch, grid (16,20,15)); NORM.json reused verbatim from the training store. Gen array 3022869 (32 tasks = 2 seeds x 16 chunks) on DeltaAI bhwp. Model = recipe variant textdrop-coupled (see runs/018 meta).

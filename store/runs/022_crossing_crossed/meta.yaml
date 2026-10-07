@@ -1,0 +1,58 @@
+id: 022_crossing_crossed
+seq: 22
+shelf: runs
+created: 2026-09-14          # trained 2026-09-14 00:12:47Z -> 03:05:42Z (DONE) on eps; 2h53m wall, ~2.94 s/step
+machine: eps fal-h100 2xH100 DDP eff-batch 2   # data-parallel batch 1/GPU x 2 GPUs (GPUs 0,1); no grad accumulation
+source: >
+  Campaign 2026-09-13_crossing_ablation — arm CROSSED, the "all but one" crossed layout. From-scratch IC-LoRA
+  on LTX-2 19B dev. Crossed = every shot is trained under all operators of its block BUT ONE (the shot says
+  nothing about the operator; only the reference names it). 21 operators = 9 S1 manners (one-sided) + 12 S2
+  shaders (two-sided). 1,392 pairs. Paired with the UNCROSSED arm (runs/023), which is identical in every
+  setting and differs ONLY in data layout (each shot under exactly one operator). The T1/T2 readout of the two
+  arms is the experiment; see gens/034_crossing_crossed/01_t1t2__eps and the campaign HANDOFF.md §1.
+  This run is the healthy member of the pair. Owner terms: shots, operators, pairs, references, crossed/uncrossed.
+inputs:
+  dataset: datasets/008_crossing_allbutone     # 1,392 pairs (crossed layout: 39 shots x (K-1) operators + S2); root self-contained
+trainer:
+  checkout: src/LTX-2-surg
+  commit: a403323            # eps copy has no .git; content-verified identical (171/171 tracked files of packages/{ltx-trainer,ltx-core,ltx-pipelines}/src) per HANDOFF §2
+  entry: accelerate launch --num_processes 2 (DDP, 2 GPUs) via misc/2026-09-13_crossing_ablation/eps/{launch_lane2.sh, run_arm2.sh}; config.yaml (the eps crossed_2gpu.yaml) copied here; training_config.yaml is the trainer-written record
+recipe: LTX-2 19B dev; IC-LoRA rank 128 / alpha 128 on attn1+attn2+FF (10 modules, target_modules attn_ffn); one_way reference attention + mask, cond_clean latents; lr 2e-4; batch 1/GPU x 2 GPU (eff-batch 2, no accumulation); WSD (warmup 100 / decay_frac 0.25 / end 0.1); grad checkpointing; bf16; uniform pair sampler seed 42; checkpoint every 250 (all kept); validation every 500 incl. step 0 (validation NOT representative — see health)
+rank: 128
+alpha: 128
+dropout: 0.0
+reference_attention: one_way
+lr: 2e-4, WSD (warmup 100 / decay_frac 0.25 / end 0.1)
+seed: 42
+effective_batch: 2          # batch_size 1 x 2 GPU, gradient_accumulation_steps 1
+steps: 3000
+checkpoints:                 # every 250, all kept; each 1,308,756,384 B
+  - lora_weights_step_00250.safetensors
+  - lora_weights_step_00500.safetensors
+  - lora_weights_step_00750.safetensors
+  - lora_weights_step_01000.safetensors
+  - lora_weights_step_01250.safetensors
+  - lora_weights_step_01500.safetensors
+  - lora_weights_step_01750.safetensors
+  - lora_weights_step_02000.safetensors
+  - lora_weights_step_02250.safetensors
+  - lora_weights_step_02500.safetensors
+  - lora_weights_step_02750.safetensors
+  - lora_weights_step_03000.safetensors
+checkpoint_sha256:
+  lora_weights_step_03000.safetensors: 4f3cbeeb9b921e2bbc3ae3e6c5d16e2330609c2f81805e3994496a46bea6ee5d
+wandb:
+  project: crossing_ablation      # entity ozgur-personal
+  run_id: 1mzc19kt
+  run_name: crossed_2gpu
+health: >
+  CLEAN. Reached step 3000, 12 checkpoints, 7 validation rounds, 0 error lines (no nan/OOM/CUDA/Killed).
+  Per-step loss stays in its 0.15-0.50 band throughout (1380=0.28, 1400=0.24, 2000=0.19, 2500=0.18,
+  3000=0.25; last-10 logged mean 0.246). Last step line: Step 3000/3000 - Loss 0.2483, LR 2.00e-05.
+  CAVEAT (both arms): inline validation is NOT representative — the validation reference conditions in the run
+  config carried no attention: key so the trainer used bidirectional (default) while the adapter was trained
+  one_way; the saved validation clips show the base model's in-context copy, not the trained adapter. The T1/T2
+  generation (gens/034) uses the one_way run_gen path and is the real readout. See HANDOFF.md §6.
+notes: >
+  Report: misc/2026-09-13_crossing_ablation/logs/operator_2gpu_report.md (2-GPU switch + final state).
+  An abandoned 1-GPU attempt left step-250 checkpoints in outputs/crossed on eps (NOT registered).

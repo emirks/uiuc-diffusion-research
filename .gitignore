@@ -71,17 +71,40 @@ datasets/
 # --- 2026-07-30 reorg: research trees relocated from $LAB into the repo dir ---
 # campaign scratch dirs (dossiers, vendored code, artifacts) — never git
 /misc/
-# trainer fork checkouts under src/ (LTX-2-official + its linked worktrees, own .git)
-/src/LTX-2-official/
-/src/LTX-2-cond-bleed-fix/
-/src/LTX-2-ctt-v2-train/
-/src/LTX-2-bneck/
+# trainer fork checkouts under src/ (LTX-2-official + its linked worktrees, each with its own .git)
+/src/LTX-2-*/
+
+# --- 2026-10-07 tidy ---
+# the paper is its own repo (papers_drafts/.git -> emirks/CTT-Paper + Overleaf), never tracked here
+/papers_drafts/
+# root-level slurm logs and job-staging scratch (regenerable)
+/logs/
+/build/
+# hand backups next to the file they back up
+*.bak
+*.bak_*
 
 # artifact store: git tracks metadata only; artifacts (videos/ckpts/scores) stay out
 /store/**
 !/store/**/
 !/store/README.md
 !/store/INDEX.md
+!/store/ARMS.md
+!/store/MIGRATION.md
+!/store/**/meta.v1.yaml
 !/store/**/meta.yaml
+!/store/FEATURES.md
+!/store/FEATURES_COVERAGE.md
+!/store/**/SHA256SUMS
+# features (contract clause 10): arrays + manifests are regenerable artifacts, never tracked
+**/features/*/*.npz
+**/features/*/*.json
+**/features/manifest.jsonl
+**/.SHA256SUMS.stat.json
 !/store/**/grid.jsonl
 !/store/**/config.yaml
+!/store/**/*.md
+# the captions shelf's description stores are versioned SOURCE TEXT, not artifacts:
+!/store/captions/**/*.json
+# the datasets shelf's frozen normalization-stats jsons are versioned metadata, not artifacts:
+!/store/datasets/**/NORM_*.json

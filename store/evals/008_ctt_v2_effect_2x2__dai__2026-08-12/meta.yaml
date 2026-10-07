@@ -1,0 +1,44 @@
+id: 008_ctt_v2_effect_2x2__dai__2026-08-12
+seq: 8
+shelf: evals
+created: 2026-08-12
+machine: DeltaAI ghx4 (aarch64 GH200)   # all 5 arms GEN + SCORE on DeltaAI-today (co-located 2x2)
+instrument: transition-eval v4 (eval-v4-cert worktree); reference_v4 sha256 459fd9a7…e606a8; corpus 222 (5a7a8be9); tau_copy 0.858
+source: >
+  misc/2026-08-11_ctt_v2_perf_push effect-prompt follow-on (advisor ac5af3d8). The effect prompt = the
+  ctt_v2_leaky convention ("{S1}. sksz. {EFFECT}. [{S2}.]"), effect manifest = registry_ctt_v2_leaky
+  VERBATIM (sha == gens/005 grid). A CO-LOCATED adapter×prompt 2×2 on DeltaAI-today to decontaminate the
+  never-co-located published "+8.8 text gain" (82.5 was eps-gen, 91.3 DeltaAI-gen).
+arms:   # all seeds 42/43, 152x2 gens; gendir <arm>__ck<step> under outputs/videos/ctt_v2_push_effect
+  ctt_v2_pushA_plain:  {adapter: runs/008_ctt_v3_wsd, prompt: plain,  headline_pct_same: 88.57}
+  ctt_v2_plain_regen:  {adapter: runs/002_ctt_v2,     prompt: plain,  headline_pct_same: 82.95}
+  ctt_v2_pushA_effect: {adapter: runs/008_ctt_v3_wsd, prompt: effect, headline_pct_same: 91.54}
+  ctt_v2_leaky_regen:  {adapter: runs/002_ctt_v2,     prompt: effect, headline_pct_same: 90.21}
+  ctt_v2_pushB_effect: {adapter: runs/009,            prompt: effect, headline_pct_same: 90.00}
+metric: paired same-seed per-item Δ%same (pp), bootstrap 95%CI over items; WIN bar CI-excl-0 AND ≥+1.0pp
+result:
+  drift_vs_published_eps_gen: {leaky_regen: "90.21 vs 91.3 (-1.1)", plain_regen: "82.95 vs 82.5 (+0.45)", pushA_plain: "88.57 vs 88.0 (+0.57)"}
+  true_colocated_text_gain_v2: "+7.26pp (90.21-82.95)"   # vs the inflated published +8.8
+  PRIMARY_pushA_effect_minus_leaky_regen:
+    ALL152: {mean: -0.22, ci95: [-1.94, 1.45]}
+    same60: {mean: 1.10, ci95: [-0.93, 3.21]}
+    verdict: NULL   # pre-declared "text channel SATURATES the adapter gain" — schedule-fix edge does not stack on the text channel
+  SECONDARY_text_gain:
+    on_champion_pushA_effect_minus_pushA_plain: {same60: 2.96, ci95: [0.29, 5.49]}
+    on_v2_leaky_regen_minus_plain_regen:        {same60: 7.78, ci95: [3.77, 11.96]}
+    claim: "NOT independent of the primary (algebra: text-gain-champ − text-gain-v2 = PRIMARY − plain-gain); licensed via the DiD below, not the ratio (drop 2.6x, pop-dependent)"
+  DiD_four_arm_paired: {ALL152: {mean: -4.62, ci95: [-7.54, -1.67], n: 152}, same60: {mean: -5.13, ci95: [-9.40, -1.14], n: 60}, verdict: "SIGNIFICANTLY SMALLER (CI excl 0) — champion text gain shrinks by ~= the plain adapter gain"}
+  same60_arm_means_ceiling_check: "effect arms 90.0-91.5 (AT the ~91 regen-consistency ceiling) → SATURATION-ONLY wording (substitution vs common-endpoint observationally identical at ceiling)"
+  B_pushB_effect_minus_pushA_effect: {same60: -1.58, ci95: [-4.02, 0.66], verdict: NULL, note: "high-sigma inert under effect too; RETIRED"}
+  copy_guard: {near_copy_all_effect_arms: 0, copy_max_effect: 0.322, copy_max_plain: 0.27, pass: true, note: "up vs plain (effect prompt names the transition) but no near-copies, far below tau 0.858"}
+verdict: >
+  Under the effect prompt the champion's schedule-fix edge WASHES OUT (pushA_effect 91.54 ≈ leaky_regen
+  90.21; primary NULL) — the text channel saturates the adapter gain. But the champion needs far LESS
+  text help (+2.96 vs +7.78pp same60) → the corrected adapter already reads from the reference what text
+  supplied. ctt_v3's champion status is UNCHANGED (decided on the plain condition, 88.0). Advisor
+  afefa334 (verdict pending at write-time).
+caveats:
+  - EOFError load-error rows (243/274/30/33/50 per arm) = the same symmetric concurrent-cache-write race as evals/006/007; paired Δ unbiased (shared GT pool), paired n=152/60 full. Initial concurrent 40-task scoring crashed 3 arms' shards (CUDA+EOFError) → re-scored throttled %4 to complete.
+  - headline discipline: these are TEXT-ASSISTED numbers (effect clause names the transition) — NEVER the champion score (that stays 88.0 plain).
+  - [UNCERTIFIED] = eval-v4-cert branch not tagged; reference sha matches evals/001-007.
+gens: gens/021_ctt_v2_pushA_effect … 025 (effect/plain 2x2 arms), outputs/videos/ctt_v2_push_effect

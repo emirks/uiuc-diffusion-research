@@ -1,0 +1,2433 @@
+{
+ "classes": {
+  "acid": {
+   "n_clips": 8,
+   "paths": {
+    "acid_0": "data/processed/transitions_std121/acid/acid_0.mp4",
+    "acid_1": "data/processed/transitions_std121/acid/acid_1.mp4",
+    "acid_2": "data/processed/transitions_std121/acid/acid_2.mp4",
+    "acid_3": "data/processed/transitions_std121/acid/acid_3.mp4",
+    "acid_4": "data/processed/transitions_std121/acid/acid_4.mp4",
+    "acid_5": "data/processed/transitions_std121/acid/acid_5.mp4",
+    "acid_6": "data/processed/transitions_std121/acid/acid_6.mp4",
+    "acid_7": "data/processed/transitions_std121/acid/acid_7.mp4"
+   },
+   "test": [
+    "acid_0",
+    "acid_1"
+   ],
+   "train": [
+    "acid_2",
+    "acid_3",
+    "acid_4",
+    "acid_5",
+    "acid_6",
+    "acid_7"
+   ]
+  },
+  "air_bending": {
+   "n_clips": 4,
+   "paths": {
+    "air_bending_0": "data/processed/transitions_std121/air_bending/air_bending_0.mp4",
+    "air_bending_1": "data/processed/transitions_std121/air_bending/air_bending_1.mp4",
+    "air_bending_2": "data/processed/transitions_std121/air_bending/air_bending_2.mp4",
+    "air_bending_3": "data/processed/transitions_std121/air_bending/air_bending_3.mp4"
+   },
+   "test": [
+    "air_bending_1"
+   ],
+   "train": [
+    "air_bending_0",
+    "air_bending_2",
+    "air_bending_3"
+   ]
+  },
+  "animalization": {
+   "n_clips": 8,
+   "paths": {
+    "animalization_0": "data/processed/transitions_std121/animalization/animalization_0.mp4",
+    "animalization_1": "data/processed/transitions_std121/animalization/animalization_1.mp4",
+    "animalization_2": "data/processed/transitions_std121/animalization/animalization_2.mp4",
+    "animalization_3": "data/processed/transitions_std121/animalization/animalization_3.mp4",
+    "animalization_4": "data/processed/transitions_std121/animalization/animalization_4.mp4",
+    "animalization_5": "data/processed/transitions_std121/animalization/animalization_5.mp4",
+    "animalization_6": "data/processed/transitions_std121/animalization/animalization_6.mp4",
+    "animalization_7": "data/processed/transitions_std121/animalization/animalization_7.mp4"
+   },
+   "test": [
+    "animalization_0",
+    "animalization_2"
+   ],
+   "train": [
+    "animalization_1",
+    "animalization_3",
+    "animalization_4",
+    "animalization_5",
+    "animalization_6",
+    "animalization_7"
+   ]
+  },
+  "color_rain": {
+   "n_clips": 8,
+   "paths": {
+    "color_rain_0": "data/processed/transitions_std121/color_rain/color_rain_0.mp4",
+    "color_rain_1": "data/processed/transitions_std121/color_rain/color_rain_1.mp4",
+    "color_rain_2": "data/processed/transitions_std121/color_rain/color_rain_2.mp4",
+    "color_rain_3": "data/processed/transitions_std121/color_rain/color_rain_3.mp4",
+    "color_rain_5": "data/processed/transitions_std121/color_rain/color_rain_5.mp4",
+    "color_rain_6": "data/processed/transitions_std121/color_rain/color_rain_6.mp4",
+    "color_rain_7": "data/processed/transitions_std121/color_rain/color_rain_7.mp4",
+    "color_rain_8": "data/processed/transitions_std121/color_rain/color_rain_8.mp4"
+   },
+   "test": [
+    "color_rain_0",
+    "color_rain_2"
+   ],
+   "train": [
+    "color_rain_1",
+    "color_rain_3",
+    "color_rain_5",
+    "color_rain_6",
+    "color_rain_7",
+    "color_rain_8"
+   ]
+  },
+  "cotton_cloud": {
+   "n_clips": 9,
+   "paths": {
+    "cotton_cloud_0": "data/processed/transitions_std121/cotton_cloud/cotton_cloud_0.mp4",
+    "cotton_cloud_1": "data/processed/transitions_std121/cotton_cloud/cotton_cloud_1.mp4",
+    "cotton_cloud_2": "data/processed/transitions_std121/cotton_cloud/cotton_cloud_2.mp4",
+    "cotton_cloud_3": "data/processed/transitions_std121/cotton_cloud/cotton_cloud_3.mp4",
+    "cotton_cloud_4": "data/processed/transitions_std121/cotton_cloud/cotton_cloud_4.mp4",
+    "cotton_cloud_5": "data/processed/transitions_std121/cotton_cloud/cotton_cloud_5.mp4",
+    "cotton_cloud_6": "data/processed/transitions_std121/cotton_cloud/cotton_cloud_6.mp4",
+    "cotton_cloud_7": "data/processed/transitions_std121/cotton_cloud/cotton_cloud_7.mp4",
+    "cotton_cloud_8": "data/processed/transitions_std121/cotton_cloud/cotton_cloud_8.mp4"
+   },
+   "test": [
+    "cotton_cloud_0",
+    "cotton_cloud_3",
+    "cotton_cloud_5",
+    "cotton_cloud_7"
+   ],
+   "train": [
+    "cotton_cloud_1",
+    "cotton_cloud_2",
+    "cotton_cloud_4",
+    "cotton_cloud_6",
+    "cotton_cloud_8"
+   ]
+  },
+  "display_transition": {
+   "n_clips": 4,
+   "paths": {
+    "display_transition_0": "data/processed/transitions_std121/display_transition/display_transition_0.mp4",
+    "display_transition_1": "data/processed/transitions_std121/display_transition/display_transition_1.mp4",
+    "display_transition_2": "data/processed/transitions_std121/display_transition/display_transition_2.mp4",
+    "display_transition_3": "data/processed/transitions_std121/display_transition/display_transition_3.mp4"
+   },
+   "test": [
+    "display_transition_0"
+   ],
+   "train": [
+    "display_transition_1",
+    "display_transition_2",
+    "display_transition_3"
+   ]
+  },
+  "earth_element": {
+   "n_clips": 6,
+   "paths": {
+    "earth_element_0": "data/processed/transitions_std121/earth_element/earth_element_0.mp4",
+    "earth_element_1": "data/processed/transitions_std121/earth_element/earth_element_1.mp4",
+    "earth_element_2": "data/processed/transitions_std121/earth_element/earth_element_2.mp4",
+    "earth_element_3": "data/processed/transitions_std121/earth_element/earth_element_3.mp4",
+    "earth_element_4": "data/processed/transitions_std121/earth_element/earth_element_4.mp4",
+    "earth_element_6": "data/processed/transitions_std121/earth_element/earth_element_6.mp4"
+   },
+   "test": [
+    "earth_element_4",
+    "earth_element_6"
+   ],
+   "train": [
+    "earth_element_0",
+    "earth_element_1",
+    "earth_element_2",
+    "earth_element_3"
+   ]
+  },
+  "earth_wave": {
+   "n_clips": 6,
+   "paths": {
+    "earth_wave_0": "data/processed/transitions_std121/earth_wave/earth_wave_0.mp4",
+    "earth_wave_1": "data/processed/transitions_std121/earth_wave/earth_wave_1.mp4",
+    "earth_wave_2": "data/processed/transitions_std121/earth_wave/earth_wave_2.mp4",
+    "earth_wave_3": "data/processed/transitions_std121/earth_wave/earth_wave_3.mp4",
+    "earth_wave_4": "data/processed/transitions_std121/earth_wave/earth_wave_4.mp4",
+    "earth_wave_5": "data/processed/transitions_std121/earth_wave/earth_wave_5.mp4"
+   },
+   "test": [
+    "earth_wave_3",
+    "earth_wave_5"
+   ],
+   "train": [
+    "earth_wave_0",
+    "earth_wave_1",
+    "earth_wave_2",
+    "earth_wave_4"
+   ]
+  },
+  "ed.Acid_mist_limb_transformation": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Acid_mist_limb_transformation.01023k013no0kksp.F": "data/processed/transitions_std121/ed.Acid_mist_limb_transformation/ed.Acid_mist_limb_transformation.01023k013no0kksp.F.mp4",
+    "ed.Acid_mist_limb_transformation.01024b0154hjfowa.F": "data/processed/transitions_std121/ed.Acid_mist_limb_transformation/ed.Acid_mist_limb_transformation.01024b0154hjfowa.F.mp4",
+    "ed.Acid_mist_limb_transformation.031b8059.F": "data/processed/transitions_std121/ed.Acid_mist_limb_transformation/ed.Acid_mist_limb_transformation.031b8059.F.mp4",
+    "ed.Acid_mist_limb_transformation.03466a57.F": "data/processed/transitions_std121/ed.Acid_mist_limb_transformation/ed.Acid_mist_limb_transformation.03466a57.F.mp4",
+    "ed.Acid_mist_limb_transformation.0f4fc4edacb19f56.M": "data/processed/transitions_std121/ed.Acid_mist_limb_transformation/ed.Acid_mist_limb_transformation.0f4fc4edacb19f56.M.mp4",
+    "ed.Acid_mist_limb_transformation.163268f8.F": "data/processed/transitions_std121/ed.Acid_mist_limb_transformation/ed.Acid_mist_limb_transformation.163268f8.F.mp4",
+    "ed.Acid_mist_limb_transformation.1d0f13c7.F": "data/processed/transitions_std121/ed.Acid_mist_limb_transformation/ed.Acid_mist_limb_transformation.1d0f13c7.F.mp4",
+    "ed.Acid_mist_limb_transformation.230479cc.F": "data/processed/transitions_std121/ed.Acid_mist_limb_transformation/ed.Acid_mist_limb_transformation.230479cc.F.mp4",
+    "ed.Acid_mist_limb_transformation.4373694d.F": "data/processed/transitions_std121/ed.Acid_mist_limb_transformation/ed.Acid_mist_limb_transformation.4373694d.F.mp4",
+    "ed.Acid_mist_limb_transformation.4992e82b.F": "data/processed/transitions_std121/ed.Acid_mist_limb_transformation/ed.Acid_mist_limb_transformation.4992e82b.F.mp4"
+   },
+   "test": [
+    "ed.Acid_mist_limb_transformation.0f4fc4edacb19f56.M"
+   ],
+   "train": [
+    "ed.Acid_mist_limb_transformation.01023k013no0kksp.F",
+    "ed.Acid_mist_limb_transformation.01024b0154hjfowa.F",
+    "ed.Acid_mist_limb_transformation.031b8059.F",
+    "ed.Acid_mist_limb_transformation.03466a57.F",
+    "ed.Acid_mist_limb_transformation.163268f8.F",
+    "ed.Acid_mist_limb_transformation.1d0f13c7.F",
+    "ed.Acid_mist_limb_transformation.230479cc.F",
+    "ed.Acid_mist_limb_transformation.4373694d.F",
+    "ed.Acid_mist_limb_transformation.4992e82b.F"
+   ]
+  },
+  "ed.Acid_mist_ring_barrier": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Acid_mist_ring_barrier.124845165dd76dbe.M": "data/processed/transitions_std121/ed.Acid_mist_ring_barrier/ed.Acid_mist_ring_barrier.124845165dd76dbe.M.mp4"
+   },
+   "test": [
+    "ed.Acid_mist_ring_barrier.124845165dd76dbe.M"
+   ],
+   "train": []
+  },
+  "ed.Acidic_Body_Aura": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Acidic_Body_Aura.1666bbc4d89600ca.M": "data/processed/transitions_std121/ed.Acidic_Body_Aura/ed.Acidic_Body_Aura.1666bbc4d89600ca.M.mp4"
+   },
+   "test": [
+    "ed.Acidic_Body_Aura.1666bbc4d89600ca.M"
+   ],
+   "train": []
+  },
+  "ed.Amber_crystal_wings_on_back": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Amber_crystal_wings_on_back.004c47d4.F": "data/processed/transitions_std121/ed.Amber_crystal_wings_on_back/ed.Amber_crystal_wings_on_back.004c47d4.F.mp4",
+    "ed.Amber_crystal_wings_on_back.0b899d5068edcb66.M": "data/processed/transitions_std121/ed.Amber_crystal_wings_on_back/ed.Amber_crystal_wings_on_back.0b899d5068edcb66.M.mp4",
+    "ed.Amber_crystal_wings_on_back.179ee267.F": "data/processed/transitions_std121/ed.Amber_crystal_wings_on_back/ed.Amber_crystal_wings_on_back.179ee267.F.mp4",
+    "ed.Amber_crystal_wings_on_back.17afd067.F": "data/processed/transitions_std121/ed.Amber_crystal_wings_on_back/ed.Amber_crystal_wings_on_back.17afd067.F.mp4",
+    "ed.Amber_crystal_wings_on_back.1c59f6a0.F": "data/processed/transitions_std121/ed.Amber_crystal_wings_on_back/ed.Amber_crystal_wings_on_back.1c59f6a0.F.mp4",
+    "ed.Amber_crystal_wings_on_back.74338fd6ddab169a.M": "data/processed/transitions_std121/ed.Amber_crystal_wings_on_back/ed.Amber_crystal_wings_on_back.74338fd6ddab169a.M.mp4",
+    "ed.Amber_crystal_wings_on_back.993c4486af1416bd.M": "data/processed/transitions_std121/ed.Amber_crystal_wings_on_back/ed.Amber_crystal_wings_on_back.993c4486af1416bd.M.mp4",
+    "ed.Amber_crystal_wings_on_back.cat-48b88619.Z": "data/processed/transitions_std121/ed.Amber_crystal_wings_on_back/ed.Amber_crystal_wings_on_back.cat-48b88619.Z.mp4",
+    "ed.Amber_crystal_wings_on_back.horse-68185e40.Z": "data/processed/transitions_std121/ed.Amber_crystal_wings_on_back/ed.Amber_crystal_wings_on_back.horse-68185e40.Z.mp4",
+    "ed.Amber_crystal_wings_on_back.snake-4fc5450e.Z": "data/processed/transitions_std121/ed.Amber_crystal_wings_on_back/ed.Amber_crystal_wings_on_back.snake-4fc5450e.Z.mp4"
+   },
+   "test": [
+    "ed.Amber_crystal_wings_on_back.0b899d5068edcb66.M"
+   ],
+   "train": [
+    "ed.Amber_crystal_wings_on_back.004c47d4.F",
+    "ed.Amber_crystal_wings_on_back.179ee267.F",
+    "ed.Amber_crystal_wings_on_back.17afd067.F",
+    "ed.Amber_crystal_wings_on_back.1c59f6a0.F",
+    "ed.Amber_crystal_wings_on_back.74338fd6ddab169a.M",
+    "ed.Amber_crystal_wings_on_back.993c4486af1416bd.M",
+    "ed.Amber_crystal_wings_on_back.cat-48b88619.Z",
+    "ed.Amber_crystal_wings_on_back.horse-68185e40.Z",
+    "ed.Amber_crystal_wings_on_back.snake-4fc5450e.Z"
+   ]
+  },
+  "ed.Amber_roots_from_feet": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Amber_roots_from_feet.140f18915e0e58bd.M": "data/processed/transitions_std121/ed.Amber_roots_from_feet/ed.Amber_roots_from_feet.140f18915e0e58bd.M.mp4",
+    "ed.Amber_roots_from_feet.1835f3ac065a039d.M": "data/processed/transitions_std121/ed.Amber_roots_from_feet/ed.Amber_roots_from_feet.1835f3ac065a039d.M.mp4",
+    "ed.Amber_roots_from_feet.19b64bed.F": "data/processed/transitions_std121/ed.Amber_roots_from_feet/ed.Amber_roots_from_feet.19b64bed.F.mp4",
+    "ed.Amber_roots_from_feet.1bba291a.F": "data/processed/transitions_std121/ed.Amber_roots_from_feet/ed.Amber_roots_from_feet.1bba291a.F.mp4",
+    "ed.Amber_roots_from_feet.204cd549.F": "data/processed/transitions_std121/ed.Amber_roots_from_feet/ed.Amber_roots_from_feet.204cd549.F.mp4",
+    "ed.Amber_roots_from_feet.20d2cfea.F": "data/processed/transitions_std121/ed.Amber_roots_from_feet/ed.Amber_roots_from_feet.20d2cfea.F.mp4",
+    "ed.Amber_roots_from_feet.367dcb13.F": "data/processed/transitions_std121/ed.Amber_roots_from_feet/ed.Amber_roots_from_feet.367dcb13.F.mp4",
+    "ed.Amber_roots_from_feet.4206579c.F": "data/processed/transitions_std121/ed.Amber_roots_from_feet/ed.Amber_roots_from_feet.4206579c.F.mp4",
+    "ed.Amber_roots_from_feet.b1c41aca9ebede4f.M": "data/processed/transitions_std121/ed.Amber_roots_from_feet/ed.Amber_roots_from_feet.b1c41aca9ebede4f.M.mp4",
+    "ed.Amber_roots_from_feet.d77ea81a4cc5491f.M": "data/processed/transitions_std121/ed.Amber_roots_from_feet/ed.Amber_roots_from_feet.d77ea81a4cc5491f.M.mp4"
+   },
+   "test": [
+    "ed.Amber_roots_from_feet.140f18915e0e58bd.M"
+   ],
+   "train": [
+    "ed.Amber_roots_from_feet.1835f3ac065a039d.M",
+    "ed.Amber_roots_from_feet.19b64bed.F",
+    "ed.Amber_roots_from_feet.1bba291a.F",
+    "ed.Amber_roots_from_feet.204cd549.F",
+    "ed.Amber_roots_from_feet.20d2cfea.F",
+    "ed.Amber_roots_from_feet.367dcb13.F",
+    "ed.Amber_roots_from_feet.4206579c.F",
+    "ed.Amber_roots_from_feet.b1c41aca9ebede4f.M",
+    "ed.Amber_roots_from_feet.d77ea81a4cc5491f.M"
+   ]
+  },
+  "ed.Amber_streams_from_eyes": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Amber_streams_from_eyes.0384d5cd.F": "data/processed/transitions_std121/ed.Amber_streams_from_eyes/ed.Amber_streams_from_eyes.0384d5cd.F.mp4",
+    "ed.Amber_streams_from_eyes.072d88d7.F": "data/processed/transitions_std121/ed.Amber_streams_from_eyes/ed.Amber_streams_from_eyes.072d88d7.F.mp4",
+    "ed.Amber_streams_from_eyes.09ce2d0c.F": "data/processed/transitions_std121/ed.Amber_streams_from_eyes/ed.Amber_streams_from_eyes.09ce2d0c.F.mp4",
+    "ed.Amber_streams_from_eyes.163ded7ec9e49fc8.M": "data/processed/transitions_std121/ed.Amber_streams_from_eyes/ed.Amber_streams_from_eyes.163ded7ec9e49fc8.M.mp4",
+    "ed.Amber_streams_from_eyes.230baaa4.F": "data/processed/transitions_std121/ed.Amber_streams_from_eyes/ed.Amber_streams_from_eyes.230baaa4.F.mp4",
+    "ed.Amber_streams_from_eyes.2a70dafb.F": "data/processed/transitions_std121/ed.Amber_streams_from_eyes/ed.Amber_streams_from_eyes.2a70dafb.F.mp4",
+    "ed.Amber_streams_from_eyes.3ac7086cb324d068.M": "data/processed/transitions_std121/ed.Amber_streams_from_eyes/ed.Amber_streams_from_eyes.3ac7086cb324d068.M.mp4",
+    "ed.Amber_streams_from_eyes.45989e256245170c.M": "data/processed/transitions_std121/ed.Amber_streams_from_eyes/ed.Amber_streams_from_eyes.45989e256245170c.M.mp4",
+    "ed.Amber_streams_from_eyes.548787d679a168aa.M": "data/processed/transitions_std121/ed.Amber_streams_from_eyes/ed.Amber_streams_from_eyes.548787d679a168aa.M.mp4",
+    "ed.Amber_streams_from_eyes.deer-2f369436.Z": "data/processed/transitions_std121/ed.Amber_streams_from_eyes/ed.Amber_streams_from_eyes.deer-2f369436.Z.mp4"
+   },
+   "test": [
+    "ed.Amber_streams_from_eyes.163ded7ec9e49fc8.M"
+   ],
+   "train": [
+    "ed.Amber_streams_from_eyes.0384d5cd.F",
+    "ed.Amber_streams_from_eyes.072d88d7.F",
+    "ed.Amber_streams_from_eyes.09ce2d0c.F",
+    "ed.Amber_streams_from_eyes.230baaa4.F",
+    "ed.Amber_streams_from_eyes.2a70dafb.F",
+    "ed.Amber_streams_from_eyes.3ac7086cb324d068.M",
+    "ed.Amber_streams_from_eyes.45989e256245170c.M",
+    "ed.Amber_streams_from_eyes.548787d679a168aa.M",
+    "ed.Amber_streams_from_eyes.deer-2f369436.Z"
+   ]
+  },
+  "ed.Amethyst_sword_from_palm": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Amethyst_sword_from_palm.04b7a1c4ba96f12f.M": "data/processed/transitions_std121/ed.Amethyst_sword_from_palm/ed.Amethyst_sword_from_palm.04b7a1c4ba96f12f.M.mp4",
+    "ed.Amethyst_sword_from_palm.2dc64f77.F": "data/processed/transitions_std121/ed.Amethyst_sword_from_palm/ed.Amethyst_sword_from_palm.2dc64f77.F.mp4",
+    "ed.Amethyst_sword_from_palm.34ca5fe0.F": "data/processed/transitions_std121/ed.Amethyst_sword_from_palm/ed.Amethyst_sword_from_palm.34ca5fe0.F.mp4",
+    "ed.Amethyst_sword_from_palm.3a03929c.F": "data/processed/transitions_std121/ed.Amethyst_sword_from_palm/ed.Amethyst_sword_from_palm.3a03929c.F.mp4",
+    "ed.Amethyst_sword_from_palm.40df12a5.F": "data/processed/transitions_std121/ed.Amethyst_sword_from_palm/ed.Amethyst_sword_from_palm.40df12a5.F.mp4",
+    "ed.Amethyst_sword_from_palm.433bea1568b316e0.M": "data/processed/transitions_std121/ed.Amethyst_sword_from_palm/ed.Amethyst_sword_from_palm.433bea1568b316e0.M.mp4",
+    "ed.Amethyst_sword_from_palm.5360b4d6.F": "data/processed/transitions_std121/ed.Amethyst_sword_from_palm/ed.Amethyst_sword_from_palm.5360b4d6.F.mp4",
+    "ed.Amethyst_sword_from_palm.a08133c9c5a39f5e.M": "data/processed/transitions_std121/ed.Amethyst_sword_from_palm/ed.Amethyst_sword_from_palm.a08133c9c5a39f5e.M.mp4",
+    "ed.Amethyst_sword_from_palm.dog-dc8eda24.Z": "data/processed/transitions_std121/ed.Amethyst_sword_from_palm/ed.Amethyst_sword_from_palm.dog-dc8eda24.Z.mp4",
+    "ed.Amethyst_sword_from_palm.f063acfce04d23bf.M": "data/processed/transitions_std121/ed.Amethyst_sword_from_palm/ed.Amethyst_sword_from_palm.f063acfce04d23bf.M.mp4"
+   },
+   "test": [
+    "ed.Amethyst_sword_from_palm.04b7a1c4ba96f12f.M"
+   ],
+   "train": [
+    "ed.Amethyst_sword_from_palm.2dc64f77.F",
+    "ed.Amethyst_sword_from_palm.34ca5fe0.F",
+    "ed.Amethyst_sword_from_palm.3a03929c.F",
+    "ed.Amethyst_sword_from_palm.40df12a5.F",
+    "ed.Amethyst_sword_from_palm.433bea1568b316e0.M",
+    "ed.Amethyst_sword_from_palm.5360b4d6.F",
+    "ed.Amethyst_sword_from_palm.a08133c9c5a39f5e.M",
+    "ed.Amethyst_sword_from_palm.dog-dc8eda24.Z",
+    "ed.Amethyst_sword_from_palm.f063acfce04d23bf.M"
+   ]
+  },
+  "ed.Ant_glyph_aura": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Ant_glyph_aura.0f6ac03f76f43971.M": "data/processed/transitions_std121/ed.Ant_glyph_aura/ed.Ant_glyph_aura.0f6ac03f76f43971.M.mp4"
+   },
+   "test": [
+    "ed.Ant_glyph_aura.0f6ac03f76f43971.M"
+   ],
+   "train": []
+  },
+  "ed.Ants_flow_from_eyes": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Ants_flow_from_eyes.0140dbe0.F": "data/processed/transitions_std121/ed.Ants_flow_from_eyes/ed.Ants_flow_from_eyes.0140dbe0.F.mp4",
+    "ed.Ants_flow_from_eyes.0620ac943c6d8ba8.M": "data/processed/transitions_std121/ed.Ants_flow_from_eyes/ed.Ants_flow_from_eyes.0620ac943c6d8ba8.M.mp4",
+    "ed.Ants_flow_from_eyes.1edb761bb1f2054b.M": "data/processed/transitions_std121/ed.Ants_flow_from_eyes/ed.Ants_flow_from_eyes.1edb761bb1f2054b.M.mp4",
+    "ed.Ants_flow_from_eyes.1f0dd9a8.F": "data/processed/transitions_std121/ed.Ants_flow_from_eyes/ed.Ants_flow_from_eyes.1f0dd9a8.F.mp4",
+    "ed.Ants_flow_from_eyes.2172f2ac.F": "data/processed/transitions_std121/ed.Ants_flow_from_eyes/ed.Ants_flow_from_eyes.2172f2ac.F.mp4",
+    "ed.Ants_flow_from_eyes.26704b77.F": "data/processed/transitions_std121/ed.Ants_flow_from_eyes/ed.Ants_flow_from_eyes.26704b77.F.mp4",
+    "ed.Ants_flow_from_eyes.3c7dde92.F": "data/processed/transitions_std121/ed.Ants_flow_from_eyes/ed.Ants_flow_from_eyes.3c7dde92.F.mp4",
+    "ed.Ants_flow_from_eyes.402b2102.F": "data/processed/transitions_std121/ed.Ants_flow_from_eyes/ed.Ants_flow_from_eyes.402b2102.F.mp4",
+    "ed.Ants_flow_from_eyes.47a88523.F": "data/processed/transitions_std121/ed.Ants_flow_from_eyes/ed.Ants_flow_from_eyes.47a88523.F.mp4",
+    "ed.Ants_flow_from_eyes.5491a4a6.F": "data/processed/transitions_std121/ed.Ants_flow_from_eyes/ed.Ants_flow_from_eyes.5491a4a6.F.mp4"
+   },
+   "test": [
+    "ed.Ants_flow_from_eyes.0620ac943c6d8ba8.M"
+   ],
+   "train": [
+    "ed.Ants_flow_from_eyes.0140dbe0.F",
+    "ed.Ants_flow_from_eyes.1edb761bb1f2054b.M",
+    "ed.Ants_flow_from_eyes.1f0dd9a8.F",
+    "ed.Ants_flow_from_eyes.2172f2ac.F",
+    "ed.Ants_flow_from_eyes.26704b77.F",
+    "ed.Ants_flow_from_eyes.3c7dde92.F",
+    "ed.Ants_flow_from_eyes.402b2102.F",
+    "ed.Ants_flow_from_eyes.47a88523.F",
+    "ed.Ants_flow_from_eyes.5491a4a6.F"
+   ]
+  },
+  "ed.Ants_in_hair": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Ants_in_hair.1c25610a8ac6e272.M": "data/processed/transitions_std121/ed.Ants_in_hair/ed.Ants_in_hair.1c25610a8ac6e272.M.mp4"
+   },
+   "test": [
+    "ed.Ants_in_hair.1c25610a8ac6e272.M"
+   ],
+   "train": []
+  },
+  "ed.Apple_blossoms_in_hair": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Apple_blossoms_in_hair.0619b4c4abb83d1a.M": "data/processed/transitions_std121/ed.Apple_blossoms_in_hair/ed.Apple_blossoms_in_hair.0619b4c4abb83d1a.M.mp4"
+   },
+   "test": [
+    "ed.Apple_blossoms_in_hair.0619b4c4abb83d1a.M"
+   ],
+   "train": []
+  },
+  "ed.Apple_core_in_chest": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Apple_core_in_chest.09795be76e2b7ec4.M": "data/processed/transitions_std121/ed.Apple_core_in_chest/ed.Apple_core_in_chest.09795be76e2b7ec4.M.mp4"
+   },
+   "test": [
+    "ed.Apple_core_in_chest.09795be76e2b7ec4.M"
+   ],
+   "train": []
+  },
+  "ed.Arm_chip_serpent": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Arm_chip_serpent.0128b962.F": "data/processed/transitions_std121/ed.Arm_chip_serpent/ed.Arm_chip_serpent.0128b962.F.mp4",
+    "ed.Arm_chip_serpent.025499df.F": "data/processed/transitions_std121/ed.Arm_chip_serpent/ed.Arm_chip_serpent.025499df.F.mp4",
+    "ed.Arm_chip_serpent.069629f4.F": "data/processed/transitions_std121/ed.Arm_chip_serpent/ed.Arm_chip_serpent.069629f4.F.mp4",
+    "ed.Arm_chip_serpent.0c90fe08.F": "data/processed/transitions_std121/ed.Arm_chip_serpent/ed.Arm_chip_serpent.0c90fe08.F.mp4",
+    "ed.Arm_chip_serpent.140f18915e0e58bd.M": "data/processed/transitions_std121/ed.Arm_chip_serpent/ed.Arm_chip_serpent.140f18915e0e58bd.M.mp4",
+    "ed.Arm_chip_serpent.30a8736f.F": "data/processed/transitions_std121/ed.Arm_chip_serpent/ed.Arm_chip_serpent.30a8736f.F.mp4",
+    "ed.Arm_chip_serpent.347c23cc.F": "data/processed/transitions_std121/ed.Arm_chip_serpent/ed.Arm_chip_serpent.347c23cc.F.mp4",
+    "ed.Arm_chip_serpent.39eb394b.F": "data/processed/transitions_std121/ed.Arm_chip_serpent/ed.Arm_chip_serpent.39eb394b.F.mp4",
+    "ed.Arm_chip_serpent.74338fd6ddab169a.M": "data/processed/transitions_std121/ed.Arm_chip_serpent/ed.Arm_chip_serpent.74338fd6ddab169a.M.mp4",
+    "ed.Arm_chip_serpent.raven-2b7fd2e7.Z": "data/processed/transitions_std121/ed.Arm_chip_serpent/ed.Arm_chip_serpent.raven-2b7fd2e7.Z.mp4"
+   },
+   "test": [
+    "ed.Arm_chip_serpent.140f18915e0e58bd.M"
+   ],
+   "train": [
+    "ed.Arm_chip_serpent.0128b962.F",
+    "ed.Arm_chip_serpent.025499df.F",
+    "ed.Arm_chip_serpent.069629f4.F",
+    "ed.Arm_chip_serpent.0c90fe08.F",
+    "ed.Arm_chip_serpent.30a8736f.F",
+    "ed.Arm_chip_serpent.347c23cc.F",
+    "ed.Arm_chip_serpent.39eb394b.F",
+    "ed.Arm_chip_serpent.74338fd6ddab169a.M",
+    "ed.Arm_chip_serpent.raven-2b7fd2e7.Z"
+   ]
+  },
+  "ed.Arm_circuit_electronic_cloud": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Arm_circuit_electronic_cloud.0ecbeef919f89a12.M": "data/processed/transitions_std121/ed.Arm_circuit_electronic_cloud/ed.Arm_circuit_electronic_cloud.0ecbeef919f89a12.M.mp4"
+   },
+   "test": [
+    "ed.Arm_circuit_electronic_cloud.0ecbeef919f89a12.M"
+   ],
+   "train": []
+  },
+  "ed.Arm_data_corruption": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Arm_data_corruption.04b7a1c4ba96f12f.M": "data/processed/transitions_std121/ed.Arm_data_corruption/ed.Arm_data_corruption.04b7a1c4ba96f12f.M.mp4",
+    "ed.Arm_data_corruption.09795be76e2b7ec4.M": "data/processed/transitions_std121/ed.Arm_data_corruption/ed.Arm_data_corruption.09795be76e2b7ec4.M.mp4",
+    "ed.Arm_data_corruption.0c151834.F": "data/processed/transitions_std121/ed.Arm_data_corruption/ed.Arm_data_corruption.0c151834.F.mp4",
+    "ed.Arm_data_corruption.1ae83afd.F": "data/processed/transitions_std121/ed.Arm_data_corruption/ed.Arm_data_corruption.1ae83afd.F.mp4",
+    "ed.Arm_data_corruption.34195089.F": "data/processed/transitions_std121/ed.Arm_data_corruption/ed.Arm_data_corruption.34195089.F.mp4",
+    "ed.Arm_data_corruption.3b7ceeeb-37dc-37.F": "data/processed/transitions_std121/ed.Arm_data_corruption/ed.Arm_data_corruption.3b7ceeeb-37dc-37.F.mp4",
+    "ed.Arm_data_corruption.47f06e8b17e7ec26.M": "data/processed/transitions_std121/ed.Arm_data_corruption/ed.Arm_data_corruption.47f06e8b17e7ec26.M.mp4",
+    "ed.Arm_data_corruption.528305bc.F": "data/processed/transitions_std121/ed.Arm_data_corruption/ed.Arm_data_corruption.528305bc.F.mp4",
+    "ed.Arm_data_corruption.boar-a0904f5a.Z": "data/processed/transitions_std121/ed.Arm_data_corruption/ed.Arm_data_corruption.boar-a0904f5a.Z.mp4",
+    "ed.Arm_data_corruption.cheetah-b6c8b42f.Z": "data/processed/transitions_std121/ed.Arm_data_corruption/ed.Arm_data_corruption.cheetah-b6c8b42f.Z.mp4"
+   },
+   "test": [
+    "ed.Arm_data_corruption.04b7a1c4ba96f12f.M"
+   ],
+   "train": [
+    "ed.Arm_data_corruption.09795be76e2b7ec4.M",
+    "ed.Arm_data_corruption.0c151834.F",
+    "ed.Arm_data_corruption.1ae83afd.F",
+    "ed.Arm_data_corruption.34195089.F",
+    "ed.Arm_data_corruption.3b7ceeeb-37dc-37.F",
+    "ed.Arm_data_corruption.47f06e8b17e7ec26.M",
+    "ed.Arm_data_corruption.528305bc.F",
+    "ed.Arm_data_corruption.boar-a0904f5a.Z",
+    "ed.Arm_data_corruption.cheetah-b6c8b42f.Z"
+   ]
+  },
+  "ed.Arm_shadow_chains": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Arm_shadow_chains.0e513cd16d065c6a.M": "data/processed/transitions_std121/ed.Arm_shadow_chains/ed.Arm_shadow_chains.0e513cd16d065c6a.M.mp4"
+   },
+   "test": [
+    "ed.Arm_shadow_chains.0e513cd16d065c6a.M"
+   ],
+   "train": []
+  },
+  "ed.Array_encircling_feet": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Array_encircling_feet.0c27bd005ad52648.M": "data/processed/transitions_std121/ed.Array_encircling_feet/ed.Array_encircling_feet.0c27bd005ad52648.M.mp4"
+   },
+   "test": [
+    "ed.Array_encircling_feet.0c27bd005ad52648.M"
+   ],
+   "train": []
+  },
+  "ed.Avocado_Pulp_Aura": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Avocado_Pulp_Aura.05d351c5.F": "data/processed/transitions_std121/ed.Avocado_Pulp_Aura/ed.Avocado_Pulp_Aura.05d351c5.F.mp4",
+    "ed.Avocado_Pulp_Aura.05dd53c7.F": "data/processed/transitions_std121/ed.Avocado_Pulp_Aura/ed.Avocado_Pulp_Aura.05dd53c7.F.mp4",
+    "ed.Avocado_Pulp_Aura.09002d27.F": "data/processed/transitions_std121/ed.Avocado_Pulp_Aura/ed.Avocado_Pulp_Aura.09002d27.F.mp4",
+    "ed.Avocado_Pulp_Aura.0b55e158.F": "data/processed/transitions_std121/ed.Avocado_Pulp_Aura/ed.Avocado_Pulp_Aura.0b55e158.F.mp4",
+    "ed.Avocado_Pulp_Aura.163ded7ec9e49fc8.M": "data/processed/transitions_std121/ed.Avocado_Pulp_Aura/ed.Avocado_Pulp_Aura.163ded7ec9e49fc8.M.mp4",
+    "ed.Avocado_Pulp_Aura.1eef95db.F": "data/processed/transitions_std121/ed.Avocado_Pulp_Aura/ed.Avocado_Pulp_Aura.1eef95db.F.mp4",
+    "ed.Avocado_Pulp_Aura.29d23f38.F": "data/processed/transitions_std121/ed.Avocado_Pulp_Aura/ed.Avocado_Pulp_Aura.29d23f38.F.mp4",
+    "ed.Avocado_Pulp_Aura.30bee061.F": "data/processed/transitions_std121/ed.Avocado_Pulp_Aura/ed.Avocado_Pulp_Aura.30bee061.F.mp4",
+    "ed.Avocado_Pulp_Aura.71e2179ce04faa74.M": "data/processed/transitions_std121/ed.Avocado_Pulp_Aura/ed.Avocado_Pulp_Aura.71e2179ce04faa74.M.mp4",
+    "ed.Avocado_Pulp_Aura.sloth-66020fca.Z": "data/processed/transitions_std121/ed.Avocado_Pulp_Aura/ed.Avocado_Pulp_Aura.sloth-66020fca.Z.mp4"
+   },
+   "test": [
+    "ed.Avocado_Pulp_Aura.163ded7ec9e49fc8.M"
+   ],
+   "train": [
+    "ed.Avocado_Pulp_Aura.05d351c5.F",
+    "ed.Avocado_Pulp_Aura.05dd53c7.F",
+    "ed.Avocado_Pulp_Aura.09002d27.F",
+    "ed.Avocado_Pulp_Aura.0b55e158.F",
+    "ed.Avocado_Pulp_Aura.1eef95db.F",
+    "ed.Avocado_Pulp_Aura.29d23f38.F",
+    "ed.Avocado_Pulp_Aura.30bee061.F",
+    "ed.Avocado_Pulp_Aura.71e2179ce04faa74.M",
+    "ed.Avocado_Pulp_Aura.sloth-66020fca.Z"
+   ]
+  },
+  "ed.Avocado_Seed_Pendant": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Avocado_Seed_Pendant.01027101.F": "data/processed/transitions_std121/ed.Avocado_Seed_Pendant/ed.Avocado_Seed_Pendant.01027101.F.mp4",
+    "ed.Avocado_Seed_Pendant.07ecaee96f206e14.M": "data/processed/transitions_std121/ed.Avocado_Seed_Pendant/ed.Avocado_Seed_Pendant.07ecaee96f206e14.M.mp4",
+    "ed.Avocado_Seed_Pendant.09d8bb78.F": "data/processed/transitions_std121/ed.Avocado_Seed_Pendant/ed.Avocado_Seed_Pendant.09d8bb78.F.mp4",
+    "ed.Avocado_Seed_Pendant.136fbbc1.F": "data/processed/transitions_std121/ed.Avocado_Seed_Pendant/ed.Avocado_Seed_Pendant.136fbbc1.F.mp4",
+    "ed.Avocado_Seed_Pendant.3136e40d.F": "data/processed/transitions_std121/ed.Avocado_Seed_Pendant/ed.Avocado_Seed_Pendant.3136e40d.F.mp4",
+    "ed.Avocado_Seed_Pendant.31c654f9.F": "data/processed/transitions_std121/ed.Avocado_Seed_Pendant/ed.Avocado_Seed_Pendant.31c654f9.F.mp4",
+    "ed.Avocado_Seed_Pendant.325e8c0e.F": "data/processed/transitions_std121/ed.Avocado_Seed_Pendant/ed.Avocado_Seed_Pendant.325e8c0e.F.mp4",
+    "ed.Avocado_Seed_Pendant.4a94fdbc-ebdc-3a.F": "data/processed/transitions_std121/ed.Avocado_Seed_Pendant/ed.Avocado_Seed_Pendant.4a94fdbc-ebdc-3a.F.mp4",
+    "ed.Avocado_Seed_Pendant.cf3fa73700a5f407.M": "data/processed/transitions_std121/ed.Avocado_Seed_Pendant/ed.Avocado_Seed_Pendant.cf3fa73700a5f407.M.mp4",
+    "ed.Avocado_Seed_Pendant.sea_turtle-bd624.Z": "data/processed/transitions_std121/ed.Avocado_Seed_Pendant/ed.Avocado_Seed_Pendant.sea_turtle-bd624.Z.mp4"
+   },
+   "test": [
+    "ed.Avocado_Seed_Pendant.07ecaee96f206e14.M"
+   ],
+   "train": [
+    "ed.Avocado_Seed_Pendant.01027101.F",
+    "ed.Avocado_Seed_Pendant.09d8bb78.F",
+    "ed.Avocado_Seed_Pendant.136fbbc1.F",
+    "ed.Avocado_Seed_Pendant.3136e40d.F",
+    "ed.Avocado_Seed_Pendant.31c654f9.F",
+    "ed.Avocado_Seed_Pendant.325e8c0e.F",
+    "ed.Avocado_Seed_Pendant.4a94fdbc-ebdc-3a.F",
+    "ed.Avocado_Seed_Pendant.cf3fa73700a5f407.M",
+    "ed.Avocado_Seed_Pendant.sea_turtle-bd624.Z"
+   ]
+  },
+  "ed.Back_Born_Letter_Wings": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Back_Born_Letter_Wings.0b899d5068edcb66.M": "data/processed/transitions_std121/ed.Back_Born_Letter_Wings/ed.Back_Born_Letter_Wings.0b899d5068edcb66.M.mp4",
+    "ed.Back_Born_Letter_Wings.1688b032.F": "data/processed/transitions_std121/ed.Back_Born_Letter_Wings/ed.Back_Born_Letter_Wings.1688b032.F.mp4",
+    "ed.Back_Born_Letter_Wings.20a3cba6.F": "data/processed/transitions_std121/ed.Back_Born_Letter_Wings/ed.Back_Born_Letter_Wings.20a3cba6.F.mp4",
+    "ed.Back_Born_Letter_Wings.2128e130.F": "data/processed/transitions_std121/ed.Back_Born_Letter_Wings/ed.Back_Born_Letter_Wings.2128e130.F.mp4",
+    "ed.Back_Born_Letter_Wings.25330b8a.F": "data/processed/transitions_std121/ed.Back_Born_Letter_Wings/ed.Back_Born_Letter_Wings.25330b8a.F.mp4",
+    "ed.Back_Born_Letter_Wings.36913e7c.F": "data/processed/transitions_std121/ed.Back_Born_Letter_Wings/ed.Back_Born_Letter_Wings.36913e7c.F.mp4",
+    "ed.Back_Born_Letter_Wings.8558269e232d4350.M": "data/processed/transitions_std121/ed.Back_Born_Letter_Wings/ed.Back_Born_Letter_Wings.8558269e232d4350.M.mp4",
+    "ed.Back_Born_Letter_Wings.b2582a9d9584ad2d.M": "data/processed/transitions_std121/ed.Back_Born_Letter_Wings/ed.Back_Born_Letter_Wings.b2582a9d9584ad2d.M.mp4",
+    "ed.Back_Born_Letter_Wings.f097ca373f334c40.M": "data/processed/transitions_std121/ed.Back_Born_Letter_Wings/ed.Back_Born_Letter_Wings.f097ca373f334c40.M.mp4",
+    "ed.Back_Born_Letter_Wings.monkey-fbecea80.Z": "data/processed/transitions_std121/ed.Back_Born_Letter_Wings/ed.Back_Born_Letter_Wings.monkey-fbecea80.Z.mp4"
+   },
+   "test": [
+    "ed.Back_Born_Letter_Wings.0b899d5068edcb66.M"
+   ],
+   "train": [
+    "ed.Back_Born_Letter_Wings.1688b032.F",
+    "ed.Back_Born_Letter_Wings.20a3cba6.F",
+    "ed.Back_Born_Letter_Wings.2128e130.F",
+    "ed.Back_Born_Letter_Wings.25330b8a.F",
+    "ed.Back_Born_Letter_Wings.36913e7c.F",
+    "ed.Back_Born_Letter_Wings.8558269e232d4350.M",
+    "ed.Back_Born_Letter_Wings.b2582a9d9584ad2d.M",
+    "ed.Back_Born_Letter_Wings.f097ca373f334c40.M",
+    "ed.Back_Born_Letter_Wings.monkey-fbecea80.Z"
+   ]
+  },
+  "ed.Back_bubble_cloak": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Back_bubble_cloak.070d11c3.F": "data/processed/transitions_std121/ed.Back_bubble_cloak/ed.Back_bubble_cloak.070d11c3.F.mp4",
+    "ed.Back_bubble_cloak.0ff2b03d.F": "data/processed/transitions_std121/ed.Back_bubble_cloak/ed.Back_bubble_cloak.0ff2b03d.F.mp4",
+    "ed.Back_bubble_cloak.12b66285.F": "data/processed/transitions_std121/ed.Back_bubble_cloak/ed.Back_bubble_cloak.12b66285.F.mp4",
+    "ed.Back_bubble_cloak.18d376f4.F": "data/processed/transitions_std121/ed.Back_bubble_cloak/ed.Back_bubble_cloak.18d376f4.F.mp4",
+    "ed.Back_bubble_cloak.1c1353a8962ef9be.M": "data/processed/transitions_std121/ed.Back_bubble_cloak/ed.Back_bubble_cloak.1c1353a8962ef9be.M.mp4",
+    "ed.Back_bubble_cloak.4ba3f2bd.F": "data/processed/transitions_std121/ed.Back_bubble_cloak/ed.Back_bubble_cloak.4ba3f2bd.F.mp4",
+    "ed.Back_bubble_cloak.597dafda.F": "data/processed/transitions_std121/ed.Back_bubble_cloak/ed.Back_bubble_cloak.597dafda.F.mp4",
+    "ed.Back_bubble_cloak.5f78b1fb.F": "data/processed/transitions_std121/ed.Back_bubble_cloak/ed.Back_bubble_cloak.5f78b1fb.F.mp4",
+    "ed.Back_bubble_cloak.658ad98e.F": "data/processed/transitions_std121/ed.Back_bubble_cloak/ed.Back_bubble_cloak.658ad98e.F.mp4",
+    "ed.Back_bubble_cloak.d511403f79173932.M": "data/processed/transitions_std121/ed.Back_bubble_cloak/ed.Back_bubble_cloak.d511403f79173932.M.mp4"
+   },
+   "test": [
+    "ed.Back_bubble_cloak.1c1353a8962ef9be.M"
+   ],
+   "train": [
+    "ed.Back_bubble_cloak.070d11c3.F",
+    "ed.Back_bubble_cloak.0ff2b03d.F",
+    "ed.Back_bubble_cloak.12b66285.F",
+    "ed.Back_bubble_cloak.18d376f4.F",
+    "ed.Back_bubble_cloak.4ba3f2bd.F",
+    "ed.Back_bubble_cloak.597dafda.F",
+    "ed.Back_bubble_cloak.5f78b1fb.F",
+    "ed.Back_bubble_cloak.658ad98e.F",
+    "ed.Back_bubble_cloak.d511403f79173932.M"
+   ]
+  },
+  "ed.Back_laser_wings": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Back_laser_wings.05a9aaf7.F": "data/processed/transitions_std121/ed.Back_laser_wings/ed.Back_laser_wings.05a9aaf7.F.mp4",
+    "ed.Back_laser_wings.0e4ad9078efa26f4.M": "data/processed/transitions_std121/ed.Back_laser_wings/ed.Back_laser_wings.0e4ad9078efa26f4.M.mp4",
+    "ed.Back_laser_wings.43368535.F": "data/processed/transitions_std121/ed.Back_laser_wings/ed.Back_laser_wings.43368535.F.mp4",
+    "ed.Back_laser_wings.4e14f847.F": "data/processed/transitions_std121/ed.Back_laser_wings/ed.Back_laser_wings.4e14f847.F.mp4",
+    "ed.Back_laser_wings.59d5128b10709e4e.M": "data/processed/transitions_std121/ed.Back_laser_wings/ed.Back_laser_wings.59d5128b10709e4e.M.mp4",
+    "ed.Back_laser_wings.5d642219.F": "data/processed/transitions_std121/ed.Back_laser_wings/ed.Back_laser_wings.5d642219.F.mp4",
+    "ed.Back_laser_wings.5eb2b5e9.F": "data/processed/transitions_std121/ed.Back_laser_wings/ed.Back_laser_wings.5eb2b5e9.F.mp4",
+    "ed.Back_laser_wings.655d5a91-0993-38.F": "data/processed/transitions_std121/ed.Back_laser_wings/ed.Back_laser_wings.655d5a91-0993-38.F.mp4",
+    "ed.Back_laser_wings.fish-ea28b9d6.Z": "data/processed/transitions_std121/ed.Back_laser_wings/ed.Back_laser_wings.fish-ea28b9d6.Z.mp4",
+    "ed.Back_laser_wings.flamingo-dd0c1c3.Z": "data/processed/transitions_std121/ed.Back_laser_wings/ed.Back_laser_wings.flamingo-dd0c1c3.Z.mp4"
+   },
+   "test": [
+    "ed.Back_laser_wings.0e4ad9078efa26f4.M"
+   ],
+   "train": [
+    "ed.Back_laser_wings.05a9aaf7.F",
+    "ed.Back_laser_wings.43368535.F",
+    "ed.Back_laser_wings.4e14f847.F",
+    "ed.Back_laser_wings.59d5128b10709e4e.M",
+    "ed.Back_laser_wings.5d642219.F",
+    "ed.Back_laser_wings.5eb2b5e9.F",
+    "ed.Back_laser_wings.655d5a91-0993-38.F",
+    "ed.Back_laser_wings.fish-ea28b9d6.Z",
+    "ed.Back_laser_wings.flamingo-dd0c1c3.Z"
+   ]
+  },
+  "ed.Back_page_wings": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Back_page_wings.06c44eb16774b786.M": "data/processed/transitions_std121/ed.Back_page_wings/ed.Back_page_wings.06c44eb16774b786.M.mp4"
+   },
+   "test": [
+    "ed.Back_page_wings.06c44eb16774b786.M"
+   ],
+   "train": []
+  },
+  "ed.Bamboo_shield_in_front": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Bamboo_shield_in_front.0a6af777.F": "data/processed/transitions_std121/ed.Bamboo_shield_in_front/ed.Bamboo_shield_in_front.0a6af777.F.mp4",
+    "ed.Bamboo_shield_in_front.0f4fc4edacb19f56.M": "data/processed/transitions_std121/ed.Bamboo_shield_in_front/ed.Bamboo_shield_in_front.0f4fc4edacb19f56.M.mp4",
+    "ed.Bamboo_shield_in_front.1187134f.F": "data/processed/transitions_std121/ed.Bamboo_shield_in_front/ed.Bamboo_shield_in_front.1187134f.F.mp4",
+    "ed.Bamboo_shield_in_front.1d6f5fb0.F": "data/processed/transitions_std121/ed.Bamboo_shield_in_front/ed.Bamboo_shield_in_front.1d6f5fb0.F.mp4",
+    "ed.Bamboo_shield_in_front.1e1f0e5e.F": "data/processed/transitions_std121/ed.Bamboo_shield_in_front/ed.Bamboo_shield_in_front.1e1f0e5e.F.mp4",
+    "ed.Bamboo_shield_in_front.2919f4aa.F": "data/processed/transitions_std121/ed.Bamboo_shield_in_front/ed.Bamboo_shield_in_front.2919f4aa.F.mp4",
+    "ed.Bamboo_shield_in_front.2d0d1e6f.F": "data/processed/transitions_std121/ed.Bamboo_shield_in_front/ed.Bamboo_shield_in_front.2d0d1e6f.F.mp4",
+    "ed.Bamboo_shield_in_front.cb893d10c0387c6b.M": "data/processed/transitions_std121/ed.Bamboo_shield_in_front/ed.Bamboo_shield_in_front.cb893d10c0387c6b.M.mp4",
+    "ed.Bamboo_shield_in_front.seal-cccded49.Z": "data/processed/transitions_std121/ed.Bamboo_shield_in_front/ed.Bamboo_shield_in_front.seal-cccded49.Z.mp4",
+    "ed.Bamboo_shield_in_front.tiger-10ab50b5.Z": "data/processed/transitions_std121/ed.Bamboo_shield_in_front/ed.Bamboo_shield_in_front.tiger-10ab50b5.Z.mp4"
+   },
+   "test": [
+    "ed.Bamboo_shield_in_front.0f4fc4edacb19f56.M"
+   ],
+   "train": [
+    "ed.Bamboo_shield_in_front.0a6af777.F",
+    "ed.Bamboo_shield_in_front.1187134f.F",
+    "ed.Bamboo_shield_in_front.1d6f5fb0.F",
+    "ed.Bamboo_shield_in_front.1e1f0e5e.F",
+    "ed.Bamboo_shield_in_front.2919f4aa.F",
+    "ed.Bamboo_shield_in_front.2d0d1e6f.F",
+    "ed.Bamboo_shield_in_front.cb893d10c0387c6b.M",
+    "ed.Bamboo_shield_in_front.seal-cccded49.Z",
+    "ed.Bamboo_shield_in_front.tiger-10ab50b5.Z"
+   ]
+  },
+  "ed.Bile_aura_hands": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Bile_aura_hands.0415d687.F": "data/processed/transitions_std121/ed.Bile_aura_hands/ed.Bile_aura_hands.0415d687.F.mp4",
+    "ed.Bile_aura_hands.0620ac943c6d8ba8.M": "data/processed/transitions_std121/ed.Bile_aura_hands/ed.Bile_aura_hands.0620ac943c6d8ba8.M.mp4",
+    "ed.Bile_aura_hands.091e4775.F": "data/processed/transitions_std121/ed.Bile_aura_hands/ed.Bile_aura_hands.091e4775.F.mp4",
+    "ed.Bile_aura_hands.0c87d8ca.F": "data/processed/transitions_std121/ed.Bile_aura_hands/ed.Bile_aura_hands.0c87d8ca.F.mp4",
+    "ed.Bile_aura_hands.1506cdc4.F": "data/processed/transitions_std121/ed.Bile_aura_hands/ed.Bile_aura_hands.1506cdc4.F.mp4",
+    "ed.Bile_aura_hands.20d3afe8.F": "data/processed/transitions_std121/ed.Bile_aura_hands/ed.Bile_aura_hands.20d3afe8.F.mp4",
+    "ed.Bile_aura_hands.57c796b7.F": "data/processed/transitions_std121/ed.Bile_aura_hands/ed.Bile_aura_hands.57c796b7.F.mp4",
+    "ed.Bile_aura_hands.ac198e9b1922c8b5.M": "data/processed/transitions_std121/ed.Bile_aura_hands/ed.Bile_aura_hands.ac198e9b1922c8b5.M.mp4",
+    "ed.Bile_aura_hands.bird-6a46c2ec.Z": "data/processed/transitions_std121/ed.Bile_aura_hands/ed.Bile_aura_hands.bird-6a46c2ec.Z.mp4",
+    "ed.Bile_aura_hands.d7254428e1f68ada.M": "data/processed/transitions_std121/ed.Bile_aura_hands/ed.Bile_aura_hands.d7254428e1f68ada.M.mp4"
+   },
+   "test": [
+    "ed.Bile_aura_hands.0620ac943c6d8ba8.M"
+   ],
+   "train": [
+    "ed.Bile_aura_hands.0415d687.F",
+    "ed.Bile_aura_hands.091e4775.F",
+    "ed.Bile_aura_hands.0c87d8ca.F",
+    "ed.Bile_aura_hands.1506cdc4.F",
+    "ed.Bile_aura_hands.20d3afe8.F",
+    "ed.Bile_aura_hands.57c796b7.F",
+    "ed.Bile_aura_hands.ac198e9b1922c8b5.M",
+    "ed.Bile_aura_hands.bird-6a46c2ec.Z",
+    "ed.Bile_aura_hands.d7254428e1f68ada.M"
+   ]
+  },
+  "ed.Body_Banknote_Shield": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Body_Banknote_Shield.0640ff900e5d6c50.M": "data/processed/transitions_std121/ed.Body_Banknote_Shield/ed.Body_Banknote_Shield.0640ff900e5d6c50.M.mp4"
+   },
+   "test": [
+    "ed.Body_Banknote_Shield.0640ff900e5d6c50.M"
+   ],
+   "train": []
+  },
+  "ed.Body_Laser_Aura": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Body_Laser_Aura.1858d4165ab7c7d2.M": "data/processed/transitions_std121/ed.Body_Laser_Aura/ed.Body_Laser_Aura.1858d4165ab7c7d2.M.mp4"
+   },
+   "test": [
+    "ed.Body_Laser_Aura.1858d4165ab7c7d2.M"
+   ],
+   "train": []
+  },
+  "ed.Body_Meteorite_Crystal": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Body_Meteorite_Crystal.01024s016k7c3pmn.F": "data/processed/transitions_std121/ed.Body_Meteorite_Crystal/ed.Body_Meteorite_Crystal.01024s016k7c3pmn.F.mp4",
+    "ed.Body_Meteorite_Crystal.0e4ad9078efa26f4.M": "data/processed/transitions_std121/ed.Body_Meteorite_Crystal/ed.Body_Meteorite_Crystal.0e4ad9078efa26f4.M.mp4",
+    "ed.Body_Meteorite_Crystal.118dbe8e.F": "data/processed/transitions_std121/ed.Body_Meteorite_Crystal/ed.Body_Meteorite_Crystal.118dbe8e.F.mp4",
+    "ed.Body_Meteorite_Crystal.1bc4d40d.F": "data/processed/transitions_std121/ed.Body_Meteorite_Crystal/ed.Body_Meteorite_Crystal.1bc4d40d.F.mp4",
+    "ed.Body_Meteorite_Crystal.2840f416.F": "data/processed/transitions_std121/ed.Body_Meteorite_Crystal/ed.Body_Meteorite_Crystal.2840f416.F.mp4",
+    "ed.Body_Meteorite_Crystal.28a2479a.F": "data/processed/transitions_std121/ed.Body_Meteorite_Crystal/ed.Body_Meteorite_Crystal.28a2479a.F.mp4",
+    "ed.Body_Meteorite_Crystal.2c5a4b0c.F": "data/processed/transitions_std121/ed.Body_Meteorite_Crystal/ed.Body_Meteorite_Crystal.2c5a4b0c.F.mp4",
+    "ed.Body_Meteorite_Crystal.51acf339.F": "data/processed/transitions_std121/ed.Body_Meteorite_Crystal/ed.Body_Meteorite_Crystal.51acf339.F.mp4",
+    "ed.Body_Meteorite_Crystal.51e03e63.F": "data/processed/transitions_std121/ed.Body_Meteorite_Crystal/ed.Body_Meteorite_Crystal.51e03e63.F.mp4",
+    "ed.Body_Meteorite_Crystal.dog-e4d32067.Z": "data/processed/transitions_std121/ed.Body_Meteorite_Crystal/ed.Body_Meteorite_Crystal.dog-e4d32067.Z.mp4"
+   },
+   "test": [
+    "ed.Body_Meteorite_Crystal.0e4ad9078efa26f4.M"
+   ],
+   "train": [
+    "ed.Body_Meteorite_Crystal.01024s016k7c3pmn.F",
+    "ed.Body_Meteorite_Crystal.118dbe8e.F",
+    "ed.Body_Meteorite_Crystal.1bc4d40d.F",
+    "ed.Body_Meteorite_Crystal.2840f416.F",
+    "ed.Body_Meteorite_Crystal.28a2479a.F",
+    "ed.Body_Meteorite_Crystal.2c5a4b0c.F",
+    "ed.Body_Meteorite_Crystal.51acf339.F",
+    "ed.Body_Meteorite_Crystal.51e03e63.F",
+    "ed.Body_Meteorite_Crystal.dog-e4d32067.Z"
+   ]
+  },
+  "ed.Body_as_mist": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Body_as_mist.1e2592b60cc87490.M": "data/processed/transitions_std121/ed.Body_as_mist/ed.Body_as_mist.1e2592b60cc87490.M.mp4"
+   },
+   "test": [
+    "ed.Body_as_mist.1e2592b60cc87490.M"
+   ],
+   "train": []
+  },
+  "ed.Body_gear_field": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Body_gear_field.06ad4482b7de1301.M": "data/processed/transitions_std121/ed.Body_gear_field/ed.Body_gear_field.06ad4482b7de1301.M.mp4",
+    "ed.Body_gear_field.10e9d671.F": "data/processed/transitions_std121/ed.Body_gear_field/ed.Body_gear_field.10e9d671.F.mp4",
+    "ed.Body_gear_field.202ac3a6.F": "data/processed/transitions_std121/ed.Body_gear_field/ed.Body_gear_field.202ac3a6.F.mp4",
+    "ed.Body_gear_field.22cc32ab.F": "data/processed/transitions_std121/ed.Body_gear_field/ed.Body_gear_field.22cc32ab.F.mp4",
+    "ed.Body_gear_field.2b01cd5e.F": "data/processed/transitions_std121/ed.Body_gear_field/ed.Body_gear_field.2b01cd5e.F.mp4",
+    "ed.Body_gear_field.3d1700fc.F": "data/processed/transitions_std121/ed.Body_gear_field/ed.Body_gear_field.3d1700fc.F.mp4",
+    "ed.Body_gear_field.3d5519c8.F": "data/processed/transitions_std121/ed.Body_gear_field/ed.Body_gear_field.3d5519c8.F.mp4",
+    "ed.Body_gear_field.4bc59fcee49a8d5b.M": "data/processed/transitions_std121/ed.Body_gear_field/ed.Body_gear_field.4bc59fcee49a8d5b.M.mp4",
+    "ed.Body_gear_field.612d634d.F": "data/processed/transitions_std121/ed.Body_gear_field/ed.Body_gear_field.612d634d.F.mp4",
+    "ed.Body_gear_field.fish-14b822dd.Z": "data/processed/transitions_std121/ed.Body_gear_field/ed.Body_gear_field.fish-14b822dd.Z.mp4"
+   },
+   "test": [
+    "ed.Body_gear_field.06ad4482b7de1301.M"
+   ],
+   "train": [
+    "ed.Body_gear_field.10e9d671.F",
+    "ed.Body_gear_field.202ac3a6.F",
+    "ed.Body_gear_field.22cc32ab.F",
+    "ed.Body_gear_field.2b01cd5e.F",
+    "ed.Body_gear_field.3d1700fc.F",
+    "ed.Body_gear_field.3d5519c8.F",
+    "ed.Body_gear_field.4bc59fcee49a8d5b.M",
+    "ed.Body_gear_field.612d634d.F",
+    "ed.Body_gear_field.fish-14b822dd.Z"
+   ]
+  },
+  "ed.Body_laser_shield": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Body_laser_shield.03f28acb3eadecd1.M": "data/processed/transitions_std121/ed.Body_laser_shield/ed.Body_laser_shield.03f28acb3eadecd1.M.mp4"
+   },
+   "test": [
+    "ed.Body_laser_shield.03f28acb3eadecd1.M"
+   ],
+   "train": []
+  },
+  "ed.Body_vine_slime": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Body_vine_slime.142742df912f8b98.M": "data/processed/transitions_std121/ed.Body_vine_slime/ed.Body_vine_slime.142742df912f8b98.M.mp4"
+   },
+   "test": [
+    "ed.Body_vine_slime.142742df912f8b98.M"
+   ],
+   "train": []
+  },
+  "ed.Brass_serpent_coil": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Brass_serpent_coil.01024101ki4hckbq.F": "data/processed/transitions_std121/ed.Brass_serpent_coil/ed.Brass_serpent_coil.01024101ki4hckbq.F.mp4",
+    "ed.Brass_serpent_coil.059f1f52.F": "data/processed/transitions_std121/ed.Brass_serpent_coil/ed.Brass_serpent_coil.059f1f52.F.mp4",
+    "ed.Brass_serpent_coil.084e15cf.F": "data/processed/transitions_std121/ed.Brass_serpent_coil/ed.Brass_serpent_coil.084e15cf.F.mp4",
+    "ed.Brass_serpent_coil.0c27bd005ad52648.M": "data/processed/transitions_std121/ed.Brass_serpent_coil/ed.Brass_serpent_coil.0c27bd005ad52648.M.mp4",
+    "ed.Brass_serpent_coil.164ce911.F": "data/processed/transitions_std121/ed.Brass_serpent_coil/ed.Brass_serpent_coil.164ce911.F.mp4",
+    "ed.Brass_serpent_coil.1728ea54ae676560.M": "data/processed/transitions_std121/ed.Brass_serpent_coil/ed.Brass_serpent_coil.1728ea54ae676560.M.mp4",
+    "ed.Brass_serpent_coil.286b2c139afae517.M": "data/processed/transitions_std121/ed.Brass_serpent_coil/ed.Brass_serpent_coil.286b2c139afae517.M.mp4",
+    "ed.Brass_serpent_coil.2becfc79-8f75-30.F": "data/processed/transitions_std121/ed.Brass_serpent_coil/ed.Brass_serpent_coil.2becfc79-8f75-30.F.mp4",
+    "ed.Brass_serpent_coil.39939528.F": "data/processed/transitions_std121/ed.Brass_serpent_coil/ed.Brass_serpent_coil.39939528.F.mp4",
+    "ed.Brass_serpent_coil.3a60a6ef.F": "data/processed/transitions_std121/ed.Brass_serpent_coil/ed.Brass_serpent_coil.3a60a6ef.F.mp4"
+   },
+   "test": [
+    "ed.Brass_serpent_coil.1728ea54ae676560.M"
+   ],
+   "train": [
+    "ed.Brass_serpent_coil.01024101ki4hckbq.F",
+    "ed.Brass_serpent_coil.059f1f52.F",
+    "ed.Brass_serpent_coil.084e15cf.F",
+    "ed.Brass_serpent_coil.0c27bd005ad52648.M",
+    "ed.Brass_serpent_coil.164ce911.F",
+    "ed.Brass_serpent_coil.286b2c139afae517.M",
+    "ed.Brass_serpent_coil.2becfc79-8f75-30.F",
+    "ed.Brass_serpent_coil.39939528.F",
+    "ed.Brass_serpent_coil.3a60a6ef.F"
+   ]
+  },
+  "ed.Chaotic_wings_from_shoulders": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Chaotic_wings_from_shoulders.0101c501.F": "data/processed/transitions_std121/ed.Chaotic_wings_from_shoulders/ed.Chaotic_wings_from_shoulders.0101c501.F.mp4",
+    "ed.Chaotic_wings_from_shoulders.0144752b-70cb-37.F": "data/processed/transitions_std121/ed.Chaotic_wings_from_shoulders/ed.Chaotic_wings_from_shoulders.0144752b-70cb-37.F.mp4",
+    "ed.Chaotic_wings_from_shoulders.07356c76.F": "data/processed/transitions_std121/ed.Chaotic_wings_from_shoulders/ed.Chaotic_wings_from_shoulders.07356c76.F.mp4",
+    "ed.Chaotic_wings_from_shoulders.09588544.F": "data/processed/transitions_std121/ed.Chaotic_wings_from_shoulders/ed.Chaotic_wings_from_shoulders.09588544.F.mp4",
+    "ed.Chaotic_wings_from_shoulders.1728ea54ae676560.M": "data/processed/transitions_std121/ed.Chaotic_wings_from_shoulders/ed.Chaotic_wings_from_shoulders.1728ea54ae676560.M.mp4",
+    "ed.Chaotic_wings_from_shoulders.2a931fb1.F": "data/processed/transitions_std121/ed.Chaotic_wings_from_shoulders/ed.Chaotic_wings_from_shoulders.2a931fb1.F.mp4",
+    "ed.Chaotic_wings_from_shoulders.2cef91fe.F": "data/processed/transitions_std121/ed.Chaotic_wings_from_shoulders/ed.Chaotic_wings_from_shoulders.2cef91fe.F.mp4",
+    "ed.Chaotic_wings_from_shoulders.c4cca916f233e949.M": "data/processed/transitions_std121/ed.Chaotic_wings_from_shoulders/ed.Chaotic_wings_from_shoulders.c4cca916f233e949.M.mp4",
+    "ed.Chaotic_wings_from_shoulders.cheetah-f0d49b2a.Z": "data/processed/transitions_std121/ed.Chaotic_wings_from_shoulders/ed.Chaotic_wings_from_shoulders.cheetah-f0d49b2a.Z.mp4",
+    "ed.Chaotic_wings_from_shoulders.seal-52afd26d.Z": "data/processed/transitions_std121/ed.Chaotic_wings_from_shoulders/ed.Chaotic_wings_from_shoulders.seal-52afd26d.Z.mp4"
+   },
+   "test": [
+    "ed.Chaotic_wings_from_shoulders.1728ea54ae676560.M"
+   ],
+   "train": [
+    "ed.Chaotic_wings_from_shoulders.0101c501.F",
+    "ed.Chaotic_wings_from_shoulders.0144752b-70cb-37.F",
+    "ed.Chaotic_wings_from_shoulders.07356c76.F",
+    "ed.Chaotic_wings_from_shoulders.09588544.F",
+    "ed.Chaotic_wings_from_shoulders.2a931fb1.F",
+    "ed.Chaotic_wings_from_shoulders.2cef91fe.F",
+    "ed.Chaotic_wings_from_shoulders.c4cca916f233e949.M",
+    "ed.Chaotic_wings_from_shoulders.cheetah-f0d49b2a.Z",
+    "ed.Chaotic_wings_from_shoulders.seal-52afd26d.Z"
+   ]
+  },
+  "ed.Chest_Burst_Ribbons": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Chest_Burst_Ribbons.135cf195.F": "data/processed/transitions_std121/ed.Chest_Burst_Ribbons/ed.Chest_Burst_Ribbons.135cf195.F.mp4",
+    "ed.Chest_Burst_Ribbons.1db1c2ae4733d3dc.M": "data/processed/transitions_std121/ed.Chest_Burst_Ribbons/ed.Chest_Burst_Ribbons.1db1c2ae4733d3dc.M.mp4",
+    "ed.Chest_Burst_Ribbons.267d2d2270082773.M": "data/processed/transitions_std121/ed.Chest_Burst_Ribbons/ed.Chest_Burst_Ribbons.267d2d2270082773.M.mp4",
+    "ed.Chest_Burst_Ribbons.26c65382.F": "data/processed/transitions_std121/ed.Chest_Burst_Ribbons/ed.Chest_Burst_Ribbons.26c65382.F.mp4",
+    "ed.Chest_Burst_Ribbons.281704cb.F": "data/processed/transitions_std121/ed.Chest_Burst_Ribbons/ed.Chest_Burst_Ribbons.281704cb.F.mp4",
+    "ed.Chest_Burst_Ribbons.2976ffbd.F": "data/processed/transitions_std121/ed.Chest_Burst_Ribbons/ed.Chest_Burst_Ribbons.2976ffbd.F.mp4",
+    "ed.Chest_Burst_Ribbons.2c403323.F": "data/processed/transitions_std121/ed.Chest_Burst_Ribbons/ed.Chest_Burst_Ribbons.2c403323.F.mp4",
+    "ed.Chest_Burst_Ribbons.3281d523.F": "data/processed/transitions_std121/ed.Chest_Burst_Ribbons/ed.Chest_Burst_Ribbons.3281d523.F.mp4",
+    "ed.Chest_Burst_Ribbons.cat-39221814.Z": "data/processed/transitions_std121/ed.Chest_Burst_Ribbons/ed.Chest_Burst_Ribbons.cat-39221814.Z.mp4",
+    "ed.Chest_Burst_Ribbons.fish-1e1cd40f.Z": "data/processed/transitions_std121/ed.Chest_Burst_Ribbons/ed.Chest_Burst_Ribbons.fish-1e1cd40f.Z.mp4"
+   },
+   "test": [
+    "ed.Chest_Burst_Ribbons.1db1c2ae4733d3dc.M"
+   ],
+   "train": [
+    "ed.Chest_Burst_Ribbons.135cf195.F",
+    "ed.Chest_Burst_Ribbons.267d2d2270082773.M",
+    "ed.Chest_Burst_Ribbons.26c65382.F",
+    "ed.Chest_Burst_Ribbons.281704cb.F",
+    "ed.Chest_Burst_Ribbons.2976ffbd.F",
+    "ed.Chest_Burst_Ribbons.2c403323.F",
+    "ed.Chest_Burst_Ribbons.3281d523.F",
+    "ed.Chest_Burst_Ribbons.cat-39221814.Z",
+    "ed.Chest_Burst_Ribbons.fish-1e1cd40f.Z"
+   ]
+  },
+  "ed.Chest_Erupting_Shield": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Chest_Erupting_Shield.0a55c067.F": "data/processed/transitions_std121/ed.Chest_Erupting_Shield/ed.Chest_Erupting_Shield.0a55c067.F.mp4",
+    "ed.Chest_Erupting_Shield.0c902a49.F": "data/processed/transitions_std121/ed.Chest_Erupting_Shield/ed.Chest_Erupting_Shield.0c902a49.F.mp4",
+    "ed.Chest_Erupting_Shield.0e8ec528ffd657e9.M": "data/processed/transitions_std121/ed.Chest_Erupting_Shield/ed.Chest_Erupting_Shield.0e8ec528ffd657e9.M.mp4",
+    "ed.Chest_Erupting_Shield.1b47bd82.F": "data/processed/transitions_std121/ed.Chest_Erupting_Shield/ed.Chest_Erupting_Shield.1b47bd82.F.mp4",
+    "ed.Chest_Erupting_Shield.1febeec2e34b94f4.M": "data/processed/transitions_std121/ed.Chest_Erupting_Shield/ed.Chest_Erupting_Shield.1febeec2e34b94f4.M.mp4",
+    "ed.Chest_Erupting_Shield.284251c1.F": "data/processed/transitions_std121/ed.Chest_Erupting_Shield/ed.Chest_Erupting_Shield.284251c1.F.mp4",
+    "ed.Chest_Erupting_Shield.30481ecb.F": "data/processed/transitions_std121/ed.Chest_Erupting_Shield/ed.Chest_Erupting_Shield.30481ecb.F.mp4",
+    "ed.Chest_Erupting_Shield.337aa627.F": "data/processed/transitions_std121/ed.Chest_Erupting_Shield/ed.Chest_Erupting_Shield.337aa627.F.mp4",
+    "ed.Chest_Erupting_Shield.41e86253.F": "data/processed/transitions_std121/ed.Chest_Erupting_Shield/ed.Chest_Erupting_Shield.41e86253.F.mp4",
+    "ed.Chest_Erupting_Shield.958f2642980d32df.M": "data/processed/transitions_std121/ed.Chest_Erupting_Shield/ed.Chest_Erupting_Shield.958f2642980d32df.M.mp4"
+   },
+   "test": [
+    "ed.Chest_Erupting_Shield.0e8ec528ffd657e9.M"
+   ],
+   "train": [
+    "ed.Chest_Erupting_Shield.0a55c067.F",
+    "ed.Chest_Erupting_Shield.0c902a49.F",
+    "ed.Chest_Erupting_Shield.1b47bd82.F",
+    "ed.Chest_Erupting_Shield.1febeec2e34b94f4.M",
+    "ed.Chest_Erupting_Shield.284251c1.F",
+    "ed.Chest_Erupting_Shield.30481ecb.F",
+    "ed.Chest_Erupting_Shield.337aa627.F",
+    "ed.Chest_Erupting_Shield.41e86253.F",
+    "ed.Chest_Erupting_Shield.958f2642980d32df.M"
+   ]
+  },
+  "ed.Chest_Laser_Burst": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Chest_Laser_Burst.01023p01komuc37f.F": "data/processed/transitions_std121/ed.Chest_Laser_Burst/ed.Chest_Laser_Burst.01023p01komuc37f.F.mp4",
+    "ed.Chest_Laser_Burst.01274ebd.F": "data/processed/transitions_std121/ed.Chest_Laser_Burst/ed.Chest_Laser_Burst.01274ebd.F.mp4",
+    "ed.Chest_Laser_Burst.06307b7f.F": "data/processed/transitions_std121/ed.Chest_Laser_Burst/ed.Chest_Laser_Burst.06307b7f.F.mp4",
+    "ed.Chest_Laser_Burst.0f7621eb-e835-3d.F": "data/processed/transitions_std121/ed.Chest_Laser_Burst/ed.Chest_Laser_Burst.0f7621eb-e835-3d.F.mp4",
+    "ed.Chest_Laser_Burst.14f92f08.F": "data/processed/transitions_std121/ed.Chest_Laser_Burst/ed.Chest_Laser_Burst.14f92f08.F.mp4",
+    "ed.Chest_Laser_Burst.1db1c2ae4733d3dc.M": "data/processed/transitions_std121/ed.Chest_Laser_Burst/ed.Chest_Laser_Burst.1db1c2ae4733d3dc.M.mp4",
+    "ed.Chest_Laser_Burst.25b255e6.F": "data/processed/transitions_std121/ed.Chest_Laser_Burst/ed.Chest_Laser_Burst.25b255e6.F.mp4",
+    "ed.Chest_Laser_Burst.451c84e369d8fe75.M": "data/processed/transitions_std121/ed.Chest_Laser_Burst/ed.Chest_Laser_Burst.451c84e369d8fe75.M.mp4",
+    "ed.Chest_Laser_Burst.skunk-daa53244.Z": "data/processed/transitions_std121/ed.Chest_Laser_Burst/ed.Chest_Laser_Burst.skunk-daa53244.Z.mp4",
+    "ed.Chest_Laser_Burst.swan-375f7e9b.Z": "data/processed/transitions_std121/ed.Chest_Laser_Burst/ed.Chest_Laser_Burst.swan-375f7e9b.Z.mp4"
+   },
+   "test": [
+    "ed.Chest_Laser_Burst.1db1c2ae4733d3dc.M"
+   ],
+   "train": [
+    "ed.Chest_Laser_Burst.01023p01komuc37f.F",
+    "ed.Chest_Laser_Burst.01274ebd.F",
+    "ed.Chest_Laser_Burst.06307b7f.F",
+    "ed.Chest_Laser_Burst.0f7621eb-e835-3d.F",
+    "ed.Chest_Laser_Burst.14f92f08.F",
+    "ed.Chest_Laser_Burst.25b255e6.F",
+    "ed.Chest_Laser_Burst.451c84e369d8fe75.M",
+    "ed.Chest_Laser_Burst.skunk-daa53244.Z",
+    "ed.Chest_Laser_Burst.swan-375f7e9b.Z"
+   ]
+  },
+  "ed.Chest_fish_burst": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Chest_fish_burst.07ecaee96f206e14.M": "data/processed/transitions_std121/ed.Chest_fish_burst/ed.Chest_fish_burst.07ecaee96f206e14.M.mp4",
+    "ed.Chest_fish_burst.0e645d8b.F": "data/processed/transitions_std121/ed.Chest_fish_burst/ed.Chest_fish_burst.0e645d8b.F.mp4",
+    "ed.Chest_fish_burst.0eb6b5f1.F": "data/processed/transitions_std121/ed.Chest_fish_burst/ed.Chest_fish_burst.0eb6b5f1.F.mp4",
+    "ed.Chest_fish_burst.233421a1-fdaf-34.F": "data/processed/transitions_std121/ed.Chest_fish_burst/ed.Chest_fish_burst.233421a1-fdaf-34.F.mp4",
+    "ed.Chest_fish_burst.3725f25e.F": "data/processed/transitions_std121/ed.Chest_fish_burst/ed.Chest_fish_burst.3725f25e.F.mp4",
+    "ed.Chest_fish_burst.5e1c0434.F": "data/processed/transitions_std121/ed.Chest_fish_burst/ed.Chest_fish_burst.5e1c0434.F.mp4",
+    "ed.Chest_fish_burst.69844736.F": "data/processed/transitions_std121/ed.Chest_fish_burst/ed.Chest_fish_burst.69844736.F.mp4",
+    "ed.Chest_fish_burst.6cbdb9c2.F": "data/processed/transitions_std121/ed.Chest_fish_burst/ed.Chest_fish_burst.6cbdb9c2.F.mp4",
+    "ed.Chest_fish_burst.7ad08282.F": "data/processed/transitions_std121/ed.Chest_fish_burst/ed.Chest_fish_burst.7ad08282.F.mp4",
+    "ed.Chest_fish_burst.7f6636f1.F": "data/processed/transitions_std121/ed.Chest_fish_burst/ed.Chest_fish_burst.7f6636f1.F.mp4"
+   },
+   "test": [
+    "ed.Chest_fish_burst.07ecaee96f206e14.M"
+   ],
+   "train": [
+    "ed.Chest_fish_burst.0e645d8b.F",
+    "ed.Chest_fish_burst.0eb6b5f1.F",
+    "ed.Chest_fish_burst.233421a1-fdaf-34.F",
+    "ed.Chest_fish_burst.3725f25e.F",
+    "ed.Chest_fish_burst.5e1c0434.F",
+    "ed.Chest_fish_burst.69844736.F",
+    "ed.Chest_fish_burst.6cbdb9c2.F",
+    "ed.Chest_fish_burst.7ad08282.F",
+    "ed.Chest_fish_burst.7f6636f1.F"
+   ]
+  },
+  "ed.Chest_light_field": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Chest_light_field.07d69ed5.F": "data/processed/transitions_std121/ed.Chest_light_field/ed.Chest_light_field.07d69ed5.F.mp4",
+    "ed.Chest_light_field.0c9f1936.F": "data/processed/transitions_std121/ed.Chest_light_field/ed.Chest_light_field.0c9f1936.F.mp4",
+    "ed.Chest_light_field.0ea3a544.F": "data/processed/transitions_std121/ed.Chest_light_field/ed.Chest_light_field.0ea3a544.F.mp4",
+    "ed.Chest_light_field.1b5355ab.F": "data/processed/transitions_std121/ed.Chest_light_field/ed.Chest_light_field.1b5355ab.F.mp4",
+    "ed.Chest_light_field.1c1353a8962ef9be.M": "data/processed/transitions_std121/ed.Chest_light_field/ed.Chest_light_field.1c1353a8962ef9be.M.mp4",
+    "ed.Chest_light_field.38888fe2.F": "data/processed/transitions_std121/ed.Chest_light_field/ed.Chest_light_field.38888fe2.F.mp4",
+    "ed.Chest_light_field.cat-48b88619.Z": "data/processed/transitions_std121/ed.Chest_light_field/ed.Chest_light_field.cat-48b88619.Z.mp4",
+    "ed.Chest_light_field.dog-dc8eda24.Z": "data/processed/transitions_std121/ed.Chest_light_field/ed.Chest_light_field.dog-dc8eda24.Z.mp4",
+    "ed.Chest_light_field.moose-bed7bf9a.Z": "data/processed/transitions_std121/ed.Chest_light_field/ed.Chest_light_field.moose-bed7bf9a.Z.mp4",
+    "ed.Chest_light_field.turtle-77754b55.Z": "data/processed/transitions_std121/ed.Chest_light_field/ed.Chest_light_field.turtle-77754b55.Z.mp4"
+   },
+   "test": [
+    "ed.Chest_light_field.1c1353a8962ef9be.M"
+   ],
+   "train": [
+    "ed.Chest_light_field.07d69ed5.F",
+    "ed.Chest_light_field.0c9f1936.F",
+    "ed.Chest_light_field.0ea3a544.F",
+    "ed.Chest_light_field.1b5355ab.F",
+    "ed.Chest_light_field.38888fe2.F",
+    "ed.Chest_light_field.cat-48b88619.Z",
+    "ed.Chest_light_field.dog-dc8eda24.Z",
+    "ed.Chest_light_field.moose-bed7bf9a.Z",
+    "ed.Chest_light_field.turtle-77754b55.Z"
+   ]
+  },
+  "ed.Chest_sigil": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Chest_sigil.06d5f776.F": "data/processed/transitions_std121/ed.Chest_sigil/ed.Chest_sigil.06d5f776.F.mp4",
+    "ed.Chest_sigil.0e8ec528ffd657e9.M": "data/processed/transitions_std121/ed.Chest_sigil/ed.Chest_sigil.0e8ec528ffd657e9.M.mp4",
+    "ed.Chest_sigil.13ef3ef8.F": "data/processed/transitions_std121/ed.Chest_sigil/ed.Chest_sigil.13ef3ef8.F.mp4",
+    "ed.Chest_sigil.18b092ef.F": "data/processed/transitions_std121/ed.Chest_sigil/ed.Chest_sigil.18b092ef.F.mp4",
+    "ed.Chest_sigil.1c94995c.F": "data/processed/transitions_std121/ed.Chest_sigil/ed.Chest_sigil.1c94995c.F.mp4",
+    "ed.Chest_sigil.1e260211.F": "data/processed/transitions_std121/ed.Chest_sigil/ed.Chest_sigil.1e260211.F.mp4",
+    "ed.Chest_sigil.27600c90.F": "data/processed/transitions_std121/ed.Chest_sigil/ed.Chest_sigil.27600c90.F.mp4",
+    "ed.Chest_sigil.34b9c324.F": "data/processed/transitions_std121/ed.Chest_sigil/ed.Chest_sigil.34b9c324.F.mp4",
+    "ed.Chest_sigil.eagle-774703b7.Z": "data/processed/transitions_std121/ed.Chest_sigil/ed.Chest_sigil.eagle-774703b7.Z.mp4",
+    "ed.Chest_sigil.skunk-ab0eae3b.Z": "data/processed/transitions_std121/ed.Chest_sigil/ed.Chest_sigil.skunk-ab0eae3b.Z.mp4"
+   },
+   "test": [
+    "ed.Chest_sigil.0e8ec528ffd657e9.M"
+   ],
+   "train": [
+    "ed.Chest_sigil.06d5f776.F",
+    "ed.Chest_sigil.13ef3ef8.F",
+    "ed.Chest_sigil.18b092ef.F",
+    "ed.Chest_sigil.1c94995c.F",
+    "ed.Chest_sigil.1e260211.F",
+    "ed.Chest_sigil.27600c90.F",
+    "ed.Chest_sigil.34b9c324.F",
+    "ed.Chest_sigil.eagle-774703b7.Z",
+    "ed.Chest_sigil.skunk-ab0eae3b.Z"
+   ]
+  },
+  "ed.Code_Mirror_Duplicate": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Code_Mirror_Duplicate.02c8c50a3fbcd46d.M": "data/processed/transitions_std121/ed.Code_Mirror_Duplicate/ed.Code_Mirror_Duplicate.02c8c50a3fbcd46d.M.mp4"
+   },
+   "test": [
+    "ed.Code_Mirror_Duplicate.02c8c50a3fbcd46d.M"
+   ],
+   "train": []
+  },
+  "ed.Cold_Tears_Gaze": {
+   "n_clips": 1,
+   "paths": {
+    "ed.Cold_Tears_Gaze.0e28a4f8490df43f.M": "data/processed/transitions_std121/ed.Cold_Tears_Gaze/ed.Cold_Tears_Gaze.0e28a4f8490df43f.M.mp4"
+   },
+   "test": [
+    "ed.Cold_Tears_Gaze.0e28a4f8490df43f.M"
+   ],
+   "train": []
+  },
+  "ed.Confetti_Burst_from_Hands": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Confetti_Burst_from_Hands.06aa92a5.F": "data/processed/transitions_std121/ed.Confetti_Burst_from_Hands/ed.Confetti_Burst_from_Hands.06aa92a5.F.mp4",
+    "ed.Confetti_Burst_from_Hands.074ed53f4c51b40d.M": "data/processed/transitions_std121/ed.Confetti_Burst_from_Hands/ed.Confetti_Burst_from_Hands.074ed53f4c51b40d.M.mp4",
+    "ed.Confetti_Burst_from_Hands.0a3c4a47.F": "data/processed/transitions_std121/ed.Confetti_Burst_from_Hands/ed.Confetti_Burst_from_Hands.0a3c4a47.F.mp4",
+    "ed.Confetti_Burst_from_Hands.0deafe88.F": "data/processed/transitions_std121/ed.Confetti_Burst_from_Hands/ed.Confetti_Burst_from_Hands.0deafe88.F.mp4",
+    "ed.Confetti_Burst_from_Hands.116c93366b05a44e.M": "data/processed/transitions_std121/ed.Confetti_Burst_from_Hands/ed.Confetti_Burst_from_Hands.116c93366b05a44e.M.mp4",
+    "ed.Confetti_Burst_from_Hands.161fdaf3.F": "data/processed/transitions_std121/ed.Confetti_Burst_from_Hands/ed.Confetti_Burst_from_Hands.161fdaf3.F.mp4",
+    "ed.Confetti_Burst_from_Hands.21c5db2d.F": "data/processed/transitions_std121/ed.Confetti_Burst_from_Hands/ed.Confetti_Burst_from_Hands.21c5db2d.F.mp4",
+    "ed.Confetti_Burst_from_Hands.2af115c7.F": "data/processed/transitions_std121/ed.Confetti_Burst_from_Hands/ed.Confetti_Burst_from_Hands.2af115c7.F.mp4",
+    "ed.Confetti_Burst_from_Hands.45363300bf22cd46.M": "data/processed/transitions_std121/ed.Confetti_Burst_from_Hands/ed.Confetti_Burst_from_Hands.45363300bf22cd46.M.mp4",
+    "ed.Confetti_Burst_from_Hands.lynx-3cd863b7.Z": "data/processed/transitions_std121/ed.Confetti_Burst_from_Hands/ed.Confetti_Burst_from_Hands.lynx-3cd863b7.Z.mp4"
+   },
+   "test": [
+    "ed.Confetti_Burst_from_Hands.116c93366b05a44e.M"
+   ],
+   "train": [
+    "ed.Confetti_Burst_from_Hands.06aa92a5.F",
+    "ed.Confetti_Burst_from_Hands.074ed53f4c51b40d.M",
+    "ed.Confetti_Burst_from_Hands.0a3c4a47.F",
+    "ed.Confetti_Burst_from_Hands.0deafe88.F",
+    "ed.Confetti_Burst_from_Hands.161fdaf3.F",
+    "ed.Confetti_Burst_from_Hands.21c5db2d.F",
+    "ed.Confetti_Burst_from_Hands.2af115c7.F",
+    "ed.Confetti_Burst_from_Hands.45363300bf22cd46.M",
+    "ed.Confetti_Burst_from_Hands.lynx-3cd863b7.Z"
+   ]
+  },
+  "ed.Cucumber_seeds_from_chest": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Cucumber_seeds_from_chest.01f95ede20c32e61.M": "data/processed/transitions_std121/ed.Cucumber_seeds_from_chest/ed.Cucumber_seeds_from_chest.01f95ede20c32e61.M.mp4",
+    "ed.Cucumber_seeds_from_chest.092cead3.F": "data/processed/transitions_std121/ed.Cucumber_seeds_from_chest/ed.Cucumber_seeds_from_chest.092cead3.F.mp4",
+    "ed.Cucumber_seeds_from_chest.116c93366b05a44e.M": "data/processed/transitions_std121/ed.Cucumber_seeds_from_chest/ed.Cucumber_seeds_from_chest.116c93366b05a44e.M.mp4",
+    "ed.Cucumber_seeds_from_chest.1b3b7d2f.F": "data/processed/transitions_std121/ed.Cucumber_seeds_from_chest/ed.Cucumber_seeds_from_chest.1b3b7d2f.F.mp4",
+    "ed.Cucumber_seeds_from_chest.242089aa.F": "data/processed/transitions_std121/ed.Cucumber_seeds_from_chest/ed.Cucumber_seeds_from_chest.242089aa.F.mp4",
+    "ed.Cucumber_seeds_from_chest.30cce17c.F": "data/processed/transitions_std121/ed.Cucumber_seeds_from_chest/ed.Cucumber_seeds_from_chest.30cce17c.F.mp4",
+    "ed.Cucumber_seeds_from_chest.3a6b3c270c81c685.M": "data/processed/transitions_std121/ed.Cucumber_seeds_from_chest/ed.Cucumber_seeds_from_chest.3a6b3c270c81c685.M.mp4",
+    "ed.Cucumber_seeds_from_chest.40f534ff.F": "data/processed/transitions_std121/ed.Cucumber_seeds_from_chest/ed.Cucumber_seeds_from_chest.40f534ff.F.mp4",
+    "ed.Cucumber_seeds_from_chest.830b7a3dc6ca36d8.M": "data/processed/transitions_std121/ed.Cucumber_seeds_from_chest/ed.Cucumber_seeds_from_chest.830b7a3dc6ca36d8.M.mp4",
+    "ed.Cucumber_seeds_from_chest.fish-ea28b9d6.Z": "data/processed/transitions_std121/ed.Cucumber_seeds_from_chest/ed.Cucumber_seeds_from_chest.fish-ea28b9d6.Z.mp4"
+   },
+   "test": [
+    "ed.Cucumber_seeds_from_chest.01f95ede20c32e61.M"
+   ],
+   "train": [
+    "ed.Cucumber_seeds_from_chest.092cead3.F",
+    "ed.Cucumber_seeds_from_chest.116c93366b05a44e.M",
+    "ed.Cucumber_seeds_from_chest.1b3b7d2f.F",
+    "ed.Cucumber_seeds_from_chest.242089aa.F",
+    "ed.Cucumber_seeds_from_chest.30cce17c.F",
+    "ed.Cucumber_seeds_from_chest.3a6b3c270c81c685.M",
+    "ed.Cucumber_seeds_from_chest.40f534ff.F",
+    "ed.Cucumber_seeds_from_chest.830b7a3dc6ca36d8.M",
+    "ed.Cucumber_seeds_from_chest.fish-ea28b9d6.Z"
+   ]
+  },
+  "ed.Dark_mist_from_mouth": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Dark_mist_from_mouth.03191b8530530fce.M": "data/processed/transitions_std121/ed.Dark_mist_from_mouth/ed.Dark_mist_from_mouth.03191b8530530fce.M.mp4",
+    "ed.Dark_mist_from_mouth.13125221.F": "data/processed/transitions_std121/ed.Dark_mist_from_mouth/ed.Dark_mist_from_mouth.13125221.F.mp4",
+    "ed.Dark_mist_from_mouth.16e32602-8143-39.F": "data/processed/transitions_std121/ed.Dark_mist_from_mouth/ed.Dark_mist_from_mouth.16e32602-8143-39.F.mp4",
+    "ed.Dark_mist_from_mouth.234ec47fbc4bce84.M": "data/processed/transitions_std121/ed.Dark_mist_from_mouth/ed.Dark_mist_from_mouth.234ec47fbc4bce84.M.mp4",
+    "ed.Dark_mist_from_mouth.3500f1e6.F": "data/processed/transitions_std121/ed.Dark_mist_from_mouth/ed.Dark_mist_from_mouth.3500f1e6.F.mp4",
+    "ed.Dark_mist_from_mouth.35ee837c.F": "data/processed/transitions_std121/ed.Dark_mist_from_mouth/ed.Dark_mist_from_mouth.35ee837c.F.mp4",
+    "ed.Dark_mist_from_mouth.3c305b9a.F": "data/processed/transitions_std121/ed.Dark_mist_from_mouth/ed.Dark_mist_from_mouth.3c305b9a.F.mp4",
+    "ed.Dark_mist_from_mouth.4de6063a.F": "data/processed/transitions_std121/ed.Dark_mist_from_mouth/ed.Dark_mist_from_mouth.4de6063a.F.mp4",
+    "ed.Dark_mist_from_mouth.cat-07b7abfa.Z": "data/processed/transitions_std121/ed.Dark_mist_from_mouth/ed.Dark_mist_from_mouth.cat-07b7abfa.Z.mp4",
+    "ed.Dark_mist_from_mouth.seal-6cdb13a8.Z": "data/processed/transitions_std121/ed.Dark_mist_from_mouth/ed.Dark_mist_from_mouth.seal-6cdb13a8.Z.mp4"
+   },
+   "test": [
+    "ed.Dark_mist_from_mouth.03191b8530530fce.M"
+   ],
+   "train": [
+    "ed.Dark_mist_from_mouth.13125221.F",
+    "ed.Dark_mist_from_mouth.16e32602-8143-39.F",
+    "ed.Dark_mist_from_mouth.234ec47fbc4bce84.M",
+    "ed.Dark_mist_from_mouth.3500f1e6.F",
+    "ed.Dark_mist_from_mouth.35ee837c.F",
+    "ed.Dark_mist_from_mouth.3c305b9a.F",
+    "ed.Dark_mist_from_mouth.4de6063a.F",
+    "ed.Dark_mist_from_mouth.cat-07b7abfa.Z",
+    "ed.Dark_mist_from_mouth.seal-6cdb13a8.Z"
+   ]
+  },
+  "ed.Dark_mist_wings_from_back": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Dark_mist_wings_from_back.03191b8530530fce.M": "data/processed/transitions_std121/ed.Dark_mist_wings_from_back/ed.Dark_mist_wings_from_back.03191b8530530fce.M.mp4",
+    "ed.Dark_mist_wings_from_back.1394ce46.F": "data/processed/transitions_std121/ed.Dark_mist_wings_from_back/ed.Dark_mist_wings_from_back.1394ce46.F.mp4",
+    "ed.Dark_mist_wings_from_back.16d23900.F": "data/processed/transitions_std121/ed.Dark_mist_wings_from_back/ed.Dark_mist_wings_from_back.16d23900.F.mp4",
+    "ed.Dark_mist_wings_from_back.198a2221.F": "data/processed/transitions_std121/ed.Dark_mist_wings_from_back/ed.Dark_mist_wings_from_back.198a2221.F.mp4",
+    "ed.Dark_mist_wings_from_back.1dcb5391.F": "data/processed/transitions_std121/ed.Dark_mist_wings_from_back/ed.Dark_mist_wings_from_back.1dcb5391.F.mp4",
+    "ed.Dark_mist_wings_from_back.207b367b.F": "data/processed/transitions_std121/ed.Dark_mist_wings_from_back/ed.Dark_mist_wings_from_back.207b367b.F.mp4",
+    "ed.Dark_mist_wings_from_back.3edcab96.F": "data/processed/transitions_std121/ed.Dark_mist_wings_from_back/ed.Dark_mist_wings_from_back.3edcab96.F.mp4",
+    "ed.Dark_mist_wings_from_back.49d0ae6a.F": "data/processed/transitions_std121/ed.Dark_mist_wings_from_back/ed.Dark_mist_wings_from_back.49d0ae6a.F.mp4",
+    "ed.Dark_mist_wings_from_back.7ea3d186772aa8d6.M": "data/processed/transitions_std121/ed.Dark_mist_wings_from_back/ed.Dark_mist_wings_from_back.7ea3d186772aa8d6.M.mp4",
+    "ed.Dark_mist_wings_from_back.cat-54895594.Z": "data/processed/transitions_std121/ed.Dark_mist_wings_from_back/ed.Dark_mist_wings_from_back.cat-54895594.Z.mp4"
+   },
+   "test": [
+    "ed.Dark_mist_wings_from_back.03191b8530530fce.M"
+   ],
+   "train": [
+    "ed.Dark_mist_wings_from_back.1394ce46.F",
+    "ed.Dark_mist_wings_from_back.16d23900.F",
+    "ed.Dark_mist_wings_from_back.198a2221.F",
+    "ed.Dark_mist_wings_from_back.1dcb5391.F",
+    "ed.Dark_mist_wings_from_back.207b367b.F",
+    "ed.Dark_mist_wings_from_back.3edcab96.F",
+    "ed.Dark_mist_wings_from_back.49d0ae6a.F",
+    "ed.Dark_mist_wings_from_back.7ea3d186772aa8d6.M",
+    "ed.Dark_mist_wings_from_back.cat-54895594.Z"
+   ]
+  },
+  "ed.Diamond_Footpath": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Diamond_Footpath.081d1c9f.F": "data/processed/transitions_std121/ed.Diamond_Footpath/ed.Diamond_Footpath.081d1c9f.F.mp4",
+    "ed.Diamond_Footpath.08faa0c7.F": "data/processed/transitions_std121/ed.Diamond_Footpath/ed.Diamond_Footpath.08faa0c7.F.mp4",
+    "ed.Diamond_Footpath.0a8ace71.F": "data/processed/transitions_std121/ed.Diamond_Footpath/ed.Diamond_Footpath.0a8ace71.F.mp4",
+    "ed.Diamond_Footpath.0c71d4091805ed87.M": "data/processed/transitions_std121/ed.Diamond_Footpath/ed.Diamond_Footpath.0c71d4091805ed87.M.mp4",
+    "ed.Diamond_Footpath.23ed4cbf.F": "data/processed/transitions_std121/ed.Diamond_Footpath/ed.Diamond_Footpath.23ed4cbf.F.mp4",
+    "ed.Diamond_Footpath.3402f2c9.F": "data/processed/transitions_std121/ed.Diamond_Footpath/ed.Diamond_Footpath.3402f2c9.F.mp4",
+    "ed.Diamond_Footpath.44df7f8d.F": "data/processed/transitions_std121/ed.Diamond_Footpath/ed.Diamond_Footpath.44df7f8d.F.mp4",
+    "ed.Diamond_Footpath.64158805.F": "data/processed/transitions_std121/ed.Diamond_Footpath/ed.Diamond_Footpath.64158805.F.mp4",
+    "ed.Diamond_Footpath.6b654853.F": "data/processed/transitions_std121/ed.Diamond_Footpath/ed.Diamond_Footpath.6b654853.F.mp4",
+    "ed.Diamond_Footpath.f6e4aa518320cb88.M": "data/processed/transitions_std121/ed.Diamond_Footpath/ed.Diamond_Footpath.f6e4aa518320cb88.M.mp4"
+   },
+   "test": [
+    "ed.Diamond_Footpath.0c71d4091805ed87.M"
+   ],
+   "train": [
+    "ed.Diamond_Footpath.081d1c9f.F",
+    "ed.Diamond_Footpath.08faa0c7.F",
+    "ed.Diamond_Footpath.0a8ace71.F",
+    "ed.Diamond_Footpath.23ed4cbf.F",
+    "ed.Diamond_Footpath.3402f2c9.F",
+    "ed.Diamond_Footpath.44df7f8d.F",
+    "ed.Diamond_Footpath.64158805.F",
+    "ed.Diamond_Footpath.6b654853.F",
+    "ed.Diamond_Footpath.f6e4aa518320cb88.M"
+   ]
+  },
+  "ed.Electric_Clothes_Glow": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Electric_Clothes_Glow.07b819b2.F": "data/processed/transitions_std121/ed.Electric_Clothes_Glow/ed.Electric_Clothes_Glow.07b819b2.F.mp4",
+    "ed.Electric_Clothes_Glow.0c71d4091805ed87.M": "data/processed/transitions_std121/ed.Electric_Clothes_Glow/ed.Electric_Clothes_Glow.0c71d4091805ed87.M.mp4",
+    "ed.Electric_Clothes_Glow.1a7ee006.F": "data/processed/transitions_std121/ed.Electric_Clothes_Glow/ed.Electric_Clothes_Glow.1a7ee006.F.mp4",
+    "ed.Electric_Clothes_Glow.1c13f1de.F": "data/processed/transitions_std121/ed.Electric_Clothes_Glow/ed.Electric_Clothes_Glow.1c13f1de.F.mp4",
+    "ed.Electric_Clothes_Glow.2f916ae5.F": "data/processed/transitions_std121/ed.Electric_Clothes_Glow/ed.Electric_Clothes_Glow.2f916ae5.F.mp4",
+    "ed.Electric_Clothes_Glow.37dfb8b4.F": "data/processed/transitions_std121/ed.Electric_Clothes_Glow/ed.Electric_Clothes_Glow.37dfb8b4.F.mp4",
+    "ed.Electric_Clothes_Glow.3cfccbb7.F": "data/processed/transitions_std121/ed.Electric_Clothes_Glow/ed.Electric_Clothes_Glow.3cfccbb7.F.mp4",
+    "ed.Electric_Clothes_Glow.3e8cb7df.F": "data/processed/transitions_std121/ed.Electric_Clothes_Glow/ed.Electric_Clothes_Glow.3e8cb7df.F.mp4",
+    "ed.Electric_Clothes_Glow.596a8794.F": "data/processed/transitions_std121/ed.Electric_Clothes_Glow/ed.Electric_Clothes_Glow.596a8794.F.mp4",
+    "ed.Electric_Clothes_Glow.5b88c138.F": "data/processed/transitions_std121/ed.Electric_Clothes_Glow/ed.Electric_Clothes_Glow.5b88c138.F.mp4"
+   },
+   "test": [
+    "ed.Electric_Clothes_Glow.0c71d4091805ed87.M"
+   ],
+   "train": [
+    "ed.Electric_Clothes_Glow.07b819b2.F",
+    "ed.Electric_Clothes_Glow.1a7ee006.F",
+    "ed.Electric_Clothes_Glow.1c13f1de.F",
+    "ed.Electric_Clothes_Glow.2f916ae5.F",
+    "ed.Electric_Clothes_Glow.37dfb8b4.F",
+    "ed.Electric_Clothes_Glow.3cfccbb7.F",
+    "ed.Electric_Clothes_Glow.3e8cb7df.F",
+    "ed.Electric_Clothes_Glow.596a8794.F",
+    "ed.Electric_Clothes_Glow.5b88c138.F"
+   ]
+  },
+  "ed.Eye_Meteor_Burst": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Eye_Meteor_Burst.04d08d2f.F": "data/processed/transitions_std121/ed.Eye_Meteor_Burst/ed.Eye_Meteor_Burst.04d08d2f.F.mp4",
+    "ed.Eye_Meteor_Burst.0660f930.F": "data/processed/transitions_std121/ed.Eye_Meteor_Burst/ed.Eye_Meteor_Burst.0660f930.F.mp4",
+    "ed.Eye_Meteor_Burst.0e8ec528ffd657e9.M": "data/processed/transitions_std121/ed.Eye_Meteor_Burst/ed.Eye_Meteor_Burst.0e8ec528ffd657e9.M.mp4",
+    "ed.Eye_Meteor_Burst.0f357118.F": "data/processed/transitions_std121/ed.Eye_Meteor_Burst/ed.Eye_Meteor_Burst.0f357118.F.mp4",
+    "ed.Eye_Meteor_Burst.116c93366b05a44e.M": "data/processed/transitions_std121/ed.Eye_Meteor_Burst/ed.Eye_Meteor_Burst.116c93366b05a44e.M.mp4",
+    "ed.Eye_Meteor_Burst.229403e7.F": "data/processed/transitions_std121/ed.Eye_Meteor_Burst/ed.Eye_Meteor_Burst.229403e7.F.mp4",
+    "ed.Eye_Meteor_Burst.2ac8b4d8.F": "data/processed/transitions_std121/ed.Eye_Meteor_Burst/ed.Eye_Meteor_Burst.2ac8b4d8.F.mp4",
+    "ed.Eye_Meteor_Burst.2d111d3e.F": "data/processed/transitions_std121/ed.Eye_Meteor_Burst/ed.Eye_Meteor_Burst.2d111d3e.F.mp4",
+    "ed.Eye_Meteor_Burst.c4722997da1baf26.M": "data/processed/transitions_std121/ed.Eye_Meteor_Burst/ed.Eye_Meteor_Burst.c4722997da1baf26.M.mp4",
+    "ed.Eye_Meteor_Burst.groundhog-34e092.Z": "data/processed/transitions_std121/ed.Eye_Meteor_Burst/ed.Eye_Meteor_Burst.groundhog-34e092.Z.mp4"
+   },
+   "test": [
+    "ed.Eye_Meteor_Burst.116c93366b05a44e.M"
+   ],
+   "train": [
+    "ed.Eye_Meteor_Burst.04d08d2f.F",
+    "ed.Eye_Meteor_Burst.0660f930.F",
+    "ed.Eye_Meteor_Burst.0e8ec528ffd657e9.M",
+    "ed.Eye_Meteor_Burst.0f357118.F",
+    "ed.Eye_Meteor_Burst.229403e7.F",
+    "ed.Eye_Meteor_Burst.2ac8b4d8.F",
+    "ed.Eye_Meteor_Burst.2d111d3e.F",
+    "ed.Eye_Meteor_Burst.c4722997da1baf26.M",
+    "ed.Eye_Meteor_Burst.groundhog-34e092.Z"
+   ]
+  },
+  "ed.Eye_Shard_Stream": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Eye_Shard_Stream.06ad4482b7de1301.M": "data/processed/transitions_std121/ed.Eye_Shard_Stream/ed.Eye_Shard_Stream.06ad4482b7de1301.M.mp4",
+    "ed.Eye_Shard_Stream.0f6354f5.F": "data/processed/transitions_std121/ed.Eye_Shard_Stream/ed.Eye_Shard_Stream.0f6354f5.F.mp4",
+    "ed.Eye_Shard_Stream.16dd00ec.F": "data/processed/transitions_std121/ed.Eye_Shard_Stream/ed.Eye_Shard_Stream.16dd00ec.F.mp4",
+    "ed.Eye_Shard_Stream.1716f0ac.F": "data/processed/transitions_std121/ed.Eye_Shard_Stream/ed.Eye_Shard_Stream.1716f0ac.F.mp4",
+    "ed.Eye_Shard_Stream.1c1eea85a48c2204.M": "data/processed/transitions_std121/ed.Eye_Shard_Stream/ed.Eye_Shard_Stream.1c1eea85a48c2204.M.mp4",
+    "ed.Eye_Shard_Stream.1e2592b60cc87490.M": "data/processed/transitions_std121/ed.Eye_Shard_Stream/ed.Eye_Shard_Stream.1e2592b60cc87490.M.mp4",
+    "ed.Eye_Shard_Stream.35175f60.F": "data/processed/transitions_std121/ed.Eye_Shard_Stream/ed.Eye_Shard_Stream.35175f60.F.mp4",
+    "ed.Eye_Shard_Stream.52921067.F": "data/processed/transitions_std121/ed.Eye_Shard_Stream/ed.Eye_Shard_Stream.52921067.F.mp4",
+    "ed.Eye_Shard_Stream.ce4e906be5c2640f.M": "data/processed/transitions_std121/ed.Eye_Shard_Stream/ed.Eye_Shard_Stream.ce4e906be5c2640f.M.mp4",
+    "ed.Eye_Shard_Stream.deer-7e0dcf35.Z": "data/processed/transitions_std121/ed.Eye_Shard_Stream/ed.Eye_Shard_Stream.deer-7e0dcf35.Z.mp4"
+   },
+   "test": [
+    "ed.Eye_Shard_Stream.06ad4482b7de1301.M"
+   ],
+   "train": [
+    "ed.Eye_Shard_Stream.0f6354f5.F",
+    "ed.Eye_Shard_Stream.16dd00ec.F",
+    "ed.Eye_Shard_Stream.1716f0ac.F",
+    "ed.Eye_Shard_Stream.1c1eea85a48c2204.M",
+    "ed.Eye_Shard_Stream.1e2592b60cc87490.M",
+    "ed.Eye_Shard_Stream.35175f60.F",
+    "ed.Eye_Shard_Stream.52921067.F",
+    "ed.Eye_Shard_Stream.ce4e906be5c2640f.M",
+    "ed.Eye_Shard_Stream.deer-7e0dcf35.Z"
+   ]
+  },
+  "ed.Fist_heat_blast": {
+   "n_clips": 10,
+   "paths": {
+    "ed.Fist_heat_blast.01023u016mr3hmgc.F": "data/processed/transitions_std121/ed.Fist_heat_blast/ed.Fist_heat_blast.01023u016mr3hmgc.F.mp4",
+    "ed.Fist_heat_blast.0161279e.F": "data/processed/transitions_std121/ed.Fist_heat_blast/ed.Fist_heat_blast.0161279e.F.mp4",
+    "ed.Fist_heat_blast.01f95ede20c32e61.M": "data/processed/transitions_std121/ed.Fist_heat_blast/ed.Fist_heat_blast.01f95ede20c32e61.M.mp4",
+    "ed.Fist_heat_blast.0279f4cd.F": "data/processed/transitions_std121/ed.Fist_heat_blast/ed.Fist_heat_blast.0279f4cd.F.mp4",
+    "ed.Fist_heat_blast.03209488.F": "data/processed/transitions_std121/ed.Fist_heat_blast/ed.Fist_heat_blast.03209488.F.mp4",
+    "ed.Fist_heat_blast.0527b0e0.F": "data/processed/transitions_std121/ed.Fist_heat_blast/ed.Fist_heat_blast.0527b0e0.F.mp4",
+    "ed.Fist_heat_blast.0e8ec528ffd657e9.M": "data/processed/transitions_std121/ed.Fist_heat_blast/ed.Fist_heat_blast.0e8ec528ffd657e9.M.mp4",
+    "ed.Fist_heat_blast.0f6ac03f76f43971.M": "data/processed/transitions_std121/ed.Fist_heat_blast/ed.Fist_heat_blast.0f6ac03f76f43971.M.mp4",
+    "ed.Fist_heat_blast.147ea999.F": "data/processed/transitions_std121/ed.Fist_heat_blast/ed.Fist_heat_blast.147ea999.F.mp4",
+    "ed.Fist_heat_blast.cat-620b2dbf.Z": "data/processed/transitions_std121/ed.Fist_heat_blast/ed.Fist_heat_blast.cat-620b2dbf.Z.mp4"
+   },
+   "test": [
+    "ed.Fist_heat_blast.01f95ede20c32e61.M"
+   ],
+   "train": [
+    "ed.Fist_heat_blast.01023u016mr3hmgc.F",
+    "ed.Fist_heat_blast.0161279e.F",
+    "ed.Fist_heat_blast.0279f4cd.F",
+    "ed.Fist_heat_blast.03209488.F",
+    "ed.Fist_heat_blast.0527b0e0.F",
+    "ed.Fist_heat_blast.0e8ec528ffd657e9.M",
+    "ed.Fist_heat_blast.0f6ac03f76f43971.M",
+    "ed.Fist_heat_blast.147ea999.F",
+    "ed.Fist_heat_blast.cat-620b2dbf.Z"
+   ]
+  },
+  "explosion": {
+   "n_clips": 10,
+   "paths": {
+    "explosion_0": "data/processed/transitions_std121/explosion/explosion_0.mp4",
+    "explosion_1": "data/processed/transitions_std121/explosion/explosion_1.mp4",
+    "explosion_2": "data/processed/transitions_std121/explosion/explosion_2.mp4",
+    "explosion_3": "data/processed/transitions_std121/explosion/explosion_3.mp4",
+    "explosion_4": "data/processed/transitions_std121/explosion/explosion_4.mp4",
+    "explosion_5": "data/processed/transitions_std121/explosion/explosion_5.mp4",
+    "explosion_6": "data/processed/transitions_std121/explosion/explosion_6.mp4",
+    "explosion_7": "data/processed/transitions_std121/explosion/explosion_7.mp4",
+    "explosion_8": "data/processed/transitions_std121/explosion/explosion_8.mp4",
+    "explosion_9": "data/processed/transitions_std121/explosion/explosion_9.mp4"
+   },
+   "test": [
+    "explosion_0",
+    "explosion_1"
+   ],
+   "train": [
+    "explosion_2",
+    "explosion_3",
+    "explosion_4",
+    "explosion_5",
+    "explosion_6",
+    "explosion_7",
+    "explosion_8",
+    "explosion_9"
+   ]
+  },
+  "fire_element": {
+   "n_clips": 5,
+   "paths": {
+    "fire_element_0": "data/processed/transitions_std121/fire_element/fire_element_0.mp4",
+    "fire_element_1": "data/processed/transitions_std121/fire_element/fire_element_1.mp4",
+    "fire_element_2": "data/processed/transitions_std121/fire_element/fire_element_2.mp4",
+    "fire_element_3": "data/processed/transitions_std121/fire_element/fire_element_3.mp4",
+    "fire_element_4": "data/processed/transitions_std121/fire_element/fire_element_4.mp4"
+   },
+   "test": [
+    "fire_element_2",
+    "fire_element_3"
+   ],
+   "train": [
+    "fire_element_0",
+    "fire_element_1",
+    "fire_element_4"
+   ]
+  },
+  "firelava": {
+   "n_clips": 6,
+   "paths": {
+    "firelava_0": "data/processed/transitions_std121/firelava/firelava_0.mp4",
+    "firelava_1": "data/processed/transitions_std121/firelava/firelava_1.mp4",
+    "firelava_2": "data/processed/transitions_std121/firelava/firelava_2.mp4",
+    "firelava_3": "data/processed/transitions_std121/firelava/firelava_3.mp4",
+    "firelava_4": "data/processed/transitions_std121/firelava/firelava_4.mp4",
+    "firelava_5": "data/processed/transitions_std121/firelava/firelava_5.mp4"
+   },
+   "test": [
+    "firelava_4"
+   ],
+   "train": [
+    "firelava_0",
+    "firelava_1",
+    "firelava_2",
+    "firelava_3",
+    "firelava_5"
+   ]
+  },
+  "flame": {
+   "n_clips": 5,
+   "paths": {
+    "flame_transition_0": "data/processed/transitions_std121/flame/flame_transition_0.mp4",
+    "flame_transition_1": "data/processed/transitions_std121/flame/flame_transition_1.mp4",
+    "flame_transition_2": "data/processed/transitions_std121/flame/flame_transition_2.mp4",
+    "flame_transition_3": "data/processed/transitions_std121/flame/flame_transition_3.mp4",
+    "flame_transition_4": "data/processed/transitions_std121/flame/flame_transition_4.mp4"
+   },
+   "test": [
+    "flame_transition_2",
+    "flame_transition_3",
+    "flame_transition_4"
+   ],
+   "train": [
+    "flame_transition_0",
+    "flame_transition_1"
+   ]
+  },
+  "flying_cam_transition": {
+   "n_clips": 5,
+   "paths": {
+    "flying_cam_transition_0": "data/processed/transitions_std121/flying_cam_transition/flying_cam_transition_0.mp4",
+    "flying_cam_transition_1": "data/processed/transitions_std121/flying_cam_transition/flying_cam_transition_1.mp4",
+    "flying_cam_transition_2": "data/processed/transitions_std121/flying_cam_transition/flying_cam_transition_2.mp4",
+    "flying_cam_transition_3": "data/processed/transitions_std121/flying_cam_transition/flying_cam_transition_3.mp4",
+    "flying_cam_transition_4": "data/processed/transitions_std121/flying_cam_transition/flying_cam_transition_4.mp4"
+   },
+   "test": [
+    "flying_cam_transition_4",
+    "flying_cam_transition_0"
+   ],
+   "train": [
+    "flying_cam_transition_1",
+    "flying_cam_transition_2",
+    "flying_cam_transition_3"
+   ]
+  },
+  "gas_transformation": {
+   "n_clips": 10,
+   "paths": {
+    "gas_transformation_0": "data/processed/transitions_std121/gas_transformation/gas_transformation_0.mp4",
+    "gas_transformation_1": "data/processed/transitions_std121/gas_transformation/gas_transformation_1.mp4",
+    "gas_transformation_2": "data/processed/transitions_std121/gas_transformation/gas_transformation_2.mp4",
+    "gas_transformation_3": "data/processed/transitions_std121/gas_transformation/gas_transformation_3.mp4",
+    "gas_transformation_4": "data/processed/transitions_std121/gas_transformation/gas_transformation_4.mp4",
+    "gas_transformation_5": "data/processed/transitions_std121/gas_transformation/gas_transformation_5.mp4",
+    "gas_transformation_6": "data/processed/transitions_std121/gas_transformation/gas_transformation_6.mp4",
+    "gas_transformation_7": "data/processed/transitions_std121/gas_transformation/gas_transformation_7.mp4",
+    "gas_transformation_8": "data/processed/transitions_std121/gas_transformation/gas_transformation_8.mp4",
+    "gas_transformation_9": "data/processed/transitions_std121/gas_transformation/gas_transformation_9.mp4"
+   },
+   "test": [
+    "gas_transformation_6",
+    "gas_transformation_7"
+   ],
+   "train": [
+    "gas_transformation_0",
+    "gas_transformation_1",
+    "gas_transformation_2",
+    "gas_transformation_3",
+    "gas_transformation_4",
+    "gas_transformation_5",
+    "gas_transformation_8",
+    "gas_transformation_9"
+   ]
+  },
+  "giant_grab": {
+   "n_clips": 6,
+   "paths": {
+    "giant_grab_0": "data/processed/transitions_std121/giant_grab/giant_grab_0.mp4",
+    "giant_grab_1": "data/processed/transitions_std121/giant_grab/giant_grab_1.mp4",
+    "giant_grab_2": "data/processed/transitions_std121/giant_grab/giant_grab_2.mp4",
+    "giant_grab_3": "data/processed/transitions_std121/giant_grab/giant_grab_3.mp4",
+    "giant_grab_4": "data/processed/transitions_std121/giant_grab/giant_grab_4.mp4",
+    "giant_grab_5": "data/processed/transitions_std121/giant_grab/giant_grab_5.mp4"
+   },
+   "test": [
+    "giant_grab_3",
+    "giant_grab_5"
+   ],
+   "train": [
+    "giant_grab_0",
+    "giant_grab_1",
+    "giant_grab_2",
+    "giant_grab_4"
+   ]
+  },
+  "glitch": {
+   "n_clips": 8,
+   "paths": {
+    "glitch_0": "data/processed/transitions_std121/glitch/glitch_0.mp4",
+    "glitch_1": "data/processed/transitions_std121/glitch/glitch_1.mp4",
+    "glitch_2": "data/processed/transitions_std121/glitch/glitch_2.mp4",
+    "glitch_3": "data/processed/transitions_std121/glitch/glitch_3.mp4",
+    "glitch_4": "data/processed/transitions_std121/glitch/glitch_4.mp4",
+    "glitch_5": "data/processed/transitions_std121/glitch/glitch_5.mp4",
+    "glitch_6": "data/processed/transitions_std121/glitch/glitch_6.mp4",
+    "glitch_7": "data/processed/transitions_std121/glitch/glitch_7.mp4"
+   },
+   "test": [
+    "glitch_0",
+    "glitch_1"
+   ],
+   "train": [
+    "glitch_2",
+    "glitch_3",
+    "glitch_4",
+    "glitch_5",
+    "glitch_6",
+    "glitch_7"
+   ]
+  },
+  "hero_flight": {
+   "n_clips": 10,
+   "paths": {
+    "hero_flight_0": "data/processed/transitions_std121/hero_flight/hero_flight_0.mp4",
+    "hero_flight_1": "data/processed/transitions_std121/hero_flight/hero_flight_1.mp4",
+    "hero_flight_2": "data/processed/transitions_std121/hero_flight/hero_flight_2.mp4",
+    "hero_flight_3": "data/processed/transitions_std121/hero_flight/hero_flight_3.mp4",
+    "hero_flight_4": "data/processed/transitions_std121/hero_flight/hero_flight_4.mp4",
+    "hero_flight_5": "data/processed/transitions_std121/hero_flight/hero_flight_5.mp4",
+    "hero_flight_6": "data/processed/transitions_std121/hero_flight/hero_flight_6.mp4",
+    "hero_flight_7": "data/processed/transitions_std121/hero_flight/hero_flight_7.mp4",
+    "hero_flight_8": "data/processed/transitions_std121/hero_flight/hero_flight_8.mp4",
+    "hero_flight_9": "data/processed/transitions_std121/hero_flight/hero_flight_9.mp4"
+   },
+   "test": [
+    "hero_flight_5",
+    "hero_flight_6"
+   ],
+   "train": [
+    "hero_flight_0",
+    "hero_flight_1",
+    "hero_flight_2",
+    "hero_flight_3",
+    "hero_flight_4",
+    "hero_flight_7",
+    "hero_flight_8",
+    "hero_flight_9"
+   ]
+  },
+  "hole_transition": {
+   "n_clips": 2,
+   "paths": {
+    "hole_transition_0": "data/processed/transitions_std121/hole_transition/hole_transition_0.mp4",
+    "hole_transition_1": "data/processed/transitions_std121/hole_transition/hole_transition_1.mp4"
+   },
+   "test": [],
+   "train": [
+    "hole_transition_0",
+    "hole_transition_1"
+   ]
+  },
+  "illustration_scene": {
+   "n_clips": 10,
+   "paths": {
+    "illustration_scene_0": "data/processed/transitions_std121/illustration_scene/illustration_scene_0.mp4",
+    "illustration_scene_1": "data/processed/transitions_std121/illustration_scene/illustration_scene_1.mp4",
+    "illustration_scene_2": "data/processed/transitions_std121/illustration_scene/illustration_scene_2.mp4",
+    "illustration_scene_3": "data/processed/transitions_std121/illustration_scene/illustration_scene_3.mp4",
+    "illustration_scene_4": "data/processed/transitions_std121/illustration_scene/illustration_scene_4.mp4",
+    "illustration_scene_5": "data/processed/transitions_std121/illustration_scene/illustration_scene_5.mp4",
+    "illustration_scene_6": "data/processed/transitions_std121/illustration_scene/illustration_scene_6.mp4",
+    "illustration_scene_7": "data/processed/transitions_std121/illustration_scene/illustration_scene_7.mp4",
+    "illustration_scene_8": "data/processed/transitions_std121/illustration_scene/illustration_scene_8.mp4",
+    "illustration_scene_9": "data/processed/transitions_std121/illustration_scene/illustration_scene_9.mp4"
+   },
+   "test": [
+    "illustration_scene_4",
+    "illustration_scene_7"
+   ],
+   "train": [
+    "illustration_scene_0",
+    "illustration_scene_1",
+    "illustration_scene_2",
+    "illustration_scene_3",
+    "illustration_scene_5",
+    "illustration_scene_6",
+    "illustration_scene_8",
+    "illustration_scene_9"
+   ]
+  },
+  "jump_transition": {
+   "n_clips": 1,
+   "paths": {
+    "jump_transition_1": "data/processed/transitions_std121/jump_transition/jump_transition_1.mp4"
+   },
+   "test": [],
+   "train": [
+    "jump_transition_1"
+   ]
+  },
+  "live_concert": {
+   "n_clips": 7,
+   "paths": {
+    "live_concert_0": "data/processed/transitions_std121/live_concert/live_concert_0.mp4",
+    "live_concert_1": "data/processed/transitions_std121/live_concert/live_concert_1.mp4",
+    "live_concert_3": "data/processed/transitions_std121/live_concert/live_concert_3.mp4",
+    "live_concert_4": "data/processed/transitions_std121/live_concert/live_concert_4.mp4",
+    "live_concert_5": "data/processed/transitions_std121/live_concert/live_concert_5.mp4",
+    "live_concert_6": "data/processed/transitions_std121/live_concert/live_concert_6.mp4",
+    "live_concert_7": "data/processed/transitions_std121/live_concert/live_concert_7.mp4"
+   },
+   "redraw": "v1.1 (Amendment 2 A2.3): live_concert_2 removed as owner-ruled duplicate of _0; 1 test clip drawn from frozen stream split_v1:live_concert over 7 sorted survivors",
+   "test": [
+    "live_concert_0"
+   ],
+   "train": [
+    "live_concert_1",
+    "live_concert_3",
+    "live_concert_4",
+    "live_concert_5",
+    "live_concert_6",
+    "live_concert_7"
+   ]
+  },
+  "luminous_gaze": {
+   "n_clips": 5,
+   "paths": {
+    "luminous_gaze_0": "data/processed/transitions_std121/luminous_gaze/luminous_gaze_0.mp4",
+    "luminous_gaze_1": "data/processed/transitions_std121/luminous_gaze/luminous_gaze_1.mp4",
+    "luminous_gaze_2": "data/processed/transitions_std121/luminous_gaze/luminous_gaze_2.mp4",
+    "luminous_gaze_3": "data/processed/transitions_std121/luminous_gaze/luminous_gaze_3.mp4",
+    "luminous_gaze_4": "data/processed/transitions_std121/luminous_gaze/luminous_gaze_4.mp4"
+   },
+   "test": [
+    "luminous_gaze_3",
+    "luminous_gaze_4"
+   ],
+   "train": [
+    "luminous_gaze_0",
+    "luminous_gaze_1",
+    "luminous_gaze_2"
+   ]
+  },
+  "melt_transition": {
+   "n_clips": 5,
+   "paths": {
+    "melt_transition_0": "data/processed/transitions_std121/melt_transition/melt_transition_0.mp4",
+    "melt_transition_1": "data/processed/transitions_std121/melt_transition/melt_transition_1.mp4",
+    "melt_transition_2": "data/processed/transitions_std121/melt_transition/melt_transition_2.mp4",
+    "melt_transition_3": "data/processed/transitions_std121/melt_transition/melt_transition_3.mp4",
+    "melt_transition_4": "data/processed/transitions_std121/melt_transition/melt_transition_4.mp4"
+   },
+   "test": [
+    "melt_transition_2",
+    "melt_transition_0"
+   ],
+   "train": [
+    "melt_transition_1",
+    "melt_transition_3",
+    "melt_transition_4"
+   ]
+  },
+  "money_rain": {
+   "n_clips": 7,
+   "paths": {
+    "money_rain_0": "data/processed/transitions_std121/money_rain/money_rain_0.mp4",
+    "money_rain_1": "data/processed/transitions_std121/money_rain/money_rain_1.mp4",
+    "money_rain_2": "data/processed/transitions_std121/money_rain/money_rain_2.mp4",
+    "money_rain_3": "data/processed/transitions_std121/money_rain/money_rain_3.mp4",
+    "money_rain_4": "data/processed/transitions_std121/money_rain/money_rain_4.mp4",
+    "money_rain_6": "data/processed/transitions_std121/money_rain/money_rain_6.mp4",
+    "money_rain_7": "data/processed/transitions_std121/money_rain/money_rain_7.mp4"
+   },
+   "test": [
+    "money_rain_1",
+    "money_rain_3"
+   ],
+   "train": [
+    "money_rain_0",
+    "money_rain_2",
+    "money_rain_4",
+    "money_rain_6",
+    "money_rain_7"
+   ]
+  },
+  "monstrosity": {
+   "n_clips": 4,
+   "paths": {
+    "monstrosity_0": "data/processed/transitions_std121/monstrosity/monstrosity_0.mp4",
+    "monstrosity_1": "data/processed/transitions_std121/monstrosity/monstrosity_1.mp4",
+    "monstrosity_2": "data/processed/transitions_std121/monstrosity/monstrosity_2.mp4",
+    "monstrosity_3": "data/processed/transitions_std121/monstrosity/monstrosity_3.mp4"
+   },
+   "test": [
+    "monstrosity_3"
+   ],
+   "train": [
+    "monstrosity_0",
+    "monstrosity_1",
+    "monstrosity_2"
+   ]
+  },
+  "mystification": {
+   "n_clips": 6,
+   "paths": {
+    "mystification_0": "data/processed/transitions_std121/mystification/mystification_0.mp4",
+    "mystification_1": "data/processed/transitions_std121/mystification/mystification_1.mp4",
+    "mystification_2": "data/processed/transitions_std121/mystification/mystification_2.mp4",
+    "mystification_3": "data/processed/transitions_std121/mystification/mystification_3.mp4",
+    "mystification_4": "data/processed/transitions_std121/mystification/mystification_4.mp4",
+    "mystification_5": "data/processed/transitions_std121/mystification/mystification_5.mp4"
+   },
+   "test": [
+    "mystification_0",
+    "mystification_1"
+   ],
+   "train": [
+    "mystification_2",
+    "mystification_3",
+    "mystification_4",
+    "mystification_5"
+   ]
+  },
+  "nature_bloom": {
+   "n_clips": 3,
+   "paths": {
+    "nature_bloom_0": "data/processed/transitions_std121/nature_bloom/nature_bloom_0.mp4",
+    "nature_bloom_1": "data/processed/transitions_std121/nature_bloom/nature_bloom_1.mp4",
+    "nature_bloom_2": "data/processed/transitions_std121/nature_bloom/nature_bloom_2.mp4"
+   },
+   "test": [
+    "nature_bloom_1"
+   ],
+   "train": [
+    "nature_bloom_0",
+    "nature_bloom_2"
+   ]
+  },
+  "northern_lights": {
+   "n_clips": 9,
+   "paths": {
+    "northern_lights_0": "data/processed/transitions_std121/northern_lights/northern_lights_0.mp4",
+    "northern_lights_1": "data/processed/transitions_std121/northern_lights/northern_lights_1.mp4",
+    "northern_lights_2": "data/processed/transitions_std121/northern_lights/northern_lights_2.mp4",
+    "northern_lights_3": "data/processed/transitions_std121/northern_lights/northern_lights_3.mp4",
+    "northern_lights_4": "data/processed/transitions_std121/northern_lights/northern_lights_4.mp4",
+    "northern_lights_5": "data/processed/transitions_std121/northern_lights/northern_lights_5.mp4",
+    "northern_lights_6": "data/processed/transitions_std121/northern_lights/northern_lights_6.mp4",
+    "northern_lights_7": "data/processed/transitions_std121/northern_lights/northern_lights_7.mp4",
+    "northern_lights_8": "data/processed/transitions_std121/northern_lights/northern_lights_8.mp4"
+   },
+   "test": [
+    "northern_lights_0",
+    "northern_lights_1"
+   ],
+   "train": [
+    "northern_lights_2",
+    "northern_lights_3",
+    "northern_lights_4",
+    "northern_lights_5",
+    "northern_lights_6",
+    "northern_lights_7",
+    "northern_lights_8"
+   ]
+  },
+  "plasma_explosion": {
+   "n_clips": 5,
+   "paths": {
+    "plasma_explosion_0": "data/processed/transitions_std121/plasma_explosion/plasma_explosion_0.mp4",
+    "plasma_explosion_1": "data/processed/transitions_std121/plasma_explosion/plasma_explosion_1.mp4",
+    "plasma_explosion_2": "data/processed/transitions_std121/plasma_explosion/plasma_explosion_2.mp4",
+    "plasma_explosion_3": "data/processed/transitions_std121/plasma_explosion/plasma_explosion_3.mp4",
+    "plasma_explosion_4": "data/processed/transitions_std121/plasma_explosion/plasma_explosion_4.mp4"
+   },
+   "test": [
+    "plasma_explosion_2",
+    "plasma_explosion_3"
+   ],
+   "train": [
+    "plasma_explosion_0",
+    "plasma_explosion_1",
+    "plasma_explosion_4"
+   ]
+  },
+  "point_cloud": {
+   "n_clips": 13,
+   "paths": {
+    "point_cloud_0": "data/processed/transitions_std121/point_cloud/point_cloud_0.mp4",
+    "point_cloud_1": "data/processed/transitions_std121/point_cloud/point_cloud_1.mp4",
+    "point_cloud_10": "data/processed/transitions_std121/point_cloud/point_cloud_10.mp4",
+    "point_cloud_11": "data/processed/transitions_std121/point_cloud/point_cloud_11.mp4",
+    "point_cloud_12": "data/processed/transitions_std121/point_cloud/point_cloud_12.mp4",
+    "point_cloud_2": "data/processed/transitions_std121/point_cloud/point_cloud_2.mp4",
+    "point_cloud_3": "data/processed/transitions_std121/point_cloud/point_cloud_3.mp4",
+    "point_cloud_4": "data/processed/transitions_std121/point_cloud/point_cloud_4.mp4",
+    "point_cloud_5": "data/processed/transitions_std121/point_cloud/point_cloud_5.mp4",
+    "point_cloud_6": "data/processed/transitions_std121/point_cloud/point_cloud_6.mp4",
+    "point_cloud_7": "data/processed/transitions_std121/point_cloud/point_cloud_7.mp4",
+    "point_cloud_8": "data/processed/transitions_std121/point_cloud/point_cloud_8.mp4",
+    "point_cloud_9": "data/processed/transitions_std121/point_cloud/point_cloud_9.mp4"
+   },
+   "test": [
+    "point_cloud_0",
+    "point_cloud_1"
+   ],
+   "train": [
+    "point_cloud_10",
+    "point_cloud_11",
+    "point_cloud_12",
+    "point_cloud_2",
+    "point_cloud_3",
+    "point_cloud_4",
+    "point_cloud_5",
+    "point_cloud_6",
+    "point_cloud_7",
+    "point_cloud_8",
+    "point_cloud_9"
+   ]
+  },
+  "polygon": {
+   "n_clips": 9,
+   "paths": {
+    "polygon_0": "data/processed/transitions_std121/polygon/polygon_0.mp4",
+    "polygon_1": "data/processed/transitions_std121/polygon/polygon_1.mp4",
+    "polygon_2": "data/processed/transitions_std121/polygon/polygon_2.mp4",
+    "polygon_3": "data/processed/transitions_std121/polygon/polygon_3.mp4",
+    "polygon_4": "data/processed/transitions_std121/polygon/polygon_4.mp4",
+    "polygon_5": "data/processed/transitions_std121/polygon/polygon_5.mp4",
+    "polygon_6": "data/processed/transitions_std121/polygon/polygon_6.mp4",
+    "polygon_7": "data/processed/transitions_std121/polygon/polygon_7.mp4",
+    "polygon_8": "data/processed/transitions_std121/polygon/polygon_8.mp4"
+   },
+   "test": [
+    "polygon_4",
+    "polygon_8"
+   ],
+   "train": [
+    "polygon_0",
+    "polygon_1",
+    "polygon_2",
+    "polygon_3",
+    "polygon_5",
+    "polygon_6",
+    "polygon_7"
+   ]
+  },
+  "portal": {
+   "n_clips": 13,
+   "paths": {
+    "portal_0": "data/processed/transitions_std121/portal/portal_0.mp4",
+    "portal_1": "data/processed/transitions_std121/portal/portal_1.mp4",
+    "portal_10": "data/processed/transitions_std121/portal/portal_10.mp4",
+    "portal_11": "data/processed/transitions_std121/portal/portal_11.mp4",
+    "portal_12": "data/processed/transitions_std121/portal/portal_12.mp4",
+    "portal_13": "data/processed/transitions_std121/portal/portal_13.mp4",
+    "portal_2": "data/processed/transitions_std121/portal/portal_2.mp4",
+    "portal_4": "data/processed/transitions_std121/portal/portal_4.mp4",
+    "portal_5": "data/processed/transitions_std121/portal/portal_5.mp4",
+    "portal_6": "data/processed/transitions_std121/portal/portal_6.mp4",
+    "portal_7": "data/processed/transitions_std121/portal/portal_7.mp4",
+    "portal_8": "data/processed/transitions_std121/portal/portal_8.mp4",
+    "portal_9": "data/processed/transitions_std121/portal/portal_9.mp4"
+   },
+   "test": [
+    "portal_1",
+    "portal_4"
+   ],
+   "train": [
+    "portal_0",
+    "portal_10",
+    "portal_11",
+    "portal_12",
+    "portal_13",
+    "portal_2",
+    "portal_5",
+    "portal_6",
+    "portal_7",
+    "portal_8",
+    "portal_9"
+   ]
+  },
+  "raven_transition": {
+   "n_clips": 4,
+   "paths": {
+    "raven_transition_0": "data/processed/transitions_std121/raven_transition/raven_transition_0.mp4",
+    "raven_transition_1": "data/processed/transitions_std121/raven_transition/raven_transition_1.mp4",
+    "raven_transition_2": "data/processed/transitions_std121/raven_transition/raven_transition_2.mp4",
+    "raven_transition_3": "data/processed/transitions_std121/raven_transition/raven_transition_3.mp4"
+   },
+   "test": [
+    "raven_transition_2"
+   ],
+   "train": [
+    "raven_transition_0",
+    "raven_transition_1",
+    "raven_transition_3"
+   ]
+  },
+  "run_set_on_fire": {
+   "n_clips": 2,
+   "paths": {
+    "action_run_setonfire_6": "data/processed/transitions_std121/run_set_on_fire/action_run_setonfire_6.mp4",
+    "action_run_setonfire_7": "data/processed/transitions_std121/run_set_on_fire/action_run_setonfire_7.mp4"
+   },
+   "test": [],
+   "train": [
+    "action_run_setonfire_6",
+    "action_run_setonfire_7"
+   ]
+  },
+  "saint_glow": {
+   "n_clips": 5,
+   "paths": {
+    "saint_glow_0": "data/processed/transitions_std121/saint_glow/saint_glow_0.mp4",
+    "saint_glow_1": "data/processed/transitions_std121/saint_glow/saint_glow_1.mp4",
+    "saint_glow_2": "data/processed/transitions_std121/saint_glow/saint_glow_2.mp4",
+    "saint_glow_3": "data/processed/transitions_std121/saint_glow/saint_glow_3.mp4",
+    "saint_glow_4": "data/processed/transitions_std121/saint_glow/saint_glow_4.mp4"
+   },
+   "test": [
+    "saint_glow_3",
+    "saint_glow_4"
+   ],
+   "train": [
+    "saint_glow_0",
+    "saint_glow_1",
+    "saint_glow_2"
+   ]
+  },
+  "sakura_petals": {
+   "n_clips": 3,
+   "paths": {
+    "sakura_petals_0": "data/processed/transitions_std121/sakura_petals/sakura_petals_0.mp4",
+    "sakura_petals_1": "data/processed/transitions_std121/sakura_petals/sakura_petals_1.mp4",
+    "sakura_petals_2": "data/processed/transitions_std121/sakura_petals/sakura_petals_2.mp4"
+   },
+   "test": [
+    "sakura_petals_1"
+   ],
+   "train": [
+    "sakura_petals_0",
+    "sakura_petals_2"
+   ]
+  },
+  "seamless_transition": {
+   "n_clips": 1,
+   "paths": {
+    "seamless_transition_0": "data/processed/transitions_std121/seamless_transition/seamless_transition_0.mp4"
+   },
+   "test": [],
+   "train": [
+    "seamless_transition_0"
+   ]
+  },
+  "shadow": {
+   "n_clips": 15,
+   "paths": {
+    "shadow_0": "data/processed/transitions_std121/shadow/shadow_0.mp4",
+    "shadow_1": "data/processed/transitions_std121/shadow/shadow_1.mp4",
+    "shadow_10": "data/processed/transitions_std121/shadow/shadow_10.mp4",
+    "shadow_11": "data/processed/transitions_std121/shadow/shadow_11.mp4",
+    "shadow_12": "data/processed/transitions_std121/shadow/shadow_12.mp4",
+    "shadow_13": "data/processed/transitions_std121/shadow/shadow_13.mp4",
+    "shadow_14": "data/processed/transitions_std121/shadow/shadow_14.mp4",
+    "shadow_2": "data/processed/transitions_std121/shadow/shadow_2.mp4",
+    "shadow_3": "data/processed/transitions_std121/shadow/shadow_3.mp4",
+    "shadow_4": "data/processed/transitions_std121/shadow/shadow_4.mp4",
+    "shadow_5": "data/processed/transitions_std121/shadow/shadow_5.mp4",
+    "shadow_6": "data/processed/transitions_std121/shadow/shadow_6.mp4",
+    "shadow_7": "data/processed/transitions_std121/shadow/shadow_7.mp4",
+    "shadow_8": "data/processed/transitions_std121/shadow/shadow_8.mp4",
+    "shadow_9": "data/processed/transitions_std121/shadow/shadow_9.mp4"
+   },
+   "test": [
+    "shadow_10",
+    "shadow_3"
+   ],
+   "train": [
+    "shadow_0",
+    "shadow_1",
+    "shadow_11",
+    "shadow_12",
+    "shadow_13",
+    "shadow_14",
+    "shadow_2",
+    "shadow_4",
+    "shadow_5",
+    "shadow_6",
+    "shadow_7",
+    "shadow_8",
+    "shadow_9"
+   ]
+  },
+  "shadow_smoke": {
+   "n_clips": 10,
+   "paths": {
+    "shadow_smoke_0": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_0.mp4",
+    "shadow_smoke_1": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_1.mp4",
+    "shadow_smoke_2": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_2.mp4",
+    "shadow_smoke_3": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_3.mp4",
+    "shadow_smoke_4": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_4.mp4",
+    "shadow_smoke_5": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_5.mp4",
+    "shadow_smoke_6": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_6.mp4",
+    "shadow_smoke_7": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_7.mp4",
+    "shadow_smoke_8": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_8.mp4",
+    "shadow_smoke_9": "data/processed/transitions_std121/shadow_smoke/shadow_smoke_9.mp4"
+   },
+   "test": [
+    "shadow_smoke_0",
+    "shadow_smoke_7"
+   ],
+   "train": [
+    "shadow_smoke_1",
+    "shadow_smoke_2",
+    "shadow_smoke_3",
+    "shadow_smoke_4",
+    "shadow_smoke_5",
+    "shadow_smoke_6",
+    "shadow_smoke_8",
+    "shadow_smoke_9"
+   ]
+  },
+  "super_fast_run": {
+   "n_clips": 12,
+   "paths": {
+    "super_fast_run_0": "data/processed/transitions_std121/super_fast_run/super_fast_run_0.mp4",
+    "super_fast_run_1": "data/processed/transitions_std121/super_fast_run/super_fast_run_1.mp4",
+    "super_fast_run_10": "data/processed/transitions_std121/super_fast_run/super_fast_run_10.mp4",
+    "super_fast_run_12": "data/processed/transitions_std121/super_fast_run/super_fast_run_12.mp4",
+    "super_fast_run_2": "data/processed/transitions_std121/super_fast_run/super_fast_run_2.mp4",
+    "super_fast_run_3": "data/processed/transitions_std121/super_fast_run/super_fast_run_3.mp4",
+    "super_fast_run_4": "data/processed/transitions_std121/super_fast_run/super_fast_run_4.mp4",
+    "super_fast_run_5": "data/processed/transitions_std121/super_fast_run/super_fast_run_5.mp4",
+    "super_fast_run_6": "data/processed/transitions_std121/super_fast_run/super_fast_run_6.mp4",
+    "super_fast_run_7": "data/processed/transitions_std121/super_fast_run/super_fast_run_7.mp4",
+    "super_fast_run_8": "data/processed/transitions_std121/super_fast_run/super_fast_run_8.mp4",
+    "super_fast_run_9": "data/processed/transitions_std121/super_fast_run/super_fast_run_9.mp4"
+   },
+   "test": [
+    "super_fast_run_0",
+    "super_fast_run_3"
+   ],
+   "train": [
+    "super_fast_run_1",
+    "super_fast_run_10",
+    "super_fast_run_12",
+    "super_fast_run_2",
+    "super_fast_run_4",
+    "super_fast_run_5",
+    "super_fast_run_6",
+    "super_fast_run_7",
+    "super_fast_run_8",
+    "super_fast_run_9"
+   ]
+  },
+  "train_rush": {
+   "n_clips": 13,
+   "paths": {
+    "train_rush_0": "data/processed/transitions_std121/train_rush/train_rush_0.mp4",
+    "train_rush_1": "data/processed/transitions_std121/train_rush/train_rush_1.mp4",
+    "train_rush_10": "data/processed/transitions_std121/train_rush/train_rush_10.mp4",
+    "train_rush_11": "data/processed/transitions_std121/train_rush/train_rush_11.mp4",
+    "train_rush_12": "data/processed/transitions_std121/train_rush/train_rush_12.mp4",
+    "train_rush_2": "data/processed/transitions_std121/train_rush/train_rush_2.mp4",
+    "train_rush_3": "data/processed/transitions_std121/train_rush/train_rush_3.mp4",
+    "train_rush_4": "data/processed/transitions_std121/train_rush/train_rush_4.mp4",
+    "train_rush_5": "data/processed/transitions_std121/train_rush/train_rush_5.mp4",
+    "train_rush_6": "data/processed/transitions_std121/train_rush/train_rush_6.mp4",
+    "train_rush_7": "data/processed/transitions_std121/train_rush/train_rush_7.mp4",
+    "train_rush_8": "data/processed/transitions_std121/train_rush/train_rush_8.mp4",
+    "train_rush_9": "data/processed/transitions_std121/train_rush/train_rush_9.mp4"
+   },
+   "test": [
+    "train_rush_0",
+    "train_rush_1"
+   ],
+   "train": [
+    "train_rush_10",
+    "train_rush_11",
+    "train_rush_12",
+    "train_rush_2",
+    "train_rush_3",
+    "train_rush_4",
+    "train_rush_5",
+    "train_rush_6",
+    "train_rush_7",
+    "train_rush_8",
+    "train_rush_9"
+   ]
+  },
+  "water_bending": {
+   "n_clips": 4,
+   "paths": {
+    "water_bending_0": "data/processed/transitions_std121/water_bending/water_bending_0.mp4",
+    "water_bending_1": "data/processed/transitions_std121/water_bending/water_bending_1.mp4",
+    "water_bending_2": "data/processed/transitions_std121/water_bending/water_bending_2.mp4",
+    "water_bending_3": "data/processed/transitions_std121/water_bending/water_bending_3.mp4"
+   },
+   "test": [
+    "water_bending_3"
+   ],
+   "train": [
+    "water_bending_0",
+    "water_bending_1",
+    "water_bending_2"
+   ]
+  },
+  "water_element": {
+   "n_clips": 6,
+   "paths": {
+    "water_element_0": "data/processed/transitions_std121/water_element/water_element_0.mp4",
+    "water_element_1": "data/processed/transitions_std121/water_element/water_element_1.mp4",
+    "water_element_2": "data/processed/transitions_std121/water_element/water_element_2.mp4",
+    "water_element_3": "data/processed/transitions_std121/water_element/water_element_3.mp4",
+    "water_element_4": "data/processed/transitions_std121/water_element/water_element_4.mp4",
+    "water_element_5": "data/processed/transitions_std121/water_element/water_element_5.mp4"
+   },
+   "test": [
+    "water_element_4",
+    "water_element_3"
+   ],
+   "train": [
+    "water_element_0",
+    "water_element_1",
+    "water_element_2",
+    "water_element_5"
+   ]
+  },
+  "wireframe": {
+   "n_clips": 9,
+   "paths": {
+    "wireframe_0": "data/processed/transitions_std121/wireframe/wireframe_0.mp4",
+    "wireframe_1": "data/processed/transitions_std121/wireframe/wireframe_1.mp4",
+    "wireframe_2": "data/processed/transitions_std121/wireframe/wireframe_2.mp4",
+    "wireframe_3": "data/processed/transitions_std121/wireframe/wireframe_3.mp4",
+    "wireframe_4": "data/processed/transitions_std121/wireframe/wireframe_4.mp4",
+    "wireframe_5": "data/processed/transitions_std121/wireframe/wireframe_5.mp4",
+    "wireframe_6": "data/processed/transitions_std121/wireframe/wireframe_6.mp4",
+    "wireframe_7": "data/processed/transitions_std121/wireframe/wireframe_7.mp4",
+    "wireframe_8": "data/processed/transitions_std121/wireframe/wireframe_8.mp4"
+   },
+   "test": [
+    "wireframe_0",
+    "wireframe_7"
+   ],
+   "train": [
+    "wireframe_1",
+    "wireframe_2",
+    "wireframe_3",
+    "wireframe_4",
+    "wireframe_5",
+    "wireframe_6",
+    "wireframe_8"
+   ]
+  },
+  "wonderland": {
+   "n_clips": 3,
+   "paths": {
+    "wonderland_0": "data/processed/transitions_std121/wonderland/wonderland_0.mp4",
+    "wonderland_1": "data/processed/transitions_std121/wonderland/wonderland_1.mp4",
+    "wonderland_2": "data/processed/transitions_std121/wonderland/wonderland_2.mp4"
+   },
+   "test": [
+    "wonderland_1"
+   ],
+   "train": [
+    "wonderland_0",
+    "wonderland_2"
+   ]
+  },
+  "x_ray": {
+   "n_clips": 16,
+   "paths": {
+    "x_ray_0": "data/processed/transitions_std121/x_ray/x_ray_0.mp4",
+    "x_ray_1": "data/processed/transitions_std121/x_ray/x_ray_1.mp4",
+    "x_ray_10": "data/processed/transitions_std121/x_ray/x_ray_10.mp4",
+    "x_ray_11": "data/processed/transitions_std121/x_ray/x_ray_11.mp4",
+    "x_ray_12": "data/processed/transitions_std121/x_ray/x_ray_12.mp4",
+    "x_ray_13": "data/processed/transitions_std121/x_ray/x_ray_13.mp4",
+    "x_ray_14": "data/processed/transitions_std121/x_ray/x_ray_14.mp4",
+    "x_ray_15": "data/processed/transitions_std121/x_ray/x_ray_15.mp4",
+    "x_ray_2": "data/processed/transitions_std121/x_ray/x_ray_2.mp4",
+    "x_ray_3": "data/processed/transitions_std121/x_ray/x_ray_3.mp4",
+    "x_ray_4": "data/processed/transitions_std121/x_ray/x_ray_4.mp4",
+    "x_ray_5": "data/processed/transitions_std121/x_ray/x_ray_5.mp4",
+    "x_ray_6": "data/processed/transitions_std121/x_ray/x_ray_6.mp4",
+    "x_ray_7": "data/processed/transitions_std121/x_ray/x_ray_7.mp4",
+    "x_ray_8": "data/processed/transitions_std121/x_ray/x_ray_8.mp4",
+    "x_ray_9": "data/processed/transitions_std121/x_ray/x_ray_9.mp4"
+   },
+   "test": [
+    "x_ray_0",
+    "x_ray_1"
+   ],
+   "train": [
+    "x_ray_10",
+    "x_ray_11",
+    "x_ray_12",
+    "x_ray_13",
+    "x_ray_14",
+    "x_ray_15",
+    "x_ray_2",
+    "x_ray_3",
+    "x_ray_4",
+    "x_ray_5",
+    "x_ray_6",
+    "x_ray_7",
+    "x_ray_8",
+    "x_ray_9"
+   ]
+  }
+ },
+ "generalist_holdout": [
+  "acid",
+  "cotton_cloud",
+  "display_transition",
+  "ed.Acid_mist_limb_transformation",
+  "ed.Acid_mist_ring_barrier",
+  "ed.Acidic_Body_Aura",
+  "ed.Amber_crystal_wings_on_back",
+  "ed.Amber_roots_from_feet",
+  "ed.Amber_streams_from_eyes",
+  "ed.Amethyst_sword_from_palm",
+  "ed.Ant_glyph_aura",
+  "ed.Ants_flow_from_eyes",
+  "ed.Ants_in_hair",
+  "ed.Apple_blossoms_in_hair",
+  "ed.Apple_core_in_chest",
+  "ed.Arm_chip_serpent",
+  "ed.Arm_circuit_electronic_cloud",
+  "ed.Arm_data_corruption",
+  "ed.Arm_shadow_chains",
+  "ed.Array_encircling_feet",
+  "ed.Avocado_Pulp_Aura",
+  "ed.Avocado_Seed_Pendant",
+  "ed.Back_Born_Letter_Wings",
+  "ed.Back_bubble_cloak",
+  "ed.Back_laser_wings",
+  "ed.Back_page_wings",
+  "ed.Bamboo_shield_in_front",
+  "ed.Bile_aura_hands",
+  "ed.Body_Banknote_Shield",
+  "ed.Body_Laser_Aura",
+  "ed.Body_Meteorite_Crystal",
+  "ed.Body_as_mist",
+  "ed.Body_gear_field",
+  "ed.Body_laser_shield",
+  "ed.Body_vine_slime",
+  "ed.Brass_serpent_coil",
+  "ed.Chaotic_wings_from_shoulders",
+  "ed.Chest_Burst_Ribbons",
+  "ed.Chest_Erupting_Shield",
+  "ed.Chest_Laser_Burst",
+  "ed.Chest_fish_burst",
+  "ed.Chest_light_field",
+  "ed.Chest_sigil",
+  "ed.Code_Mirror_Duplicate",
+  "ed.Cold_Tears_Gaze",
+  "ed.Confetti_Burst_from_Hands",
+  "ed.Cucumber_seeds_from_chest",
+  "ed.Dark_mist_from_mouth",
+  "ed.Dark_mist_wings_from_back",
+  "ed.Diamond_Footpath",
+  "ed.Electric_Clothes_Glow",
+  "ed.Eye_Meteor_Burst",
+  "ed.Eye_Shard_Stream",
+  "ed.Fist_heat_blast",
+  "explosion",
+  "firelava",
+  "flying_cam_transition",
+  "glitch",
+  "live_concert",
+  "luminous_gaze",
+  "melt_transition",
+  "monstrosity",
+  "northern_lights",
+  "point_cloud",
+  "raven_transition",
+  "saint_glow",
+  "train_rush",
+  "x_ray"
+ ],
+ "n_classes": 97,
+ "n_test": 128,
+ "n_train": 549,
+ "provenance": {
+  "additions": {
+   "effectdata": {
+    "ed.Acid_mist_limb_transformation": 10,
+    "ed.Acid_mist_ring_barrier": 1,
+    "ed.Acidic_Body_Aura": 1,
+    "ed.Amber_crystal_wings_on_back": 10,
+    "ed.Amber_roots_from_feet": 10,
+    "ed.Amber_streams_from_eyes": 10,
+    "ed.Amethyst_sword_from_palm": 10,
+    "ed.Ant_glyph_aura": 1,
+    "ed.Ants_flow_from_eyes": 10,
+    "ed.Ants_in_hair": 1,
+    "ed.Apple_blossoms_in_hair": 1,
+    "ed.Apple_core_in_chest": 1,
+    "ed.Arm_chip_serpent": 10,
+    "ed.Arm_circuit_electronic_cloud": 1,
+    "ed.Arm_data_corruption": 10,
+    "ed.Arm_shadow_chains": 1,
+    "ed.Array_encircling_feet": 1,
+    "ed.Avocado_Pulp_Aura": 10,
+    "ed.Avocado_Seed_Pendant": 10,
+    "ed.Back_Born_Letter_Wings": 10,
+    "ed.Back_bubble_cloak": 10,
+    "ed.Back_laser_wings": 10,
+    "ed.Back_page_wings": 1,
+    "ed.Bamboo_shield_in_front": 10,
+    "ed.Bile_aura_hands": 10,
+    "ed.Body_Banknote_Shield": 1,
+    "ed.Body_Laser_Aura": 1,
+    "ed.Body_Meteorite_Crystal": 10,
+    "ed.Body_as_mist": 1,
+    "ed.Body_gear_field": 10,
+    "ed.Body_laser_shield": 1,
+    "ed.Body_vine_slime": 1,
+    "ed.Brass_serpent_coil": 10,
+    "ed.Chaotic_wings_from_shoulders": 10,
+    "ed.Chest_Burst_Ribbons": 10,
+    "ed.Chest_Erupting_Shield": 10,
+    "ed.Chest_Laser_Burst": 10,
+    "ed.Chest_fish_burst": 10,
+    "ed.Chest_light_field": 10,
+    "ed.Chest_sigil": 10,
+    "ed.Code_Mirror_Duplicate": 1,
+    "ed.Cold_Tears_Gaze": 1,
+    "ed.Confetti_Burst_from_Hands": 10,
+    "ed.Cucumber_seeds_from_chest": 10,
+    "ed.Dark_mist_from_mouth": 10,
+    "ed.Dark_mist_wings_from_back": 10,
+    "ed.Diamond_Footpath": 10,
+    "ed.Electric_Clothes_Glow": 10,
+    "ed.Eye_Meteor_Burst": 10,
+    "ed.Eye_Shard_Stream": 10,
+    "ed.Fist_heat_blast": 10
+   },
+   "new_classes": {
+    "acid": 8,
+    "explosion": 10,
+    "glitch": 8,
+    "northern_lights": 9,
+    "point_cloud": 13,
+    "train_rush": 13,
+    "x_ray": 16
+   },
+   "topups": {
+    "cotton_cloud": [
+     "cotton_cloud_3",
+     "cotton_cloud_5",
+     "cotton_cloud_7"
+    ],
+    "display_transition": [
+     "display_transition_0"
+    ],
+    "earth_wave": [
+     "earth_wave_5"
+    ],
+    "fire_element": [
+     "fire_element_3"
+    ],
+    "flame": [
+     "flame_transition_2",
+     "flame_transition_3",
+     "flame_transition_4"
+    ],
+    "flying_cam_transition": [
+     "flying_cam_transition_0"
+    ],
+    "giant_grab": [
+     "giant_grab_5"
+    ],
+    "luminous_gaze": [
+     "luminous_gaze_4"
+    ],
+    "melt_transition": [
+     "melt_transition_0"
+    ],
+    "monstrosity": [
+     "monstrosity_3"
+    ],
+    "mystification": [
+     "mystification_1"
+    ],
+    "nature_bloom": [
+     "nature_bloom_1"
+    ],
+    "plasma_explosion": [
+     "plasma_explosion_3"
+    ],
+    "saint_glow": [
+     "saint_glow_4"
+    ],
+    "sakura_petals": [
+     "sakura_petals_1"
+    ],
+    "water_element": [
+     "water_element_3"
+    ],
+    "wonderland": [
+     "wonderland_1"
+    ]
+   }
+  },
+  "base": "split_v1.2",
+  "base_sha256": "c694659d6d2e264528ccb546b43b9974bfecd2770ab674ba7b514981d026e6ce",
+  "promotions_train_to_test": [
+   "earth_element:earth_element_6",
+   "money_rain:money_rain_1"
+  ],
+  "rule": "strict superset of v1.2 (every v1.2 clip keeps class + band); grid v3 additions: top-ups -> test band (untrained content), new Higgsfield zero-shot classes + EffectData `ed.*` classes -> generalist_holdout (test = endpoint/reference clips, train = the rest). Built by scripts/grid_v3/build_split_v1_3.py from eval_ladder/grid_v3.yaml + disk (2026-09-07)."
+ },
+ "quarantined": [
+  "live_concert_2"
+ ],
+ "sha256": "bbb4aee2ae8d67cb30619b2cb305ab21f0e14a89141f4f92eeda17d440931324",
+ "specialist_roster": [
+  "animalization",
+  "color_rain",
+  "gas_transformation",
+  "hero_flight",
+  "illustration_scene",
+  "polygon",
+  "portal",
+  "shadow",
+  "shadow_smoke",
+  "super_fast_run",
+  "wireframe"
+ ],
+ "split": "v1.3",
+ "test_fraction": 0.1891
+}

@@ -1,0 +1,34 @@
+id: 007_base_cond_ctt
+seq: 7
+shelf: gens
+created: 2026-07-31
+machine: DeltaAI GH200 (ghx4)
+source: misc/base_arms campaign (eval_ladder/run_gen.py, arm base_cond_ctt)
+code: envs-aarch64/ltx2 editable installs -> src/LTX-2-official packages
+inputs:
+  run: null                      # NO adapter — this is the LTX-2 19B base model
+  base_model: cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors
+  adapter_sha256: null
+grid: grid.jsonl (152 rows x seeds [42,43] = 304 clips; = misc/base_arms/registry_base_cond_ctt.jsonl)
+prompt_rule: >-
+  identical to 006_base_prompt_ctt — '"{S1}. {EFFECT}. [{S2}.]"', the ctt_v2_leaky prompt with the
+  trained " sksz." substring removed. The two entries differ in ONE field, the conditioning.
+resolution: 480x640x121f @ 24 fps
+inference: steps 30, guidance_scale 4.0, stg_scale 1.0, stg_blocks [29], stg_mode stg_v; no adapter
+conditioning: prefix 9f (+ suffix 8f if two-sided) — the same endpoint windows every trained arm
+  receives. NO reference: a base model handed a demo is a copier, not a baseline (owner ruling
+  2026-07-23).
+role: baseline 2 of 2 on the CTT grid (owner call 2026-07-31). The honest no-adapter twin of the
+  IC-LoRA arms — same inputs they get, minus the adapter and the demo. 006 vs 007 prices the
+  anchors; either against a training prices the adapter.
+caveats:
+  - >-
+    rows keep `reference` and set `use_reference: false`. The model never sees the demo; the field
+    is SCORING identity — run_eval.pool_refs() bans the row's reference from the GT pool, so
+    dropping it would give this arm a different pool than the arms it is read against.
+  - >-
+    un-twinned by design (`no_twin: true`): it IS a baseline, so there is no base twin to join.
+    Contributes a level, never a paired margin.
+  - >-
+    not a same-prompt control for ctt_v2/ic_gen — those prompts carry `sksz` and no effect clause.
+    This is the level of "text + anchors, no adapter".

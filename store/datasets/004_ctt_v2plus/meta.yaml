@@ -1,0 +1,69 @@
+id: 004_ctt_v2plus
+seq: 4
+shelf: datasets
+naming_note: "store shelf seq is 004 (003 was taken by 003_dino_signals). The MIX CONTRACT id is '003_ctt_v2plus' (root_common.MIX_CONTRACTS, baked into the assembled ROOT_MANIFEST); the two ids differ intentionally — the contract id was not renamed to avoid a re-assemble."
+created: 2026-08-28
+role: cttv2 + EffectData breadth stratum (S6) — additive one-sided demonstration data
+source: scripts/ctt_v2 pipeline (assemble_root --sampler-mix --contract 003_ctt_v2plus); EffectData build misc/2026-08-28_effectdata_s6/BUILD.md
+root: symlink -> ../../../outputs/ctt_v2/roots/ctt_v2plus_mix  # physical sampler-mix root (symlink trees -> sources; no data moved, unlike 002's moved-in datasets/ctt_v2)
+form: sampler-mix (one row per base pair; mix realized by the trainer's StratifiedEpochSampler from mix.json — the dataset is never rebuilt to change the mix)
+contents: 138,625 base pairs across S0 385 / S2a 22,731 / S2b 23,577 / S4 6,000 / S6 85,932; S1 absent (pilot only)
+mix: S0 12 / S2a 28.67 / S2b 29.73 / S4 9.6 / S6 20  (mix.json stratum_weights_pct; contract 003_ctt_v2plus = 002 weights x0.80 + S6 20pp, advisor 2026-08-28)
+s6: EffectData top-2,000 counterfactual subjects, 2,917 effects, 28,644 clips; ONE-SIDED (frame-0 anchor, prefix_latents=1), reference = same-effect different-subject demonstration
+s6_shapes: 4 native VAE-legal (704x1056 / 704x1248 / 1056x704 / 1248x704, all 81f/24fps); tokens 7986/9438
+s6_captions: store/captions/004_effectdata (per-subject A, gemini-3.6-flash one-image-per-call, hash 3c317b80; leak-clean, 0 audit mismatch on 45-sample opus cross-check)
+trainer: SampleListDataset + StratifiedEpochSampler; data.sample_list = root/samples.jsonl; data.stratum_weights_pct from mix.json
+eval_axis: seen/unseen/zero-shot is AUTOMATIC over operators — 2,917 seen effects; 144 zero-shot operators (in ED, untrained); unseen = seen effect on a subject outside the 2,000 (rest of ED); no held-out carve needed
+consumers: []   # paired-arm gate (arm A = this vs arm B = 002 mix) pending, per advisor D3.2
+health: samples.jsonl 138,625 rows, all 5 paths/row resolve to real tensors; S6 latents (128,11,H,W) fps 24, cond_clean==latents, reference from a different subject, mask p1_onesided
+docs: ../../../misc/2026-08-28_effectdata_s6/BUILD.md
+authority: root/ROOT_MANIFEST.json (weights/counts/shapes/provenance); store/TEXT_LIFECYCLE.md (text)
+
+# ═══════════════ CORRECTION 2026-08-29 (append-only; original lines above unchanged) ═══════════════
+# Three corrections landed together (owner-directed, fable-advisor GO 2026-08-29). The original
+# lines above describe the 2026-08-28 build and are SUPERSEDED by this block where they conflict.
+correction_2026_08_29:
+  supersedes: "the original contents/mix/health lines + the 'S1 absent (pilot only)' label"
+  1_S1_restored:
+    what: "S1 was NOT pilot-only — its absence was a BUILD GAP. The 003_ctt_v2plus contract always
+           included S1 (mix_strata has it, 4.8%); the assembler ran the pre-registered S1-ABSENT
+           branch because normalize_inventory_paths.py omitted S1 from STRATA (so S1's inventory
+           was never /projects->/taiga normalized) and the manifest had S1 present=false. Fixed:
+           S1 normalized + present=true. The 'S1 absent (pilot only)' label is RETRACTED."
+    added: "S1 3,675 pairs / 1,225 clips (16,20,15); DINO signal already cached (no re-extraction)."
+  2_S6_same_shape_repairing:
+    what: "S6 had 4 native shapes and was paired within-effect only -> 75.1% of pairs were
+           CROSS-shape (reference grid != target grid), which breaks reference-aligned conditioning.
+           Re-paired SAME-SHAPE (ring within each (effect,shape)); every S6 pair is now same-shape."
+    dropped: "2,378 clips are the lone subject of their shape for their effect -> no same-shape
+              partner -> DROPPED. They are UNTRAINED same-effect subjects = free unseen-subject eval
+              material (a trained effect on an untrained subject). MUST NOT be described as trained."
+    s6_now: "26,266 clips / 57,847 same-shape pairs (was 28,644 / 85,932)."
+  3_form_code_side:
+    what: "The root is now CODE-SIDE: no per-row symlink trees. samples.jsonl carries ROOT-RELATIVE
+           paths; source tensors resolve through ONE re-pointable symlink `_src` -> the repo, masks
+           in `_mask_store`. Portable across devices (only `_src` changes per device). See the format
+           doc below."
+    rationale: "owner: the mix was already sampler-side (never in the trees), and the trees baked in
+                one machine's paths -> not portable across training devices with different store roots."
+  new_totals: "138,625 -> 114,215 pairs (S0 385 / S1 3,675 / S2a 22,731 / S2b 23,577 / S4 6,000 / S6 57,847)."
+  mix: "full contract S0 12 / S1 4.8 / S2 55.2 (S2a 27.10 / S2b 28.10 pro-rata) / S4 8 / S6 20 (S1-present branch)."
+  samples_sha256: 5a73eb3c24e274d021e8f47a32a0bfa1ed4f0051395f6cabaa77f768040b380e   # pin at run start
+  verification: "misc/2026-08-24_flow_signal_conditioning/armA/CODESIDE_VERIFY.md (invariants 1-5 PASS);
+                 old 571k-symlink tree pruned in full; final root == the 8 code-side entries."
+  norm: "served by NORM_dino_v3 over {S0,S1,S2a,S2b,S4,S6} — store/datasets/003_dino_signals (v3 addendum)."
+  format_doc: "misc/2026-08-28_effectdata_s6/CODESIDE_FORMAT.md + root/README.md (layout, _src portability, per-device bring-up, row schema)."
+  eps_migration: "the stale 138,625-row symlink-form samples.jsonl shipped to eps must be killed +
+                  reshipped code-side; instructions in CODESIDE_FORMAT.md §7 (eps agent's job)."
+
+# ═══════════════ DOCS RELOCATED IN-STORE 2026-08-29 (append-only) ═══════════════
+docs_relocated_2026_08_29:
+  what: "The dataset docs were carried INTO this store entry so it is self-sufficient. Canonical
+         copies now live here: ./README.md (entry point/index), ./CODESIDE_FORMAT.md (format + usage
+         + portability + verify — the primary doc), ./BUILD.md (S6 source build; §1-7 authority,
+         §8 superseded). Symlink stubs remain at the old misc/2026-08-28_effectdata_s6/ paths so
+         CHANGELOG, the hashed caption store, and code comments still resolve."
+  read_first: "./README.md — routes to CODESIDE_FORMAT.md / BUILD.md / meta.yaml correction block /
+               root (via the `root` symlink) / ../003_dino_signals (signal + NORM_dino_v3, not duplicated)."
+  supersedes_pointers: "the earlier `docs:` and `format_doc:` fields point at the old misc paths;
+                        those still resolve via the stubs, but the canonical home is this directory."

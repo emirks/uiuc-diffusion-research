@@ -1,0 +1,120 @@
+{
+ "total_clips": 132850,
+ "total_axisA": 308746,
+ "total_ops": 3061,
+ "mb": 6.182160331200603,
+ "rows": [
+  {
+   "M": 1,
+   "subjects": 56941,
+   "clips": 132850,
+   "axisA": 308746,
+   "ops": 3061
+  },
+  {
+   "M": 2,
+   "subjects": 28628,
+   "clips": 104537,
+   "axisA": 308746,
+   "ops": 2917
+  },
+  {
+   "M": 3,
+   "subjects": 12519,
+   "clips": 72319,
+   "axisA": 292637,
+   "ops": 2917
+  },
+  {
+   "M": 4,
+   "subjects": 6345,
+   "clips": 53797,
+   "axisA": 274115,
+   "ops": 2917
+  },
+  {
+   "M": 5,
+   "subjects": 4483,
+   "clips": 46349,
+   "axisA": 262943,
+   "ops": 2917
+  },
+  {
+   "M": 6,
+   "subjects": 3865,
+   "clips": 43259,
+   "axisA": 256763,
+   "ops": 2917
+  },
+  {
+   "M": 7,
+   "subjects": 3492,
+   "clips": 41021,
+   "axisA": 251168,
+   "ops": 2917
+  },
+  {
+   "M": 8,
+   "subjects": 3083,
+   "clips": 38158,
+   "axisA": 242579,
+   "ops": 2917
+  },
+  {
+   "M": 9,
+   "subjects": 2652,
+   "clips": 34710,
+   "axisA": 230511,
+   "ops": 2917
+  },
+  {
+   "M": 10,
+   "subjects": 2198,
+   "clips": 30624,
+   "axisA": 214167,
+   "ops": 2917
+  },
+  {
+   "M": 12,
+   "subjects": 1439,
+   "clips": 22681,
+   "axisA": 176482,
+   "ops": 2917
+  },
+  {
+   "M": 15,
+   "subjects": 769,
+   "clips": 14067,
+   "axisA": 125190,
+   "ops": 2917
+  },
+  {
+   "M": 20,
+   "subjects": 228,
+   "clips": 5050,
+   "axisA": 54027,
+   "ops": 2540
+  },
+  {
+   "M": 25,
+   "subjects": 27,
+   "clips": 726,
+   "axisA": 9481,
+   "ops": 651
+  },
+  {
+   "M": 30,
+   "subjects": 5,
+   "clips": 159,
+   "axisA": 2451,
+   "ops": 159
+  },
+  {
+   "M": 33,
+   "subjects": 1,
+   "clips": 33,
+   "axisA": 528,
+   "ops": 33
+  }
+ ]
+}

@@ -1,0 +1,179 @@
+model:
+  model_path: /taiga/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors
+  text_encoder_path: /taiga/illinois/eng/cs/jrehg/users/emirkisa/cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized
+  training_mode: lora
+  load_checkpoint: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/store/runs/002_ctt_v2/checkpoints/lora_weights_step_10000.safetensors
+lora:
+  rank: 128
+  alpha: 128
+  dropout: 0.0
+  target_modules:
+  - attn1.to_k
+  - attn1.to_q
+  - attn1.to_v
+  - attn1.to_out.0
+  - attn2.to_k
+  - attn2.to_q
+  - attn2.to_v
+  - attn2.to_out.0
+  - ff.net.0.proj
+  - ff.net.2
+training_strategy:
+  name: flexible
+  video:
+    is_generated: true
+    latents_dir: latents
+    cond_clean_latents_dir: cond_clean_latents
+    conditions:
+    - type: reference
+      latents_dir: reference_latents
+      probability: 1.0
+      attention: one_way
+    - type: mask
+      mask_dir: masks
+      probability: 1.0
+optimization:
+  learning_rate: 0.0001
+  steps: 2000
+  batch_size: 1
+  gradient_accumulation_steps: 2
+  max_grad_norm: 1.0
+  optimizer_type: adamw
+  scheduler_type: wsd
+  scheduler_params:
+    warmup_steps: 100
+    decay_frac: 0.25
+    end_factor: 0.1
+  enable_gradient_checkpointing: true
+acceleration:
+  mixed_precision_mode: bf16
+  quantization: null
+  load_text_encoder_in_8bit: false
+  offload_optimizer_during_validation: true
+data:
+  sample_list: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/datasets/ctt_v2/samples.jsonl
+  stratum_weights_pct:
+    S0: 5.0
+    S1: 12.0
+    S2a: 34.36059
+    S2b: 35.63941
+    S4: 13.0
+  sampler_seed: 42
+  sampler_epoch_size: null
+  resume_data_position: true
+  verify_sample_files: true
+  num_dataloader_workers: 4
+checkpoints:
+  interval: 50
+  keep_last_n: 3
+  precision: bfloat16
+  save_training_state: full
+validation:
+  samples:
+  - prompt: A hiker in a light purple shirt and olive trousers carrying a large black
+      backpack walks across a bright rocky mountain slope. sksz.
+    conditions:
+    - type: prefix
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/davis_hike_start9.mp4
+      num_frames: 9
+    - type: reference
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/animalization/animalization_0.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: A woman in a red bomber jacket poses against a blue studio backdrop, hands
+      on hips. sksz.
+    conditions:
+    - type: prefix
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/animalization_0_start9.mp4
+      num_frames: 9
+    - type: reference
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/cotton_cloud/cotton_cloud_1.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: A figure in a white knit balaclava and bright red hoodie leans against
+      the hood of a blue car in a dusky parking lot. sksz.
+    conditions:
+    - type: prefix
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/air_bending_1_start9.mp4
+      num_frames: 9
+    - type: suffix
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/air_bending_1_end9.mp4
+      num_frames: 8
+    - type: reference
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/data/processed/transitions_std121/raven_transition/raven_transition_0.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: A woman with long black hair and large sunglasses stands in a warm-lit
+      kitchen holding a white telephone receiver. sksz.
+    conditions:
+    - type: prefix
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/eval_ladder/conds/color_rain_0_start9.mp4
+      num_frames: 9
+    - type: reference
+      video: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/datasets/ctt_v2/encodes/S2a/clips/s2_0023_c00.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  negative_prompt: worst quality, inconsistent motion, distorted, jittery
+  video_dims:
+  - 480
+  - 640
+  - 121
+  frame_rate: 24.0
+  seed: 42
+  inference_steps: 30
+  interval: 1000
+  guidance_scale: 4.0
+  stg_scale: 1.0
+  stg_blocks:
+  - 29
+  stg_mode: stg_v
+  generate_audio: false
+  skip_initial_validation: true
+flow_matching:
+  timestep_sampling_mode: shifted_logit_normal
+  timestep_sampling_params: {}
+hub:
+  push_to_hub: false
+  hub_model_id: null
+wandb:
+  enabled: true
+  project: dualforce
+  entity: null
+  log_validation_videos: true
+  tags:
+  - dualforce
+  - contrast
+  - s0s1
+  - dpo
+  - cttv2warm
+  - rank128
+  - 2gpu
+  - chunked
+seed: 42
+output_dir: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/dualforce/contrast_2gpu
+twin:
+  enabled: true
+  variant: s0s1_contrast
+  cell_index_path: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/misc/2026-08-20_s0s1_counterfactual/build/s0s1_cell_index.json
+  strata:
+  - S0
+  - S1
+  contrast_axis: sample
+  beta: 8.0
+  lambda_con: 0.25
+  ref_anchor: true
+  lambda_red: 0.0
+  lambda_diff: 0.0
+  lambda_warmup_steps: 250
+  band_low: 0.5
+  band_high: 0.9
+  seam_frames: 1
+  ref_checkpoint: /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/store/runs/002_ctt_v2/checkpoints/lora_weights_step_10000.safetensors

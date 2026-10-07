@@ -1,0 +1,16 @@
+id: gens/039_crossing_uncrossed_s0s1/01_t0t1t2__eps
+seq: 1
+shelf: gens
+arm: crossing_uncrossed_s0s1
+harness_arm: crossing_uncrossed_s0s1   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: t0t1t2
+machine: eps
+created: 2026-09-15
+inputs: {run: runs/025_crossing_uncrossed_s0s1, step: 3000}
+code: misc/2026-09-13_crossing_ablation/gen/xab_gen.py (fork of eps ctt_v2 run_gen.py) @ 3184f77f6aa5
+prompt_family: prompts/018_crossing_s0s1
+prompt_sha: 7ab4e29dba61
+grid_rows: 81
+videos: 162
+source: scripts/store_register.py over misc/2026-09-13_crossing_ablation/eval_s0s1/registries/crossing_uncrossed_s0s1.gen.jsonl
+notes: crossing ablation CLEAN s0+s1 retrain, UNCROSSED arm (owner terms: shots/operators/references/crossed-uncrossed). Identical settings to runs/024 except data layout (each shot under exactly one operator); did NOT diverge (the first-pair uncrossed runs/023 diverged; this clean retrain removes that confound). one_way ref attn, rank128/alpha128, 30 steps cfg4 STG1 blk29, 480x640x121@24, prefix 9; eps (fal-h100). 81 items x seeds 42/43 = 162 clips. Scored 9-pool on eps (evals/034_crossing_s0s1__eps__2026-09-15).

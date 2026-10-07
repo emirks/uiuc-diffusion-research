@@ -1,0 +1,16 @@
+id: gens/036_dualforce_dcg_vaelerp_w6/02_neutral_v3ed81zs__dai
+seq: 2
+shelf: gens
+arm: dualforce_dcg_vaelerp_w6
+harness_arm: dualforce_dcg_vaelerp_w6_v3ed81zs   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral_v3ed81zs
+machine: dai
+created: 2026-09-14
+inputs: {run: runs/012_dualforce_control, step: 1000}
+code: src/LTX-2-ctt-v2-train packages + scripts/grid_v3/gen_dcg_v3.py --null-kind vae_lerp (VAE-latent dissolve, gs4/stg1, w=6)
+prompt_family: prompts/012_ctt_v3ed_neutral
+prompt_sha: 423ea86ce085
+grid_rows: 102
+videos: 102
+source: scripts/store_register.py over misc/2026-09-14_dcg_vae_lerp/eval/single/dualforce_dcg_vaelerp_w6_v3ed81zs.jsonl
+notes: grid v3 EffectData tier (native 81 f, frame-0 anchor, GEN_PREFIX_FRAMES=1), zero-shot for every arm; family prompts/012_ctt_v3ed_neutral; test-time DCG w=6, null_kind=vae_lerp (VAE-latent dissolve); runs/012@1000 r128/a128 one_way; seed 42 only; DeltaAI GH200

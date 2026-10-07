@@ -1,0 +1,16 @@
+id: 011_vfxmaster
+seq: 11
+shelf: runs
+external: true
+created: 2026-08-14
+machine: n/a (not trained by us)
+source: libaolu312/VFXMaster @ 0632c5a9979586adc1d4f96632e5b808ee11712f — official release (arXiv:2510.25772)
+inputs: {}
+model: CogVideoX-Fun-V1.1 2b-InP aux (VAE/T5/sched) + 5B VFXMaster transformer (8ruceLi/VFXMaster ckpt-40000, 11.14 GB); 2b-aux+5B config per the authors' own scripts (README 5b line inconsistent)
+steps_trained: n/a (released checkpoint)
+checkpoints: symlink -> $LAB/cache/vfxmaster
+env: $LAB/envs-aarch64/vfxmaster
+code: $LAB/external/vfxmaster/... @ 0632c5a9979586adc1d4f96632e5b808ee11712f
+notes: >
+  One-sided CTT baseline (I2V, start-frame only — NO end-frame path; two-sided cells N/A).
+  Demo-gate PASS (authors' own examples reproduced). Provenance + integration: misc/2026-08-13_baseline_metric_table/DOSSIER.md.

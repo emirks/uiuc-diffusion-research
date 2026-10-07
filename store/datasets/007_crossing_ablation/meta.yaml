@@ -1,0 +1,42 @@
+id: 007_crossing_ablation
+seq: 7
+shelf: datasets
+created: 2026-09-12
+role: >
+  Crossing mini-ablation — a MATCHED PAIR of from-scratch training sets (crossed vs uncrossed) that
+  differ ONLY in the onesided data layout, to show that crossed data makes the model read the operator
+  from the reference instead of the shots. 24 operators, two within-source blocks: S0+S1 (9 dense
+  manners, DEGREE 5, 45 crossed contents) + S6/EffectData (15 effects, DEGREE 2 — effects barely
+  co-occur so degree 2 is the ceiling — 28 crossed subjects). Onesided only; twosided is the eval side
+  (T3, grid v3).
+source: >
+  datasets/crossing_ablation/build.py (deterministic, seed 42) over the verified code-side manifest
+  store/datasets/005_ctt_v2plus_s6reshape/root/samples.jsonl (all reused paths training-verified).
+root: symlink -> ../../../datasets/crossing_ablation   # holds crossed/, uncrossed/, tests/, _mask_store/
+form: >
+  code-side — two samples.jsonl (crossed/, uncrossed/), each a full root with `_src -> repo root` and
+  `_mask_store` (3 onesided masks: f16_h20_w15_p2, f11_h16_w26_p1, f11_h26_w16_p1). ROOT-RELATIVE paths;
+  only `_src` changes per device (as in 005). Trainer reads ONE root per run.
+contents: >
+  2,136 pairs PER SET (identical count; S0+S1 1,800 + S6 336). CROSSED: 73 endpoints — 45 S0+S1
+  contents (× 5 manners, degree 5) + 28 S6 subjects (× 2 effects, degree 2). UNCROSSED: 281 endpoints
+  each under 1 operator (the 73 crossed endpoints are a subset, each under its designated operator).
+  Operators: 9 S0+S1 manners + 15 S6 effects = 24. References: same-operator different-endpoint (same
+  grid for S6); 8/target S0+S1, 6/target S6.
+control_invariant: >
+  operator->pair histogram is BYTE-IDENTICAL between crossed and uncrossed (equal operators, videos/op,
+  pairs) — the ONLY difference is endpoint operator-uniqueness. Verified in BUILD_AUDIT.json.
+tests:
+  t1_seen: datasets/crossing_ablation/tests/t1_seen.jsonl   # 73; matched ref -> expect tie (equal-training check)
+  t2_swap: datasets/crossing_ablation/tests/t2_swap.jsonl   # 73; swapped ref -> margin(swap vs designated); THE cell
+  t3_zeroshot: datasets/crossing_ablation/tests/t3_zeroshot.md  # bonus; grid v3 held-out ops+shots (incl. twosided)
+health: >
+  BUILD_AUDIT.json: pairs_equal true, operator_histogram_equal true, crossed subset of uncrossed,
+  all endpoints single-op in uncrossed / multi-op in crossed; all 15 EB operators covered (per-op
+  crossed pairs 12/24/30 min/med/max). Path resolution 0 missing over both roots (1501 crossed /
+  1688 uncrossed distinct tensors); torch shapes verified (S6 (128,11,16,26)/(128,11,26,16), S0+S1
+  (128,16,20,15); target==reference per row).
+sidedness: one   # crossing lives onesided (only place semantic crossing reaches degree 5); twosided is T3/eval only
+consumers: []    # two from-scratch runs (crossed, uncrossed) PENDING on eps; same recipe/steps/seed
+docs: ./root/README.md (design + numbers + reproduce), ./root/BUILD_AUDIT.json
+authority: ./root/BUILD_AUDIT.json (counts/invariants); build.py (construction)

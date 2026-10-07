@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EffectData Browser</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --panel:#fff; --panel2:#eceef2; --ink:#14171c; --mut:#606a78;
+    --line:#e3e7ed; --accent:#5b7cfa; --accent-ink:#fff; --chip:#eef1f7; --chipink:#3a4557;
+    --trans:#e0a83a; --transbg:#fbf1da; --transink:#7a5806;
+    --shadow:0 1px 2px rgba(20,30,50,.06),0 8px 24px rgba(20,30,50,.07);
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#0d1014; --panel:#161a20; --panel2:#1d232b; --ink:#e9ecf1; --mut:#98a3b2;
+    --line:#282f39; --accent:#8098ff; --accent-ink:#0d1014; --chip:#222932; --chipink:#c4cede;
+    --trans:#e6b64d; --transbg:#2b2510; --transink:#f2da8f;
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.4);
+  }}
+  :root[data-theme="dark"]{
+    --bg:#0d1014; --panel:#161a20; --panel2:#1d232b; --ink:#e9ecf1; --mut:#98a3b2;
+    --line:#282f39; --accent:#8098ff; --accent-ink:#0d1014; --chip:#222932; --chipink:#c4cede;
+    --trans:#e6b64d; --transbg:#2b2510; --transink:#f2da8f;
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--accent);text-decoration:none}
+  header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--panel) 90%,transparent);
+    backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:13px 22px}
+  .htop{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+  h1{font-size:17px;margin:0;letter-spacing:-.2px}
+  h1 .dim{color:var(--mut);font-weight:500;font-size:13px}
+  .stats{color:var(--mut);font-size:12.5px;margin-left:auto;display:flex;gap:16px;flex-wrap:wrap}
+  .stats b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .cta{margin-left:8px;background:linear-gradient(180deg,var(--accent),color-mix(in srgb,var(--accent) 80%,#000));
+    color:var(--accent-ink);border:none;border-radius:9px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer}
+  .controls{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:11px}
+  input[type=search]{flex:1;min-width:220px;background:var(--panel2);border:1px solid var(--line);
+    color:var(--ink);border-radius:9px;padding:9px 12px;font-size:14px;outline:none}
+  input[type=search]:focus{border-color:var(--accent)}
+  select,.btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 11px;font-size:13px;cursor:pointer}
+  .facets{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+  .chip{border:1px solid var(--line);background:var(--panel2);color:var(--chipink);border-radius:999px;
+    padding:6px 12px;font-size:12.5px;cursor:pointer;user-select:none;white-space:nowrap;transition:.12s}
+  .chip:hover{border-color:var(--accent)}
+  .chip[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+  .chip .c{opacity:.6;margin-left:5px;font-variant-numeric:tabular-nums}
+  .count{color:var(--mut);font-size:12.5px;margin-left:auto}
+  main{padding:16px 22px 64px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:15px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:13px;overflow:hidden;
+    box-shadow:var(--shadow);cursor:pointer;display:flex;flex-direction:column;transition:transform .13s,border-color .13s}
+  .card:hover{transform:translateY(-3px);border-color:var(--accent)}
+  .vwrap{position:relative;aspect-ratio:3/2;background:var(--panel2);overflow:hidden}
+  .vwrap video,.vwrap .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .ph{display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:11px;text-align:center;padding:8px}
+  .badge{position:absolute;top:8px;left:8px;background:var(--transbg);color:var(--transink);
+    border:1px solid color-mix(in srgb,var(--trans) 55%,transparent);border-radius:7px;padding:2px 7px;font-size:10px;font-weight:700;letter-spacing:.3px}
+  .nclip{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.6);color:#fff;border-radius:6px;padding:2px 7px;font-size:10.5px;font-variant-numeric:tabular-nums}
+  .cbody{padding:9px 11px 11px}
+  .name{font-weight:600;font-size:13px;line-height:1.25;margin:0 0 2px}
+  .zh{color:var(--mut);font-size:11.5px;margin-bottom:6px;min-height:1em}
+  .vfx{display:inline-block;background:var(--chip);color:var(--chipink);border-radius:6px;padding:2px 7px;font-size:10.5px}
+  .ov{position:fixed;inset:0;z-index:50;background:rgba(6,9,14,.66);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:24px}
+  .ov.open{display:flex}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;max-width:920px;width:100%;max-height:88vh;overflow:auto;box-shadow:var(--shadow);display:grid;grid-template-columns:420px 1fr;position:relative}
+  @media(max-width:680px){.modal{grid-template-columns:1fr}}
+  .modal video{width:100%;aspect-ratio:3/2;object-fit:cover;background:#000;display:block}
+  .mbody{padding:20px 22px}
+  .mbody h2{margin:0 0 2px;font-size:20px}
+  .mbody .mzh{color:var(--mut);margin-bottom:14px}
+  .kv{margin:13px 0}.kv .k{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut);margin-bottom:3px}
+  .kv .v{font-size:13.5px;line-height:1.5}
+  .x{position:absolute;top:14px;right:16px;color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:8px;width:34px;height:34px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2}
+  .foot{color:var(--mut);font-size:12px;margin-top:28px;text-align:center;line-height:1.7}
+  .sentinel{height:1px}
+</style>
+</head>
+<body>
+<header>
+  <div class="htop">
+    <h1>EffectData <span class="dim">· ysy31415926 · preview browser</span></h1>
+    <div class="stats" id="stats"></div>
+    <button class="cta" onclick="location.href='counterfactual.html'">↔ Counterfactual axes →</button>
+  </div>
+  <div class="controls">
+    <input id="q" type="search" placeholder="Search name / 中文 / vfx / prompt…" autocomplete="off">
+    <button class="chip" id="fTrans" aria-pressed="false" title="Captions contain change/onset language (generous match)">↻ transition-shaped</button>
+    <select id="sort">
+      <option value="name">Sort: name A–Z</option>
+      <option value="nclip">Sort: most clips</option>
+      <option value="nclipa">Sort: fewest clips</option>
+    </select>
+    <button class="btn" id="theme">◐ theme</button>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="facets" id="facets"></div>
+</header>
+<main><div class="grid" id="grid"></div><div class="sentinel" id="sentinel"></div>
+  <div class="foot" id="foot"></div></main>
+
+<div class="ov" id="ov"><div class="modal">
+  <button class="x" id="x">×</button>
+  <video id="mvid" autoplay loop muted playsinline controls></video>
+  <div class="mbody" id="mbody"></div>
+</div></div>
+
+<script>
+const PREV="media/example_preview/";
+const CATS=[
+  ["fire","fire|flame|ember|lava|burn|inferno|magma"],["ice","ice|frost|snow|glaci|freeze|crystal wing"],
+  ["water","water|aqua|wave|ocean|sea|rain|mist|splash|tide|liquid"],["light","laser|light|glow|lumin|beam|radian|halo|ray|shine"],
+  ["electric","electric|lightning|thunder|volt|spark|arc|plasma|ion"],["smoke","smoke|fog|vapor|mist|steam|haze"],
+  ["plant","vine|bloom|flower|blossom|petal|root|leaf|tree|moss|fungi|myceli|sprout|garden|seed"],
+  ["crystal","crystal|gem|amber|diamond|quartz|amethyst|jewel|glass|shard"],
+  ["eyes","eye|pupil|gaze|iris|tears|vision"],["wings","wing|feather|angel"],
+  ["aura","aura|shield|barrier|field|halo|orbit|guardian"],["digital","code|data|digital|pixel|hologram|glitch|circuit|binary|formula"],
+  ["acid","acid|toxic|corros|poison|venom"],["shadow","shadow|dark|void|black hole|abyss|night"],
+];
+let DATA=null, VIEW=[], RENDERED=0, PAGE=120;
+const grid=document.getElementById('grid');
+const enc=s=>encodeURIComponent(s);
+const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const io=new IntersectionObserver((es)=>{
+  for(const e of es){
+    const v=e.target.querySelector('video'); if(!v) continue;
+    if(e.isIntersecting){ if(!v.src&&v.dataset.src){v.src=v.dataset.src;} v.play?.().catch(()=>{}); }
+    else { v.pause?.(); if(v.src){ v.removeAttribute('src'); v.load?.(); } }
+  }
+},{rootMargin:"400px"});
+
+// infinite scroll
+const pager=new IntersectionObserver((es)=>{ if(es[0].isIntersecting) renderMore(); },{rootMargin:"800px"});
+pager.observe(document.getElementById('sentinel'));
+
+function card(d){
+  const pv=PREV+enc(d.pv);
+  const c=document.createElement('div'); c.className='card';
+  c.innerHTML=`<div class="vwrap">
+      <video muted loop playsinline preload="none" data-src="${pv}"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"></video>
+      <div class="ph" style="display:none">no preview</div>
+      ${d.trans?'<span class="badge">↻ TRANSITION-ISH</span>':''}
+      <span class="nclip">${d.n} clips</span></div>
+    <div class="cbody"><p class="name">${esc(d.abstract_en||d.cls.replace(/_/g,' '))}</p>
+      <div class="zh">${esc(d.zh||'')}</div><span class="vfx">${esc(d.vfx_en||'—')}</span></div>`;
+  c.onclick=()=>openModal(d);
+  io.observe(c);
+  return c;
+}
+function renderMore(){
+  const frag=document.createDocumentFragment();
+  const end=Math.min(RENDERED+PAGE, VIEW.length);
+  for(let i=RENDERED;i<end;i++) frag.appendChild(card(VIEW[i]));
+  grid.appendChild(frag); RENDERED=end;
+}
+function apply(){
+  const q=document.getElementById('q').value.trim().toLowerCase();
+  const onlyT=document.getElementById('fTrans').getAttribute('aria-pressed')==='true';
+  const sort=document.getElementById('sort').value;
+  const cats=[...document.querySelectorAll('.facets .chip[aria-pressed=true]')].map(c=>c.dataset.cat);
+  VIEW=DATA.effects.filter(d=>{
+    if(onlyT&&!d.trans) return false;
+    if(cats.length && !cats.some(c=>d._cats.includes(c))) return false;
+    if(!q) return true; return d._blob.includes(q);
+  });
+  VIEW.sort((a,b)=> sort==='name'?a.abstract_en.localeCompare(b.abstract_en):sort==='nclip'?b.n-a.n:a.n-b.n);
+  grid.innerHTML=''; RENDERED=0; renderMore();
+  document.getElementById('count').textContent=VIEW.length.toLocaleString()+" classes";
+}
+function openModal(d){
+  document.getElementById('mvid').src=PREV+enc(d.pv);
+  document.getElementById('mbody').innerHTML=`
+    <h2>${esc(d.abstract_en)}</h2>
+    <div class="mzh">${esc(d.zh)} · <b>${d.n}</b> clips in full set ${d.trans?'· <span style="color:var(--transink)">transition-shaped</span>':''}</div>
+    <div class="kv"><div class="k">VFX label</div><div class="v">${esc(d.vfx_en)}</div></div>
+    <div class="kv"><div class="k">Instruction (the manner)</div><div class="v">${esc(d.instruction_en)}</div></div>
+    <div class="kv"><div class="k">Sample prompt (one clip)</div><div class="v">${esc(d.prompt_en)}</div></div>
+    <div class="kv"><div class="k">class id</div><div class="v" style="font-family:ui-monospace,monospace;font-size:12px;color:var(--mut)">${esc(d.cls)}</div></div>`;
+  document.getElementById('ov').classList.add('open');
+}
+document.getElementById('x').onclick=()=>{document.getElementById('ov').classList.remove('open');document.getElementById('mvid').pause();};
+document.getElementById('ov').onclick=e=>{if(e.target.id==='ov'){document.getElementById('x').click();}};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('x').click();});
+let t;document.getElementById('q').oninput=()=>{clearTimeout(t);t=setTimeout(apply,140);};
+document.getElementById('fTrans').onclick=e=>{const b=e.currentTarget;b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true');apply();};
+document.getElementById('sort').onchange=apply;
+document.getElementById('theme').onclick=()=>{const r=document.documentElement,c=r.getAttribute('data-theme');
+  r.setAttribute('data-theme',c==='dark'?'light':c==='light'?'dark':(matchMedia('(prefers-color-scheme:dark)').matches?'light':'dark'));};
+
+fetch('media/effects_index.json').then(r=>r.json()).then(d=>{
+  DATA=d;
+  const catRe=CATS.map(([n,p])=>[n,new RegExp(p,'i')]);
+  const catCount={};
+  for(const e of d.effects){
+    e._blob=(e.cls+' '+e.zh+' '+e.vfx_en+' '+e.abstract_en+' '+e.prompt_en+' '+e.instruction_en).toLowerCase();
+    e._cats=catRe.filter(([n,re])=>re.test(e._blob)).map(([n])=>n);
+    for(const c of e._cats) catCount[c]=(catCount[c]||0)+1;
+  }
+  const m=d.meta;
+  document.getElementById('stats').innerHTML=
+    `<span><b>${m.n_classes.toLocaleString()}</b> effect classes</span>
+     <span><b>${m.n_videos.toLocaleString()}</b> videos</span>
+     <span><b>${m.vids_per_class.min}–${m.vids_per_class.max}</b> clips/class</span>`;
+  const fc=document.getElementById('facets');
+  for(const [n] of CATS){ if(!catCount[n]) continue;
+    const b=document.createElement('button'); b.className='chip'; b.dataset.cat=n; b.setAttribute('aria-pressed','false');
+    b.innerHTML=`${n}<span class="c">${catCount[n]}</span>`;
+    b.onclick=()=>{b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true');apply();};
+    fc.appendChild(b);
+  }
+  document.getElementById('foot').innerHTML=
+    `Previews are the low-res teaser (one clip per class, ${m.n_classes.toLocaleString()} of ${m.n_videos.toLocaleString()} videos). Full set ~822 GB · Apache-2.0.<br>
+     "transition-shaped" = caption contains change/onset language (generous keyword match — over-counts true A→B transitions). See the <a href="counterfactual.html">counterfactual axes</a> page for same-operator / same-endpoint galleries.`;
+  apply();
+});
+</script>
+</body>
+</html>

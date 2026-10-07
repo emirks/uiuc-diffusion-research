@@ -1,0 +1,2106 @@
+{
+ "ceilings": {
+  "ed.Acid_Sphere_from_Palms": {
+   "ceiling": 0.8608411990764931,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.138543929937279,
+   "sidedness": "onesided"
+  },
+  "ed.Amber_crystal_crown": {
+   "ceiling": 0.6347055611761494,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.29285926044071386,
+   "sidedness": "onesided"
+  },
+  "ed.Amber_crystal_wings_on_back": {
+   "ceiling": 0.9094395712042771,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1363906000680408,
+   "sidedness": "onesided"
+  },
+  "ed.Amber_shield_from_palms": {
+   "ceiling": 0.9250870574399986,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.12668527941593824,
+   "sidedness": "onesided"
+  },
+  "ed.Amethyst_vines_on_arms": {
+   "ceiling": 0.8715938274761804,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.24775309431578882,
+   "sidedness": "onesided"
+  },
+  "ed.Apple_shield_on_arm": {
+   "ceiling": 0.9795561707326412,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.022092121247753616,
+   "sidedness": "onesided"
+  },
+  "ed.Arm_Spiraling_Sigils": {
+   "ceiling": 0.9361494361494362,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.07436176454942017,
+   "sidedness": "onesided"
+  },
+  "ed.Arm_coiled_light_core": {
+   "ceiling": 0.8096808243867067,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.26400459736278276,
+   "sidedness": "onesided"
+  },
+  "ed.Arm_data_corruption": {
+   "ceiling": 0.854554472201531,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.12705899374572047,
+   "sidedness": "onesided"
+  },
+  "ed.Arm_liquid_blade": {
+   "ceiling": 0.9053822436175377,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.11310467691243,
+   "sidedness": "onesided"
+  },
+  "ed.Arm_spirit_sword": {
+   "ceiling": 0.9664648194059958,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.04982654399720686,
+   "sidedness": "onesided"
+  },
+  "ed.Arm_time_phase": {
+   "ceiling": 0.7620629679453207,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2503325057683295,
+   "sidedness": "onesided"
+  },
+  "ed.Arm_wrapped_in_cucumber_vines": {
+   "ceiling": 0.7571477277359631,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2671016697744285,
+   "sidedness": "onesided"
+  },
+  "ed.Aurora_tears": {
+   "ceiling": 0.8266726207902679,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.25575995199651513,
+   "sidedness": "onesided"
+  },
+  "ed.Back_Rainbow_Wings": {
+   "ceiling": 0.9661609367491721,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.04767952553897602,
+   "sidedness": "onesided"
+  },
+  "ed.Back_Tentacle_Aura": {
+   "ceiling": 0.8668086021027198,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.13659519766635064,
+   "sidedness": "onesided"
+  },
+  "ed.Back_ethereal_wings": {
+   "ceiling": 0.7494203376556318,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2310709309724642,
+   "sidedness": "onesided"
+  },
+  "ed.Back_page_wings": {
+   "ceiling": 0.9596373419902832,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.05141583287040099,
+   "sidedness": "onesided"
+  },
+  "ed.Back_pink_wings": {
+   "ceiling": 0.9609946227593287,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.06289001876293576,
+   "sidedness": "onesided"
+  },
+  "ed.Back_scroll_wings": {
+   "ceiling": 0.9527941145588205,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.0574266189211184,
+   "sidedness": "onesided"
+  },
+  "ed.Back_slime_vortex": {
+   "ceiling": 0.9660812601989072,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.04651836993706148,
+   "sidedness": "onesided"
+  },
+  "ed.Back_steam_wings": {
+   "ceiling": 0.8939875704581587,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.17903569050256166,
+   "sidedness": "onesided"
+  },
+  "ed.Back_vortex_zone": {
+   "ceiling": 0.9249243072772485,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.13000365702355826,
+   "sidedness": "onesided"
+  },
+  "ed.Bamboo_shield_in_front": {
+   "ceiling": 0.8707303560244737,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.15275113182243455,
+   "sidedness": "onesided"
+  },
+  "ed.Banana_blade_hand": {
+   "ceiling": 0.8668092197503962,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.15721773888680746,
+   "sidedness": "onesided"
+  },
+  "ed.Banana_tear_flow": {
+   "ceiling": 0.8186737745561276,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1992868555528206,
+   "sidedness": "onesided"
+  },
+  "ed.Basis_vector_energy": {
+   "ceiling": 0.88766347589877,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.13928911237732203,
+   "sidedness": "onesided"
+  },
+  "ed.Bee_column": {
+   "ceiling": 0.9266092501386619,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.0692482448113978,
+   "sidedness": "onesided"
+  },
+  "ed.Bee_patterns_on_clothes": {
+   "ceiling": 0.6816264022146376,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2939234603652354,
+   "sidedness": "onesided"
+  },
+  "ed.Bee_veil": {
+   "ceiling": 0.8553533994710466,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.17014985866861704,
+   "sidedness": "onesided"
+  },
+  "ed.Beer_liquid_aura": {
+   "ceiling": 0.9643357878651997,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.07621096606659303,
+   "sidedness": "onesided"
+  },
+  "ed.Behind_Geometric_Vortex": {
+   "ceiling": 0.9366166866166866,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1469324038593628,
+   "sidedness": "onesided"
+  },
+  "ed.Bile_aura_hands": {
+   "ceiling": 0.8594746535923007,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2638964679638805,
+   "sidedness": "onesided"
+  },
+  "ed.Bile_puddle_feet": {
+   "ceiling": 0.8430384312737254,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2129172971387028,
+   "sidedness": "onesided"
+  },
+  "ed.Blade_Tail_from_Spine": {
+   "ceiling": 0.7651928975458389,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.17650079674400507,
+   "sidedness": "onesided"
+  },
+  "ed.Blood_cloak_aura": {
+   "ceiling": 0.8124120624120624,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2653385505935792,
+   "sidedness": "onesided"
+  },
+  "ed.Blue_liquid_mist_from_mouth": {
+   "ceiling": 0.730416862769804,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.26649687889181023,
+   "sidedness": "onesided"
+  },
+  "ed.Body_Dark_Energy_Field": {
+   "ceiling": 0.7506513094748388,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.28352333435929294,
+   "sidedness": "onesided"
+  },
+  "ed.Body_chip_shield": {
+   "ceiling": 0.8934458934458935,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.16049697375215444,
+   "sidedness": "onesided"
+  },
+  "ed.Body_dissolving_to_array": {
+   "ceiling": 0.9377232024290849,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.11427443046941504,
+   "sidedness": "onesided"
+  },
+  "ed.Body_vine_slime": {
+   "ceiling": 0.8393245157951041,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.21708901581866152,
+   "sidedness": "onesided"
+  },
+  "ed.Butterfly_halo": {
+   "ceiling": 0.8471501118559941,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.17284879969251205,
+   "sidedness": "onesided"
+  },
+  "ed.Carrot_eye_beams": {
+   "ceiling": 0.8578125636949165,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.16638906200278267,
+   "sidedness": "onesided"
+  },
+  "ed.Cauliflower_Breath_Cloud": {
+   "ceiling": 0.957347104405928,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08931423640810207,
+   "sidedness": "onesided"
+  },
+  "ed.Chaotic_spheres_from_fists": {
+   "ceiling": 0.9880951498598557,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.021303676391389324,
+   "sidedness": "onesided"
+  },
+  "ed.Character_skin_mark": {
+   "ceiling": 0.8226341314576607,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.18745846384216144,
+   "sidedness": "onesided"
+  },
+  "ed.Chest_Burst": {
+   "ceiling": 0.9666201577966284,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.04347518230234275,
+   "sidedness": "onesided"
+  },
+  "ed.Chest_Burst_Ribbons": {
+   "ceiling": 0.9778489925548748,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.036798870063049625,
+   "sidedness": "onesided"
+  },
+  "ed.Chest_Code_Core": {
+   "ceiling": 0.9454265042500337,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.10185780262355883,
+   "sidedness": "onesided"
+  },
+  "ed.Chest_Magnetic_Pulse": {
+   "ceiling": 0.7190953808600867,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.30582189749901684,
+   "sidedness": "onesided"
+  },
+  "ed.Chest_bursts_pixel_shockwave": {
+   "ceiling": 0.8436752260281672,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.22300140544226132,
+   "sidedness": "onesided"
+  },
+  "ed.Chest_light_field": {
+   "ceiling": 0.9162454309513133,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.0817448314627747,
+   "sidedness": "onesided"
+  },
+  "ed.Chest_rune_burst": {
+   "ceiling": 0.8301941390176685,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.23610757166636442,
+   "sidedness": "onesided"
+  },
+  "ed.Chin_Spore_Light": {
+   "ceiling": 0.8120056502409444,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.26083555454647206,
+   "sidedness": "onesided"
+  },
+  "ed.Code_sprawl_from_feet": {
+   "ceiling": 0.8061299678946738,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.22962800808855116,
+   "sidedness": "onesided"
+  },
+  "ed.Code_tears_from_eyes": {
+   "ceiling": 0.7783883225059696,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.241118389744648,
+   "sidedness": "onesided"
+  },
+  "ed.Concrete_vine_binding": {
+   "ceiling": 0.8407318260259438,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2080529238595719,
+   "sidedness": "onesided"
+  },
+  "ed.Conjure_runic_sword": {
+   "ceiling": 0.96951136657019,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.03529677064005436,
+   "sidedness": "onesided"
+  },
+  "ed.Core_Belief_Manifest": {
+   "ceiling": 0.7384688267041208,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.30392557040921575,
+   "sidedness": "onesided"
+  },
+  "ed.Corn_Juice_Field": {
+   "ceiling": 0.7847939465586524,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2135921613382893,
+   "sidedness": "onesided"
+  },
+  "ed.Corn_silk_aura": {
+   "ceiling": 0.8195224224635989,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.20985893151232152,
+   "sidedness": "onesided"
+  },
+  "ed.Corrosive_Mist_Field": {
+   "ceiling": 0.9102205866911748,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.14476474175551038,
+   "sidedness": "onesided"
+  },
+  "ed.Crow_path_below": {
+   "ceiling": 0.974336121394945,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.04150634259798035,
+   "sidedness": "onesided"
+  },
+  "ed.Crow_wings_from_back": {
+   "ceiling": 0.9919699625581978,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.007574092827196349,
+   "sidedness": "onesided"
+  },
+  "ed.Crystal_Body_Aura": {
+   "ceiling": 0.857444754503578,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.21052935868591519,
+   "sidedness": "onesided"
+  },
+  "ed.Crystal_Ice_Shield": {
+   "ceiling": 0.777069027069027,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2821842168860603,
+   "sidedness": "onesided"
+  },
+  "ed.Cucumber_leaf_cloak": {
+   "ceiling": 0.9905129316894021,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.014000975511210182,
+   "sidedness": "onesided"
+  },
+  "ed.Cucumber_seeds_from_chest": {
+   "ceiling": 0.9180962122138593,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.09908865530014652,
+   "sidedness": "onesided"
+  },
+  "ed.Cucumbers_in_hair": {
+   "ceiling": 0.8764896117837294,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.18843983175373874,
+   "sidedness": "onesided"
+  },
+  "ed.Data_flow_from_mouth": {
+   "ceiling": 0.9587377381495028,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.05977073548019122,
+   "sidedness": "onesided"
+  },
+  "ed.Data_stream_from_mouth": {
+   "ceiling": 0.9251617928088517,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.11476614987501102,
+   "sidedness": "onesided"
+  },
+  "ed.Demonic_scythe_from_hand": {
+   "ceiling": 0.9100519688754982,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.12308823875788336,
+   "sidedness": "onesided"
+  },
+  "ed.Diamond_Shard_Burst": {
+   "ceiling": 0.9382018793783499,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.06955576250259478,
+   "sidedness": "onesided"
+  },
+  "ed.Diamond_Shield": {
+   "ceiling": 0.8007224624871684,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.23237327891561566,
+   "sidedness": "onesided"
+  },
+  "ed.Diamond_Tears": {
+   "ceiling": 0.7215909862968686,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.26399668332456533,
+   "sidedness": "onesided"
+  },
+  "ed.Diamond_back_wings": {
+   "ceiling": 0.9735480029597676,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.034394805015549576,
+   "sidedness": "onesided"
+  },
+  "ed.Diamond_hand_gauntlet": {
+   "ceiling": 0.6511269599504894,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.3217224026627704,
+   "sidedness": "onesided"
+  },
+  "ed.Dice_staff_in_hand": {
+   "ceiling": 0.9363260833849069,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08927456522902215,
+   "sidedness": "onesided"
+  },
+  "ed.Dust_Trailing_Stream": {
+   "ceiling": 0.9032655650302709,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.13965381445692587,
+   "sidedness": "onesided"
+  },
+  "ed.Dust_displacement": {
+   "ceiling": 0.8745835510541392,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.17023884086714802,
+   "sidedness": "onesided"
+  },
+  "ed.Electric_arc_weapon": {
+   "ceiling": 0.8296107707872413,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.21821158735999946,
+   "sidedness": "onesided"
+  },
+  "ed.Emerald_shield_from_chest": {
+   "ceiling": 0.9570015305309424,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08652041232167787,
+   "sidedness": "onesided"
+  },
+  "ed.Emerging_Logic_Cornerstone": {
+   "ceiling": 0.993737052560582,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.00833900700994527,
+   "sidedness": "onesided"
+  },
+  "ed.Energy_blade_wings_from_back": {
+   "ceiling": 0.8513278807396454,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1414767898356433,
+   "sidedness": "onesided"
+  },
+  "ed.Entwining_Thorns": {
+   "ceiling": 0.9311174605292252,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.12538617975243718,
+   "sidedness": "onesided"
+  },
+  "ed.Exhaling_soulfire": {
+   "ceiling": 0.8418960918960919,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2384425107564262,
+   "sidedness": "onesided"
+  },
+  "ed.Exploding_orange_pulp_aura": {
+   "ceiling": 0.9207388177976412,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08764392323877782,
+   "sidedness": "onesided"
+  },
+  "ed.Eye_Data_Project": {
+   "ceiling": 0.8749878014583896,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1765498509674726,
+   "sidedness": "onesided"
+  },
+  "ed.Eye_Laser_Beams": {
+   "ceiling": 0.8277442395089454,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.22820654458330866,
+   "sidedness": "onesided"
+  },
+  "ed.Eye_Lightning_Arc": {
+   "ceiling": 0.8359070712011889,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.18701051527319268,
+   "sidedness": "onesided"
+  },
+  "ed.Eye_Meteor_Burst": {
+   "ceiling": 0.8414529296882238,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2331084275255554,
+   "sidedness": "onesided"
+  },
+  "ed.Eye_Pupil_Sigils": {
+   "ceiling": 0.6156217920923802,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.3064177806468595,
+   "sidedness": "onesided"
+  },
+  "ed.Eye_Radiance_Noise": {
+   "ceiling": 0.9375054816231287,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08382849896216361,
+   "sidedness": "onesided"
+  },
+  "ed.Eye_Shard_Stream": {
+   "ceiling": 0.8950042185336304,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.19890856138716498,
+   "sidedness": "onesided"
+  },
+  "ed.Eye_tear_bubbles": {
+   "ceiling": 0.9677834971952619,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.0617145728644124,
+   "sidedness": "onesided"
+  },
+  "ed.Eye_tide_shell_beams": {
+   "ceiling": 0.8995121201003555,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.09421123721700646,
+   "sidedness": "onesided"
+  },
+  "ed.Eyes_time_wave": {
+   "ceiling": 0.8806334100451748,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.19903410895289564,
+   "sidedness": "onesided"
+  },
+  "ed.Face_digital_curve_flicker": {
+   "ceiling": 0.876385538150244,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1803784513775802,
+   "sidedness": "onesided"
+  },
+  "ed.Feet_Money_Tree": {
+   "ceiling": 0.8241226623579564,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.21395004435609313,
+   "sidedness": "onesided"
+  },
+  "ed.Feet_dice_growth": {
+   "ceiling": 0.9351578028048615,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.06557661814243369,
+   "sidedness": "onesided"
+  },
+  "ed.Feet_peach_vortex": {
+   "ceiling": 0.9534139240021593,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.07490906589268718,
+   "sidedness": "onesided"
+  },
+  "ed.Fiery_Hair_Crown": {
+   "ceiling": 0.7997981527393292,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2871784297094855,
+   "sidedness": "onesided"
+  },
+  "ed.Fiery_body_shield": {
+   "ceiling": 0.9274687068804716,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1385544565356941,
+   "sidedness": "onesided"
+  },
+  "ed.Fiery_stream_cloak": {
+   "ceiling": 0.8354716295892767,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.20789192776636017,
+   "sidedness": "onesided"
+  },
+  "ed.Finger_ribbon_pulse": {
+   "ceiling": 0.7491655579890875,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2805973565474036,
+   "sidedness": "onesided"
+  },
+  "ed.Fingertip_Circuit_Arcs": {
+   "ceiling": 0.9365774659892308,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.11803585563438578,
+   "sidedness": "onesided"
+  },
+  "ed.Fingertip_Ice_Claws": {
+   "ceiling": 0.8748272130625072,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.22475127158858876,
+   "sidedness": "onesided"
+  },
+  "ed.Fingertip_Mist_Rune": {
+   "ceiling": 0.8779148337971866,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.16867480896736414,
+   "sidedness": "onesided"
+  },
+  "ed.Fingertip_Sparks": {
+   "ceiling": 0.8256874727462964,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.22392342137116752,
+   "sidedness": "onesided"
+  },
+  "ed.Fingertip_Spirals": {
+   "ceiling": 0.8541230452995159,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.22046592827016886,
+   "sidedness": "onesided"
+  },
+  "ed.Fingertip_Vortex": {
+   "ceiling": 0.8996263849205026,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.13976626406675513,
+   "sidedness": "onesided"
+  },
+  "ed.Fingertip_gene_stream": {
+   "ceiling": 0.8519517048928814,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.23196997138899322,
+   "sidedness": "onesided"
+  },
+  "ed.Fingertip_mechanical_tendrils": {
+   "ceiling": 0.9107153224800283,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.10818341650972721,
+   "sidedness": "onesided"
+  },
+  "ed.Fingertip_network_tendrils": {
+   "ceiling": 0.9432474432474433,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.11574243700730656,
+   "sidedness": "onesided"
+  },
+  "ed.Fingertip_ruby_dust": {
+   "ceiling": 0.8938597173891292,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.15774840655132524,
+   "sidedness": "onesided"
+  },
+  "ed.Fingertip_smoke": {
+   "ceiling": 0.871717665835313,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.15706694019351103,
+   "sidedness": "onesided"
+  },
+  "ed.Fingertips_condensing_black_holes": {
+   "ceiling": 0.6980678745384626,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.31282131970613686,
+   "sidedness": "onesided"
+  },
+  "ed.Fire_mist_from_eyes": {
+   "ceiling": 0.9283358842182371,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.10999041449589275,
+   "sidedness": "onesided"
+  },
+  "ed.Fire_wings_on_back": {
+   "ceiling": 0.92597770538947,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.09015194856750627,
+   "sidedness": "onesided"
+  },
+  "ed.Firecracker_Shield": {
+   "ceiling": 0.9473940209234326,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.11584596424288401,
+   "sidedness": "onesided"
+  },
+  "ed.Fireflies_rising": {
+   "ceiling": 0.6442275265804677,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.35555337425237915,
+   "sidedness": "onesided"
+  },
+  "ed.Fish_dance_in_hair_tips": {
+   "ceiling": 0.9422551922551922,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.098397530686123,
+   "sidedness": "onesided"
+  },
+  "ed.Fist_Dust_Explosion": {
+   "ceiling": 0.8164675370557724,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2100074645367549,
+   "sidedness": "onesided"
+  },
+  "ed.Fist_heat_blast": {
+   "ceiling": 0.9170604170604171,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.15017838673435274,
+   "sidedness": "onesided"
+  },
+  "ed.Fists_burst_mane": {
+   "ceiling": 0.8886026091908444,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.17453676485459105,
+   "sidedness": "onesided"
+  },
+  "ed.Fluorescent_liquid_pool_at_feet": {
+   "ceiling": 0.8331542155071566,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2301313732967891,
+   "sidedness": "onesided"
+  },
+  "ed.Foam_Body_Shield": {
+   "ceiling": 0.607527519292225,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.3136188096421501,
+   "sidedness": "onesided"
+  },
+  "ed.Foot_Dark_Energy_Spikes": {
+   "ceiling": 0.8070027040615276,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.21135020239830102,
+   "sidedness": "onesided"
+  },
+  "ed.Foot_Rainbow_Path": {
+   "ceiling": 0.7189486895369248,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2666699743592293,
+   "sidedness": "onesided"
+  },
+  "ed.Foot_Shockwave_Sound": {
+   "ceiling": 0.7018278047689813,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2970135544837598,
+   "sidedness": "onesided"
+  },
+  "ed.Foot_Spacetime_Rift": {
+   "ceiling": 0.9231198495904377,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1370160652904717,
+   "sidedness": "onesided"
+  },
+  "ed.Foot_born_Pedestal": {
+   "ceiling": 0.9059053911995089,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.13310049761945353,
+   "sidedness": "onesided"
+  },
+  "ed.Foot_bursting_leaves": {
+   "ceiling": 0.7663099133687369,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2417330119394814,
+   "sidedness": "onesided"
+  },
+  "ed.Foot_butterfly_surge": {
+   "ceiling": 0.9276086040791923,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.14537921059233616,
+   "sidedness": "onesided"
+  },
+  "ed.Foot_chaos_eruption": {
+   "ceiling": 0.8035583917936859,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2422832605512942,
+   "sidedness": "onesided"
+  },
+  "ed.Foot_digital_network": {
+   "ceiling": 0.9234743793567324,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.10366756393637662,
+   "sidedness": "onesided"
+  },
+  "ed.Foot_rising_light_column": {
+   "ceiling": 0.8146717264364323,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2383721759612688,
+   "sidedness": "onesided"
+  },
+  "ed.Foot_shell_altar": {
+   "ceiling": 0.8180678621855093,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.24211130505926828,
+   "sidedness": "onesided"
+  },
+  "ed.Footfall_spark_pillar": {
+   "ceiling": 0.9573508102919868,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08472042749707143,
+   "sidedness": "onesided"
+  },
+  "ed.Formula_Vortex_Hand": {
+   "ceiling": 0.8972101472101472,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.20578044090052738,
+   "sidedness": "onesided"
+  },
+  "ed.Frost_Tree_Sprout": {
+   "ceiling": 0.9401258518905579,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.07142821417151193,
+   "sidedness": "onesided"
+  },
+  "ed.Fruit_core_vortex_shield": {
+   "ceiling": 0.9441124588183413,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.07654664115243069,
+   "sidedness": "onesided"
+  },
+  "ed.Fruit_halo_above_head": {
+   "ceiling": 0.7048406901348077,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.29043819198957405,
+   "sidedness": "onesided"
+  },
+  "ed.Full_Body_Aura": {
+   "ceiling": 0.5814680373503902,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.30633137550616574,
+   "sidedness": "onesided"
+  },
+  "ed.Full_Body_Gamma_Aura": {
+   "ceiling": 0.8645875410581293,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.237564311732489,
+   "sidedness": "onesided"
+  },
+  "ed.Full_Body_Laser_Shield": {
+   "ceiling": 0.9323657264833736,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08097642057700388,
+   "sidedness": "onesided"
+  },
+  "ed.Full_body_code_glitch": {
+   "ceiling": 0.9382818647524529,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08679776369325652,
+   "sidedness": "onesided"
+  },
+  "ed.Full_body_digital_glitch": {
+   "ceiling": 0.6709469650646122,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.33773204188805983,
+   "sidedness": "onesided"
+  },
+  "ed.Gauntlet_From_Hand": {
+   "ceiling": 0.8805376746553217,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.22707653404439782,
+   "sidedness": "onesided"
+  },
+  "ed.Ginkgo_hair_cascade": {
+   "ceiling": 0.9568996186643246,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08780972257418947,
+   "sidedness": "onesided"
+  },
+  "ed.Glass_growing_from_feet": {
+   "ceiling": 0.9722172810408104,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.03784705977866024,
+   "sidedness": "onesided"
+  },
+  "ed.Glass_tears_from_eyes": {
+   "ceiling": 0.9560225589637354,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08148812354760039,
+   "sidedness": "onesided"
+  },
+  "ed.Golden_Lotus_Pedestal": {
+   "ceiling": 0.9281258840082369,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.12447692857544247,
+   "sidedness": "onesided"
+  },
+  "ed.Golden_body_aura": {
+   "ceiling": 0.744502626855568,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.3034715955009993,
+   "sidedness": "onesided"
+  },
+  "ed.Golden_chains_on_wrists": {
+   "ceiling": 0.8391358244299422,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.17881452266252293,
+   "sidedness": "onesided"
+  },
+  "ed.Golden_mist_from_mouth": {
+   "ceiling": 0.9415970886559123,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.09302844374404112,
+   "sidedness": "onesided"
+  },
+  "ed.Grass_breath_plume": {
+   "ceiling": 0.8164999635587872,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.22014524969173802,
+   "sidedness": "onesided"
+  },
+  "ed.Grass_vortex_from_feet": {
+   "ceiling": 0.8980625010036773,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.16933978501892102,
+   "sidedness": "onesided"
+  },
+  "ed.Green_liquid_wings": {
+   "ceiling": 0.9227823051352463,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.11455622917613045,
+   "sidedness": "onesided"
+  },
+  "ed.Ground_Gravitational_Rift": {
+   "ceiling": 0.8964495140965729,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.16804126769819697,
+   "sidedness": "onesided"
+  },
+  "ed.Ground_Wine_Tendrils": {
+   "ceiling": 0.8160747131335366,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2612314393701785,
+   "sidedness": "onesided"
+  },
+  "ed.Ground_gene_roots": {
+   "ceiling": 0.9847453376865142,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.0190950585344533,
+   "sidedness": "onesided"
+  },
+  "ed.Ground_metallic_spikes": {
+   "ceiling": 0.9493989052812584,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.0899300482433973,
+   "sidedness": "onesided"
+  },
+  "ed.Hair_Dust_Eruption": {
+   "ceiling": 0.7600787747846572,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2823910079963186,
+   "sidedness": "onesided"
+  },
+  "ed.Hair_Frost_Shimmer": {
+   "ceiling": 0.649448811213517,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.3375983405463404,
+   "sidedness": "onesided"
+  },
+  "ed.Hair_Frost_Tendrils": {
+   "ceiling": 0.815110256286727,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.22959810015380572,
+   "sidedness": "onesided"
+  },
+  "ed.Hair_Laser_Stream": {
+   "ceiling": 0.8257161933632523,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.18269805760840316,
+   "sidedness": "onesided"
+  },
+  "ed.Hair_digital_strands": {
+   "ceiling": 0.7985060338001515,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.20442502250816766,
+   "sidedness": "onesided"
+  },
+  "ed.Hair_tip_Ice_Tendrils": {
+   "ceiling": 0.8336152894976423,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.22489924651054638,
+   "sidedness": "onesided"
+  },
+  "ed.Hair_transforming_lily_crown": {
+   "ceiling": 0.9517110693581282,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08470155607200122,
+   "sidedness": "onesided"
+  },
+  "ed.Hair_transforms_into_Koi": {
+   "ceiling": 0.8521644845174257,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1773145588644556,
+   "sidedness": "onesided"
+  },
+  "ed.Hand_Banknote_Vortex": {
+   "ceiling": 0.9413599119481473,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08097674009548698,
+   "sidedness": "onesided"
+  },
+  "ed.Hand_Sandwhip": {
+   "ceiling": 0.9561664708723532,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.07278892494609492,
+   "sidedness": "onesided"
+  },
+  "ed.Hand_Shard_Shield": {
+   "ceiling": 0.9435920906509143,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.07325588097729617,
+   "sidedness": "onesided"
+  },
+  "ed.Hand_floating_islands": {
+   "ceiling": 0.8012937865879043,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.254024501350464,
+   "sidedness": "onesided"
+  },
+  "ed.Hand_hexagonal_zone": {
+   "ceiling": 0.8016180516180516,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.22607039410550103,
+   "sidedness": "onesided"
+  },
+  "ed.Hand_holy_vortex": {
+   "ceiling": 0.9851483527954117,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.019483205278472825,
+   "sidedness": "onesided"
+  },
+  "ed.Head_brick_halo": {
+   "ceiling": 0.8008339478927714,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.18495242888185356,
+   "sidedness": "onesided"
+  },
+  "ed.Head_encircling_halo": {
+   "ceiling": 0.6854496413319942,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.28419984248820657,
+   "sidedness": "onesided"
+  },
+  "ed.Head_holy_orb": {
+   "ceiling": 0.670051684757567,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.30154358653133384,
+   "sidedness": "onesided"
+  },
+  "ed.Head_nebula_aura": {
+   "ceiling": 0.8583378730437555,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1866668862964659,
+   "sidedness": "onesided"
+  },
+  "ed.Heart's_smoke": {
+   "ceiling": 0.7190231160819397,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.30951342786962344,
+   "sidedness": "onesided"
+  },
+  "ed.Heart_shadow_radiation": {
+   "ceiling": 0.9374792315968786,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08228709255455692,
+   "sidedness": "onesided"
+  },
+  "ed.Holy_water_tears": {
+   "ceiling": 0.8446748887925358,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.15730117664392443,
+   "sidedness": "onesided"
+  },
+  "ed.Honey_Golden_Wings": {
+   "ceiling": 0.8283498430557252,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.19203673821079445,
+   "sidedness": "onesided"
+  },
+  "ed.Honey_skin_patterns": {
+   "ceiling": 0.845593948535125,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.16154710107804965,
+   "sidedness": "onesided"
+  },
+  "ed.Ink_Chest_Burst": {
+   "ceiling": 0.8923217746747159,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1448769997813577,
+   "sidedness": "onesided"
+  },
+  "ed.Ink_body_aura": {
+   "ceiling": 0.9884064442887972,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.01660271887673211,
+   "sidedness": "onesided"
+  },
+  "ed.Inky_letters_from_fist": {
+   "ceiling": 0.7351486616192499,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2972324976112213,
+   "sidedness": "onesided"
+  },
+  "ed.Ionic_Vortex_Behind": {
+   "ceiling": 0.9386904386904387,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.07918324774918102,
+   "sidedness": "onesided"
+  },
+  "ed.Iridescent_Gem_Tears": {
+   "ceiling": 0.8659136306195129,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.20318489162251893,
+   "sidedness": "onesided"
+  },
+  "ed.Iridescent_Oil_Shield": {
+   "ceiling": 0.831843875961523,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.18289785437956774,
+   "sidedness": "onesided"
+  },
+  "ed.Jellyfish_Tear_Trails": {
+   "ceiling": 0.6718116718116718,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2774974529527779,
+   "sidedness": "onesided"
+  },
+  "ed.Juice_vines_from_feet": {
+   "ceiling": 0.8191953780189075,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.20896072690226164,
+   "sidedness": "onesided"
+  },
+  "ed.Laser_Head_Halo": {
+   "ceiling": 0.6018065576889107,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.34075774364656797,
+   "sidedness": "onesided"
+  },
+  "ed.Laser_Wings_from_Back": {
+   "ceiling": 0.9510026274732157,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.06069210343454208,
+   "sidedness": "onesided"
+  },
+  "ed.Laughter_Foam_Bubbles": {
+   "ceiling": 0.8718535483241365,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.23084072371992173,
+   "sidedness": "onesided"
+  },
+  "ed.Lava_weapon_form": {
+   "ceiling": 0.9519528784234668,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.06718647218081136,
+   "sidedness": "onesided"
+  },
+  "ed.Leaf_path_from_feet": {
+   "ceiling": 0.8128857981799158,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.207356963431299,
+   "sidedness": "onesided"
+  },
+  "ed.Leaf_spiral_column": {
+   "ceiling": 0.9731456054985467,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.04423878196268402,
+   "sidedness": "onesided"
+  },
+  "ed.Lettuce_tears": {
+   "ceiling": 0.8530291912644852,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.18103028397339574,
+   "sidedness": "onesided"
+  },
+  "ed.Lotus_leaf_armguard": {
+   "ceiling": 0.9236463942346296,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.07401364641104584,
+   "sidedness": "onesided"
+  },
+  "ed.Lotus_leaf_crown": {
+   "ceiling": 0.7711078005195652,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.24854463186211292,
+   "sidedness": "onesided"
+  },
+  "ed.Lotus_liquid_from_mouth": {
+   "ceiling": 0.9272349272349272,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08906433817795846,
+   "sidedness": "onesided"
+  },
+  "ed.Lotus_step_trail": {
+   "ceiling": 0.8614681114681115,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.15550437716367063,
+   "sidedness": "onesided"
+  },
+  "ed.Maple_grove_surround": {
+   "ceiling": 0.7040250863780275,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2920842818078379,
+   "sidedness": "onesided"
+  },
+  "ed.Maple_leaf_aura": {
+   "ceiling": 0.8782292164645105,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1975624687622462,
+   "sidedness": "onesided"
+  },
+  "ed.Meteorite_trail_from_back": {
+   "ceiling": 0.9370579958815253,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.09440908804460331,
+   "sidedness": "onesided"
+  },
+  "ed.Milk_constructs_from_hands": {
+   "ceiling": 0.8534964417317359,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.14220032836597343,
+   "sidedness": "onesided"
+  },
+  "ed.Milk_energy_aura": {
+   "ceiling": 0.8012066982655218,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2271881360890199,
+   "sidedness": "onesided"
+  },
+  "ed.Milk_halo_around_head": {
+   "ceiling": 0.593204578498696,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2910388200310429,
+   "sidedness": "onesided"
+  },
+  "ed.Milk_wings_from_back": {
+   "ceiling": 0.9448687683981802,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.06888563817874657,
+   "sidedness": "onesided"
+  },
+  "ed.Mouth_Sprout": {
+   "ceiling": 0.9055730967495673,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.13095574300201834,
+   "sidedness": "onesided"
+  },
+  "ed.Mouth_emits_purple_mist": {
+   "ceiling": 0.8552851494027964,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.21491672516316634,
+   "sidedness": "onesided"
+  },
+  "ed.Mouth_energy_blade": {
+   "ceiling": 0.9446853270382681,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.061468984633254495,
+   "sidedness": "onesided"
+  },
+  "ed.Mouth_exhaled_seal": {
+   "ceiling": 0.7920670567729392,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.258296195085171,
+   "sidedness": "onesided"
+  },
+  "ed.Mouth_fish_stream": {
+   "ceiling": 0.9450312097370922,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.07882283412578228,
+   "sidedness": "onesided"
+  },
+  "ed.Mouth_spewing_apple_seeds": {
+   "ceiling": 0.9275431334254863,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.10250881645181874,
+   "sidedness": "onesided"
+  },
+  "ed.Mud_hair_crown": {
+   "ceiling": 0.8770170828994359,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1508541413630616,
+   "sidedness": "onesided"
+  },
+  "ed.Mud_tendrils_from_feet": {
+   "ceiling": 0.7849619467266526,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.23837348044049242,
+   "sidedness": "onesided"
+  },
+  "ed.Mycelial_hair_crown": {
+   "ceiling": 0.8120346796817386,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2613162787410383,
+   "sidedness": "onesided"
+  },
+  "ed.Mycelial_wings": {
+   "ceiling": 0.8071151159386453,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.20586626201742708,
+   "sidedness": "onesided"
+  },
+  "ed.Nail_cage_feet": {
+   "ceiling": 0.897375059139765,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2044858940162037,
+   "sidedness": "onesided"
+  },
+  "ed.Nail_vortex_fists": {
+   "ceiling": 0.9243789243789243,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1292284841432833,
+   "sidedness": "onesided"
+  },
+  "ed.Notes_from_palms": {
+   "ceiling": 0.9604041515806222,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08767125282859062,
+   "sidedness": "onesided"
+  },
+  "ed.Orange_slice_halo": {
+   "ceiling": 0.7186191745015275,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.24031136693634583,
+   "sidedness": "onesided"
+  },
+  "ed.Overhead_spherical_seal": {
+   "ceiling": 0.8878929320105791,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1293881127096954,
+   "sidedness": "onesided"
+  },
+  "ed.Palm_condenses_distortion_weapon": {
+   "ceiling": 0.9677226588991296,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.040806428904496074,
+   "sidedness": "onesided"
+  },
+  "ed.Palm_forms_pixel_sword": {
+   "ceiling": 0.7877978760331702,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.3136682357871456,
+   "sidedness": "onesided"
+  },
+  "ed.Palm_insect_sphere": {
+   "ceiling": 0.9839618516089104,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.020545494775290638,
+   "sidedness": "onesided"
+  },
+  "ed.Pearls_bloom_under_feet": {
+   "ceiling": 0.8492257168727756,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.15771652932119845,
+   "sidedness": "onesided"
+  },
+  "ed.Petal_hairfall": {
+   "ceiling": 0.740717064246476,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.232010798385971,
+   "sidedness": "onesided"
+  },
+  "ed.Petal_shield_from_arm": {
+   "ceiling": 0.7708258443552561,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.21130388912416667,
+   "sidedness": "onesided"
+  },
+  "ed.Pineapple_gaze": {
+   "ceiling": 0.6010131892484833,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2644490948174845,
+   "sidedness": "onesided"
+  },
+  "ed.Pineapple_tears": {
+   "ceiling": 0.7542040189099013,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2663011766604395,
+   "sidedness": "onesided"
+  },
+  "ed.Pink_orb_hand": {
+   "ceiling": 0.9672489231312761,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.0428208785778434,
+   "sidedness": "onesided"
+  },
+  "ed.Pixel_mist_breath": {
+   "ceiling": 0.7894763335939805,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.29254906894017096,
+   "sidedness": "onesided"
+  },
+  "ed.Pixel_ripples_underfoot": {
+   "ceiling": 0.8099322069910305,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2141586540430434,
+   "sidedness": "onesided"
+  },
+  "ed.Pixelated_Head_Vortex": {
+   "ceiling": 0.8262090762090762,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.24932616072104286,
+   "sidedness": "onesided"
+  },
+  "ed.Plastic_lattice_cage": {
+   "ceiling": 0.8894484776837719,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.14670932237453396,
+   "sidedness": "onesided"
+  },
+  "ed.Plum_breath": {
+   "ceiling": 0.6968869321810498,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.34056015989439925,
+   "sidedness": "onesided"
+  },
+  "ed.Potato_shield_from_hands": {
+   "ceiling": 0.8446779770309182,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.21608850650901773,
+   "sidedness": "onesided"
+  },
+  "ed.Potato_starch_aura": {
+   "ceiling": 0.8073612485377191,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.23374908687003032,
+   "sidedness": "onesided"
+  },
+  "ed.Potatoes_erupt_from_ground": {
+   "ceiling": 0.9197271109035815,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08870642943956526,
+   "sidedness": "onesided"
+  },
+  "ed.Psychic_Tendrils": {
+   "ceiling": 0.8944576003399533,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.16666806762330114,
+   "sidedness": "onesided"
+  },
+  "ed.Rainbow_path_from_feet": {
+   "ceiling": 0.7780723957194544,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.20611468751797513,
+   "sidedness": "onesided"
+  },
+  "ed.Rainbow_wings": {
+   "ceiling": 0.9284902961373549,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.07971137523780036,
+   "sidedness": "onesided"
+  },
+  "ed.Ribbons_from_heart": {
+   "ceiling": 0.9073769367887016,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.15749432699799903,
+   "sidedness": "onesided"
+  },
+  "ed.Ribbons_swirling_around_body": {
+   "ceiling": 0.9070390835096718,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.13508783443337288,
+   "sidedness": "onesided"
+  },
+  "ed.Rising_scroll_platforms": {
+   "ceiling": 0.7401815637109754,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2707064516371674,
+   "sidedness": "onesided"
+  },
+  "ed.Rock_candy_crown": {
+   "ceiling": 0.8491562315091726,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1438654493769424,
+   "sidedness": "onesided"
+  },
+  "ed.Roots_arm_gauntlets": {
+   "ceiling": 0.8899830517477577,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.17382669780976207,
+   "sidedness": "onesided"
+  },
+  "ed.Roots_silhouette_behind": {
+   "ceiling": 0.8690852514381926,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.18460502414679533,
+   "sidedness": "onesided"
+  },
+  "ed.Ruby_crystal_gauntlets": {
+   "ceiling": 0.9240592917063506,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.10317542198853705,
+   "sidedness": "onesided"
+  },
+  "ed.Rune_barrier_around_body": {
+   "ceiling": 0.8605725223372281,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.18823688172394637,
+   "sidedness": "onesided"
+  },
+  "ed.Rune_path_under_feet": {
+   "ceiling": 0.789586892528069,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.23225631280494824,
+   "sidedness": "onesided"
+  },
+  "ed.Rune_wings_on_back": {
+   "ceiling": 0.9841699988758813,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.015015035483631646,
+   "sidedness": "onesided"
+  },
+  "ed.Runic_Formula_Activation": {
+   "ceiling": 0.7693885782121076,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.30738566266338174,
+   "sidedness": "onesided"
+  },
+  "ed.Sand_mist_from_wounds": {
+   "ceiling": 0.8458119781649193,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.23694165860397962,
+   "sidedness": "onesided"
+  },
+  "ed.Sapphire_eye_glow": {
+   "ceiling": 0.5677167294814353,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.3444100289826533,
+   "sidedness": "onesided"
+  },
+  "ed.Screw_crown": {
+   "ceiling": 0.8491707462295698,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.235486555424249,
+   "sidedness": "onesided"
+  },
+  "ed.Sea_spray_breath_mist": {
+   "ceiling": 0.8587779470132412,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.22076464330143777,
+   "sidedness": "onesided"
+  },
+  "ed.Seashell_Armor_on_Shoulders": {
+   "ceiling": 0.8275966217142687,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.251617831467764,
+   "sidedness": "onesided"
+  },
+  "ed.Seedling_wings_from_back": {
+   "ceiling": 0.8333886128003776,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1954586994843977,
+   "sidedness": "onesided"
+  },
+  "ed.Seedlings_spread_from_feet": {
+   "ceiling": 0.8425600631482986,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.15773798414040496,
+   "sidedness": "onesided"
+  },
+  "ed.Sharks_Underfoot": {
+   "ceiling": 0.9695706607471313,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.036006891981351076,
+   "sidedness": "onesided"
+  },
+  "ed.Shattering_chains_binding_body": {
+   "ceiling": 0.850779409602939,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.18000640004635735,
+   "sidedness": "onesided"
+  },
+  "ed.Shimmering_crystal_tears": {
+   "ceiling": 0.8001857266563148,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2293947412689571,
+   "sidedness": "onesided"
+  },
+  "ed.Skin_Crack_Clockwork": {
+   "ceiling": 0.9101807484160426,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.12463602557173688,
+   "sidedness": "onesided"
+  },
+  "ed.Slime_tears": {
+   "ceiling": 0.826689914925209,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.17876962004561522,
+   "sidedness": "onesided"
+  },
+  "ed.Smoke_crown_on_head": {
+   "ceiling": 0.7553293729764317,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.23038682830841203,
+   "sidedness": "onesided"
+  },
+  "ed.Smoke_talons_on_arms": {
+   "ceiling": 0.8452051393227864,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.3057921447199341,
+   "sidedness": "onesided"
+  },
+  "ed.Snowflake_cloak": {
+   "ceiling": 0.9061363914305092,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1229026340742745,
+   "sidedness": "onesided"
+  },
+  "ed.Soul_light_from_heart": {
+   "ceiling": 0.8648330560095265,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.21434363440446355,
+   "sidedness": "onesided"
+  },
+  "ed.Soulfire_eyes": {
+   "ceiling": 0.794936339053986,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2525015961103637,
+   "sidedness": "onesided"
+  },
+  "ed.Soulfire_ground_field": {
+   "ceiling": 0.9222134516252164,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.1344000622054467,
+   "sidedness": "onesided"
+  },
+  "ed.Soy_sauce_pool": {
+   "ceiling": 0.7789648966119554,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.22956154294504622,
+   "sidedness": "onesided"
+  },
+  "ed.Speed_heat_trail": {
+   "ceiling": 0.9249962632315574,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.15411546363499035,
+   "sidedness": "onesided"
+  },
+  "ed.Stamens_wings_from_back": {
+   "ceiling": 0.8494891436067907,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.22779906210388232,
+   "sidedness": "onesided"
+  },
+  "ed.Stone_pedestal_roots": {
+   "ceiling": 0.6556648174295232,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.29021289967903835,
+   "sidedness": "onesided"
+  },
+  "ed.Subdermal_gear_patterns": {
+   "ceiling": 0.8684703831762655,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.19355605722826827,
+   "sidedness": "onesided"
+  },
+  "ed.Sunflower_Breath": {
+   "ceiling": 0.8411295911295912,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.20261725306432507,
+   "sidedness": "onesided"
+  },
+  "ed.Sunflower_Hair_Crown": {
+   "ceiling": 0.9844748080042197,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.013607242311514927,
+   "sidedness": "onesided"
+  },
+  "ed.Swirling_chain_barrier": {
+   "ceiling": 0.9909740056798881,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.01477039538991718,
+   "sidedness": "onesided"
+  },
+  "ed.Syrup_hair": {
+   "ceiling": 0.9087650999415705,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.10867496899827074,
+   "sidedness": "onesided"
+  },
+  "ed.Tea_Sphere_Float": {
+   "ceiling": 0.9665040400334518,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.04726032519943284,
+   "sidedness": "onesided"
+  },
+  "ed.Tea_Sword": {
+   "ceiling": 0.925134925134925,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.12457075587452833,
+   "sidedness": "onesided"
+  },
+  "ed.Tomato_body_aura": {
+   "ceiling": 0.620375517434341,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.3275478865087666,
+   "sidedness": "onesided"
+  },
+  "ed.Trailing_limb_sparks": {
+   "ceiling": 0.8496250260956143,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.21492593548686947,
+   "sidedness": "onesided"
+  },
+  "ed.Tree_crown_from_back": {
+   "ceiling": 0.9697232197232197,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.03682972970894342,
+   "sidedness": "onesided"
+  },
+  "ed.Vein_magic_liquid": {
+   "ceiling": 0.68769077592607,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.30930993474869994,
+   "sidedness": "onesided"
+  },
+  "ed.Vine_wings": {
+   "ceiling": 0.9603167544344016,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.04302675484536986,
+   "sidedness": "onesided"
+  },
+  "ed.Vines_from_feet": {
+   "ceiling": 0.8131306954836366,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2016898588806734,
+   "sidedness": "onesided"
+  },
+  "ed.Waterfall_Backdrop": {
+   "ceiling": 0.9556374556374557,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.061259216960729126,
+   "sidedness": "onesided"
+  },
+  "ed.Weapon_EM_charge": {
+   "ceiling": 0.8791788497670849,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.17153513903101808,
+   "sidedness": "onesided"
+  },
+  "ed.Weapon_smoke_engulf": {
+   "ceiling": 0.9346281699222876,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.08798025054247198,
+   "sidedness": "onesided"
+  },
+  "ed.Whispering_paper_secrets": {
+   "ceiling": 0.7896820102702456,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.27170047089996735,
+   "sidedness": "onesided"
+  },
+  "ed.Wisdom_Halo_(Head)": {
+   "ceiling": 0.542287248169601,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.2833362011565607,
+   "sidedness": "onesided"
+  },
+  "ed.Withered_grass_ground_trail": {
+   "ceiling": 0.7632871456400867,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.22115357638210276,
+   "sidedness": "onesided"
+  },
+  "ed.Withered_grass_spear_fist": {
+   "ceiling": 0.9517194076017604,
+   "n_clips": 12,
+   "n_pairs": 132,
+   "sd_pairs": 0.0766337013502767,
+   "sidedness": "onesided"
+  }
+ },
+ "method": "deployed pool-score kernel (appearance_s3 / m1a_pair) vs the FROZEN reference_v4 populations, core_mask_v3 onesided, mean app_ref over ordered same-class pairs (scripts/ed_screen/warm_ceilings.py)",
+ "n_classes": 300
+}

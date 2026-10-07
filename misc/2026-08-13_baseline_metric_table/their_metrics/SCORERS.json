@@ -1,0 +1,140 @@
+{
+  "_about": "Competitor evaluation-metric scorers for the CTT snapshot. Each scorer: importable `Scorer` class (Scorer(device).score(gen, ref=None, input_frame=None) -> dict) plus a CLI. `gen`/`ref` accept an .mp4 path OR a uint8 [T,H,W,3] frame array; `input_frame` accepts a PNG/JPG path OR a uint8 [H,W,3] array. Videos are decoded via diffusion.transition_eval.video_io.load_frames at short_side=256 (common.DECODE_SHORT_SIDE). Set PYTHONPATH so `diffusion` is importable OR rely on common.py which inserts <repo>/src. Run from this directory so sibling imports (common, clip_sim) resolve. env: HF_HOME=$LAB/cache/huggingface, TORCH_HOME=$LAB/cache/torch, HF_HUB_OFFLINE=1 (all weights pre-warmed).",
+  "_env": {
+    "python": "$LAB/envs-aarch64/ltx2/bin/python (torch 2.10.0+cu129, transformers 5.14.1, torchvision 0.25.0, av 18.0.0)",
+    "platform": "DeltaAI GH200 / aarch64; validated on gh-login02 (CPU) + ghx4 GPU",
+    "activate": "source $LAB/envs-aarch64/activate",
+    "decode_short_side": 256,
+    "caveat_framecount": "motion_smoothness and dynamic_degree are frame-count/fps-sensitive; videoprism/clip/dynamic_degree magnitudes also resolution-sensitive. Do NOT compare across clips of different frame counts (e.g. our 121f@24 vs refVFX 49f@~9.7) without disclosure -- same caveat class as core_degenerate/copy_max."
+  },
+  "implementation": {
+    "impl_sha": "8a808635e8a08cb4",
+    "impl_sha_prev": "d63935f4f6c0f771",
+    "impl_sha_algo": "sha256 (first 16 hex) over the sorted concatenation of impl_files bytes",
+    "impl_files": ["clip_sim.py", "common.py", "det_motion_fidelity.py", "dynamic_degree.py", "motion_smoothness.py", "score_batch.py", "videoprism_sim.py"],
+    "note": "Every batch row embeds this impl_sha; compare it across scoring batches to assert an identical implementation. Editing ANY impl_file changes the sha. run_fixtures.py is deliberately NOT in impl_files (it is fixture-only, not the scoring path).",
+    "impl_sha_change_2026-09-18": "d63935f4 -> 8a808635 (feature-store P3b): score_batch.py gains --store (default on) — the per-VIDEO lens arrays (clip_b32@r256, videoprism@f16r288, raft_mag@r256, cotracker3@g20-m384-v2) are read from / written to the contract-v2 feature store BY VIDEO PATH, filled on a miss by diffusion.feature_extractors.REGISTRY (single preprocessing source); the input FRAME is embedded fresh (reusing the same REGISTRY models); .track_cache retired. Metric arithmetic (clip_sim, motion_smoothness, videoprism_sim, det_motion_fidelity, dynamic_degree) is UNCHANGED — only score_batch.py bytes changed. The paper's committed rows_v3 were produced under impl_sha d63935f4 and KEEP that sha; the 20-row numeric reproduction of rows_v3 to 1e-6 through the store needs GPU features and is P4. --no-store restores the exact legacy in-process embedder path (byte-identical arithmetic)."
+  },
+  "batch_driver": {
+    "path": "score_batch.py",
+    "cli": "python score_batch.py --glob '<gens/*.mp4>' --out-dir DIR   [--manifest FILE] [--shard N --num-shards M] [--limit K] [--overwrite]",
+    "sbatch_example": "validate_batch.sbatch (bhwp-dtai-gh, ghx4, 1 GPU, constraint=taiga)",
+    "inputs": "--glob of gen .mp4s and/or --manifest (one path per line, or .jsonl {gen:...}). Derives reference + input frame from each filename.",
+    "derivation": {
+      "item_id": "gen filename stem",
+      "endpoint": "the '__'-field immediately before '__ref_'",
+      "reference": "first '__'-field after '__ref_'",
+      "seed": "digits of trailing s<NN>/seed<NN>",
+      "arm": "<group>/<variant> from the store path (.../gens/<group>/<variant>/videos/)",
+      "ref_class": "eval_ladder/prompts.clip_class(reference)  [authoritative split_v1.2.json; NOT a naive rsplit]",
+      "reference_video": "data/processed/transitions_std121/<ref_class>/<reference>.mp4",
+      "input_frame": "misc/refvfx_baseline/frames/<endpoint>__first.png"
+    },
+    "output": "one JSON row per gen at <out-dir>/<item_id>.json; keys = derivation meta + all 10 metric outputs + impl_sha + warnings[] + host + elapsed_sec. NaN (e.g. det_motion_fidelity with no moving tracklets) serialized as null.",
+    "sharding": "gens sorted+deduped, sliced [shard::num_shards]; shard/num_shards default to SLURM_ARRAY_TASK_ID / SLURM_ARRAY_TASK_COUNT. Per-gen skip-if-exists.",
+    "efficiency": "loads CLIP/VideoPrism/RAFT/CoTracker ONCE; CLIP and VideoPrism gen embeddings computed once and reused across their two metrics; CoTracker tracks disk-cached by absolute path (.track_cache/) so the ~36 reference clips are tracked once and reused across all gens and shards.",
+    "env": "source $LAB/envs-aarch64/activate; HF_HOME=$LAB/cache/huggingface; TORCH_HOME=$LAB/cache/torch; HF_HUB_OFFLINE=1. Run from this directory."
+  },
+  "fixture_validation": {
+    "gpu_job": "2941983 (ghx4, GH200 gh102), fixtures.json, 76.7s over 4 real (gen,ref) pairs incl. 1 refVFX competitor gen",
+    "direction_summary": {
+      "clip_sim_input": "PASS 4/4 (e.g. 0.918 matched vs 0.604 mismatched)",
+      "clip_sim_ref": "PASS 3/4 (weak; p4 refVFX gen inverts 0.545<0.676) -- narrow-cone ref weakness",
+      "motion_smoothness": "PASS 4/4 (gen 0.98-0.99 vs shuffled 0.82-0.91)",
+      "videoprism_sim_input": "PASS 4/4 (e.g. 0.986 vs 0.954)",
+      "videoprism_sim_ref": "PASS 3/4 (thin margins ~0.001-0.017; p4 inverts) -- saturates ~0.95 narrow cone; use _input/_global for ranking",
+      "dynamic_degree_mean_mag": "PASS 4/4 (gen 0.21-0.96 px vs static ~0.01 px). NB dynamic_degree_bit==0 for all: threshold 1.0px too high at short_side=256/consecutive-frame flow -- RAW mag is the metric; recalibrate/ignore the bit",
+      "det_motion_fidelity": "PASS 3/4 per-pair + aggregate (mean matched 0.177 > mean mismatched 0.109); p3 earth inverts -- inherently noisy unpaired-motion metric; NaN when a clip has no moving tracklets"
+    },
+    "disclose": "Reference-fidelity embedding sims (clip_sim_ref, videoprism_sim_ref) discriminate the true reference only weakly; VideoPrism saturates in a narrow cone. This is a faithful refVFX/VAP-style implementation and a genuine finding about these metrics, not a bug. The *_input and *_global columns separate cleanly."
+  },
+  "metrics": {
+    "det_motion_fidelity": {
+      "path": "det_motion_fidelity.py",
+      "entrypoint": "det_motion_fidelity.Scorer(device).score(gen, ref=...)",
+      "cli": "python det_motion_fidelity.py GEN --ref REF",
+      "inputs_required": {"gen": true, "ref": true, "input_frame": false},
+      "outputs": {"det_motion_fidelity": "scalar in [-1,1]; NaN is VALID (a clip has no moving tracklets)"},
+      "direction": "higher_better",
+      "provenance": "DeT / MTBench 'Motion Fidelity' (Yatim et al., Space-Time Diffusion Features): CoTracker trajectories, velocity-direction cross-correlation.",
+      "substrate": "Wraps certified diffusion.transition_eval.motion (Tracker=CoTracker3 offline via torch.hub, motion_fidelity=pure numpy). CoTracker3 weights: cache/torch/hub/checkpoints/scaled_offline.pth + repo clone cache/torch/hub/facebookresearch_co-tracker_main.",
+      "gpu": true
+    },
+    "videoprism_sim": {
+      "path": "videoprism_sim.py",
+      "entrypoint": "videoprism_sim.Scorer(device).score(gen, ref=..., input_frame=...)",
+      "cli": "python videoprism_sim.py GEN --ref REF --input-frame FRAME.png",
+      "inputs_required": {"gen": true, "ref": "optional", "input_frame": "optional"},
+      "outputs": {
+        "videoprism_sim_ref": "per-frame mean-of-max cosine, gen vs reference (SPEC metric)",
+        "videoprism_sim_input": "per-frame mean-of-max cosine, gen vs input start frame",
+        "videoprism_sim_ref_global": "BONUS: video-level cosine (L2-normalized mean of per-frame embeddings) gen vs ref",
+        "videoprism_sim_input_global": "BONUS: video-level cosine gen vs input"
+      },
+      "direction": "higher_better",
+      "provenance": "refVFX HEADLINE automatic metric (VideoPrism embedding similarity, output-vs-reference AND output-vs-input).",
+      "model": {
+        "hf_id": "MHRDYN7/videoprism-base-f16r288",
+        "revision": "c5bb17adeb575aaf1d46b56c5b9dfa1b00465c80",
+        "class": "transformers.VideoPrismVisionModel",
+        "size_mb": 457,
+        "local_path": "$LAB/cache/huggingface/hub/models--MHRDYN7--videoprism-base-f16r288",
+        "provenance_note": "COMMUNITY torch conversion of flax-only official google/videoprism-base-f16r288 (the google repo ships only flax .npz; transformers has NO conversion script, so from_pretrained cannot consume it). MHRDYN7 loads into VideoPrismVisionModel with ZERO missing/unexpected/mismatched keys (verified 2026-08-13).",
+        "preprocessing": "shipped video_preprocessor_config.json: RGB, rescale 1/255, resize 288x288, do_normalize=FALSE, 16 frames. torchvision<0.27 falls back LANCZOS->BICUBIC (benign).",
+        "embedding": "last_hidden_state [1,16*256,768] reshaped to [16,256,768], mean-pool 256 spatial -> 16 per-frame embeddings, L2-normalized."
+      },
+      "caveat": "VideoPrism embeddings occupy a narrow cone: absolute sims saturate ~0.95 and matched-vs-mismatched-ref margins are thin. out-vs-input separates well; ref separation is weak. Consider the _global variant for ranking. Faithful refVFX-style implementation; not a defect.",
+      "gpu": true
+    },
+    "clip_sim": {
+      "path": "clip_sim.py",
+      "entrypoint": "clip_sim.Scorer(device).score(gen, ref=..., input_frame=...)",
+      "cli": "python clip_sim.py GEN --ref REF --input-frame FRAME.png",
+      "inputs_required": {"gen": true, "ref": "optional", "input_frame": "optional"},
+      "outputs": {
+        "clip_sim_ref": "per-frame mean-of-max cosine of CLIP embeddings, gen vs reference",
+        "clip_sim_input": "per-frame mean-of-max cosine, gen vs input start frame"
+      },
+      "direction": "higher_better",
+      "provenance": "VAP 'CLIP Score' (output-vs-reference CLIP similarity); generic VBench/T2V appearance metric.",
+      "model": {
+        "hf_id": "openai/clip-vit-base-patch32",
+        "class": "transformers.CLIPModel (get_image_features -> .pooler_output, projected 512-d)",
+        "local_path": "$LAB/cache/huggingface/hub/models--openai--clip-vit-base-patch32",
+        "mirror_note": "$LAB/cache/clip_vitb32_merged is a BROKEN symlink into /projects (Campus-Cluster only) -- unusable on DeltaAI; use the canonical hub id."
+      },
+      "reused_by": "motion_smoothness.py imports ClipEmbedder from here (load CLIP once, share).",
+      "gpu": true
+    },
+    "motion_smoothness": {
+      "path": "motion_smoothness.py",
+      "entrypoint": "motion_smoothness.Scorer(device[, embedder]).score(gen)",
+      "cli": "python motion_smoothness.py GEN",
+      "inputs_required": {"gen": true, "ref": false, "input_frame": false},
+      "outputs": {"motion_smoothness": "mean cosine of consecutive-frame CLIP embeddings within gen (single video)"},
+      "direction": "higher_better",
+      "provenance": "VBench motion-smoothness family; reported by refVFX and VAP. This is the CLIP-drift flavor (refVFX-style), NOT VBench's AMT-interpolation flavor (which needs the AMT checkpoint).",
+      "model": {"hf_id": "openai/clip-vit-base-patch32", "note": "same CLIP as clip_sim; pass embedder=clip.emb to share the load."},
+      "gpu": true
+    },
+    "dynamic_degree": {
+      "path": "dynamic_degree.py",
+      "entrypoint": "dynamic_degree.Scorer(device).score(gen)",
+      "cli": "python dynamic_degree.py GEN",
+      "inputs_required": {"gen": true, "ref": false, "input_frame": false},
+      "outputs": {
+        "dynamic_degree_mean_mag": "mean per-frame RAFT flow magnitude (pixels at decode res) -- PRIMARY continuous value",
+        "dynamic_degree_bit": "0/1 thresholded at MOTION_THRESHOLD=1.0 px (nominal; report raw for comparisons)"
+      },
+      "direction": "higher_better",
+      "provenance": "VBench 'dynamic degree'; reported by refVFX, VFXMaster, Omni-Effects, VFX-Creator, VAP.",
+      "model": {
+        "id": "RAFT-large (torchvision Raft_Large_Weights.DEFAULT)",
+        "weights": "cache/torch/hub/checkpoints/raft_large_C_T_SKHT_V2-ff5fadd5.pth",
+        "note": "Lean inline reimplementation of diffusion.signals.flow.RAFTExtractor (avoids importing diffusion.signals whose __init__ eagerly loads SAM/YOLO). Frames forced to dims divisible by 8 (RAFT requirement), longest side capped at 1024."
+      },
+      "caveat": "magnitude is resolution- AND frame-count/fps-sensitive; not comparable across differing frame counts without disclosure.",
+      "gpu": true
+    }
+  }
+}

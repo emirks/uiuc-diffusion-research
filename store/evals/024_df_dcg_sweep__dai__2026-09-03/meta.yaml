@@ -1,0 +1,38 @@
+id: 024_df_dcg_sweep__dai__2026-09-03
+seq: 24
+shelf: evals
+created: 2026-09-03
+machine: DeltaAI ghx4 (aarch64 GH200) — GEN + SCORE both on DeltaAI (one machine)
+instrument: >
+  transition-eval v4 (eval-v4-cert worktree; [UNCERTIFIED] by design — reference_v4.npz is the accepted
+  working-tree v4-lane mod). reference_v4 sha256 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8 (== evals/001-023). corpus
+  data/processed/transitions_std121 = 222 clips / 39 classes; tau_copy 0.858. refvfx env
+  (module miniforge3_pytorch/2.10.0 + envs-aarch64/refvfx), warm 222 cache misc/refvfx_baseline/probe/cache.
+source: >
+  DCG conditioning sweep on the DUAL-FORCE plain-FM CONTROL arm (dualforce_control, runs/012 @ step 1000;
+  misc/2026-09-02_dcg_dualforce_control/DOSSIER.md). Same protocol as the ctt_v2 DCG sweep (evals/014,015),
+  adapter swapped: test-time Demonstration-Contrastive Guidance (crossfade null, live 2nd forward) added to the
+  deployed config gs=4/stg=1, DCG strength w in {1.0,1.5,3.0,6.0}, NEUTRAL prompt, seed 42, 152-row
+  ic_gen roster (gens/029-032, prompt_sha 0d708175). DCG@w=1 = plain demo branch (parity).
+  Plan: run_eval.py --mode plan --arms dualforce_dcg_w1,dualforce_dcg_w1p5,dualforce_dcg_w3,dualforce_dcg_w6 --extra-registry
+  misc/2026-09-02_dcg_dualforce_control/extra_df_dcg_registry.jsonl. Score: job 3074752, 16 shards on ghx4.
+caveat: >
+  ~7% of (gen x pool-ref) rows dropped to the shared warm-cache EOFError/BadZipFile race (arm-uniform, does
+  not bias per-w comparison), same symmetric race as evals/012/014/015. Single seed (42). NOT independently certified.
+arms_scored:
+  dualforce_dcg_w1: {gen: gens/029_dualforce_dcg_w1/01_neutral__dai, run: runs/012_dualforce_control, step: 1000, dcg_w: 1.0, rows: 923}
+  dualforce_dcg_w1p5: {gen: gens/030_dualforce_dcg_w1p5/01_neutral__dai, run: runs/012_dualforce_control, step: 1000, dcg_w: 1.5, rows: 936}
+  dualforce_dcg_w3: {gen: gens/031_dualforce_dcg_w3/01_neutral__dai, run: runs/012_dualforce_control, step: 1000, dcg_w: 3.0, rows: 923}
+  dualforce_dcg_w6: {gen: gens/032_dualforce_dcg_w6/01_neutral__dai, run: runs/012_dualforce_control, step: 1000, dcg_w: 6.0, rows: 923}
+headline:   # appearance %same, same-type cells (G-ref-control mismatch-control excluded), n-weighted; levels >100 = raw exceeds GT-class ceiling
+  dualforce_dcg_w1: {pct_same: 94.1}
+  dualforce_dcg_w1p5: {pct_same: 96.5}
+  dualforce_dcg_w3: {pct_same: 96.4}
+  dualforce_dcg_w6: {pct_same: 99.2}
+copy_guard: PENDING   # demo-copy / copy_max guards (the honest-vs-intrusion discriminator, score_copy.py) NOT yet run — FOLLOW-UP
+verdict: >
+  NUMBERS ONLY (no KEEP verdict). app%same alone cannot separate honest gain from reference-content intrusion;
+  the demo-copy guard (which failed ctt_v2 w3/w6) is the required conjunct and is not yet run. Baseline note:
+  dualforce_control's DCG-w1 is much higher than ctt_v2's (83.6 neutral),
+  so DCG headroom is small; neutral levels >100% (w1 effect / w6 neutral) flag intrusion. Re-derive from the
+  DOSSIER + score_copy before any KEEP reading.

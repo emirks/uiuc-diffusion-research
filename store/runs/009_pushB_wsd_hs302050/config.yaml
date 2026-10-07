@@ -1,0 +1,195 @@
+# =============================================================================
+# ctt_v2 performance-push — ARM B: "corrected recipe + gentle high-sigma lean"
+# The shipped ctt_v2 champion recipe VERBATIM, with the ONLY change being the
+# LR schedule: linear (buggy, floored at 1e-5 for 87.5% of the champion's run)
+# -> num_processes-correct WSD, 6000 steps. Base timestep sampler unchanged.
+# surgery block OMITTED (default-off => bitwise the raw-reader baseline).
+# eff-batch 8 = 4 GPUs x bs1 x accum2. Advisor fable-advisor a5728a61.
+# =============================================================================
+model:
+  model_path: /storage/ozgur/ctt_v2/models/ltx-2-19b-dev.safetensors
+  text_encoder_path: /storage/ozgur/ctt_v2/models/gemma-3-12b-it-qat-q4_0-unquantized
+  training_mode: lora
+  load_checkpoint: null
+lora:
+  rank: 128
+  alpha: 128
+  dropout: 0.0
+  target_modules:
+  - attn1.to_k
+  - attn1.to_q
+  - attn1.to_v
+  - attn1.to_out.0
+  - attn2.to_k
+  - attn2.to_q
+  - attn2.to_v
+  - attn2.to_out.0
+  - ff.net.0.proj
+  - ff.net.2
+training_strategy:
+  name: flexible
+  video:
+    is_generated: true
+    latents_dir: latents
+    cond_clean_latents_dir: cond_clean_latents
+    conditions:
+    - type: reference
+      latents_dir: reference_latents
+      probability: 1.0            # ctt_v2 champion: reference_dropout OFF (raw video reference)
+      attention: one_way
+    - type: mask
+      mask_dir: masks
+      probability: 1.0
+optimization:
+  learning_rate: 0.0001
+  steps: 6000
+  batch_size: 1
+  gradient_accumulation_steps: 2   # 4 GPUs x bs1 x accum2 = eff-batch 8 (ctt_v2 parity)
+  max_grad_norm: 1.0
+  optimizer_type: adamw
+  scheduler_type: wsd
+  # WSD @ 6000: warmup [0,100) 1e-6->1e-4, stable [100,4500) 1e-4, decay [4500,6000]->1e-5.
+  # num_processes-correct (identical curve at P=4 vs P=8). Pre-decay ckpt @4500 is load-bearing.
+  scheduler_params:
+    warmup_steps: 100
+    decay_frac: 0.25
+    end_factor: 0.1
+  enable_gradient_checkpointing: true
+acceleration:
+  mixed_precision_mode: bf16
+  quantization: null
+  load_text_encoder_in_8bit: false
+  offload_optimizer_during_validation: true
+data:
+  sample_list: /storage/ozgur/ctt_v2/datasets/ctt_v2/samples.jsonl
+  stratum_weights_pct:
+    S0: 5.0
+    S1: 12.0
+    S2a: 34.36059
+    S2b: 35.63941
+    S4: 13.0
+  sampler_seed: 42
+  sampler_epoch_size: null
+  resume_data_position: true
+  verify_sample_files: true
+  num_dataloader_workers: 4
+checkpoints:
+  interval: 1500              # ckpts @ 1500 / 3000 / 4500(pre-decay) / 6000
+  keep_last_n: -1
+  precision: bfloat16
+  save_training_state: full   # full state each interval -> 4500 pre-decay resumable (extension fallback)
+validation:
+  samples:
+  - prompt: A hiker in a light purple shirt and olive trousers carrying a large black backpack walks across a bright rocky mountain slope. sksz.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/davis_hike_start9.mp4
+      num_frames: 9
+    - type: reference
+      video: /storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/animalization/animalization_0.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: "A man in a green sweater and pink beanie stands outside a Parisian caf\xE9 holding a shopping bag and a pink jacket. sksz. a first-person aerial view above a narrow European street, a green-sleeved arm stretched out ahead."
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/hero_flight_6_start9.mp4
+      num_frames: 9
+    - type: suffix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/hero_flight_6_end9.mp4
+      num_frames: 8
+    - type: reference
+      video: /storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/hero_flight/hero_flight_5.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: A woman in a red bomber jacket poses against a blue studio backdrop, hands on hips. sksz.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/animalization_0_start9.mp4
+      num_frames: 9
+    - type: reference
+      video: /storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/cotton_cloud/cotton_cloud_1.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  - prompt: A figure in a white knit balaclava and bright red hoodie leans against the hood of a blue car in a dusky parking lot, cradling a black motorcycle helmet in red-gloved hands. sksz. a young man with dark hair in an oversized brown shirt smoking a cigarette against a white railing inside a green-lit pedestrian tunnel at night.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/air_bending_1_start9.mp4
+      num_frames: 9
+    - type: suffix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/air_bending_1_end9.mp4
+      num_frames: 8
+    - type: reference
+      video: /storage/ozgur/ctt_v2/repo/data/processed/transitions_std121/raven_transition/raven_transition_0.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  # copy-canary: distinctive demo scenery, unrelated endpoint. Demo scenery in output = copying.
+  - prompt: A woman with long black hair and large sunglasses stands in a warm-lit kitchen, wearing a brown leather jacket, a light blue button-down shirt, and a brown skirt while holding a white telephone receiver to her ear. sksz.
+    conditions:
+    - type: prefix
+      video: /storage/ozgur/ctt_v2/repo/eval_ladder/conds/color_rain_0_start9.mp4
+      num_frames: 9
+    - type: reference
+      video: /storage/ozgur/ctt_v2/datasets/ctt_v2/encodes/S2a/clips/s2_0023_c00.mp4
+      downscale_factor: 1
+      temporal_scale_factor: 1
+      include_in_output: false
+      attention: one_way
+  negative_prompt: worst quality, inconsistent motion, distorted, jittery
+  video_dims: [480, 640, 121]
+  frame_rate: 24.0
+  seed: 42
+  inference_steps: 30
+  interval: 1000
+  guidance_scale: 4.0
+  stg_scale: 1.0
+  stg_blocks: [29]
+  stg_mode: stg_v
+  generate_audio: false
+  skip_initial_validation: false   # step-0 = base near-copy control point (leak 0.95-0.98)
+flow_matching:
+  timestep_sampling_mode: shifted_logit_normal
+  timestep_sampling_params: {}
+hub:
+  push_to_hub: false
+  hub_model_id: null
+wandb:
+  enabled: true
+  project: ctt_v2_push
+  entity: null
+  tags: [ctt_v2_push, armB, corrected_wsd, high_sigma_30_20_50, rank128, lr1e-4, steps6000, effbatch8]
+  log_validation_videos: true
+seed: 42
+output_dir: /storage/ozgur/ctt_push/armB_wsd6k_hs302050
+# -----------------------------------------------------------------------------
+# ARM B ONLY: gentle high-sigma timestep lean (owner's novelty, advisor-de-risked
+# from SURG-1's 60/15/25 to 30/20/50). Wraps the base shifted_logit_normal sampler
+# with a band mixture: 30% U[0.90,1.0] + 20% U[0.70,0.90) + 50% unchanged base.
+# gap_loss / per_sigma_loss_norm / probe stay OFF (those need a V-JEPA code channel;
+# this is a raw-video reader). This is the ONLY difference from Arm A.
+# -----------------------------------------------------------------------------
+surgery:
+  enabled: true
+  high_sigma_mixture:
+    enabled: true
+    sigma_max: 1.0
+    bands:
+    - - 0.9
+      - 1.0
+      - 0.3
+    - - 0.7
+      - 0.9
+      - 0.2
+  gap_loss:
+    enabled: false
+  per_sigma_loss_norm:
+    enabled: false
+  probe:
+    enabled: false

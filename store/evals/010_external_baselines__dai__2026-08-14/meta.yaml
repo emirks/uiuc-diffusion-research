@@ -1,0 +1,16 @@
+id: 010_external_baselines__dai__2026-08-14
+seq: 10
+shelf: evals
+created: 2026-08-14
+machine: DeltaAI ghx4 (aarch64 GH200) — GEN + SCORE both on DeltaAI (one machine)
+instrument: transition-eval v4 (eval-v4-cert worktree); reference_v4 sha256 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8; corpus 222; tau_copy 0.858
+source: >
+  Prior-works baselines VAP + VFXMaster over the one-sided CTT grid (112 rows x 2 tiers x 2 seeds),
+  our v4 pool-yardstick. Snapshot campaign misc/2026-08-13_baseline_metric_table (DOSSIER.md).
+  One-sided/untwinned/prefix-only projection (build_ext_eval_manifest.py); registry = manifest_<model>.jsonl.
+arms_scored:
+  vap_neutral: {gen: gens/011_vap/01_neutral__dai, run: runs/010_vap, rows: 2876}
+  vap_effect: {gen: gens/011_vap/02_effect__dai, run: runs/010_vap, rows: 2876}
+  vfxmaster_neutral: {gen: gens/012_vfxmaster/01_neutral__dai, run: runs/011_vfxmaster, rows: 2876}
+  vfxmaster_effect: {gen: gens/012_vfxmaster/02_effect__dai, run: runs/011_vfxmaster, rows: 2876}
+notes: competitor-metric lenses (their_metrics/rows_<model>.jsonl, impl_sha d63935f4) live in the campaign dir, not this eval.

@@ -1,0 +1,30 @@
+id: 015_surg1_wsd
+seq: 15
+shelf: gens
+created: 2026-08-11
+machine: DeltaAI ghx4 (aarch64 GH200)
+source: misc/2026-08-10_encoder_branch_redteam — SURG-1 Gate B (advisor-greenlit). MATCHED arm.
+inputs:
+  run: runs/007_surg1_wsd
+  step: 4500
+  adapter_sha256: cdc36bbb2c1df3d0f7cc5e0261f72d3a1687b209568106225e7ab869bffc5d1a
+code: >
+  src/LTX-2-surg @ a4033230c24901fb0a3becc81885d222067de7fb — vjepa bottleneck gen (backbone-free):
+  run_gen.py reconstructs the TRAINED projector from the checkpoint's operator_encoder.projector.* and
+  runs it on precomputed eval-ref V-JEPA raw features (runs/005_vjepa_stageA_idea3/gen_feats_raw.pt).
+arm: surg1_wsd
+adapter: IC-LoRA r128/a128 + trained V-JEPA projector; reference = 144-token V-JEPA code (token_shape 16,3,3), one_way; the row's OWN reference
+rank: 128
+alpha: 128
+prompt_rule: sksz slot marker + transition prompt (registry rows, leak-free)
+geometry: [480, 640, 121]        # H, W, frames @ 24 fps
+seeds: [42, 43]
+n_videos: 304                    # 152 rows × 2 seeds
+video_layout: surg1_wsd__ck4500/<item_id>__s<seed>.mp4
+grid: grid.jsonl                 # = registry_surg1_wsd.jsonl (152 rendered rows, prompts included)
+twin: gens/016_surg1_wsd_shufcode  # the deranged-code MUST-FAIL control (byte-identical GT pool)
+scored_in: evals/006_surg1_wsd__dai__2026-08-11
+notes: >
+  Gate B verdict: reads-but-weakly-instructs. matched > deranged-twin in both claim cells (P1_cross
+  9/13 PASS), 0/304 copy-flagged — above the dead arms — but P2 +0.0199 << bar 0.1016. See
+  evals/006/p1p2_headline.json. Campaign closed SURG-1 as a publishable negative.

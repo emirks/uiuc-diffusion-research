@@ -7,7 +7,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --requeue
 #SBATCH --time=03:30:00
-#SBATCH --output=/projects/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/logs/slurm/%x-%A_%a.out
+#SBATCH --output=/taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/outputs/logs/slurm/%x-%A_%a.out
 # Score one ladder2 eval chunk with the v4 instrument (eval-v4-cert worktree — owner
 # directive 2026-07-20: v4 is the lane instrument). Shared warm feature cache.
 #   sbatch --array=0-7 --partition=secondary --account=campusclusterusers \
@@ -17,7 +17,7 @@
 # `set -eo pipefail` that killed scoring chunks 7 seconds in with an empty log.
 source ~/.bashrc || true
 set -eo pipefail
-LAB=/projects/illinois/eng/cs/jrehg/users/emirkisa
+LAB=/taiga/illinois/eng/cs/jrehg/users/emirkisa
 # Call the env's interpreter DIRECTLY rather than `conda activate`: when several array tasks
 # start at once the activation can fail silently and leave system python, which then dies with
 # ModuleNotFoundError: torch ~10s in. An absolute interpreter path cannot fail that way.

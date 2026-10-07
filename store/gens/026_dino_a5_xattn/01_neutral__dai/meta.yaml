@@ -1,0 +1,16 @@
+id: gens/026_dino_a5_xattn/01_neutral__dai
+seq: 1
+shelf: gens
+arm: dino_a5_xattn
+harness_arm: dino_a5_xattn_neutral   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral
+machine: dai
+created: 2026-09-01
+inputs: {run: outputs/dino_signal_005/A5_xattn_fusion @ step 10000 (sha 584997b6; LTX-2-armA @32d6e3f); dataset 005_ctt_v2plus_s6reshape, step: 10000}
+code: src/LTX-2-armA @ 32d6e3f
+prompt_family: prompts/001_ctt152_neutral
+prompt_sha: 0d708175fbfe
+grid_rows: 152
+videos: 152
+source: scripts/store_register.py over /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/misc/2026-08-27_dino_signal_training/gen/registry_dino_a5_xattn_neutral.jsonl
+notes: A5 xattn-route DINO-signal (signal-as-Q cross-attention, SPEC R1.4). SIGNAL_CONFIG=gen/cfg/a5_xattn.json route=xattn placement=target token_pool=2 signal-guidance=1.0 xattn.hidden 256/heads 4, 13 signal.* keys strict, norm db47be88. Matched signal_id=eval__<own ref>. Production MATCHED case, seed 42. gen num_inference_steps 30 (arms.yaml global) vs 20 at training-validation — sampler knob, flagged for owner.

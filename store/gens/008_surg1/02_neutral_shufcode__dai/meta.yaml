@@ -1,0 +1,14 @@
+id: gens/008_surg1/02_neutral_shufcode__dai
+seq: 2
+shelf: gens
+arm: surg1
+harness_arm: surg1_wsd_shufcode   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral_shufcode
+machine: dai
+created: 2026-08-11
+migrated: 2026-08-13 from gens/016_surg1_wsd_shufcode (contract v2 — store/MIGRATION.md; full v1 provenance in meta.v1.yaml)
+inputs: {run: runs/007_surg1_wsd, step: 4500}
+prompt_family: prompts/001_ctt152_neutral
+prompt_sha: 0d708175fbfe
+grid_rows: 152
+videos: 304

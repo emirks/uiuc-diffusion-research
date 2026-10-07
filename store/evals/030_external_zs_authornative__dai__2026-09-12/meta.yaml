@@ -1,0 +1,18 @@
+id: 030_external_zs_authornative__dai__2026-09-12
+seq: 30
+shelf: evals
+created: 2026-09-13
+machine: DeltaAI ghx4 (aarch64 GH200) — GEN + SCORE both on DeltaAI (one machine)
+instrument: transition-eval v4 (eval-v4-cert worktree); reference_v4 sha256 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8; corpus 677 (datasets/006) + --reference-corpus 222 pin (out-of-population amendment); tau_copy 0.858
+source: >
+  External baselines VFXMaster + VAP + refVFX, AUTHOR-NATIVE tier, over the v3 ZERO-SHOT
+  one-sided set (183 pairs x 2 seeds). Captions health-gated 2026-09-12 (authorcfg_native_captions).
+  Manifests via build_ext_eval_manifest.py (pool refs corpus-filtered to match grid-v3 paper arms).
+arms_scored:
+  vap_author_native: {gen: gens/011_vap/05_author_native__dai, run: runs/010_vap, rows: 5288}
+  vfxmaster_author_native: {gen: gens/012_vfxmaster/05_author_native__dai, run: runs/011_vfxmaster, rows: 5288}
+  refvfx_author_native: {gen: gens/003_refvfx/03_author_native__dai, run: runs/003_refvfx, rows: 5288}
+caveats: >
+  Frame counts 49f (VFX/VAP) / 33f (refVFX) vs our 121f/81f — copy_max/core_degenerate NOT
+  comparable across frame counts; zero-shot refs are out-of-population (r_ref via --reference-corpus
+  amendment, row flag ref_in_v4_population). Externals shown at author-native (richest text).

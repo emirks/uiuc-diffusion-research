@@ -1,0 +1,62 @@
+id: 008_ctt_v3_wsd
+seq: 8
+shelf: runs
+created: 2026-08-12          # trained on eps (offsite GCP, fal-h100), 8xH100
+machine: eps — offsite GCP (fal-h100), 8xH100 80GB (4-GPU DDP, num_processes=4 x accum2 = eff-batch 8)
+source: >
+  misc/2026-08-11_ctt_v2_perf_push campaign (DOSSIER.md = authority). Advised operator/advisor run.
+  THE NEW CHAMPION CANDIDATE ("ctt_v3"): the runs/002_ctt_v2 recipe held byte-identical EXCEPT the LR
+  schedule is corrected. ctt_v2 shipped with `linear` (LinearLR) whose decay length silently scaled with
+  GPU count (accelerate steps the scheduler x num_processes) and FLOORED at 1e-5 — so ctt_v2 trained at
+  the 1e-5 floor for ~87.5% of its 10k steps. This run uses the num_processes-correct WSD schedule and
+  6000 steps (40% cheaper). NOTE this is a TWO-variable change vs ctt_v2 (schedule shape AND 6k-vs-10k).
+inputs:
+  dataset: datasets/002_ctt_v2        # SAME 56,368-pair set as runs/002; not rebuilt
+trainer:
+  checkout: src/LTX-2-surg             # ISOLATED fork (carries the WSD scheduler); surgery OFF for this arm
+  branch: surg
+  commit: a4033230c24901fb0a3becc81885d222067de7fb   # num_processes-correct WSD. LOCAL (origin=Lightricks, NOT pushed)
+  entry: run_arm.sh → uv run --no-sync accelerate launch --num_processes 4 --main_process_port 29511 packages/ltx-trainer/scripts/train.py (armA_wsd6k.yaml)
+  env: eps bneck-coupling uv env (torch 2.9.1+cu128) + PYTHONPATH shadow to src/LTX-2-surg
+model: LTX-2 19B dev (frozen)
+adapter: IC-LoRA r128/a128; one-way reference attention; RAW video reference (reference latents concatenated as tokens — NOT a bottleneck code). Same target_modules (attn_ffn, 10 modules) as ctt_v2.
+rank: 128
+alpha: 128
+reference_attention: one_way
+reference_dropout: "off (p=1.0)"
+lr: >
+  WSD (warmup-stable-decay), num_processes-CORRECT (verified in-run: LR fingerprint exact at P=4).
+  warmup 0->100 (1e-6->1e-4), stable 1e-4 on [100,4500), linear decay to 1e-5 on [4500,6000].
+timesteps: shifted_logit_normal (base sampler; NO high-sigma lean — that is the Arm B negative, runs/009)
+seed: 42
+effective_batch: 8                     # 4 DDP x bs1 x accum2
+steps_trained: 6000
+shipped_step: 6000
+checkpoint_sha256:
+  lora_weights_step_06000.safetensors: aa263cba047ecb0701c38a32ffe2f5483bd113794563470bf5427ac0be80176a
+  lora_weights_step_04500.safetensors: "(pre-decay, kept for the extension fallback)"
+# ---------------------------------------------------------------------------- result
+result: >
+  MEASURABLE WIN over the shipped ctt_v2 champion (evals/007, v4 DeltaAI). Gen on eps co-located with
+  ctt_v2 — repro gate BIT-IDENTICAL (eps regenerates ctt_v2's exact clips, PSNR=inf) → paired same-seed
+  per-row Δ has ZERO gen-machine term. Analysis reproduced ctt_v2=82.49 (=published 82.5) before any Δ.
+  paired Δ(%same) vs ctt_v2:  ALL-152 +4.99pp 95%CI[+2.38,+7.63] · same-60 +5.49pp 95%CI[+1.88,+9.38]
+  (both MEASURABLE WIN: CI excludes 0, mean >= +1.0pp, no seed sign-flip). headline %_same 82.5 -> 88.0.
+  COPY-GUARD PASS: near_copy 0/0, copy_max 0.269 vs ctt_v2 0.255 (Δ+0.014, far below τ0.858), core_deg
+  19 vs 18 → win is real reference-reading, NOT copier drift.
+verdict_status: PROVISIONAL_CHAMPION_PENDING_BLIND_AB   # advisor a38825fa: measurable win + copy-guard clean; blind A/B >=9/12 (pre-registered) is the last owner-gated gate before FINAL.
+finding: >
+  ctt_v2's WSD LR schedule was mis-scaled by num_processes, flooring LR at 1e-5 for 87.5% of its 10k
+  steps; a corrected-schedule retrain (6k steps, 40% cheaper) beats the shipped champion by paired
+  same-seed Δ +5.0pp ALL-152 [+2.4,+7.6] / +5.5pp same-60 (82.5->88.0). Adding SURG-1's high-σ timestep
+  lean on top (runs/009) adds nothing (B-A -0.4pp [-2.9,+2.1]); escalation gate not met, lever closed
+  for raw readers. The win is the SCHEDULE FIX, not a novel method — a corrected baseline, not a paper
+  contribution. CAVEAT: the shipped champion was UNDERTRAINED → every ctt_v2-anchored number needs
+  re-reading (CTT publishability baseline; ladder negatives close STRONGER vs ~88, but headroom framing
+  is suspect).
+gens: gens/017_ctt_v2_pushA (this arm's 304 clips) ; scored in evals/007
+notes: >
+  Arm A of the 2-arm ctt_v2-push design (Arm B = runs/009 = A + high-σ 30/20/50, the negative). Trainer
+  commit a4033230 is LOCAL (fork origin=Lightricks). Checkpoints gitignored; durable copy also at
+  misc/2026-08-11_ctt_v2_perf_push/checkpoints_from_eps/armA/. The eps repo run_gen.py is a Jul-30 copy
+  that ignores code_source_reference (raw path) — matters only for the shufref control, not this arm.

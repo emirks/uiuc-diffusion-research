@@ -230,10 +230,10 @@ def camera_zpr(gen_tracks, gen_vis, gen_cam, ref_tracks, ref_vis, ref_cam,
 
 
 def object_csls(sim_gen_ref: float, sims_gen_corpus: np.ndarray,
-                ref_key_index: int, ref_stats: dict) -> dict:
+                ref_key_index: int | None, ref_stats: dict, r_ref: float | None = None) -> dict:
     """M1c v4: CSLS-de-hubbed object-motion distance. sims_gen_corpus = the gen
     clip's object_match similarities against all 223 reference-corpus clips
     (via residual_direction_profile + object_match_from_profiles)."""
     from .reference_stats import m1c_pair
-    r = m1c_pair(sim_gen_ref, sims_gen_corpus, ref_key_index, ref_stats)
+    r = m1c_pair(sim_gen_ref, sims_gen_corpus, ref_key_index, ref_stats, r_ref=r_ref)
     return {"obj_csls": r["csls"], "obj_r_gen": r["r_gen"]}

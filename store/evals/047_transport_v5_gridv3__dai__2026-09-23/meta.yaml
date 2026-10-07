@@ -1,0 +1,298 @@
+id: 047_transport_v5_gridv3__dai__2026-09-23
+seq: 47
+shelf: evals
+created: '2026-09-23'
+machine: dai (login CPU, numpy over stored features + imported pair caches)
+instrument: scripts/metrics_v5/v5.py @ fbf9e00
+reference_v5_sha256: fc6d385430edbfe093301b645e76226fd347303d565061176cbf9eab92dde0cb
+headline: {column: bl_333, weights: [0.3333333333333333, 0.3333333333333333, 0.3333333333333333]}
+definition:
+  - "Transport v5 = the three-channel blend, the Look_u rule generalised: per (gen, pool-ref) pair the rank-similarities s_X = 1 - ecdf_pop_X(raw_X) of appearance Mu, semantic transport D and pixel transport PX vs the 222-corpus populations;"
+  - "fused sim = 1 - ecdf_fusedpop( 1 - (w_Mu*s_Mu + w_D*s_D + w_PX*s_PX) ) re-ranked against the same-weight fused corpus population; within-class ceilings under the same weights (222 pin + new-class over the 677 corpus)."
+  - "Per generation: capped pooled-% = 100*min(mean_over_pairs(fused_sim)/ceiling[class], 1). bl_333 = the .33/.33/.33 weights (headline Transport); the other 9 WEIGHTS columns are named as in blend_grid.py."
+  - "Raw per-pair distances (Mu, D, pxd, plus the 6 pillar distances T/Tshape/E/Mw and the MF fidelity fid) are IMPORTED from outputs/eval/temporal_dynamics/mf_pair_cache (score_v3_mf.py); no recomputation. TEG arms take their two-sided zero-shot rows (teg mode); own arms take every cell (cells mode)."
+why: "The paper Transport column = the equal-thirds three-channel blend (appearance / semantic transport / pixel transport), % of the class ceiling; replaces the v4 transport_pct."
+caveat: "Frame-count caveat: ours 121/81 frames vs the prior works 33-49 frames; pools = evals/028s 677-corpus references and 222-based ceilings. Round-1 arms imported from mf_pair_cache; Round-2 arms (the guidance sweep w=1.5/w=3 and the neutral twins) computed by scripts/metrics_v5/v5.py pairs -- score_v3_mf's channel code over stored features (gen dino_cls@dinov2b-r256, gen/ref trackdesc@cotracker3-s64-v1, PX z-stats from reference_v5), reproducing the imported caches (A8)."
+arms_pending: []
+labels_missing_cache: []
+arms_scored:
+  base_cond_effect_v3:
+    gen: store/gens/005_base_cond/06_effect_v3__dai
+    label: "base_cond effect"
+    cache: cells_base_cond_effect_a7309224b33230cd.npz
+    rows: 3414
+    gens: 564
+    headline_bl_333_mean: 79.18
+  base_cond_effect_v3ed81:
+    gen: store/gens/005_base_cond/07_effect_v3ed81__dai
+    label: "base_cond effect"
+    cache: cells_base_cond_effect_a7309224b33230cd.npz
+    rows: 1632
+    gens: 204
+    headline_bl_333_mean: 72.0
+  base_cond_neutral_v3:
+    gen: store/gens/005_base_cond/04_neutral_v3__dai
+    label: "base_cond neutral"
+    cache: cells_base_cond_neutral_1cc697971b296bc0.npz
+    rows: 3155
+    gens: 564
+    headline_bl_333_mean: 53.8
+  base_cond_neutral_v3ed81:
+    gen: store/gens/005_base_cond/05_neutral_v3ed81__dai
+    label: "base_cond neutral"
+    cache: cells_base_cond_neutral_1cc697971b296bc0.npz
+    rows: 1632
+    gens: 204
+    headline_bl_333_mean: 29.45
+  dualforce_control_effect_v3:
+    gen: store/gens/013_dualforce_control/05_effect_v3__dai
+    label: "dualforce_control effect"
+    cache: cells_dualforce_control_effect_0d768fe5ce1dcef1.npz
+    rows: 3414
+    gens: 564
+    headline_bl_333_mean: 89.5
+  dualforce_control_effect_v3ed81:
+    gen: store/gens/013_dualforce_control/06_effect_v3ed81__dai
+    label: "dualforce_control effect"
+    cache: cells_dualforce_control_effect_0d768fe5ce1dcef1.npz
+    rows: 1632
+    gens: 204
+    headline_bl_333_mean: 93.64
+  dualforce_control_neutral_v3:
+    gen: store/gens/013_dualforce_control/03_neutral_v3__dai
+    label: "dualforce_control neutral"
+    cache: cells_dualforce_control_neutral_4ca152724fc5fc94.npz
+    rows: 3414
+    gens: 564
+    headline_bl_333_mean: 84.41
+  dualforce_control_neutral_v3ed81:
+    gen: store/gens/013_dualforce_control/04_neutral_v3ed81__dai
+    label: "dualforce_control neutral"
+    cache: cells_dualforce_control_neutral_4ca152724fc5fc94.npz
+    rows: 1632
+    gens: 204
+    headline_bl_333_mean: 90.45
+  dualforce_dcg_emptynull_w6_neutral_v3:
+    gen: store/gens/040_dualforce_dcg_emptynull_w6/03_neutral_v3__dai
+    label: "SEGUE (empty null)"
+    cache: computed:v5.py pairs (dualforce_dcg_emptynull_w6, cells mode, stored features)
+    rows: 3414
+    gens: 564
+    headline_bl_333_mean: 90.5
+  dualforce_dcg_emptynull_w6_neutral_v3ed81:
+    gen: store/gens/040_dualforce_dcg_emptynull_w6/04_neutral_v3ed81__dai
+    label: "SEGUE (empty null)"
+    cache: computed:v5.py pairs (dualforce_dcg_emptynull_w6, cells mode, stored features)
+    rows: 1632
+    gens: 204
+    headline_bl_333_mean: 96.01
+  dualforce_dcg_emptynull_w6_neutral_v3zs:
+    gen: store/gens/040_dualforce_dcg_emptynull_w6/05_neutral_v3zs__dai
+    label: "SEGUE (empty null, zero-shot)"
+    cache: computed:v5.py pairs (dualforce_dcg_emptynull_w6_zs, cells mode, stored features)
+    rows: 1288
+    gens: 238
+    headline_bl_333_mean: 90.41
+  dualforce_dcg_holdstart_w6_neutral_v3zs10:
+    gen: store/gens/044_dualforce_dcg_holdstart_w6/01_neutral_v3zs10__dai
+    label: "SEGUE (hold-start null, 10-row probe)"
+    cache: computed:v5.py pairs (dualforce_dcg_holdstart_w6_zs10, cells mode, stored features)
+    rows: 62
+    gens: 10
+    headline_bl_333_mean: 92.33
+  dualforce_dcg_w1p5_effect_v3:
+    gen: store/gens/030_dualforce_dcg_w1p5/05_effect_v3__dai
+    label: "SEGUE (w=1.5, effect prompt)"
+    cache: computed:v5.py pairs (dualforce_dcg_w1p5_effect, cells mode, stored features)
+    rows: 3414
+    gens: 564
+    headline_bl_333_mean: 90.09
+  dualforce_dcg_w1p5_effect_v3ed81:
+    gen: store/gens/030_dualforce_dcg_w1p5/06_effect_v3ed81__dai
+    label: "SEGUE (w=1.5, effect prompt)"
+    cache: computed:v5.py pairs (dualforce_dcg_w1p5_effect, cells mode, stored features)
+    rows: 1632
+    gens: 204
+    headline_bl_333_mean: 94.29
+  dualforce_dcg_w1p5_neutral_v3:
+    gen: store/gens/030_dualforce_dcg_w1p5/03_neutral_v3__dai
+    label: "SEGUE (w=1.5)"
+    cache: computed:v5.py pairs (dualforce_dcg_w1p5, cells mode, stored features)
+    rows: 3414
+    gens: 564
+    headline_bl_333_mean: 86.0
+  dualforce_dcg_w1p5_neutral_v3ed81:
+    gen: store/gens/030_dualforce_dcg_w1p5/04_neutral_v3ed81__dai
+    label: "SEGUE (w=1.5)"
+    cache: computed:v5.py pairs (dualforce_dcg_w1p5, cells mode, stored features)
+    rows: 1632
+    gens: 204
+    headline_bl_333_mean: 93.12
+  dualforce_dcg_w3_effect_v3:
+    gen: store/gens/031_dualforce_dcg_w3/05_effect_v3__dai
+    label: "SEGUE (w=3, effect prompt)"
+    cache: computed:v5.py pairs (dualforce_dcg_w3_effect, cells mode, stored features)
+    rows: 3414
+    gens: 564
+    headline_bl_333_mean: 91.13
+  dualforce_dcg_w3_effect_v3ed81:
+    gen: store/gens/031_dualforce_dcg_w3/06_effect_v3ed81__dai
+    label: "SEGUE (w=3, effect prompt)"
+    cache: computed:v5.py pairs (dualforce_dcg_w3_effect, cells mode, stored features)
+    rows: 1632
+    gens: 204
+    headline_bl_333_mean: 95.99
+  dualforce_dcg_w3_neutral_v3:
+    gen: store/gens/031_dualforce_dcg_w3/03_neutral_v3__dai
+    label: "SEGUE (w=3)"
+    cache: computed:v5.py pairs (dualforce_dcg_w3, cells mode, stored features)
+    rows: 3414
+    gens: 564
+    headline_bl_333_mean: 88.62
+  dualforce_dcg_w3_neutral_v3ed81:
+    gen: store/gens/031_dualforce_dcg_w3/04_neutral_v3ed81__dai
+    label: "SEGUE (w=3)"
+    cache: computed:v5.py pairs (dualforce_dcg_w3, cells mode, stored features)
+    rows: 1632
+    gens: 204
+    headline_bl_333_mean: 94.98
+  dualforce_dcg_w6_effect_v3:
+    gen: store/gens/032_dualforce_dcg_w6/05_effect_v3__dai
+    label: "dualforce_dcg w6 effect"
+    cache: cells_dualforce_dcg_w6_effect_4939bbf5a3defa55.npz
+    rows: 3414
+    gens: 564
+    headline_bl_333_mean: 91.75
+  dualforce_dcg_w6_effect_v3ed81:
+    gen: store/gens/032_dualforce_dcg_w6/06_effect_v3ed81__dai
+    label: "dualforce_dcg w6 effect"
+    cache: cells_dualforce_dcg_w6_effect_4939bbf5a3defa55.npz
+    rows: 1632
+    gens: 204
+    headline_bl_333_mean: 96.81
+  dualforce_dcg_w6_neutral_v3:
+    gen: store/gens/032_dualforce_dcg_w6/03_neutral_v3__dai
+    label: "dualforce_dcg w6 neutral"
+    cache: cells_dualforce_dcg_w6_neutral_51b75d5ea749b499.npz
+    rows: 3414
+    gens: 564
+    headline_bl_333_mean: 90.04
+  dualforce_dcg_w6_neutral_v3ed81:
+    gen: store/gens/032_dualforce_dcg_w6/04_neutral_v3ed81__dai
+    label: "dualforce_dcg w6 neutral"
+    cache: cells_dualforce_dcg_w6_neutral_51b75d5ea749b499.npz
+    rows: 1632
+    gens: 204
+    headline_bl_333_mean: 95.85
+  ic_gen_effect_v3:
+    gen: store/gens/001_ic_gen/05_effect_v3__dai
+    label: "ic_gen effect"
+    cache: cells_ic_gen_effect_05306d3773631bda.npz
+    rows: 3414
+    gens: 564
+    headline_bl_333_mean: 85.09
+  ic_gen_effect_v3ed81:
+    gen: store/gens/001_ic_gen/06_effect_v3ed81__dai
+    label: "ic_gen effect"
+    cache: cells_ic_gen_effect_05306d3773631bda.npz
+    rows: 1632
+    gens: 204
+    headline_bl_333_mean: 78.28
+  ic_gen_neutral_v3:
+    gen: store/gens/001_ic_gen/03_neutral_v3__dai
+    label: "ic_gen neutral"
+    cache: cells_ic_gen_neutral_76109598e853dbcd.npz
+    rows: 3414
+    gens: 564
+    headline_bl_333_mean: 72.46
+  ic_gen_neutral_v3ed81:
+    gen: store/gens/001_ic_gen/04_neutral_v3ed81__dai
+    label: "ic_gen neutral"
+    cache: cells_ic_gen_neutral_76109598e853dbcd.npz
+    rows: 1632
+    gens: 204
+    headline_bl_333_mean: 52.99
+  refvfx_author_native:
+    gen: store/gens/003_refvfx/03_author_native__dai
+    label: "refVFX author-native"
+    cache: cells_refVFX_author-native_f5c30555a69cd89a.npz
+    rows: 2644
+    gens: 366
+    headline_bl_333_mean: 66.29
+  refvfx_effect_v3:
+    gen: store/gens/003_refvfx/04_effect_v3__cc
+    label: "refVFX TEG effect"
+    cache: computed:v5.py pairs (refvfx_teg, teg mode, stored features)
+    rows: 276
+    gens: 76
+    headline_bl_333_mean: 70.54
+  refvfx_neutral_v3:
+    gen: store/gens/003_refvfx/05_neutral_v3__dai
+    label: "refVFX (neutral prompt)"
+    cache: computed:v5.py pairs (refvfx_neutral, cells mode, stored features)
+    rows: 2644
+    gens: 366
+    headline_bl_333_mean: 42.12
+  refvfx_neutral_v3_teg:
+    gen: store/gens/003_refvfx/06_neutral_v3_teg__cc
+    label: "refVFX (ref. + both endpoints, neutral)"
+    cache: computed:v5.py pairs (refvfx_teg_neutral, teg mode, stored features)
+    rows: 276
+    gens: 76
+    headline_bl_333_mean: 49.78
+  vap_author_native:
+    gen: store/gens/011_vap/05_author_native__dai
+    label: "VAP author-native"
+    cache: cells_VAP_author-native_48e07750758d6549.npz
+    rows: 2644
+    gens: 366
+    headline_bl_333_mean: 70.34
+  vap_neutral_v3:
+    gen: store/gens/011_vap/06_neutral_v3__dai
+    label: "Video-As-Prompt (neutral prompt)"
+    cache: computed:v5.py pairs (vap_neutral, cells mode, stored features)
+    rows: 2644
+    gens: 366
+    headline_bl_333_mean: 40.88
+  vfxmaster_author_native:
+    gen: store/gens/012_vfxmaster/05_author_native__dai
+    label: "VFXMaster author-native"
+    cache: cells_VFXMaster_author-native_8951264b2403b658.npz
+    rows: 2644
+    gens: 366
+    headline_bl_333_mean: 85.54
+  vfxmaster_neutral_v3:
+    gen: store/gens/012_vfxmaster/06_neutral_v3__dai
+    label: "VFXMaster (neutral prompt)"
+    cache: computed:v5.py pairs (vfxmaster_neutral, cells mode, stored features)
+    rows: 2644
+    gens: 366
+    headline_bl_333_mean: 49.85
+  wan_flf2v_effect_v3:
+    gen: store/gens/042_wan_flf2v/01_effect_v3__cc
+    label: "Wan2.1-FLF2V TEG effect"
+    cache: cells_Wan2.1-FLF2V_TEG_effect_e74f986d4879d644.npz
+    rows: 276
+    gens: 76
+    headline_bl_333_mean: 84.29
+  wan_flf2v_neutral_v3:
+    gen: store/gens/042_wan_flf2v/02_neutral_v3__cc
+    label: "Wan2.1-FLF2V (neutral prompt)"
+    cache: computed:v5.py pairs (wan_flf2v_neutral, teg mode, stored features)
+    rows: 276
+    gens: 76
+    headline_bl_333_mean: 56.65
+  wan_vace_effect_v3:
+    gen: store/gens/043_wan_vace/01_effect_v3__cc
+    label: "Wan2.1-VACE TEG effect"
+    cache: cells_Wan2.1-VACE_TEG_effect_22f75bee34dedfb9.npz
+    rows: 276
+    gens: 76
+    headline_bl_333_mean: 77.02
+  wan_vace_neutral_v3:
+    gen: store/gens/043_wan_vace/02_neutral_v3__cc
+    label: "Wan2.1-VACE clip (neutral prompt)"
+    cache: computed:v5.py pairs (wan_vace_neutral, teg mode, stored features)
+    rows: 276
+    gens: 76
+    headline_bl_333_mean: 51.88

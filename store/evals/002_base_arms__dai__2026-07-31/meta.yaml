@@ -1,0 +1,59 @@
+id: 002_base_arms__dai__2026-07-31
+seq: 2
+shelf: evals
+created: 2026-07-31
+machine: DeltaAI GH200 (ghx4) — Linux aarch64, torch 2.10.0+cu129, python 3.12
+source: misc/base_arms/eval (build_eval_manifest.py + job_score.sbatch)
+harness: transition-eval/4.0.0 (m1a_S3 kernel)
+instrument:
+  # MEASURED with sha256sum, not the declared constant — same values eval 001 recorded, which is
+  # what makes these arms readable next to the five-arm comparison
+  reference_artifact: .claude/worktrees/eval-v4-cert/src/diffusion/transition_eval/reference_v4.npz
+  reference_artifact_sha256: 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8
+  corpus: data/processed/transitions_std121/corpus_manifest.json   # the 222-clip manifest
+  corpus_sha256: 5a7a8be9f8a0ba70de9d3c77aaec77801a59170255d5fcb425d80a364afd3652
+  corpus_sha256_declared_by_harness: dc2e139a
+  spec_sha256: a7d92188
+  tau_copy: 0.858
+  certified: false
+  uncertified_reasons:
+    - "instrument files modified since HEAD: ['src/diffusion/transition_eval/reference_v4.npz']"
+    - "HEAD tag is None, expected 'eval/v4.0.0'"
+inputs:
+  gens: [006_base_prompt_ctt, 007_base_cond_ctt]
+arms:
+  base_prompt_ctt:
+    items: 1842        # 152 rows x 2 seeds x <=8 copy-guarded GT-pool refs
+    rows_written: 1842
+    controls: 0        # no endpoint conditioning => the harness synthesises no control twins
+    errors: 0
+    shards: 36
+  base_cond_ctt:
+    items: 1842
+    rows_written: 3684
+    controls: 1842     # control_hold 1399 + control_lerp 393, dropped on the registry join
+    errors: 0
+    shards: 36
+pool_rule: >-
+  run_eval.pool_refs() semantics, asserted row-by-row against the frozen ctt_v2 registry: the
+  same-class GT pool for the row's gt_pool_class, copy-guarded by removing the row's own
+  `reference` and `endpoint`, first 8 by clip name. Identical to the pool ctt_v2 / ctt_v2_leaky /
+  refvfx_A / refvfx_B were scored against for the same item_id — that identity is the reason the
+  base rows keep a `reference` they were never shown.
+caveats:
+  - >-
+    ONE MACHINE. Scored on DeltaAI, the same box as store/evals/001_five_arm__dai__2026-07-30, so
+    the levels are readable next to those five arms. eps and DeltaAI do not reproduce each other
+    row-by-row on this instrument (PROBE.md: app_ref max |Δ| 0.185, 54% of rows breaching the
+    pre-registered 0.005 bar), so never mix a row from the two.
+  - >-
+    both arms are UN-TWINNED (`no_twin: true`): they ARE the baselines, so `twin_of` is null and
+    they contribute a LEVEL, never a paired margin. The paired Δ and the donor-class sign test on
+    the trainings page stay between the two trainings.
+  - >-
+    item_ids COLLIDE with ctt_v2 / ctt_v2_leaky / refvfx_A / refvfx_B (all ran the ctt_v2
+    registry's rows). The harness `arm` stamp is the only field that separates them — key on
+    (arm, item_id), and never add two of these directories to one score set's `paths`.
+  - >-
+    the prompt differs from the trainings' (effect clause, no `sksz`), so this is the level of
+    "text alone" and "text + anchors", not a same-prompt control for ctt_v2/ic_gen.

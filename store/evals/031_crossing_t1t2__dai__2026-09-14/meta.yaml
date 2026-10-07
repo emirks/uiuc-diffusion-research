@@ -1,0 +1,49 @@
+id: 031_crossing_t1t2__dai__2026-09-14
+seq: 31
+shelf: evals
+created: 2026-09-14
+machine: DeltaAI ghx4 GH200 (aarch64), bhwp-dtai-gh, torch 2.10.0+cu129 (SCORE); gens on eps (fal H100)
+harness: transition-eval v4.0.0 (eval-v4-cert worktree @ 4e792c02)
+instrument:
+  eval_v4_cert_commit: 4e792c02e8498a27febd7678540dc7c7e7c01cd5     # $DR/.claude/worktrees/eval-v4-cert
+  reference_v4_sha256: 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8     # MEASURED on the scoring machine; same instrument as evals/021-030
+  corpus: misc/2026-09-13_crossing_ablation/eval/corpus_manifest_xab.json (sha256 3e8bd29687b73fba29269a72118af0b031f719a67215624faab4de795268ddb5; 1037 clips / 109 classes = 677 v3 corpus + 12 S2 shader pools x 30 = 360)
+  reference_corpus: data/processed/transitions_std121/corpus_manifest_v1_222.json (the certified 222 pin, sha256 5a7a8be9f8a0ba70de9d3c77aaec77801a59170255d5fcb425d80a364afd3652) — --reference-corpus, amendment 2 (out-of-population references flagged ref_in_v4_population=false, r_ref against the 222 population)
+  tau_copy: 0.858
+  readout: app_ref (v4 M1 headline = 1 - S3 rank-distance, HIGHER=more like the pool class); pool = up to 8 same-class GT clips per row (pool_refs, copy-guarded)
+source: >
+  Crossing ablation (CTT paper). Two from-scratch IC-LoRA arms (LTX-2 19B dev, r128/alpha128 one_way,
+  dataset 008_crossing_allbutone) trained on eps: CROSSED = the "all but one" layout (each shot trained
+  under all-but-one operator; the reference names the operator) vs UNCROSSED = each shot under exactly
+  one operator. Two blocks: s0s1 (one-sided, 9 dense S1 manner operators, 27 shots) and s2 (two-sided,
+  12 gl-transitions shader operators on existing S2 endpoint pairs, 12 endpoints). Per shot the T1 and
+  T2 test clips were generated on eps (seeds 42/43) and scored here on ONE machine (DeltaAI).
+  T1 ("seen"): shot + reference of its DESIGNATED operator (trained on this shot in both arms) -> tie
+  check on %_same toward that operator's class. T2 ("swap"): shot + reference of the MISSING operator
+  (never trained on this shot in either arm; the missing cell is reached only through the reference) ->
+  margin = %_missing - %_designated: does the output follow the reference (missing) operator or the
+  shot's designated operator? Each T2 item is scored TWICE against two same-clip pools (one video_key,
+  two rows t2_role=missing|designated, distinct gt_pool_class).
+arms_scored:
+  crossing_crossed_t1t2: {gen: gens/034_crossing_crossed/01_t1t2__eps, run: runs/022_crossing_crossed, rows: 3744}   # real 1872 + control_lerp 576 + control_hold 1296; error_rows 0
+  crossing_uncrossed_t1t2: {gen: gens/035_crossing_uncrossed/01_t1t2__eps, run: runs/023_crossing_uncrossed, rows: 3744}   # real 1872 + control_lerp 576 + control_hold 1296; error_rows 0
+jobs: {scoring_crossed: 3148527, scoring_uncrossed: 3148528, ceilings: 3148614}   # DeltaAI ghx4 arrays, account bhwp-dtai-gh, 8 shards each, all COMPLETED
+ceilings:
+  method: 9 S1 manner classes from the certified v4 matrix (run_eval.ceilings(), same-class off-diagonal mean of app_ref); 12 S2 s2_<shader> classes computed corpus-against-itself with the production scorer on THIS machine (ceilings_manifest.py pattern, mean app_ref over the 132 ordered same-class pairs [12x11] of the 12-clip ceiling subset of each class's 30-clip scoring pool), written to misc/2026-09-13_crossing_ablation/eval/ceilings_xab.json
+  s2_ceiling_subset: 12 clips/class (misc/2026-09-13_crossing_ablation/eval/ceilings/ceiling_subset.json); 132 ordered pairs/class; SCORING pool stays 30 (misc/.../eval/s2_pools.json), pool_refs uses <=8
+headline:   # T1 %_same and T2 %margin (missing - designated); levels only
+  T1_pct_same: {crossed: {s0s1: 82.92, s2: 99.86}, uncrossed: {s0s1: 75.0, s2: 97.71}}
+  T2_margin_pct: {crossed: {s0s1: 27.28, s2: 16.66}, uncrossed: {s0s1: 21.15, s2: 10.93}}
+  paired_crossed_minus_uncrossed_T2_pct: {s0s1: 6.12, s2: 5.73}
+caveats:
+  - uncrossed arm (runs/023) DIVERGED at training step 1392 and was tested as trained (owner decision); its T1/T2 numbers are of a diverged adapter.
+  - the 12 S2 shader classes are NOT eval classes anywhere; their SCORING pools are 30 EXISTING S2 shader renders each (inventory-authoritative clip->shader; stratum-qualified; excludes every T1/T2 target/reference and every crossing-training S2 target/reference stem, misc/.../eval/s2_pools.json = 360 clips) and their ceilings are NEW (corpus-against-itself over a 12-clip subset), not the certified matrix. S2 pools are two-sided renders scored whole-clip while the two-sided gens carry a suffix mask (documented masking asymmetry).
+  - references in our rows (S1/S2 renders) are OUTSIDE the certified 222 population -> reference-corpus kept at the 222 pin (--reference-corpus, amendment 2); rows carry ref_in_v4_population=false and get r_ref against the 222 population.
+  - single training seed per arm (seed 42); generation seeds 42/43. No T3 (grid-v3 zero-shot) in this pass.
+  - the inline-validation attention omission (bidirectional vs one_way; HANDOFF §6) does NOT affect these gens -> T1/T2 were generated via the one_way run_gen path.
+  - item_ids embed the harness_arm so they are distinct across arms here, but every join keys on (arm, item_id) per the v4 contract (item_ids can collide across arms in general).
+notes: >
+  Scored on ONE machine (DeltaAI). Aggregators misc/2026-09-13_crossing_ablation/eval/{analyze.py, finalize.py};
+  headline summary.md + summary.json beside this meta; per-item CSVs per_item_{T1,T2}.csv + per-operator
+  per_operator_T2.csv in the entry; full facts-only report misc/2026-09-13_crossing_ablation/eval/REPORT.md.
+  Checker recompute: misc/2026-09-13_crossing_ablation/analysis/t1t2_aggregate.py (agrees). Levels only, no verdicts.

@@ -13,6 +13,7 @@ Index:
 |---|---|---|---|
 | F-001 | Same-class references are interchangeable judges at class level; pool-mean scoring is a valid universal appearance yardstick | metrics/validity table | owner-approved 2026-07-20 |
 | F-002 | The sided core-frame mask improves the appearance metric on every measure vs scoring all frames | metrics/validity table | owner-approved 2026-07-20 |
+| F-003 | Continue-training ctt_v2 with a fresh WSD LR-restart (+~1k steps, surgery/KD off) gives a qualitatively clearly better checkpoint — a cheap, non-novel quality lever (vs-ctt_v2 delta uncertified) | engineering lever (not a novelty claim) | owner-approved 2026-08-19 |
 
 ---
 
@@ -74,3 +75,45 @@ the v3 pairwise matrices independently reproduce the ordering on the full
 - **Instrument:** v2 exam + v3.0.0 certification artifacts; mask definition in
   SPEC §3 (S — Structure).
 - **Status:** owner-approved 2026-07-20.
+
+## F-003 · Continue-training ctt_v2 with a fresh WSD LR-restart is a cheap, non-novel quality lever
+
+**Provenance:** the DUAL-FORCE campaign's plain-FM **control** arm
+(`runs/012_dualforce_control`), built only as the A/B baseline for the KD
+text-crutch treatment (that treatment was a terminal negative — a separate
+mechanism-refutation draft, not yet in this registry). The control is **ctt_v2
+(`runs/002` @ step 10,000) warm-started and trained ~1,000 more steps under a
+fresh WSD schedule** (warmup→stable→decay), surgery/KD **off**, same 56k ctt_v2
+data, r128/α128 attn_ffn, one-way reference — architecturally identical to ctt_v2
+(960 plain LoRA tensors). Shipped at the step-1000 checkpoint.
+
+**Observation:** on the arm-comparison viewer the control is *qualitatively and
+clearly better than ctt_v2* (owner's direct read). Mechanistically consistent:
+ctt_v2's LR decayed monotonically to ~1e-5 and stopped; the WSD restart re-warms
+toward the 1e-4 peak then re-anneals, and the shipped @1000 checkpoint sits in the
+high-LR zone of a 2000-step schedule — i.e. a classic LR-restart / continued-
+training gain. **Important but not novel** (continued training + LR restart is
+standard practice); logged as an engineering lever, not a research contribution.
+The contribution search continues from here.
+
+**Measured** (control's own v4 scorecard, one machine): pooled same
+0.7757 · 0.8722 · **89.6%**; G-fit 0.7899 · 0.8735 · 90.7%; G-unseen-same
+0.8452 · 0.8735 · 97.1%; copy-guard clean (near_copy 0/304), core_degenerate
+8/304. **The improvement over ctt_v2 is UNCERTIFIED** — control and ctt_v2 were
+scored in *separate* passes on different corpora, so no paired same-corpus delta
+exists yet; the "better" claim is qualitative pending a co-scored A/B (ctt_v2@10k
+vs control@1000, one out-root, same 222 corpus).
+
+- **Evidence:** `store/runs/012_dualforce_control/{config.yaml,meta.yaml}`
+  (checkpoint sha256 `72a213b9…`); scores
+  `store/evals/012_dualforce_control__dai__2026-08-19/HEADLINE.md`; gens
+  `store/gens/013_dualforce_control/01_neutral__dai`. Baseline
+  `store/runs/002_ctt_v2`; prior ctt_v2 scores `store/evals/007_ctt_v2_push…`
+  (separate pass — not co-scored).
+- **Regenerate / confirm:** co-scored A/B not yet run — one gen+eval pass on
+  DeltaAI (`bhwp` only) over the 222 corpus, scoring ctt_v2@10k and control@1000
+  into a single out-root; then a step-sweep of the full WSD run to locate the peak.
+- **Instrument:** transition-eval v4.0.0 [UNCERTIFIED by design], one machine
+  (DeltaAI GH200 aarch64), τ_copy 0.858, corpus 222.
+- **Status:** owner-approved 2026-08-19 (qualitative observation; vs-ctt_v2
+  magnitude UNCERTIFIED — pending co-scored A/B).

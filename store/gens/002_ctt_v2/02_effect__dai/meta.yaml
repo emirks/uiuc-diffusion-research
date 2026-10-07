@@ -1,0 +1,14 @@
+id: gens/002_ctt_v2/02_effect__dai
+seq: 2
+shelf: gens
+arm: ctt_v2
+harness_arm: ctt_v2_leaky   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: effect
+machine: dai
+created: 2026-07-30
+migrated: 2026-08-13 from gens/005_ctt_v2_leaky (contract v2 — store/MIGRATION.md; full v1 provenance in meta.v1.yaml)
+inputs: {run: runs/002_ctt_v2, step: 10000}
+prompt_family: prompts/002_ctt152_effect
+prompt_sha: 35930d7d7453
+grid_rows: 152
+videos: 304

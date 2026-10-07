@@ -115,6 +115,17 @@ and that colliding arms still carry distinct clips and distinct metric vectors.
 `build_runs.py :: assert_arms()` and the `[ids]` / `[join-key]` blocks in
 `check()` are the worked example.
 
+**The flagship arm-comparison page today** is `iclora_neutral_effect_v2` (builder
+`eval_ladder/viewer/build_neutral_effect_v2.py` + `template_neutral_effect_v2.html`,
+store-fed only; practices in the `viewer` skill, builder notes in
+`eval_ladder/viewer/NOTES_v2.md`). Since 2026-09-22 it writes two files, a 39 KB
+`index.html` and a 35 MB sibling `data.js` (`window.__NE_DATA__`), so its registry
+`mount` lists both; a template edit is `--mode page` (sub-second) and a data rebuild
+runs through a per-arm cache under `outputs/cache/`. The v1 builder that emitted one
+fused 35 MB page is archived byte-identical under
+`eval_ladder/viewer/archive/neutral_effect_v1_2026-09-22/` (README + `run_v1.sh`),
+and its last page is the `archived` entry `iclora_neutral_effect`.
+
 ---
 
 ## Creating a viewer
@@ -201,6 +212,21 @@ force an application server. A static page can fetch
 `[offset, offset+size)` from the shard and hand the bytes to `<video>` as a blob
 URL, with the offsets coming from a `_viewer_index/*.jsonl.gz`.
 
+### The static server also accepts POST — for one allow-listed file
+
+`viewerctl httpd` also answers `POST`/`PUT`, but only to save the arm-comparison
+viewer's collections file. A write is accepted **only** when its
+`translate_path`→`os.path.realpath` (symlinks followed) lands inside
+`<repo>/eval_ladder/viewer/collections/` and ends in `.json` — every other path
+gets a `403` and the file on disk is untouched. The body must parse as JSON with
+an integer `schema` key (else `400`), stays under a 20 MB cap (`413`), and carries
+an `X-Base-Updated` header for optimistic concurrency: if the file's current
+`updated` differs the server answers `409` with the current file so the client can
+merge and retry once. On success the server stamps `updated`, writes atomically
+(tmp + `os.replace`), keeps a rolling backup under `collections/.history/`, and
+returns `{"ok":true,...}`. The bind stays `127.0.0.1`; GET and byte ranges are
+unchanged. Everything else the server does is read-only.
+
 That is not theoretical: the ctt_v2 corpora viewer (153,758 samples across
 361 GB of tars) **was** an application on port 8799 and is now a static page on
 8017. `build_ctt_v2_corpora.py` precomputes what its server did in memory —
@@ -252,7 +278,9 @@ are what the dashboard shows.
 
 ## Current inventory
 
-19 current viewers, all static; 4 archived. All resolve except the 2AFC study, whose
+Snapshot of the registry as of 2026-08 (19 current viewers, 4 archived), plus the
+2026-09-22 arm-comparison rows; the generated dashboard is the live inventory
+(54 current · 8 archived on 2026-09-22). All resolve except the 2AFC study, whose
 media set is only partly present on DeltaAI (62 of 93 clips).
 Generated view: `outputs/viewers/index.html`.
 
@@ -269,6 +297,7 @@ Generated view: `outputs/viewers/index.html`.
 ### Eval instrument & ladder
 | Viewer | What it shows |
 |---|---|
+| **IC-LoRA — neutral vs effect prompt** ★ (`iclora_neutral_effect_v2`) | the flagship arm-comparison page: every store arm (own trainings, DCG sweeps, prior-work VFX-transfer and TEG baselines) over the same input cards, tier grid + donor/sidedness filters, metrics table + input-bag cards. Rebuild: `eval_ladder/viewer/build_neutral_effect_v2.py` (`--mode page` for template edits); two files, `index.html` + `data.js` |
 | **IC-LoRA trainings — results** ★ | every IC-LoRA training on one page, a chip per run, over 139 identical inputs; plus the specialist/copier context tiers and the two external refVFX baseline arms (Ⓐ their prompt convention · Ⓑ our text budget). Rebuild: `eval_ladder/viewer/build_runs.py`. Adding a training is one entry in its `RUNS`; adding an external baseline is one entry in its `EXTERNAL` |
 | **ladder2 — single reference of truth** ★ | the clean campaign: design, seatbelts, prompt rendering; + DAVIS foreign generations |
 | **eval ladder — results viewer** ★ | 1,902 generated transitions with scores, filterable by cell/tier/ontology |
@@ -300,10 +329,11 @@ Generated view: `outputs/viewers/index.html`.
 | HumanVid sample (40 clips) | `data/raw/humanvid_sample` was cleaned — only filmstrips resolve |
 | VC Dissolve viewer (exp_021) | exp_021 run_0002 outputs deleted; only run_0004 survives |
 | eval ladder v1 one-pager | superseded by ladder2 REFERENCE |
+| IC-LoRA — neutral vs effect prompt, v1 builder (`iclora_neutral_effect`) | superseded 2026-09-22 by `iclora_neutral_effect_v2` (same payload byte-for-byte); the last fused 35 MB page stays openable, builder archived under `eval_ladder/viewer/archive/neutral_effect_v1_2026-09-22/` |
 
 ### Deliberately not registered
 - `outputs/viewers/s2_dataset/shaders/*.html` — 42 per-shader detail pages, reached from the S2 browse page.
-- `*/viewer_template*.html`, `eval_ladder/viewer/template.html` — templates consumed by generators, not pages to open.
+- `*/viewer_template*.html`, `eval_ladder/viewer/template.html`, `eval_ladder/viewer/template_neutral_effect_v2.html`, `eval_ladder/viewer/archive/**` — templates consumed by generators (and the archived v1 builder/template), not pages to open.
 - `.claude/worktrees/**` — duplicates of tracked pages on other branches.
 - `misc/shotbridge/web/.next/**` — Next.js build output for a separate product.
 - `data/raw/cifar10/**/readme.html` — vendor file.

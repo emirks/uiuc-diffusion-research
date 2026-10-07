@@ -1,0 +1,101 @@
+id: 005_ic_effect_neutral__dai__2026-08-07
+seq: 5
+shelf: evals
+created: 2026-08-07
+machine: DeltaAI GH200 (ghx4) — Linux aarch64, torch 2.10.0+cu129, python 3.12.9
+source: >-
+  misc/2026-08-06_metric_eval/gen_eval — v4-LANE re-score. ic_gen_effect manifests REUSED from the
+  campaign's ladder plan (verified below); the two neutral arms' manifests rebuilt by
+  build_eval_manifest_v4lane.py; scored by job_score_v4lane.sbatch; headline by report_v4lane.py
+  (all under misc/, gitignored). The campaign's earlier scores under gen_eval/scores/ used the
+  metric-SEARCH instrument and are NOT reused here — only the v4-lane scorer output (scores_v4lane/).
+harness: transition-eval/4.0.0 (m1a_S3 kernel)
+instrument:
+  # MEASURED with sha256sum, not the declared constant — same values evals 001/002/004 recorded,
+  # which is what makes these arms readable next to the five-arm comparison and the base arms.
+  reference_artifact: .claude/worktrees/eval-v4-cert/src/diffusion/transition_eval/reference_v4.npz
+  reference_artifact_sha256: 459fd9a71bb50ef81dcbd1d881aecf6a6c70e18855899b37c0a64b7167e606a8  # sha256sum of the FILE, echoed by every one of the 108 task verify blocks
+  corpus_manifest: data/processed/transitions_std121/corpus_manifest.json                          # the 222-clip manifest
+  corpus_manifest_sha256: 5a7a8be9f8a0ba70de9d3c77aaec77801a59170255d5fcb425d80a364afd3652         # MEASURED sha256sum of the file; matches evals 002-004
+  harness_corpus_sha256: dc2e139a2a829403939ae43855b0fc985d5c128647c99ac0d634fd4fb20e0952           # the CONTENT hash the harness records in results.json (provenance.corpus_sha256)
+  spec_sha256: a7d921881e29fc3ce235f206bfb762453cb533f8615e652d63786c9ad63379c2
+  tau_copy: 0.858
+  certified: false
+  uncertified_reasons:                       # verbatim from every shard's results.json provenance
+    - "instrument files modified since HEAD: ['src/diffusion/transition_eval/reference_v4.npz']"
+    - "HEAD tag is None, expected 'eval/v4.0.0'"
+inputs:
+  gens: [010_ic_gen_effect, 011_base_cond_neutral, 012_base_prompt_neutral]
+arms:
+  ic_gen_effect:
+    items: 1842        # 152 rows x 2 seeds x <=8 copy-guarded GT-pool refs
+    rows_written: 3684
+    controls: 1842     # endpoint conditioning => the harness synthesises control_hold/control_lerp twins, dropped on the registry join
+    errors: 0
+    nulls: 0
+    shards: 36
+    twinned: true      # a TREATMENT (uses the reference); carries ladder-plan twin_of to its ic_gen base twins (NOT scored here — see caveats)
+  base_cond_neutral:
+    items: 1842
+    rows_written: 3684
+    controls: 1842
+    errors: 0
+    nulls: 0
+    shards: 36
+    twinned: false     # un-twinned no-demo baseline
+  base_prompt_neutral:
+    items: 1842
+    rows_written: 1842
+    controls: 0         # no endpoint conditioning => the harness synthesises no control twins
+    errors: 0
+    nulls: 0
+    shards: 36
+    twinned: false
+headline:
+  # Pool-% (app_ref pool mean / GT-class ceiling), per report_v4lane.py; raw . ceiling . %.
+  # %_same = fair, cross-class comparable, headline-eligible. (%_proxy) = content-capped, ranking-only, NEVER blended.
+  ceiling_source: .claude/worktrees/eval-v4-cert/outputs/eval/certification/4.0.0-draft.1/analysis/distance_matrices.npz [m1a_S3]
+  ic_gen_effect:       {same_pct: 89.1, same_raw: 0.7755, proxy_pct: 84.4, proxy_raw: 0.7364, ceiling_same: 0.8722}
+  base_cond_neutral:   {same_pct: 60.4, same_raw: 0.5256, proxy_pct: 47.0, proxy_raw: 0.4032, ceiling_same: 0.8722}
+  base_prompt_neutral: {same_pct: 58.1, same_raw: 0.5078, proxy_pct: 44.9, proxy_raw: 0.3907, ceiling_same: 0.8722}
+storage:
+  layout_deviation: >
+    Each arm dir here is a relative SYMLINK to misc/2026-08-06_metric_eval/gen_eval/scores_v4lane/<arm>
+    (the campaign-private v4-lane score tree) rather than a copied <arm>/<shard>/{items.jsonl,results.json}
+    tree (siblings evals/001-002 copy). Owner directive 2026-08-07: score into a campaign-private tree,
+    wire into the store by symlink — the store contract's "wiring, not copying". Unlike evals/004 the
+    full scorer output IS present (each shard's items.jsonl AND results.json), so no provenance is lost;
+    the symlink is purely a no-duplicate wiring choice. Relative targets (../../../) resolve on both clusters.
+pool_rule: >-
+  run_eval.pool_refs() semantics (build_eval_manifest_v4lane.py, verbatim from misc/base_arms/eval):
+  the same-class GT pool for the row's gt_pool_class, copy-guarded by removing the row's own `reference`
+  and `endpoint`, first 8 by clip name. Asserted row-by-row IDENTICAL across the three arms against the
+  ic_gen_effect registry (measured 0/152 mismatches) — which is why the neutral base rows keep a
+  `reference` they were never shown (`use_reference: false`). ic_gen_effect's manifests were reused from
+  the campaign's ladder plan and independently VERIFIED: 1842 items / 304 gens / 152 rows, every
+  reference_video in the 222-clip corpus, pool identity 0/152, all generations present, and per-shard
+  disjoint by generated_video (no cache write race possible).
+caveats:
+  - >-
+    ONE MACHINE. Scored on DeltaAI GH200, the same box and identical instrument sha as evals/001
+    (five-arm) and evals/002 (base arms), so the levels are readable next to those. eps and DeltaAI do
+    not reproduce each other row-by-row on this instrument (max |Δ| 0.185 on app_ref, 54% of rows
+    breaching the 0.005 bar), so never mix a row from the two.
+  - >-
+    item_ids COLLIDE across the three arms here (all ran the ladder2 CTT grid — byte-identical item_id
+    sets, measured), though they do NOT collide with eval_ladder/registry.jsonl (0/152). The harness
+    `arm` stamp is the only field separating them — key on (arm, item_id), and never add two of these
+    directories to one score set's `paths`.
+  - >-
+    ic_gen_effect is a TREATMENT (it reads the reference; ref_novelty=seen), not a baseline. Its
+    manifest carries the ladder plan's `twin_of` to the effect-free ic_gen base twins, but those base
+    twins are NOT scored in this entry, so the twin_of references DANGLE here. This entry reports LEVELS
+    only; any paired Δpp for ic_gen_effect must be computed elsewhere against a scored base twin.
+  - >-
+    The two neutral arms are UN-TWINNED (`no_twin: true`): they ARE the baselines, contributing a LEVEL,
+    never a paired margin.
+  - >-
+    The neutral arms use a V-NEUTRAL prompt (start scene only; both `sksz` and the effect clause removed)
+    — they are the specificity-ZERO anchor and the caption V-neutral probe. They are NOT interchangeable
+    with evals/002's base_prompt_ctt / base_cond_ctt, whose prompts STATE the effect. ic_gen_effect's
+    prompt convention matches gens/005_ctt_v2_leaky's (effect clause after the `sksz` token).
