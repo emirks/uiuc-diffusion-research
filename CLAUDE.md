@@ -189,9 +189,10 @@ skill first — they are the source of truth for this workflow:**
   `MIGRATION.md` resolves old ids; ledger `store/INDEX.md`; validate every
   registration with `scripts/store_fsck.py`.
 - `viewer` — serving result pages (:8017) + creating/fixing viewers. The
-  arm-comparison page (`iclora_neutral_effect`) is the cornerstone and is
-  ruled strictly — arms enter the store first (`lora-flow`), then the page
-  via its two-edit builder recipe.
+  arm-comparison page (`iclora_neutral_effect_v2`; the un-suffixed slug is the
+  archived v1 page since 2026-09-22) is the cornerstone and is ruled strictly —
+  arms enter the store first (`lora-flow`), then the page via its two-edit
+  builder recipe.
 
 Since 2026-07-22 the project also runs on **NCSA DeltaAI** (`gh-login*`,
 aarch64 GH200). **Before running ANYTHING on DeltaAI (any `sbatch`/`srun`,
