@@ -28,7 +28,7 @@ import subprocess
 import sys
 import time
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -725,6 +725,19 @@ def cmd_httpd(args) -> None:
     """
     from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
     import functools
+    import threading
+
+    # POST/PUT are accepted for ONE purpose only: saving the viewer's collections file(s). Writes are
+    # allow-listed to this directory (realpath, symlinks followed) and serialized by a lock. Everything
+    # else stays a read-only static server.
+    COLLECTIONS_ALLOW = os.path.realpath(REPO / "eval_ladder" / "viewer" / "collections")
+    MAX_POST = 20 * 1024 * 1024      # 20 MB
+    HISTORY_KEEP = 30
+    _write_lock = threading.Lock()
+
+    def _now_ms() -> str:
+        t = datetime.now(timezone.utc)
+        return t.strftime("%Y-%m-%dT%H:%M:%S.") + f"{t.microsecond // 1000:03d}Z"
 
     class Handler(SimpleHTTPRequestHandler):
         protocol_version = "HTTP/1.1"
@@ -735,6 +748,99 @@ def cmd_httpd(args) -> None:
 
         def log_message(self, fmt, *a):
             pass  # the access log is noise; failures still surface as HTTP codes
+
+        # ---- collections save endpoint --------------------------------------------------
+        def _send_json(self, code, obj):
+            body = json.dumps(obj, ensure_ascii=False).encode("utf-8")
+            self.send_response(code)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            if self.command != "HEAD":
+                self.wfile.write(body)
+
+        def _resolve_allowed(self):
+            """The realpath of the request target if it is an allow-listed .json file, else None."""
+            path = self.translate_path(self.path)
+            real = os.path.realpath(path)
+            base = COLLECTIONS_ALLOW + os.sep
+            if (real == COLLECTIONS_ALLOW) or not real.startswith(base):
+                return None
+            if not real.endswith(".json"):
+                return None
+            return real
+
+        def do_POST(self):
+            real = self._resolve_allowed()
+            if real is None:
+                self._send_json(403, {"error": "forbidden",
+                                      "detail": "POST is only allowed for eval_ladder/viewer/collections/*.json"})
+                return
+            try:
+                length = int(self.headers.get("Content-Length") or 0)
+            except ValueError:
+                self._send_json(400, {"error": "bad_content_length"})
+                return
+            if length <= 0:
+                self._send_json(400, {"error": "empty_body"})
+                return
+            if length > MAX_POST:
+                self._send_json(413, {"error": "too_large", "limit": MAX_POST})
+                return
+            raw = self.rfile.read(length)
+            try:
+                doc = json.loads(raw.decode("utf-8"))
+            except Exception as e:
+                self._send_json(400, {"error": "invalid_json", "detail": str(e)})
+                return
+            if not isinstance(doc, dict) or not isinstance(doc.get("schema"), int) \
+                    or isinstance(doc.get("schema"), bool):
+                self._send_json(400, {"error": "schema_missing",
+                                      "detail": "body must be a JSON object with an integer 'schema'"})
+                return
+            with _write_lock:
+                # optimistic concurrency: the client's X-Base-Updated must match the file on disk
+                base_updated = self.headers.get("X-Base-Updated") or ""
+                if os.path.exists(real):
+                    try:
+                        with open(real, encoding="utf-8") as fh:
+                            current = json.load(fh)
+                    except Exception:
+                        current = None
+                    cur_upd = (current or {}).get("updated") if isinstance(current, dict) else None
+                    if current is not None and cur_upd != base_updated:
+                        self._send_json(409, {"error": "conflict", "current": current})
+                        return
+                now = _now_ms()
+                doc["updated"] = now
+                data = (json.dumps(doc, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
+                d = os.path.dirname(real)
+                name = os.path.basename(real)
+                # roll a backup of the PREVIOUS file into .history/ (keep the newest HISTORY_KEEP)
+                if os.path.exists(real):
+                    hist = os.path.join(d, ".history")
+                    os.makedirs(hist, exist_ok=True)
+                    stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+                    try:
+                        with open(real, "rb") as src, \
+                                open(os.path.join(hist, f"{name}.{stamp}.json"), "wb") as dst:
+                            dst.write(src.read())
+                    except OSError:
+                        pass
+                    backups = sorted(f for f in os.listdir(hist)
+                                     if f.startswith(name + ".") and f.endswith(".json"))
+                    for old in backups[:-HISTORY_KEEP]:
+                        try:
+                            os.remove(os.path.join(hist, old))
+                        except OSError:
+                            pass
+                tmp = os.path.join(d, f".{name}.tmp.{os.getpid()}.{threading.get_ident()}")
+                with open(tmp, "wb") as fh:
+                    fh.write(data)
+                os.replace(tmp, real)
+                self._send_json(200, {"ok": True, "updated": now, "bytes": len(data)})
+
+        do_PUT = do_POST
 
         def send_head(self):
             rng = self.headers.get("Range")
@@ -930,7 +1036,10 @@ def main() -> None:
     s.add_argument("--log")
     s.set_defaults(func=cmd_serve)
 
-    d = sub.add_parser("httpd", help="the range-capable static server (used by serve)")
+    d = sub.add_parser("httpd", help="the range-capable static server (used by serve); also accepts "
+                                     "POST/PUT to save eval_ladder/viewer/collections/*.json "
+                                     "(allow-listed, optimistic-concurrency via X-Base-Updated, "
+                                     ".history backups, 20 MB cap)")
     d.add_argument("--port", type=int, default=DEFAULT_PORT)
     d.add_argument("--bind", default="127.0.0.1")
     d.add_argument("--root", default=str(REPO))

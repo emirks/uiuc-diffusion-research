@@ -1,0 +1,1593 @@
+<meta charset="utf-8">
+<title>IC-LoRA arms — neutral / effect</title>
+<style>
+:root{--bg:#0e1014;--card:#171a1f;--card2:#1d2127;--edge:#2a2f37;--edge2:#3a414c;
+ --fg:#dde3ea;--dim:#8b95a1;--dim2:#666f7a;
+ --pre:#2dd4bf;--suf:#f5a524;--ref:#a78bfa;--bad:#f2555a;--good:#4ade80;--warn:#fbbf24;
+ --sel:#3b82f6}
+/* category colors are assigned at runtime from the catalog (index-stable palette) — no
+   category ids in CSS, so a new category needs zero template edits */
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);overflow-x:hidden;
+ font:13px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3,h4,h5{margin:0;font-weight:600}
+a{color:var(--sel)}
+.wrap{max-width:1900px;margin:0 auto;padding:16px}
+header{border-bottom:1px solid var(--edge);padding-bottom:10px;margin-bottom:14px}
+header h1{font-size:19px;letter-spacing:.2px}
+header .sub{color:var(--dim);font-size:12px;margin-top:4px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+details.prov{margin-top:6px;font-size:11px;color:var(--dim)}
+details.prov>summary{cursor:pointer;user-select:none;color:var(--dim2)}
+details.prov .pline{margin:3px 0 0 14px}
+
+/* ---------------------------------------------------------------- panels + matrix */
+.panel{background:var(--card);border:1px solid var(--edge);border-radius:10px;
+ padding:14px;margin-bottom:14px}
+.panel>h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);
+ margin-bottom:10px}
+.mx{border-collapse:separate;border-spacing:4px;width:100%;max-width:900px}
+.mx th,.mx td{padding:0}
+.mx .corner{width:150px}
+.mx th.ch,.mx th.rh{background:var(--card2);border:1px solid var(--edge);border-radius:7px;
+ padding:7px 9px;cursor:pointer;font-size:11px;font-weight:600;text-align:left;
+ color:var(--fg);user-select:none;transition:.12s}
+.mx th.ch{text-align:center}
+.mx th span{display:block;font-weight:400;color:var(--dim2);font-size:10px;margin-top:2px}
+.mx th.ch:hover,.mx th.rh:hover{border-color:var(--edge2);background:#232830}
+.mx td.c{background:var(--card2);border:1px solid var(--edge);border-radius:7px;
+ padding:10px 6px;text-align:center;cursor:pointer;user-select:none;transition:.12s}
+.mx td.c .n{font-size:17px;font-weight:600}
+.mx td.c .l{font-size:10px;color:var(--dim2);margin-top:1px}
+.mx td.c:hover{border-color:var(--edge2)}
+.mx td.c.on{background:#132b4d;border-color:var(--sel);box-shadow:inset 0 0 0 1px var(--sel)}
+.mx td.c.on .l{color:#9dc4f5}
+.mx td.c.empty{opacity:.28;cursor:default}
+.mxbar{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap;position:relative}
+.btn{background:var(--card2);border:1px solid var(--edge);color:var(--fg);border-radius:6px;
+ padding:5px 10px;cursor:pointer;font-size:11px;font-family:inherit}
+.btn:hover{border-color:var(--edge2)}
+.btn.on{background:#132b4d;border-color:var(--sel)}
+.seg{display:inline-flex;border:1px solid var(--edge);border-radius:6px;overflow:hidden}
+.seg button{background:var(--card2);border:0;border-right:1px solid var(--edge);color:var(--dim);
+ padding:5px 10px;cursor:pointer;font-size:11px;font-family:inherit}
+.seg button:last-child{border-right:0}
+.seg button.on{background:#132b4d;color:var(--fg)}
+.lbl{color:var(--dim);font-size:11px}
+
+/* ------------------------------------------------- arm selector (inline, always open) */
+.selrow{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.selcol{flex:1 1 460px;min-width:340px}
+.armsec{background:#14171c;border:1px solid var(--edge);border-radius:9px;padding:10px}
+.armsec>h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);
+ margin-bottom:8px;display:flex;align-items:baseline;gap:8px}
+.armsec>h3 .cnt{color:var(--dim2);font-weight:400;text-transform:none;letter-spacing:0}
+#armlist{max-height:56vh;overflow-y:auto}
+#armlist::-webkit-scrollbar{width:9px}
+#armlist::-webkit-scrollbar-thumb{background:var(--edge2);border-radius:5px}
+.aptool{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding-bottom:8px;
+ border-bottom:1px solid var(--edge);margin-bottom:8px}
+.apcat{border:1px solid var(--edge);border-radius:8px;margin-bottom:8px;overflow:hidden}
+.apcat>.ch{display:flex;align-items:center;gap:8px;padding:6px 9px;background:var(--card2);
+ font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.apcat>.ch .cdot{width:8px;height:8px;border-radius:2px;flex:none}
+.apcat>.ch .sp{flex:1}
+.apcat>.ch button{background:none;border:1px solid var(--edge);border-radius:4px;color:var(--dim);
+ cursor:pointer;font-size:10px;padding:1px 6px}
+.apcat>.ch button:hover{color:var(--fg);border-color:var(--edge2)}
+.aparm{display:flex;align-items:baseline;gap:8px;padding:5px 9px;border-top:1px solid #20242b;
+ flex-wrap:wrap}
+.aparm .an{flex:0 0 175px;font-size:11.5px;color:var(--fg)}
+.pillrow{display:flex;gap:4px;flex-wrap:wrap}
+.pill{font-size:10.5px;padding:3px 8px;border-radius:6px;border:1px solid var(--edge2);
+ background:#12151b;color:var(--dim);cursor:pointer;user-select:none;font-weight:600;transition:.1s}
+.pill:hover{border-color:var(--sel);color:var(--fg)}
+.pill.on{background:#132b4d;border-color:var(--sel);color:#dbeafe}          /* unknown-variant fallback */
+.pill.v-neutral.on{background:#0e2f26;border-color:#1c6b57;color:#5eead4}
+.pill.v-effect.on{background:#33240a;border-color:#7a5410;color:#fbbf24}
+.pill.v-control.on{background:#241b33;border-color:#4a3d6b;color:#c4b5fd}
+
+/* ---------------------------------------------------------------- metrics table */
+.tw{overflow-x:auto}
+table.d{border-collapse:collapse;width:100%;font-size:11.5px;white-space:nowrap}
+table.d th,table.d td{padding:4px 9px;text-align:right;border-bottom:1px solid #22262d}
+table.d th{color:var(--dim);font-weight:600;text-align:right;position:sticky;top:0;
+ background:var(--card);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;
+ cursor:pointer;user-select:none}
+table.d th:hover{color:var(--fg)}
+table.d th .sar{color:var(--sel);margin-left:2px}
+table.d td:first-child,table.d th:first-child,
+table.d td.l,table.d th.l{text-align:left}
+table.d tbody tr:hover{background:#1e232a}
+table.d .num{font-family:ui-monospace,Menlo,monospace}
+.mut{color:var(--dim2)}
+.catbar{display:inline-block;width:3px;height:12px;border-radius:2px;margin-right:7px;
+ vertical-align:-2px}
+.vtag{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:5px;
+ margin-left:6px;text-transform:lowercase;background:#132b4d;color:#dbeafe;
+ border:1px solid var(--sel)}                                    /* unknown-variant fallback */
+.vtag.v-neutral{background:#0e2f26;color:#5eead4;border:1px solid #1c6b57}
+.vtag.v-effect{background:#33240a;color:#fbbf24;border:1px solid #7a5410}
+.vtag.v-control{background:#241b33;color:#c4b5fd;border:1px solid #4a3d6b}
+.badge{display:inline-block;font-size:9px;letter-spacing:.06em;padding:1px 5px;border-radius:3px;
+ background:#3a2a12;color:var(--warn);border:1px solid #5a4420;vertical-align:middle}
+.empty{padding:36px;text-align:center;color:var(--dim2)}
+.more{padding:12px;text-align:center}
+
+/* ---------------------------------------------------------------- cards */
+.card{background:var(--card);border:1px solid var(--edge);border-radius:10px;
+ margin-bottom:12px;overflow:hidden;min-width:0;max-width:100%}
+.chead{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#13161b;
+ border-bottom:1px solid var(--edge);flex-wrap:wrap}
+.chead b{font-size:13px}
+.chead .dim{color:var(--dim);font-size:11px}
+.chead .pill2{margin-left:auto}
+.pbtn{background:#132b4d;border:1px solid var(--sel);color:#cfe2fb;border-radius:5px;
+ padding:3px 9px;cursor:pointer;font-size:10.5px;font-family:inherit}
+.grp{padding:10px 12px}
+.row{display:flex;flex-wrap:nowrap;gap:10px;overflow-x:auto;overflow-y:hidden;
+ padding-bottom:6px;align-items:stretch}
+.row::-webkit-scrollbar{height:9px}
+.row::-webkit-scrollbar-thumb{background:var(--edge2);border-radius:5px}
+.row::-webkit-scrollbar-track{background:#0d0f13}
+.band{display:flex;gap:10px;flex:0 0 auto;align-items:stretch}
+.out-band{border-left:2px dashed var(--edge2);margin-left:6px;padding-left:12px}
+.cellbox{flex:0 0 210px;background:var(--card2);border:1px solid var(--edge);border-radius:8px;
+ padding:8px;display:flex;flex-direction:column;gap:6px}
+.cellbox.wide{flex:0 0 320px}
+.cellbox.in{background:#111c22;border-color:#1e3a44}
+.cellbox.ctxbox{background:#17181c;border-color:#2b2f36;opacity:.9}
+.cellbox.blank{background:transparent !important;border:1px dashed #2a3038 !important;
+ opacity:.55;justify-content:center;min-height:150px}
+.cellbox.blank .bl{color:var(--dim2);font-size:10px;text-align:center;line-height:1.5}
+.cellbox.blank .bl b{color:var(--dim);font-weight:600;display:block;font-size:10.5px;margin-bottom:3px}
+.cellbox h4{font-size:11px;line-height:1.35}
+.cellbox h4 .arm{color:var(--dim);font-weight:400;display:block;font-size:10px}
+.cellbox video{width:100%;aspect-ratio:3/4;object-fit:cover;background:#000;border-radius:5px;
+ display:block}
+.cellbox .miss{width:100%;aspect-ratio:3/4;display:grid;place-items:center;color:var(--dim2);
+ background:#0b0d10;border-radius:5px;font-size:11px}
+.cellbox .fn{color:var(--dim2);font-size:10px;word-break:break-all;line-height:1.35}
+/* output cells: neutral base, category accent applied inline from the runtime palette */
+.cellbox.out{background:#15171a;border-color:#3d444d}
+
+/* prompt chips (input bag) + dots (cells) */
+.pchip{display:flex;align-items:flex-start;gap:6px;margin:3px 0}
+.pdot{flex:none;font-size:9.5px;font-weight:700;font-family:ui-monospace,Menlo,monospace;
+ border-radius:4px;padding:1px 5px;border:1px solid;color:#0b0d10;margin-top:1px}
+.ptxt{font-size:11px;color:#c7d0da;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;
+ -webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+.ptxt.openp{-webkit-line-clamp:unset}
+.chips{display:flex;flex-wrap:wrap;gap:3px;align-items:center}
+.chip{font-size:9.5px;padding:1px 5px;border-radius:4px;border:1px solid var(--edge);
+ color:var(--dim);background:#14171c;font-family:ui-monospace,Menlo,monospace}
+.chip b{color:var(--fg);font-weight:600}
+.chip.big{font-size:11px;padding:2px 7px}
+.chip.r{border-color:#5c2426;color:var(--bad)}
+.chip.a{border-color:#5c4a1c;color:var(--warn)}
+
+/* conditioning bar + ref ribbon (ported) */
+.cond{border:1px solid var(--edge);border-radius:5px;overflow:hidden;background:#0b0d10}
+.cond .track{display:flex;height:12px;position:relative}
+.cond .seg-p{background:linear-gradient(180deg,#2dd4bf,#14a89a)}
+.cond .seg-s{background:linear-gradient(180deg,#f5a524,#c47f10)}
+.cond .seg-g{flex:1;background:repeating-linear-gradient(-45deg,#1b1f26 0 5px,#141820 5px 10px)}
+.cond .seg-n{flex:1;background:repeating-linear-gradient(-45deg,#22262d 0 5px,#191d23 5px 10px)}
+.cond .cap{display:flex;justify-content:space-between;padding:2px 6px;font-size:9px;
+ letter-spacing:.03em;font-weight:600;text-transform:uppercase}
+.cond .cap .p{color:var(--pre)}
+.cond .cap .s{color:var(--suf)}
+.cond .cap .g{color:var(--dim2);font-weight:400;text-transform:none;letter-spacing:0}
+.cond .cap .none{color:var(--dim);font-weight:600}
+.refbar{display:flex;align-items:center;gap:6px;padding:3px 7px;border-radius:5px;
+ background:#1e1a33;border:1px solid #3b3163;font-size:10px;color:#c9bcf5;font-weight:600}
+.refbar.mismatch{background:#2c1618;border-color:#5c2426;color:#f0a7ab}
+.refbar.none{background:#14171c;border-color:var(--edge);color:var(--dim2)}
+.refbar .clip{font-weight:400;color:#9b8fd0;font-family:ui-monospace,Menlo,monospace;
+ overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.refbar.mismatch .clip{color:#d1898e}
+
+/* ---------------------------------------------------------------- collections */
+.colbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.colbar select.btn{max-width:230px}
+.colbar .sp{flex:1}
+.colstatus{font-size:11px;color:var(--dim);white-space:nowrap}
+.colstatus.saving{color:var(--warn)}
+.colstatus.failed{color:var(--bad)}
+.colstatus.offline{color:var(--suf)}
+.colmenu{position:relative;display:inline-block}
+.colmenu>.mbtn{background:var(--card2);border:1px solid var(--edge);color:var(--fg);border-radius:6px;
+ padding:5px 10px;cursor:pointer;font-size:11px;font-family:inherit}
+.colmenu>.mbtn:hover{border-color:var(--edge2)}
+.colmenu>.mlist{position:absolute;right:0;top:calc(100% + 4px);background:var(--card);
+ border:1px solid var(--edge2);border-radius:8px;padding:5px;min-width:230px;z-index:60;
+ box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.colmenu>.mlist button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--fg);
+ padding:6px 9px;border-radius:5px;cursor:pointer;font-size:11.5px;font-family:inherit}
+.colmenu>.mlist button:hover{background:#232830}
+.colmenu>.mlist .hr{height:1px;background:var(--edge);margin:4px 2px}
+
+/* card bookmark button (in the card header) */
+.bmk{display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap}
+.bmk.inon{background:#1e1a33;border-color:#4a3d6b;color:#c4b5fd}
+.btag{font-size:9px;background:#2a2350;border:1px solid #4a3d6b;color:#d7ccff;border-radius:4px;padding:0 4px}
+.rownum{background:#132b4d;border:1px solid var(--sel);color:#cfe2fb;border-radius:5px;padding:1px 7px;
+ font-size:11px;font-weight:700}
+/* per-card quick-add-to-target button (beside the bookmark button; shares .bmk / .bmk.inon palette) */
+.qadd{max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* add/edit dialog (anchored popover) */
+.colbackdrop{position:fixed;inset:0;background:rgba(4,6,10,.45);z-index:80}
+.coldlg{position:fixed;z-index:90;width:400px;max-width:94vw;max-height:86vh;overflow:auto;
+ background:var(--card);border:1px solid var(--edge2);border-radius:10px;box-shadow:0 14px 40px rgba(0,0,0,.6)}
+.coldlg .cd-head{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--edge);
+ font-size:12px;font-weight:600}
+.coldlg .cd-head .x{margin-left:auto;background:none;border:0;color:var(--dim);cursor:pointer;font-size:15px}
+.coldlg .cd-body{padding:11px 12px;display:flex;flex-direction:column;gap:10px}
+.coldlg label.fld{display:flex;flex-direction:column;gap:4px;font-size:10.5px;color:var(--dim);
+ text-transform:uppercase;letter-spacing:.05em}
+.coldlg select,.coldlg textarea{background:#0d0f13;border:1px solid var(--edge2);color:var(--fg);
+ border-radius:6px;padding:6px 8px;font-size:12px;font-family:inherit}
+.coldlg textarea{min-height:66px;resize:vertical;line-height:1.45}
+.cd-cols{display:flex;flex-direction:column;gap:3px;max-height:34vh;overflow:auto;border:1px solid var(--edge);
+ border-radius:7px;padding:6px}
+.cd-col{display:flex;align-items:flex-start;gap:7px;font-size:11px;padding:3px 4px;border-radius:5px}
+.cd-col:hover{background:#1a1e25}
+.cd-col.absent{opacity:.55}
+.cd-col input{margin-top:2px}
+.cd-col .cn{color:var(--fg)}
+.cd-col .mk{display:block;font-size:9.5px;margin-top:1px}
+.cd-col .mk.has{color:var(--good)}
+.cd-col .mk.no{color:var(--dim2)}
+.cd-foot{display:flex;gap:8px;align-items:center;padding-top:2px}
+.cd-foot .sp{flex:1}
+.cd-foot .danger{border-color:#5c2426;color:var(--bad)}
+
+/* right-side drawer (management panel; off-canvas when closed so it never shifts the cards) */
+.coldrawer{position:fixed;top:0;right:0;height:100vh;width:430px;max-width:96vw;z-index:70;
+ background:var(--card);border-left:1px solid var(--edge2);box-shadow:-8px 0 30px rgba(0,0,0,.5);
+ transform:translateX(100%);transition:transform .18s ease;display:flex;flex-direction:column}
+.coldrawer.open{transform:translateX(0)}
+.coldrawer .dh{display:flex;align-items:center;gap:8px;padding:11px 13px;border-bottom:1px solid var(--edge);
+ flex-wrap:wrap}
+.coldrawer .dh b{font-size:13px}
+.coldrawer .dh .x{margin-left:auto;background:none;border:0;color:var(--dim);cursor:pointer;font-size:16px}
+.coldrawer .db{overflow:auto;padding:11px 13px;display:flex;flex-direction:column;gap:12px}
+.di{border:1px solid var(--edge);border-radius:9px;padding:9px 10px;background:#14171c}
+.di .dih{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:11.5px}
+.di .dih .ctrl{margin-left:auto;display:flex;gap:3px}
+.di .dih .ctrl button{background:var(--card2);border:1px solid var(--edge);color:var(--dim);border-radius:5px;
+ cursor:pointer;font-size:10px;padding:1px 6px;font-family:inherit}
+.di .dih .ctrl button:hover{color:var(--fg);border-color:var(--edge2)}
+.di .dinp{font-size:10.5px;color:var(--dim);margin:5px 0}
+.di .dchips{display:flex;flex-wrap:wrap;gap:4px;margin:5px 0}
+.dchip{font-size:10px;border-radius:5px;padding:1px 6px;border:1px solid #2e6b4a;background:#0e2f26;color:#8ff0d4}
+.dchip.abs{border:1px dashed #4a3d6b;background:transparent;color:var(--dim2);text-decoration:line-through}
+.di textarea{width:100%;background:#0d0f13;border:1px solid var(--edge);color:var(--fg);border-radius:6px;
+ padding:5px 7px;font-size:11px;font-family:inherit;min-height:38px;resize:vertical;line-height:1.4}
+.di textarea.cnotes{min-height:30px}
+.card.flash{box-shadow:0 0 0 2px var(--sel),0 0 18px rgba(59,130,246,.6)}
+/* transient toast (quick-add "removed — undo", and the no-target hint). No `display` in the base rule
+   so the UA's [hidden]{display:none} wins when hidden (same trick the dialog/backdrop rely on). */
+.coltoast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:95;
+ background:var(--card);border:1px solid var(--edge2);border-radius:9px;padding:9px 13px;
+ box-shadow:0 10px 30px rgba(0,0,0,.55);font-size:12px;color:var(--fg)}
+.coltoast button{margin-left:10px;background:var(--card2);border:1px solid var(--edge2);color:var(--fg);
+ border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11.5px;font-family:inherit}
+.coltoast button:hover{border-color:var(--sel)}
+</style>
+
+<div class="wrap">
+<header>
+  <h1>IC-LoRA arms — neutral / effect</h1>
+  <div class="sub" id="sub"></div>
+  <details class="prov"><summary>provenance</summary><div id="prov"></div></details>
+</header>
+
+<div class="panel">
+  <h2>selection</h2>
+  <div class="selrow">
+    <div class="selcol">
+      <table class="mx" id="mx"></table>
+      <div class="mxbar" id="grids"></div>
+      <div class="mxbar">
+        <button class="btn" onclick="selAll(1)">select all</button>
+        <button class="btn" onclick="selAll(0)">clear</button>
+        <span class="lbl" style="margin-left:6px">seed</span>
+        <span class="seg" id="seeds"></span>
+        <span class="lbl" style="margin-left:6px">donor class</span>
+        <select id="donor" class="btn"></select>
+        <span class="lbl" style="margin-left:6px">sidedness</span>
+        <select id="sided" class="btn" title="one-sided rows: start endpoint given (no end anchor); two-sided rows: both endpoints given"></select>
+        <span class="lbl" id="selinfo" style="margin-left:auto"></span>
+      </div>
+    </div>
+    <div class="selcol armsec">
+      <h3>arms <span class="cnt" id="armcount"></span></h3>
+      <div class="aptool">
+        <button class="btn" onclick="armAll(1)">select all</button>
+        <button class="btn" onclick="armAll(0)">clear</button>
+        <span class="lbl" style="margin-left:6px"
+          title="bulk variant switches — they apply ONLY to arms that already have a selected entry">for chosen arms:</span>
+        <button class="btn" onclick="bulkVar('neutral',1)">N on</button>
+        <button class="btn" onclick="bulkVar('neutral',0)">N off</button>
+        <button class="btn" onclick="bulkVar('effect',1)">E on</button>
+        <button class="btn" onclick="bulkVar('effect',0)">E off</button>
+      </div>
+      <div id="armlist"></div>
+    </div>
+  </div>
+</div>
+
+<div class="panel">
+  <h2 style="display:flex;align-items:center;gap:10px">collections
+    <span class="lbl" style="text-transform:none;letter-spacing:0"
+      title="Bookmark input rows into named sets (e.g. the TEG / VFX-transfer user studies, a supplementary set). Each saved row snapshots the columns you have open — present OR absent for that row — plus your notes, to a git-tracked JSON written through the server.">save rows + the visible columns + notes to named sets</span></h2>
+  <div class="colbar" id="colbar"></div>
+</div>
+
+<div class="panel">
+  <h2>metrics — selected arms × selected ontology cells</h2>
+  <div id="stats"></div>
+</div>
+
+<div class="panel">
+  <h2 style="display:flex;align-items:center;gap:10px">examples
+    <span class="lbl" id="cardinfo" style="text-transform:none;letter-spacing:0"></span></h2>
+  <div id="cards"></div>
+  <div class="more" id="more"></div>
+</div>
+
+<!-- collections: right-side management drawer + anchored add/edit dialog (fixed overlays) -->
+<div class="coldrawer" id="coldrawer">
+  <div class="dh" id="coldrawerHead"></div>
+  <div class="db" id="coldrawerBody"></div>
+</div>
+<div class="colbackdrop" id="colbackdrop" hidden onclick="closeDialog()"></div>
+<div class="coldlg" id="coldlg" hidden></div>
+<div class="coltoast" id="colToast" hidden></div>
+</div>
+
+<script src="data.js"></script>
+<script>
+const D = window.__NE_DATA__;
+const PAGE = 25;
+let shown = PAGE;
+
+// ---------------------------------------------------------------- helpers (ported)
+const keyOf = (n,c) => n+"|"+c;
+const fmt = (v,dp=3) => (v==null||!isFinite(v)) ? "—" : v.toFixed(dp);
+const pct = v => (v==null||!isFinite(v)) ? "—" : (v*100).toFixed(1)+"%";
+const mean = a => { a = a.filter(x=>x!=null&&isFinite(x)); return a.length? a.reduce((s,x)=>s+x,0)/a.length : null; };
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+const PRIMARY = D.meta.primary_set;
+
+// ---------------------------------------------------------------- per-reference row split (generic)
+// A card with two+ references (e.g. a transition demoed by clip _1 AND clip _2) is shown as one
+// display "sub-card" per reference — each row self-describing — instead of one card that piles every
+// reference's generations together. Single-reference cards are untouched (same key, same object).
+// a generation's reference clip token from its id (fallback: any videos path). Word-bounded: the clip
+// name runs until a "__", ".", "-", "/" or end. Clip names carry no double underscores.
+function refToken(s){
+  if(!s) return null;
+  const m = String(s).match(/__ref_([A-Za-z0-9_]+?)(?=__|[.\-\/]|$)/);
+  return m ? m[1] : null;
+}
+function refTokenOf(g){
+  let t = refToken(g.id);
+  if(t != null) return t;
+  for(const k in (g.videos||{})){ t = refToken(g.videos[k]); if(t != null) return t; }
+  return null;
+}
+// a card is multi-reference iff it has >=2 refs, or >=2 distinct non-null g.ref across its slots
+function isMultiRef(card){
+  if((card.refs||[]).length >= 2) return true;
+  const s = new Set();
+  for(const t in (card.slots||{})) for(const g of card.slots[t]) if(g.ref != null){ s.add(g.ref); if(s.size >= 2) return true; }
+  return false;
+}
+// single-ref cards return [themselves] unchanged; multi-ref split into one display sub-card per
+// reference in card.refs order. Each sub-card keeps one ref and only that reference's generations:
+// ref-taking gens by g.ref; reference-free gens by their __ref_ token; reference-free gens with NO
+// token appear on EVERY sub-card (and are tagged "reference-free" in the cell).
+function subCardsFor(card){
+  if(!isMultiRef(card)) return [card];
+  const refClips = (card.refs||[]).map(r=>r.clip);
+  const seen = new Set(refClips);
+  for(const t in (card.slots||{})) for(const g of card.slots[t]) if(g.ref!=null && !seen.has(g.ref)){ seen.add(g.ref); refClips.push(g.ref); }
+  return refClips.map(rc=>{
+    const slots = {};
+    for(const t in (card.slots||{})){
+      const keep = card.slots[t].filter(g=>{
+        if(g.ref != null) return g.ref === rc;         // ref-taking: exact reference
+        const tok = refTokenOf(g);
+        return tok == null || tok === rc;              // null-ref: token match, or everywhere
+      });
+      if(keep.length) slots[t] = keep;
+    }
+    const ref = (card.refs||[]).find(r=>r.clip===rc) || {clip:rc, cls:null, video:null, mismatched:false, tiers:[]};
+    return Object.assign({}, card, {key:card.key+"|ref="+rc, refs:[ref], slots, _split:true, _base:card, _refClip:rc});
+  });
+}
+// build the display-row list once. DISPLAY_ROWS = 365 base rows + one extra per split reference;
+// CARD_BY_KEY maps every DISPLAY key (single-ref base keys + sub-card keys) to its display card;
+// BASE_BY_KEY maps every base key to its base card (for resolving legacy base-key collection items).
+// A split base key is NOT in CARD_BY_KEY — only its sub-card keys are.
+const DISPLAY_ROWS = [];
+const BASE_BY_KEY = {};
+for(const c of D.cards){
+  BASE_BY_KEY[c.key] = c;
+  const subs = subCardsFor(c);
+  c._multi = subs.length > 1;
+  for(const dc of subs) DISPLAY_ROWS.push(dc);
+}
+const CARD_BY_KEY = Object.fromEntries(DISPLAY_ROWS.map(c=>[c.key,c]));
+
+// ---------------------------------------------------------------- arm catalog state
+// meta.arm_catalog: [{id,label,arms:[{id,label,entries:[{tier,variant,label}]}]}]
+const CATALOG = D.meta.arm_catalog || [];
+const CAT_BY_ID = Object.fromEntries(CATALOG.map(c=>[c.id,c]));
+const ENTRY_META = {};                            // tier -> {cat, arm, armLabel, variant, label}
+for(const c of CATALOG) for(const a of c.arms) for(const e of a.entries)
+  ENTRY_META[e.tier] = {cat:c.id, arm:a.id, armLabel:a.label, variant:e.variant, label:e.label};
+const KNOWN = new Set(Object.keys(ENTRY_META));
+
+const LS_SEL = "iclne_v2_sel", LS_ORD = "iclne_v2_catorder";
+// category accent colors: assigned by CATALOG index (stable under user reordering), palette
+// cycles — a new category gets a color with zero template edits
+const CPAL = ["#8b95a1","#60a5fa","#a78bfa","#e8d49a","#4ade80","#f472b6","#2dd4bf","#f2555a"];
+const CAT_COLOR = Object.fromEntries(CATALOG.map((c,i)=>[c.id, CPAL[i % CPAL.length]]));
+function defaultSel(){
+  // generic default: each arm's first neutral-variant entry, every category
+  const s = new Set();
+  for(const c of CATALOG)
+    for(const a of c.arms){
+      const first = a.entries.find(e=>e.variant==="neutral");
+      if(first) s.add(first.tier);
+    }
+  return s;
+}
+function loadState(){
+  let selArr = null, ordArr = null;
+  try{ selArr = JSON.parse(localStorage.getItem(LS_SEL)); }catch(e){}
+  try{ ordArr = JSON.parse(localStorage.getItem(LS_ORD)); }catch(e){}
+  const tiers = (Array.isArray(selArr) ? new Set(selArr.filter(t=>KNOWN.has(t))) : null) || defaultSel();
+  const ids = CATALOG.map(c=>c.id);
+  let ord = Array.isArray(ordArr) ? ordArr.filter(i=>ids.includes(i)) : [];
+  for(const i of ids) if(!ord.includes(i)) ord.push(i);
+  return {tiers: (selArr===null ? defaultSel() : tiers), ord};
+}
+const state = loadState();
+let tiers = state.tiers;                       // Set of selected entry tier ids
+let catOrder = state.ord;                      // category id order
+function saveState(){
+  try{
+    localStorage.setItem(LS_SEL, JSON.stringify([...tiers]));
+    localStorage.setItem(LS_ORD, JSON.stringify(catOrder));
+  }catch(e){}
+}
+// entries in DISPLAY order: category order, then catalog order within
+function dispTiers(){
+  const out = [];
+  for(const cid of catOrder){
+    const c = CAT_BY_ID[cid]; if(!c) continue;
+    for(const a of c.arms) for(const e of a.entries) out.push(e.tier);
+  }
+  return out;
+}
+const selTiers = () => dispTiers().filter(t=>tiers.has(t));
+
+// ---------------------------------------------------------------- ontology matrix (ported)
+const sel = new Set();
+let seed = String(D.meta.seeds[0]);
+let donor = "";
+let sided = "";   // "" = all, "one" | "two" — a card property (its row's sidedness), filters cards not gens
+// grid facet (generic: ids/labels come from D.meta.grids; v2 = the 152-row grid, v3-* = grid-v3 families)
+const LS_GRID = "iclne_v2_grid";
+const GRIDS = D.meta.grids || [];
+let gridSel = new Set(GRIDS.map(g=>g.id));
+try{ const s = JSON.parse(localStorage.getItem(LS_GRID)); if(Array.isArray(s)) gridSel = new Set(s.filter(x=>GRIDS.some(g=>g.id===x))); }catch(e){}
+function drawGrids(){
+  const el = document.getElementById("grids"); if(!el) return;
+  if(GRIDS.length < 2){ el.innerHTML = ""; return; }
+  el.innerHTML = `<span class="lbl">grid</span>` + GRIDS.map(g =>
+    `<button class="btn ${gridSel.has(g.id)?"on":""}" onclick="togGrid('${g.id}')">${g.label} <span class="cnt">${g.cards}</span></button>`).join("");
+}
+function togGrid(id){
+  gridSel.has(id) ? gridSel.delete(id) : gridSel.add(id);
+  try{ localStorage.setItem(LS_GRID, JSON.stringify([...gridSel])); }catch(e){}
+  shown = PAGE; render();
+}
+const gridOk = g => !GRIDS.length || gridSel.has(g.grid || "v2");
+// which grids each arm entry has generations on (from the cards; generic — no ids hardcoded)
+const TIER_GRIDS = {};
+for(const c of D.cards) for(const [t, gs] of Object.entries(c.slots||{})) for(const g of gs)
+  (TIER_GRIDS[t] = TIER_GRIDS[t] || new Set()).add(g.grid || "v2");
+const tierOnGrid = t => !GRIDS.length || [...(TIER_GRIDS[t]||[])].some(x => gridSel.has(x));
+function drawMatrix(){
+  const t = document.getElementById("mx");
+  let h = "<tr><th class='corner'></th>";
+  for(const c of D.content_order)
+    h += `<th class="ch" onclick="togCol('${c}')">${D.content_label[c]}</th>`;
+  h += "</tr>";
+  for(const n of D.novelty_order){
+    h += `<tr><th class="rh" onclick="togRow('${n}')">${D.novelty_label[n]}</th>`;
+    for(const c of D.content_order){
+      const k = keyOf(n,c), cnt = D.matrix[k]||0;
+      h += cnt===0
+        ? `<td class="c empty"><div class="n">–</div></td>`
+        : `<td class="c ${sel.has(k)?"on":""}" onclick="tog('${k}')">
+             <div class="n">${cnt}</div><div class="l">rows</div></td>`;
+    }
+    h += "</tr>";
+  }
+  t.innerHTML = h;
+}
+function tog(k){ sel.has(k)?sel.delete(k):sel.add(k); render(); }
+function togRow(n){
+  const ks = D.content_order.map(c=>keyOf(n,c)).filter(k=>(D.matrix[k]||0)>0);
+  const all = ks.every(k=>sel.has(k));
+  ks.forEach(k=> all?sel.delete(k):sel.add(k)); render();
+}
+function togCol(c){
+  const ks = D.novelty_order.map(n=>keyOf(n,c)).filter(k=>(D.matrix[k]||0)>0);
+  const all = ks.every(k=>sel.has(k));
+  ks.forEach(k=> all?sel.delete(k):sel.add(k)); render();
+}
+function selAll(on){
+  sel.clear();
+  if(on) for(const k in D.matrix) if(D.matrix[k]>0) sel.add(k);
+  render();
+}
+
+// ------------------------------------------- arm selector (inline, always open, fully generic)
+function drawArms(){
+  // the panel lists only the entries that have generations on a selected grid (grid chip row)
+  const visible = new Set(Object.keys(ENTRY_META).filter(tierOnGrid));
+  const nSel = [...tiers].filter(t => visible.has(t)).length;
+  document.getElementById("armcount").textContent = `${nSel} of ${visible.size} entries selected` +
+    (visible.size < KNOWN.size ? ` (${KNOWN.size - visible.size} off-grid hidden)` : "");
+  const p = document.getElementById("armlist");
+  const keepScroll = p.scrollTop;                 // the list re-renders on every toggle
+  let h = "";
+  catOrder.forEach((cid, i) => {
+    const c = CAT_BY_ID[cid]; if(!c) return;
+    const arms = c.arms.map(a => ({...a, entries: a.entries.filter(e => visible.has(e.tier))})).filter(a => a.entries.length);
+    if(!arms.length) return;
+    h += `<div class="apcat"><div class="ch">
+        <span class="cdot" style="background:${CAT_COLOR[c.id]}"></span>${esc(c.label)}
+        <span class="sp"></span>
+        <button onclick="moveCat(${i},-1)" title="move category up">▲</button>
+        <button onclick="moveCat(${i},1)" title="move category down">▼</button></div>`;
+    for(const a of arms){
+      h += `<div class="aparm"><span class="an">${esc(a.label)}</span><span class="pillrow">` +
+        a.entries.map(e =>
+          `<span class="pill v-${esc(e.variant)} ${tiers.has(e.tier)?"on":""}"
+             onclick="togTier('${e.tier}')">${esc(e.label)}</span>`).join("") +
+        `</span></div>`;
+    }
+    h += `</div>`;
+  });
+  p.innerHTML = h;
+  p.scrollTop = keepScroll;
+}
+function togTier(t){
+  tiers.has(t) ? tiers.delete(t) : tiers.add(t);
+  saveState(); shown = PAGE; render();
+}
+function armAll(on){
+  tiers = on ? new Set(Object.keys(ENTRY_META)) : new Set();
+  saveState(); shown = PAGE; render();
+}
+// bulk N/E — only over arms that currently have >=1 selected entry ("chosen arms")
+function bulkVar(variant, on){
+  const engaged = new Set();
+  for(const t of tiers){ const m = ENTRY_META[t]; if(m) engaged.add(m.cat+"::"+m.arm); }
+  for(const [t, m] of Object.entries(ENTRY_META)){
+    if(m.variant !== variant) continue;
+    if(!engaged.has(m.cat+"::"+m.arm)) continue;
+    if(on) tiers.add(t); else tiers.delete(t);
+  }
+  saveState(); shown = PAGE; render();
+}
+function moveCat(i, d){
+  const j = i + d;
+  if(j < 0 || j >= catOrder.length) return;
+  [catOrder[i], catOrder[j]] = [catOrder[j], catOrder[i]];
+  saveState(); render();
+}
+
+// ---------------------------------------------------------------- filtering
+function cardMatches(card){
+  if(sided && card.sided !== sided) return null;
+  const hit = [];
+  for(const t of selTiers())
+    for(const g of card.slots[t]||[]){
+      if(sel.size && !sel.has(keyOf(g.novelty, g.content))) continue;
+      if(donor && g.donor !== donor) continue;
+      if(!gridOk(g)) continue;
+      hit.push(g);
+    }
+  return hit.length ? hit : null;
+}
+function selectedCards(){
+  // open-collection mode: show exactly this collection's rows, in collection order, numbered row N
+  if(openColMode){
+    const col = activeCol();
+    if(col){
+      const out = [];
+      col.items.forEach((it, i) => {
+        const r = displayCardForItem(it);         // resolves sub-card keys AND legacy base keys
+        if(!r || !r.card) return;
+        out.push({card: r.card, hit: cardMatches(r.card) || [], rowNum: i + 1, item: it, legacy: r.legacy});
+      });
+      return out;
+    }
+  }
+  const out = [];
+  for(const card of DISPLAY_ROWS){ const hit = cardMatches(card); if(hit) out.push({card, hit}); }
+  return out;
+}
+
+// ---------------------------------------------------------------- metrics table
+function drawStats(){
+  const el = document.getElementById("stats");
+  const st = selTiers();
+  if(!st.length){ el.innerHTML = "<div class='empty'>no arms selected — open the arms menu</div>"; return; }
+  const entries = selectedCards();
+  if(!entries.length){ el.innerHTML = "<div class='empty'>no rows match the selection</div>"; return; }
+  // per selected entry: its gens over the matching cards (ontology + donor filtered)
+  const per = {}, seenG = {};                    // dedup by gen identity: a reference-free gen shown
+  for(const {card} of entries)                   // on every sub-card must be counted ONCE per tier
+    for(const t of st)
+      for(const g of card.slots[t]||[]){
+        if(sel.size && !sel.has(keyOf(g.novelty, g.content))) continue;
+        if(donor && g.donor !== donor) continue;
+        if(!gridOk(g)) continue;
+        (seenG[t] = seenG[t] || new Set());
+        if(seenG[t].has(g)) continue;
+        seenG[t].add(g);
+        (per[t] = per[t] || []).push(g);
+      }
+  let h = `<div class="tw"><table class="d"><thead><tr>
+    <th class="l">arm · variant</th>
+    <th>%_same<br><span class="mut" style="font-size:9px">comparable · n</span></th>
+    <th>(%_proxy)<br><span class="mut" style="font-size:9px">ranking only · n</span></th>
+    <th>%_all<br><span class="mut" style="font-size:9px">same+proxy · n</span></th>
+    <th>raw app_ref</th><th>copy_max ↓</th><th>near_copy ↓</th><th>items</th></tr></thead><tbody>`;
+  for(const t of st){
+    const gs = per[t] || [];
+    const m = ENTRY_META[t];
+    const same = gs.filter(g=>g.pct_type==="same").map(g=>g.pct);
+    const prox = gs.filter(g=>g.pct_type==="proxy").map(g=>g.pct);
+    const all = gs.filter(g=>g.pct_type==="same"||g.pct_type==="proxy").map(g=>g.pct);
+    const bad = [...new Set(gs.map(g=>g.instr).filter(i=>i && i!==PRIMARY))];
+    h += `<tr><td class="l"><span class="catbar" style="background:${CAT_COLOR[m.cat]}"></span>
+        <b>${esc(m.armLabel)}</b> <span class="vtag v-${esc(m.variant)}">${esc(m.label)}</span>
+        ${bad.length?`<span class="badge">${bad.join("/")}</span>`:""}</td>
+      <td class="num"><b>${pct(mean(same))}</b> <span class="mut">· ${same.filter(x=>x!=null).length}</span></td>
+      <td class="num">${mean(prox)==null?"—":"("+pct(mean(prox))+")"} <span class="mut">· ${prox.filter(x=>x!=null).length}</span></td>
+      <td class="num">${pct(mean(all))} <span class="mut">· ${all.filter(x=>x!=null).length}</span></td>
+      <td class="num">${fmt(mean(gs.map(g=>g.m.app_ref)),4)}</td>
+      <td class="num">${fmt(mean(gs.map(g=>g.m.copy_max)),3)}</td>
+      <td class="num">${fmt(mean(gs.map(g=>g.f.near_copy)),3)}</td>
+      <td class="num">${gs.length}</td></tr>`;
+  }
+  h += `</tbody></table></div>`;
+  el.innerHTML = h;
+}
+
+// ---------------------------------------------------------------- conditioning bar (ported)
+function condBar(g){
+  const F = D.meta.frames, P = D.meta.px_prefix, S = D.meta.suffix_gen_frames;
+  let bar;
+  if(g.cond === "none"){
+    bar = `<div class="track"><div class="seg-n"></div></div>
+           <div class="cap"><span class="none">prompt only — no endpoints</span>
+             <span class="g">${F}f generated</span></div>`;
+  } else if(g.cond === "external"){
+    bar = `<div class="track"><div class="seg-n"></div></div>
+           <div class="cap"><span class="none">their contract</span>
+             <span class="g">${g.cond_note}</span></div>`;
+  } else if(g.cond === "prefix"){
+    bar = `<div class="track">
+             <div class="seg-p" style="width:${100*P/F}%"></div><div class="seg-g"></div></div>
+           <div class="cap"><span class="p">prefix ${P}f</span>
+             <span class="g">${F-P}f generated</span></div>`;
+  } else {
+    bar = `<div class="track">
+             <div class="seg-p" style="width:${100*P/F}%"></div><div class="seg-g"></div>
+             <div class="seg-s" style="width:${100*S/F}%"></div></div>
+           <div class="cap"><span class="p">prefix ${P}f</span>
+             <span class="g">${F-P-S}f generated</span><span class="s">suffix ${S}f</span></div>`;
+  }
+  const ref = g.ref
+    ? `<div class="refbar ${g.mismatched_ref?"mismatch":""}">
+         <span>${g.mismatched_ref?"✕ wrong demo":"◧ demo"}</span><span class="clip">${g.ref}</span></div>`
+    : `<div class="refbar none"><span>ref —</span></div>`;
+  return ref + `<div class="cond">${bar}</div>`;
+}
+
+// ---------------------------------------------------------------- cards
+function vid(src){
+  return src ? `<video preload="metadata" muted loop playsinline autoplay
+                  data-src="${D.meta.rel}${src}"></video>`
+             : `<div class="miss">not available</div>`;
+}
+const PALETTE = ["#5eead4","#fbbf24","#c4b5fd","#f472b6","#4ade80","#60a5fa","#f2555a","#e8d49a"];
+
+// ---- per-row tier (novelty × content), derived from the row's generations (generic — vocab from
+// D.novelty_order / D.content_order). A row's novelty is usually single-valued; the few rows that mix
+// (e.g. a memorization probe beside an unseen sample) render as "seen + unseen".
+const plainLbl = s => String(s==null?"":s).split("<")[0].trim();   // strip the label's <br><span> sub-text
+function rowTier(card, useAll){
+  let gens = [];
+  if(!useAll){ for(const t of selTiers()) for(const g of card.slots[t]||[]) gens.push(g); }
+  if(useAll || !gens.length){ gens = []; for(const t in (card.slots||{})) for(const g of card.slots[t]) gens.push(g); }
+  const nov = [], con = [], cells = [];
+  for(const g of gens){
+    if(g.novelty != null && nov.indexOf(g.novelty) < 0) nov.push(g.novelty);
+    if(g.content != null && con.indexOf(g.content) < 0) con.push(g.content);
+    if(g.cell != null && cells.indexOf(g.cell) < 0) cells.push(g.cell);
+  }
+  const oN = D.novelty_order||[], oC = D.content_order||[];
+  nov.sort((a,b)=>(oN.indexOf(a)) - (oN.indexOf(b)));
+  con.sort((a,b)=>(oC.indexOf(a)) - (oC.indexOf(b)));
+  cells.sort();
+  return {novelty:nov, content:con, cells};
+}
+function tierWords(tier){
+  const nL = D.novelty_label||{}, cL = D.content_label||{};
+  return {nv:(tier.novelty||[]).map(n=>plainLbl(nL[n]||n)).join(" + "),
+          cn:(tier.content||[]).map(c=>plainLbl(cL[c]||c)).join(" + ")};
+}
+
+function cardHtml(entry){
+  const c = entry.card;
+  const st = selTiers();
+  // gens per selected entry on this card (unfiltered by ontology within the card — the card
+  // already matched; each cell shows what that arm did on this row)
+  const cells = [];
+  for(const t of st) for(const g of c.slots[t]||[]) cells.push([t, g]);
+
+  // ---- the UNIQUE prompts across the selected cells, colored by first appearance
+  const pIdx = new Map();
+  for(const [, g] of cells){
+    const p = g.prompt;
+    if(p && !pIdx.has(p)) pIdx.set(p, pIdx.size);
+  }
+  const pcolor = i => PALETTE[i % PALETTE.length];
+  const bag = [...pIdx.entries()].map(([txt, i]) =>
+    `<div class="pchip"><span class="pdot" style="background:${pcolor(i)};border-color:${pcolor(i)}">P${i+1}</span>
+       <span class="ptxt" onclick="this.classList.toggle('openp')" title="click to expand">${esc(txt)}</span></div>`).join("");
+
+  // ---- the UNIQUE reference-channel prompts (the demo/reference TEXT budget). Shown beside the
+  // target prompt so the neutral (empty) vs effect (full caption) difference in that channel is visible.
+  const rIdx = new Map();
+  for(const [, g] of cells){ const rp = g.ref_prompt; if(rp && !rIdx.has(rp)) rIdx.set(rp, rIdx.size); }
+  const hasRefField = cells.some(([,g]) => g.ref_prompt !== undefined);
+  const refIof = g => (g.ref_prompt && rIdx.has(g.ref_prompt)) ? rIdx.get(g.ref_prompt) : null;
+  const refbag = [...rIdx.entries()].map(([txt, i]) =>
+    `<div class="pchip"><span class="pdot" style="background:#8b95a1;border-color:#8b95a1">R${i+1}</span>
+       <span class="ptxt" onclick="this.classList.toggle('openp')" title="click to expand">${esc(txt)}</span></div>`).join("");
+
+  // ---- input bag
+  const refBoxes = (c.refs||[]).filter(r => c._split || cells.some(([,g]) => g.ref === r.clip)).map(r=>
+    `<div class="cellbox in" style="border-color:${r.mismatched?'#5c2426':'#3b3163'};background:${r.mismatched?'#1c1113':'#141127'}">
+       <h4>${r.mismatched?"✕ WRONG DEMO":"◧ DEMO"} · ${r.cls||"?"}<span class="arm">reference video</span></h4>
+       ${vid(r.video)}<div class="fn">${r.clip}</div></div>`).join("");
+  const inputs =
+    `<div class="cellbox in wide"><h4>PROMPTS<span class="arm">endpoint P${hasRefField?" · reference channel R":""}</span></h4>${
+       (bag ? `<div class="fn" style="margin:2px 0">endpoint / target prompt</div>${bag}`
+            : `<div class="fn">no prompts (no selected arm answers this row)</div>`) +
+       (hasRefField ? `<div class="fn" style="margin:8px 0 2px">reference-channel prompt (the demo text)</div>${
+          refbag || `<div class="fn">— empty (no effect text in the reference channel)</div>`}` : ``)
+     }</div>` +
+    `<div class="cellbox in"><h4>PREFIX · ${D.meta.px_prefix}f<span class="arm">start anchor</span></h4>
+       ${vid(c.prefix_video)}</div>` +
+    (c.sided==="two"
+      ? `<div class="cellbox in"><h4>SUFFIX · ${D.meta.px_prefix}f<span class="arm">end anchor</span></h4>${vid(c.suffix_video)}</div>`
+      : `<div class="cellbox in blank"><div class="bl"><b>suffix</b>one-sided<br>no end anchor</div></div>`) +
+    refBoxes +
+    `<div class="cellbox ctxbox"><h4>ENDPOINT SOURCE<span class="arm">context · not an input</span></h4>
+       ${c.endpoint_video?vid(c.endpoint_video):`<div class="miss">DAVIS — off-distribution</div>`}
+       <div class="fn">${c.endpoint} · ${c.endpoint_class||"davis"}</div></div>`;
+
+  // ---- output cells: [P# dot] [ref] [endpoints] indicators + video + score
+  const outs = cells.map(([t, g])=>{
+    const m = ENTRY_META[t];
+    const pi = g.prompt!=null && pIdx.has(g.prompt) ? pIdx.get(g.prompt) : null;
+    const ri = refIof(g);
+    const chips = [
+      pi==null ? `<span class="chip">P —</span>`
+        : `<span class="pdot" style="background:${pcolor(pi)};border-color:${pcolor(pi)}" title="${esc(g.prompt)}">P${pi+1}</span>`,
+    ];
+    if(g.ref_prompt !== undefined) chips.push(ri==null
+      ? `<span class="chip" title="reference channel empty (no effect text)">R —</span>`
+      : `<span class="pdot" style="background:#8b95a1;border-color:#8b95a1" title="${esc(g.ref_prompt)}">R${ri+1}</span>`);
+    if(c._split && g.ref==null && refTokenOf(g)==null)   // reference-free arm shown on every ref row
+      chips.push(`<span class="chip" title="reference-free arm — the same clip is shown on every reference row">reference-free</span>`);
+    if(g.scored){
+      chips.push(`<span class="chip big">%ceil <b>${pct(g.pct)}</b></span>`);
+      chips.push(`<span class="chip">copy <b>${fmt(g.m.copy_max,2)}</b></span>`);
+      if(g.f.near_copy>0) chips.push(`<span class="chip r">near_copy ${fmt(g.f.near_copy,2)}</span>`);
+      if(g.instr && g.instr!==PRIMARY) chips.push(`<span class="badge">${g.instr}</span>`);
+    } else chips.push(`<span class="chip a">unscored</span>`);
+    return `<div class="cellbox out" style="box-shadow:inset 3px 0 0 ${CAT_COLOR[m.cat]}">
+      <h4>${m.armLabel} <span class="vtag v-${esc(m.variant)}">${esc(m.label)}</span>
+        <span class="arm">${g.cell} · ${g.novelty}${g.grid && g.grid!=="v2" ? " · "+esc(g.grid) : ""}</span></h4>
+      ${condBar(g)}
+      ${vid(g.videos[seed] || Object.values(g.videos)[0])}
+      <div class="chips">${chips.join("")}</div></div>`;
+  }).join("");
+
+  const mem = colsOf(c.key);
+  const bmk = `<button class="pbtn bmk ${mem.length?"inon":""}" onclick="openAddDialog(this)"
+      title="add this row to a collection / edit its saved columns + notes">${mem.length?"🔖":"＋"} collection${
+      mem.map(x=>`<span class="btag">${esc(colShort(x.title))} #${x.rowNum}</span>`).join("")}</button>`;
+  const qadd = quickBtnHtml(c);                     // one-click file into the chosen "quick-add" collection
+  const rn = entry.rowNum ? `<span class="rownum">row ${entry.rowNum}</span> ` : "";
+  const tier = rowTier(c);                          // novelty × content of THIS row (selected tiers, else all)
+  const tw = tierWords(tier);
+  const refPart = c._split ? ` · reference <b>${esc(c._refClip)}</b>` : ``;
+  const tierPart = (tw.nv || tw.cn) ? ` · ${esc([tw.nv, tw.cn].filter(Boolean).join(" · "))}` : ``;
+  const cellTag = tier.cells.length ? `<span class="chip">${esc(tier.cells.join(" · "))}</span>` : ``;
+  return `<div class="card" data-key="${esc(c.key)}">
+    <div class="chead">${rn}<b>${c.endpoint}</b>
+      <span class="dim">transition <b>${c.donor}</b> · ${c.sided}-sided${refPart}${tierPart}</span>${cellTag}
+      <span class="pill2">${bmk} ${qadd} <button class="pbtn" onclick="playAll(this)">↻ restart row synced</button></span></div>
+    <div class="grp"><div class="row">
+      <div class="band">${inputs}</div>
+      <div class="band out-band">${outs || `<div class="cellbox blank"><div class="bl"><b>no cells</b>no selected arm<br>answers this row</div></div>`}</div>
+    </div></div>
+  </div>`;
+}
+
+function drawCards(){
+  const entries = selectedCards();
+  const oc = openColMode && activeCol();
+  document.getElementById("cardinfo").textContent = oc
+    ? `collection "${activeCol().title}" · ${entries.length} saved rows · showing ${Math.min(shown,entries.length)}`
+    : `${entries.length} transition×endpoint rows · showing ${Math.min(shown,entries.length)}`;
+  const el = document.getElementById("cards");
+  if(!entries.length){ el.innerHTML = "<div class='empty'>no rows match the selection</div>";
+    document.getElementById("more").innerHTML=""; return; }
+  el.innerHTML = entries.slice(0,shown).map(cardHtml).join("");
+  document.getElementById("more").innerHTML = entries.length>shown
+    ? `<button class="btn" onclick="shown+=${PAGE};drawCards()">show ${Math.min(PAGE,entries.length-shown)} more of ${entries.length-shown}</button>` : "";
+  lazy();
+}
+
+// ---------------------------------------------------------------- video machinery (ported)
+let io;
+function lazy(){
+  if(io) io.disconnect();
+  io = new IntersectionObserver(es=>es.forEach(e=>{
+    const v = e.target;
+    if(e.isIntersecting){ if(!v.src) v.src = v.dataset.src; v.play().catch(()=>{}); }
+    else v.pause();
+  }), {rootMargin:"300px"});
+  document.querySelectorAll("video").forEach(v=>io.observe(v));
+}
+function playAll(btn){
+  const vids = [...btn.closest(".card").querySelectorAll("video")];
+  vids.forEach(v=>{ if(!v.src) v.src = v.dataset.src; });
+  const go = () => vids.forEach(v=>{ v.currentTime = 0; v.play().catch(()=>{}); });
+  const notReady = vids.filter(v=>v.readyState < 1);
+  if(!notReady.length){ go(); return; }
+  let left = notReady.length;
+  notReady.forEach(v=>v.addEventListener("loadedmetadata",
+    ()=>{ if(--left === 0) go(); }, {once:true}));
+}
+
+// ---------------------------------------------------------------- chrome
+function drawControls(){
+  document.getElementById("seeds").innerHTML = D.meta.seeds.map(s=>
+    `<button class="${String(s)===seed?"on":""}" onclick="setSeed('${s}')">${s}</button>`).join("");
+  const donors = [...new Set(D.cards.map(c=>c.donor))].filter(Boolean).sort();
+  const d = document.getElementById("donor");
+  if(!d.options.length){
+    d.innerHTML = `<option value="">all (${donors.length})</option>` +
+      donors.map(x=>`<option value="${x}">${x}</option>`).join("");
+    d.onchange = e => { donor = e.target.value; shown = PAGE; render(); };
+  }
+  const sd = document.getElementById("sided");
+  if(!sd.options.length){
+    const n = {one: 0, two: 0};
+    for(const c of DISPLAY_ROWS) if(c.sided in n) n[c.sided]++;
+    sd.innerHTML = `<option value="">all (${DISPLAY_ROWS.length})</option>` +
+      `<option value="one">one-sided · start given (${n.one})</option>` +
+      `<option value="two">two-sided · both given (${n.two})</option>`;
+    sd.onchange = e => { sided = e.target.value; shown = PAGE; render(); };
+  }
+}
+function setSeed(s){ seed = s; render(); }
+
+function render(){
+  shown = Math.max(shown, PAGE);
+  drawMatrix(); drawGrids(); drawControls(); drawArms(); drawStats(); drawCards();
+  drawColBar(); drawDrawer();
+  const seenN = new Set();                         // distinct generations (a reference-free gen shown
+  for(const e of selectedCards()) for(const g of e.hit) seenN.add(g);   // on several sub-cards counts once
+  document.getElementById("selinfo").textContent =
+    (sel.size ? `${sel.size} ontology cells` : `all ontology cells`) +
+    ` · ${tiers.size} arm entries · ${seenN.size} generations`;
+}
+
+// sortable stats table (ported)
+document.addEventListener("click", e => {
+  const th = e.target.closest("table.d th");
+  if(!th) return;
+  const table = th.closest("table"), head = table.tHead.rows[0], body = table.tBodies[0];
+  const idx = [...head.cells].indexOf(th);
+  const dir = th.dataset.dir === "asc" ? "desc" : "asc";
+  [...head.cells].forEach(c => { c.removeAttribute("data-dir"); c.querySelector(".sar")?.remove(); });
+  th.dataset.dir = dir;
+  const num = td => {
+    const t = td.textContent.trim().replace(/[()%,]/g, "").replace(/^\+/, "");
+    if(t === "" || t === "—") return null;
+    const n = parseFloat(t);
+    return isNaN(n) ? t.toLowerCase() : n;
+  };
+  [...body.rows].map(r => [r, num(r.cells[idx])])
+    .sort((a, b) => {
+      const x = a[1], y = b[1];
+      if(x === null) return 1;
+      if(y === null) return -1;
+      if(typeof x === "number" && typeof y === "number") return dir === "asc" ? x - y : y - x;
+      return dir === "asc" ? String(x).localeCompare(y) : String(y).localeCompare(x);
+    })
+    .forEach(([r]) => body.appendChild(r));
+  const ar = document.createElement("span");
+  ar.className = "sar"; ar.textContent = dir === "asc" ? "▲" : "▼";
+  th.appendChild(ar);
+});
+
+// ---------------------------------------------------------------- header + provenance
+const m = D.meta;
+document.getElementById("sub").innerHTML =
+  `<b class="mono">${m.cards}</b> transition×endpoint tasks · <b class="mono">${m.generations}</b> videos ·
+   seeds ${m.seeds.join(", ")} · instrument <span class="mono">${m.instrument}</span> ·
+   ${m.frames}f @ prefix ${m.px_prefix} / suffix ${m.suffix_gen_frames}`;
+document.getElementById("prov").innerHTML =
+  (m.machines||[]).map(x=>`<div class="pline"><span class="mono">${x.arch} · torch ${x.torch} · py ${x.python}</span>
+     ${x.primary?"<b>(primary)</b>":""} ← ${x.cols.join(", ")}</div>`).join("") +
+  `<div class="pline">score sets: ${(m.score_sets||[]).map(s=>`<span class="mono">${s.id}</span>${s.id===m.primary_set?" (primary)":""}`).join(" · ")}</div>` +
+  `<div class="pline">%_same is cross-class comparable; (%_proxy) is ranking-only. %_all pools same+proxy
+    at the gen level — a convenience blend that mixes the comparable and ranking-only pools, so read it with that caveat.
+    copy_max / near_copy are not comparable across frame counts (33f external vs 121f).</div>`;
+
+// ============================================================ collections (all generic; no ids hardcoded)
+// The three preset collections are DATA (seeded into the JSON file by the builder), never template
+// constants. This block loads that file over HTTP, lets the user bookmark input rows into named
+// collections snapshotting the currently-visible columns + notes, and saves back through the server's
+// POST endpoint (optimistic concurrency via X-Base-Updated; a 409 merges only the changed collections).
+const LS_COLL = "iclne_v2_collections_mirror";
+const LS_QT = "iclne_v2_quick_target";               // the owner's chosen quick-add collection id (per browser)
+const SAVE_URL = "collections.json";                 // relative → resolves next to this page
+let COLL = {schema:1, viewer:"", updated:"", collections:[]};
+let activeColId = null;
+let openColMode = false, restoreCols = false, drawerOpen = false;
+let colStatus = {cls:"", text:"loading…"};
+const dirty = new Set();                              // collection ids changed since the last good save
+// CARD_BY_KEY / BASE_BY_KEY are built once near the top (per-reference row split). These resolve a
+// collection item to its display card, including LEGACY items whose card_key is the base key of a
+// now-split card (saved before the split): pick the sub-card whose reference appears in the item's
+// snapshot (inputs.refs, else __ref_ tokens in the saved columns); ambiguous/unknown -> first sub-card.
+function itemRefClip(item, refClips){
+  const inputRefs = [];
+  for(const r of (((item||{}).inputs||{}).refs||[])) if(refClips.indexOf(r.clip)>=0 && inputRefs.indexOf(r.clip)<0) inputRefs.push(r.clip);
+  if(inputRefs.length === 1) return {ref:inputRefs[0], sure:true};
+  const found = [];
+  for(const c of (((item||{}).columns)||[])) for(const g of (c.gens||[])){
+    const t = refToken(g.id) || refToken(g.video);
+    if(t != null && refClips.indexOf(t)>=0 && found.indexOf(t)<0) found.push(t);
+  }
+  if(found.length === 1) return {ref:found[0], sure:true};
+  if(inputRefs.length >= 1) return {ref:inputRefs[0], sure:false};
+  return {ref:refClips[0], sure:false};
+}
+function displayCardForItem(item){
+  const dc = CARD_BY_KEY[item.card_key];
+  if(dc) return {card:dc, legacy:false};                 // sub-card key or single-ref base key
+  const base = BASE_BY_KEY[item.card_key];
+  if(base && base._multi){                               // legacy base key of a now-split card
+    const rr = itemRefClip(item, (base.refs||[]).map(r=>r.clip));
+    return {card: CARD_BY_KEY[base.key+"|ref="+rr.ref], legacy:true};
+  }
+  return null;
+}
+function itemMatchesDisplay(it, dc){
+  if(!dc) return false;
+  if(it.card_key === dc.key) return true;
+  if(dc._split && dc._base && it.card_key === dc._base.key){
+    const rr = itemRefClip(it, (dc._base.refs||[]).map(r=>r.clip));
+    return rr.ref === dc._refClip;
+  }
+  return false;
+}
+const nn = v => (v==null ? null : v);                 // undefined/null → null (esprima 4 has no ?? )
+const genId = () => Math.random().toString(36).slice(2,10);
+const nowISO = () => new Date().toISOString();        // ms, UTC, e.g. 2026-09-22T21:45:00.123Z
+const colShort = t => { const w=((t||"").split(/\s+/)[0])||(t||""); return w.length>12?w.slice(0,11)+"…":w; };
+function slugify(s){ return ((s||"").toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"")) || "collection"; }
+function uniqueColId(base){ let id=base,k=2; const have=new Set(COLL.collections.map(c=>c.id));
+  while(have.has(id)){ id=base+"_"+k; k++; } return id; }
+
+function activeCol(){ return (COLL.collections||[]).find(c=>c.id===activeColId) || null; }
+function colsOf(key){
+  const dc = CARD_BY_KEY[key];
+  const out=[];
+  (COLL.collections||[]).forEach(c=>{ const i=(c.items||[]).findIndex(it=>itemMatchesDisplay(it, dc));
+    if(i>=0) out.push({id:c.id, title:c.title, rowNum:i+1, legacy:(c.items[i].card_key!==key)}); });
+  return out;
+}
+function colItemFor(key){
+  const a=activeCol(); if(a){ const it=(a.items||[]).find(x=>x.card_key===key); if(it) return it; }
+  for(const c of (COLL.collections||[])){ const it=(c.items||[]).find(x=>x.card_key===key); if(it) return it; }
+  return null;
+}
+function markDirty(id){ if(id) dirty.add(id); }
+function normalizeDoc(doc){
+  if(!doc || typeof doc!=="object") doc={};
+  if(typeof doc.schema!=="number") doc.schema=1;
+  if(!doc.viewer) doc.viewer="";
+  if(!Array.isArray(doc.collections)) doc.collections=[];
+  for(const c of doc.collections){ if(!Array.isArray(c.items)) c.items=[]; if(c.notes==null) c.notes=""; }
+  return doc;
+}
+
+// ---- localStorage mirror (the last good server state; used when the fetch fails)
+function mirrorSave(){ try{ localStorage.setItem(LS_COLL, JSON.stringify(COLL)); }catch(e){} }
+function mirrorLoad(){ try{ const s=localStorage.getItem(LS_COLL); return s?JSON.parse(s):null; }catch(e){ return null; } }
+
+// ---- status indicator (updated in place so the export menu doesn't collapse)
+function setStatus(cls, text){
+  colStatus = {cls, text};
+  const s = document.getElementById("colStatus");
+  if(s){ s.className = "colstatus "+cls; s.textContent = text; }
+}
+function statusSaved(){
+  const d=new Date(), hh=String(d.getHours()).padStart(2,"0"), mm=String(d.getMinutes()).padStart(2,"0");
+  const n=(COLL.collections||[]).length;
+  setStatus("", "saved "+hh+":"+mm+" · "+n+" collection"+(n===1?"":"s"));
+}
+
+// ---- load / save through the server
+async function loadCollections(){
+  setStatus("saving","loading…");
+  try{
+    const r = await fetch(SAVE_URL+"?t="+Date.now(), {cache:"no-store"});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    COLL = normalizeDoc(await r.json());
+    dirty.clear(); mirrorSave();
+    if(!activeColId && COLL.collections.length) activeColId = COLL.collections[0].id;
+    statusSaved();
+  }catch(e){
+    const m = mirrorLoad();
+    if(m){ COLL = normalizeDoc(m); if(!activeColId && COLL.collections.length) activeColId = COLL.collections[0].id; }
+    setStatus("offline","offline copy — server save unavailable");
+  }
+  render();
+}
+function mergeConflict(mine, current, dirtyIds){
+  // keep the server's non-changed collections; replace/append only the ones we changed; drop ours if deleted
+  const dset = new Set(dirtyIds);
+  const myById = Object.fromEntries((mine.collections||[]).map(c=>[c.id,c]));
+  const cols = (current.collections||[]).filter(c=>!dset.has(c.id));
+  for(const id of dirtyIds){ const mc = myById[id]; if(mc) cols.push(mc); }
+  const out = Object.assign({}, current); out.collections = cols; return out;
+}
+async function saveCollections(){
+  setStatus("saving","saving…");
+  const post = base => fetch(SAVE_URL, {method:"POST",
+    headers:{"Content-Type":"application/json","X-Base-Updated":base||""}, body:JSON.stringify(COLL)});
+  try{
+    let r = await post(COLL.updated);
+    if(r.status===409){
+      const j = await r.json();
+      COLL = mergeConflict(COLL, normalizeDoc(j.current), [...dirty]);
+      r = await post((j.current && j.current.updated) || "");
+    }
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const j = await r.json();
+    COLL.updated = j.updated; dirty.clear(); mirrorSave(); statusSaved();
+    return true;
+  }catch(e){
+    mirrorSave(); setStatus("failed","save FAILED — download instead"); return false;
+  }
+}
+let saveTimer = null;
+function scheduleSave(){ if(saveTimer) clearTimeout(saveTimer); saveTimer=setTimeout(()=>{ saveTimer=null; saveCollections(); }, 500); }
+function saveNow(){ if(saveTimer){ clearTimeout(saveTimer); saveTimer=null; } saveCollections(); }
+
+// ---- snapshot builders (keys in the schema's order, so the pretty-printed file diffs cleanly)
+function snapshotView(){ return {seed:String(seed), grid:[...gridSel], donor_filter:donor, sided_filter:sided}; }
+function snapshotInputs(card){
+  return {
+    donor:card.donor, endpoint:card.endpoint, sided:card.sided,
+    endpoint_class:nn(card.endpoint_class), endpoint_split:nn(card.endpoint_split),
+    prompt:nn(card.prompt), neutral_prompt:nn(card.neutral_prompt), effect_prompt:nn(card.effect_prompt),
+    prefix_video:nn(card.prefix_video), suffix_video:nn(card.suffix_video), endpoint_video:nn(card.endpoint_video),
+    refs:(card.refs||[]).map(r=>({clip:r.clip, cls:nn(r.cls), video:nn(r.video), mismatched:!!r.mismatched})),
+    tier:rowTier(card, true)                          // novelty × content × cell(s) of this row (all gens)
+  };
+}
+function tierPresence(card, t){
+  const gs = card.slots[t]||[]; const seeds=[]; let clips=0;
+  for(const g of gs) for(const sk of Object.keys(g.videos||{})){ clips++; if(seeds.indexOf(sk)<0) seeds.push(sk); }
+  seeds.sort();
+  return {present:clips>0, clips, seeds};
+}
+function snapshotColumns(card, tierList){
+  return tierList.map(t=>{
+    const m = ENTRY_META[t], cat = CAT_BY_ID[m.cat];
+    const gens = [];
+    for(const g of card.slots[t]||[]) for(const sk of Object.keys(g.videos||{}))
+      gens.push({id:g.id, seed:sk, video:g.videos[sk], ref_video:nn(g.ref_video),
+                 scored:!!g.scored, pct:(g.pct==null?null:g.pct), cond:nn(g.cond)});
+    return {tier:t, category:m.cat, category_label:(cat?cat.label:m.cat), arm:m.arm, arm_label:m.armLabel,
+            variant:m.variant, label:m.label, present:gens.length>0, gens};
+  });
+}
+
+// ---- quick-add-to-target (one-click file a card's row into a chosen "quick-add" collection)
+// The target is a collection the owner picks ONCE in the bar ("quick-add →"); a card's quick button
+// then files that row into it with the columns currently open, exactly like the dialog's Save — no
+// dialog — and files it again removes it (with a 3 s undo toast). Everything is generic: the target is
+// a stored collection id, never a hardcoded one; if that id disappears the target falls back to none.
+function colShortTitle(t){ const s=(t||""), max=18; return s.length>max ? s.slice(0,max-1)+"…" : s; }
+function quickTargetId(){
+  let id=""; try{ id=localStorage.getItem(LS_QT)||""; }catch(e){}
+  return (id && (COLL.collections||[]).some(c=>c.id===id)) ? id : null;   // fall back to none if it disappeared
+}
+function quickTargetCol(){ const id=quickTargetId(); return id ? (COLL.collections||[]).find(c=>c.id===id) : null; }
+function setQuickTarget(v){ try{ if(v) localStorage.setItem(LS_QT, v); else localStorage.removeItem(LS_QT); }catch(e){} render(); }
+function quickBtnHtml(dc){
+  const col = quickTargetCol();
+  if(!col) return `<button class="pbtn qadd" onclick="quickToggle(this)"
+     title="set a quick-add target in the collections bar ('quick-add →'), then one click files a row here">＋ quick…</button>`;
+  const active = (col.items||[]).some(it=>itemMatchesDisplay(it, dc));
+  const t = esc(colShortTitle(col.title));
+  const tip = active ? "remove this row from "+esc(col.title)
+                     : "add this row to "+esc(col.title)+" with the columns currently open, no dialog";
+  return `<button class="pbtn bmk qadd ${active?"inon":""}" onclick="quickToggle(this)" title="${tip}">${active?"✓ ":"＋ "}${t}</button>`;
+}
+// one click: add the row to the target (like the dialog's Save — all visible columns, no dialog), or
+// remove it if already there (with an undo toast). Never duplicates a card_key within a collection.
+function quickToggle(btn){
+  const cardEl = btn.closest(".card"); if(!cardEl) return;
+  const key = cardEl.dataset.key, dc = CARD_BY_KEY[key]; if(!dc) return;
+  const col = quickTargetCol();
+  if(!col){
+    const q=document.getElementById("colQuick"); if(q) q.focus();
+    showToast("pick a quick-add target in the 'quick-add →' menu (collections bar) — then one click files a row", null);
+    return;
+  }
+  const existing = (col.items||[]).find(it=>itemMatchesDisplay(it, dc));
+  if(existing){                                            // toggle OFF: remove + undo toast
+    const snap = JSON.parse(JSON.stringify(existing)), idx = col.items.indexOf(existing);
+    col.items = (col.items||[]).filter(x=>x!==existing); col.updated = nowISO();
+    markDirty(col.id); mirrorSave(); render(); saveNow();
+    showToast("removed from "+col.title, ()=>quickRestore(col.id, snap, idx));
+    return;
+  }
+  if((col.items||[]).some(it=>it.card_key===key)) return;  // belt-and-suspenders: never a duplicate card_key
+  const now = nowISO(), columns = snapshotColumns(dc, selTiers());
+  let notes = "", src = null;                              // copy notes + source from the OPEN collection, if any
+  const open = openColMode ? activeCol() : null;
+  if(open && open.id !== col.id){
+    const oi = (open.items||[]).find(it=>itemMatchesDisplay(it, dc));
+    if(oi){ notes = oi.notes||""; src = open.id; }
+  }
+  const it = {id:genId(), card_key:key, added:now, updated:now, notes,
+              view:snapshotView(), inputs:snapshotInputs(dc), columns};
+  if(src) it.source_collection = src;                     // plain extra field; collections_export.py ignores it
+  col.items.push(it); col.updated = now;
+  markDirty(col.id); mirrorSave(); render(); saveNow();
+}
+function quickRestore(cid, snap, idx){
+  const c = (COLL.collections||[]).find(x=>x.id===cid); if(!c) return;
+  if((c.items||[]).some(x=>x.card_key===snap.card_key)) return;   // already back / no duplicate
+  const at = Math.max(0, Math.min(idx, c.items.length));
+  c.items.splice(at, 0, snap); c.updated = nowISO();
+  markDirty(cid); mirrorSave(); render(); saveNow();
+}
+// ---- 3-second toast (used by the undo affordance and the no-target hint)
+let toastTimer = null;
+function showToast(msg, onUndo){
+  const el = document.getElementById("colToast"); if(!el) return;
+  el.innerHTML = esc(msg) + (onUndo ? " <button id=\"colToastUndo\">undo</button>" : "");
+  el.hidden = false;
+  if(onUndo){ const b=document.getElementById("colToastUndo"); if(b) b.onclick=()=>{ hideToast(); onUndo(); }; }
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(hideToast, 3000);
+}
+function hideToast(){ const el=document.getElementById("colToast");
+  if(el){ el.hidden=true; el.innerHTML=""; } if(toastTimer){ clearTimeout(toastTimer); toastTimer=null; } }
+
+// ---- collections bar
+function drawColBar(){
+  const el = document.getElementById("colbar"); if(!el) return;
+  const cols = COLL.collections||[];
+  const opts = cols.length
+    ? cols.map(c=>`<option value="${esc(c.id)}" ${c.id===activeColId?"selected":""}>${esc(c.title)} (${(c.items||[]).length})</option>`).join("")
+    : `<option value="">(none yet)</option>`;
+  const dis = cols.length ? "" : "disabled";
+  const qid = quickTargetId();
+  const qopts = `<option value="" ${qid?"":"selected"}>(none)</option>` +
+    cols.map(c=>`<option value="${esc(c.id)}" ${c.id===qid?"selected":""}>${esc(c.title)} (${(c.items||[]).length})</option>`).join("");
+  el.innerHTML =
+    `<span class="lbl">active</span>
+     <select class="btn" id="colActive" onchange="setActiveCol(this.value)" ${dis}>${opts}</select>
+     <button class="btn" onclick="newCol()" title="new collection (prompts for a title)">＋ new</button>
+     <button class="btn" onclick="renameCol()" ${dis}>rename</button>
+     <button class="btn" onclick="deleteCol()" ${dis}>delete</button>
+     <button class="btn ${openColMode?"on":""}" onclick="toggleOpenCol()" ${dis}
+        title="filter the cards to this collection's rows, in order, labelled row 1, row 2, …">${openColMode?"● open collection":"open collection"}</button>
+     <button class="btn ${restoreCols?"on":""}" onclick="toggleRestoreCols()"
+        title="while a collection is open, select exactly the union of the columns saved with its rows">restore its columns</button>
+     <button class="btn ${drawerOpen?"on":""}" onclick="toggleDrawer()" ${dis} title="open the management drawer">manage rows ▸</button>
+     <span class="lbl" title="one click on a card's '＋ <name>' button files that row into this collection — no dialog">quick-add →</span>
+     <select class="btn" id="colQuick" onchange="setQuickTarget(this.value)" ${dis}>${qopts}</select>
+     <span class="sp"></span>
+     <span class="colstatus ${colStatus.cls}" id="colStatus">${esc(colStatus.text)}</span>
+     <span class="colmenu">
+       <button class="mbtn" onclick="toggleColMenu(event)">⋯ export / import</button>
+       <div class="mlist" id="colMenuList" hidden>
+         <button onclick="downloadCollectionsJSON()">Download collections.json</button>
+         <div class="hr"></div>
+         <button onclick="doExport('md')">Export Markdown (active collection)</button>
+         <button onclick="doExport('jsonl')">Export JSONL manifest (active collection)</button>
+         <div class="hr"></div>
+         <button onclick="pickImport()">Import JSON (merge by id)</button>
+       </div>
+     </span>
+     <input type="file" id="colImportFile" accept="application/json,.json" hidden onchange="importJSONFile(this)">`;
+}
+function setActiveCol(id){ activeColId = id; if(openColMode && restoreCols) applyRestoreColumns(); shown = PAGE; render(); }
+function toggleColMenu(e){ e.stopPropagation(); const m=document.getElementById("colMenuList"); if(m) m.hidden=!m.hidden; }
+function newCol(){
+  const title = prompt("New collection title:"); if(title==null) return;
+  const t = title.trim(); if(!t) return;
+  const id = uniqueColId(slugify(t)), now = nowISO();
+  COLL.collections.push({id, title:t, notes:"", created:now, updated:now, items:[]});
+  activeColId = id; markDirty(id); mirrorSave(); render(); saveNow();
+}
+function renameCol(){
+  const c = activeCol(); if(!c) return;
+  const title = prompt("Rename collection:", c.title); if(title==null) return;
+  const t = title.trim(); if(!t) return;
+  c.title = t; c.updated = nowISO(); markDirty(c.id); mirrorSave(); render(); saveNow();
+}
+function deleteCol(){
+  const c = activeCol(); if(!c) return;
+  if((c.items||[]).length){
+    const typed = prompt(`"${c.title}" has ${c.items.length} row(s). To delete it, type its title exactly:`);
+    if(typed==null) return;
+    if(typed.trim()!==c.title){ alert("title did not match — not deleted"); return; }
+  } else if(!confirm(`Delete empty collection "${c.title}"?`)) return;
+  const id = c.id;
+  COLL.collections = COLL.collections.filter(x=>x.id!==id); markDirty(id);
+  activeColId = COLL.collections.length ? COLL.collections[0].id : null;
+  mirrorSave(); render(); saveNow();
+}
+function toggleOpenCol(){ openColMode=!openColMode; if(openColMode && restoreCols) applyRestoreColumns(); shown=PAGE; render(); }
+function toggleRestoreCols(){ restoreCols=!restoreCols; if(openColMode && restoreCols) applyRestoreColumns(); shown=PAGE; render(); }
+function applyRestoreColumns(){
+  const col = activeCol(); if(!col) return;
+  const u = new Set();
+  for(const it of (col.items||[])) for(const c of (it.columns||[])) if(ENTRY_META[c.tier]) u.add(c.tier);
+  if(u.size){ tiers = new Set(u); saveState(); }
+}
+
+// ---- add / edit dialog
+let dlgKey = null, dlgTiers = [];
+function openAddDialog(btn){
+  const card = btn.closest(".card"); if(!card) return;
+  dlgKey = card.dataset.key;
+  const inCols = colsOf(dlgKey);
+  let cid = inCols.length ? inCols[0].id : (activeColId || (COLL.collections[0] && COLL.collections[0].id));
+  const dlg = document.getElementById("coldlg"), bd = document.getElementById("colbackdrop");
+  if(!cid){ alert("no collection yet — create one first (＋ new)"); return; }
+  renderDialog(cid);
+  dlg.hidden = false; bd.hidden = false;
+  const r = btn.getBoundingClientRect();
+  let left = r.left, top = r.bottom + 6;
+  const dw = dlg.offsetWidth, dh = dlg.offsetHeight;
+  if(left + dw > window.innerWidth - 8) left = window.innerWidth - dw - 8;
+  if(left < 8) left = 8;
+  if(top + dh > window.innerHeight - 8) top = Math.max(8, r.top - dh - 6);
+  dlg.style.left = left + "px"; dlg.style.top = top + "px";
+  const nt = document.getElementById("cdNotes"); if(nt) nt.focus();
+}
+function renderDialog(cid){
+  const card = CARD_BY_KEY[dlgKey]; if(!card) return;
+  let col = COLL.collections.find(c=>c.id===cid); if(!col) col = COLL.collections[0];
+  cid = col ? col.id : "";
+  const existing = col ? (col.items||[]).find(it=>itemMatchesDisplay(it, card)) : null;
+  const legacy = !!(existing && existing.card_key !== dlgKey);   // base-key item on a now-split card
+  const savedTiers = existing ? (existing.columns||[]).map(c=>c.tier) : [];
+  const union = new Set([...savedTiers, ...selTiers()]);
+  dlgTiers = dispTiers().filter(t=>union.has(t) && ENTRY_META[t]);
+  const checkedSet = existing ? new Set(savedTiers) : new Set(selTiers());
+  const opts = COLL.collections.map(c=>`<option value="${esc(c.id)}" ${c.id===cid?"selected":""}>${esc(c.title)} (${(c.items||[]).length})</option>`).join("");
+  const rows = dlgTiers.map(t=>{
+    const m = ENTRY_META[t], info = tierPresence(card, t);
+    const mk = info.present
+      ? `<span class="mk has">✓ has entries for this row (${info.clips} clip${info.clips===1?"":"s"}, seeds ${info.seeds.join("/")})</span>`
+      : `<span class="mk no">— no entry for this row</span>`;
+    return `<label class="cd-col ${info.present?"":"absent"}">
+       <input type="checkbox" data-tier="${esc(t)}" ${checkedSet.has(t)?"checked":""}>
+       <span><span class="cn">${esc(m.armLabel)} · ${esc(m.label)}</span>${mk}</span></label>`;
+  }).join("");
+  const dlg = document.getElementById("coldlg");
+  dlg.innerHTML =
+    `<div class="cd-head">${existing?"Edit row in collection":"Add row to collection"}
+       <button class="x" onclick="closeDialog()" title="Esc">✕</button></div>
+     <div class="cd-body">
+       ${legacy?`<div class="mk no" style="color:var(--warn);padding:2px">saved before the per-reference split — re-save to pin the reference</div>`:""}
+       <label class="fld">collection
+         <select id="cdSel" onchange="renderDialog(this.value)">${opts}</select></label>
+       <label class="fld">columns to capture (${dlgTiers.length} visible)
+         <div class="cd-cols" id="cdCols">${rows || "<div class='mk no' style='padding:4px'>no columns are open — select some arms first</div>"}</div></label>
+       <label class="fld">notes
+         <textarea id="cdNotes" placeholder="why this row / what to look at / caveats">${existing?esc(existing.notes||""):""}</textarea></label>
+       <div class="cd-foot">
+         ${existing?`<button class="btn danger" onclick="removeFromDialog()">Remove from collection</button>`:""}
+         <span class="sp"></span>
+         <button class="btn" onclick="closeDialog()">Cancel</button>
+         <button class="btn on" onclick="saveDialog()">${existing?"Update":"Save"} <span class="lbl">(⌘/Ctrl+↵)</span></button>
+       </div>
+     </div>`;
+}
+function closeDialog(){
+  const dlg=document.getElementById("coldlg"); if(dlg){ dlg.hidden=true; dlg.innerHTML=""; }
+  const bd=document.getElementById("colbackdrop"); if(bd) bd.hidden=true;
+  dlgKey=null;
+}
+function saveDialog(){
+  const dlg=document.getElementById("coldlg"); const selEl=dlg.querySelector("#cdSel"); if(!selEl) return;
+  const cid=selEl.value, col=COLL.collections.find(c=>c.id===cid); if(!col) return;
+  const card=CARD_BY_KEY[dlgKey]; if(!card) return;
+  const checked=[...dlg.querySelectorAll("#cdCols input[type=checkbox]")].filter(x=>x.checked).map(x=>x.dataset.tier);
+  const notesEl=dlg.querySelector("#cdNotes"), notes=notesEl?notesEl.value:"";
+  const now=nowISO(), columns=snapshotColumns(card, checked);
+  let it=(col.items||[]).find(x=>itemMatchesDisplay(x, card));
+  if(it){ it.card_key=dlgKey; it.notes=notes; it.view=snapshotView(); it.inputs=snapshotInputs(card); it.columns=columns; it.updated=now; }
+  else{ it={id:genId(), card_key:dlgKey, added:now, updated:now, notes, view:snapshotView(), inputs:snapshotInputs(card), columns};
+        col.items.push(it); }
+  col.updated=now; markDirty(cid); mirrorSave(); closeDialog(); render(); saveNow();
+}
+function removeFromDialog(){
+  const dlg=document.getElementById("coldlg"); const selEl=dlg.querySelector("#cdSel"); if(!selEl) return;
+  const cid=selEl.value, col=COLL.collections.find(c=>c.id===cid); if(!col) return;
+  const card=CARD_BY_KEY[dlgKey];
+  if(!confirm("Remove this row from the collection?")) return;
+  const existing=(col.items||[]).find(x=>itemMatchesDisplay(x, card));
+  col.items=(col.items||[]).filter(x=>x!==existing); col.updated=nowISO();
+  markDirty(cid); mirrorSave(); closeDialog(); render(); saveNow();
+}
+
+// ---- management drawer
+function toggleDrawer(){ drawerOpen=!drawerOpen; drawDrawer(); }
+function drawDrawer(){
+  const drawer=document.getElementById("coldrawer"), head=document.getElementById("coldrawerHead"),
+        body=document.getElementById("coldrawerBody");
+  if(!drawer||!head||!body) return;
+  drawer.classList.toggle("open", drawerOpen);
+  if(!drawerOpen) return;
+  const col=activeCol();
+  if(!col){ head.innerHTML=`<b>collections</b><button class="x" onclick="toggleDrawer()">✕</button>`;
+    body.innerHTML="<div class='mk no'>no collection selected</div>"; return; }
+  head.innerHTML=`<b>${esc(col.title)}</b><span class="lbl">${(col.items||[]).length} row${(col.items||[]).length===1?"":"s"}</span>
+     <button class="x" onclick="toggleDrawer()" title="close">✕</button>`;
+  let h=`<label class="fld" style="font-size:10px;color:var(--dim)">collection notes
+     <textarea class="cnotes" onblur="setColNotes(this.value)" placeholder="notes for the whole collection">${esc(col.notes||"")}</textarea></label>`;
+  (col.items||[]).forEach((it,i)=>{
+    const inp=it.inputs||{}, view=it.view||{};
+    const r=displayCardForItem(it);
+    const refc=(r && r.card && r.card._split) ? r.card._refClip
+             : (((inp.refs||[]).length===1) ? inp.refs[0].clip : null);
+    const legacy=!!(r && r.legacy);
+    let tierStr="";                                    // items saved before this change lack inp.tier
+    if(inp.tier){ const tw=tierWords(inp.tier); const cs=(inp.tier.cells||[]).join(" ");
+      tierStr=[tw.nv, tw.cn, cs].filter(Boolean).join(" · "); }
+    const chips=(it.columns||[]).map(c=> c.present
+      ? `<span class="dchip">${esc(colName(c))} · ${(c.gens||[]).length}</span>`
+      : `<span class="dchip abs">${esc(colName(c))}</span>`).join("");
+    h += `<div class="di">
+       <div class="dih"><span class="rownum">row ${i+1}</span>
+         <span>${esc(inp.endpoint||"?")}</span>
+         <span class="lbl">${esc(inp.donor||"?")} · ${esc(inp.sided||"?")}-sided${refc?` · ref ${esc(refc)}`:""}${tierStr?` · ${esc(tierStr)}`:""} · seed ${esc(view.seed||"?")}</span>
+         <span class="ctrl">
+           <button onclick="moveItem('${esc(col.id)}',${i},-1)" title="move up">▲</button>
+           <button onclick="moveItem('${esc(col.id)}',${i},1)" title="move down">▼</button>
+           <button onclick="gotoCard('${esc(it.card_key)}')" title="go to this card">go</button>
+           <button onclick="removeItem('${esc(col.id)}','${esc(it.card_key)}')" title="remove from collection">✕</button>
+         </span></div>
+       ${legacy?`<div class="dinp" style="color:var(--warn)">saved before the per-reference split — re-save to pin the reference</div>`:""}
+       <div class="dinp">inputs: ${esc(inputsLine(inp))}</div>
+       <div class="dchips">${chips || "<span class='mk no'>no columns saved</span>"}</div>
+       <textarea onblur="setItemNotes('${esc(col.id)}','${esc(it.card_key)}',this.value)" placeholder="notes for this row…">${esc(it.notes||"")}</textarea>
+     </div>`;
+  });
+  body.innerHTML=h;
+}
+function setColNotes(v){ const c=activeCol(); if(!c) return; c.notes=v; c.updated=nowISO(); markDirty(c.id); mirrorSave(); scheduleSave(); }
+function setItemNotes(cid,key,v){
+  const c=COLL.collections.find(x=>x.id===cid); if(!c) return;
+  const it=(c.items||[]).find(x=>x.card_key===key); if(!it) return;
+  it.notes=v; it.updated=nowISO(); c.updated=nowISO(); markDirty(cid); mirrorSave(); scheduleSave();
+}
+function moveItem(cid,i,d){
+  const c=COLL.collections.find(x=>x.id===cid); if(!c) return;
+  const j=i+d; if(j<0||j>=c.items.length) return;
+  const tmp=c.items[i]; c.items[i]=c.items[j]; c.items[j]=tmp;
+  c.updated=nowISO(); markDirty(cid); mirrorSave(); render(); saveNow();
+}
+function removeItem(cid,key){
+  const c=COLL.collections.find(x=>x.id===cid); if(!c) return;
+  if(!confirm("Remove this row from the collection?")) return;
+  c.items=(c.items||[]).filter(x=>x.card_key!==key); c.updated=nowISO();
+  markDirty(cid); mirrorSave(); render(); saveNow();
+}
+function gotoCard(key){
+  openColMode = false;                 // leave open-collection view so normal filters apply
+  sided=""; donor=""; sel.clear();
+  const sd=document.getElementById("sided"); if(sd) sd.value="";
+  const dn=document.getElementById("donor"); if(dn) dn.value="";
+  const it=colItemFor(key);
+  let card=CARD_BY_KEY[key];            // resolve legacy base keys of split cards to their sub-card
+  if(!card){ const base=BASE_BY_KEY[key];
+    if(base && base._multi){ const rr=itemRefClip(it||{}, (base.refs||[]).map(r=>r.clip));
+      card=CARD_BY_KEY[base.key+"|ref="+rr.ref]; } }
+  if(!card) return;
+  const dispKey=card.key;
+  if(GRIDS.length){ for(const g of (card.grids||[])) gridSel.add(g);
+    try{ localStorage.setItem(LS_GRID, JSON.stringify([...gridSel])); }catch(e){} }
+  if(it) for(const c of (it.columns||[])) if(ENTRY_META[c.tier]) tiers.add(c.tier);
+  saveState();
+  const all=selectedCards(), idx=all.findIndex(e=>e.card.key===dispKey);
+  if(idx>=0) shown=Math.max(shown, idx+1);
+  render();
+  requestAnimationFrame(()=>{
+    const elc=document.querySelector('.card[data-key="'+dispKey+'"]');
+    if(elc){ elc.scrollIntoView({behavior:"smooth", block:"center"}); elc.classList.add("flash");
+      setTimeout(()=>elc.classList.remove("flash"), 2000); }
+  });
+}
+
+// ---- exports (browser side). IDENTICAL string ops to eval_ladder/viewer/collections_export.py, so
+// the in-page download and the CLI produce byte-for-byte the same file for the same data.
+function colName(col){
+  const lbl = (col.arm_label||col.arm||"?"), ent = (col.label||"");
+  if(ent && lbl.toLowerCase().indexOf(ent.toLowerCase())<0) return lbl+" · "+ent;
+  return lbl;
+}
+function inputsLine(inp){
+  const parts=[];
+  if(inp.prefix_video) parts.push("start (prefix)");
+  if(inp.sided==="two" && inp.suffix_video) parts.push("end (suffix)");
+  for(const r of (inp.refs||[])) parts.push("reference ("+(r.cls||"?")+")");
+  return parts.length ? parts.join(" · ") : "—";
+}
+function columnsLine(cols){
+  const groups=[], index={}; let firstPresent=true;
+  const render1 = c => {
+    const name = colName(c);
+    if(c.present){ const n=(c.gens||[]).length; if(firstPresent){ firstPresent=false; return name+" ✓ ("+n+" clips)"; } return name+" ✓ ("+n+")"; }
+    return name+" — (no entry)";
+  };
+  for(const c of cols){
+    const cl = (c.category_label||c.category||"?");
+    if(!(cl in index)){ index[cl]=groups.length; groups.push([cl,[]]); }
+    groups[index[cl]][1].push(render1(c));
+  }
+  return groups.map(g=>g[0]+": "+g[1].join(" · ")).join(" | ");
+}
+function notesBody(notes){ const n=(notes||""); if(n.trim()==="") return "—"; return n.replace(/\n/g,"\n  "); }
+// the row's tier from the snapshot's RAW ids (no D needed) — the Python CLI mirrors this byte-for-byte
+function tierExport(tier){
+  if(!tier) return "";
+  const nov=(tier.novelty||[]).join("+"), con=(tier.content||[]).join("+"), cel=(tier.cells||[]).join(" ");
+  return [nov,con,cel].filter(Boolean).join(" · ");
+}
+function exportMarkdown(col){
+  const items = col.items||[], date=(col.updated||"").slice(0,10), title=(col.title||col.id);
+  const lines = ["# "+title+" ("+items.length+" rows) — "+date];
+  const cnotes = (col.notes||"");
+  if(cnotes.trim()!==""){ lines.push(""); lines.push(cnotes); }
+  items.forEach((item,i0)=>{
+    const inp=item.inputs||{}, view=item.view||{};
+    const tstr=tierExport(inp.tier);
+    lines.push("");
+    lines.push("## row "+(i0+1)+" — "+(inp.endpoint||"?")+" · "+(inp.donor||"?")+" · "+(inp.sided||"?")+"-sided"+(tstr?" · "+tstr:"")+" · seed "+(view.seed||"?"));
+    lines.push("inputs: "+inputsLine(inp));
+    lines.push("columns: "+columnsLine(item.columns||[]));
+    lines.push("notes: "+notesBody(item.notes));
+  });
+  return lines.join("\n")+"\n";
+}
+function exportJSONL(col){
+  const out=[];
+  (col.items||[]).forEach((item,i0)=>{
+    const inp=item.inputs||{}, refs=(inp.refs||[]).map(r=>nn(r.video));
+    const base={row_index:i0+1, card_key:nn(item.card_key), prefix_video:nn(inp.prefix_video),
+      suffix_video:nn(inp.suffix_video), endpoint_video:nn(inp.endpoint_video), refs, row_tier:nn(inp.tier)};
+    for(const c of (item.columns||[])){
+      const cf={category:nn(c.category), tier:nn(c.tier), arm:nn(c.arm), variant:nn(c.variant),
+                label:nn(c.label), present:!!c.present};
+      const gens=c.gens||[];
+      if(c.present && gens.length){
+        for(const g of gens) out.push(JSON.stringify(Object.assign({}, base, cf,
+          {seed:nn(g.seed), video:nn(g.video), ref_video:nn(g.ref_video), scored:nn(g.scored), pct:nn(g.pct)})));
+      } else {
+        out.push(JSON.stringify(Object.assign({}, base, cf,
+          {seed:null, video:null, ref_video:null, scored:null, pct:null})));
+      }
+    }
+  });
+  return out.join("\n") + (out.length?"\n":"");
+}
+function downloadBlob(name, text, type){
+  const blob = new Blob([text], {type:type||"text/plain"}), url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href=url; a.download=name;
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 500);
+}
+function doExport(kind){
+  const col = activeCol(); if(!col){ alert("no active collection"); return; }
+  const m=document.getElementById("colMenuList"); if(m) m.hidden=true;
+  if(kind==="md") downloadBlob(col.id+".md", exportMarkdown(col), "text/markdown");
+  else downloadBlob(col.id+".jsonl", exportJSONL(col), "application/x-ndjson");
+}
+function downloadCollectionsJSON(){
+  const m=document.getElementById("colMenuList"); if(m) m.hidden=true;
+  downloadBlob("neutral_effect_collections.json", JSON.stringify(COLL, null, 2)+"\n", "application/json");
+}
+function pickImport(){ const f=document.getElementById("colImportFile"); if(f) f.click(); }
+function importJSONFile(input){
+  const f = input.files && input.files[0]; if(!f) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    let doc; try{ doc=JSON.parse(reader.result); }catch(e){ alert("not valid JSON: "+e); return; }
+    if(!doc || !Array.isArray(doc.collections)){ alert("no .collections array in that file"); return; }
+    if(!confirm("Merge "+doc.collections.length+" collection(s) by id? Same-id collections are REPLACED.")) return;
+    const byId = Object.fromEntries(COLL.collections.map((c,i)=>[c.id,i]));
+    for(const c of doc.collections){
+      if(!c || !c.id) continue;
+      if(c.id in byId) COLL.collections[byId[c.id]] = c; else COLL.collections.push(c);
+      markDirty(c.id);
+    }
+    if(!activeColId && COLL.collections.length) activeColId = COLL.collections[0].id;
+    mirrorSave(); render(); saveNow();
+  };
+  reader.readAsText(f); input.value = "";
+}
+
+// close the export menu on an outside click; dialog keyboard (Esc / Ctrl-Cmd+Enter)
+document.addEventListener("click", e => {
+  const m = document.getElementById("colMenuList");
+  if(m && !m.hidden && !e.target.closest(".colmenu")) m.hidden = true;
+});
+document.addEventListener("keydown", e => {
+  const dlg = document.getElementById("coldlg");
+  if(dlg && !dlg.hidden){
+    if(e.key==="Escape"){ e.preventDefault(); closeDialog(); }
+    else if((e.ctrlKey||e.metaKey) && e.key==="Enter"){ e.preventDefault(); saveDialog(); }
+    return;
+  }
+  // "a" = quick-add toggle on the hovered card — never while typing, never with a modifier, never with
+  // the dialog open (handled above). Cards are not focusable, so this is hover-only.
+  if(e.key==="a" && !e.ctrlKey && !e.metaKey && !e.altKey){
+    const t=e.target, tag=((t&&t.tagName)||"").toLowerCase();
+    if(tag==="input"||tag==="textarea"||tag==="select"||(t&&t.isContentEditable)) return;
+    const hov=document.querySelector(".card:hover");
+    if(hov){ const qb=hov.querySelector(".qadd"); if(qb){ e.preventDefault(); qb.click(); } }
+  }
+});
+
+selAll(1);
+loadCollections();
+</script>

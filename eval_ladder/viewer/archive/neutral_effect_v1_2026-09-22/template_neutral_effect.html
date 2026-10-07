@@ -208,6 +208,8 @@ table.d .num{font-family:ui-monospace,Menlo,monospace}
         <span class="seg" id="seeds"></span>
         <span class="lbl" style="margin-left:6px">donor class</span>
         <select id="donor" class="btn"></select>
+        <span class="lbl" style="margin-left:6px">sidedness</span>
+        <select id="sided" class="btn" title="one-sided rows: start endpoint given (no end anchor); two-sided rows: both endpoints given"></select>
         <span class="lbl" id="selinfo" style="margin-left:auto"></span>
       </div>
     </div>
@@ -312,6 +314,7 @@ const selTiers = () => dispTiers().filter(t=>tiers.has(t));
 const sel = new Set();
 let seed = String(D.meta.seeds[0]);
 let donor = "";
+let sided = "";   // "" = all, "one" | "two" — a card property (its row's sidedness), filters cards not gens
 // grid facet (generic: ids/labels come from D.meta.grids; v2 = the 152-row grid, v3-* = grid-v3 families)
 const LS_GRID = "iclne_v2_grid";
 const GRIDS = D.meta.grids || [];
@@ -429,6 +432,7 @@ function moveCat(i, d){
 
 // ---------------------------------------------------------------- filtering
 function cardMatches(card){
+  if(sided && card.sided !== sided) return null;
   const hit = [];
   for(const t of selTiers())
     for(const g of card.slots[t]||[]){
@@ -662,6 +666,15 @@ function drawControls(){
     d.innerHTML = `<option value="">all (${donors.length})</option>` +
       donors.map(x=>`<option value="${x}">${x}</option>`).join("");
     d.onchange = e => { donor = e.target.value; shown = PAGE; render(); };
+  }
+  const sd = document.getElementById("sided");
+  if(!sd.options.length){
+    const n = {one: 0, two: 0};
+    for(const c of D.cards) if(c.sided in n) n[c.sided]++;
+    sd.innerHTML = `<option value="">all (${D.cards.length})</option>` +
+      `<option value="one">one-sided · start given (${n.one})</option>` +
+      `<option value="two">two-sided · both given (${n.two})</option>`;
+    sd.onchange = e => { sided = e.target.value; shown = PAGE; render(); };
   }
 }
 function setSeed(s){ seed = s; render(); }

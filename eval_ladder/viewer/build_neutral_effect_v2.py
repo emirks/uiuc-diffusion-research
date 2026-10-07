@@ -37,6 +37,7 @@ import json
 import os
 import statistics as st
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -50,6 +51,169 @@ import prompts  # noqa: E402
 import report_full as rf  # noqa: E402
 import run_eval  # noqa: E402
 
+# ============================================================================ v2 fast-build cache
+#: Colocated with the arithmetic it accelerates: every expensive per-directory / per-arm load below
+#: is memoized to ONE pickle under outputs/cache/viewer_neutral_effect_v2/. `outputs/` is gitignored
+#: and by repo rule reconstitutable, so a wiped cache costs exactly one cold rebuild. A unit's cache
+#: key is a fingerprint of EVERY file it reads — (repo-relative path, size, mtime_ns), sorted — plus
+#: a schema constant and the sha256 of THIS builder source, so touching any input file or editing the
+#: builder re-reads that unit and only that unit. The metric arithmetic is untouched: a cached value
+#: is byte-for-byte what the uncached function returned. See eval_ladder/viewer/NOTES_v2.md.
+import hashlib   # noqa: E402
+import pickle    # noqa: E402
+import shutil    # noqa: E402
+
+CACHE_SCHEMA = 1
+CACHE_DIR = REPO_ROOT / "outputs/cache/viewer_neutral_effect_v2"
+_CACHE_READ = True          # --no-cache flips this off: ignore existing entries, still rewrite them
+_MISS = object()
+
+
+def _relrepo(p) -> str:
+    p = Path(p).resolve()
+    try:
+        return str(p.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(p)
+
+
+def _fingerprint(files) -> list:
+    out = []
+    for f in sorted({str(Path(x).resolve()) for x in files}):
+        p = Path(f)
+        try:
+            s = p.stat()
+            out.append((_relrepo(p), s.st_size, s.st_mtime_ns))
+        except FileNotFoundError:
+            out.append((_relrepo(p), None, None))
+    return out
+
+
+_BUILDER_SHA = hashlib.sha256(Path(__file__).resolve().read_bytes()).hexdigest()
+
+
+def _cache_key(unit: str, files, extra) -> str:
+    blob = pickle.dumps((CACHE_SCHEMA, _BUILDER_SHA, unit, _fingerprint(files), extra), protocol=5)
+    return hashlib.sha256(blob).hexdigest()
+
+
+def _safe(name: str) -> str:
+    return "".join(c if (c.isalnum() or c in "._-") else "_" for c in name)
+
+
+def _memo(unit: str, files, extra, compute):
+    """Return compute()'s value, served from cache when the fingerprint is unchanged.
+
+    One file per unit, {'key','value'}; a miss (absent, unreadable, or stale key) recomputes and
+    rewrites atomically (tmp + os.replace)."""
+    key = _cache_key(unit, files, extra)
+    f = CACHE_DIR / (_safe(unit) + ".pkl")
+    if _CACHE_READ and f.exists():
+        try:
+            with f.open("rb") as fh:
+                rec = pickle.load(fh)
+            if rec.get("key") == key:
+                return rec["value"]
+        except Exception:
+            pass
+    val = compute()
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    tmp = CACHE_DIR / (_safe(unit) + f".pkl.tmp.{os.getpid()}")
+    with tmp.open("wb") as fh:
+        pickle.dump({"key": key, "value": val}, fh, protocol=5)
+    os.replace(tmp, f)
+    return val
+
+
+def _registry_files() -> list:
+    ex = run_eval.EXTRA_REGISTRY
+    ex = list(ex) if isinstance(ex, (list, tuple)) else ([ex] if ex else [])
+    return [run_eval.REGISTRY] + ex
+
+
+def _ceilings_files() -> list:
+    fs = [run_eval.NPZ, LADDER / "ceilings_v3.json"]
+    fs += [Path(p) for p in os.environ.get("LADDER_CEILINGS_EXTRA", "").split(":") if p]
+    return fs
+
+
+def _media_listing(a: dict) -> tuple:
+    """Which video files an external arm's media dir holds. external_gen only asks whether each
+    clip EXISTS, so the sorted listing is the exact input its 300+ per-arm `.exists()` stats read —
+    fingerprint it once (one readdir) instead of re-stat'ing every file on a warm build. Content
+    changes never move the payload (the page embeds the path, not the bytes), so they need no miss."""
+    d = REPO_ROOT / a["media"]
+    try:
+        return tuple(sorted(os.listdir(d)))
+    except OSError:
+        return ()
+# ============================================================================ end v2 fast-build cache
+
+# ============================================================================ collections (2026-09-22)
+#: The arm-comparison page can bookmark input rows into named collections (the TEG / VFX-transfer user
+#: studies, and a supplementary set). The DURABLE record is ONE git-tracked JSON file; the page loads
+#: it over HTTP and saves back through the static server's POST endpoint (scripts/viewers/viewerctl.py).
+#: This builder owns two side effects that must happen in EVERY mode (incl. --mode page): seed the file
+#: the first time it is missing, and (re)create the RELATIVE symlink that serves it next to the page.
+#: The three preset collections are DATA (seeded here), never template constants — the template stays
+#: generic and hardcodes no collection id.
+COLLECTIONS_DIR = HERE / "collections"
+COLLECTIONS_FILE = COLLECTIONS_DIR / "neutral_effect_collections.json"
+COLLECTIONS_VIEWER = "iclora_neutral_effect_v2"
+COLLECTIONS_PRESETS = [
+    ("teg_user_study", "TEG user study"),
+    ("vfx_transfer_user_study", "VFX Transfer user study"),
+    ("supplementary", "Supplementary"),
+]
+
+
+def _utc_now_ms() -> str:
+    """ISO-8601 UTC with millisecond precision (matches the server's write clock format)."""
+    t = datetime.now(timezone.utc)
+    return t.strftime("%Y-%m-%dT%H:%M:%S.") + f"{t.microsecond // 1000:03d}Z"
+
+
+def seed_collections(out_dir: Path) -> None:
+    """Create the tracked collections file (once) and refresh the relative symlink that serves it.
+
+    Runs in EVERY mode. The JSON holds user data, so it is written ONLY when missing; the dir, its
+    `.gitignore` (which excludes the `.history/` rolling backups) and the serving symlink are refreshed
+    idempotently on every run. The symlink target is RELATIVE (survives a repo move), like `_link()`.
+    """
+    COLLECTIONS_DIR.mkdir(parents=True, exist_ok=True)
+    gi = COLLECTIONS_DIR / ".gitignore"          # never touch the ROOT .gitignore
+    want_gi = ".history/\n"
+    if not gi.exists() or gi.read_text() != want_gi:
+        gi.write_text(want_gi)
+    if not COLLECTIONS_FILE.exists():
+        now = _utc_now_ms()
+        doc = {
+            "schema": 1,
+            "viewer": COLLECTIONS_VIEWER,
+            "updated": now,
+            "collections": [
+                {"id": cid, "title": title, "notes": "",
+                 "created": now, "updated": now, "items": []}
+                for cid, title in COLLECTIONS_PRESETS
+            ],
+        }
+        COLLECTIONS_FILE.write_text(
+            json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        print(f"[collections] seeded {_relrepo(COLLECTIONS_FILE)} "
+              f"({len(COLLECTIONS_PRESETS)} preset collections)")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    link = out_dir / "collections.json"
+    rel = os.path.relpath(COLLECTIONS_FILE, out_dir)
+    if link.is_symlink():
+        if os.readlink(link) != rel:
+            link.unlink()
+            link.symlink_to(rel)
+    elif link.exists():
+        raise SystemExit(f"[collections] {link} exists and is not a symlink — refusing to clobber")
+    else:
+        link.symlink_to(rel)
+# ============================================================================ end collections
+
 STD = REPO_ROOT / "data/processed/transitions_std121"
 SEEDS = (42, 43)
 
@@ -60,7 +224,7 @@ SEEDS = (42, 43)
 #: a second checkpoint of the same adapter is simply a second entry.
 RUNS = [
     {"id": "ic_gen", "arm": "ic_gen", "checkpoint": None,
-     "label": "IC-LoRA generalist", "sub": "ladder2 · the incumbent",
+     "label": "Plain LoRA (ic_gen)", "sub": "ladder2 · the incumbent",
      "family": "ic_gen", "pclass": "neutral",
      "gen_dir": "store/gens/001_ic_gen/01_neutral__cc/videos", "registry": None},
     {"id": "ctt_v2", "arm": "ctt_v2", "checkpoint": 10000,
@@ -544,7 +708,7 @@ EXTERNAL = [
     {"id": "dualforce_control_neutral", "score_id": "dualforce_v4", "kind": "ours", "frames": 121,
      "no_twin": True, "same_prompt_by_design": True,
      "join_swap": ("__dualforce_control_neutral__", "__ctt_v2__"),
-     "label": "Ⓝ DUAL-FORCE control (plain FM)",
+     "label": "Ⓝ SEGUE w/o NRG",
      "sub": "ctt_v2 warm-start + 1000 plain-FM steps @1000 · matched paired baseline · raw ref · dai",
      "src": REPO_ROOT / "store/gens/013_dualforce_control/01_neutral__dai/videos",
      "media": "outputs/videos/dualforce/dualforce_control",
@@ -557,7 +721,7 @@ EXTERNAL = [
     {"id": "dualforce_control_effect", "score_id": "dualforce_v4", "kind": "ours", "frames": 121,
      "no_twin": True, "same_prompt_by_design": True,
      "join_swap": ("__dualforce_control_effect__", "__ctt_v2__"),
-     "label": "Ⓔ DUAL-FORCE control (plain FM)",
+     "label": "Ⓔ SEGUE w/o NRG",
      "sub": "ctt_v2 warm-start + 1000 plain-FM steps @1000 · EFFECT prompt · pooled-same 93.6 (neutral base 89.6) · raw ref · dai",
      "src": REPO_ROOT / "store/gens/013_dualforce_control/02_effect__dai/videos",
      "media": "outputs/videos/dualforce/dualforce_control_effect",
@@ -889,7 +1053,7 @@ EXTERNAL = [
      "doc": "misc/2026-08-14_dcg_conditioning/DOSSIER.md"},
     {"id": "dualforce_dcg_w1", "score_id": "df_dcg_v4", "kind": "ours", "frames": 121, "no_twin": True,
      "same_prompt_by_design": True, "join_swap": ("__dfw1", ""),
-     "label": "ⓝ DCG w=1 (parity)",
+     "label": "ⓝ SEGUE (w=1 · parity)",
      "sub": "dualforce control 1k + DCG w=1 · neutral · app%same 94.1 (= plain demo branch; the baseline — ≫ ctt_v2 DCG-w1 83.6) · NUMBERS ONLY (copy-guards pending)",
      "src": REPO_ROOT / "store/gens/029_dualforce_dcg_w1/01_neutral__dai/videos",
      "media": "outputs/videos/df_dcg_sweep/dualforce_dcg_w1",
@@ -900,7 +1064,7 @@ EXTERNAL = [
      "doc": "misc/2026-09-02_dcg_dualforce_control/DOSSIER.md"},
     {"id": "dualforce_dcg_w1p5", "score_id": "df_dcg_v4", "kind": "ours", "frames": 121, "no_twin": True,
      "same_prompt_by_design": True, "join_swap": ("__dfw1p5", ""),
-     "label": "ⓝ DCG w=1.5",
+     "label": "ⓝ SEGUE (w=1.5)",
      "sub": "dualforce control 1k + DCG w=1.5 · neutral · app%same 96.5 (+2.4 vs w1) · NUMBERS ONLY (copy-guards pending)",
      "src": REPO_ROOT / "store/gens/030_dualforce_dcg_w1p5/01_neutral__dai/videos",
      "media": "outputs/videos/df_dcg_sweep/dualforce_dcg_w1p5",
@@ -911,7 +1075,7 @@ EXTERNAL = [
      "doc": "misc/2026-09-02_dcg_dualforce_control/DOSSIER.md"},
     {"id": "dualforce_dcg_w3", "score_id": "df_dcg_v4", "kind": "ours", "frames": 121, "no_twin": True,
      "same_prompt_by_design": True, "join_swap": ("__dfw3", ""),
-     "label": "ⓝ DCG w=3",
+     "label": "ⓝ SEGUE (w=3)",
      "sub": "dualforce control 1k + DCG w=3 · neutral · app%same 96.4 · NUMBERS ONLY (copy-guards pending)",
      "src": REPO_ROOT / "store/gens/031_dualforce_dcg_w3/01_neutral__dai/videos",
      "media": "outputs/videos/df_dcg_sweep/dualforce_dcg_w3",
@@ -922,7 +1086,7 @@ EXTERNAL = [
      "doc": "misc/2026-09-02_dcg_dualforce_control/DOSSIER.md"},
     {"id": "dualforce_dcg_w6", "score_id": "df_dcg_v4", "kind": "ours", "frames": 121, "no_twin": True,
      "same_prompt_by_design": True, "join_swap": ("__dfw6", ""),
-     "label": "ⓝ DCG w=6",
+     "label": "ⓝ SEGUE (w=6)",
      "sub": "dualforce control 1k + DCG w=6 · neutral · app%same 99.2 (>ceiling — intrusion flag) · NUMBERS ONLY (copy-guards pending)",
      "src": REPO_ROOT / "store/gens/032_dualforce_dcg_w6/01_neutral__dai/videos",
      "media": "outputs/videos/df_dcg_sweep/dualforce_dcg_w6",
@@ -933,7 +1097,7 @@ EXTERNAL = [
      "doc": "misc/2026-09-02_dcg_dualforce_control/DOSSIER.md"},
     {"id": "dualforce_dcg_w1_e", "score_id": "df_dcg_effect_v4", "kind": "ours", "frames": 121, "no_twin": True,
      "same_prompt_by_design": True, "join_swap": ("__dfw1_e", ""),
-     "label": "Ⓔ DCG w=1 (parity)",
+     "label": "Ⓔ SEGUE (w=1 · parity)",
      "sub": "dualforce control 1k + DCG w=1 · effect · app%same 100.0 (= plain demo branch; >ceiling) · NUMBERS ONLY (copy-guards pending)",
      "src": REPO_ROOT / "store/gens/029_dualforce_dcg_w1/02_effect__dai/videos",
      "media": "outputs/videos/df_dcg_sweep/dualforce_dcg_w1_e",
@@ -944,7 +1108,7 @@ EXTERNAL = [
      "doc": "misc/2026-09-02_dcg_dualforce_control/DOSSIER.md"},
     {"id": "dualforce_dcg_w1p5_e", "score_id": "df_dcg_effect_v4", "kind": "ours", "frames": 121, "no_twin": True,
      "same_prompt_by_design": True, "join_swap": ("__dfw1p5_e", ""),
-     "label": "Ⓔ DCG w=1.5",
+     "label": "Ⓔ SEGUE (w=1.5)",
      "sub": "dualforce control 1k + DCG w=1.5 · effect · app%same 100.9 · NUMBERS ONLY (copy-guards pending)",
      "src": REPO_ROOT / "store/gens/030_dualforce_dcg_w1p5/02_effect__dai/videos",
      "media": "outputs/videos/df_dcg_sweep/dualforce_dcg_w1p5_e",
@@ -955,7 +1119,7 @@ EXTERNAL = [
      "doc": "misc/2026-09-02_dcg_dualforce_control/DOSSIER.md"},
     {"id": "dualforce_dcg_w3_e", "score_id": "df_dcg_effect_v4", "kind": "ours", "frames": 121, "no_twin": True,
      "same_prompt_by_design": True, "join_swap": ("__dfw3_e", ""),
-     "label": "Ⓔ DCG w=3",
+     "label": "Ⓔ SEGUE (w=3)",
      "sub": "dualforce control 1k + DCG w=3 · effect · app%same 102.0 (>ceiling) · NUMBERS ONLY (copy-guards pending)",
      "src": REPO_ROOT / "store/gens/031_dualforce_dcg_w3/02_effect__dai/videos",
      "media": "outputs/videos/df_dcg_sweep/dualforce_dcg_w3_e",
@@ -966,7 +1130,7 @@ EXTERNAL = [
      "doc": "misc/2026-09-02_dcg_dualforce_control/DOSSIER.md"},
     {"id": "dualforce_dcg_w6_e", "score_id": "df_dcg_effect_v4", "kind": "ours", "frames": 121, "no_twin": True,
      "same_prompt_by_design": True, "join_swap": ("__dfw6_e", ""),
-     "label": "Ⓔ DCG w=6",
+     "label": "Ⓔ SEGUE (w=6)",
      "sub": "dualforce control 1k + DCG w=6 · effect · app%same 100.9 (>ceiling) · NUMBERS ONLY (copy-guards pending)",
      "src": REPO_ROOT / "store/gens/032_dualforce_dcg_w6/02_effect__dai/videos",
      "media": "outputs/videos/df_dcg_sweep/dualforce_dcg_w6_e",
@@ -1515,49 +1679,87 @@ def external_gen(a: dict, r: dict, per_seed: dict, m: dict | None, ceil: dict,
     return e
 
 
+def _attach_arm_payload(a: dict, registry: dict, ceil: dict) -> dict:
+    """The CACHED, card-independent half of one external arm's attach: read its rows and scores,
+    and pre-build every generation dict (videos + ref clip resolved on disk) for each item that
+    names a registry row. This is where the v1 profile spends its time — the items.jsonl parse
+    (load_external_scores) plus external_gen's per-clip `.exists()` storm — and none of it depends
+    on which cards exist, so it caches per arm keyed on the arm's OWN inputs (rows file, scores dir,
+    media listing) + the registry/ceilings the join and pct read.
+
+    `prompt_hi` is left empty here and recomputed against the real card prompt at replay (a cheap
+    string diff), because that is the one field of `g` that depends on the card — nothing else does.
+    """
+    by_item = arm_rows(a)
+    metrics, prov = load_external_scores(a["scores"], registry, ceil, a["id"], a.get("join_swap"))
+    js = a.get("join_swap")
+    records, off_grid = [], 0
+    for item, per_seed in sorted(by_item.items()):
+        r = registry.get(item.replace(*js) if js else item)
+        if r is None:
+            off_grid += 1
+            continue
+        g = external_gen(a, r, per_seed, metrics.get(item), ceil, "")   # our_prompt filled at replay
+        g["prompt_hi"] = None                                           # card-dependent — set on replay
+        records.append({"key": f"{r['donor_class']}|{r['endpoint']}|{r['sided']}",
+                        "ref": r.get("reference"), "exp_vids": len(per_seed), "g": g,
+                        # only makes_cards arms ever call new_card(r); others skip when no card exists
+                        "r": r if a.get("makes_cards") else None})
+    return {"records": records, "off_grid": off_grid, "rows": len(by_item), "prov": prov}
+
+
+def _attach_payload_cached(a: dict, registry: dict, ceil: dict) -> dict:
+    files = _registry_files() + _ceilings_files() + [a["rows"][1]]
+    sp = Path(a["scores"])
+    files += list(sp.glob("*/items.jsonl")) + list(sp.glob("items.jsonl"))
+    files += list(sp.glob("*/results.json")) + list(sp.glob("results.json"))
+    prim = SCORE_SETS[0]
+    extra = (prim.get("corpus"), tuple(sorted((prim.get("env") or {}).items())), _media_listing(a))
+    return _memo(f"attach__{a['id']}", files, extra,
+                 lambda: _attach_arm_payload(a, registry, ceil))
+
+
 def attach_external(cards: dict, registry: dict, ceil: dict, new_card=None) -> list[dict]:
     """Hang every external arm's clips on the cards the runs already built, and collect each
-    card's per-arm prompts so the page can show them side by side with ours."""
+    card's per-arm prompts so the page can show them side by side with ours.
+
+    The expensive per-arm read/build is memoized in _attach_payload_cached; this function does only
+    the cheap join — decide each generation's card, fill the card-dependent `prompt_hi`, and count —
+    every build, so the join is always correct against the current card set even off a warm cache."""
     stats = []
     for a in EXTERNAL:
-        by_item = arm_rows(a)
-        metrics, prov = load_external_scores(a["scores"], registry, ceil, a["id"],
-                                             a.get("join_swap"))
-        joined = vids = scored = off_grid = same_as_ours = exp_vids = 0
-        js = a.get("join_swap")
-        for item, per_seed in sorted(by_item.items()):
-            r = registry.get(item.replace(*js) if js else item)
-            if r is None:
-                off_grid += 1
-                continue
-            key = f"{r['donor_class']}|{r['endpoint']}|{r['sided']}"
+        pay = _attach_payload_cached(a, registry, ceil)
+        joined = vids = scored = same_as_ours = exp_vids = 0
+        for rec in pay["records"]:
+            key = rec["key"]
             card = cards.get(key)
             if card is None:
                 if a.get("makes_cards") and new_card is not None:   # grid v3: new rows get their own cards
-                    card = cards.setdefault(key, new_card(r))
+                    card = cards.setdefault(key, new_card(rec["r"]))
                 else:                             # a row of the grid no run answers — not a card
                     continue
-            g = external_gen(a, r, per_seed, metrics.get(item), ceil, card["prompt"])
+            g = rec["g"]
+            g["prompt_hi"] = diff_span(card["prompt"], g["prompt"])  # the one card-dependent field
             card["slots"][a["id"]].append(g)
             # the prompt belongs to (arm, reference): two rows can share a card with different
             # demos, and arm Ⓐ's prompt is written from the demo, so it differs between them
             card.setdefault("alt_prompts", []).append(
                 {"tier": a["id"], "label": a["label"], "kind": a["prompt_kind"],
-                 "ref": r.get("reference"), "text": g["prompt"], "hi": g["prompt_hi"]})
+                 "ref": rec["ref"], "text": g["prompt"], "hi": g["prompt_hi"]})
             joined += 1
-            exp_vids += len(per_seed)   # seeds this arm DECLARES for the item (a manifest arm may be 1-seed)
+            exp_vids += rec["exp_vids"]   # seeds this arm DECLARES for the item (a manifest arm may be 1-seed)
             vids += len(g["videos"])
             scored += bool(g["scored"])
             same_as_ours += g["prompt"] == card["prompt"]
         stats.append({"id": a["id"], "label": a["label"], "sub": a["sub"],
                       "kind": a.get("kind", "prior-work"), "frames": a.get("frames"),
                       "no_twin": bool(a.get("no_twin")),
-                      "score_id": a["score_id"], "prov": prov,
+                      "score_id": a["score_id"], "prov": pay["prov"],
                       "prompt_kind": a["prompt_kind"], "doc": a["doc"],
                       "media": a["media"], "manifest": str(a["rows"][1].relative_to(LAB)),
                       "scores_slot": str(a["scores"].relative_to(LAB)),
-                      "rows": len(by_item), "gens": joined, "videos": vids, "exp_vids": exp_vids, "scored": scored,
-                      "off_grid": off_grid, "same_as_ours": same_as_ours,
+                      "rows": pay["rows"], "gens": joined, "videos": vids, "exp_vids": exp_vids, "scored": scored,
+                      "off_grid": pay["off_grid"], "same_as_ours": same_as_ours,
                       # carried through so the prompt-identity seatbelt can exempt the arms whose
                       # claim REQUIRES an identical prompt (the ⑦/⑧ bottleneck pair)
                       "same_prompt_by_design": a.get("same_prompt_by_design", False)})
@@ -1574,15 +1776,16 @@ def attach_external(cards: dict, registry: dict, ceil: dict, new_card=None) -> l
 #: store/evals/028_grid_v3_paper_arms__dai__* (absent => unscored, videos only). Rows: the subentry's grid.jsonl
 #: once store_register wrote it, else the stamped registry it was generated from (identical rows).
 GRID_V3_TABLE = [  # canonical arm, gen dir, category, arm label, kind, subentry KK for (neutral hf, neutral ed, effect hf, effect ed) [None = not generated], optional eval glob (default evals/028)
-    ("base_cond", "005_base_cond", "baseline", "base · +endpoints", "baseline", (4, 5, 6, 7)),
-    ("ic_gen", "001_ic_gen", "generalist", "ic_gen (r32)", "ours", (3, 4, 5, 6)),
-    ("dualforce_control", "013_dualforce_control", "dualforce", "DUAL-FORCE control (plain FM)", "ours", (3, 4, 5, 6)),
-    ("dualforce_dcg_w6", "032_dualforce_dcg_w6", "df_dcg", "DCG w=6", "ours", (3, 4, 5, 6)),
+    ("base_cond", "005_base_cond", "baseline", "Base LTX-2 (no reference)", "baseline", (4, 5, 6, 7)),
+    ("ic_gen", "001_ic_gen", "generalist", "Plain LoRA", "ours", (3, 4, 5, 6)),
+    ("dualforce_control", "013_dualforce_control", "dualforce", "SEGUE w/o NRG", "ours", (3, 4, 5, 6)),
+    ("dualforce_dcg_w6", "032_dualforce_dcg_w6", "df_dcg", "SEGUE (w=6)", "ours", (3, 4, 5, 6)),
     # DCG guidance-weight sweep (misc/2026-09-19_dcg_sweep_metrics): w=1.5 and w=3 between w=1 (dualforce_control) and w=6, NEUTRAL
     # tiers only (the effect arms were taken out of scope by the owner on 2026-09-20; 031/06 is registered but unscored). Same rows,
     # seeds and 028-identical pools, scored in evals/041 on the same instrument (feature-store path, bit-identical to 028's).
-    ("dualforce_dcg_w1p5", "030_dualforce_dcg_w1p5", "df_dcg", "DCG w=1.5", "ours", (3, 4, None, None), "041_grid_v3_dcg_w_sweep__dai__*"),
-    ("dualforce_dcg_w3", "031_dualforce_dcg_w3", "df_dcg", "DCG w=3", "ours", (3, 4, None, None), "041_grid_v3_dcg_w_sweep__dai__*"),
+    ("dualforce_dcg_w1p5", "030_dualforce_dcg_w1p5", "df_dcg", "SEGUE (w=1.5)", "ours", (3, 4, 5, 6), "041_grid_v3_dcg_w_sweep__dai__*"),  # IMPL-5 2026-09-25: effect KKs 5/6 (05_effect_v3, 06_effect_v3ed81) now present; 041 glob has no effect scores -> videos now, numbers when scoring lands
+    ("dualforce_dcg_w3", "031_dualforce_dcg_w3", "df_dcg", "SEGUE (w=3)", "ours", (3, 4, 5, 6), "041_grid_v3_dcg_w_sweep__dai__*"),  # IMPL-5 2026-09-25: effect KKs 5/6 added (see above)
+    ("dualforce_dcg_emptynull_w6", "040_dualforce_dcg_emptynull_w6", "df_dcg", "SEGUE (empty null, w=6)", "ours", (3, 4, None, None), "000_none__*"),  # full-grid empty-null (endpoint_only) NEUTRAL only; videos now, v5 numbers via evals 047/040/048/049 (no v4 028-style scores)
 ]
 GRID_V3_LABEL = {"v2": "152-row grid (v2)", "v3-hf": "grid v3 · Higgsfield + reserve (121 f)", "v3-ed": "grid v3 · EffectData (native 81 f)"}
 
@@ -1609,7 +1812,7 @@ def _grid_v3_entries() -> tuple[list[dict], list[tuple]]:
                 # v2 runs' own prompts, byte-identical by the superset rule) — identical is the design
                 "same_prompt_by_design": tier == "neutral", "rows_arm": ha,
                 "label": ("Ⓝ " if tier == "neutral" else "Ⓔ ") + arm_label + (" · ED81" if fam == "ed" else " · v3"),
-                "sub": f"grid v3 {tier} · {GRID_V3_LABEL[grid]} · seeds 42/43 · dai"
+                "sub": f"grid v3 {tier} · {GRID_V3_LABEL[grid]} · seeds 42/43 · dai · store arm {arm} ({gen_dir})"
                        + (" · frame-0 anchor; copy/core flags not comparable with 121 f" if fam == "ed" else "")
                        + (" · DCG w-sweep, scored in evals/041 on the instrument of evals/028 (028-identical pools)" if sweep else ""),
                 "src": sub / "videos", "media": f"outputs/videos/grid_v3/{ha}",
@@ -1702,51 +1905,70 @@ EXTERNAL.extend(_VFXDCG)
 CONTEXT_TIERS_AFTER.extend(a["id"] for a in _VFXDCG)
 TIER_LABEL.update({a["id"]: [a["label"].upper(), a["sub"]] for a in _VFXDCG})
 
-# Two-endpoint (TEG, both endpoints given) adapted baselines — campaign misc/2026-09-20_teg_baselines, scored in evals/042 on
-# the ZERO-SHOT two-sided grid-v3 rows only (owner 2026-09-20; 38 items x seeds 42/43 = 76 gens per arm): refVFX two-sided
-# (reference + first/last frame), Wan2.1-FLF2V-14B base (first/last frame, text only) and Wan2.1-VACE-14B first-last CLIP
-# (6 + 4 given frames at 16 fps, text only). Every arm receives the base_cond EFFECT prompt with the task token stripped — the
-# paper's "adapted baselines receive the effect as text" — so they join the two-sided grid-v3 cards as ABSOLUTE levels
-# (no CTT base twin), like the sibling external arms. Generated on the campus cluster H100 (`__cc`), scored on DeltaAI (one
-# machine for every arm, the rule since 2026-07-30). Each entry's grid.jsonl also carries the 72 seen/unseen gens; `rows_keep`
-# drops them here because they are unscored. Frame counts 33 / 81 vs our 121: copy/core flags not comparable (stated in `sub`).
+# Two-endpoint (TEG, both endpoints given) adapted baselines — campaign misc/2026-09-20_teg_baselines (effect arms, the
+# zero-shot two-sided tier scored in evals/042) + misc/2026-09-21_neutral_baselines (their NEUTRAL-prompt twins, unscored):
+# refVFX two-sided (reference + first/last frame), Wan2.1-FLF2V-14B base (first/last frame, text only) and Wan2.1-VACE-14B
+# first-last CLIP (6 + 4 given frames at 16 fps, text only). The effect arms receive the base_cond EFFECT prompt with the task
+# token stripped — the paper's "adapted baselines receive the effect as text"; the neutral twins receive the base_cond NEUTRAL
+# text ("S1 S2", token stripped, no effect clause). All join the two-sided grid-v3 cards as ABSOLUTE levels (no CTT base twin),
+# like the sibling external arms. Generated on the campus cluster H100 (`__cc`); the effect arms' zero-shot tier scored on
+# DeltaAI (one machine for every arm, the rule since 2026-07-30). Since 2026-09-22 EVERY row of each grid.jsonl joins (owner:
+# "i just want to see all the TEG generations alongside my own ones") — 74 items x seeds 42/43 = 148 clips per arm: 38 zero-shot
+# + 4 seen + 32 unseen items; the seen/unseen gens and the whole neutral twins carry no score and render as videos only (an
+# absent score entry is the documented "unscored" path — no placeholder, no borrowed number). Before 2026-09-22 a `rows_keep`
+# filter kept the zero-shot rows only. Frame counts 33 / 81 vs our 121: copy/core flags not comparable (stated in `sub`).
 _TEG, _TEG_CATALOG = [], []
-for _ha, _subdir, _F, _armk, _mlabel, _cond, _how in [
-    ("refvfx_effect_v3", "store/gens/003_refvfx/04_effect_v3__cc", 33, "refvfx_teg", "refVFX · ref + both endpoints",
+_TEG_SYSTEMS = [  # store shelf, frames, canonical arm, panel label, cond note, recipe; (effect subentry, neutral subentry); (effect harness_arm, neutral harness_arm)
+    ("003_refvfx", 33, "refvfx_teg", "refVFX · ref + both endpoints",
      "1st+last frame + demo → {n}f",
      "refVFX release recipe (Wan2.1-FLF2V-14B-720P + refVFX LoRA step-10000 + CausVid, 6 steps, cfg 6 / cfg_ref 2, strict end image) "
      "with BOTH endpoints (frame 0 of start9, frame 8 of end9 = target frame 120) and the reference demo uniformly subsampled to 33 f; "
-     "33 f @ 6.55 fps (duration-matched). The only adapted baseline that also sees the reference."),
-    ("wan_flf2v_effect_v3", "store/gens/042_wan_flf2v/01_effect_v3__cc", 81, "wan_flf2v", "Wan2.1-FLF2V · text only",
+     "33 f @ 6.55 fps (duration-matched). The only adapted baseline that also sees the reference.",
+     ("04_effect_v3__cc", "06_neutral_v3_teg__cc"), ("refvfx_effect_v3", "refvfx_neutral_v3_teg")),
+    ("042_wan_flf2v", 81, "wan_flf2v", "Wan2.1-FLF2V · text only",
      "1st+last frame, no demo → {n}f",
      "stock Wan2.1-FLF2V-14B-720P through DiffSynth's official first-last-frame example (50 steps, cfg 5, sigma_shift 16, Wan negative), "
-     "no LoRA, no CausVid, no reference; the effect reaches the model through the prompt only. 81 f @ 16 fps, 480x640 (720p-trained model at "
-     "480p, disclosed)."),
-    ("wan_vace_effect_v3", "store/gens/043_wan_vace/01_effect_v3__cc", 81, "wan_vace", "Wan2.1-VACE clip · text only",
+     "no LoRA, no CausVid, no reference; the effect (if any) reaches the model through the prompt only. 81 f @ 16 fps, 480x640 "
+     "(720p-trained model at 480p, disclosed).",
+     ("01_effect_v3__cc", "02_neutral_v3__cc"), ("wan_flf2v_effect_v3", "wan_flf2v_neutral_v3")),
+    ("043_wan_vace", 81, "wan_vace", "Wan2.1-VACE clip · text only",
      "6+4-frame clips @16 fps, no demo → {n}f",
      "stock Wan2.1-VACE-14B first-last CLIP extension (composed 81-f source: the 24-fps endpoints resampled to 16 fps — start9 idx 0,2,3,5,6,8 "
      "as output frames 0..5, end9 idx 4,5,7,8 as frames 77..80 — mid-gray elsewhere, keep/generate mask; 50 steps, cfg 5, sigma_shift 16, "
-     "no reference image). The metric harness scores its given windows against those resampled clips (grid type VACE16)."),
-]:
-    _subp = REPO_ROOT / _subdir
-    _TEG.append({
-        "id": _ha, "score_id": "teg_v4", "kind": "prior-work", "frames": _F,
-        "no_twin": True, "grid": "v3-hf", "makes_cards": False,
-        "join_swap": (f"__{_ha}__", "__ic_gen__"), "rows_arm": _ha,
-        "rows_keep": (lambda row: row.get("ref_novelty") == "zero_shot"),
-        "cond_note": _cond,
-        "label": f"Ⓣ {_mlabel} · TEG zero-shot",
-        "sub": f"both endpoints given (TEG) · effect prompt (base_cond text, token stripped) · two-sided zero-shot rows only "
-               f"(38 items x seeds 42/43; seen/unseen generated but unscored) · {_F}f — copy/core not comparable across frame counts · "
-               f"gen cc (H100), scored dai (evals/042)",
-        "src": _subp / "videos", "media": f"outputs/videos/teg_baselines/{_ha}",
-        "rows": ("manifest", _subp / "grid.jsonl"),
-        "scores": REPO_ROOT / f"store/evals/042_teg_zs_baselines__dai__2026-09-20/{_ha}",
-        "prompt_kind": f"{_mlabel}: {_how} Prompt = the grid-v3 EFFECT prompt with the task token stripped, byte-equal to "
-                       f"gens/005_base_cond/06_effect_v3 (the LTX-2 effect-prompt row of the same block). Absolute level, no CTT base twin.",
-        "doc": "misc/2026-09-20_teg_baselines/RECORD.md",
-    })
-    _TEG_CATALOG.append((_ha, "teg", _armk, _mlabel, "effect", "effect prompt · v3 two-sided zs"))
+     "no reference image). The metric harness scores its given windows against those resampled clips (grid type VACE16).",
+     ("01_effect_v3__cc", "02_neutral_v3__cc"), ("wan_vace_effect_v3", "wan_vace_neutral_v3")),
+]
+for _shelf, _F, _armk, _mlabel, _cond, _how, _subs, _has in _TEG_SYSTEMS:
+    for _var, _sub, _ha in zip(("effect", "neutral"), _subs, _has):
+        _subp = REPO_ROOT / f"store/gens/{_shelf}/{_sub}"
+        _scored = _var == "effect"          # only the effect arms' zero-shot tier has a score entry (evals/042)
+        _scores = (REPO_ROOT / f"store/evals/042_teg_zs_baselines__dai__2026-09-20/{_ha}" if _scored
+                   else REPO_ROOT / f"store/evals/pending_teg_neutral__dai/{_ha}")     # absent => unscored, videos only
+        _TEG.append({
+            "id": _ha, "score_id": "teg_v4", "kind": "prior-work", "frames": _F,
+            "no_twin": True, "grid": "v3-hf", "makes_cards": False,
+            "join_swap": (f"__{_ha}__", "__ic_gen__"), "rows_arm": _ha,
+            "cond_note": _cond,
+            "label": f"{'Ⓣ' if _scored else 'ⓣ'} {_mlabel} · TEG {_var}",
+            "sub": f"both endpoints given (TEG) · {_var} prompt "
+                   + ("(base_cond effect text, token stripped)" if _scored else "(base_cond neutral text \"S1 S2\", token stripped, no effect clause)")
+                   + " · ALL two-sided grid-v3 rows (74 items x seeds 42/43 = 148 clips: 38 zero-shot + 4 seen + 32 unseen items) · "
+                   + ("zero-shot tier scored dai (evals/042); seen/unseen UNSCORED (videos only)" if _scored
+                      else "UNSCORED (videos only) · neutral twin, campaign misc/2026-09-21_neutral_baselines")
+                   + f" · {_F}f — copy/core not comparable across frame counts · gen cc (H100)",
+            "src": _subp / "videos", "media": f"outputs/videos/teg_baselines/{_ha}",
+            "rows": ("manifest", _subp / "grid.jsonl"),
+            "scores": _scores,
+            "prompt_kind": f"{_mlabel}: {_how} "
+                           + ("Prompt = the grid-v3 EFFECT prompt with the task token stripped, byte-equal to gens/005_base_cond/06_effect_v3 "
+                              "(the LTX-2 effect-prompt row of the same block)." if _scored
+                              else "Prompt = the base_cond NEUTRAL text (prompts/010, task token stripped: \"S1 S2\" on these two-sided rows, "
+                                   "no effect clause; refVFX also without its template clause).")
+                           + " Absolute level, no CTT base twin.",
+            "doc": "misc/2026-09-20_teg_baselines/RECORD.md" if _scored else "misc/2026-09-21_neutral_baselines/RECORD.md",
+        })
+        _TEG_CATALOG.append((_ha, "teg", _armk, _mlabel, _var,
+                             f"{_var} prompt · v3 two-sided" + (" (zs scored · seen/unseen videos)" if _scored else " (unscored)")))
 EXTERNAL.extend(_TEG)
 CONTEXT_TIERS_AFTER.extend(a["id"] for a in _TEG)
 TIER_LABEL.update({a["id"]: [a["label"].upper(), a["sub"]] for a in _TEG})
@@ -1926,6 +2148,56 @@ def instrument_delta(registry: dict) -> dict:
 
 
 # ------------------------------------------------------------------------------------- build
+
+# ------------------------------------------------------- v2 fast-build: memoize the score-set reads
+#: The three functions that read the SCORE_SETS directories (5.8 + 1.2 + 0.3 s in the v1 profile).
+#: None of them change when an EXTERNAL arm is added, so caching them keeps a warm rebuild from
+#: touching store/evals at all for the run/specialist columns. Each wrapper reassigns a module
+#: global to a cached version of the SAME function; build() calls these by name and picks the cached
+#: one up unchanged. On a miss the ORIGINAL runs and its result is cached; on a hit the identical
+#: result is returned from disk. The fingerprint spans every file the unit reads, INCLUDING the
+#: registry and ceilings source files whose parsed dicts feed the join / pct arithmetic.
+_uncached_load_all_scores = load_all_scores
+_uncached_instrument_delta = instrument_delta
+_uncached_control_floors = control_floors
+
+
+def load_all_scores():
+    files = _registry_files() + _ceilings_files()
+    for ss in SCORE_SETS:
+        for p in score_paths(ss):
+            files += list(p.glob("*/items.jsonl")) + list(p.glob("*/results.json"))
+            files += [x for x in (p / "items.jsonl", p / "results.json") if x.exists()]
+
+    def compute():
+        m, instr = _uncached_load_all_scores()
+        side = {ss["id"]: {"env": ss.get("env"), "arms": ss.get("arms")} for ss in SCORE_SETS}
+        return m, instr, side
+
+    m, instr, side = _memo("all_scores", files, (), compute)
+    for ss in SCORE_SETS:                       # load_all_scores' only side effects, restored on a hit
+        if ss["id"] in side:
+            ss["env"] = side[ss["id"]]["env"]
+            ss["arms"] = side[ss["id"]]["arms"]
+    return m, instr
+
+
+def instrument_delta(registry):
+    files = _registry_files() + _ceilings_files()
+    for ss in SCORE_SETS:                       # the uncached fn scans EVERY set for ic_gen rows
+        for p in score_paths(ss):
+            files += list(p.glob("*/items.jsonl"))
+    return _memo("instrument_delta", files, (), lambda: _uncached_instrument_delta(registry))
+
+
+def control_floors(registry):
+    files = _registry_files() + _ceilings_files()
+    for p in score_paths(SCORE_SETS[0]):
+        files += list(p.glob("*/items.jsonl"))
+    return _memo("control_floors", files, (), lambda: _uncached_control_floors(registry))
+# ----------------------------------------------------- end v2 fast-build score-set memoization
+
+
 def build() -> dict:
     ensure_external_media()
     run_eval.EXTRA_REGISTRY = None
@@ -2084,8 +2356,8 @@ def build() -> dict:
     # metric_eval fork: group arms into FAMILIES, each with a neutral and an effect variant, so the
     # compact selector can show two toggles (N / E) per family instead of one flat chip per arm.
     FAM_ORDER = ["base_prompt", "base_cond", "ic_gen", "ctt_v2", "refvfx"]
-    FAM_LABEL = {"base_prompt": "base · prompt-only", "base_cond": "base · +endpoints",
-                 "ic_gen": "ic_gen (r32)", "ctt_v2": "ctt_v2 (r128)", "refvfx": "refVFX (ext)"}
+    FAM_LABEL = {"base_prompt": "Base LTX-2 · prompt only", "base_cond": "Base LTX-2 (no reference)",
+                 "ic_gen": "Plain LoRA", "ctt_v2": "ctt_v2 (r128)", "refvfx": "refVFX (ext)"}
     # per-family class display labels (refVFX uses its own vocabulary)
     PCLASS_LABEL = {"base_prompt": {"neutral": "neutral", "effect": "effect_in"},
                     "base_cond":   {"neutral": "neutral", "effect": "effect_in"},
@@ -2149,21 +2421,21 @@ def build() -> dict:
                   ("generalist", "Generalist trainings"),
                   ("bottleneck", "Bottleneck arms"),
                   ("dcg", "DCG on ctt_v2 (test-time guidance)"),
-                  ("df_dcg", "DCG on dualforce_control (test-time guidance)"),
+                  ("df_dcg", "SEGUE · NRG weight w (test-time DCG on SEGUE w/o NRG)"),
                   ("ext_dcg", "DCG on prior systems (VFXMaster)"),
-                  ("dualforce", "DUAL-FORCE (KD-crutch A/B)"),
+                  ("dualforce", "SEGUE w/o NRG (dualforce_control) · DUAL-FORCE KD-crutch A/B siblings"),
                   ("contrast", "Contrastive over 012 (control + lose)"),
                   ("flowsig", "optical-flow program (flowsig)"),
                   ("dino_signal", "DINO transition-signal (arm A)"),
                   ("external", "Visual effect transfer · prior work"),
                   ("teg", "Transition effect generation (TEG) · prior work (both endpoints given)")]
     CATALOG = [  # (tier id, category, arm, arm label, variant, entry label)
-        ("base_prompt_neutral", "baseline", "base_prompt", "base · prompt-only", "neutral", "neutral"),
-        ("base_prompt_ctt",     "baseline", "base_prompt", "base · prompt-only", "effect",  "effect"),
-        ("base_cond_neutral",   "baseline", "base_cond",   "base · +endpoints",  "neutral", "neutral"),
-        ("base_cond_ctt",       "baseline", "base_cond",   "base · +endpoints",  "effect",  "effect"),
-        ("run_ic_gen",          "generalist", "ic_gen", "ic_gen (r32)",  "neutral", "neutral · cc"),
-        ("ic_gen_effect",       "generalist", "ic_gen", "ic_gen (r32)",  "effect",  "effect · dai"),
+        ("base_prompt_neutral", "baseline", "base_prompt", "Base LTX-2 · prompt only", "neutral", "neutral"),
+        ("base_prompt_ctt",     "baseline", "base_prompt", "Base LTX-2 · prompt only", "effect",  "effect"),
+        ("base_cond_neutral",   "baseline", "base_cond",   "Base LTX-2 (no reference)",  "neutral", "neutral"),
+        ("base_cond_ctt",       "baseline", "base_cond",   "Base LTX-2 (no reference)",  "effect",  "effect"),
+        ("run_ic_gen",          "generalist", "ic_gen", "Plain LoRA",  "neutral", "neutral · cc"),
+        ("ic_gen_effect",       "generalist", "ic_gen", "Plain LoRA",  "effect",  "effect · dai"),
         ("run_ctt_v2",          "generalist", "ctt_v2", "ctt_v2 (r128)", "neutral", "neutral · eps"),
         ("ctt_v2_plain_regen",  "generalist", "ctt_v2", "ctt_v2 (r128)", "neutral", "neutral · dai regen"),
         ("ctt_v2_leaky",        "generalist", "ctt_v2", "ctt_v2 (r128)", "effect",  "effect · dai"),
@@ -2191,7 +2463,7 @@ def build() -> dict:
         ("vfxmaster_neutral", "external", "vfxmaster", "VFXMaster (prior work)", "neutral", "neutral · no effect · dai"),
         ("vfxmaster_effect",  "external", "vfxmaster", "VFXMaster (prior work)", "effect",  "effect · generic clause · dai"),
         ("vfxmaster_authorcfg","external","vfxmaster", "VFXMaster (prior work)", "author_short", "author-short · {S1}.{EFFECT}. · dai"),
-        ("dualforce_control_neutral", "dualforce", "dualforce_control", "DUAL-FORCE control (plain FM)", "neutral", "neutral · dai"),
+        ("dualforce_control_neutral", "dualforce", "dualforce_control", "SEGUE w/o NRG", "neutral", "neutral · dai"),
         ("dualforce_kd_neutral",      "dualforce", "dualforce_kd",      "DUAL-FORCE KD (crutch distill)", "neutral", "neutral · dai"),
         ("dualforce_twin_neutral",    "dualforce", "dualforce_twin",    "COUNTERFACTUAL-TWIN (redirect+diff)", "neutral", "neutral · dai"),
         ("dualforce_contrast_neutral", "dualforce", "dualforce_contrast", "CONTRASTIVE (paired-preference)", "neutral", "neutral · dai"),
@@ -2218,15 +2490,15 @@ def build() -> dict:
         ("dcg_w1p5_e", "dcg", "dcg_w1p5", "DCG w=1.5", "effect", "effect · dai"),
         ("dcg_w3_e",   "dcg", "dcg_w3",   "DCG w=3", "effect", "effect · dai"),
         ("dcg_w6_e",   "dcg", "dcg_w6",   "DCG w=6", "effect", "effect · dai"),
-        ("dualforce_control_effect", "dualforce", "dualforce_control", "DUAL-FORCE control (plain FM)", "effect", "effect · dai"),
-        ("dualforce_dcg_w1",   "df_dcg", "dualforce_dcg_w1",   "DCG w=1 (parity)", "neutral", "neutral · dai"),
-        ("dualforce_dcg_w1p5", "df_dcg", "dualforce_dcg_w1p5", "DCG w=1.5", "neutral", "neutral · dai"),
-        ("dualforce_dcg_w3",   "df_dcg", "dualforce_dcg_w3",   "DCG w=3", "neutral", "neutral · dai"),
-        ("dualforce_dcg_w6",   "df_dcg", "dualforce_dcg_w6",   "DCG w=6", "neutral", "neutral · dai"),
-        ("dualforce_dcg_w1_e",   "df_dcg", "dualforce_dcg_w1",   "DCG w=1 (parity)", "effect", "effect · dai"),
-        ("dualforce_dcg_w1p5_e", "df_dcg", "dualforce_dcg_w1p5", "DCG w=1.5", "effect", "effect · dai"),
-        ("dualforce_dcg_w3_e",   "df_dcg", "dualforce_dcg_w3",   "DCG w=3", "effect", "effect · dai"),
-        ("dualforce_dcg_w6_e",   "df_dcg", "dualforce_dcg_w6",   "DCG w=6", "effect", "effect · dai"),
+        ("dualforce_control_effect", "dualforce", "dualforce_control", "SEGUE w/o NRG", "effect", "effect · dai"),
+        ("dualforce_dcg_w1",   "df_dcg", "dualforce_dcg_w1",   "SEGUE (w=1 · parity)", "neutral", "neutral · dai"),
+        ("dualforce_dcg_w1p5", "df_dcg", "dualforce_dcg_w1p5", "SEGUE (w=1.5)", "neutral", "neutral · dai"),
+        ("dualforce_dcg_w3",   "df_dcg", "dualforce_dcg_w3",   "SEGUE (w=3)", "neutral", "neutral · dai"),
+        ("dualforce_dcg_w6",   "df_dcg", "dualforce_dcg_w6",   "SEGUE (w=6)", "neutral", "neutral · dai"),
+        ("dualforce_dcg_w1_e",   "df_dcg", "dualforce_dcg_w1",   "SEGUE (w=1 · parity)", "effect", "effect · dai"),
+        ("dualforce_dcg_w1p5_e", "df_dcg", "dualforce_dcg_w1p5", "SEGUE (w=1.5)", "effect", "effect · dai"),
+        ("dualforce_dcg_w3_e",   "df_dcg", "dualforce_dcg_w3",   "SEGUE (w=3)", "effect", "effect · dai"),
+        ("dualforce_dcg_w6_e",   "df_dcg", "dualforce_dcg_w6",   "SEGUE (w=6)", "effect", "effect · dai"),
         ("vfxmaster_dcg_w6_v3zs",     "ext_dcg", "vfxmaster_dcg", "VFXMaster + DCG w=6", "neutral", "neutral · v3 HF"),
         ("vfxmaster_dcg_w6_v3ed81zs", "ext_dcg", "vfxmaster_dcg", "VFXMaster + DCG w=6", "neutral", "neutral · v3 ED81"),
     ]
@@ -2529,27 +2801,59 @@ def check(data: dict) -> None:
               f"per-cell where n≥8: {len(v['cells'])} cells")
 
 
-def emit(data: dict, out: Path) -> None:
-    depth = len(out.parent.relative_to(REPO_ROOT).parts)
+def emit_page(out_dir: Path) -> None:
+    """Write index.html from the v2 template alone — no data, no store reads (seconds)."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "index.html").write_text((HERE / "template_neutral_effect_v2.html").read_text())
+
+
+def emit_data(data: dict, out_dir: Path) -> None:
+    """Write data.js (the payload the template loads via window.__NE_DATA__) and then the page.
+
+    `meta.rel` is set here from the OUTPUT depth exactly as the v1 emit() did, so the compact JSON
+    is byte-identical to v1's embedded payload for an output at the same depth."""
+    depth = len(out_dir.relative_to(REPO_ROOT).parts)
     data["meta"]["rel"] = "../" * depth
-    tpl = (HERE / "template_neutral_effect.html").read_text()
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(tpl.replace("/*__DATA__*/null", json.dumps(data, separators=(",", ":"))))
+    out_dir.mkdir(parents=True, exist_ok=True)
+    payload = json.dumps(data, separators=(",", ":"))
+    (out_dir / "data.js").write_text("window.__NE_DATA__=" + payload + ";")
+    emit_page(out_dir)
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default="outputs/reports/iclora_neutral_effect/index.html")
+    ap.add_argument("--out-dir", default="outputs/reports/iclora_neutral_effect_v2",
+                    help="directory that receives index.html + data.js")
+    ap.add_argument("--mode", choices=["all", "data", "page"], default="all",
+                    help="all/data: rebuild data.js (cached) then re-emit the page; "
+                         "page: re-emit index.html from the template only (no build, no store reads)")
+    ap.add_argument("--no-cache", action="store_true",
+                    help="ignore existing cache entries and rebuild (entries are still rewritten)")
+    ap.add_argument("--clear-cache", action="store_true",
+                    help="delete the cache dir before building (a true cold build)")
     args = ap.parse_args()
+    global _CACHE_READ
+    if args.clear_cache:
+        shutil.rmtree(CACHE_DIR, ignore_errors=True)
+        print(f"[cache] cleared {CACHE_DIR}")
+    if args.no_cache:
+        _CACHE_READ = False
+    out_dir = REPO_ROOT / args.out_dir
+    seed_collections(out_dir)      # every mode: seed the tracked file once + refresh the serving symlink
+    if args.mode == "page":
+        emit_page(out_dir)
+        print(f"[viewer:v2] page-only -> {args.out_dir}/index.html (template only, no store reads)")
+        return
     data = build()
     check(data)
-    out = REPO_ROOT / args.out
-    emit(data, out)
+    emit_data(data, out_dir)
     m = data["meta"]
-    print(f"\n[viewer] {m['cards']} cards · {m['generations']} videos · "
+    idx, dj = out_dir / "index.html", out_dir / "data.js"
+    print(f"\n[viewer:v2] {m['cards']} cards · {m['generations']} videos · "
           f"{len(m['arm_tiers'])} toggleable arms ({len(data['runs'])} runs + "
-          f"{len(m['external'])} own-prompt) -> {args.out} ({out.stat().st_size / 1e6:.1f} MB)")
-    print(f"[viewer] serve:  python3 scripts/viewers/viewerctl.py serve   (port 8017)")
+          f"{len(m['external'])} own-prompt) -> {args.out_dir}/ "
+          f"(index.html {idx.stat().st_size / 1e3:.0f} KB + data.js {dj.stat().st_size / 1e6:.1f} MB)")
+    print(f"[viewer:v2] serve:  /usr/bin/python3.12 scripts/viewers/viewerctl.py serve   (port 8017)")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,1463 @@
+{
+  "schema": 1,
+  "updated": "2026-09-26T08:32:16.143Z",
+  "sections": {
+    "A": {
+      "class_order": [
+        "shadow_smoke",
+        "firelava",
+        "flame",
+        "melt_transition",
+        "display_transition",
+        "flying_cam_transition",
+        "earth_wave",
+        "raven_transition",
+        "air_bending",
+        "giant_grab",
+        "water_bending"
+      ],
+      "row_order": {
+        "shadow_smoke": [
+          "418iqdn6",
+          "r6egcwkb",
+          "cczwrrnb",
+          "z3v0r35k",
+          "fdo2d544",
+          "a33sjmgt",
+          "gmhs85jz",
+          "fasp0pks",
+          "z18xkws2"
+        ],
+        "firelava": [
+          "byogszpf",
+          "0cyl72zt",
+          "u2pggshw",
+          "3ckchgya",
+          "ur0ja9il",
+          "yil62xka",
+          "ig4kscw5",
+          "4pag4rf0"
+        ],
+        "flame": [
+          "hgmk9k1r",
+          "pcsxtdae",
+          "vq4dm2fy",
+          "dxyvqpnb",
+          "frt966wf",
+          "swq1e8op"
+        ],
+        "melt_transition": [
+          "8l4n4l9y",
+          "95eem7b3",
+          "9avhm49k",
+          "tdvdp7h2",
+          "6xf4fkp2"
+        ],
+        "display_transition": [
+          "l2q44rzv",
+          "7isbc4dc",
+          "wrpylh7n",
+          "ezx4zuge"
+        ],
+        "flying_cam_transition": [
+          "qk3taafg",
+          "3ig0ss2e",
+          "qur4pczi",
+          "ji4poo2r"
+        ],
+        "earth_wave": [
+          "3icsfin3",
+          "9gwmg7v2",
+          "0cvi6jes"
+        ],
+        "raven_transition": [
+          "dxhfcj5a",
+          "7s3y5vqd",
+          "one918hv"
+        ],
+        "air_bending": [
+          "c4bum34e",
+          "6ymiqoit"
+        ],
+        "giant_grab": [
+          "p8aac5nz",
+          "rff2p6ip"
+        ],
+        "water_bending": [
+          "qr2hukz1",
+          "knppfe3u"
+        ]
+      },
+      "hidden_rows": [
+        "r6egcwkb",
+        "cczwrrnb",
+        "z3v0r35k",
+        "fdo2d544",
+        "a33sjmgt",
+        "gmhs85jz",
+        "fasp0pks",
+        "z18xkws2",
+        "0cyl72zt",
+        "u2pggshw",
+        "3ckchgya",
+        "ur0ja9il",
+        "yil62xka",
+        "ig4kscw5",
+        "4pag4rf0",
+        "pcsxtdae",
+        "vq4dm2fy",
+        "dxyvqpnb",
+        "frt966wf",
+        "swq1e8op",
+        "8l4n4l9y",
+        "95eem7b3",
+        "9avhm49k",
+        "tdvdp7h2",
+        "6xf4fkp2",
+        "7isbc4dc",
+        "wrpylh7n",
+        "ezx4zuge",
+        "qk3taafg",
+        "3ig0ss2e",
+        "qur4pczi",
+        "ji4poo2r",
+        "9gwmg7v2",
+        "0cvi6jes",
+        "dxhfcj5a",
+        "7s3y5vqd",
+        "one918hv",
+        "c4bum34e",
+        "p8aac5nz",
+        "rff2p6ip",
+        "qr2hukz1"
+      ]
+    },
+    "B": {
+      "class_order": [
+        "train_rush",
+        "luminous_gaze",
+        "saint_glow",
+        "ed.Bile_aura_hands",
+        "ed.Amber_roots_from_feet",
+        "ed.Amethyst_sword_from_palm",
+        "explosion",
+        "monstrosity",
+        "acid",
+        "ed.Amber_crystal_wings_on_back",
+        "ed.Avocado_Pulp_Aura",
+        "ed.Back_Born_Letter_Wings",
+        "ed.Back_laser_wings",
+        "ed.Bamboo_shield_in_front",
+        "ed.Body_Meteorite_Crystal",
+        "ed.Chest_Burst_Ribbons",
+        "ed.Chest_Erupting_Shield",
+        "ed.Chest_fish_burst",
+        "ed.Chest_Laser_Burst",
+        "ed.Chest_light_field",
+        "ed.Confetti_Burst_from_Hands",
+        "ed.Cucumber_seeds_from_chest",
+        "ed.Electric_Clothes_Glow",
+        "ed.Eye_Shard_Stream",
+        "ed.Fist_heat_blast",
+        "live_concert",
+        "northern_lights",
+        "ed.Amber_streams_from_eyes",
+        "ed.Avocado_Seed_Pendant",
+        "ed.Back_bubble_cloak",
+        "ed.Chest_sigil",
+        "cotton_cloud",
+        "ed.Diamond_Footpath",
+        "ed.Eye_Meteor_Burst",
+        "glitch",
+        "ed.Acid_mist_limb_transformation",
+        "ed.Arm_chip_serpent",
+        "ed.Body_gear_field",
+        "ed.Brass_serpent_coil",
+        "ed.Chaotic_wings_from_shoulders",
+        "ed.Dark_mist_wings_from_back"
+      ],
+      "row_order": {
+        "train_rush": [
+          "hb6u017y",
+          "2dpwkqxc",
+          "84gmh17q",
+          "d83jwhc6",
+          "ltwqp0i7"
+        ],
+        "luminous_gaze": [
+          "sm0sx0sa",
+          "3bvg7rn1",
+          "dq1jiakm",
+          "n1yax26p",
+          "lpuo5slp",
+          "zxix8kce",
+          "xc81lpj4"
+        ],
+        "saint_glow": [
+          "z9kdv9ah",
+          "lfzz1zo7",
+          "dz7xx9ky",
+          "kgxbo76o",
+          "ym1f1505",
+          "ty2i9ul2"
+        ],
+        "ed.Bile_aura_hands": [
+          "2yip06f4",
+          "6n9acf0x",
+          "m9d7lss4"
+        ],
+        "ed.Amber_roots_from_feet": [
+          "txm3qfk6",
+          "lz2inwbb",
+          "29n4nckx"
+        ],
+        "ed.Amethyst_sword_from_palm": [
+          "j89any4p",
+          "s7vo55tp",
+          "3w18ljlm"
+        ],
+        "explosion": [
+          "w806c1wx",
+          "1qw49sxh",
+          "d58j20kq",
+          "naa73sg7",
+          "woskvsiu"
+        ],
+        "monstrosity": [
+          "aeby8may",
+          "przmy22h",
+          "26j1vu6q",
+          "00lsje7n"
+        ],
+        "acid": [
+          "thrp1hwl",
+          "08an8cdn",
+          "5r3gnkxy"
+        ],
+        "ed.Amber_crystal_wings_on_back": [
+          "mliyqx0l",
+          "s28o7lus",
+          "c2wmn43b"
+        ],
+        "ed.Avocado_Pulp_Aura": [
+          "93ggmxty",
+          "fp7zvizo",
+          "jl5jko3l"
+        ],
+        "ed.Back_Born_Letter_Wings": [
+          "vrkoiiqh",
+          "ntop82tc",
+          "vhbctw3k"
+        ],
+        "ed.Back_laser_wings": [
+          "hsz09ytl",
+          "gn3berbf",
+          "j6di51i6"
+        ],
+        "ed.Bamboo_shield_in_front": [
+          "abwpfeny",
+          "g2av8pdv",
+          "qq2ntc36"
+        ],
+        "ed.Body_Meteorite_Crystal": [
+          "wjqkn9g3",
+          "e4d9biig",
+          "nrsjow9w"
+        ],
+        "ed.Chest_Burst_Ribbons": [
+          "fxxlsinn",
+          "ygea0u18",
+          "zins3y1p"
+        ],
+        "ed.Chest_Erupting_Shield": [
+          "h9uqiw4f",
+          "9a065ld6",
+          "mo6r93st"
+        ],
+        "ed.Chest_fish_burst": [
+          "cpe61esh",
+          "ap8t57t1",
+          "5x9sn3ti"
+        ],
+        "ed.Chest_Laser_Burst": [
+          "kzpdepsk",
+          "jn53rt5q",
+          "bmnj6c54"
+        ],
+        "ed.Chest_light_field": [
+          "2h0sjrg5",
+          "kxi63bv9",
+          "4akduyxw"
+        ],
+        "ed.Confetti_Burst_from_Hands": [
+          "1ufecrk6",
+          "9tdl943a",
+          "3m5gdr6c"
+        ],
+        "ed.Cucumber_seeds_from_chest": [
+          "cadv967d",
+          "0dctmafp",
+          "f54r3rt0"
+        ],
+        "ed.Electric_Clothes_Glow": [
+          "suon5lo3",
+          "qj4xfyji",
+          "97kkazrz"
+        ],
+        "ed.Eye_Shard_Stream": [
+          "lyg2rn2o",
+          "4rwqoqln",
+          "hvdocxkm"
+        ],
+        "ed.Fist_heat_blast": [
+          "tvcapf2d",
+          "4zc46ol5",
+          "ywczod68"
+        ],
+        "live_concert": [
+          "rb3pznsl",
+          "rvu4pmd1",
+          "zqhiga8e"
+        ],
+        "northern_lights": [
+          "f2ukahj0",
+          "jalist23",
+          "ikvc20uw"
+        ],
+        "ed.Amber_streams_from_eyes": [
+          "wlnqov1q",
+          "lvf4ysgb"
+        ],
+        "ed.Avocado_Seed_Pendant": [
+          "7azxsfqf",
+          "zku1mae0"
+        ],
+        "ed.Back_bubble_cloak": [
+          "5zfljecx",
+          "az8p7tjz"
+        ],
+        "ed.Chest_sigil": [
+          "pczbv2h8",
+          "yocaonhp"
+        ],
+        "cotton_cloud": [
+          "opk1d33v",
+          "biw95y1e"
+        ],
+        "ed.Diamond_Footpath": [
+          "737v327q",
+          "ktoaea6z"
+        ],
+        "ed.Eye_Meteor_Burst": [
+          "71x9uyec",
+          "gs0xkxa6"
+        ],
+        "glitch": [
+          "s2tffjlw",
+          "7k0zbjxf"
+        ],
+        "ed.Acid_mist_limb_transformation": [
+          "qaoujnbs"
+        ],
+        "ed.Arm_chip_serpent": [
+          "r9391cth"
+        ],
+        "ed.Body_gear_field": [
+          "85jfsm7e"
+        ],
+        "ed.Brass_serpent_coil": [
+          "jwzv5mbe"
+        ],
+        "ed.Chaotic_wings_from_shoulders": [
+          "jmgmfpsy"
+        ],
+        "ed.Dark_mist_wings_from_back": [
+          "44jdtpy8"
+        ]
+      },
+      "hidden_rows": [
+        "2dpwkqxc",
+        "84gmh17q",
+        "d83jwhc6",
+        "ltwqp0i7",
+        "sm0sx0sa",
+        "3bvg7rn1",
+        "dq1jiakm",
+        "n1yax26p",
+        "zxix8kce",
+        "xc81lpj4",
+        "z9kdv9ah",
+        "lfzz1zo7",
+        "dz7xx9ky",
+        "kgxbo76o",
+        "ty2i9ul2",
+        "2yip06f4",
+        "6n9acf0x",
+        "lz2inwbb",
+        "29n4nckx",
+        "s7vo55tp",
+        "3w18ljlm",
+        "w806c1wx",
+        "d58j20kq",
+        "naa73sg7",
+        "woskvsiu",
+        "aeby8may",
+        "przmy22h",
+        "26j1vu6q",
+        "00lsje7n",
+        "thrp1hwl",
+        "08an8cdn",
+        "5r3gnkxy",
+        "mliyqx0l",
+        "s28o7lus",
+        "c2wmn43b",
+        "93ggmxty",
+        "fp7zvizo",
+        "jl5jko3l",
+        "vrkoiiqh",
+        "ntop82tc",
+        "vhbctw3k",
+        "hsz09ytl",
+        "gn3berbf",
+        "j6di51i6",
+        "abwpfeny",
+        "g2av8pdv",
+        "qq2ntc36",
+        "wjqkn9g3",
+        "e4d9biig",
+        "ygea0u18",
+        "zins3y1p",
+        "h9uqiw4f",
+        "mo6r93st",
+        "cpe61esh",
+        "ap8t57t1",
+        "5x9sn3ti",
+        "kzpdepsk",
+        "jn53rt5q",
+        "bmnj6c54",
+        "2h0sjrg5",
+        "4akduyxw",
+        "1ufecrk6",
+        "9tdl943a",
+        "3m5gdr6c",
+        "cadv967d",
+        "0dctmafp",
+        "f54r3rt0",
+        "suon5lo3",
+        "qj4xfyji",
+        "97kkazrz",
+        "lyg2rn2o",
+        "4rwqoqln",
+        "hvdocxkm",
+        "4zc46ol5",
+        "ywczod68",
+        "rb3pznsl",
+        "rvu4pmd1",
+        "zqhiga8e",
+        "f2ukahj0",
+        "jalist23",
+        "ikvc20uw",
+        "wlnqov1q",
+        "lvf4ysgb",
+        "7azxsfqf",
+        "zku1mae0",
+        "5zfljecx",
+        "az8p7tjz",
+        "pczbv2h8",
+        "yocaonhp",
+        "opk1d33v",
+        "biw95y1e",
+        "737v327q",
+        "ktoaea6z",
+        "71x9uyec",
+        "gs0xkxa6",
+        "s2tffjlw",
+        "7k0zbjxf",
+        "qaoujnbs",
+        "85jfsm7e",
+        "jwzv5mbe",
+        "jmgmfpsy",
+        "44jdtpy8"
+      ]
+    },
+    "C": {
+      "class_order": [
+        "shadow_smoke",
+        "firelava",
+        "display_transition",
+        "melt_transition",
+        "flame",
+        "water_bending",
+        "flying_cam_transition",
+        "earth_wave",
+        "air_bending",
+        "giant_grab",
+        "raven_transition",
+        "hero_flight"
+      ],
+      "block_order": {
+        "shadow_smoke": [
+          "teg_ref__shadow_smoke_0",
+          "teg_ref__shadow_smoke_7"
+        ],
+        "firelava": [
+          "teg_ref__firelava_0",
+          "teg_ref__firelava_1"
+        ],
+        "display_transition": [
+          "teg_ref__display_transition_1",
+          "teg_ref__display_transition_2"
+        ],
+        "melt_transition": [
+          "teg_ref__melt_transition_3",
+          "teg_ref__melt_transition_1"
+        ],
+        "flame": [
+          "teg_ref__flame_transition_3",
+          "teg_ref__flame_transition_2"
+        ],
+        "water_bending": [
+          "teg_ref__water_bending_3"
+        ],
+        "flying_cam_transition": [
+          "teg_ref__flying_cam_transition_1"
+        ],
+        "earth_wave": [
+          "teg_ref__earth_wave_3"
+        ],
+        "air_bending": [
+          "teg_ref__air_bending_1"
+        ],
+        "giant_grab": [
+          "teg_ref__giant_grab_3"
+        ],
+        "raven_transition": [
+          "teg_ref__raven_transition_0",
+          "teg_ref__raven_transition_1"
+        ],
+        "hero_flight": [
+          "teg_ref__hero_flight_0"
+        ]
+      },
+      "cell_order": {
+        "teg_ref__shadow_smoke_0": [
+          "9r6ssuva",
+          "kjgpzj3r",
+          "j2j8qx39",
+          "xcy5jro3",
+          "hcsbnr9i",
+          "x40mchkc"
+        ],
+        "teg_ref__shadow_smoke_7": [
+          "bduddroe",
+          "r7qerih4",
+          "7u8csnc6",
+          "juo75g38"
+        ],
+        "teg_ref__firelava_0": [
+          "6831obm2",
+          "c7md7j9g",
+          "taf30krj",
+          "46swv4uc",
+          "or3wi60o"
+        ],
+        "teg_ref__firelava_1": [
+          "n75ywwm5",
+          "ij0sowr7",
+          "1u2onwq9"
+        ],
+        "teg_ref__display_transition_1": [
+          "r4rdzykq",
+          "gvsylasq",
+          "obm67zn4",
+          "1s5bbqmc"
+        ],
+        "teg_ref__display_transition_2": [
+          "dy831a5y"
+        ],
+        "teg_ref__melt_transition_3": [
+          "1qkisvya",
+          "tv957zdr",
+          "5z0zh7gg"
+        ],
+        "teg_ref__melt_transition_1": [
+          "6ock7q2f",
+          "oeqll9jb"
+        ],
+        "teg_ref__flame_transition_3": [
+          "g999tmy5",
+          "pdznb0p0",
+          "4vfvahxd"
+        ],
+        "teg_ref__flame_transition_2": [
+          "49cwlor1",
+          "yxglx7ye",
+          "zwjoyu44"
+        ],
+        "teg_ref__water_bending_3": [
+          "st157l67",
+          "likikq10"
+        ],
+        "teg_ref__flying_cam_transition_1": [
+          "3iqanzta",
+          "dymjlciz",
+          "ldjv3cnd",
+          "nme2x38v"
+        ],
+        "teg_ref__earth_wave_3": [
+          "e1q8zgrk",
+          "q1vh7zp9",
+          "6cpl6e09"
+        ],
+        "teg_ref__air_bending_1": [
+          "faey8pxr",
+          "lrhk3jxu"
+        ],
+        "teg_ref__giant_grab_3": [
+          "fthd1yfp",
+          "4smff5pa"
+        ],
+        "teg_ref__raven_transition_0": [
+          "xh64se0a"
+        ],
+        "teg_ref__raven_transition_1": [
+          "oaqfpl2c"
+        ],
+        "teg_ref__hero_flight_0": [
+          "fjm4ba37"
+        ]
+      },
+      "hidden_blocks": [
+        "teg_ref__shadow_smoke_7",
+        "teg_ref__display_transition_2",
+        "teg_ref__flame_transition_2",
+        "teg_ref__raven_transition_0",
+        "teg_ref__raven_transition_1",
+        "teg_ref__hero_flight_0"
+      ],
+      "hidden_cells": {
+        "teg_ref__shadow_smoke_0": [
+          "j2j8qx39",
+          "xcy5jro3",
+          "hcsbnr9i",
+          "x40mchkc"
+        ],
+        "teg_ref__shadow_smoke_7": [
+          "7u8csnc6",
+          "juo75g38"
+        ],
+        "teg_ref__firelava_0": [
+          "taf30krj",
+          "46swv4uc",
+          "or3wi60o"
+        ],
+        "teg_ref__firelava_1": [
+          "1u2onwq9"
+        ],
+        "teg_ref__display_transition_1": [
+          "obm67zn4",
+          "1s5bbqmc"
+        ],
+        "teg_ref__display_transition_2": [
+          "dy831a5y"
+        ],
+        "teg_ref__melt_transition_3": [
+          "5z0zh7gg"
+        ],
+        "teg_ref__flame_transition_3": [
+          "4vfvahxd"
+        ],
+        "teg_ref__flame_transition_2": [
+          "zwjoyu44"
+        ],
+        "teg_ref__flying_cam_transition_1": [
+          "ldjv3cnd",
+          "nme2x38v"
+        ],
+        "teg_ref__earth_wave_3": [
+          "6cpl6e09"
+        ],
+        "teg_ref__raven_transition_0": [
+          "xh64se0a"
+        ],
+        "teg_ref__raven_transition_1": [
+          "oaqfpl2c"
+        ]
+      },
+      "merge_into": {
+        "teg_ref__shadow_smoke_1": "teg_ref__shadow_smoke_7"
+      }
+    },
+    "D": {
+      "class_order": [
+        "portal",
+        "earth_element",
+        "animalization",
+        "gas_transformation",
+        "color_rain",
+        "illustration_scene",
+        "luminous_gaze",
+        "acid",
+        "explosion",
+        "live_concert",
+        "wireframe",
+        "cotton_cloud",
+        "saint_glow",
+        "train_rush",
+        "money_rain",
+        "monstrosity",
+        "ed.Amber_roots_from_feet",
+        "ed.Bile_aura_hands",
+        "ed.Amber_crystal_wings_on_back",
+        "ed.Back_laser_wings",
+        "ed.Bamboo_shield_in_front",
+        "super_fast_run",
+        "ed.Chest_Burst_Ribbons",
+        "ed.Avocado_Pulp_Aura",
+        "ed.Body_Meteorite_Crystal",
+        "ed.Chest_Erupting_Shield",
+        "ed.Chest_fish_burst",
+        "ed.Chest_Laser_Burst",
+        "ed.Chest_light_field",
+        "ed.Confetti_Burst_from_Hands",
+        "ed.Cucumber_seeds_from_chest",
+        "ed.Electric_Clothes_Glow",
+        "ed.Eye_Shard_Stream",
+        "ed.Fist_heat_blast",
+        "northern_lights",
+        "polygon",
+        "ed.Amber_streams_from_eyes",
+        "ed.Amethyst_sword_from_palm",
+        "ed.Avocado_Seed_Pendant",
+        "ed.Back_bubble_cloak",
+        "ed.Dark_mist_wings_from_back",
+        "ed.Diamond_Footpath",
+        "ed.Eye_Meteor_Burst",
+        "glitch",
+        "mystification",
+        "sakura_petals",
+        "shadow",
+        "ed.Acid_mist_limb_transformation",
+        "ed.Arm_chip_serpent",
+        "ed.Back_Born_Letter_Wings",
+        "ed.Body_gear_field",
+        "ed.Brass_serpent_coil",
+        "ed.Chaotic_wings_from_shoulders",
+        "ed.Chest_sigil",
+        "nature_bloom"
+      ],
+      "block_order": {
+        "portal": [
+          "vfx_ref__portal_1",
+          "vfx_ref__portal_0",
+          "vfx_ref__portal_4"
+        ],
+        "earth_element": [
+          "vfx_ref__earth_element_4"
+        ],
+        "animalization": [
+          "vfx_ref__animalization_0",
+          "vfx_ref__animalization_1"
+        ],
+        "gas_transformation": [
+          "vfx_ref__gas_transformation_0",
+          "vfx_ref__gas_transformation_6",
+          "vfx_ref__gas_transformation_7"
+        ],
+        "color_rain": [
+          "vfx_ref__color_rain_0",
+          "vfx_ref__color_rain_1",
+          "vfx_ref__color_rain_2"
+        ],
+        "illustration_scene": [
+          "vfx_ref__illustration_scene_0",
+          "vfx_ref__illustration_scene_4",
+          "vfx_ref__illustration_scene_7"
+        ],
+        "luminous_gaze": [
+          "vfx_ref__luminous_gaze_1",
+          "vfx_ref__luminous_gaze_0"
+        ],
+        "acid": [
+          "vfx_ref__acid_0",
+          "vfx_ref__acid_1"
+        ],
+        "explosion": [
+          "vfx_ref__explosion_0",
+          "vfx_ref__explosion_1"
+        ],
+        "live_concert": [
+          "vfx_ref__live_concert_1",
+          "vfx_ref__live_concert_3"
+        ],
+        "wireframe": [
+          "vfx_ref__wireframe_0",
+          "vfx_ref__wireframe_1",
+          "vfx_ref__wireframe_7"
+        ],
+        "cotton_cloud": [
+          "vfx_ref__cotton_cloud_2",
+          "vfx_ref__cotton_cloud_1"
+        ],
+        "saint_glow": [
+          "vfx_ref__saint_glow_1",
+          "vfx_ref__saint_glow_0"
+        ],
+        "train_rush": [
+          "vfx_ref__train_rush_0",
+          "vfx_ref__train_rush_1"
+        ],
+        "money_rain": [
+          "vfx_ref__money_rain_1"
+        ],
+        "monstrosity": [
+          "vfx_ref__monstrosity_0",
+          "vfx_ref__monstrosity_1"
+        ],
+        "ed.Amber_roots_from_feet": [
+          "vfx_ref__ed.Amber_roots_from_feet.b1c41aca9ebede4f.M"
+        ],
+        "ed.Bile_aura_hands": [
+          "vfx_ref__ed.Bile_aura_hands.ac198e9b1922c8b5.M"
+        ],
+        "ed.Amber_crystal_wings_on_back": [
+          "vfx_ref__ed.Amber_crystal_wings_on_back.74338fd6ddab169a.M"
+        ],
+        "ed.Back_laser_wings": [
+          "vfx_ref__ed.Back_laser_wings.fish-ea28b9d6.Z"
+        ],
+        "ed.Bamboo_shield_in_front": [
+          "vfx_ref__ed.Bamboo_shield_in_front.cb893d10c0387c6b.M"
+        ],
+        "super_fast_run": [
+          "vfx_ref__super_fast_run_0",
+          "vfx_ref__super_fast_run_1"
+        ],
+        "ed.Chest_Burst_Ribbons": [
+          "vfx_ref__ed.Chest_Burst_Ribbons.267d2d2270082773.M"
+        ],
+        "ed.Avocado_Pulp_Aura": [
+          "vfx_ref__ed.Avocado_Pulp_Aura.71e2179ce04faa74.M"
+        ],
+        "ed.Body_Meteorite_Crystal": [
+          "vfx_ref__ed.Body_Meteorite_Crystal.dog-e4d32067.Z"
+        ],
+        "ed.Chest_Erupting_Shield": [
+          "vfx_ref__ed.Chest_Erupting_Shield.958f2642980d32df.M"
+        ],
+        "ed.Chest_fish_burst": [
+          "vfx_ref__ed.Chest_fish_burst.0e645d8b.F"
+        ],
+        "ed.Chest_Laser_Burst": [
+          "vfx_ref__ed.Chest_Laser_Burst.451c84e369d8fe75.M"
+        ],
+        "ed.Chest_light_field": [
+          "vfx_ref__ed.Chest_light_field.cat-48b88619.Z"
+        ],
+        "ed.Confetti_Burst_from_Hands": [
+          "vfx_ref__ed.Confetti_Burst_from_Hands.45363300bf22cd46.M"
+        ],
+        "ed.Cucumber_seeds_from_chest": [
+          "vfx_ref__ed.Cucumber_seeds_from_chest.116c93366b05a44e.M"
+        ],
+        "ed.Electric_Clothes_Glow": [
+          "vfx_ref__ed.Electric_Clothes_Glow.07b819b2.F"
+        ],
+        "ed.Eye_Shard_Stream": [
+          "vfx_ref__ed.Eye_Shard_Stream.1e2592b60cc87490.M"
+        ],
+        "ed.Fist_heat_blast": [
+          "vfx_ref__ed.Fist_heat_blast.0e8ec528ffd657e9.M"
+        ],
+        "northern_lights": [
+          "vfx_ref__northern_lights_0",
+          "vfx_ref__northern_lights_1"
+        ],
+        "polygon": [
+          "vfx_ref__polygon_0",
+          "vfx_ref__polygon_4",
+          "vfx_ref__polygon_8"
+        ],
+        "ed.Amber_streams_from_eyes": [
+          "vfx_ref__ed.Amber_streams_from_eyes.3ac7086cb324d068.M"
+        ],
+        "ed.Amethyst_sword_from_palm": [
+          "vfx_ref__ed.Amethyst_sword_from_palm.a08133c9c5a39f5e.M"
+        ],
+        "ed.Avocado_Seed_Pendant": [
+          "vfx_ref__ed.Avocado_Seed_Pendant.cf3fa73700a5f407.M"
+        ],
+        "ed.Back_bubble_cloak": [
+          "vfx_ref__ed.Back_bubble_cloak.d511403f79173932.M"
+        ],
+        "ed.Dark_mist_wings_from_back": [
+          "vfx_ref__ed.Dark_mist_wings_from_back.7ea3d186772aa8d6.M"
+        ],
+        "ed.Diamond_Footpath": [
+          "vfx_ref__ed.Diamond_Footpath.f6e4aa518320cb88.M"
+        ],
+        "ed.Eye_Meteor_Burst": [
+          "vfx_ref__ed.Eye_Meteor_Burst.0e8ec528ffd657e9.M"
+        ],
+        "glitch": [
+          "vfx_ref__glitch_0"
+        ],
+        "mystification": [
+          "vfx_ref__mystification_0"
+        ],
+        "sakura_petals": [
+          "vfx_ref__sakura_petals_1"
+        ],
+        "shadow": [
+          "vfx_ref__shadow_10"
+        ],
+        "ed.Acid_mist_limb_transformation": [
+          "vfx_ref__ed.Acid_mist_limb_transformation.01023k013no0kksp.F"
+        ],
+        "ed.Arm_chip_serpent": [
+          "vfx_ref__ed.Arm_chip_serpent.74338fd6ddab169a.M"
+        ],
+        "ed.Back_Born_Letter_Wings": [
+          "vfx_ref__ed.Back_Born_Letter_Wings.8558269e232d4350.M"
+        ],
+        "ed.Body_gear_field": [
+          "vfx_ref__ed.Body_gear_field.4bc59fcee49a8d5b.M"
+        ],
+        "ed.Brass_serpent_coil": [
+          "vfx_ref__ed.Brass_serpent_coil.0c27bd005ad52648.M"
+        ],
+        "ed.Chaotic_wings_from_shoulders": [
+          "vfx_ref__ed.Chaotic_wings_from_shoulders.c4cca916f233e949.M"
+        ],
+        "ed.Chest_sigil": [
+          "vfx_ref__ed.Chest_sigil.eagle-774703b7.Z"
+        ],
+        "nature_bloom": [
+          "vfx_ref__nature_bloom_1"
+        ]
+      },
+      "cell_order": {
+        "vfx_ref__portal_1": [
+          "3vfgzlec",
+          "7csxp5w9",
+          "119ypqd6",
+          "j180d4lj",
+          "qqg0u33t"
+        ],
+        "vfx_ref__portal_0": [
+          "7096kv1y"
+        ],
+        "vfx_ref__portal_4": [
+          "qaq3su3h",
+          "qzeb22zb",
+          "sdtcl2ga"
+        ],
+        "vfx_ref__earth_element_4": [
+          "nlhloko0",
+          "0jfsu11q",
+          "c9i8mbvp",
+          "simxjnw0",
+          "c9m2gcmo"
+        ],
+        "vfx_ref__animalization_0": [
+          "xezft41o",
+          "ks2b0dmq",
+          "vl7urs0e",
+          "nh4v00h5",
+          "h29lte46"
+        ],
+        "vfx_ref__animalization_1": [
+          "8vd3cwy0",
+          "fu26mo8e"
+        ],
+        "vfx_ref__gas_transformation_0": [
+          "s59o3e44",
+          "c913y0xl"
+        ],
+        "vfx_ref__gas_transformation_6": [
+          "szlg9ft1",
+          "ubtbbx5g",
+          "g298f8vg",
+          "y42h7aso"
+        ],
+        "vfx_ref__gas_transformation_7": [
+          "stnnq1c5",
+          "9ccohr2v",
+          "ta9x4c6d"
+        ],
+        "vfx_ref__color_rain_0": [
+          "rndexgcm",
+          "o9cuex37",
+          "jejubxik",
+          "kzmbx2bt",
+          "g00plypb"
+        ],
+        "vfx_ref__color_rain_1": [
+          "3sy74u77"
+        ],
+        "vfx_ref__color_rain_2": [
+          "jgp67ugb"
+        ],
+        "vfx_ref__illustration_scene_0": [
+          "53dsi8bv"
+        ],
+        "vfx_ref__illustration_scene_4": [
+          "ff2nz9op",
+          "4ej9re3e",
+          "8m7qxf9c"
+        ],
+        "vfx_ref__illustration_scene_7": [
+          "59wcp91q",
+          "hrnkhw8b",
+          "94up2iia"
+        ],
+        "vfx_ref__luminous_gaze_1": [
+          "po8aas5r",
+          "xkwpv62x",
+          "sh1b4f5c"
+        ],
+        "vfx_ref__luminous_gaze_0": [
+          "4l182t72",
+          "gvzd8oke",
+          "jt5xtvpa",
+          "0fa6mzia"
+        ],
+        "vfx_ref__acid_0": [
+          "jka8kv59",
+          "sr1ieba7"
+        ],
+        "vfx_ref__acid_1": [
+          "eq6ctkiz",
+          "vcbv34om",
+          "t0xz99e4"
+        ],
+        "vfx_ref__explosion_0": [
+          "buzjlbr2",
+          "a4rq1bbt",
+          "ay182rf3"
+        ],
+        "vfx_ref__explosion_1": [
+          "mzt52ds3",
+          "m8pzq5d6"
+        ],
+        "vfx_ref__live_concert_1": [
+          "kkf7v5yo",
+          "rs83jw4a",
+          "8o3u1uo5"
+        ],
+        "vfx_ref__live_concert_3": [
+          "8iacc8yg",
+          "nka9oxel"
+        ],
+        "vfx_ref__wireframe_0": [
+          "rl47r16t",
+          "79b7y78n"
+        ],
+        "vfx_ref__wireframe_1": [
+          "xest78e3"
+        ],
+        "vfx_ref__wireframe_7": [
+          "abg0zqfv",
+          "vuz3hah2"
+        ],
+        "vfx_ref__cotton_cloud_2": [
+          "p2ylga6c",
+          "v62uh47h"
+        ],
+        "vfx_ref__cotton_cloud_1": [
+          "fib8z3xp",
+          "qe0kn965"
+        ],
+        "vfx_ref__saint_glow_1": [
+          "ze70ojgn",
+          "jnjve0gs",
+          "j9kyp5np"
+        ],
+        "vfx_ref__saint_glow_0": [
+          "1yvqlnoj"
+        ],
+        "vfx_ref__train_rush_0": [
+          "n093erkc",
+          "ytkxm7g3",
+          "m7djzghu"
+        ],
+        "vfx_ref__train_rush_1": [
+          "s50g3smg"
+        ],
+        "vfx_ref__money_rain_1": [
+          "padw5nir",
+          "5fm01k2p",
+          "mnvuw9nh",
+          "s3dy9g5s"
+        ],
+        "vfx_ref__monstrosity_0": [
+          "k9hqk2ev"
+        ],
+        "vfx_ref__monstrosity_1": [
+          "m01488qz",
+          "gssx3nom",
+          "hfozsdd8"
+        ],
+        "vfx_ref__ed.Amber_roots_from_feet.b1c41aca9ebede4f.M": [
+          "8h5rta2s",
+          "n4zyandp",
+          "5wjfe18t"
+        ],
+        "vfx_ref__ed.Bile_aura_hands.ac198e9b1922c8b5.M": [
+          "rhaus4im",
+          "6wlsq4w3",
+          "ag1umg8n"
+        ],
+        "vfx_ref__ed.Amber_crystal_wings_on_back.74338fd6ddab169a.M": [
+          "tx5w8gbc",
+          "ya8q62p3",
+          "jvvqtuoh"
+        ],
+        "vfx_ref__ed.Back_laser_wings.fish-ea28b9d6.Z": [
+          "aq41w6t3",
+          "ji85p4y7",
+          "nexyi1i3"
+        ],
+        "vfx_ref__ed.Bamboo_shield_in_front.cb893d10c0387c6b.M": [
+          "i3a36deh",
+          "uttbzsl1",
+          "wrd33zb8"
+        ],
+        "vfx_ref__super_fast_run_0": [
+          "9363ji4n",
+          "hsmzewi8"
+        ],
+        "vfx_ref__super_fast_run_1": [
+          "kj4pz3c7"
+        ],
+        "vfx_ref__ed.Chest_Burst_Ribbons.267d2d2270082773.M": [
+          "klcas8p8",
+          "617w8ltv",
+          "14t1jau0"
+        ],
+        "vfx_ref__ed.Avocado_Pulp_Aura.71e2179ce04faa74.M": [
+          "xrj8i5yl",
+          "1p1lunjg",
+          "qtj3j2v4"
+        ],
+        "vfx_ref__ed.Body_Meteorite_Crystal.dog-e4d32067.Z": [
+          "2xuxaesl",
+          "41b77qs3",
+          "si6ackip"
+        ],
+        "vfx_ref__ed.Chest_Erupting_Shield.958f2642980d32df.M": [
+          "r78krcf6",
+          "dex5tbx4",
+          "0vmqx27m"
+        ],
+        "vfx_ref__ed.Chest_fish_burst.0e645d8b.F": [
+          "qfteyks7",
+          "j8oeni1c",
+          "i31ts8vd"
+        ],
+        "vfx_ref__ed.Chest_Laser_Burst.451c84e369d8fe75.M": [
+          "8qsm8b0h",
+          "6w550uqo",
+          "c05u0c8l"
+        ],
+        "vfx_ref__ed.Chest_light_field.cat-48b88619.Z": [
+          "bvuy4plw",
+          "gdj3liw1",
+          "7ougwvpr"
+        ],
+        "vfx_ref__ed.Confetti_Burst_from_Hands.45363300bf22cd46.M": [
+          "x3z0dt6u",
+          "h5upqvbq",
+          "ia7a77nw"
+        ],
+        "vfx_ref__ed.Cucumber_seeds_from_chest.116c93366b05a44e.M": [
+          "ob8jd8nr",
+          "dc0ry0dh",
+          "i5co4vvk"
+        ],
+        "vfx_ref__ed.Electric_Clothes_Glow.07b819b2.F": [
+          "z4xz4yx4",
+          "jb9bi0wf",
+          "a2cu4hh9"
+        ],
+        "vfx_ref__ed.Eye_Shard_Stream.1e2592b60cc87490.M": [
+          "acepaaht",
+          "q8fma11h",
+          "66isv11q"
+        ],
+        "vfx_ref__ed.Fist_heat_blast.0e8ec528ffd657e9.M": [
+          "d0hr88ue",
+          "i8dc76or",
+          "obyhlyos"
+        ],
+        "vfx_ref__northern_lights_0": [
+          "vvdhq87r",
+          "2h9p5s2f"
+        ],
+        "vfx_ref__northern_lights_1": [
+          "7mywt4nt"
+        ],
+        "vfx_ref__polygon_0": [
+          "r1wd5pir"
+        ],
+        "vfx_ref__polygon_4": [
+          "sgnch94i"
+        ],
+        "vfx_ref__polygon_8": [
+          "xgemxcku"
+        ],
+        "vfx_ref__ed.Amber_streams_from_eyes.3ac7086cb324d068.M": [
+          "nafpxhej",
+          "xcunhg0p"
+        ],
+        "vfx_ref__ed.Amethyst_sword_from_palm.a08133c9c5a39f5e.M": [
+          "h7ssek7t",
+          "wqqu68t9"
+        ],
+        "vfx_ref__ed.Avocado_Seed_Pendant.cf3fa73700a5f407.M": [
+          "drk0mfx2",
+          "6ti7fesp"
+        ],
+        "vfx_ref__ed.Back_bubble_cloak.d511403f79173932.M": [
+          "he55f8fi",
+          "1um3sjk6"
+        ],
+        "vfx_ref__ed.Dark_mist_wings_from_back.7ea3d186772aa8d6.M": [
+          "ofmd7hin",
+          "quljnp2b"
+        ],
+        "vfx_ref__ed.Diamond_Footpath.f6e4aa518320cb88.M": [
+          "6qgrd9we",
+          "h20zx8y0"
+        ],
+        "vfx_ref__ed.Eye_Meteor_Burst.0e8ec528ffd657e9.M": [
+          "ccbge4n6",
+          "z1stdgi4"
+        ],
+        "vfx_ref__glitch_0": [
+          "yw019hue",
+          "uu86ot3f"
+        ],
+        "vfx_ref__mystification_0": [
+          "budtv1a6",
+          "302304t0"
+        ],
+        "vfx_ref__sakura_petals_1": [
+          "1s2nq8wu",
+          "rpwah86n"
+        ],
+        "vfx_ref__shadow_10": [
+          "4sjw8b11",
+          "k7nbug0q"
+        ],
+        "vfx_ref__ed.Acid_mist_limb_transformation.01023k013no0kksp.F": [
+          "ft5rug2k"
+        ],
+        "vfx_ref__ed.Arm_chip_serpent.74338fd6ddab169a.M": [
+          "jxvrhbzz"
+        ],
+        "vfx_ref__ed.Back_Born_Letter_Wings.8558269e232d4350.M": [
+          "5a9ft07o"
+        ],
+        "vfx_ref__ed.Body_gear_field.4bc59fcee49a8d5b.M": [
+          "jq4oqd98"
+        ],
+        "vfx_ref__ed.Brass_serpent_coil.0c27bd005ad52648.M": [
+          "3y3mtw1r"
+        ],
+        "vfx_ref__ed.Chaotic_wings_from_shoulders.c4cca916f233e949.M": [
+          "slhggs4z"
+        ],
+        "vfx_ref__ed.Chest_sigil.eagle-774703b7.Z": [
+          "pi6m8e9f"
+        ],
+        "vfx_ref__nature_bloom_1": [
+          "61m150by"
+        ]
+      },
+      "hidden_blocks": [
+        "vfx_ref__portal_0",
+        "vfx_ref__portal_4",
+        "vfx_ref__animalization_1",
+        "vfx_ref__gas_transformation_0",
+        "vfx_ref__gas_transformation_6",
+        "vfx_ref__color_rain_1",
+        "vfx_ref__color_rain_2",
+        "vfx_ref__illustration_scene_0",
+        "vfx_ref__illustration_scene_4",
+        "vfx_ref__illustration_scene_7",
+        "vfx_ref__luminous_gaze_0",
+        "vfx_ref__acid_0",
+        "vfx_ref__acid_1",
+        "vfx_ref__explosion_1",
+        "vfx_ref__live_concert_1",
+        "vfx_ref__live_concert_3",
+        "vfx_ref__wireframe_1",
+        "vfx_ref__wireframe_7",
+        "vfx_ref__cotton_cloud_1",
+        "vfx_ref__saint_glow_0",
+        "vfx_ref__train_rush_1",
+        "vfx_ref__money_rain_1",
+        "vfx_ref__monstrosity_0",
+        "vfx_ref__monstrosity_1",
+        "vfx_ref__ed.Back_laser_wings.fish-ea28b9d6.Z",
+        "vfx_ref__ed.Bamboo_shield_in_front.cb893d10c0387c6b.M",
+        "vfx_ref__super_fast_run_1",
+        "vfx_ref__ed.Chest_fish_burst.0e645d8b.F",
+        "vfx_ref__ed.Chest_Laser_Burst.451c84e369d8fe75.M",
+        "vfx_ref__ed.Confetti_Burst_from_Hands.45363300bf22cd46.M",
+        "vfx_ref__ed.Cucumber_seeds_from_chest.116c93366b05a44e.M",
+        "vfx_ref__ed.Electric_Clothes_Glow.07b819b2.F",
+        "vfx_ref__ed.Eye_Shard_Stream.1e2592b60cc87490.M",
+        "vfx_ref__northern_lights_1",
+        "vfx_ref__polygon_0",
+        "vfx_ref__polygon_4",
+        "vfx_ref__polygon_8",
+        "vfx_ref__ed.Amber_streams_from_eyes.3ac7086cb324d068.M",
+        "vfx_ref__ed.Avocado_Seed_Pendant.cf3fa73700a5f407.M",
+        "vfx_ref__ed.Back_bubble_cloak.d511403f79173932.M",
+        "vfx_ref__ed.Diamond_Footpath.f6e4aa518320cb88.M",
+        "vfx_ref__ed.Eye_Meteor_Burst.0e8ec528ffd657e9.M",
+        "vfx_ref__glitch_0",
+        "vfx_ref__mystification_0",
+        "vfx_ref__sakura_petals_1",
+        "vfx_ref__shadow_10",
+        "vfx_ref__ed.Acid_mist_limb_transformation.01023k013no0kksp.F",
+        "vfx_ref__ed.Back_Born_Letter_Wings.8558269e232d4350.M",
+        "vfx_ref__ed.Body_gear_field.4bc59fcee49a8d5b.M",
+        "vfx_ref__ed.Brass_serpent_coil.0c27bd005ad52648.M",
+        "vfx_ref__ed.Chaotic_wings_from_shoulders.c4cca916f233e949.M",
+        "vfx_ref__ed.Chest_sigil.eagle-774703b7.Z",
+        "vfx_ref__nature_bloom_1"
+      ],
+      "hidden_cells": {
+        "vfx_ref__portal_1": [
+          "119ypqd6",
+          "j180d4lj",
+          "qqg0u33t"
+        ],
+        "vfx_ref__portal_0": [
+          "7096kv1y"
+        ],
+        "vfx_ref__portal_4": [
+          "qaq3su3h"
+        ],
+        "vfx_ref__earth_element_4": [
+          "c9i8mbvp",
+          "simxjnw0",
+          "c9m2gcmo"
+        ],
+        "vfx_ref__animalization_0": [
+          "ks2b0dmq",
+          "vl7urs0e",
+          "nh4v00h5"
+        ],
+        "vfx_ref__gas_transformation_6": [
+          "g298f8vg",
+          "y42h7aso"
+        ],
+        "vfx_ref__gas_transformation_7": [
+          "ta9x4c6d"
+        ],
+        "vfx_ref__color_rain_0": [
+          "jejubxik",
+          "kzmbx2bt",
+          "g00plypb"
+        ],
+        "vfx_ref__illustration_scene_4": [
+          "8m7qxf9c"
+        ],
+        "vfx_ref__illustration_scene_7": [
+          "94up2iia"
+        ],
+        "vfx_ref__luminous_gaze_1": [
+          "sh1b4f5c"
+        ],
+        "vfx_ref__luminous_gaze_0": [
+          "gvzd8oke",
+          "jt5xtvpa"
+        ],
+        "vfx_ref__acid_1": [
+          "vcbv34om"
+        ],
+        "vfx_ref__explosion_0": [
+          "a4rq1bbt"
+        ],
+        "vfx_ref__live_concert_1": [
+          "8o3u1uo5"
+        ],
+        "vfx_ref__wireframe_1": [
+          "xest78e3"
+        ],
+        "vfx_ref__saint_glow_1": [
+          "jnjve0gs"
+        ],
+        "vfx_ref__train_rush_0": [
+          "m7djzghu"
+        ],
+        "vfx_ref__money_rain_1": [
+          "mnvuw9nh",
+          "s3dy9g5s"
+        ],
+        "vfx_ref__monstrosity_1": [
+          "gssx3nom"
+        ],
+        "vfx_ref__ed.Amber_roots_from_feet.b1c41aca9ebede4f.M": [
+          "n4zyandp"
+        ],
+        "vfx_ref__ed.Bile_aura_hands.ac198e9b1922c8b5.M": [
+          "ag1umg8n"
+        ],
+        "vfx_ref__ed.Amber_crystal_wings_on_back.74338fd6ddab169a.M": [
+          "jvvqtuoh"
+        ],
+        "vfx_ref__ed.Back_laser_wings.fish-ea28b9d6.Z": [
+          "ji85p4y7"
+        ],
+        "vfx_ref__ed.Bamboo_shield_in_front.cb893d10c0387c6b.M": [
+          "wrd33zb8"
+        ],
+        "vfx_ref__ed.Chest_Burst_Ribbons.267d2d2270082773.M": [
+          "14t1jau0"
+        ],
+        "vfx_ref__ed.Avocado_Pulp_Aura.71e2179ce04faa74.M": [
+          "qtj3j2v4"
+        ],
+        "vfx_ref__ed.Body_Meteorite_Crystal.dog-e4d32067.Z": [
+          "2xuxaesl"
+        ],
+        "vfx_ref__ed.Chest_Erupting_Shield.958f2642980d32df.M": [
+          "0vmqx27m"
+        ],
+        "vfx_ref__ed.Chest_fish_burst.0e645d8b.F": [
+          "i31ts8vd"
+        ],
+        "vfx_ref__ed.Chest_Laser_Burst.451c84e369d8fe75.M": [
+          "c05u0c8l"
+        ],
+        "vfx_ref__ed.Chest_light_field.cat-48b88619.Z": [
+          "bvuy4plw"
+        ],
+        "vfx_ref__ed.Confetti_Burst_from_Hands.45363300bf22cd46.M": [
+          "ia7a77nw"
+        ],
+        "vfx_ref__ed.Cucumber_seeds_from_chest.116c93366b05a44e.M": [
+          "i5co4vvk"
+        ],
+        "vfx_ref__ed.Electric_Clothes_Glow.07b819b2.F": [
+          "a2cu4hh9"
+        ],
+        "vfx_ref__ed.Eye_Shard_Stream.1e2592b60cc87490.M": [
+          "66isv11q"
+        ],
+        "vfx_ref__ed.Fist_heat_blast.0e8ec528ffd657e9.M": [
+          "obyhlyos"
+        ],
+        "vfx_ref__northern_lights_1": [
+          "7mywt4nt"
+        ]
+      },
+      "merge_into": {}
+    }
+  }
+}
