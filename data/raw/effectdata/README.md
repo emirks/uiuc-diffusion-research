@@ -7,6 +7,12 @@ start frame = the clean subject, end = after the effect.
 
 Downloaded & verified 2026-08-26 (every zip sha256-checked vs the HF LFS manifest).
 
+> **2026-10-12: `Videos/*.zip` (3,063 zips, 765 GiB) were deleted to free space; everything else here was kept.**
+> Restore them byte-identically (pinned HF commit `0ae08ae2`, size + sha256 verified per file, one process, resumable):
+> `python scripts/effectdata/restore_effectdata.py` (add `--names A,B` for a few effects, `--check` to see what is missing).
+> The S6 training encodes do not need the zips (`datasets/ctt_v2/encodes/EFFECTDATA*`); raw clips (e.g. the unseen /
+> zero-shot eval pool, `remote_zip.py`, the viewer's clip playback) do.
+
 ## What it is
 
 | | |
