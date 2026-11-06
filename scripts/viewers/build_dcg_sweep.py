@@ -138,6 +138,30 @@ CATS = [
 # entries whose HF variant seeds the default selection (the interesting ctt core)
 DEFAULT_TIERS = ["df_base_hf", "df_xfade_hf", "df_emptynull_hf"]  # owner 2026-09-24: SEGUE w/o NRG vs crossfade null vs empty null, full grid v3
 
+# ── VLM-judge leak tab (owner 2026-11-06) ────────────────────────────────────
+# Per-clip flags from the v5 Gemini judge (call 3: "effect" + "leak" = recognizable content of the
+# reference copied into the output), seed 42, grid v3, SEGUE w=6 neutral: crossfade null (032/03+04)
+# vs empty null (040/03+04). Written by misc/2026-09-22_vlm_judge_ab/clipflags_grid.py; misc/ is
+# gitignored, so a missing file just leaves the tab empty. Joined to the page by clip path.
+JUDGE_FILE = REPO / "misc/2026-09-22_vlm_judge_ab/clipflags_grid.json"
+JUDGE_ARMS = {"crossfade_w6": "xfade", "emptynull_w6": "empty"}
+# arms shown side by side on a leak card (only those with a clip for the card's grid family)
+LEAK_TIERS = ["df_base_hf", "df_base_ed", "df_xfade_hf", "df_xfade_ed", "df_emptynull_hf", "df_emptynull_ed"]
+
+
+def load_judge():
+    """Repo-relative clip path (store/gens/...) -> judge flags; {} when the judge file is absent."""
+    if not JUDGE_FILE.exists():
+        print("[warn] {} missing — leak tab will be empty".format(JUDGE_FILE.relative_to(REPO)))
+        return {}
+    out = {}
+    for o in json.load(open(JUDGE_FILE)):
+        rel = "store/gens/" + o["clip"].split("/store/gens/", 1)[1]
+        lk, ef = o.get("leak") or {}, o.get("effect") or {}
+        out[rel] = {"arm": JUDGE_ARMS[o["arm"]], "leak": lk.get("answer"), "leak_ev": lk.get("evidence", ""),
+                    "effect": ef.get("answer"), "effect_ev": ef.get("evidence", ""), "parse_error": o["parse_error"]}
+    return out
+
 
 def video_name(row):
     """The clip filename for a grid row — out_name when baked in, else <item_id>__s<seed>.mp4."""
@@ -197,6 +221,21 @@ def main():
     # stable order: cell, endpoint, reference
     card_list.sort(key=lambda c: (c["cell"], c["endpoint"], c["reference"]))
 
+    # attach the judge flags to the seed-42 clip of each slot; card.leak = {xfade/empty: True}
+    judge = load_judge()
+    n_judged = 0
+    for c in card_list:
+        flags = {}
+        for s in c["slots"].values():
+            j = judge.get(s["videos"].get("42"))
+            if j:
+                s["judge"] = j
+                n_judged += 1
+                if j["leak"] == "yes":
+                    flags[j["arm"]] = True
+        if flags:
+            c["leak"] = flags
+
     seed_list = sorted(seeds, key=lambda s: (s != "42", s))  # 42 first
     data = {
         "meta": {
@@ -205,6 +244,8 @@ def main():
             "cards": len(card_list),
             "clips": tot_clips,
             "default": DEFAULT_TIERS,
+            "leak_tiers": LEAK_TIERS,
+            "judge_clips": n_judged,
         },
         "cats": CATS,
         "cards": card_list,
@@ -217,9 +258,12 @@ def main():
     n_ep = sum(1 for c in card_list if c["src"]["ep_start"])
     n_end = sum(1 for c in card_list if c["src"]["ep_end"])
     n_ref = sum(1 for c in card_list if c["src"]["ref"])
+    n_lk = {a: sum(1 for c in card_list if c.get("leak", {}).get(a)) for a in ("xfade", "empty")}
     print("\n".join(report))
     print("[src ] endpoint-start {}/{} · endpoint-end {} (two-sided) · reference {}/{}".format(
         n_ep, len(card_list), n_end, n_ref, len(card_list)))
+    print("[judge] {}/{} judge records joined · leak cards: crossfade {} · empty {} · any {}".format(
+        n_judged, len(judge), n_lk["xfade"], n_lk["empty"], sum(1 for c in card_list if c.get("leak"))))
     print("\n[done] {} cards · {} clips · seeds {} -> {}".format(
         len(card_list), tot_clips, seed_list, OUT.relative_to(REPO)))
 
@@ -323,6 +367,22 @@ input.flt{background:var(--card2);border:1px solid var(--edge);color:var(--fg);b
  background:#132b4d;color:#dbeafe;border:1px solid var(--sel)}
 .vtag.v-HF{background:#0e2f26;color:#5eead4;border:1px solid #1c6b57}
 .vtag.v-ED{background:#33240a;color:#fbbf24;border:1px solid #7a5410}
+
+/* view tabs + VLM-judge leak flags */
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.tab{background:var(--card);border:1px solid var(--edge);color:var(--dim);border-radius:8px;
+ padding:7px 14px;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit}
+.tab:hover{border-color:var(--edge2);color:var(--fg)}
+.tab.on{background:#132b4d;border-color:var(--sel);color:#dbeafe}
+.jb{display:inline-block;font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:5px;margin:0 4px 0 0}
+.jb.leak{background:#3b1216;color:#fca5a5;border:1px solid #7f1d1d}
+.jb.clean{background:#0e2f1c;color:#86efac;border:1px solid #166534}
+.jb.noeff{background:#33240a;color:#fbbf24;border:1px solid #7a5410}
+.jb.na{background:#1d2127;color:var(--dim);border:1px solid var(--edge)}
+.jev{font-size:10.5px;color:#c7d0da;line-height:1.4;max-height:130px;overflow-y:auto}
+.jev b{color:var(--dim)}
+.cellbox.lk{border-color:#b91c1c;box-shadow:inset 0 0 0 1px #7f1d1d !important}
+.lnote{color:var(--dim);font-size:11.5px;line-height:1.5;margin-bottom:10px}
 </style>
 
 <div class="wrap">
@@ -331,7 +391,19 @@ input.flt{background:var(--card2);border:1px solid var(--edge);color:var(--fg);b
   <div class="sub" id="sub"></div>
 </header>
 
-<div class="panel">
+<div class="tabs" id="tabs"></div>
+
+<div class="panel" id="leakpanel" style="display:none">
+  <h2>VLM-judge leaks · crossfade (dissolve) null vs empty null</h2>
+  <div class="lnote">Gemini 2.5 judge (v5, per-clip call 3), shown the given frame(s), the reference video and one
+    output clip, asked whether recognizable people / objects / backgrounds <i>from the reference</i> appear in the output
+    (<b>leak</b>) and whether any effect happens (<b>no effect</b> flag). Grid v3, seed 42, SEGUE w=6, neutral prompt.
+    Arms per card: SEGUE w/o NRG (not judged) · crossfade null = NRG dissolve null (032) · empty null (040).
+    A card is listed when at least one null was flagged; each judged cell shows the judge's reason.</div>
+  <span class="lbl">show</span> <span class="seg" id="leakmodes"></span>
+</div>
+
+<div class="panel" id="armpanel">
   <h2>arms</h2>
   <div class="aptool">
     <button class="btn" onclick="armAll(1)">select all</button>
@@ -394,6 +466,48 @@ function selTiers(){
 let seed = D.meta.seeds[0] || "42";
 let flt = "";
 
+// ── view: all examples | VLM-judge leaks (#leaks) ───────────────────────────
+let view = location.hash === "#leaks" ? "leak" : "all";
+let leakMode = "any";
+const LK = c => c.leak || {};
+const LEAK_MODES = [
+  ["any",        "any null",       c => LK(c).xfade || LK(c).empty],
+  ["empty",      "empty null",     c => LK(c).empty],
+  ["xfade",      "dissolve null",  c => LK(c).xfade],
+  ["empty_only", "only empty",     c => LK(c).empty && !LK(c).xfade],
+  ["xfade_only", "only dissolve",  c => LK(c).xfade && !LK(c).empty],
+  ["both",       "both",           c => LK(c).xfade && LK(c).empty],
+];
+const leakFn = () => (LEAK_MODES.find(m => m[0] === leakMode) || LEAK_MODES[0])[2];
+function drawTabs(){
+  const n = D.cards.filter(LEAK_MODES[0][2]).length;
+  document.getElementById("tabs").innerHTML =
+    `<button class="tab ${view==="all"?"on":""}" onclick="setView('all')">all examples</button>` +
+    `<button class="tab ${view==="leak"?"on":""}" onclick="setView('leak')">VLM-judge leaks (${n} inputs)</button>`;
+  document.getElementById("armpanel").style.display = view === "leak" ? "none" : "";
+  document.getElementById("leakpanel").style.display = view === "leak" ? "" : "none";
+  document.getElementById("leakmodes").innerHTML = LEAK_MODES.map(([id, lab, fn]) =>
+    `<button class="${id===leakMode?"on":""}" onclick="setLeakMode('${id}')">${lab} (${D.cards.filter(fn).length})</button>`).join("");
+}
+function setView(v){
+  view = v; shown = PAGE;
+  try{ history.replaceState(null, "", v === "leak" ? "#leaks" : location.pathname + location.search); }catch(e){}
+  drawTabs(); drawCards();
+}
+function setLeakMode(m){ leakMode = m; shown = PAGE; drawTabs(); drawCards(); }
+function judgeHtml(j, full){
+  if(!j) return "";
+  const lk = j.leak === "yes" ? `<span class="jb leak">LEAK</span>`
+           : j.leak === "no"  ? `<span class="jb clean">no leak</span>` : `<span class="jb na">leak ?</span>`;
+  const ef = j.effect === "no" ? `<span class="jb noeff">no effect</span>` : "";
+  let h = `<div>${lk}${ef}</div>`;
+  if(full){
+    if(j.leak_ev) h += `<div class="jev"><b>judge:</b> ${esc(j.leak_ev)}</div>`;
+    if(j.effect === "no" && j.effect_ev) h += `<div class="jev"><b>effect:</b> ${esc(j.effect_ev)}</div>`;
+  }
+  return h;
+}
+
 // ── arm panel ──────────────────────────────────────────────────────────────
 function drawArms(){
   document.getElementById("armcount").textContent =
@@ -442,6 +556,7 @@ function matchFlt(c){
   return flt.split(/\s+/).every(w => hay.includes(w));
 }
 function selectedCards(){
+  if(view === "leak"){ const fn = leakFn(); return D.cards.filter(c => matchFlt(c) && fn(c)); }
   const st = selTiers();
   const out = [];
   for(const c of D.cards){
@@ -455,17 +570,18 @@ function vid(src){
              : `<div class="miss">no clip</div>`;
 }
 function cardHtml(c){
-  const st = selTiers();
+  const st = view === "leak" ? D.meta.leak_tiers.filter(t => ENTRY[t] && c.slots[t]) : selTiers();
   const cells = st.map(t=>{
     const m = ENTRY[t];
     const slot = c.slots[t];
     if(!slot) return `<div class="cellbox blank"><div class="bl"><b>${esc(m.armLabel)}</b><br>${esc(m.label)}<br>no clip</div></div>`;
     const src = slot.videos[seed] || Object.values(slot.videos)[0];
     const fn = src ? src.split("/").pop() : "";
-    return `<div class="cellbox out" style="box-shadow:inset 3px 0 0 ${CAT_COLOR[m.cat]}">
+    const j = slot.judge;
+    return `<div class="cellbox out ${j && j.leak==="yes" ? "lk" : ""}" style="box-shadow:inset 3px 0 0 ${CAT_COLOR[m.cat]}">
       <h4>${esc(m.armLabel)}<span class="vtag v-${esc(m.variant)}">${esc(m.label)}</span>
         <span class="arm">${esc(m.catLabel.split(" ")[0])}</span></h4>
-      ${vid(src)}<div class="fn">${esc(fn)}</div></div>`;
+      ${vid(src)}${judgeHtml(j, view === "leak")}<div class="fn">${esc(fn)}</div></div>`;
   }).join("");
   const info = `<div class="pptxt"><h4>INPUT</h4>
       <div class="meta"><b>endpoint</b> ${esc(c.endpoint)} · ${esc(c.endpoint_class)}</div>
@@ -533,7 +649,7 @@ function drawSeeds(){
 function setSeed(s){ seed = s; drawSeeds(); drawCards(); }
 document.getElementById("flt").addEventListener("input", e=>{ flt = e.target.value.trim().toLowerCase(); shown=PAGE; drawCards(); });
 
-function render(){ shown = Math.max(shown, PAGE); drawArms(); drawSeeds(); drawCards(); }
+function render(){ shown = Math.max(shown, PAGE); drawTabs(); drawArms(); drawSeeds(); drawCards(); }
 
 document.getElementById("sub").innerHTML =
   `<b class="mono">${D.meta.cards}</b> input cards · <b class="mono">${D.meta.clips}</b> clips · ` +
