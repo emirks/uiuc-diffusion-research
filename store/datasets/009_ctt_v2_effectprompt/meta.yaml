@@ -1,0 +1,17 @@
+id: 009_ctt_v2_effectprompt
+seq: 9
+shelf: datasets
+created: 2026-11-08
+role: ablation arms A (one-way + EFFECT prompts) and C (bidirectional + EFFECT prompts) training root — ICLR 2027 rebuttal (reviewers PNmc/icXV asked to separate neutral-prompt training from one-way attention)
+root: symlink -> ../../../datasets/ctt_v2_effectprompt
+derived_from: datasets/002_ctt_v2 (samples.jsonl sha256 1a086911e44d7686…) — SAME 56,368 rows in the SAME order; only `caption_key` and `paths.conditions` rewritten; encodes/ masks/ inventories/ docs/ are symlinks into datasets/ctt_v2; mix.json byte-identical
+text_rule: "neutral.replace(' sksz.', ' sksz. ' + EFFECT_detailed.rstrip('.') + '.', 1); key = sha256(text)[:16]"   # {A}. sksz. {EFFECT_detailed}. [{B}.] — the KD/leaky assembly rule
+captions: captions.json = 18,800 distinct arm-A strings (sha256 12367cd80cae40d5…), max 249 words (Gemma budget 1024 tokens); neutral text from datasets/ctt_v2/captions.json as is; effect text from captions/006_effect_desc_detailed
+conditions: conditions_effect/by_caption/<sha16>.pt, trainer's own process_captions.py (Gemma 12B), 18,800 x 15.7 MB ≈ 295 GB; encoded 2026-11-08 as 24 one-GPU shards (misc/2026-11-02_rebuttal/armA/build/encode_shard{,_cc}.sbatch; inputs effect_caption_inputs.json in the root); control item conditions_effect/control/000dad51c20460c9.pt must equal datasets/ctt_v2/conditions/by_caption/000dad51c20460c9.pt
+status: root + captions registered 2026-11-08; conditions_effect/ ENCODING IN PROGRESS (check `ls root/conditions_effect/by_caption | wc -l` = 18800 and `python misc/2026-11-02_rebuttal/armA/build/assert_derived_root.py --files`)
+validator: misc/2026-11-02_rebuttal/armA/build/assert_derived_root.py (row count, order, every other field byte-equal to 002; key = sha256(string)[:16]; manifest sha of the parent) — PASS 2026-11-08
+trainer: SampleListDataset + StratifiedEpochSampler; data.sample_list = root/samples.jsonl; same strata/weights as 002 -> same global sample sequence as the arm B replay
+consumers: misc/2026-11-02_rebuttal/armA/config_armA_4gpu.yaml (one_way), misc/2026-11-02_rebuttal/armC/config_armC_4gpu.yaml (bidirectional); runs not started
+extras_in_root: effect_descriptions_train.jsonl / effect_descriptions_eval.jsonl (copies of captions/006), effect_caption_inputs.json (encoder input), README.md
+lane: A-effect — TEXT_LIFECYCLE.md §9; NEVER merged into Lane A (datasets/002 untouched)
+authority: root/MANIFEST.json; ../../TEXT_LIFECYCLE.md §9

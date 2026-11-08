@@ -1,0 +1,17 @@
+id: captions/006_effect_desc_detailed
+seq: 6
+shelf: captions
+created: 2026-11-08
+role: EFFECT_DESC_DETAILED — VFXMaster-length (median 130 w) subject-generic description of the EFFECT ONLY; Lane A-effect (ablation arms A/C TRAINING text, a deliberate exception to TEXT_LIFECYCLE §0) + eval E families (not yet rendered)
+count: 1738   # 1670 training operators (one per datasets/ctt_v2 `group`, keyed "<stratum>/<group>|effect") + 68 grid-v3 references ("<reference_clip>|effect")
+content_hash: 7e2a1516587c   # sha256[:12] over the sorted id -> text map
+style: 100-160 words drawn per item from VFXMaster's native caption lengths (data/raw/vfxmaster/info.json, median 131); the effect as ONE process (material, entry, spread, speed, hand-off); scenes referred to only as "the subject" / "the first/second scene"
+generator: gemini-3.6-flash, temperature 0.2, JSON response schema (scene fields first, effect last); prompt effectdet-v3b-json = VFXMaster step5 (Fig-14) rules 3-7 verbatim + scene-exclusion rules 1-2 + rule 8 (no clip comparison)
+inputs: training = TWO exemplar clips of the operator with different endpoints in one call (describe what they share); eval = the reference clip itself
+auditor: gemini-3.5-flash-lite scene-leak check on the text only; flagged 130/1738; OWNER DECISION 2026-11-08: flags ACCEPTED as is (mostly the auditor breaking its own allow-list; a few real scene nouns such as clothing/glasses/sky judged harmless at one word per 130)
+regenerated: 12 training texts that compared the clips ("video A/B", "second clip") were regenerated once (archive misc/2026-11-02_rebuttal/texts/desc_train.v3b_full_before_regen.jsonl); 6 length outliers (87-158 w) accepted
+cost_usd: 1.77
+files: EFFECT_DESC_DETAILED.json (map), desc_train.jsonl / desc_eval.jsonl (byte copies of the generator output, raw responses included), audit.jsonl
+source: misc/2026-11-02_rebuttal/texts/gen_effect_descriptions.py (ledgers ledger_train.jsonl / ledger_eval.jsonl there); items from build_items.py
+consumed_by: datasets/009_ctt_v2_effectprompt (training strings = neutral caption + this text after `sksz.`); eval E families: NOT rendered yet (owner decision pending)
+authority: ../../TEXT_LIFECYCLE.md §9 (Lane A-effect)

@@ -267,3 +267,33 @@ are Tier-1 leaks (identical situation to refVFX's 42 trigger phrases, withheld u
 - **Vision-captioned strata need S4's extra gates**, not just the 12-gate battery: the blind-guess
   gate and the 100% Layer-2 audit tripwire (`DATASET.md` C3) — a captioner writing from memory can
   pass every lexical/length gate while describing the wrong clip.
+
+---
+
+## 9. Lane A-effect — the ablation arms' training text (2026-11, ICLR 2027 rebuttal)
+
+**The one deliberate exception to §0.** Reviewers PNmc/icXV asked to separate "neutral-prompt training" from
+"one-way attention". Arms A (one-way + effect text) and C (bidirectional + effect text) therefore train on captions that
+DO contain the effect. SEGUE and arm B keep Lane A untouched (`datasets/002`).
+
+```
+  LANE A-effect — TRAINING captions WITH the effect (ablation arms A/C only)
+    captions/006_effect_desc_detailed ─► "{A}. sksz. {EFFECT_detailed}. [{B}.]" ─► Gemma embed
+      (1,670 operators, VFXMaster length)     (armA/build/build_encode_inputs.py)   datasets/ctt_v2_effectprompt/conditions_effect/by_caption/<sha16>.pt
+                                                                                         │ datasets/009 samples.jsonl.caption_key (rows/order = 002)
+                                                                                         ▼  TRAINING of arms A and C
+```
+
+- **Source text:** `store/captions/006_effect_desc_detailed/` — one description per training OPERATOR (`group`, 1,670) from
+  two exemplar clips, and one per grid-v3 REFERENCE (68) for the future E eval families. gemini-3.6-flash, VFXMaster step5
+  rules kept verbatim where they concern detail; scenes excluded by rule; length drawn per item from VFXMaster's own caption
+  lengths (median 130 vs 131). Auditor flags accepted by the owner (2026-11-08).
+- **Assembly:** the KD/leaky rule, byte-identical: `neutral.replace(" sksz.", " sksz. " + EFFECT.rstrip(".") + ".", 1)`;
+  the neutral text is `datasets/ctt_v2/captions.json[caption_key]` as is. 18,800 distinct strings, key `sha256[:16]`.
+- **Root:** `store/datasets/009_ctt_v2_effectprompt` — the 56,368 rows of 002 in the same order, only `caption_key` and
+  `paths.conditions` rewritten (validator `misc/2026-11-02_rebuttal/armA/build/assert_derived_root.py`).
+- **Never merged into Lane A.** `datasets/002`, `captions/001-005`, `prompts/0xx` are untouched; nothing from this lane
+  may be used to train or evaluate SEGUE itself.
+- **Eval:** all four arms are scored on the NEUTRAL grid-v3 families (`prompts/010`, `012`) — the comparison the
+  reviewers asked for. E families (effect-detailed eval prompts from the 68 reference descriptions) are not rendered;
+  owner decision pending.
