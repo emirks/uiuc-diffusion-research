@@ -1,0 +1,1208 @@
+[
+{
+"cell": "G-fit",
+"endpoint": "animalization_3",
+"reference": "animalization_1",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-fit",
+"endpoint": "color_rain_3",
+"reference": "color_rain_1",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-fit",
+"endpoint": "earth_element_1",
+"reference": "earth_element_0",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-fit",
+"endpoint": "gas_transformation_1",
+"reference": "gas_transformation_0",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-fit",
+"endpoint": "hero_flight_1",
+"reference": "hero_flight_0",
+"sided": "two",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-fit",
+"endpoint": "illustration_scene_1",
+"reference": "illustration_scene_0",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-fit",
+"endpoint": "money_rain_2",
+"reference": "money_rain_0",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-fit",
+"endpoint": "polygon_1",
+"reference": "polygon_0",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-fit",
+"endpoint": "portal_10",
+"reference": "portal_0",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-fit",
+"endpoint": "shadow_1",
+"reference": "shadow_0",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-fit",
+"endpoint": "shadow_smoke_2",
+"reference": "shadow_smoke_1",
+"sided": "two",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-fit",
+"endpoint": "super_fast_run_10",
+"reference": "super_fast_run_1",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-fit",
+"endpoint": "wireframe_2",
+"reference": "wireframe_1",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-memo-probe",
+"endpoint": "animalization_0",
+"reference": "animalization_1",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-memo-probe",
+"endpoint": "color_rain_0",
+"reference": "color_rain_1",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-memo-probe",
+"endpoint": "earth_element_4",
+"reference": "earth_element_0",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-memo-probe",
+"endpoint": "gas_transformation_6",
+"reference": "gas_transformation_0",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-memo-probe",
+"endpoint": "hero_flight_5",
+"reference": "hero_flight_0",
+"sided": "two",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-memo-probe",
+"endpoint": "illustration_scene_4",
+"reference": "illustration_scene_0",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-memo-probe",
+"endpoint": "money_rain_1",
+"reference": "money_rain_0",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-memo-probe",
+"endpoint": "polygon_4",
+"reference": "polygon_0",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-memo-probe",
+"endpoint": "portal_1",
+"reference": "portal_0",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-memo-probe",
+"endpoint": "shadow_10",
+"reference": "shadow_0",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-memo-probe",
+"endpoint": "shadow_smoke_0",
+"reference": "shadow_smoke_1",
+"sided": "two",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-memo-probe",
+"endpoint": "super_fast_run_0",
+"reference": "super_fast_run_1",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-memo-probe",
+"endpoint": "wireframe_0",
+"reference": "wireframe_1",
+"sided": "one",
+"ref_novelty": "seen",
+"content": "same",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "display_transition_1",
+"reference": "air_bending_1",
+"sided": "two",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "color_rain_0",
+"reference": "animalization_0",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "earth_element_4",
+"reference": "color_rain_0",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "gas_transformation_6",
+"reference": "earth_element_4",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "air_bending_1",
+"reference": "earth_wave_3",
+"sided": "two",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "color_rain_2",
+"reference": "fire_element_2",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "air_bending_1",
+"reference": "flame_transition_2",
+"sided": "two",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "illustration_scene_7",
+"reference": "gas_transformation_6",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "hero_flight_6",
+"reference": "giant_grab_3",
+"sided": "two",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "display_transition_1",
+"reference": "hero_flight_5",
+"sided": "two",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "monstrosity_0",
+"reference": "illustration_scene_4",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "polygon_4",
+"reference": "money_rain_1",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "gas_transformation_7",
+"reference": "mystification_0",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "acid_0",
+"reference": "nature_bloom_1",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "live_concert_0",
+"reference": "plasma_explosion_2",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "portal_4",
+"reference": "polygon_4",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "shadow_3",
+"reference": "portal_1",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "animalization_2",
+"reference": "sakura_petals_1",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "water_element_4",
+"reference": "shadow_10",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "melt_transition_2",
+"reference": "shadow_smoke_0",
+"sided": "two",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "color_rain_2",
+"reference": "super_fast_run_0",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "firelava_4",
+"reference": "water_bending_3",
+"sided": "two",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "money_rain_1",
+"reference": "water_element_4",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "earth_element_6",
+"reference": "wireframe_0",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-cross",
+"endpoint": "cotton_cloud_0",
+"reference": "wonderland_1",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-foreign",
+"endpoint": "hvpair.humanvid_4058810.humanvid_7682587",
+"reference": "air_bending_1",
+"sided": "two",
+"ref_novelty": "unseen",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-foreign",
+"endpoint": "davis_hike",
+"reference": "animalization_0",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-foreign",
+"endpoint": "davis_hike",
+"reference": "color_rain_0",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-foreign",
+"endpoint": "davis_lucia",
+"reference": "earth_element_4",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-foreign",
+"endpoint": "hvpair.humanvid_2402374.humanvid_7663067",
+"reference": "earth_wave_3",
+"sided": "two",
+"ref_novelty": "unseen",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-foreign",
+"endpoint": "humanvid_5385990",
+"reference": "fire_element_2",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-foreign",
+"endpoint": "hvpair.humanvid_4223661.humanvid_7772314",
+"reference": "flame_transition_2",
+"sided": "two",
+"ref_novelty": "unseen",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-foreign",
+"endpoint": "davis_hike",
+"reference": "gas_transformation_6",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-foreign",
+"endpoint": "hvpair.humanvid_3795426.humanvid_7670221",
+"reference": "giant_grab_3",
+"sided": "two",
+"ref_novelty": "unseen",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-foreign",
+"endpoint": "davis_bear_elephant",
+"reference": "hero_flight_5",
+"sided": "two",
+"ref_novelty": "unseen",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-foreign",
+"endpoint": "davis_lucia",
+"reference": "illustration_scene_4",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-foreign",
+"endpoint": "davis_hike",
+"reference": "money_rain_1",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-foreign",
+"endpoint": "humanvid_4873451",
+"reference": "mystification_0",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-foreign",
+"endpoint": "humanvid_6011432",
+"reference": "nature_bloom_1",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-unseen-foreign",
+"endpoint": "humanvid_5712746",
+"reference": "plasma_explosion_2",
+"sided": "one",
+"ref_novelty": "unseen",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "animalization_0",
+"reference": "acid_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "animalization_0",
+"reference": "cotton_cloud_1",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "hero_flight_5",
+"reference": "display_transition_1",
+"sided": "two",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "color_rain_2",
+"reference": "explosion_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "air_bending_1",
+"reference": "firelava_1",
+"sided": "two",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "earth_wave_3",
+"reference": "flying_cam_transition_1",
+"sided": "two",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "fire_element_2",
+"reference": "glitch_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "money_rain_3",
+"reference": "live_concert_1",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "polygon_4",
+"reference": "luminous_gaze_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "giant_grab_3",
+"reference": "melt_transition_1",
+"sided": "two",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "super_fast_run_0",
+"reference": "monstrosity_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "gas_transformation_7",
+"reference": "northern_lights_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "money_rain_1",
+"reference": "point_cloud_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "air_bending_1",
+"reference": "raven_transition_0",
+"sided": "two",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "animalization_2",
+"reference": "saint_glow_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "mystification_1",
+"reference": "train_rush_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "polygon_4",
+"reference": "x_ray_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "humanvid_6396124",
+"reference": "acid_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "davis_hike",
+"reference": "cotton_cloud_1",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "davis_bear_elephant",
+"reference": "display_transition_1",
+"sided": "two",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "humanvid_6455384",
+"reference": "explosion_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "davis_blackswan_rhino",
+"reference": "firelava_0",
+"sided": "two",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "davis_bear_elephant",
+"reference": "flying_cam_transition_1",
+"sided": "two",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "humanvid_6548002",
+"reference": "glitch_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "davis_hike",
+"reference": "live_concert_1",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "davis_lucia",
+"reference": "luminous_gaze_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "davis_bear_elephant",
+"reference": "melt_transition_1",
+"sided": "two",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "davis_hike",
+"reference": "monstrosity_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "humanvid_6625516",
+"reference": "northern_lights_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "humanvid_6774466",
+"reference": "point_cloud_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "davis_blackswan_rhino",
+"reference": "raven_transition_0",
+"sided": "two",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "davis_hike",
+"reference": "saint_glow_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "humanvid_6815493",
+"reference": "train_rush_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-foreign",
+"endpoint": "humanvid_6878737",
+"reference": "x_ray_0",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "foreign",
+"tier": "hf"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Ant_glyph_aura.0f6ac03f76f43971.M",
+"reference": "ed.Acid_mist_limb_transformation.01023k013no0kksp.F",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Array_encircling_feet.0c27bd005ad52648.M",
+"reference": "ed.Amber_crystal_wings_on_back.74338fd6ddab169a.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Body_vine_slime.142742df912f8b98.M",
+"reference": "ed.Amber_roots_from_feet.b1c41aca9ebede4f.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Acidic_Body_Aura.1666bbc4d89600ca.M",
+"reference": "ed.Amber_streams_from_eyes.3ac7086cb324d068.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Apple_blossoms_in_hair.0619b4c4abb83d1a.M",
+"reference": "ed.Amethyst_sword_from_palm.a08133c9c5a39f5e.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Body_Banknote_Shield.0640ff900e5d6c50.M",
+"reference": "ed.Ants_flow_from_eyes.1edb761bb1f2054b.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Body_vine_slime.142742df912f8b98.M",
+"reference": "ed.Arm_chip_serpent.74338fd6ddab169a.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Apple_blossoms_in_hair.0619b4c4abb83d1a.M",
+"reference": "ed.Arm_data_corruption.09795be76e2b7ec4.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Acidic_Body_Aura.1666bbc4d89600ca.M",
+"reference": "ed.Avocado_Pulp_Aura.71e2179ce04faa74.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Apple_core_in_chest.09795be76e2b7ec4.M",
+"reference": "ed.Avocado_Seed_Pendant.cf3fa73700a5f407.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Array_encircling_feet.0c27bd005ad52648.M",
+"reference": "ed.Back_Born_Letter_Wings.8558269e232d4350.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Ants_in_hair.1c25610a8ac6e272.M",
+"reference": "ed.Back_bubble_cloak.d511403f79173932.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Arm_shadow_chains.0e513cd16d065c6a.M",
+"reference": "ed.Back_laser_wings.fish-ea28b9d6.Z",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Ant_glyph_aura.0f6ac03f76f43971.M",
+"reference": "ed.Bamboo_shield_in_front.cb893d10c0387c6b.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Body_Banknote_Shield.0640ff900e5d6c50.M",
+"reference": "ed.Bile_aura_hands.ac198e9b1922c8b5.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Arm_shadow_chains.0e513cd16d065c6a.M",
+"reference": "ed.Body_Meteorite_Crystal.dog-e4d32067.Z",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Back_page_wings.06c44eb16774b786.M",
+"reference": "ed.Body_gear_field.4bc59fcee49a8d5b.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Body_Laser_Aura.1858d4165ab7c7d2.M",
+"reference": "ed.Brass_serpent_coil.0c27bd005ad52648.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Body_Laser_Aura.1858d4165ab7c7d2.M",
+"reference": "ed.Chaotic_wings_from_shoulders.c4cca916f233e949.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Body_as_mist.1e2592b60cc87490.M",
+"reference": "ed.Chest_Burst_Ribbons.267d2d2270082773.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Arm_circuit_electronic_cloud.0ecbeef919f89a12.M",
+"reference": "ed.Chest_Erupting_Shield.958f2642980d32df.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Body_as_mist.1e2592b60cc87490.M",
+"reference": "ed.Chest_Laser_Burst.451c84e369d8fe75.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Apple_core_in_chest.09795be76e2b7ec4.M",
+"reference": "ed.Chest_fish_burst.0e645d8b.F",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Ants_in_hair.1c25610a8ac6e272.M",
+"reference": "ed.Chest_light_field.cat-48b88619.Z",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Arm_circuit_electronic_cloud.0ecbeef919f89a12.M",
+"reference": "ed.Chest_sigil.eagle-774703b7.Z",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Acid_mist_ring_barrier.124845165dd76dbe.M",
+"reference": "ed.Confetti_Burst_from_Hands.45363300bf22cd46.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Code_Mirror_Duplicate.02c8c50a3fbcd46d.M",
+"reference": "ed.Cucumber_seeds_from_chest.116c93366b05a44e.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Body_laser_shield.03f28acb3eadecd1.M",
+"reference": "ed.Dark_mist_from_mouth.cat-07b7abfa.Z",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Body_laser_shield.03f28acb3eadecd1.M",
+"reference": "ed.Dark_mist_wings_from_back.7ea3d186772aa8d6.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Cold_Tears_Gaze.0e28a4f8490df43f.M",
+"reference": "ed.Diamond_Footpath.f6e4aa518320cb88.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Cold_Tears_Gaze.0e28a4f8490df43f.M",
+"reference": "ed.Electric_Clothes_Glow.07b819b2.F",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Acid_mist_ring_barrier.124845165dd76dbe.M",
+"reference": "ed.Eye_Meteor_Burst.0e8ec528ffd657e9.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Back_page_wings.06c44eb16774b786.M",
+"reference": "ed.Eye_Shard_Stream.1e2592b60cc87490.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+},
+{
+"cell": "G-zs-cross",
+"endpoint": "ed.Code_Mirror_Duplicate.02c8c50a3fbcd46d.M",
+"reference": "ed.Fist_heat_blast.0e8ec528ffd657e9.M",
+"sided": "one",
+"ref_novelty": "zero_shot",
+"content": "cross",
+"tier": "ed"
+}
+]
