@@ -5,11 +5,11 @@ created: 2026-11-09
 family: E
 lane: gen_eval
 grammar: "{S1}. sksz. {EFFECT_detailed}. [{S2}.]"
-role: effect-DETAILED prompts for the rebuttal ablation arms A/C (grid v3 Higgsfield tier, ZERO-SHOT rows only, 121 f)
-rows: 119
-prompt_corpus_sha: f9b81157411c   # sha256[:12] over prompts concatenated in (cell,endpoint,reference,sided) order, unique items
+role: effect-DETAILED prompts for the rebuttal ablation arms (grid v3 Higgsfield tier, all 282 rows: seen/unseen/zero-shot, 121 f)
+rows: 282
+prompt_corpus_sha: c6d93e0d47ae   # sha256[:12] over prompts concatenated in (cell,endpoint,reference,sided) order, unique items
 renderer: prompts/010_ctt_v3_neutral rows (zero-shot) with ' sksz.' -> ' sksz. <EFFECT_DESC_DETAILED>.' (the Lane A-effect assembly rule, TEXT_LIFECYCLE §9); EFFECT_DESC_DETAILED = store/captions/006_effect_desc_detailed (hash 7e2a1516587c), one per reference clip
-derived_from: prompts/010_ctt_v3_neutral (prompt_corpus_sha d8b0f6d3502b); zero-shot rows only because the detailed descriptions exist for the 68 held-out references (17 Higgsfield classes x 2 + 34 EffectData)
+derived_from: prompts/010_ctt_v3_neutral (prompt_corpus_sha d8b0f6d3502b); every row (descriptions exist for all 120 grid references: 68 zero-shot via the junho key, 52 seen/unseen via the transition key, 2026-11-09)
 source: misc/2026-11-02_rebuttal/armA/build/build_subset_package.py
-consumers: rebuttal arms A (ablate_effectprompt) and C (ablate_bidir_effectprompt), harness arms <slug>_effectdet_v3 / _v3ed81; registries offsite/inputs/registries/*effectdet*_sub182.jsonl (182-row seed-42 subset, owner 2026-11-09)
+consumers: rebuttal arms A (ablate_effectprompt) and C (ablate_bidir_effectprompt), harness arms <slug>_effectdet_v3 / _v3ed81; registries offsite/inputs/registries/*effectdet*_sub134.jsonl (134-row seed-42 subset, owner 2026-11-09)
 notes: rows are ARM-FREE; stamp_rows.py re-adds arm/item_id. NOT comparable to prompts/011/013 (20-word clauses): different text length; compare within arm (neutral vs effect-detailed) only.

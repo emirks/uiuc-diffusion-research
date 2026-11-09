@@ -35427,7 +35427,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the visual effects, transitions, fluid dynamics, warp distortions, and generic references like 'the subject', 'the first scene', and 'the secondary scene', which are explicitly allowed."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Chest_Burst_Ribbons.267d2d2270082773.M|effect": {
   "text": "A radiant point of intense light ignites at the center of the subject, rapidly expanding into a spherical luminance. Thick, solid geometric ribbons of solid light burst outward in a radial pattern, projecting upward and outward across the frame with high velocity. These ribbons feature distinct, saturated monochrome hues and sharp edges, creating a fan-like dispersion that travels along parabolic trajectories. High-intensity lens flare artifacts and flickering starburst rays emanate from the central source, overlaying the foreground. Small glowing ember particles detach from the primary ribbons, drifting outward with turbulent dispersion before fading. As the emission reaches maximum expansion, the central starburst gradually decreases in luminance while the primary luminous ribbons maintain their outward momentum, tapering into fine lines of light that dissipate into the ambient environment, fully clearing the view of the subject.",
@@ -35447,7 +35449,9 @@
    "phrases": [],
    "reason": "The text exclusively describes visual effects, transitions, camera elements, and generic terms like 'the subject' and 'the frame' without leaking any specific scene identities, objects, clothing, or settings."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Ants_flow_from_eyes.1edb761bb1f2054b.M|effect": {
   "text": "A swarm of tiny, dark winged particles emerges directly from the central subject's face, concentrating near the upper features. The swarming geometry begins as dense, irregular clusters that rapidly detach and multiply, fluttering outwards with high kinetic velocity. As the motion accelerates, the dark entities spread laterally and vertically, creating a erratic, chaotic dispersal pattern around the subject. The individual particles exhibit fast, pitch-black flapping motions, simulating a sudden burst of miniature flying creatures taking flight simultaneously. They turbulently drift upward and toward the frame boundaries, casting subtle moving shadows against the subject. The concentration thins out as the swarm expands outward into the surrounding space, smoothly transitioning from a dense localized mass into a widely scattered cloud of energetic, chaotic motion that eventually disperses toward the edges of the frame.",
@@ -35470,7 +35474,9 @@
    ],
    "reason": "The text references the subject's 'face' and 'upper features', which are specific body parts rather than the generic allowed terms like 'head' or 'body', constituting a scene identity leak according to the instructions."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "monstrosity_0|effect": {
   "text": "A massive, horned monster geometry emerges from behind the distant terrain of the scene, accompanied by thick volumes of dust smoke particles. The creature rises with a steady upward velocity, casting dense volumetric dust plumes that billow outward in a wide radial pattern. As it ascends, the atmospheric smoke expands across the background, obscuring the horizon with low-frequency fluid dynamics. The creature's eyes emit a intense, localized orange illumination glow, creating a strong point-light source that cuts through the rising dust clouds. The camera smoothly zooms out, altering the spatial scale while the entity maintains its slow, imposing upward trajectory. The dust particles continue to disperse laterally at high speed, filling the background environment with volumetric haze while leaving the foreground completely undisturbed and sharp throughout the entire duration of the sequence.",
@@ -35494,7 +35500,9 @@
    ],
    "reason": "The text identifies the subject of the scene as a horned monster, creature, and entity, which violates the rule against revealing the identity of what is in the scene."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "display_transition_2|effect": {
   "text": "A camera monitor enters from the left edge of the frame, moving horizontally toward the center with moderate velocity. As the camera operator positions the monitor in front of the lens, the screen displays a live digital feed. The camera executes a rapid forward push-in motion, zooming directly into the square display of the monitor. The frame borders of the monitor expand outward, effectively cropping out the initial environment. The digital screen image scales up continuously until it fills the entirety of the viewing area, seamlessly replacing the original scene. This optical whip-zoom through the viewfinder screen acts as a spatial passthrough, smoothly handing off the perspective into the second scene with no visible distortion, particles, or lighting artifacts, completing a clean frame-within-a-frame transition across the sequence.",
@@ -35514,7 +35522,9 @@
    "phrases": [],
    "reason": "The text exclusively describes camera motion, transition mechanics, and the visual elements of the transition effect (camera monitor, digital feed, whip-zoom) without leaking any specific scene identities, locations, or pre-existing objects."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "acid_1|effect": {
   "text": "A chromatic aberration visual effect initiates instantly across the frame, shifting the visual channels of the scene into distinct red, green, and blue components. The displacement radiates outward from the center, increasing in spatial offset magnitude as it reaches the perimeter. Simultaneously, a high-contrast solarization layer applies over the geometry, introducing inverted luminance values and saturation spikes. Dynamic chromatic fringing bleeds high-velocity streaks of magenta, cyan, and yellow along all high-contrast edges. The color channels oscillate horizontally with a high-frequency jitter, creating a rhythmic distortion effect across the entire surface. A subtle radial glow intensifies from the center, casting a light flare that shifts hue rapidly from warm amber to cool blue across the duration. The overall visual effect maintains a persistent digital glitch state, maintaining max distortion and color channel separation continuously without fully resolving back to the original source state.",
@@ -35534,7 +35544,9 @@
    "phrases": [],
    "reason": "The text exclusively describes visual effects, transitions, camera properties, and distortion techniques without revealing any specific scene identity, objects, or settings."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "cotton_cloud_2|effect": {
   "text": "Volumetric pastel pink smoke clouds burst rapidly outward from within the interior opening directly behind the subject. The dense fluid mass originates from the shadowed background doorway, expanding with high forward velocity and filling the central frame depth. As the volumetric material surges forward, it billows laterally and vertically, engulfing the interior space while remaining behind the foreground subject. The cloud formation features soft, opaque surface details with complex, rolling turbulent swirls that continuously scale upward. Soft ambient light diffuses through the edges of the expanding gaseous volume, creating subtle internal shadows and high-contrast highlights across the billowing folds. The continuous outward pressure propels the smoke past the left and right frame edges, generating a dense, cloud-like background layer that completely replaces the original interior details while maintaining clear spatial separation from the foreground elements throughout the duration.",
@@ -35558,7 +35570,9 @@
    ],
    "reason": "The text references specific scene elements such as a doorway and interior details which are part of the setting rather than the visual effect itself."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "cotton_cloud_1|effect": {
   "text": "Dense, volumetric cloud formations begin generating symmetrically at the left and right outer edges of the frame, slowly creeping inward toward the center. The gaseous material expands with a soft, billowy texture and a gentle internal turbulence, gradually obscuring the peripheral background elements. As the cloud volume increases, the mist rolls downward and sweeps across the lower region of the environment, surrounding the central subject. Light sources within the scene illuminate the front surfaces of the vapor clouds, creating high-contrast shading and deep shadows in the folds of the gas. The expansion velocity remains slow and steady throughout the duration of the clip, steadily building volume without fully engulfing the main focal point, before settling into a persistent, lingering haze that fills the side margins of the shot.",
@@ -35582,7 +35596,9 @@
    ],
    "reason": "The text refers to 'the central subject' and 'main focal point', which identify specific elements in the scene rather than strictly describing the visual effect itself."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Acid_mist_limb_transformation.01023k013no0kksp.F|effect": {
   "text": "A smooth liquid surface deformation effect originates from an object held by the subject. The material transitions into a glossy, viscous green fluid that rapidly expands vertically upward against gravity. The fluid stretches into an elongated, high-gloss anatomical hand and arm structure that morphs and ascends toward the upper center frame. As the structure reaches its apex, the outer boundary of the liquid loses cohesion, causing thick streams of the viscous green fluid to drip continuously downward under gravitational acceleration. The drips trail off the lower forearm with high surface tension, leaving a shiny, reflective coating over the area. The fluid motion is smooth and continuous, maintaining a uniform bright green hue and high specular highlights throughout the transformation. The effect stabilizes as the liquid drips dissipate into the surrounding spatial area, concluding the geometric surface morphing sequence smoothly.",
@@ -35606,7 +35622,9 @@
    ],
    "reason": "The text references specific scene elements such as 'an object held by the subject', 'anatomical hand and arm structure', and 'lower forearm', which identify parts of the subject and objects rather than strictly describing the transition effect itself."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "display_transition_1|effect": {
   "text": "A physical camera enters the frame from the left foreground, rapidly panning and tracking forward toward the center of the first scene. As the camera unit moves into position, its integrated monitor screen expands, dominating the frame. The spatial boundary of the screen acts as a geometric wipe transition, where the live preview interface inside the display scales up smoothly at high velocity. This scaling motion covers the initial surroundings entirely within two seconds. The camera frame interface then dissolves and expands beyond the viewport edges, perfectly matching the bounds of the frame. This action seamlessly reveals the second scene contained within the screen as full-frame live-action footage. The spatial push-in accelerates continuously without motion blur, completing the transition from the external environment into the displayed scene through the physical camera device medium.",
@@ -35632,7 +35650,9 @@
    ],
    "reason": "The text references specific scene identities such as 'first scene', 'initial surroundings', 'second scene', 'external environment', and 'displayed scene' instead of strictly describing the visual transition mechanics."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "acid_0|effect": {
   "text": "A chromatic spectral distortion effect overlays the subject and scene. It originates as a localized rainbow halo around the upper torso and head of the subject, radiating concentrated rings of vivid red, green, yellow, and blue light. As the sequence progresses, the distortion expands rapidly, generating vertical heat-wave refraction and RGB color-channel separation across the entire frame. Glowing, neon-colored fringes trail upward from central elements, stretching geometry vertically into smooth gradient streaks. Secondary horizontal color splitting casts misaligned cyan, magenta, and yellow ghosting across the midground. The glow intensifies in luminosity towards the center, blooming over facial features while maintaining sharp edge boundaries. The effect continues to pulse dynamically, refracting background light sources into stretched spectral flares, fully saturating the visual space until the image remains completely enveloped in vibrant chromatic aura distortion.",
@@ -35652,7 +35672,9 @@
    "phrases": [],
    "reason": "The text exclusively describes a visual effect, its properties, its interaction with generic terms ('the subject', 'upper torso', 'head', 'background light sources', 'facial features'), and its evolution, without leaking any specific scene identities, objects, or settings."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Amber_crystal_wings_on_back.74338fd6ddab169a.M|effect": {
   "text": "Luminous, crystalline geometric structures originate from a central point behind the subject, expanding outward to form a pair of wing-like shapes. Glowing golden particles burst at high velocity from the center of origin, tracing the outward expansion of the geometric elements. The structures feature sharply defined facets that refract and emit an intense internal yellow and amber light. As the elements spread laterally and upward, smaller fragmented debris and high-intensity light flares erupt from the primary geometry, drifting into the surrounding space. The overall motion accelerates rapidly during the initial deployment, settling into an outward-stretching trajectory while maintaining a steady rate of particle emission and flickering light intensity. The bright glow illuminates the space immediately adjacent to the structural origin. The visual effect remains fully formed, hovering directly behind the subject without dissipating, as the emitted particle field slowly fades near the outer edges.",
@@ -35672,7 +35694,9 @@
    "phrases": [],
    "reason": "The text exclusively describes a visual effect (crystalline geometric structures, golden particles, light flares, trajectory, and motion) acting on allowed generic terms like 'the subject' and 'the surrounding space'. No specific scene identity, objects, clothing, or locations are leaked."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Amber_roots_from_feet.b1c41aca9ebede4f.M|effect": {
   "text": "A dynamic fluid and particle animation erupts from the bottom of the frame, growing upward in a twisting, helical trajectory. Glowing amber tendrils surge vertically, expanding in volume and branching outward into intricate, crystalline geometries. As the liquid-like structures ascend with high velocity, bright, bioluminescent particles resemble small winged forms that detach and flutter outward in chaotic, radial motion patterns. Intense internal light radiates from within the translucent fluid paths, casting localized illumination into the surrounding space. The upward surge accelerates steadily through the middle of the duration, reaching maximum volume as secondary branches split and extend laterally. Towards the end of the sequence, the upward velocity decelerates slightly while the outer swarm of glowing micro-particles expands outward, settling into a stable, highly detailed luminescent formation across the lower foreground region of the scene without fully clearing.",
@@ -35692,7 +35716,9 @@
    "phrases": [],
    "reason": "The text exclusively describes a visual effect, including fluid and particle animations, amber tendrils, crystalline geometries, and bioluminescent particles, without referencing specific scene identities, objects, clothing, or locations."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Amber_streams_from_eyes.3ac7086cb324d068.M|effect": {
   "text": "Bright luminescence originates from the subject's eye area, casting an intense yellow-orange radiance. High-velocity energy beams project outward from the glowing eyes, curving dynamically in mid-air to form a continuous, swirling halo of fiery light floating around the upper portion of the subject. Simultaneously, a luminous, glowing orb materializes below, suspended between the subject's hands. Intricate, glowing glyphs and geometric symbols rotate within the orb's core, casting an intense warmth upward. Sparks and fine incandescent particles continuously discharge from both the eye beams and the orb, fluttering outward before dissipating into the surrounding air. The dual light sources pulse steadily, maintaining a synchronized, fiery intensity that illuminates the surrounding volume throughout the entire sequence.",
@@ -35712,7 +35738,9 @@
    "phrases": [],
    "reason": "The text exclusively describes visual effects, energy beams, glowing orbs, particles, and light sources acting on generic parts ('eye area', 'hands') and generic terms ('the subject'), without leaking any specific scene identity, clothing, setting, or objects."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Amethyst_sword_from_palm.a08133c9c5a39f5e.M|effect": {
   "text": "A glowing geometric energy construct materializes vertically in the center of the frame between the hands of the subject. Bright purple lighting emits from the core geometry, casting a strong violet illumination outward onto surrounding surfaces. Intricate, glowing lines of energy trace the internal structure of the construct, continuously pulsating with high luminance. Electrical arcs and tendrils of light discharge outward from the edges of the object, flickering rapidly across its surface. Small, glowing violet light particles detach from the primary form and drift upward into the surrounding space at moderate speed before dissipating. The high-contrast energy aura maintains a stable position within the frame, continuously crackling with electric arcs while illuminating the immediate environment until the conclusion of the shot.",
@@ -35732,7 +35760,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the visual effects (a glowing geometric energy construct, lighting, electrical arcs, particles, and energy aura) and uses only allowed generic terms like 'the subject' and 'the frame'."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Arm_data_corruption.09795be76e2b7ec4.M|effect": {
   "text": "A dynamic procedural geometric distortion propagates across the surface of the subject. Dark, high-contrast, vein-like fissures and cracked lattice geometry originate from the upper right portion of the subject's arm and spread rapidly downward toward the lower arm and hand. As the effect progresses across the clip, these subterranean micro-fractures physically displace the underlying surface, generating localized volumetric ridges, raised bulges, and undulating fluid-like swelling beneath the skin-like texture. The linear cracks maintain sharp, high-frequency edges while expanding radially outward, deepening the perceived depth of the crevices. Smooth organic displacement waves travel along the vectors of the fissure network at a moderate, continuous velocity. The overall surface topography continuously warps, producing subtle specular shifts along the newly formed geometric ridges. The displacement stabilizes toward the end of the frame without fully resolving, leaving the complex, elevated structural lattice permanently embedded across the affected regions of the subject's surface.",
@@ -35752,7 +35782,9 @@
    "phrases": [],
    "reason": "The text exclusively describes a procedural geometric distortion effect, its propagation, its visual characteristics (vein-like fissures, cracked lattice geometry), and the motion of the effect on generic body parts ('arm', 'hand', 'skin-like texture') as permitted by the instructions. No specific scene identities, clothing, accessories, or environments are leaked."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Arm_chip_serpent.74338fd6ddab169a.M|effect": {
   "text": "Bright blue luminescent energy erupts from a circular portal on the floor, forming a spiraling beam around the subject. The energy rapidly coalesces into a segmented, serpentine dragon geometry composed of digital grid lines, glowing nodes, and high-velocity pulse streams. As the energy serpent travels upward, it wraps around the lower body and torso at moderate speed, casting intense blue volumetric light onto the subject and background. Small glowing energy particles and electric arcs detach from the main body, floating outward into the surrounding space. The serpent extends its head toward the viewer, opening its jaws while maintaining a tight spiral formation around the upper body. The luminescent lines pulse continuously with internal light, creating a strong glowing aura around the central figure throughout the motion sequence before stabilizing into a steady visual loop.",
@@ -35774,7 +35806,9 @@
    ],
    "reason": "The phrase 'central figure' refers to the identity of the subject in the scene rather than the visual effect itself."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Back_laser_wings.fish-ea28b9d6.Z|effect": {
   "text": "A luminous energy surge initiates from the subject's eye, radiating a high-intensity blue light that quickly spreads along its upper dorsal line. As this light accelerates, vibrant geometric tendrils of pink, cyan, and yellow luminescence emerge from the wing structures, expanding outward in symmetrical, sweeping arc patterns. The generated light trails pulse at a high velocity, creating a layered, multi-colored fringe of glowing laser-like filaments along the trailing edges of the subject's anatomy. The optical bloom steadily intensifies across the frame, emitting hyper-bright neon rays that distort the immediate spatial area with high-contrast chromatic radiance. This energetic illumination remains anchored to the subject's form as it moves upward, leaving behind a persistent grid of glowing energy vectors that fade gradually into the background volume.",
@@ -35796,7 +35830,9 @@
    ],
    "reason": "The phrase 'wing structures' reveals the identity or specific anatomical feature of the subject beyond allowed generic body parts."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Avocado_Pulp_Aura.71e2179ce04faa74.M|effect": {
   "text": "A luminous, semi-translucent green fluid mass generates at the center of the frame over the subject. The fluid expands rapidly outward in a smooth, continuous wave, conforming directly to the subject's contours. As it spreads horizontally and vertically across the subject, it emits a bright, volumetric green light glow along its rising outer edges. Simultaneously, dense trails of light green vapor and fine suspended particles release from the fluid's perimeter, drifting upward with moderate velocity. The glowing material quickly coats the subject's entire torso and arms, solidifying into an illuminated, glossy outer shell. The intense green glow along the surface boundaries peaks in brightness before stabilizing, while the surrounding green smoke dissipates upward into the upper portion of the frame. This continuous fluid morphing process completes the transformation across the subject while maintaining a steady halo of ambient light.",
@@ -35816,7 +35852,9 @@
    "phrases": [],
    "reason": "The text exclusively describes visual effects, transitions, and generic allowed references such as 'the subject' and body regions like 'torso and arms'. There are no mentions of specific identities, clothing, existing objects, or locations."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Bamboo_shield_in_front.cb893d10c0387c6b.M|effect": {
   "text": "A vertical neon green line of light materializes rapidly in front of the subject. The line swiftly expands horizontally and vertically, casting an intense green glow across the scene while transforming into a distinct shield shape. Intricate glowing geometric glyphs and maze-like patterns materialize within the boundary of the shield, illuminating from the center outward with high intensity. The edges of the shield emit a continuous, soft green aura that pulsates subtly. Small, glowing green energy particles detach from the shield's surface, drifting upward and sideways at low velocity before dissipating into the surrounding dark space. The glowing green shield remains fully formed, solid, and suspended in mid-air directly ahead of the subject, maintaining a bright, steady luminescence that casts dynamic highlights across the adjacent surfaces until the end of the clip.",
@@ -35836,7 +35874,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the visual effect, its shape, expansion, glow, particles, and the allowed generic term 'the subject', without leaking any specific scene identity, setting, or objects."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Back_Born_Letter_Wings.8558269e232d4350.M|effect": {
   "text": "Luminous energy originates behind the center of the subject, emerging as small golden embers at the base of the frame. The glow rapidly ascends and spreads laterally, forming high-density particle streams that shape a pair of intricate, feathered wings. Bright glowing runes and digital symbols materialize inside the wing geometry, flowing outward along the feathers with high velocity. The radiance intensifies as the wings expand to full size, casting a strong directional light bloom behind the subject. Beams of light project outward from the glowing glyphs, creating a intense halo effect. The particle density increases at the edges, continually emitting floating sparks into the surrounding space. The wings maintain a high-intensity luminance, pulsing with continuous energy while remaining anchored behind the subject until the clip ends.",
@@ -35856,7 +35896,9 @@
    "phrases": [],
    "reason": "The text exclusively describes visual effects, transitions, camera interactions, and generic subject references ('the subject', 'base of the frame', 'surrounding space') without revealing any specific scene identity, setting, clothing, or pre-existing objects."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Back_bubble_cloak.d511403f79173932.M|effect": {
   "text": "Transparent spherical bubbles and flowing pastel ribbons originate behind the subject's shoulders. The ribbons, rendered in soft blue, pink, and white tones, extend horizontally outwards while waving gently. Concurrently, a dense stream of iridescent bubbles inflates and detaches from the upper back region, drifting laterally away from the center of the frame. These elements expand outward at a moderate velocity, creating an arched canopy structure. The bubbles reflect surrounding light with high specular highlights, floating freely in small clusters that dissipate into the ambient environment. As the movement continues, the trailing ribbons slowly billow and settle, maintaining a continuous generation of floating particles from the origin point. The entire visual effect maintains consistent luminescence without light emitting or glowing properties. It remains localized around the subject's upper body throughout the sequence, smoothly filling the midground space before slowly drifting out of frame.",
@@ -35876,7 +35918,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the visual effects (bubbles, pastel ribbons) and their movement, structure, and behavior. It uses only allowed generic terms like 'the subject's shoulders' and 'upper body' to anchor the effect, with no leakage of specific scene identities, objects, or locations."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Body_gear_field.4bc59fcee49a8d5b.M|effect": {
   "text": "A digital visual effect initiates from the lower frame, where brilliant cyan energy arcs form around the lower hands. These glowing blue light tendrils rapidly expand into a multi-layered concentric metallic ring pattern that materializes directly behind the subject. Intricate futuristic geometry and gear-like mechanical structures construct within the circular glowing borders at high velocity. Bright electrical currents pulse continuously through the cyan energy ring, emitting high-intensity volumetric light outwards. The circular structure rotates with steady angular velocity while generating a faint radiant aura around its perimeter. A faint distortion field emanates from the center of the ring, spreading outward to encompass the central subject. The glowing cyan energy maintains peak luminosity, with bright particles floating softly near the edges of the frame before stabilizing entirely around the stationary subject in the frame.",
@@ -35896,7 +35940,9 @@
    "phrases": [],
    "reason": "The text exclusively describes visual effects, glowing energy arcs, metallic ring patterns, geometry, electrical currents, and distortion fields, while using only allowed generic terms like 'the subject', 'lower hands', and 'frame'."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Bile_aura_hands.ac198e9b1922c8b5.M|effect": {
   "text": "A luminous, viscous green fluid materializes directly over the subject's hands, clinging to the skin with high surface tension. As the effect begins, the liquid rapidly coats the palms and fingers, dripping downward in thick, glowing tendrils at a moderate velocity. Simultaneously, a volumetric green vapor emerges around the hands, expanding outward in turbulent, swirling eddies. The fluid emits an intense internal neon green luminescence that casts dynamic lighting onto the immediate surrounding geometry. The vapor density increases over time, rising vertically and spreading laterally while maintaining continuous turbulence. Drops of the glowing fluid detach from the fingertips, falling under gravity, while the dense green smoke cloud remains concentrated around the hands, obscuring portions of the subject with a high-contrast glowing aura until the end of the shot.",
@@ -35916,7 +35962,9 @@
    "phrases": [],
    "reason": "The text strictly describes the visual effect (luminous green fluid, volumetric green vapor, glowing tendrils, neon luminescence, smoke cloud) and uses only allowed generic terms (\"the subject's hands\", \"skin\", \"palms and fingers\", \"fingertips\", \"the shot\") without leaking any specific scene identity, clothing, objects, or settings."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Body_Meteorite_Crystal.dog-e4d32067.Z|effect": {
   "text": "A rapid material manifestation effect begins at the base of the subject and spreads upward across its entire form. Dense, jagged crystalline structures burst outward from the subject's surface, expanding with high velocity. Glowing red energy veins immediately pulse through the growing geometric fissures, casting a sharp luminance. The crystalline geometry rapidly scales up, engulfing the original silhouette and constructing a much larger, muscular humanoid structure over the subject. Simultaneously, the subject's upper features warp as internal fiery light intensifies behind the eyes and facial fissures. Smoke particles and radiant embers emit from the seam lines during the rapid crystallization process. The transformation completes within two seconds as the newly formed armor locks into place, fully replacing the original subject with a fully realized armored entity as the particle emission clears.",
@@ -35940,7 +35988,9 @@
    ],
    "reason": "The text references specific anatomical or object identities belonging to the subject/scene rather than purely generic transition elements, specifically mentioning 'eyes', 'muscular humanoid structure', and 'armor'."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Brass_serpent_coil.0c27bd005ad52648.M|effect": {
   "text": "A 3D geometry generation effect introduces a heavy, solid metallic form that enters from the bottom of the frame and spirals upward around the central subject. The effect begins with rapid upward translation, expanding along a tight helical trajectory that constricts against the subject. As the metallic mass ascends, it smooths into a seamless surface featuring intricate repeating scale patterns. The object rotates horizontally around the subject while climbing, maintaining high velocity during the initial wrap phase. Upon reaching the upper chest level, the lead segment flares outward and upward, transforming into a distinct head structure with an open jaw that turns toward the subject's head. Direct directional light hits the metallic surfaces, generating bright specularity, sharp highlights, and cast shadows across the geometry, while the form holds its fixed, wrapped position relative to the subject.",
@@ -35959,7 +36009,9 @@
    "scene_leak": "parse-error",
    "raw": "{\"scene_leak\": \"yes\", \"phrases\": [\"central subject\", \"upper chest level\", \"head structure\", \"subject's head\"], \"reason\": \"The text references specific body parts ('chest', 'head') of the subject, which are allowed by the instructions, but it also repeatedly identifies the target as 'the central subject' and mentions 'upper chest level' and 'head structure', bordering or leaking identity context. However, looking strictly at the allowed list: 'generic body parts or regions of the subject that the effect acts on (head, face, chest, torso, arms, hands, legs, feet, body, silhouette)' are ALLOWED. Wait, let me re-read the text carefully. 'central subject', 'upper chest level', 'head structure', 'subject's head'. Body parts like chest and head are explicitly allowed. Is there any actual scene leak like a man, woman, dog, clothing, location? No"
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Avocado_Seed_Pendant.cf3fa73700a5f407.M|effect": {
   "text": "A luminous, glowing energy phenomenon originates between the subject's hands, emitting a bright green light with soft outer radiance and a dense core. The effect expands outward, increasing in volume and intensity while hovering steadily. As the glowing mass grows, subtle volumetric light rays radiate into the surrounding space, casting dynamic green illumination onto the subject's hands, arms, and torso. Thin streams of bright energy particles circulate within the central mass, creating continuous fluid internal motion. The brightness ramps up uniformly, reaching a peak luminescence that highlights surface details through strong rim lighting. The aura maintains a consistent spherical boundary with smooth, pulsating edges. Midway through the clip, the volumetric glow stabilizes at its maximum scale, maintaining high-frequency light flickers and constant internal particulate velocity until the frame ends, leaving a strong directional light source embedded centrally within the scene.",
@@ -35979,7 +36031,9 @@
    "phrases": [],
    "reason": "The text exclusively describes a visual energy effect, its behavior, its light emission, and its interaction with generic allowed body parts (\"the subject's hands, arms, and torso\"). No specific identities, objects, clothing, or locations from the scene are mentioned."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Chaotic_wings_from_shoulders.c4cca916f233e949.M|effect": {
   "text": "A digital visual effect manifests dark, volumetric geometric particles around the upper torso region of the subject. These particles emit a subtle purple glow and rapidly expand outward with high initial velocity, swirling in an arc-like motion. As the particles multiply, they coalesce into dense, articulated wing structures on both sides of the subject. The material transitions from loose, fragmenting particulate clusters into solid, defined feather geometry. Bright purple energy surges along the edges of the newly formed geometry, fading into deep black tones towards the core. The structures fully extend outward across the frame, maintaining a continuous slight motion of floating particles shedding off the outer tips. The effect stabilizes into a permanent geometric addition onto the subject, with residual ambient purple light particles continuously dispersing upward into the surrounding space before vanishing completely.",
@@ -35999,7 +36053,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the visual effect, its motion, color, and geometry, using only allowed generic terms like 'the subject' and 'upper torso region'."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Chest_Erupting_Shield.958f2642980d32df.M|effect": {
   "text": "A digital graphic effect overlays an glowing oval shield outline around the central subject. The effect begins as glowing light trails that form a defined crest barrier around the upper torso. At the center of this barrier, an intense point of luminous white energy ignites, emitting high-velocity electrical tendrils and blue lightning arcs that continuously expand outward toward the edges of the shield perimeter. The surrounding edge of the shield glows brightly with concentrated light, while internal energy arcs pulse rapidly across its surface. The subject's eyes illuminate with matching high-intensity blue light, synchronized with the energetic flares of the central core. The outer boundary of the shield remains defined, containing the fluid electrical discharges within its perimeter while glowing light continuously radiates into the surrounding frame.",
@@ -36019,7 +36075,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the visual effect, its lighting, energy arcs, and the generic body regions it interacts with ('upper torso', 'eyes'), without leaking any specific scene identity, objects, or settings."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Chest_Laser_Burst.451c84e369d8fe75.M|effect": {
   "text": "A luminous, energy-based visual effect originates at the center of the frame, starting as a compact, glowing blue burst. The core rapidly intensifies in brightness, emitting sharp, radiating beams of light in a full 360-degree radial pattern. Simultaneously, thin, high-velocity electrical arcing in vivid blue and red hues shoots outward from the central burst, continuously branching and pulsing. A perfectly circular, glowing ring of electrical energy expands outward from the center, circumscribing the radiating light rays. As the effect progresses, the central energy core grows larger and more intense, swamping the middle ground with bright white light. The radial light beams extend toward the edges of the frame at a consistent speed, maintaining a symmetrical, high-energy distribution before holding at maximum luminosity through the end of the clip.",
@@ -36039,7 +36097,9 @@
    "phrases": [],
    "reason": "The text describes only the visual properties, geometry, and progression of an energy-based effect and light rays, without referencing any specific scene content, subjects, or environment."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Chest_fish_burst.0e645d8b.F|effect": {
   "text": "A luminous energy orb ignites at the center of the subject's chest, casting intense lens flares and radial light beams outward. The light source pulses with high brightness as a sudden bursting force emits hundreds of stylized 3D fish geometries outward in a spherical trajectory. The fish travel rapidly toward the camera and off-screen, surrounded by trailing cyan energy streaks and glowing particles. The optical distortion expands continuously from the center point, creating a volumetric blast wave of light rays that engulf the immediate space around the subject. The radial dispersion of the fish accelerates sharply over two seconds, maintaining high velocity as the central beam reaches peak brightness, before the particle emission density begins to dissipate toward the end of the sequence.",
@@ -36059,7 +36119,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the visual effects, including a luminous energy orb, light flares, 3D fish geometries, energy streaks, and optical distortion, while using the allowed generic term 'the subject' without revealing any specific identity, clothing, or setting."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Chest_light_field.cat-48b88619.Z|effect": {
   "text": "A high-intensity energy build-up originates from a localized central source point on the front of the subject. The effect begins with an intense cyan-blue volumetric glow that expands outward. Horizontally oriented electrical arcs of plasma rapidly branch sideways across the frame at high velocity, crackling with violent frequency. Simultaneously, secondary lightning tendrils shoot upward and downward along the vertical axis, creating a starburst pattern centered on the glowing core. The high-voltage electrical arcs feature intense white centers with saturated bright blue outer halos. As the core energy peaks, dynamic multi-directional lightning bolts extend fully to the frame edges, casting bright dynamic specular highlights across the surrounding subject geometry. The high-energy plasma discharge maintains maximum brightness and spatial expansion through the end of the shot, violently crackling with continuous motion while leaving the underlying scene geometry fully illuminated.",
@@ -36079,7 +36141,9 @@
    "phrases": [],
    "reason": "The text exclusively describes visual effects, energy build-up, electrical arcs, plasma discharge, lighting, and camera/frame interactions without mentioning specific identities, settings, clothing, or pre-existing scene objects."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Chest_sigil.eagle-774703b7.Z|effect": {
   "text": "A luminous circular geometric glyph ignites at the center of the subject, emitting intense gold luminescence. Fine electrical arcing filaments instantly radiate outward from the central ring, expanding horizontally and vertically across the surface of the subject. A vertical beam of intense white-gold light projects straight upward from the core of the circular emblem, crossing the upper frame. Simultaneously, the eyes of the subject ignite with a powerful, solid yellow-white inner glow, matching the luminance of the central emblem. The electrical tendrils continuously crackle and pulse outward at high velocity, maintaining structural density across the torso region while small light motes detach and float upward. The high-intensity glowing energy, beam, and arcing tendrils remain fully sustained throughout the duration, continuously illuminating the surrounding textures of the subject with sharp highlight reflections before maintaining a steady visual output.",
@@ -36101,7 +36165,9 @@
    ],
    "reason": "The phrase 'eyes of the subject' leaks specific scene identity/body features that go beyond the generic allowed terms (head, face, chest, torso, arms, hands, legs, feet, body, silhouette)."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Confetti_Burst_from_Hands.45363300bf22cd46.M|effect": {
   "text": "Bright orange, flickering plasma energy ignites at two focal points near the center of the frame, emitting intense light and localized heat distortion. The energy rapidly expands outward along the horizontal axis, casting strong dynamic reflections on surrounding surfaces. Simultaneously, the subject's head tilts backward, triggering a high-velocity vertical eruption of multi-colored, sharp geometric particles emitting directly from the upper region of the central figure. These vibrant pink, yellow, blue, and orange fragments shoot rapidly upward in a dense cone-shaped plume, expanding outward as they ascend. The particles maintain high momentum before gradually decelerating into the upper atmospheric area of the frame. Bright radiant light flashes continuously at the origin point of the eruption, while smaller ambient embers and luminous debris disperse sideways, softly fading as the upward velocity subsides toward the end of the video.",
@@ -36124,7 +36190,9 @@
    ],
    "reason": "The text refers to 'the subject's head' and 'the central figure', which violate the rule against identifying the subject, even though generic body parts can be part of the effect, 'subject's head' and 'central figure' specify the identity or presence of a distinct subject in the scene."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Cucumber_seeds_from_chest.116c93366b05a44e.M|effect": {
   "text": "A radiant, point-source burst of intense bright green light ignites at the center of the subject's chest, casting directional laser-like rays outward in a radial geometric pattern. As the central glare intensifies, it rapidly generates a volumetric cloud of luminous green spherical particles that erupt from the core. These tiny glowing spheres expand outward with high initial velocity, accelerating in a spherical wave away from the central point of origin. The particle emission continuous to multiply rapidly, forming a dense, self-illuminated field of green light droplets that obscure the surrounding torso area. As the outward momentum pushes the dense mass of particles further, the glowing rays maintain their sharp radial angles while the expanding cloud scales up smoothly to envelop a larger radius around the central core, leaving a bright persistent point source of light at the middle.",
@@ -36144,7 +36212,9 @@
    "phrases": [],
    "reason": "The text exclusively describes a visual effect (a burst of green light, rays, and particles) originating from a generic allowed body part ('the subject's chest' and 'torso area'). No specific scene identity, setting, clothing, or pre-existing objects are leaked."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Diamond_Footpath.f6e4aa518320cb88.M|effect": {
   "text": "A ground-plane particle effect initiates beneath the subject's feet and expands outward in a rectangular strip along the floor vector. Luminous, crystalline geometry fragments materialize rapidly at high density, forming a continuous carpet of glowing polygonal elements. A bright turquoise light source emits from the base of these objects, casting intense upward volumetric illumination onto the lower regions of the subject. The geometric particles pulse with internal radiance while maintaining a fixed position relative to the ground plane as the camera moves. As the sequence progresses, additional crystalline clusters spawn continuously along the path ahead, maintaining high spatial velocity. The illumination intensity remains constant, creating strong specular highlights on surrounding surfaces, while the trailing particles stay fully illuminated behind the subject without fading or dissipating before the clip ends.",
@@ -36164,7 +36234,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the visual transition, camera motion, and the generated particle effects without revealing specific scene identities, locations, or clothing."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Dark_mist_from_mouth.cat-07b7abfa.Z|effect": {
   "text": "Dense green fluid smoke erupts directly from the center of the subject at high velocity, expanding outward toward the camera. The volumetric vapor forms turbulent, Billowing cloud structures that rapidly scale up, obscuring the lower portion of the frame. Simultaneously, a secondary layer of finer green mist disperses backward and sideways around the subject, creating an ethereal aura that fills the midground depth. The primary central emission maintains a strong upward and forward momentum, continuously generating churning fluid dynamics with high-contrast shadows within the gas folds. As the smoke advances, bright ambient highlights reflect off the thickest particulate clusters before diffusing softly into the surrounding space. The intense stream reaches maximum volume near the end of the duration, fully engulfing the lower foreground in opaque green vapor while the lingering background fog slowly dissipates across the outer edges of the scene frame.",
@@ -36184,7 +36256,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the visual effects, motion, particle dynamics, and colors of the green fluid smoke acting on the generic 'subject', without revealing any specific identity, setting, clothing, or scene context."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Dark_mist_wings_from_back.7ea3d186772aa8d6.M|effect": {
   "text": "Volumetric dark smoke emerges behind the subject, expanding laterally to form distinct wing-like geometry. The dark vapor swirls with high fluid velocity, dynamic turbulence, and internal density variations, consolidating into defined feathered edges along the upper perimeter. Concurrently, a secondary burst of dense black smoke erupts from the lower center frame near the waistline, expanding upward and outward in a spherical convection pattern. The smoke mass billows smoothly across the lower mid-ground, obscuring the torso before dissipating into faint wisps. Simultaneously, the dark wing geometry fully extends outward and upward, maintaining constant fluid motion and subtle trailing tendrils along its edges. The volumetric smoke structures continuously billow and shift, casting soft ambient shadows inward while maintaining high contrast and high density against the background light, preserving their defined silhouette throughout the dynamic transformation.",
@@ -36204,7 +36278,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the visual effects (dark smoke, wing-like geometry, fluid motion, turbulence) and uses allowed generic terms such as 'the subject', 'waistline', and 'torso'. No specific identities, clothing, or environment details are leaked."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Electric_Clothes_Glow.07b819b2.F|effect": {
   "text": "Luminous blue energetic filaments emerge instantly around the subject's forearms and hands, initiating high-velocity, organic branching paths across the frame. These electric, laser-like lines oscillate rapidly while expanding outward, forming a intricate web of bright glowing tendrils that wrap three-dimensionally around the subject. Additional tendrils sprout continuously from the primary branches, accelerating along parabolic curves across the center of the screen. High-intensity light radiates from each node, creating sharp specular blooming along the edges of the linear paths. The webbed structure retains a cohesive, floating motion pattern, constantly pulsing with energy while shifting fluidly alongside the subject's movement. As the sequence progresses, the density of the electric tendrils multiplies, completely blanketing the foreground with an intricate, glowing network of bright light. The overall energy effect maintains a steady luminescent brightness without fading, fully integrating with the motion of the scene until the end.",
@@ -36224,7 +36300,9 @@
    "phrases": [],
    "reason": "The text exclusively describes visual effects (luminous blue energetic filaments, electric, laser-like lines, tendrils) and uses allowed generic terms such as 'the subject', 'forearms and hands', and 'the scene'."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Eye_Meteor_Burst.0e8ec528ffd657e9.M|effect": {
   "text": "Intense energy conduits shoot out diagonally from the subject's ocular region toward the upper corners of the frame. These beams of light radiate a vivid orange glow and are enveloped by floating, jagged rock debris that hovers within the luminous current. Simultaneously, an explosive surge of light creates a expanding ring of orange energy beneath the subject, cracking the ground surface with glowing magma fissures. Electrical lightning strikes flare across the background, while intense rim lighting illuminates the edges of the subject's form. High-velocity energy trails, smoke, and ember particles continuously erupt from the focal points. The intensity peaks as the beams, ground fracture effects, and atmospheric lightning pulses synchronously maintain maximum brightness across the frame.",
@@ -36247,7 +36325,9 @@
    ],
    "reason": "The text references specific scene elements like the 'ground surface' and 'background' that are part of the original setting rather than being generated exclusively by the effect."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Eye_Shard_Stream.1e2592b60cc87490.M|effect": {
   "text": "Bright luminescent liquid streams generate at two points on the subject's face, instantly emitting a sharp neon glow. The fluid flows downward along vertical paths, increasing in velocity while expanding in thickness. As the streams cascade past the torso, colorful glowing particles and micro-sparks detach, floating outward into the surrounding space. The luminescent fluid displays internal color variations, shifting dynamically between icy blue, violet, and electric pink hues. High-intensity light emanates directly from the paths, casting a vivid multicolored illumination across the front surface of the subject. The fluid streams maintain a continuous downward trajectory, extending past the lower boundary of the frame while leaving faint glowing tendrils and airborne embers in their wake, which slowly dissipate into the ambient environment.",
@@ -36267,7 +36347,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the visual effects (luminescent liquid streams, glowing particles, light emission) and uses only allowed generic terms such as 'the subject', 'face', and 'torso'. No specific scene identity, clothing, setting, or preexisting objects are revealed."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "explosion_0|effect": {
   "text": "A high-velocity detonation erupts in the central background of the frame, generating a rapidly expanding fireball of intense luminescent orange and yellow plasma. The volumetric blast wave outward expands geometrically at high speed, consuming the immediate vicinity with turbulent fire and dense shockwaves. As the thermal energy reaches peak volume, radiant orange light casts high-contrast illumination forward across the ground plane. The flaming fireball instantly dissipates upward and outward, transitioning into thick, billowing clouds of dark grey and black smoke. This voluminous smoke cloud expands rapidly to engulf the central depth of the frame, obscuring background geometry while airborne debris is propelled radially. The turbulent smoke slowly rises and disperses horizontally, gradually cooling into a lingering haze that reduces overall visibility as the initial explosive velocity dissipates into atmospheric drift.",
@@ -36287,7 +36369,9 @@
    "phrases": [],
    "reason": "The text describes a high-velocity detonation, fireball, shockwave, and smoke clouds strictly as visual effects and spatial elements (background, ground plane) without identifying specific subjects, characters, clothing, or real-world locations."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "ed.Fist_heat_blast.0e8ec528ffd657e9.M|effect": {
   "text": "A powerful energy surge effect originates around the central subject as a sudden burst of high-velocity atmospheric distortion, causing a subtle ripple across the surrounding frame. High-intensity crimson light ignites within the eyes of the subject, emitting a harsh, concentrated specular glow that steadily increases in luminance. Radiant orange and red lens flares radiate outward from these dual focal points, casting dynamic highlights across the immediate environment. Fine, high-speed energy particles and heat waves rise rapidly from the lower portion of the frame, swirling upward in a violent turbulent motion around the subject's torso. The intense illumination pulses continuously, casting cast-shadows into the background while volumetric light streaks stretch laterally across the camera lens. The energy buildup peaks abruptly as the forward motion reaches full extension, sustaining the fiery ocular glow, atmospheric distortion, and particle emission through the final frame.",
@@ -36307,7 +36391,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the visual effects (energy surge, crimson light in the eyes, lens flares, particles, heat waves, and illumination) acting upon generic terms ('subject', 'eyes', 'torso') and does not leak any specific scene identity, setting, or objects."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "firelava_1|effect": {
   "text": "An intense fire energy effect initiates over the central subject, appearing as vibrant white and orange plasma arcs that outline the silhouette. The bright glowing discharge intensifies rapidly, spreading outward in high-velocity energy ribbons that completely envelope the center of the frame. As the combustion reaches maximum luminance, a horizontal light streak sweeps across the scene accompanied by motion blur, wiping the visuals laterally from left to right. This aggressive displacement transition completely obscures the visual field with searing white light, flame trails, and lens flare artifacts. As the lateral velocity subsides, the blinding fire energy collapses inward around the center frame. The intense glow, plasma arcs, and smoke dissipate radially outward over a split second, revealing the second scene completely intact beneath the cleared area as the visual effect fully extinguishes.",
@@ -36327,7 +36413,9 @@
    "phrases": [],
    "reason": "The text exclusively describes visual effects, transitions, camera motion, and generic subjects (\"central subject\", \"center of the frame\", \"second scene\") without leaking any specific scene identities, locations, clothing, or pre-existing objects."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "explosion_1|effect": {
   "text": "A sudden, high-velocity fiery explosion detonates in the upper background of the scene, generating a bright orange core with intense luminance that casts immediate illumination onto surrounding geometry. Expanding outward rapidly, the shockwave releases violent fireballs, high-speed debris fragments, and turbulent shock waves that travel downward and outward across the upper third of the frame. Thick, dark billows of smoke swiftly form around the fiery core, expanding upward and outward while obscuring sections of the background. As the initial fireball reaches peak intensity, it transitions into a dense column of rising orange flame and heavy black smoke. The explosive velocity gradually decelerates into a continuous vertical plume of dark smoke and residual fiery sparks, leaving rolling atmospheric smoke that slowly diffuses across the upper atmosphere before fading out towards the end of the clip.",
@@ -36347,7 +36435,9 @@
    "phrases": [],
    "reason": "The text exclusively describes a visual effect (fiery explosion, shockwave, debris, smoke, and sparks) and its interaction with generic geometry and lighting, without referencing any specific scene identities, locations, characters, or pre-existing objects."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "firelava_0|effect": {
   "text": "A high-velocity fire effect initiates at the base of the frame, igniting into intense orange flames that rapidly consume the subject. The fire spreads upward and laterally with high turbulent kinetic energy, fully enveloping the geometry of the subject in bright incandescent thermal light. As the camera tracks laterally, the flames stretch into a dense streak of fire that trails across the screen, obscuring the primary view with continuous combustion, heat distortion, and rising dark smoke. The fire streak sweeps forcefully past the camera lens before settling directly onto the contours of the second subject. Glowing orange energy veins and residual electric tendrils outline the silhouette of the subject in the second scene. These luminous hot traces gradually dissipate, burning off completely from top to bottom to smoothly reveal the clean final scene without lingering smoke.",
@@ -36371,7 +36461,9 @@
    ],
    "reason": "The text refers to the 'second subject', 'second scene', and 'final scene', which leak the identity and organization of the scenes rather than describing only the visual effect itself."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "flying_cam_transition_1|effect": {
   "text": "A 3D archway geometry emerges vertically from the ground of the first scene, expanding outward into the frame. Fine dust particles and thick sand fluid burst violently outward from its base with high radial velocity, dispersing horizontally along the ground plane. The interior cavity of the archway rapidly fills with dense volumetric grey smoke and dust, fully obscuring the background within its frame. A forward camera zoom moves through the center of the archway into the localized smoke mass. As the camera penetrates the smoke layer, the particulate density rapidly dissipates, clearing the obscuring haze to reveal the second scene completely intact behind the threshold. Simultaneously, the surrounding geometry of the original environment and the outer arch frame dissolve, while the incoming camera momentum smoothly stabilizes into the final framing of the second scene, completing the spatial transition across the boundary.",
@@ -36397,7 +36489,9 @@
    ],
    "reason": "The text references specific scene identities such as 'the first scene', 'background', 'the second scene', and 'original environment' instead of generic effect terminology."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "glitch_0|effect": {
   "text": "A digital chromatic aberration visual effect initiates immediately across the entire frame. High-frequency digital distortion manifests as horizontal signal tearing and pixel displacement across the imagery. Red, cyan, and yellow color channels separate along high-contrast edges, creating distinct RGB misregistration artifacts that oscillate rapidly in offset distance and spatial frequency. The distortion pulses intermittently, generating localized horizontal glitch lines that sweep vertically across the composition at high velocity. Bright edge-enhancement flares and micro-strobe luminescent flashes activate along the displaced color channels, momentarily increasing localized contrast before snapping back into spatial alignment. The intensity of the visual artifacting flickers continuously, alternating between subtle RGB fringe separation and aggressive horizontal frame displacement, maintaining a continuous digital video signal interference across the frame without resolving.",
@@ -36417,7 +36511,9 @@
    "phrases": [],
    "reason": "The text exclusively describes a digital chromatic aberration and glitch visual effect, including color channel separation, pixel displacement, signal tearing, and edge-enhancement flares, without mentioning any specific scene identities, objects, settings, or subjects."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "glitch_1|effect": {
   "text": "A digital distortion effect initiates across a localized screen region within the subject, rapidly altering the displayed content. Horizontal scan lines and chromatic RGB displacement bands burst across the surface with high velocity, creating erratic glitch patterns. Intermittent frame-skipping and signal noise distort the embedded visual elements, shifting their luminance and color saturation dynamically. The distortion waves move laterally from left to right while vertical displacement fields fluctuate in intensity. Mid-way through the clip, the intensity of the noise escalates, introducing flickering horizontal bands and scan-line artifacts that momentarily obscure the visual data. As the clip nears completion, the high-frequency signal interference rapidly decelerates, stabilization occurs, and the noise completely clears, leaving a sharp, stabilized image within the designated screen boundary of the main subject.",
@@ -36437,7 +36533,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the visual transition effects, technical glitch artifacts, and camera motion, referencing only allowed generic terms such as 'the subject' and 'the main subject'."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "live_concert_1|effect": {
   "text": "A continuous zoom-out camera motion drives a dynamic visual transition between two scenes. The sequence begins closely framed on the first scene before rapidly pulling backward along the z-axis. As the camera retreats at high velocity, volumetric blue and white fog rolls inward from the periphery, filling the void created by the expanding frame. Bright light beams from an array of overhead fixtures burst into the lens, generating intense horizontal flare artifacts that momentarily obscure the center. The retreat uncovers a wide perspective, revealing the second scene emerging beneath the dense smoke layer. Pulsing illumination strobes rhythmically across the widening area, while the fog gradually dissipates toward the edges. The fast backward tracking motion decelerates smoothly, settling into a stable, expansive final composition bathed in theatrical light and lingering atmospheric mist.",
@@ -36457,7 +36555,9 @@
    "phrases": [],
    "reason": "The text exclusively describes camera motion (zoom-out, pulling backward along the z-axis, fast backward tracking), the visual effects added (volumetric blue and white fog, bright light beams, horizontal flare artifacts, pulsing illumination, theatrical light, atmospheric mist), and generic transitional terms (first scene, second scene) as permitted by the instructions."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "live_concert_3|effect": {
   "text": "A fast flash transition cuts the first scene to the second scene at the center of the video clip. Coinciding with the match cut, dense clouds of white volcanic smoke rapidly expand outward from behind the central subject, filling the middle ground horizontally with turbulent fluid dynamics. Bright volumetric light beams penetrate the haze from overhead, casting sharp linear rays downward across the frame. Simultaneously, high-velocity lens flare elements burst radially from multiple point sources, sweeping outward toward the edges of the frame before settling into a persistent ambient illumination. As the primary blast of luminance dissipates, light smoke continuously drifts across the lower area, gradually thinning to reveal the geometry of the second scene. The entire transition occurs swiftly, utilizing sudden luminance spikes, expanding vapor clouds, and directional light shafts to seamlessly hand off the visual focus from the initial subject to the secondary environment.",
@@ -36477,7 +36577,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the transition mechanism, light effects, smoke, and generic terms like 'the first scene', 'the second scene', 'the central subject', and 'the initial subject', without leaking any specific scene identities, locations, or objects."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "flying_cam_transition_2|effect": {
   "text": "A fast forward-traveling camera whip-zoom transition initiates the movement. A radial blur motion distortion originates from the center of the frame, instantly smearing the geometry of the first scene outward along linear vectors. High-velocity optical streaks stretch from the periphery inward, creating an intense motion-blur warp effect across the entire image plane. As the camera accelerates exponentially forward through this visual distortion field, the foreground elements dissolve into high-speed directional streak lines. Simultaneously, a bright luminance flash expands outward from the focal point, masking the handoff between the imagery. The spatial scale suddenly expands as the central blur quickly clears in a reverse radial expansion. The distortion vectors instantly snap back into sharp focus, revealing the second scene as the forward velocity swiftly decelerates to a static, stable frame.",
@@ -36497,7 +36599,9 @@
    "phrases": [],
    "reason": "The text exclusively describes camera motion (fast forward-traveling camera whip-zoom, acceleration), visual effects and transitions (radial blur motion distortion, high-velocity optical streaks, luminance flash), and uses permitted generic terminology ('the first scene', 'the second scene', 'foreground elements'). There are no leaks of specific scene identity, objects, or settings."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "luminous_gaze_0|effect": {
   "text": "A VFX sequence initiates as a localized luminescent glow emerges within the ocular regions of the central subject. Simultaneously, fine dark ash particles appear in the surrounding atmosphere. The ocular illumination intensifies at high velocity, evolving into a saturated yellow-orange incandescence that projects soft light onto the facial geometry. Dark grey turbulent smoke rolls upward around the periphery, gradually filling the background space. Bright orange emissive lines then trace along the seam contours of the central subject's attire, spreading steadily across the chest and neck. Shadow values darken significantly across the entire frame, shifting the environment to a low-key lighting setup. The combined ocular glow, emissive seams, and billowing background smoke maintain peak intensity through the end of the shot.",
@@ -36520,7 +36624,9 @@
    ],
    "reason": "The text references specific clothing ('attire') belonging to the scene's subject, which is a violation of the rule against mentioning clothing or the identity/details of what was already in the scene."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "monstrosity_1|effect": {
   "text": "A massive, dark, jagged geometric mass slowly emerges from the water in the background, rising vertically with high mass and low velocity. As the structure ascends, intense fluid displacement occurs, generating large volume ocean spray, cascading white foam, and dense fog around its base. Two bright, circular volumetric light sources ignite from within the upper structure, projecting intense, focused beams forward and casting a harsh white illumination across the surrounding environment. The surface of the rising mass features complex, rocky micro-geometry that drips with fluid as it breaks the surface. The emerging entity continues to grow in height, dominating the background frame while the atmospheric fog continuously expands outward across the water surface, settling into the lower portion of the composition as the visual sequence reaches its peak amplitude.",
@@ -36540,7 +36646,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the visual effects, geometry, water displacement, lighting, and atmospheric elements without revealing any specific scene identity, setting, or subject."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "luminous_gaze_1|effect": {
   "text": "Volumetric dark smoke plumes emerge near the upper frame boundaries, expanding downward with low initial velocity. Simultaneously, a bright yellow glowing outline traces the silhouette of the central subject. This luminous neon contour intensifies rapidly, increasing in luminescence while casting a sharp yellow rim light onto surrounding surfaces. As the smoke spreads horizontally across the upper half of the composition, thickening into a dense translucent vapor, the yellow outline expands outward, emitting fine luminous particles that trace internal geometry. The glow radiates with high intensity across the subject's features, completely obscuring structural details in bright yellow light. Concurrently, the dark smoke descends fully into the foreground, increasing opacity and absorbing ambient light until the entire frame transitions into dark silhouette textures illuminated solely by the persistent yellow glow.",
@@ -36560,7 +36668,9 @@
    "phrases": [],
    "reason": "The text exclusively describes visual effects, lighting, smoke, and general camera composition terms permitted by the guidelines, without revealing specific scene identities, locations, or objects."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "melt_transition_1|effect": {
   "text": "A liquid geometry distortion effect initiates at the center of the frame, morphing the surface of the held object into a semi-translucent, fluid-like sheet. This fluid mass expands rapidly outward in a radial direction across the frame, generating dynamic wave propagation and refraction across its surface. As the fluid volume scales up, it engulfs the subject and surrounding elements, distorting the underlying pixels with high-velocity motion blur and specular highlights. The viscosity appears low as the material stretches smoothly, billowing outward toward the camera lens. At peak expansion, high-density particle droplets detach from the edges of the fluid layer. The volumetric fluid dynamic then rapidly dissolves and dissipates outward, reducing opacity to zero over several frames. This clear, high-speed dispersion completely clears the frame, wiping away the first scene and fully revealing the underlying second scene beneath.",
@@ -36586,7 +36696,9 @@
    ],
    "reason": "The text references 'held object', 'the subject', 'surrounding elements', 'the first scene', and 'the second scene', which violate the rule against identifying scene objects, subjects, and identities."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "northern_lights_0|effect": {
   "text": "Luminous fluid tendrils of green light emerge gradually from the upper atmosphere of the scene, expanding horizontally across the sky. The light curtains exhibit vertical velocity and soft wave-like oscillations, undulating steadily while intensifying in luminance. As the phenomenon develops, secondary diffuse ribbons spread downward toward the horizon, casting an ambient glow over the subject and terrain below. The motion pattern maintains a continuous upward tilt, creating a shimmering wave effect across the entire upper region of the frame. The translucent energy sheets slowly shift position, varying in thickness and intensity while remaining anchored in the upper portion of the composition throughout the duration. The light smoothly dissipates at its edges, seamlessly blending into the surrounding dark environment without harsh borders.",
@@ -36612,7 +36724,9 @@
    ],
    "reason": "The text references specific scene elements and environments such as the sky, horizon, terrain, and the surrounding dark environment, which define the setting rather than the visual effect itself."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "northern_lights_1|effect": {
   "text": "Luminescent atmospheric curtains emerge across the upper region of the frame, initiating a vertical sheet-like emission pattern. These volumetric light tendrils materialize with moderate velocity, expanding downward and laterally to cover the sky area above the horizon line. The emission exhibits continuous wave-like lateral motion, shifting across the upper dynamic space with undulating intensity. Bright vertical pillars of light oscillate gently, glowing against the dark background while casting a soft ambient illumination downwards over the scene. The fluid light phenomenon maintains a steady, sweeping movement across the frame from right to left, altering its internal density and structural contours continuously without clearing, remaining fully integrated into the upper environment through the final frame of the clip as a persistent atmospheric element.",
@@ -36632,7 +36746,9 @@
    "phrases": [],
    "reason": "The text exclusively describes visual effects, lighting elements (luminescent atmospheric curtains, light tendrils, vertical pillars), and camera/frame dynamics without mentioning specific scene identities, objects, clothing, or locations."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "point_cloud_0|effect": {
   "text": "Dense glowing light particles defining the geometry of the subject and environment begin to gradually decay and disperse into the surrounding dark void. The bright points of light forming the contours lose cohesion, slowly separating and floating outward in multidirectional paths. This particle detachment originates along the peripheral edges of the scene before spreading inward toward the center. As time progresses, the luminosity of the individual light nodes diminishes, while their density thins significantly. The outer structure dissolves first, scattering micro-particles into the empty background. The overall shape steadily loses clarity as the bright skeletal points of illumination fade completely, transitioning the scene into a field of sparse, dying embers. Finally, the remaining faint particles vanish into the darkness, fully resolving the effect into a pitch-black frame as the structure totally dissipates.",
@@ -36652,7 +36768,9 @@
    "phrases": [],
    "reason": "The text exclusively describes visual transition effects, light particles, geometric decay, and spatial dissolution without revealing any specific scene identity, objects, or settings."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "point_cloud_1|effect": {
   "text": "A continuous stippled particle luminance effect overlays the frame, transforming structural edges into dense networks of self-illuminated white points. Tiny high-intensity nodes radiate a constant, sharp specular glow, creating crisp wireframe outlines across the subject and surrounding geometric forms. These glowing particles maintain a static spatial distribution, anchoring to the underlying contours while exhibiting a subtle, fast-frequency brightness flicker. Across the frame, a mild volumetric bloom diffuses outward from the densest clusters, casting a soft white radiance into the immediate ambient space. The effect creates strong visual contrast through pure white point-light arrays superimposed against dark silhouette regions. High-density edge tracking outlines secondary details with finer nodes, while broader structural lines feature larger, saturated points of light. The overall optical overlay maintains uniform velocity and intensity throughout the clip, providing constant illumination without directional drift or particle dissipation.",
@@ -36672,7 +36790,9 @@
    "phrases": [],
    "reason": "The text exclusively describes visual effects, transitions, particle overlays, lighting characteristics, and geometric transformations without revealing any specific scene identities, objects, clothing, or settings."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "raven_transition_0|effect": {
   "text": "A rapid volumetric burst initiates at the center of the frame, generating an outward explosion of dense, organic black geometric entities. These entities burst outward with high velocity, radially expanding from the subject's torso to cover the entire foreground and midground within frames. The mass disperses into multiple fast-moving trajectories that travel towards the camera and off-screen edges, creating intense motion blur and total visual occlusion of the scene. As the outward velocity peaks, the dense cluster scatters, leaving volumetric shadow trails across the environment. The initial scene completely dissipates behind the expanding particle field. The swarm clears rapidly outward beyond the frame borders, revealing the secondary scene fully illuminated in the background with no remaining fluid or particle artifacts.",
@@ -36692,7 +36812,9 @@
    "phrases": [],
    "reason": "The text describes a visual effect transition (volumetric burst, geometric entities, motion blur, particle field) and uses only allowed generic terms such as 'the subject', 'torso', 'the frame', 'the environment', 'the scene', 'the first scene', and 'the secondary scene'."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "raven_transition_1|effect": {
   "text": "A transition effect begins as a dense swarm of volumetric geometry resembling black winged entities erupts from behind the subject in the first scene. The entities burst outward with high velocity, moving rapidly toward the camera and completely obscuring the frame within a fraction of a second. Motion blur accompanies the forward movement, creating an overlapping mass of dark shapes that blocks all background lighting. As the swarm surges past the lens, the original subject is fully enveloped. The camera follows the forward trajectory of the entities as they disperse outward in all directions. The sudden dispersal clears the screen, revealing the second scene positioned behind the flying shapes. The entire sequence occurs in a continuous motion, where the high-speed forward flux of dark geometric silhouettes acts as a dynamic wiped mask to reveal the second scene.",
@@ -36712,7 +36834,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the transition effect, its volumetric geometry, motion, and camera movement without leaking specific scene identities, settings, or objects belonging to the scenes."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "saint_glow_0|effect": {
   "text": "A luminous digital graphic effect materializes above the subject and intensifies over four seconds. The sequence opens as a faint, glowing elliptical ring forms horizontally above the subject's head. Golden-yellow light radiates outward from the ring, casting volumetric rays that extend downward and laterally across the upper portion of the scene. Small, luminous dust particles drift upward around the perimeter of the ring at a low velocity. The halo gains intensity, increasing in brightness while a secondary glowing element emerges within the subject's eye region. Bright yellow luminescence fills the lenses of the subject's glasses, blooming into an intense flare effect that obscures the eyes beneath. The volumetric light rays sharpen and expand toward the edges of the frame before holding a steady maximum brightness through the final frame of the sequence.",
@@ -36734,7 +36858,9 @@
    ],
    "reason": "The text references 'glasses', which are an accessory/object that belongs to the scene rather than the effect itself."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "saint_glow_1|effect": {
   "text": "A digital light effect generates geometric luminescent overlays directly above and across the central subject within the scene. At the start of the sequence, a glowing golden ring materializes above the subject, emitting soft radial light beams outward in all directions. Simultaneously, intense yellow light covers the eyes of the subject with sharp intensity. As the sequence progresses, glowing textual graphics and a solid glowing diamond overlay map onto the center of the subject's torso. Bright, angular light rays shoot outward diagonally from this central point toward the edges of the frame. These volumetric light shafts maintain a constant velocity and high intensity throughout the clip, while the halo ring continues floating stably with an pulsing radiance. The luminescent overlays remain locked to the subject's geometry, maintaining brightness until the clip reaches its final frame.",
@@ -36754,7 +36880,9 @@
    "phrases": [],
    "reason": "The text exclusively describes visual effects, lighting, and geometric overlays applied to generic subjects ('central subject', 'subject's eyes', 'subject's torso') using allowed terminology, without revealing any specific scene identity, clothing, environment, or objects belonging to the underlying scene."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "train_rush_0|effect": {
   "text": "A rapid background replacement transition begins as a high-speed motion blur sweeps horizontally across the rear plane behind the static foreground subject. The original environment instantly dissolves into a streaks of elongated light vectors moving at high velocity from right to left. Simultaneously, a metallic, reflective surface materializes behind the subject, accompanied by a bright, linear light source that casts intense specular highlights across the frame. Windows featuring interior illumination rapidly streak past, generating horizontal motion trails and directional glare. The directional movement accelerates smoothly over two seconds, maintaining high motion distortion while the foreground subject remains completely unaffected by the transition. As the motion blur reaches maximum velocity, the blurred environment abruptly cuts out, clearing the streaks and instantly revealing the original night background scene to complete the loop seamless transition effect.",
@@ -36776,7 +36904,9 @@
    ],
    "reason": "The phrase 'original night background scene' describes the setting and time of day, which is considered a scene leak."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "train_rush_1|effect": {
   "text": "A fast-moving, horizontal motion blur visual effect sweeps laterally across the frame, positioned in the midground directly behind the stationary central subject. The effect manifests as an elongated, continuous band of hyper-directional streaks, simulating high-velocity travel from right to left. Bright warm light emanates from internal segments of the moving band, creating a flickering, incandescent glow that casts dynamic highlights onto the immediate surroundings. The directional blur exhibits variable transparency, allowing structural grid patterns and light panels to smear into smooth horizontal vectors. As the sequence progresses, the velocity reaches a maximum threshold before the trailing edge of the blurred band accelerates out of frame toward the left side. The luminous streaks dissipate rapidly, clearing the volumetric space entirely and restoring absolute static clarity to the background elements.",
@@ -36796,7 +36926,9 @@
    "phrases": [],
    "reason": "The text exclusively describes the visual effect, motion blur, lighting, and camera movement without revealing the specific identity of the subjects, objects, or setting."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "x_ray_0|effect": {
   "text": "A progressive X-ray energy scan effect begins at the bottom of the frame, generating bright blue electrical arcs and glowing tendrils of static lightning. These electrical discharge particles travel rapidly upward across the surface of the subject. As the blue energy wave travels up the frame with high velocity, it turns the exterior geometry semi-transparent, revealing a bright blue glowing skeletal structure underneath. The glowing energy continues its upward trajectory, illuminating the spine, ribs, neck, and skull in sequence with intense luminescent translucency. Light radiates outward from the internal skeletal geometry, creating a strong volumetric glow. The transformation reaches full coverage at the top of the frame, where the entire subject resolves completely into a fully illuminated, stylized blue translucent skeletal figure glowing against the darkened surroundings, concluding the upward scanning sequence.",
@@ -36818,7 +36950,9 @@
    ],
    "reason": "The text explicitly names anatomical parts (spine, ribs, neck, and skull) belonging to the subject rather than just generic body parts (head, face, chest, torso, arms, hands, legs, feet, body, silhouette) allowed by the rules."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
  },
  "x_ray_1|effect": {
   "text": "A digital graphic effect originates at the lower center of the subject hands with small neon blue glowing geometric nodes that expand rapidly upward. The glowing blue skeletal structure geometry spreads from the hands up the arms, torso, ribs, and shoulders with high velocity, overlaid directly onto the subject. The translucent blue geometric line art illuminates the central form, projecting a intense cyan luminance that casts light onto adjacent areas. The effect travels upward into the neck and head, revealing a glowing blue digital skull graphic over the subject facial region. The volumetric light effect maintains steady intensity across the entire geometric skeletal frame, outlining internal structural shapes with sharp vector lines. The bright blue graphic overlay locks onto the subject motion, remaining fully visible and glowing intensely until the video ends.",
@@ -36838,6 +36972,1203 @@
    "phrases": [],
    "reason": "The text exclusively describes a digital graphic effect, its movement, colors, and the body parts (hands, arms, torso, ribs, shoulders, neck, head, facial region) it interacts with, all of which are explicitly allowed under the rules."
   },
-  "audit_note": null
+  "audit_note": null,
+  "tier": "zero_shot",
+  "key": "junho (2026-11-04/08)"
+ },
+ "animalization_1|effect": {
+  "text": "A luminous fiery burn effect initiates along the lower section of the subject in the first scene, generating intensely glowing orange embers, bright yellow flames, and wisps of dark smoke. The combustion boundary rapidly advances upward across the torso with high velocity, consuming the subject's geometry while emitting localized light and heat distortion. As the incineration progresses, the original silhouette disintegrates into a cloud of rising incandescent particles and micro-sparks that disperse into the air. Simultaneously, a dynamic noise pattern distorts the region of transition. Out of the dense pocket of bright luminescence, smoke, and active flames, the geometry of the second scene emerges from the center of the combustion zone. The fiery threshold expands outward and rapidly dissipates, extinguishing the embers and clearing the smoke to fully reveal the second scene in the final frames.",
+  "words": 136,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/animalization/animalization_1.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   142,
+   152
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual effects (fiery burn, embers, flames, smoke, combustion boundary, incandescent particles) and uses allowed generic terms like 'the subject', 'the first scene', 'the second scene', and 'torso'."
+  },
+  "audit_note": null,
+  "tier": "seen",
+  "key": "transition (2026-11-09)"
+ },
+ "color_rain_0|effect": {
+  "text": "A dense fluid effect initiates from the top edge of the frame, cascading downward in vertical streams across the entire scene. The liquid descends rapidly under constant velocity, coating the surfaces of the subject and environment with a viscous, glossy layer. Concurrently, fine droplet particles splash outward from horizontal collision surfaces, creating localized liquid spray. As the downward flow continues to cover the frame, a monochromatic red color grading effect washes over the entire composition. This color shift begins with a subtle tint and rapidly intensifies in saturation, absorbing the natural ambient light. The streams maintain their downward trajectory throughout the duration, continuously saturating the scene with fluid dynamics while the deep red overlay fully dominates the final illumination of the environment.",
+  "words": 122,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/color_rain/color_rain_0.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   123,
+   133
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes visual effects, including a fluid cascading movement, droplet particles, and a red color grading effect, without leaking specific identities of the subject, environment, or setting."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "color_rain_1|effect": {
+  "text": "A thick, high-viscosity orange fluid splashes directly onto the center of the frame from above, impacting the upper portion of the subject with high downward velocity. The fluid rapidly spreads outward, splashing and dripping across the subject's head, face, torso, and arms in a heavy stream. It coats the surfaces with a glossy, specular wetness, clinging tightly to the contours of the subject while continuously streaming downward under gravity. Droplets and fine sprays scatter outward upon initial impact, landing on lower areas of the frame. The flow maintains a steady downward momentum, accumulating into pools at the base while continuous thick ribbons of fluid stretch and drip from extremities, gradually settling into a smooth, wet layer that completely covers the front of the subject.",
+  "words": 124,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/color_rain/color_rain_1.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   123,
+   133
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes a visual effect (an orange fluid splashing, spreading, and coating) and uses only allowed generic terms such as 'the subject', 'head', 'face', 'torso', and 'arms'."
+  },
+  "audit_note": null,
+  "tier": "seen",
+  "key": "transition (2026-11-09)"
+ },
+ "animalization_0|effect": {
+  "text": "A luminous energy ring emerges in the center of the frame, swirling rapidly around the subject while expanding outward with high rotational velocity. Bright white and blue electric arcs and wispy light tendrils emit from the rotating circumference, casting a dynamic glow across the frame. Simultaneously, a smooth spatial warping distortion initiates from the core of the subject. This liquid-like refraction ripples outward in concentric waves, blurring and dissolving the surface details of the initial subject. The central distortion intensifies as the surrounding light ring reaches maximum brightness and velocity. The warp effect then rapidly contracts inward, wiping away the localized motion blur and spatial displacement to reveal the second subject completely intact. The luminous ring instantly dissipates outward in a fine shower of fading spark particles, leaving the final scene clear.",
+  "words": 132,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/animalization/animalization_0.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   135,
+   145
+  ],
+  "audit": {
+   "scene_leak": "yes",
+   "phrases": [
+    "initial subject",
+    "second subject"
+   ],
+   "reason": "The phrases 'initial subject' and 'second subject' leak scene identity elements by referring to the specific subjects transitioning in the scenes rather than treating them generically as allowed by the instructions."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "air_bending_1|effect": {
+  "text": "A rapid horizontal camera whip pan initiates the transition, causing severe directional motion blur across the initial frame. Concurrent with the pan, a dense volume of white volumetric smoke enters from the right edge, expanding rapidly across the screen with high kinetic velocity. The thick cloud of smoke completely obscures the subject and background under an opaque, low-density vapor layer at the midpoint of the movement. Bright directional light highlights the turbulent contours and internal texture of the expanding gas as it sweeps horizontally. As the high-speed whip pan decelerates and stabilizes, the thick smoke plume dissipates horizontally toward the left side of the frame. Its density rapidly thins out, revealing the second scene behind it. Residual wisps of smoke linger briefly in the foreground, swirling slowly before fully dissipating to complete the seamless transition into the final scene.",
+  "words": 139,
+  "sided": "two",
+  "exemplars": [
+   "data/processed/transitions_std121/air_bending/air_bending_1.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   138,
+   148
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes camera motion, motion blur, and the properties of the smoke effect used for the transition, without leaking any specific identity, setting, or objects belonging to the scenes."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "animalization_2|effect": {
+  "text": "A shape-shifting transition transforms the subject into a new form through rapid geometric deformation and energy emission. The process begins as a purple luminescent aura ignites around the perimeter of the subject. High-velocity spatial distortion warps the subject's geometry, causing the silhouette to stretch, compress, and liquify in a rapid motion blur across the center of the frame. Digital chromatic aberration and radial blur intensify at the core of the morphing figure. As the initial structure dissolves within the dark, shifting mass, a localized shockwave expands outward, blurring the immediate surrounding air. The dark volumetric fluid-like mass rapidly remolds itself, expanding outward to establish the volume, limbs, and motion of the new subject. The glowing purple aura flashes brightly before quickly dissipating into the atmosphere, leaving the fully integrated second subject moving smoothly forward as the distortion clears completely.",
+  "words": 139,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/animalization/animalization_2.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   140,
+   150
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual effects, motion blur, energy emissions, and geometric deformations of the transition without revealing the specific identity, clothing, setting, or specific objects of the scenes."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "color_rain_2|effect": {
+  "text": "A dense vertical downpour of liquid streams and fine rain droplets enters from the top frame, maintaining a high downward velocity across the entire scene. As the fluid impacts the central subject and environment, it splatters and forms a thick, viscous purple fluid coating that pools and drips downward along geometry contours. The liquid stream maintains constant vertical momentum while the accumulated fluid exhibits a slower, gravity-driven motion, trickling down surfaces and accumulating in puddles below. Dynamic lighting highlights the glossy, reflective specular surfaces of the flowing fluid and the individual rain streaks against the background atmosphere. The downpour intensity remains steady throughout the duration, continuously saturating the scene with the liquid phenomenon while wet streaks and dripping motion persist across all impacted surfaces until the clip concludes.",
+  "words": 128,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/color_rain/color_rain_2.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   139,
+   149
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual effect (liquid streams, rain droplets, viscous purple fluid coating, splattering, dripping) and uses permitted generic terms like 'the central subject and environment' and 'geometry contours' without revealing any specific scene identity, objects, or locations."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "earth_element_0|effect": {
+  "text": "A textured stone layer initiates at the center of the subject, rapidly spreading outward along the surfaces of the torso and neck. Glowing energy tendrils, emitting high-intensity illumination, travel along the fissures of the expanding rock geometry at high velocity. As the stony encrustation thickens, its surface displaces original geometry, expanding outward to form rigid plates. Fluid motion currents of luminous energy course through the deep cracks across the chest and shoulders, pulsing outward toward the limbs. Simultaneously, a glossy liquid sheath coats the hardening rock exterior, reflecting ambient highlights as it flows down the contours of the body. The transformation accelerates, enveloping the upper torso, neck, and face with dense, cracked earth textures. Energy arcs pulse through the structural crevices before settling into a sustained internal radiance, solidifying the newly formed rocky surface across the upper subject.",
+  "words": 138,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/earth_element/earth_element_0.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   141,
+   151
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes visual effects, geometry, and the generic body parts (torso, neck, limbs, body, face) permitted by the rules, without leaking specific scene identities, clothing, or environment."
+  },
+  "audit_note": null,
+  "tier": "seen",
+  "key": "transition (2026-11-09)"
+ },
+ "earth_element_6|effect": {
+  "text": "Solid, fractured geological geometry materializes directly over the surface of the central subject. The transformation originates at the upper chest, spreading radially outward and upward over the head, shoulders, and arms with high velocity. Interlocking rock plates instantly form a thick, armored outer layer, completely obscuring the original surface features. As the material encrustation expands downward to cover the lower body, dense clouds of fine dust particles are emitted from the contact points, bursting outward into the surrounding volume. The subject expands rapidly in overall geometric volume and height, gaining massive physical proportions. Concurrently, localized shockwaves hit the ground, causing rocky debris and high-velocity dust plumes to erupt around the base of the subject. The airborne dust swirls upward, partially obscuring the lower half of the frame as the transformation stabilizes into the enlarged, rocky entity.",
+  "words": 136,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/earth_element/earth_element_6.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   136,
+   146
+  ],
+  "audit": {
+   "scene_leak": "yes",
+   "phrases": [
+    "hit the ground"
+   ],
+   "reason": "The phrase 'hit the ground' references the environment/setting of the scene rather than just the visual effect itself."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "earth_wave_3|effect": {
+  "text": "A massive surge of dense brown fur erupts from the center of the first scene, rapidly expanding outward with high velocity to cover the frame. This thick, coarse hair mass forms a heavy wave that swoops downward across the lower portion of the screen, completely occluding the original image with its fast, organic sweeping motion. As the dense fur structure cascades rapidly toward the bottom edge, it sweeps across the environment in a continuous motion. The trailing edge of the heavy hair mass lifts and clears upwards, revealing the second scene completely intact beneath it. The camera follows this rapid downward motion, using the sweeping motion of the hair as a wipe that smoothly transitions between the two scenes.",
+  "words": 119,
+  "sided": "two",
+  "exemplars": [
+   "data/processed/transitions_std121/earth_wave/earth_wave_3.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   134,
+   144
+  ],
+  "audit": {
+   "scene_leak": "yes",
+   "phrases": [
+    "dense brown fur"
+   ],
+   "reason": "The text mentions 'dense brown fur' and 'coarse hair', which describes the specific identity or texture of a subject/object rather than a pure generic visual effect or transition element allowed by the rules."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "earth_element_4|effect": {
+  "text": "A live geometry transformation effect initiates on the center of the subject, replacing the surface texture with interlocking, jagged stone fragments. The rocky geometry rapidly propagates outward from the torso, expanding upward to encase the head and downward along the limbs. As the stone scales scale up and thicken into heavy, chiseled plates, the subject expands in volumetric mass, broadening the silhouette. Small dust particles and tiny debris bits detach and fall away from the surface during the rapid material displacement. The original surface completely disappears under the dense, cracked rock layer as the subject advances forward. The lighting across the newly formed stony facade shifts with natural specular highlights across sharp edges, casting deep ambient occlusion shadows within the crevices as the motion continues seamlessly across the frame until the solid stone entity completely dominates the foreground visual space.",
+  "words": 140,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/earth_element/earth_element_4.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   136,
+   146
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes a visual effect (geometry transformation into stone fragments), camera motion, anatomical terms permitted by the rules ('torso', 'head', 'limbs', 'silhouette'), and particles/lighting added by the effect itself. No specific identities, clothing, existing objects, or locations are revealed."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "fire_element_2|effect": {
+  "text": "Luminous volcanic fissure cracks ignite across the surface of the subject, originating at the lower boundaries and rapidly propagating upward across the torso, arms, and neck with increasing velocity. Glowing lava veins expand and pulsate with high-intensity molten orange light, causing intense local surface distortion and texture shifting to volcanic rock. Wisps of dark combustion smoke and fiery plasma trails stream continuously off the moving limbs, pulled backward by motion vectors. The intensity of the incandescent illumination scales exponentially, casting strong directional light across surrounding elements. A dense cloud of micro-particles and heat distortion waves envelopes the subject, obscuring finer details until the surface material is fully covered by fiery cracks, maintaining a sustained infernal glow through the remainder of the clip.",
+  "words": 122,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/fire_element/fire_element_2.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   123,
+   133
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes visual effects, geometry transformations, and particle elements (volcanic fissures, lava veins, smoke, plasma trails, heat distortion) acting on generic allowed terms ('the subject', 'torso', 'arms', 'neck') without revealing any specific scene identity, setting, or clothing."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "flame_transition_2|effect": {
+  "text": "A fire transition initiates as intense orange flames ignite around the silhouette of the subject in the first scene. The fire rapidly spreads inward with high velocity, generating a bright white-hot core of light and volumetric heat distortion that engulfs the frame. Dense smoke particles rise from the edges as the luminous flames reach maximum intensity, completely obscuring the original composition. The blaze then expands outward towards the camera, acting as a fiery curtain. As the intense brightness and flame density quickly decay, the light clears downward and outward, dissipating into lingering embers and subtle heat ripples. This rapid reduction of fire reveals the second scene beneath, fully establishing the new composition as the remaining embers fade away completely.",
+  "words": 119,
+  "sided": "two",
+  "exemplars": [
+   "data/processed/transitions_std121/flame/flame_transition_2.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   126,
+   136
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual effects (fire, orange flames, white-hot core, heat distortion, smoke particles, embers, heat ripples) and allows generic terms like 'the subject', 'the first scene', and 'the second scene'. No specific scene identity, clothing, objects, or settings are leaked."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "gas_transformation_7|effect": {
+  "text": "A disintegration effect begins as a faint reddish optical glow outlines the subject while subtle radial heat distortion ripples across the entire frame. Dense gray volumetric smoke ignites around the subject's midsection, rapidly expanding outward with upward velocity. The subject disintegrates into fine dark ash particles that mix directly into the expanding cloud. This particulate erosion spreads rapidly from the center, moving downward to consume the lower half before accelerating upward to erode the upper torso, shoulders, and head. The smoke billows outward with high density, fully obscuring the center of the frame as the subject completely vaporizes. The thick particulate cloud gradually loses kinetic energy, dispersing outward into thin wisps before dissipating entirely to reveal the untouched empty background scene behind it.",
+  "words": 123,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/gas_transformation/gas_transformation_7.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   129,
+   139
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual effect, its progression, the smoke, particles, distortion, and uses only permitted generic terms ('the subject', 'the center of the frame', 'empty background scene')."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "gas_transformation_0|effect": {
+  "text": "A rapid disintegration effect begins at the top of the central subject. Thick grey smoke plumes instantly replace the uppermost head region, expanding outward with high initial velocity. The gaseous volumetric smoke turbulence rolls continuously upwards and sideways as the breakdown propagates downwards along the vertical axis of the subject. Organic mass collapses rapidly into volumetric smoke while the remaining lower structure drops under gravity, disintegrating upon contact with the floor. The dense smoke cloud billows upward, spreading out across the center of the frame and gradually losing velocity and density. As the subject completely vanishes, the atmospheric smoke thins rapidly, dissipating into the surrounding air to leave the background fully clear and unobstructed.",
+  "words": 114,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/gas_transformation/gas_transformation_0.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   135,
+   145
+  ],
+  "audit": {
+   "scene_leak": "yes",
+   "phrases": [
+    "central subject",
+    "head region",
+    "subject",
+    "Organic mass",
+    "lower structure",
+    "floor"
+   ],
+   "reason": "The text references specific scene identities and elements such as 'central subject', 'head region', 'Organic mass', 'lower structure', and 'floor', which violate the allowed generic terms."
+  },
+  "audit_note": null,
+  "tier": "seen",
+  "key": "transition (2026-11-09)"
+ },
+ "gas_transformation_6|effect": {
+  "text": "A cloud-like vapor effect initiates around the lower body of the subject, rapidly expanding upward. As the dense, semi-translucent green-tinted mist consumes the subject's form, the geometry of the subject dissolves into fine, dispersing particles. The gaseous volume expands in size, drifting upward with high vertical velocity. Mid-way through the clip, the subject's silhouette completely homogenizes into a single, cohesive plume of thick white smoke. The smoke column continues its upward trajectory toward the top of the frame, trailing fine wisps of vapor behind. As the primary cloud exits the upper border, minor residual micro-particles and a faint hazy distortion linger briefly near the center of the frame before fully dissipating into the surrounding atmosphere, leaving the underlying background clear.",
+  "words": 120,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/gas_transformation/gas_transformation_6.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   124,
+   134
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual transition, using only allowed generic terms such as 'the subject', 'lower body', and 'silhouette', along with effect-generated elements like vapor, particles, and smoke."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "hero_flight_0|effect": {
+  "text": "The camera initiates a rapid upward motion, creating a fast vertical shift that tracks the motion of the subject ascending from the frame. High-velocity motion blur affects the scene as the camera tilts upward to follow the trajectory of the upward movement. A sudden drop in elevation follows, creating a downward camera tilt with severe vertical motion blur and perspective warping. The initial environment rapidly recedes as the camera sweeps down, transitioning into a continuous forward motion through the secondary space. Light streaks stretch vertically across the frame due to the rapid camera acceleration and changing focal point. The rapid motion stabilizes as the camera levels out into a linear horizontal push, clearing the dynamic blur effects to reveal the second scene seamlessly with a smooth deceleration pattern.",
+  "words": 128,
+  "sided": "two",
+  "exemplars": [
+   "data/processed/transitions_std121/hero_flight/hero_flight_0.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   132,
+   142
+  ],
+  "audit": {
+   "scene_leak": "yes",
+   "phrases": [
+    "the secondary space"
+   ],
+   "reason": "The phrase 'the secondary space' references specific scene content rather than a pure visual effect or camera motion."
+  },
+  "audit_note": null,
+  "tier": "seen",
+  "key": "transition (2026-11-09)"
+ },
+ "flame_transition_3|effect": {
+  "text": "Bright orange and yellow flames ignite spontaneously near the center of the subject, rapidly expanding outward in high-velocity turbulent bursts. The intense fire consumes the frame with incandescent heat, releasing thick dark smoke particles that billow upward. Bright white thermal glow radiates from the core of the combustion, temporarily blinding the lens and completely obscuring the entire first scene. The fiery blast sweeps vertically across the frame from bottom to top, shifting the overall color saturation and exposure. As the rapid combustion peaks in density and intensity, it instantly dissipates outward toward the edges. The diminishing smoke and fading ember particles clear away smoothly to reveal the second scene beneath, fully restoring standard exposure levels.",
+  "words": 115,
+  "sided": "two",
+  "exemplars": [
+   "data/processed/transitions_std121/flame/flame_transition_3.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   144,
+   154
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual effects (flames, smoke, thermal glow, ember particles), camera action, and generic transition terms ('the subject', 'the first scene', 'the second scene') without revealing any specific scene identities, locations, or objects belonging to the scene."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "giant_grab_3|effect": {
+  "text": "A foreground element enters from the left frame edge at high velocity, moving laterally across the screen to occlude the central subject. This solid geometry acts as a wiped mask, traveling rightward with steady speed across the middle ground. As the edge of this obscuring shape traverses the frame, it wipes away the pixels of the first scene directly behind its trailing boundary. Simultaneously, a dynamic screen-shake displacement is applied to the frame, simulating an impactful physical displacement. The original subject rapidly shifts position and exits off the bottom-left frame edge in direct synchronization with the lateral wipe motion. The obscuring foreground element then reverses direction, retreating back toward the left edge to reveal the newly established second scene underneath. The transition completes seamlessly as the foreground mask fully clears the frame, leaving the second scene completely static and unobstructed.",
+  "words": 140,
+  "sided": "two",
+  "exemplars": [
+   "data/processed/transitions_std121/giant_grab/giant_grab_3.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   146,
+   156
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text describes a transition solely using allowed generic terms ('the central subject', 'the first scene', 'the second scene', 'foreground element') and technical descriptions of visual effects and camera motion without leaking any specific scene identities, clothing, objects, or locations."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "illustration_scene_0|effect": {
+  "text": "A stylized graphic overlay sequence transforms the live-action scene through an animated line-art drawing process. High-contrast vector lines trace over the subject, originating from the center of the frame and expanding outward to outline contours. Concurrently, geometric graphic shapes sweep in diagonally from the frame edges, filling sections of the background and subject with bold block colors. Thick black vector strokes rapidly replace live-action details, while vibrant color planes expand at high velocity to cover the underlying visual elements. As the geometric fills lock into place, the original scene fully transitions into a stylized illustrated graphic aesthetic, maintaining the subject's composition.",
+  "words": 101,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/illustration_scene/illustration_scene_0.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   137,
+   147
+  ],
+  "audit": {
+   "scene_leak": "yes",
+   "phrases": [
+    "live-action scene",
+    "background",
+    "live-action details",
+    "underlying visual elements",
+    "original scene"
+   ],
+   "reason": "The text references 'live-action scene', 'background', 'live-action details', 'underlying visual elements', and 'original scene', which describe elements belonging to the scene rather than the effect itself."
+  },
+  "audit_note": null,
+  "tier": "seen",
+  "key": "transition (2026-11-09)"
+ },
+ "money_rain_0|effect": {
+  "text": "Paper object particles suddenly enter the upper frame with high downward velocity, creating a continuous vertical cascade across the entire scene. The individual rectangular elements rotate and tumble along their pitch and roll axes as gravity pulls them downward. As they descend, the density of the falling elements increases rapidly, filling the space around and in front of the subject. The incoming lighting illuminates the surfaces of the tumbling objects, casting moving shadows and highlights across their planes as they pass through the frame. The spatial distribution remains dense throughout the duration of the clip, maintaining a steady rain of falling geometry that obscures sections of the background until the video concludes.",
+  "words": 112,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/money_rain/money_rain_0.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   115,
+   125
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual effect (paper object particles, vertical cascade, tumbling elements, lighting, shadows, and highlights) and uses only allowed generic terms like 'the subject' and 'the background'."
+  },
+  "audit_note": null,
+  "tier": "seen",
+  "key": "transition (2026-11-09)"
+ },
+ "hero_flight_5|effect": {
+  "text": "The transition begins with a rapid upward camera motion that matches an explosive vertical velocity from the center of the frame. As the upward displacement peaks, the first scene instantly cuts away while maintaining the upward momentum. A high-speed forward match-move camera motion immediately takes over, plunging downward along a steep diagonal path. Simultaneously, a dynamic zoom stretches the peripheral perspective outward, creating a strong motion blur across the edges of the frame. High-velocity air currents visualised as subtle, semi-transparent wind streaks stream inward from the borders toward the frame center. As the rapid descent decelerates into a stabilized forward glide over the second scene, the motion blur dissipates, the perspective distortion flattens to normal focal proportions, and the high-speed air currents vanish to reveal the target environment fully.",
+  "words": 129,
+  "sided": "two",
+  "exemplars": [
+   "data/processed/transitions_std121/hero_flight/hero_flight_5.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   135,
+   145
+  ],
+  "audit": {
+   "scene_leak": "yes",
+   "phrases": [
+    "target environment"
+   ],
+   "reason": "The phrase 'target environment' references the specific setting or location of the second scene, which violates the rule against mentioning scene identity, settings, or locations."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "illustration_scene_7|effect": {
+  "text": "A rapid full-frame graphic stylistic transition instantly alters the visual presentation of the scene midway through the sequence. High-contrast, thick black ink line work suddenly outlines every geometric edge, contour, and detail across the subject and background simultaneously. The natural shading, textures, and realistic lighting wipe away completely in a single frame. They are replaced by posterized flat color regions and heavy halftone-style shading. Vibrant neon pink and saturated cyan hues sweep across the subject and environment, before shifting rapidly into warmer peach, terracotta, and soft magenta tones. The spatial geometry, subject position, and fine structural elements remain perfectly locked, while the render style converts instantly from photorealistic live-action footage into a hand-drawn, animated comic book aesthetic. This stylized filter holds steadily over the entire frame through the end of the clip.",
+  "words": 132,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/illustration_scene/illustration_scene_7.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   139,
+   149
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text describes a purely visual transition effect (ink line work, halftone shading, posterized flat colors, and stylistic filter) applied to the subject and background without leaking any specific scene identities, locations, or objects."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "hero_flight_6|effect": {
+  "text": "The transition begins with a fast vertical pan and upward camera displacement, causing motion blur across the first scene as the camera accelerates upward. Simultaneously, spatial distortion stretches the frame along the vertical axis. The initial scene quickly translates downward and exits the lower frame edge within fractions of a second. As the upward displacement peaks, a high-velocity push forward initiates, introducing perspective projection warping. The second scene enters instantly from the upper and center regions of the frame, replacing the original geometry. The camera's forward momentum creates radial motion blur along the frame's edges, tapering off smoothly as the visual tracking stabilizes into a continuous forward trajectory over the second scene. The entire sequence executes as a seamless continuous camera take, smoothly blending high-speed vertical displacement into direct forward momentum without any visible spatial cuts.",
+  "words": 136,
+  "sided": "two",
+  "exemplars": [
+   "data/processed/transitions_std121/hero_flight/hero_flight_6.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   135,
+   145
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes camera motion, spatial distortion, motion blur, and generic transition mechanics ('first scene', 'second scene') without revealing any specific identities, locations, objects, or scene-specific attributes."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "illustration_scene_4|effect": {
+  "text": "The visual effect transitions the subject and scene into a stylized graphic illustration through a rapid graphical wipe. Initiating at the three-second mark, a sharp vector line work overlay generates across the subject, tracing every contour, fold, feature, and edge with thick, defined black strokes. Simultaneously, glowing highlights and dynamic line weights sweep across the frame from top-left to bottom-right at high velocity. The original textures, lighting, and natural depth fade completely over one second, replaced by flat, solid color fills within the newly formed outline regions. The internal details contract into high-contrast vector shapes, while the background converts instantly into a uniform, saturated color block. By the four-second mark, the full spatial geometry of the frame freezes into a two-dimensional posterized illustration, completely overwriting the initial photorealistic video frame with high-contrast graphic artwork that remains static until the clip concludes.",
+  "words": 141,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/illustration_scene/illustration_scene_4.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   148,
+   158
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes a visual effect, transition mechanics, and the resulting graphical transformation without leaking the specific identity of the subject, objects, or location."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "money_rain_1|effect": {
+  "text": "A dynamic particle animation overlay begins at one second into the clip, introducing rectangular green paper elements that enter the upper corners of the frame. These elements fall diagonally downward at moderate velocity, cascading in front of and around the subject while rotating continuously along their pitch and roll axes. Additional paper units spawn at varying depths across the frame, drifting outward toward the camera lens to create natural perspective scale variations. Motion blur accompanies the tumbling geometry to emphasize directional speed, with lighting on the surfaces shifting dynamically based on their angle relative to the light source. The stream of falling elements maintains a steady density and velocity, dispersing across the entire foreground before exiting the bottom edge of the frame, leaving the underlying video undisturbed throughout the motion sequence.",
+  "words": 131,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/money_rain/money_rain_1.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   135,
+   145
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual effects (particle animation overlay, green paper elements, falling motion, blur, lighting) and uses only allowed generic terms like 'the subject'."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "money_rain_3|effect": {
+  "text": "A deluge of paper currency notes materializes near the upper frame edge and streams downward into the scene. The individual bill entities descend with varied angular velocities, tumbling and fluttering along turbulent trajectory paths. As the physical velocity carries them toward the lower frame edge, several notes collide with the subject and surrounding structural geometry, coming to rest on flat horizontal surfaces while others continue to fall past the field of view. The volumetric density of the falling objects increases rapidly over the first few seconds, creating a continuous vertical cascade across the foreground and midground planes. Ambient directional lighting illuminates the flat surfaces of the floating rectangular paper geometric elements, casting subtle dynamic shadows as they move downward through the spatial volume before settling static across the environment.",
+  "words": 129,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/money_rain/money_rain_3.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   127,
+   137
+  ],
+  "audit": {
+   "scene_leak": "yes",
+   "phrases": [
+    "surrounding structural geometry",
+    "flat horizontal surfaces",
+    "environment"
+   ],
+   "reason": "The text references environment elements like 'surrounding structural geometry', 'flat horizontal surfaces', and 'environment' which describe the existing scene's setting rather than the effect itself."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "nature_bloom_1|effect": {
+  "text": "Dense, tall green grass blades and slender wild stems instantly sprout and ascend vertically from the base of the frame, rapidly covering the lower half of the scene. Small pink and yellow flower buds emerge concurrently along the rising stems with high velocity. The botanical growth expands continuously upward and outward, filling the space behind and around the subject. The vegetation moves with upward kinetic force, instantly populating the environment with layered flora. A subtle, natural swaying motion affects the stems as they reach maximum height, while small petals detach and drift downward through the frame. The rapid growth phase stabilizes into a static organic layer, completely altering the background composition without obscuring the central foreground subject before the frame holds.",
+  "words": 121,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/nature_bloom/nature_bloom_1.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   127,
+   137
+  ],
+  "audit": {
+   "scene_leak": "yes",
+   "phrases": [
+    "green grass blades",
+    "wild stems",
+    "pink and yellow flower buds",
+    "botanical growth",
+    "vegetation",
+    "flora",
+    "stems",
+    "petals",
+    "organic layer"
+   ],
+   "reason": "The text describes specific natural elements like green grass blades, wild stems, and flower buds that constitute the specific botanical setting and objects, which violates the restriction against naming scene content rather than pure effect geometry or particles."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "mystification_0|effect": {
+  "text": "A visual effect initiates as glowing amber smoke and luminous energy tendrils emerge near the center of the subject, swirling outward with accelerating radial velocity. As the golden vapor expands, it wraps around the torso, limbs, and head of the subject, emitting soft light across adjacent surfaces. Concurrently, a disintegration process begins at the focal point of the energy and spreads rapidly outward, converting the subject's geometry into fine brown ash and micro-particles. The disintegrating wave moves vertically upward through the upper body and downward into the lower extremities with high speed. The floating dust particles drift along turbulence vectors before dispersing into the surrounding environment. As the primary subject dissolves completely, trailing wisps of glowing smoke and disintegrating fragments linger momentarily in the air, gradually fading to reveal an empty background where the subject originally resided, concluding the linear volumetric erosion sequence.",
+  "words": 143,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/mystification/mystification_0.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   148,
+   158
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual transition, the energy tendrils, the ash, and the generic anatomy of the subject ('torso, limbs, and head', 'upper body', 'lower extremities') without leaking any specific scene identity, clothing, setting, or background details."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "plasma_explosion_2|effect": {
+  "text": "A powerful upward blast of light originates from the central subject's upper body at high velocity, forming a concentrated vertical energy column that pierces toward the upper frame. Luminance rapidly surges around the emission point, blindingly obscuring the head area. As the column expands, high-density volumetric grey and black smoke erupts from the peak of the light beam, spreading outward in a turbulent mushrooming pattern. The expanding cloud dissipates the bright central pillar, transforming the vertical discharge into a rolling spherical mass of dark soot. As the camera rapidly pulls back along the ground plane, the dense smoke cloud continues to expand violently, engulfing the upper spatial region of the subject while billowing outward to fill the central mid-air space. The glowing core gradually fades into heavy opacity, leaving a lingering volumetric plume that completely obscures the original upper geometry.",
+  "words": 140,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/plasma_explosion/plasma_explosion_2.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   133,
+   143
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual effects (upward blast of light, energy column, volumetric grey and black smoke, mushrooming pattern, glowing core) and uses only allowed generic terms like 'the central subject', 'upper body', and 'head area' without revealing any specific scene identity, clothing, objects, or locations."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "polygon_0|effect": {
+  "text": "A digital texture overwriting effect initiates at the top of the frame, spreading downward in a uniform wave across the scene. The original appearance of the subject and background rapidly converts into flat, untextured white geometric planes, replacing smooth curves and complex details with low-polygon faceted surfaces. As the transition line moves downward at a constant velocity, bright lighting artifacts edge the boundary between the original material and the new geometry. The transformation alters the surface properties instantaneously without generating extraneous particles, fluid motion, or volume smoke, maintaining the exact pose and structural bounds of the subject while converting the environmental surroundings simultaneously. Once the downward sweep reaches the bottom edge of the frame, the complete scene retains its matte white polygonal state, stabilizing completely into a static geometric model until the end of the clip.",
+  "words": 136,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/polygon/polygon_0.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   141,
+   151
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text describes a purely visual transition effect involving digital texture overwriting, low-polygon conversion, and lighting artifacts. It strictly uses permitted generic terms like 'the subject', 'the scene', and 'background' without leaking specific identities, objects, clothing, or settings."
+  },
+  "audit_note": null,
+  "tier": "seen",
+  "key": "transition (2026-11-09)"
+ },
+ "polygon_4|effect": {
+  "text": "A geometric low-poly mesh effect originates at the base of the frame and propagates upward along the subject and ground plane. The transition begins with fine white, angular polygonal facets forming at ground level, expanding vertically at a steady velocity. As the wave of low-poly geometry advances, it completely overlays the original surfaces, replacing smooth organic textures and colors with sharp, faceted architectural shapes and monochrome white lighting. The material transformation spreads continuously across the subject from feet to head while simultaneously spreading outward across the surrounding environment in a sweeping motion. Shadows and highlights re-render as flat, sharp-edged shading across the tessellated polygons. The transformation completes as the final remnants of original color, texture, and detail are engulfed by the solid, untextured geometric mesh, leaving a fully stylized, low-poly 3D scene.",
+  "words": 132,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/polygon/polygon_4.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   134,
+   144
+  ],
+  "audit": {
+   "scene_leak": "yes",
+   "phrases": [
+    "subject",
+    "feet to head",
+    "surrounding environment"
+   ],
+   "reason": "The text references the subject's anatomy ('feet to head') and the scene's environment ('surrounding environment'), which violate the rule against mentioning specific identities, body parts, or setting components beyond generic allowed terms."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "portal_0|effect": {
+  "text": "A small luminous orb of emerald energy hovers centrally before rapidly expanding into a massive, vertically elongated oval portal. The portal consists of swirling, viscous fluid-like layers rotating horizontally with high velocity. Bright glowing green light emanates continuously from the core, casting intense illumination outward into the surrounding environment. White energy flecks and small glowing particles burst rapidly from the edges of the swirling mass, drifting outward before fading. The fluid geometry maintains an unstable surface, undulating continuously with intense luminous radiance. As the spatial distortion reaches maximum scale, it consumes the central region of the frame, providing an active energy barrier. The intense luminescence remains constant while the spinning motion accelerates, fully establishing the high-density portal structure.",
+  "words": 118,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/portal/portal_0.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   128,
+   138
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes visual effects, lighting, motion, and geometry (a luminous orb, portal, fluid-like layers, energy flecks, spatial distortion) without mentioning any specific subjects, clothing, objects, or locations belonging to the underlying scene."
+  },
+  "audit_note": null,
+  "tier": "seen",
+  "key": "transition (2026-11-09)"
+ },
+ "polygon_8|effect": {
+  "text": "A stylized geometric distortion effect originates from the center of the frame and propagates outward over the subject. Tiny triangular micro-facets expand, sub-divide, and shift across the surface geometry, creating a continuous crystalline or low-poly tessellation. The effect moves with moderate velocity, rippling across contours while preserving the original volume and silhouette. A sharp, white, high-contrast specular sheen highlights the dynamic polygon edges as they continuously re-mesh and rotate. As the geometric noise reaches maximum intensity around mid-clip, the faceted distortion creates a rhythmic flickering across the surface planes. The effect then smooths slightly, stabilizing into a refined polygonal grid overlay that holds its shape through the end of the clip, blending the digital tessellation seamlessly into the structure of the subject while maintaining constant edge illumination throughout.",
+  "words": 128,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/polygon/polygon_8.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   133,
+   143
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text describes a visual geometric distortion effect and its interaction with the generic 'subject', 'surface geometry', and 'silhouette', without revealing any specific scene identity, objects, or locations."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "portal_1|effect": {
+  "text": "The visual transition initiates in the background behind the subject as the static gradient surface morphs into an active fluid distortion. A swirling vortex formation develops directly at the center of the frame, generating thick, concentric liquid ripples that expand outward with increasing rotational velocity. The fluid surface exhibits high specular reflections, deep volumetric depth, and glossy refractive caustics that warp the space behind the subject. Concurrently, a violent downward gravity force field acts upon the subject, causing it to fall rapidly into the center of the swirling fluid vortex. As the subject descends downward, the perspective shifts dynamically to maintain focus on the subject. The liquid ripples engulf the subject completely, while the surrounding fluid distortion continues its continuous rotational movement, fully obscuring the original background plane and finishing the animated sequence with a persistent fluid vortex.",
+  "words": 138,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/portal/portal_1.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   139,
+   149
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual transition, background fluid distortion, vortex, ripples, and camera/perspective shifts. It uses the allowed generic term 'the subject' and does not leak any specific scene identity, objects, clothing, or locations."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "sakura_petals_1|effect": {
+  "text": "A rapid organic particle disintegration effect begins at the center of the frame, targeting the subject. The subject’s geometry fractures into a high-density cloud of organic, petal-like debris. This floral erosion rapidly propagates outward and upward, completely consuming the subject's structure from the top down within one second. The generated mass of pink and red organic fragments bursts into the air with high upward velocity, propelled by turbulent wind dynamics. The dense cloud expands as it ascends toward the top camera boundary, scattering individual elements across the upper frame. As the main cluster disperses out of view, lingering micro-particles drift slowly on ambient thermal currents, leaving the original environment fully visible and completely clear of the central subject by the conclusion of the sequence.",
+  "words": 124,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/sakura_petals/sakura_petals_1.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   127,
+   137
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual transition effect, its direction, propagation, generated particles, and their behavior, without revealing the specific identity of the subject or the setting."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "portal_4|effect": {
+  "text": "A luminous, circular vortex effect dominates the center background of the scene, emitting a intense green glow. The effect features concentric rings of swirling fluid energy and high-velocity radial light streaks that continuously rotate around a dark center core. As the shot progresses, the subject situated in the foreground leans backward, crossing the threshold of the distortion field. The center of the fluid portal visually engulfs the subject, pulling them inward through the vortex with accelerating motion until the subject is entirely obscured. The swirling green plasma effect expands slightly outward, maintaining high-frequency swirling turbulence and luminous particle emissions across the boundary of the energy pool. Bright rim lighting casting from the vortex saturates the surrounding ambient environment throughout the transition, leaving only the active vortex remaining in frame.",
+  "words": 129,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/portal/portal_4.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   127,
+   137
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text describes a visual effect, its properties, and generic allowed terms such as 'the subject' and 'the scene', without leaking any specific scene identity, setting, or objects."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "shadow_0|effect": {
+  "text": "A dark, fine particle disintegration effect initiates at the base of the subject and spreads vertically toward the top of the frame. Small black sand-like granules and dense smoky wisps detach from the lower region, rising with an upward velocity while churning outward into the surrounding space. The dissolution front progresses at a steady pace, consuming the subject's form from the ground up and converting its solid geometry into a turbulent cloud of dark particulate matter. As the wave of particle erosion reaches the highest point of the subject, the entire figure fully dissolves into a volumetric silhouette composed of floating micro-particles and fine ash mist. This dark cloud briefly hovers in place, slowly expanding and dispersing outward before dissipating into the atmosphere, leaving the rest of the surrounding scene entirely unmodified throughout the duration of the transition.",
+  "words": 138,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/shadow/shadow_0.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   136,
+   146
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual effect, its progression, and generic references allowed by the rules ('the subject', 'the ground', 'the highest point', 'the surrounding space'). No specific scene identities, locations, or objects belonging to the scene are revealed."
+  },
+  "audit_note": null,
+  "tier": "seen",
+  "key": "transition (2026-11-09)"
+ },
+ "shadow_10|effect": {
+  "text": "A black fur texture fluidly expands outward from the lower portion of the frame to engulf the lower half of the subject. The material originates near the feet at high velocity, fanning out horizontally and vertically across the surface of the subject's clothing. It spreads with a wave-like motion, exhibiting dense volumetric depth and dynamic shadows as it moves upward toward the midsection. The material maintains a soft, fibrous surface structure that folds and overlaps continuously during its outward growth. The propagation continues rapidly, scaling in size and volume to obscure the subject's lower region entirely. The boundary of the black fur material expands outward, settling into a dense static mass across the lower frame as the growth motion slows to a complete stop.",
+  "words": 124,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/shadow/shadow_10.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   122,
+   132
+  ],
+  "audit": {
+   "scene_leak": "yes",
+   "phrases": [
+    "clothing"
+   ],
+   "reason": "The text mentions 'clothing', which refers to objects already on the subject, violating the rule against referencing clothing or items belonging to the scene."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "shadow_smoke_0|effect": {
+  "text": "A dense, volumetric cloud of pitch-black smoke rapidly erupts from the center of the frame, engulfing the subject in a turbulent fluid motion. The black tendrils expand violently outward, completely obscuring the subject and the immediate surroundings within a second. The thick vortex of dark smoke then shifts its trajectory, accelerating laterally across the frame at high velocity like a propelled projectile. As the smoke trail streak swoops horizontally, a directional motion blur stretches the fluid dynamics. The dark cloud then rapidly dissipates and unravels from the center outward, unveiling the second scene. Wisps of residual black vapor cling momentarily to the new subject before fully evaporating into the surrounding air, completing a seamless travel transition between the two environments.",
+  "words": 120,
+  "sided": "two",
+  "exemplars": [
+   "data/processed/transitions_std121/shadow_smoke/shadow_smoke_0.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   130,
+   140
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes a visual transition effect involving smoke, camera motion, and allowed generic terms such as 'the subject' and 'the second scene'. No specific identities, locations, or scene contents are leaked."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "shadow_smoke_1|effect": {
+  "text": "A dense, volumetric mass of dark black smoke erupts directly from the lower torso and legs of the subject in the first scene. The fluid smoke expands exponentially at high velocity, billowing outward to engulf the central subject in a thick, opaque cloud. It rapidly covers the frame from the center toward the perimeter, completely obscuring the geometry and background of the first scene with a turbulent, light-absorbing shroud. As the motion continues forward, the black smoke begins to dissipate quickly from the top down, pulling away in trailing tendrils toward the base of the frame. The vanishing fluid reveals the second scene beneath, with residual vapor clinging briefly to the lower portion of the new subject before fully evaporating into the air, finalizing a seamless scene transition.",
+  "words": 128,
+  "sided": "two",
+  "exemplars": [
+   "data/processed/transitions_std121/shadow_smoke/shadow_smoke_1.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   130,
+   140
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text describes a visual transition effect using allowed generic terms ('the subject', 'the first scene', 'the second scene', 'lower torso and legs') and effect-generated elements (black smoke, fluid smoke, vapor) without leaking specific scene identities, locations, or objects."
+  },
+  "audit_note": null,
+  "tier": "seen",
+  "key": "transition (2026-11-09)"
+ },
+ "shadow_3|effect": {
+  "text": "A dynamic organic growth effect originates from the lower edge of the frame, introducing dark, rope-like tendrils that expand upward with rapid, steady velocity. These fibrous geometric strands cross and overlap across the center of the frame, steadily engulfing the subject from the bottom up. As the volumetric strands ascend, they form a dense, intertwined web of rotating tubular forms that obscure the original lower elements of the scene. The dark material continually twists and thickens, expanding its footprint vertically to gradually cover the subject's torso, shoulders, and lower visage. The upward progression maintains a fluid, creeping motion, locking around the central features until the lower two-thirds of the image are completely encapsulated by the matte, textured strands, concluding the transition as the upper elements remain partially exposed.",
+  "words": 128,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/shadow/shadow_3.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   130,
+   140
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual transition effect (organic growth, dark rope-like tendrils, geometric strands, volumetric strands, tubular forms) and uses only allowed generic terms (\"the subject\", \"the scene\", \"torso\", \"shoulders\", \"lower visage\") as specified in the instructions."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "shadow_smoke_7|effect": {
+  "text": "A dense cloud of dark gray smoke erupts instantly from the center of the frame, expanding outward at high velocity. The opaque smoke rapidly surges forward to completely envelop the subject and obscure the initial scene entirely within one second. The swirling fluid mass undergoes a sudden directional shift, sweeping across the viewport diagonally toward the left edge with high kinetic energy. As the volumetric smoke plume moves across the screen, it stretches into elongated tendrils that draw the frame's focal point along its trajectory. The trailing edge of the thick vapor trail dissipates smoothly, thinning out to reveal the second scene beneath it. The residual smoke particles drift out of frame toward the upper left corner, completely clearing the view and leaving the second scene fully visible in crisp focus, completing a seamless volumetric fluid dynamic transition between the two environments.",
+  "words": 142,
+  "sided": "two",
+  "exemplars": [
+   "data/processed/transitions_std121/shadow_smoke/shadow_smoke_7.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   142,
+   152
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual transition effects, including smoke behavior, motion, and generic references like 'the subject', 'the initial scene', and 'the second scene' which are explicitly allowed."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "super_fast_run_1|effect": {
+  "text": "A dynamic speed blur and camera shake effect is applied across the frame as the subject moves. A radial motion blur expands outward from the center of the frame, intensifying progressively to simulate high-velocity forward acceleration. Luminous light streaks and elongated light trails stretch horizontally and diagonally along the edges, following the direction of movement. Light distortion and chromatic aberration appear on the outer boundaries of the view, warping the perimeter while keeping the focal point relatively sharp. The effect builds in magnitude rapidly, with violent camera jitter, micro-stuttering, and a slight push-in zoom applied synchronously to amplify the sense of sudden kinetic momentum. As the movement continues, bright lens flare elements stretch across the frame along the primary lighting axes, before the intense motion distortion stabilizes back to a clearer image.",
+  "words": 132,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/super_fast_run/super_fast_run_1.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   131,
+   141
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes visual effects, camera movements, blurs, light streaks, and distortion mechanics without revealing any specific scene identity, objects, subjects, or locations."
+  },
+  "audit_note": null,
+  "tier": "seen",
+  "key": "transition (2026-11-09)"
+ },
+ "super_fast_run_0|effect": {
+  "text": "The visual effect originates as a dynamic directional motion streak across the outer edges of the frame while the central subject remains in relative focus. Rapid peripheral stretching and chromatic distortion spread outward from the center, creating an intense forward kinetic acceleration phenomenon. Volumetric spatial warping stretches the surrounding environment radially away from the focal center along Z-axis vector paths. The velocity steadily escalates, causing extreme motion blur across the lateral periphery while maintaining structural clarity along the central motion vector. Digital noise streaks and light trails stretch along the edges of the screen, mimicking high-speed travel through a narrow corridor. The intense spatial blur peaks during the mid-sequence motion before resolving smoothly into a stabilized frame as the rapid forward movement decelerates, allowing the distorted spatial geometry and periphery light streaks to clear completely back into clear photorealistic detail.",
+  "words": 140,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/super_fast_run/super_fast_run_0.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   142,
+   152
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text describes a camera motion and visual effect (directional motion streak, chromatic distortion, spatial warping, motion blur, light trails) without revealing any specific scene identity, setting, or subject details."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "super_fast_run_3|effect": {
+  "text": "The visual effect introduces an intense radial camera motion blur effect that gradually intensifies across the frame. Initially, the subject accelerates forward, causing a subtle motion distortion that rapidly evolves into a heavy zoom-blur phenomenon centered on the focal point. Bright, linear light streaks originate from the center of the frame and expand outward toward the edges at high velocity, simulating extreme forward momentum. The peripheral geometry of the scene stretches dramatically along radial vectors, blurring the background elements into smooth, continuous lines while maintaining relative clarity at the central core. The speed of the directional distortion increases exponentially, creating a tunnel-like warping field across the visual plane. Optical glow and chromatic aberration intensify along the outer borders of the streaking artifacts. Finally, the visual distortion stabilizes as the intense outward blur field dissipates back into the frame.",
+  "words": 138,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/super_fast_run/super_fast_run_3.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   134,
+   144
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes visual effects, camera motion, light streaks, and distortion mechanics without revealing any specific scene identity, objects, or locations."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "water_bending_3|effect": {
+  "text": "A dynamic fluid simulation transition begins as a high-velocity wave of translucent water emerges from the subject's extended hand in the first scene. The water rapidly surges forward toward the camera, sweeping across the lower frame with churning white foam, turbulent currents, and airborne droplets. As the heavy fluid volume crests and expands, it completely covers the lens, temporarily obscuring the entire frame with a dense wall of churning liquid and white spray. The turbulent water motion acts as an wipe, immediately washing outward and dissipating downward. As the foam clears and the water volume recedes across the ground plane, it reveals the second scene completely underneath. The fluid retains high transparency and realistic light refraction throughout its movement, transitioning seamlessly from a concentrated stream into a wide surge before evaporating to leave the final scene fully visible.",
+  "words": 138,
+  "sided": "two",
+  "exemplars": [
+   "data/processed/transitions_std121/water_bending/water_bending_3.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   140,
+   150
+  ],
+  "audit": {
+   "scene_leak": "yes",
+   "phrases": [
+    "subject's extended hand",
+    "ground plane"
+   ],
+   "reason": "The text mentions 'subject's extended hand' (identifying a body part beyond allowed generic terms interacting with the scene, or implying a specific subject attribute) and 'ground plane' (describing the setting/location architecture)."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "water_element_4|effect": {
+  "text": "A translucent fluid energy effect originates at the top of the subject, rapidly engulfing it downwards. Bright, luminous blue liquid with internal electrical tendrils flows over the head and shoulders, sweeping down the torso and legs with high velocity. As the fluid cascades, it leaves a glowing, semi-transparent aura that completely coats the subject's form, obscuring surface details with swirling energy patterns. Bright white and magenta light streaks arc within the fluid stream, generating dynamic refractions and specular highlights. Spatter and droplets fly outward from the main body, splashing along the ground near the base of the subject. The energy layer rapidly thickens, transforming the subject's silhouette into a fully encapsulated, glowing light form. Smoke and faint vapor trail off the edges of the liquid mass as it settles, sustaining a continuous pulsating glow and internal electric sparks that cover the entire figure by the end of the sequence.",
+  "words": 149,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/water_element/water_element_4.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   146,
+   156
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes a visual effect (translucent fluid energy, blue liquid, electrical tendrils, light streaks, smoke) acting on allowed generic terms (subject, head, shoulders, torso, legs, silhouette) without revealing any specific scene identities, clothing, objects, or locations."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "wireframe_0|effect": {
+  "text": "A luminous neon green geometric wireframe grid begins scanning across the lower surface of the subject. The glowing green lattice pattern rapidly propagates upward with high velocity, conforming precisely to the contours of the subject while emitting an intense volumetric glow. As the digital grid sweeps over the surface, it disintegrates the underlying visual texture, replacing the original subject entirely with a hollow, three-dimensional wireframe mesh accented by a warm orange glow along its top rim. Simultaneously, the background dissolves into absolute darkness. The newly generated wireframe geometry then undergoes a fluid rotational movement, floating centrally within the dark frame while maintaining its structural luminosity. The bright wireframe grid remains fully visible as the transition completes.",
+  "words": 116,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/wireframe/wireframe_0.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   124,
+   134
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual effect, transition mechanics, camera motion, and the generated wireframe geometry. It uses allowed generic terms like 'the subject' and 'the background', with no leaks of scene identity, clothing, specific objects, or setting."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "wireframe_7|effect": {
+  "text": "A luminous digital wireframe overlay originates along the bottom edges of the subject and scene geometry. The luminescent green grid lines rapidly expand upward, tracing every contour and surface curvature of the central subject, surrounding objects, and underlying terrain. As the grid spreads with increasing velocity, intense green ambient illumination radiates outward, casting sharp volumetric light across all surfaces while the underlying real-world textures and colors gradually fade to total black. The wireframe mesh grows progressively denser, forming a glowing geometric lattice that defines the 3D topology of the entire composition. The overall background lighting dims completely into pitch darkness as the brightly glowing green wireframe fully replaces the scene, sustaining a constant high-intensity glow while subtle light pulses ripple steadily through the interconnected vector lines until the final frame.",
+  "words": 130,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/wireframe/wireframe_7.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   140,
+   150
+  ],
+  "audit": {
+   "scene_leak": "yes",
+   "phrases": [
+    "underlying real-world textures and colors"
+   ],
+   "reason": "The phrase mentions real-world textures and colors, which refer to the actual scene elements rather than the abstract digital wireframe effect."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
+ },
+ "wireframe_1|effect": {
+  "text": "A digital wireframe overlay originates on the surface of the central subject and surrounding elements, sweeping quickly across all geometries. As the geometric grid pattern propagates outward, the original surface textures, lighting, and background color fade rapidly to complete blackness. Bright green glowing vector lines define the contours of the central subject and adjacent structural forms, highlighting edges with high contrast. The surrounding elements dim entirely into dark silhouettes, while the central subject retains a luminous, neon green wireframe structure. Tiny ambient particles flicker along the glowing grid lines. The effect maintains full opacity on the central subject's outline while the periphery dissolves entirely into deep shadows, leaving only the stylized holographic schematic visible against the dark backdrop.",
+  "words": 118,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/wireframe/wireframe_1.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   123,
+   133
+  ],
+  "audit": {
+   "scene_leak": "no",
+   "phrases": [],
+   "reason": "The text exclusively describes the visual transition, using permitted generic terms like 'central subject', 'surrounding elements', and 'background', without leaking any specific scene identities, objects, clothing, or locations."
+  },
+  "audit_note": null,
+  "tier": "seen",
+  "key": "transition (2026-11-09)"
+ },
+ "wonderland_1|effect": {
+  "text": "A digital distortion effect originates from the upper perimeter of the frame, introducing a fluidic, painterly texture that spreads rapidly downward. The texture consists of swirl patterns and dynamic wave displacement, behaving like high-viscosity liquid paint mixing in real time. Dark metallic hues, vibrant purple, and iridescent teal tones ripple across the surface, engulfing the upper scene elements first. As the distortion advances across the frame, it applies a heavy chromatic aberration and motion-blur noise, obscuring geometric details. The velocity accelerates midway through the clip, causing the entire background to turn into a swirling mass of liquid distortion. The subject transitions into a translucent, glowing purple silhouette enveloped in soft radiant light. Finally, the wave motion stabilizes into an abstract, pulsing fluid texture that covers the entire canvas, completely replacing the original geometry with a dense, constantly shifting digital fluid surface.",
+  "words": 141,
+  "sided": "one",
+  "exemplars": [
+   "data/processed/transitions_std121/wonderland/wonderland_1.mp4"
+  ],
+  "model": "gemini-3.6-flash",
+  "prompt_version": "effectdet-v3b-json",
+  "target_words": [
+   137,
+   147
+  ],
+  "audit": {
+   "scene_leak": "yes",
+   "phrases": [
+    "background"
+   ],
+   "reason": "The text references the 'background', which refers to a pre-existing part of the scene rather than the effect itself."
+  },
+  "audit_note": null,
+  "tier": "unseen",
+  "key": "transition (2026-11-09)"
  }
 }
