@@ -57,12 +57,22 @@ def ref_clip_path(clip: str) -> str:
     return str(STD / P.clip_class(clip) / f"{clip}.mp4")
 
 
+def row_ref_path(row: dict) -> str:
+    """The reference clip fed to the model. `reference_path` (same field as run_gen.build_sample, campaign
+    2026-08-14_timing_relay) = an explicit clip OUTSIDE the std121 tree (e.g. the procedural held-out tier's
+    reference renders); absent on every grid-v3 row -> ref_clip_path, byte-identical to every prior generation."""
+    rp = row.get("reference_path")
+    if rp:
+        return str(rp if Path(rp).is_absolute() else DR / rp)
+    return ref_clip_path(row["reference"])
+
+
 def make_sample(row: dict) -> ValidationSample:
     paths = ec.cond_paths(row["endpoint"], row["sided"])
     conds = [PrefixConditionConfig(video=str(paths["prefix"]), num_frames=ec.prefix_frames())]
     if row["sided"] == "two":
         conds.append(SuffixConditionConfig(video=str(paths["suffix"]), num_frames=ec.SUFFIX_GEN_FRAMES))
-    conds.append(ReferenceConditionConfig(video=ref_clip_path(row["reference"]), downscale_factor=1, attention="one_way",
+    conds.append(ReferenceConditionConfig(video=row_ref_path(row), downscale_factor=1, attention="one_way",
                                           temporal_scale_factor=1, include_in_output=False, dcg_null_video=None))
     return ValidationSample(prompt=row["prompt"], conditions=conds)
 
@@ -114,7 +124,7 @@ def main() -> None:
             except Exception as e:  # noqa: BLE001
                 checks.append(("prefix/suffix", f"ERROR: {e}", False))
             try:
-                ref = ref_clip_path(r["reference"])
+                ref = row_ref_path(r)
                 checks.append(("reference", ref, Path(ref).exists()))
             except Exception as e:  # noqa: BLE001
                 checks.append(("reference", f"ERROR: {e}", False))
