@@ -1,3 +1,7 @@
+## 2026-11-09
+
+- `08:55` store: `datasets/009_ctt_v2_effectprompt` complete — all 18,800 effect-prompt text embeddings encoded overnight (24 one-GPU GH200 shards across the three DeltaAI accounts, 276 GB), `assert_derived_root.py --files` passes, and the control re-encode of a neutral caption matches datasets/002's embedding to bf16 rounding (same encoder, different hardware). Arms A and C can train; the campus-cluster run sheet is `misc/2026-11-02_rebuttal/offsite/CC_README.md`.
+
 ## 2026-11-08
 
 - `16:50` store: registered the ICLR 2027 rebuttal effect-prompt text lane — `captions/006_effect_desc_detailed` (1,670 training operators + 68 grid-v3 references, VFXMaster-length scenes-free effect descriptions, gemini-3.6-flash prompt effectdet-v3b-json, auditor flags accepted by the owner, 12 clip-comparison texts regenerated) and `datasets/009_ctt_v2_effectprompt` (datasets/002's rows in the same order with the caption key and conditions path rewritten to `{A}. sksz. {EFFECT}. [{B}.]`, 18,800 distinct strings; embeddings encoding as 24 one-GPU shards). TEXT_LIFECYCLE §9 documents Lane A-effect as the one deliberate exception to §0 (never merged into Lane A). Arms A/C configs and the campus-cluster twin of the encoder job live in `misc/2026-11-02_rebuttal/arm{A,C}/`.
