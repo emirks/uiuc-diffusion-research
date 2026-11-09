@@ -1,0 +1,16 @@
+id: gens/013_dualforce_control/07_neutral_proc__dai
+seq: 7
+shelf: gens
+arm: dualforce_control
+harness_arm: dualforce_control_neutral_proc   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral_proc
+machine: dai
+created: 2026-11-09
+inputs: {run: runs/012_dualforce_control, step: 1000}
+code: eval_ladder/run_gen.py (ctt stack, src/LTX-2-ctt-v2-train) @ repo 191737f
+prompt_family: prompts/022_proc_heldout_neutral
+prompt_sha: 2d17f21554ea
+grid_rows: 36
+videos: 36
+source: scripts/store_register.py over misc/2026-11-02_rebuttal/procedural/registry/registry_dualforce_control_neutral_proc.jsonl
+notes: procedural held-out tier (ICLR 2027 rebuttal, misc/2026-11-02_rebuttal/procedural): 10 held-out H2 shader families + seen fade/dissolve anchors x 3 exact ops, two-sided 121 f, neutral, w=1, seed 42; references = misc/.../render/videos *_ref.mp4 via row reference_path; DeltaAI GH200 job 3564595 (bgjg)

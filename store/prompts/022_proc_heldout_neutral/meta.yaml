@@ -1,0 +1,15 @@
+id: prompts/022_proc_heldout_neutral
+seq: 22
+shelf: prompts
+created: 2026-11-09
+family: A
+lane: gen_eval
+grammar: "{S1}. sksz. {S2}."
+role: neutral prompts for the PROCEDURAL held-out tier (ICLR 2027 rebuttal) — the 10 held-out H2 shader families (experiments/exp_082_s2_humanvid/HOLDOUT_S2_UNION.json) + seen anchors fade/dissolve, 3 exact ops per family, two-sided, 121 f, 480x640
+rows: 36
+prompt_corpus_sha: 2d17f21554ea   # sha256[:12] over prompts concatenated in (cell,endpoint,reference,sided) order, unique items
+captions: store/captions/005_grid_v3_endpoints/CAPTION_STORE.json (<clip>|A of the TARGET pair; S2 lower-initial per scripts/grid_v3/assemble_text.py)
+renders: misc/2026-11-02_rebuttal/procedural/render (render_tier.py; PLAN.json + ops/*.jsonl; seed 20261109; S2 op policy + gates) — rows' gt_path / reference_path point there; conds eval_ladder/conds/proc_*_{start9,end9}.mp4
+source: misc/2026-11-02_rebuttal/procedural/registry/build_family.py
+consumers: gens/013_dualforce_control/07_neutral_proc__dai (w=1), gens/032_dualforce_dcg_w6/09_neutral_proc__dai (NRG w=6); harness arms dualforce_control_neutral_proc / dualforce_dcg_w6_neutral_proc (stamped --set no_twin=true)
+notes: rows are ARM-FREE; stamp_rows.py re-adds arm/item_id. Endpoints = the 63 reserved never-trained clips with audited grid-v3 captions; reference and target pairs content-disjoint. Captions describe each clip's first 9 frames while the suffix conditioning is B's last 9 frames (same caption source as grid v3 hvpair rows). No effect family yet (owner 2026-11-09: neutral only).
