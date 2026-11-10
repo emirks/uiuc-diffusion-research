@@ -1,0 +1,23 @@
+id: gens/050_dualforce_dcg_otherref_w6/02_neutral_v3ed81zs68__dai
+seq: 2
+shelf: gens
+arm: dualforce_dcg_otherref_w6
+harness_arm: dualforce_dcg_otherref_w6_neutral_v3ed81   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral_v3ed81zs68
+machine: dai
+created: 2026-11-10
+inputs: {run: runs/012_dualforce_control, step: 1000}
+code: src/LTX-2-ctt-v2-train packages + scripts/grid_v3/gen_dcg_v3.py @ 984d851 --null-kind other_ref --null-specs misc/2026-11-02_rebuttal/nulls68/null_specs.json (other-effect-reference null: the reference of the next reference class (sorted, cyclic, within the tier), used as is, gs4/stg1, w=6)
+prompt_family: prompts/012_ctt_v3ed_neutral
+prompt_sha: b2b9094bf0bc
+grid_rows: 34
+videos: 34
+source: scripts/store_register.py over misc/2026-11-02_rebuttal/nulls68/registries/registry_dualforce_dcg_otherref_w6_neutral_v3ed81.jsonl
+notes: EffectData tier, family prompts/012_ctt_v3ed_neutral, native 81 f, frame-0 anchor (GEN_FRAMES=81 GEN_PREFIX_FRAMES=1), 34 rows; NRG null-design comparison for reviewer p5WC (rebuttal 2026-11-10): runs/012@1000 one_way r128 + NRG w=6, gs4/stg1/30 steps, seed 42, neutral prompt, identical to dualforce_dcg_w6 except the null; the 68 zero-shot rows of eval_ladder/subsets/gridv3_sub134_s42.json (derived sha zs68_s42); DeltaAI GH200; nulls actually encoded saved in nulls/ (+ spec json); misc/2026-11-02_rebuttal/nulls68
+features:
+  dino_cls@dinov2b-r256: {have: 34, of: 34, hosts: [gh015.hsn.cm.delta.internal.ncsa.edu, gh022.hsn.cm.delta.internal.ncsa.edu, gh123.hsn.cm.delta.internal.ncsa.edu]}
+  cotracker3@g20-m384-v2: {have: 34, of: 34, hosts: [gh015.hsn.cm.delta.internal.ncsa.edu, gh022.hsn.cm.delta.internal.ncsa.edu, gh123.hsn.cm.delta.internal.ncsa.edu]}
+  lpips_t@alex-r256: {have: 34, of: 34, hosts: [gh015.hsn.cm.delta.internal.ncsa.edu, gh022.hsn.cm.delta.internal.ncsa.edu, gh123.hsn.cm.delta.internal.ncsa.edu]}
+  videoprism@f16r288: {have: 34, of: 34, hosts: [gh015.hsn.cm.delta.internal.ncsa.edu, gh022.hsn.cm.delta.internal.ncsa.edu, gh123.hsn.cm.delta.internal.ncsa.edu]}
+  trackdesc@cotracker3-s64-v1: {have: 34, of: 34, hosts: [gh022.hsn.cm.delta.internal.ncsa.edu]}
+  action@swin3db-k400-u32: {have: 34, of: 34, hosts: [gh015.hsn.cm.delta.internal.ncsa.edu, gh022.hsn.cm.delta.internal.ncsa.edu, gh123.hsn.cm.delta.internal.ncsa.edu]}

@@ -1,0 +1,75 @@
+id: 053_null_designs_v5_zs68__dai__2026-11-10
+seq: 53
+shelf: evals
+created: '2026-11-10'
+machine: dai (GH200 for the new gens' features; scoring CPU inside a ghx4 allocation)
+instrument: misc/2026-11-02_rebuttal/offsite/tools/offsite_score.py run against this repo (--root .) = the metrics v5 code of evals 047 (transport bl_333 vs scripts/metrics_v5/reference_v5.npz), 040 (det_motion_fidelity,
+  videoprism_sim_ref), 048 (seam_free, physical windows), 049 (action_kl); --compare-store = per-video max |diff| vs those evals for the stored arms (misc/2026-11-02_rebuttal/nulls68/scores/COMPARE.md)
+rows: the 68 zero-shot rows of eval_ladder/subsets/gridv3_sub134_s42.json (34 Higgsfield 121 f + 34 EffectData 81 f), seed 42 (misc/2026-11-02_rebuttal/nulls68/rows_zs68.json); pool map misc/2026-11-02_rebuttal/offsite/inputs/pool_map_v3.json
+purpose: 'NRG null-design comparison for reviewer p5WC (rebuttal); six designs scored with ONE instrument: no reference (005/04-05), w/o guidance (013/03-04), crossfade null (032/03-04), empty null (040/03-04),
+  shuffled-reference null (049/01-02), other-effect-reference null (050/01-02). The stored arms are RE-SCORED here on the 68 rows (their store evals 040/047/048/049 are untouched).'
+columns: 'transport, transport_uncapped, n_pairs, motfid, vp_ref, seam_free (0/100 per video), seam_z, action_kl, flow_mse (null for the new gens: flow_u32 not extracted), plus row fields cell/endpoint/reference/sided/tier/source/gtype'
+table: misc/2026-11-02_rebuttal/tables/TABLE_NULL_DESIGNS_draft.md
+caveat: transport pools = the shared pool_map_v3.json for every arm; store eval 047 scored base_cond_neutral (HF) against its effect sibling's pool draw (v5.py _twin_rows), so base_cond_neutral_v3 transport
+  differs from 047 on 14/34 rows (max |diff| 16.6); every other column and arm reproduces 040/047/048/049 per video (max |diff| <= 2.2e-14)
+arms_scored:
+  base_cond_neutral_v3:
+    label: no reference
+    gen: gens/005_base_cond/04_neutral_v3__dai
+    rows: 34
+    transport_mean: 48.75
+  base_cond_neutral_v3ed81:
+    label: no reference
+    gen: gens/005_base_cond/05_neutral_v3ed81__dai
+    rows: 34
+    transport_mean: 22.49
+  dualforce_control_neutral_v3:
+    label: w/o guidance
+    gen: gens/013_dualforce_control/03_neutral_v3__dai
+    rows: 34
+    transport_mean: 83.0
+  dualforce_control_neutral_v3ed81:
+    label: w/o guidance
+    gen: gens/013_dualforce_control/04_neutral_v3ed81__dai
+    rows: 34
+    transport_mean: 90.85
+  dualforce_dcg_emptynull_w6_neutral_v3:
+    label: empty null
+    gen: gens/040_dualforce_dcg_emptynull_w6/03_neutral_v3__dai
+    rows: 34
+    transport_mean: 86.08
+  dualforce_dcg_emptynull_w6_neutral_v3ed81:
+    label: empty null
+    gen: gens/040_dualforce_dcg_emptynull_w6/04_neutral_v3ed81__dai
+    rows: 34
+    transport_mean: 97.21
+  dualforce_dcg_otherref_w6_neutral_v3:
+    label: other-effect-reference null
+    gen: gens/050_dualforce_dcg_otherref_w6/01_neutral_v3zs68__dai
+    rows: 34
+    transport_mean: 86.55
+  dualforce_dcg_otherref_w6_neutral_v3ed81:
+    label: other-effect-reference null
+    gen: gens/050_dualforce_dcg_otherref_w6/02_neutral_v3ed81zs68__dai
+    rows: 34
+    transport_mean: 94.48
+  dualforce_dcg_shufnull_w6_neutral_v3:
+    label: shuffled-reference null
+    gen: gens/049_dualforce_dcg_shufnull_w6/01_neutral_v3zs68__dai
+    rows: 34
+    transport_mean: 88.35
+  dualforce_dcg_shufnull_w6_neutral_v3ed81:
+    label: shuffled-reference null
+    gen: gens/049_dualforce_dcg_shufnull_w6/02_neutral_v3ed81zs68__dai
+    rows: 34
+    transport_mean: 95.9
+  dualforce_dcg_w6_neutral_v3:
+    label: crossfade null
+    gen: gens/032_dualforce_dcg_w6/03_neutral_v3__dai
+    rows: 34
+    transport_mean: 87.04
+  dualforce_dcg_w6_neutral_v3ed81:
+    label: crossfade null
+    gen: gens/032_dualforce_dcg_w6/04_neutral_v3ed81__dai
+    rows: 34
+    transport_mean: 96.39
