@@ -1,0 +1,13 @@
+id: 051_rebuttal_ablation_v5_sub134__dai__2026-11-09
+seq: 51
+shelf: evals
+created: '2026-11-09'
+machine: dai (GH200; features extracted here by the package's extract_queue, scored by offsite/tools/offsite_score.py = metrics v5)
+instrument: misc/2026-11-02_rebuttal/offsite/tools/offsite_score.py (transport v5 blend, motion fidelity, VideoPrism ref sim, seam-free from lpips_t, Action KL); reference side = scripts/metrics_v5/reference_v5.npz + corpus features (the fixed instrument)
+rows: eval_ladder/subsets/gridv3_sub134_s42.json — 134 grid-v3 rows, seed 42 (all 26 seen, 40 unseen, 34 zero-shot HF, 34 EffectData); pooled internal comparison of the rebuttal ablation arms; NOT comparable to full-grid paper numbers
+columns: transport, motfid, vp_ref, seam_free, seam_z, action_kl, flow_mse (+ row fields cell/endpoint/reference/sided/tier/source)
+arms_scored: {}   # one <harness_arm>/rows.jsonl per scored arm variant; appended as arms land
+  ablate_bidir_effectdet_v3: {gen: gens/045_ablate_bidir/03_effectdet_v3__dai, rows: 100, transport_mean: 86.62}
+  ablate_bidir_effectdet_v3ed81: {gen: gens/045_ablate_bidir/04_effectdet_v3ed81__dai, rows: 34, transport_mean: 89.41}
+  ablate_bidir_neutral_v3: {gen: gens/045_ablate_bidir/01_neutral_v3__dai, rows: 100, transport_mean: 77.81}
+  ablate_bidir_neutral_v3ed81: {gen: gens/045_ablate_bidir/02_neutral_v3ed81__dai, rows: 34, transport_mean: 74.86}

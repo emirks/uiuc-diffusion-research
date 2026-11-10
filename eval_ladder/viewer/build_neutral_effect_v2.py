@@ -1863,6 +1863,58 @@ EXTERNAL.extend(_EXT_AN)
 CONTEXT_TIERS_AFTER.extend(a["id"] for a in _EXT_AN)
 TIER_LABEL.update({a["id"]: [a["label"].upper(), a["sub"]] for a in _EXT_AN})
 
+# ------------------------------------------------------------------------------- REBUTTAL ABLATION (2026-11-09)
+#: ICLR 2027 rebuttal: the 2x2 training ablation reviewers PNmc/icXV asked for (reference attention x training text),
+#: plus arm D = SEGUE's own recipe at the matched budget. Every arm is generated on the SAME 134-row seed-42 subset of
+#: grid v3 (eval_ladder/subsets/gridv3_sub134_s42.json), w=1 (no NRG), under TWO prompt settings: the neutral grid-v3
+#: families (prompts/010/012) and the effect-DETAILED families (prompts/020/021: the reference's VFXMaster-length
+#: description after sksz — NOT the 20-word effect clause of the paper's effect variant). Rows join the existing v3
+#: cards (makes_cards False); seed 43 is absent by design. Scores = metrics v5 in store/evals/051_rebuttal_* (rows.jsonl,
+#: not the v4 pass shape this page reads) -> the page shows these arms as videos only; numbers live in the rebuttal tables.
+#: Each arm's store gen dir is read only if it exists, so arms register one by one as they land.
+REBUTTAL_TABLE = [  # canonical arm, gen dir, arm label, attention, training text
+    ("ablate_oneway_neutral",     "048_ablate_oneway_neutral",     "D · one-way + neutral text (SEGUE recipe, matched budget)", "one-way", "neutral"),
+    ("ablate_bidir",              "045_ablate_bidir",              "B · bidirectional + neutral text",                         "bidirectional", "neutral"),
+    ("ablate_effectprompt",       "046_ablate_effectprompt",       "A · one-way + effect-detailed text",                       "one-way", "effect-detailed"),
+    ("ablate_bidir_effectprompt", "047_ablate_bidir_effectprompt", "C · bidirectional + effect-detailed text",                 "bidirectional", "effect-detailed"),
+]
+
+
+def _rebuttal_entries() -> tuple[list[dict], list[tuple]]:
+    ext, cat = [], []
+    for arm, gen_dir, arm_label, att, ttext in REBUTTAL_TABLE:
+        for kk, (tag, tier, fam) in enumerate([("neutral", "neutral", "hf"), ("neutral", "neutral", "ed"),
+                                              ("effectdet", "effect", "hf"), ("effectdet", "effect", "ed")], start=1):
+            suf = "v3ed81" if fam == "ed" else "v3"
+            ha = f"{arm}_{tag}_{suf}"
+            sub = REPO_ROOT / f"store/gens/{gen_dir}/{kk:02d}_{tag}_{suf}__dai"
+            if not (sub / "grid.jsonl").exists():
+                continue                                        # not registered yet
+            grid = "v3-ed" if fam == "ed" else "v3-hf"
+            ext.append({
+                "id": ha, "score_id": "gridv3_v4", "kind": "ours", "frames": 81 if fam == "ed" else 121,
+                "no_twin": True, "grid": grid, "makes_cards": False,
+                "join_swap": (f"__{ha}__", "__ic_gen__"), "same_prompt_by_design": tier == "neutral", "rows_arm": ha,
+                "label": ("Ⓝ " if tier == "neutral" else "Ⓔ ") + arm_label + (" · ED81" if fam == "ed" else " · v3"),
+                "sub": f"rebuttal ablation · {'neutral' if tier == 'neutral' else 'effect-DETAILED'} prompts · 134-row seed-42 subset · w=1 · "
+                       f"trained: {att} attention, {ttext} training text · dai · store arm {arm} ({gen_dir})"
+                       + (" · frame-0 anchor; copy/core flags not comparable with 121 f" if fam == "ed" else ""),
+                "src": sub / "videos", "media": f"outputs/videos/rebuttal_ablation/{ha}",
+                "rows": ("registry", sub / "grid.jsonl"),
+                "scores": REPO_ROOT / "store/evals/000_none__pending" / ha,      # metrics-v5 scores are rows.jsonl (store/evals/051_rebuttal_*), not the v4 shape -> videos only here
+                "prompt_kind": ("GRID v3 NEUTRAL tier (prompts/010/012): the same {S1}. sksz. [{S2}.] grammar" if tier == "neutral"
+                                else "effect-DETAILED (prompts/020/021): neutral + the reference's ~130-word effect description after sksz"),
+                "doc": "misc/2026-11-02_rebuttal/armA/STATUS.md",
+            })
+            cat.append((ha, "rebuttal", arm, arm_label, tier, f"{'neutral' if tier == 'neutral' else 'effect-detailed'} · v3 {'ED81' if fam == 'ed' else 'HF'}"))
+    return ext, cat
+
+
+_REBUTTAL_EXTERNAL, _REBUTTAL_CATALOG = _rebuttal_entries()
+EXTERNAL.extend(_REBUTTAL_EXTERNAL)
+CONTEXT_TIERS_AFTER.extend(a["id"] for a in _REBUTTAL_EXTERNAL)
+TIER_LABEL.update({a["id"]: [a["label"].upper(), a["sub"]] for a in _REBUTTAL_EXTERNAL})
+
 # External DCG (paper A3, "guidance on prior systems") — VFXMaster + test-time DCG w=6 with a
 # pixel-dissolve null (campaign misc/2026-09-14_vfxmaster_dcg). An EXTERNAL, one-sided (start-frame)
 # CogVideoX model, NOT trained on the CTT effects, so it joins ONLY the v3 zero-shot cards and is read
@@ -2428,7 +2480,8 @@ def build() -> dict:
                   ("flowsig", "optical-flow program (flowsig)"),
                   ("dino_signal", "DINO transition-signal (arm A)"),
                   ("external", "Visual effect transfer · prior work"),
-                  ("teg", "Transition effect generation (TEG) · prior work (both endpoints given)")]
+                  ("teg", "Transition effect generation (TEG) · prior work (both endpoints given)"),
+                  ("rebuttal", "Rebuttal ablation · attention × training text (134-row subset, seed 42, w=1)")]
     CATALOG = [  # (tier id, category, arm, arm label, variant, entry label)
         ("base_prompt_neutral", "baseline", "base_prompt", "Base LTX-2 · prompt only", "neutral", "neutral"),
         ("base_prompt_ctt",     "baseline", "base_prompt", "Base LTX-2 · prompt only", "effect",  "effect"),
@@ -2505,6 +2558,7 @@ def build() -> dict:
     CATALOG += GRID_V3_CATALOG                    # grid v3 arms, categorised under their own arms
     CATALOG += _EXT_AN_CATALOG                    # external zero-shot author-native arms (VFXMaster/VAP/refVFX)
     CATALOG += _TEG_CATALOG                       # two-endpoint (TEG) adapted baselines, zero-shot two-sided rows (evals/042)
+    CATALOG += _REBUTTAL_CATALOG                  # ICLR 2027 rebuttal ablation arms (A-D), 134-row seed-42 subset, neutral + effect-detailed
     known = set(all_tiers)
     _catids = {c for c, _ in CATEGORIES}
     _orphan = sorted({cat for _, cat, *_ in CATALOG if cat not in _catids})

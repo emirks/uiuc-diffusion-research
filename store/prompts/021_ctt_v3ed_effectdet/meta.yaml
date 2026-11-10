@@ -13,3 +13,5 @@ derived_from: prompts/012_ctt_v3ed_neutral (prompt_corpus_sha 423ea86ce085); eve
 source: misc/2026-11-02_rebuttal/armA/build/build_subset_package.py
 consumers: rebuttal arms A (ablate_effectprompt) and C (ablate_bidir_effectprompt), harness arms <slug>_effectdet_v3 / _v3ed81; registries offsite/inputs/registries/*effectdet*_sub134.jsonl (134-row seed-42 subset, owner 2026-11-09)
 notes: rows are ARM-FREE; stamp_rows.py re-adds arm/item_id. NOT comparable to prompts/011/013 (20-word clauses): different text length; compare within arm (neutral vs effect-detailed) only.
+derived:   # deterministic transforms (row subsets; prompts BYTE-IDENTICAL)
+  sub134_s42: bac3b07bb41a        # eval_ladder/subsets/gridv3_sub134_s42.json rows (34 of this family), seed 42 -- rebuttal ablation arms A-D (misc/2026-11-02_rebuttal)
