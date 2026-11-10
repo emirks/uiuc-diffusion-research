@@ -451,6 +451,7 @@ input.flt{background:var(--card2);border:1px solid var(--edge);color:var(--fg);b
     <span style="margin-left:auto;display:flex;gap:8px;align-items:center">
       <span class="lbl">seed</span><span class="seg" id="seeds"></span>
       <input class="flt" id="flt" placeholder="filter: endpoint / reference / cell">
+      <label class="lbl" style="text-transform:none;letter-spacing:0;cursor:pointer"><input type="checkbox" id="fullonly" onchange="full=this.checked;shown=0;render()"> only inputs every selected arm has</label>
     </span></h2>
   <div id="cards"></div>
   <div class="more" id="more"></div>
@@ -492,6 +493,7 @@ function selTiers(){
 
 let seed = D.meta.seeds[0] || "42";
 let flt = "";
+let full = false;
 
 // ── view: all examples | VLM-judge leaks (#leaks) ───────────────────────────
 let view = location.hash === "#leaks" ? "leak" : "all";
@@ -588,7 +590,7 @@ function selectedCards(){
   const out = [];
   for(const c of D.cards){
     if(!matchFlt(c)) continue;
-    if(st.some(t => c.slots[t])) out.push(c);
+    if(full ? st.every(t => c.slots[t]) : st.some(t => c.slots[t])) out.push(c);
   }
   return out;
 }
