@@ -114,6 +114,33 @@ CATS = [
             {"tier": "df_emptynull60_ed", "variant": "ED", "label": "ED-81",
              "sub": "040_dualforce_dcg_emptynull_w6/02_neutral_v3ed81zs60__dai"}]},
     ]},
+    {"id": "nulls68", "label": "rebuttal null designs — SEGUE w6, 68 zero-shot rows (2026-11-10)", "arms": [
+        {"id": "n68_base", "label": "SEGUE w/o NRG (w1)", "entries": [
+            {"tier": "n68_base_hf", "variant": "HF", "label": "HF-121",
+             "sub": "013_dualforce_control/03_neutral_v3__dai"},
+            {"tier": "n68_base_ed", "variant": "ED", "label": "ED-81",
+             "sub": "013_dualforce_control/04_neutral_v3ed81__dai"}]},
+        {"id": "n68_xfade", "label": "crossfade null (ours)", "entries": [
+            {"tier": "n68_xfade_hf", "variant": "HF", "label": "HF-121",
+             "sub": "032_dualforce_dcg_w6/03_neutral_v3__dai"},
+            {"tier": "n68_xfade_ed", "variant": "ED", "label": "ED-81",
+             "sub": "032_dualforce_dcg_w6/04_neutral_v3ed81__dai"}]},
+        {"id": "n68_empty", "label": "empty null", "entries": [
+            {"tier": "n68_empty_hf", "variant": "HF", "label": "HF-121",
+             "sub": "040_dualforce_dcg_emptynull_w6/03_neutral_v3__dai"},
+            {"tier": "n68_empty_ed", "variant": "ED", "label": "ED-81",
+             "sub": "040_dualforce_dcg_emptynull_w6/04_neutral_v3ed81__dai"}]},
+        {"id": "n68_shuf", "label": "shuffled-reference null (new)", "entries": [
+            {"tier": "n68_shuf_hf", "variant": "HF", "label": "HF-121",
+             "sub": "049_dualforce_dcg_shufnull_w6/01_neutral_v3zs68__dai"},
+            {"tier": "n68_shuf_ed", "variant": "ED", "label": "ED-81",
+             "sub": "049_dualforce_dcg_shufnull_w6/02_neutral_v3ed81zs68__dai"}]},
+        {"id": "n68_other", "label": "other-effect-reference null (new)", "entries": [
+            {"tier": "n68_other_hf", "variant": "HF", "label": "HF-121",
+             "sub": "050_dualforce_dcg_otherref_w6/01_neutral_v3zs68__dai"},
+            {"tier": "n68_other_ed", "variant": "ED", "label": "ED-81",
+             "sub": "050_dualforce_dcg_otherref_w6/02_neutral_v3ed81zs68__dai"}]},
+    ]},
     {"id": "vfxmaster", "label": "VFXMaster (external) — DCG w6", "arms": [
         {"id": "vfx_xfade", "label": "crossfade (w6)", "entries": [
             {"tier": "vfx_xfade_hf", "variant": "HF", "label": "HF-121",
