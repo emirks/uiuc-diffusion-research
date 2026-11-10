@@ -11,3 +11,11 @@ arms_scored: {}   # one <harness_arm>/rows.jsonl per scored arm variant; appende
   ablate_bidir_effectdet_v3ed81: {gen: gens/045_ablate_bidir/04_effectdet_v3ed81__dai, rows: 34, transport_mean: 89.41}
   ablate_bidir_neutral_v3: {gen: gens/045_ablate_bidir/01_neutral_v3__dai, rows: 100, transport_mean: 77.81}
   ablate_bidir_neutral_v3ed81: {gen: gens/045_ablate_bidir/02_neutral_v3ed81__dai, rows: 34, transport_mean: 74.86}
+  ablate_oneway_neutral_effectdet_v3: {gen: gens/048_ablate_oneway_neutral/03_effectdet_v3__dai, rows: 100, transport_mean: 86.85}
+  ablate_oneway_neutral_effectdet_v3ed81: {gen: gens/048_ablate_oneway_neutral/04_effectdet_v3ed81__dai, rows: 34, transport_mean: 88.16}
+  ablate_oneway_neutral_neutral_v3: {gen: gens/048_ablate_oneway_neutral/01_neutral_v3__dai, rows: 100, transport_mean: 76.44}
+  ablate_oneway_neutral_neutral_v3ed81: {gen: gens/048_ablate_oneway_neutral/02_neutral_v3ed81__dai, rows: 34, transport_mean: 75.40}
+  ablate_effectprompt_effectdet_v3: {gen: gens/046_ablate_effectprompt/03_effectdet_v3__dai, rows: 100, transport_mean: 85.56}
+  ablate_effectprompt_effectdet_v3ed81: {gen: gens/046_ablate_effectprompt/04_effectdet_v3ed81__dai, rows: 34, transport_mean: 91.57}
+  ablate_effectprompt_neutral_v3: {gen: gens/046_ablate_effectprompt/01_neutral_v3__dai, rows: 100, transport_mean: 65.57}
+  ablate_effectprompt_neutral_v3ed81: {gen: gens/046_ablate_effectprompt/02_neutral_v3ed81__dai, rows: 34, transport_mean: 54.98}

@@ -1,0 +1,16 @@
+id: gens/048_ablate_oneway_neutral/01_neutral_v3__dai
+seq: 1
+shelf: gens
+arm: ablate_oneway_neutral
+harness_arm: ablate_oneway_neutral_neutral_v3   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: neutral_v3
+machine: dai
+created: 2026-11-10
+inputs: {run: runs/031_ablate_oneway_neutral, step: 1000}
+code: src/LTX-2-ctt-v2-train @ 65c0c6b + offsite DCG any-attention patch; eval_ladder/run_gen.py, --rank 128 --alpha 128
+prompt_family: prompts/010_ctt_v3_neutral
+prompt_sha: 97a7a48ed463
+grid_rows: 100
+videos: 100
+source: scripts/store_register.py over /taiga/illinois/eng/cs/jrehg/users/emirkisa/diffusion-research/misc/2026-11-02_rebuttal/offsite/staging/offsite/inputs/registries/registry_ablate_oneway_neutral_neutral_v3_sub134.jsonl
+notes: rebuttal ablation arm D; 134-row seed-42 subset eval_ladder/subsets/gridv3_sub134_s42.json; videos generated on DeltaAI GH200 from the in-place package (store/gens/907_ablate_oneway_neutral/01_neutral_v3__a100); weights lora_weights_step_01000.safetensors
