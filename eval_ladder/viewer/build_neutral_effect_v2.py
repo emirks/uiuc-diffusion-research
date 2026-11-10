@@ -1510,7 +1510,7 @@ def arm_rows(a: dict) -> dict[str, dict[int, dict]]:
             continue
         if a.get("rows_arm") and row.get("arm") != a["rows_arm"]:   # grid v3: stamped registries carry base twins too
             continue
-        for s in SEEDS:
+        for s in a.get("seeds", SEEDS):      # a registry arm may DECLARE fewer seeds (rebuttal ablation: seed 42 only)
             out.setdefault(row["item_id"], {})[s] = {
                 **row, "seed": s, "out_name": f"{row['item_id']}__s{s}.mp4",
                 "num_frames": a["frames"], "end_image": row["sided"] == "two"}
@@ -1893,7 +1893,7 @@ def _rebuttal_entries() -> tuple[list[dict], list[tuple]]:
             grid = "v3-ed" if fam == "ed" else "v3-hf"
             ext.append({
                 "id": ha, "score_id": "gridv3_v4", "kind": "ours", "frames": 81 if fam == "ed" else 121,
-                "no_twin": True, "grid": grid, "makes_cards": False,
+                "no_twin": True, "grid": grid, "makes_cards": False, "seeds": (42,),
                 "join_swap": (f"__{ha}__", "__ic_gen__"), "same_prompt_by_design": tier == "neutral", "rows_arm": ha,
                 "label": ("Ⓝ " if tier == "neutral" else "Ⓔ ") + arm_label + (" · ED81" if fam == "ed" else " · v3"),
                 "sub": f"rebuttal ablation · {'neutral' if tier == 'neutral' else 'effect-DETAILED'} prompts · 134-row seed-42 subset · w=1 · "
