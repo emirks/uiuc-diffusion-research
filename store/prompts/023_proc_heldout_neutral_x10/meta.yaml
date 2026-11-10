@@ -1,0 +1,20 @@
+id: prompts/023_proc_heldout_neutral_x10
+seq: 23
+shelf: prompts
+created: 2026-11-10
+family: A
+lane: gen_eval
+grammar: "{S1}. sksz. {S2}."
+role: neutral prompts for the PROCEDURAL held-out tier extended to 10 items per held-out family (ICLR 2027 rebuttal, owner 2026-11-10) — = prompts/022_proc_heldout_neutral (all 36 rows byte-identical) + 70 new rows (items 3-9 of the 10 held-out H2 shader families); seen anchors fade/dissolve stay at 3 items; two-sided, 121 f, 480x640
+rows: 106
+prompt_corpus_sha: 0d94db0f553e   # sha256[:12] over prompts concatenated in (cell,endpoint,reference,sided) order, unique items
+derived:   # row subsets, prompts BYTE-IDENTICAL
+  proc022_subset: 2d17f21554ea    # items 0-2 of all 12 families = prompts/022 (gens 013/07, 032/09)
+  new70_subset: 0ea90824e811      # items 3-9 of the 10 held-out families, the 70 new rows (gens 013/08, 032/10)
+derived_from: store/prompts/022_proc_heldout_neutral (36 rows) + misc/2026-11-02_rebuttal/procedural/render/ops_x10/*.jsonl (70 new items)
+captions: store/captions/005_grid_v3_endpoints/CAPTION_STORE.json (<clip>|A of the TARGET pair; S2 lower-initial per scripts/grid_v3/assemble_text.py)
+renders: misc/2026-11-02_rebuttal/procedural/render (render_tier.py items 0-2 / render_tier_x10.py items 3-9; PLAN.json + ops/, PLAN_x10.json + ops_x10/; seed 20261109; S2 op policy + gates) — rows' gt_path / reference_path point there; conds eval_ladder/conds/proc_*_{start9,end9}.mp4
+item_rule_x10: item j (3-9) = primary target T[j] / reference R[j] of PLAN.json's pairing, spares T[10:] / R[10:]; a target pair already used by an earlier item of the same family is skipped; op rng Random(f"20261109-{shader}-item{j}-op{rs}")
+source: misc/2026-11-02_rebuttal/procedural/registry/build_family_x10.py (row builder verified to rebuild prompts/022 byte-for-byte)
+consumers: gens/013_dualforce_control/08_neutral_proc_x10__dai (w=1), gens/032_dualforce_dcg_w6/10_neutral_proc_x10__dai (NRG w=6) — both over new70_subset; harness arms dualforce_control_neutral_proc / dualforce_dcg_w6_neutral_proc reused (stamped --set no_twin=true)
+notes: rows are ARM-FREE; stamp_rows.py re-adds arm/item_id. Endpoints = the 63 reserved never-trained clips with audited grid-v3 captions; reference and target pairs content-disjoint within every item; no held-out family repeats a target pair among items 3-9 (two original families already repeat one among items 0-2: DefocusBlur i1/i2, parametric_glitch i0/i2). Neutral only.
