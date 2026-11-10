@@ -14,6 +14,13 @@ output layout and the frame contract made explicit:
               <item_id>__s<seed>.mp4 — exactly run_gen.py --videos-dir
   GEN_FRAMES / GEN_PREFIX_FRAMES   the EffectData tier runs at 81 frames with the frame-0 anchor
               (encode_conditioning.prefix_frames()), the Higgsfield tier at 121 with the 9-frame prefix.
+  --null-kind shuffled | other_ref (nulls68, rebuttal 2026-11-10; --null-specs <null_specs.json>): built HERE, on the
+              runner's crossfade encode path (read -> _preprocess_reference -> builder -> same VAE encode / null-token slice);
+              only the builder is swapped per sample (NullSpecRunner). shuffled = the row's own reference with its frames
+              in a fixed random order (numpy default_rng(spec seed) permutation over the frames fed to the model);
+              other_ref = another effect's reference clip as is (spec null_reference_path, passed as dcg_null_video).
+              Each null actually encoded is saved to <out-root>/nulls/<item_id>.mp4 (+ .json with the permutation).
+              Every other kind runs the unmodified ValidationRunner, byte-identical to before.
 """
 from __future__ import annotations
 
@@ -24,6 +31,7 @@ import shutil
 import sys
 from pathlib import Path
 
+import numpy as np
 import torch
 import yaml
 from peft import LoraConfig, get_peft_model, set_peft_model_state_dict
@@ -41,6 +49,7 @@ from ltx_trainer.config import (PrefixConditionConfig, ReferenceConditionConfig,
 from ltx_trainer.model_loader import load_transformer  # noqa: E402
 from ltx_trainer.progress import TrainingProgress  # noqa: E402
 from ltx_trainer.validation_runner import ValidationRunner  # noqa: E402
+from ltx_trainer.video_utils import save_video  # noqa: E402
 
 MODEL = Path(os.environ.get("LTX_MODEL", LAB / "cache/huggingface/ltx2_models/ltx-2-19b-dev.safetensors"))
 GEMMA = Path(os.environ.get("LTX_GEMMA", LAB / "cache/huggingface/gemma/gemma-3-12b-it-qat-q4_0-unquantized"))
@@ -67,14 +76,59 @@ def row_ref_path(row: dict) -> str:
     return ref_clip_path(row["reference"])
 
 
-def make_sample(row: dict) -> ValidationSample:
+def make_sample(row: dict, null_video: str | None = None) -> ValidationSample:
     paths = ec.cond_paths(row["endpoint"], row["sided"])
     conds = [PrefixConditionConfig(video=str(paths["prefix"]), num_frames=ec.prefix_frames())]
     if row["sided"] == "two":
         conds.append(SuffixConditionConfig(video=str(paths["suffix"]), num_frames=ec.SUFFIX_GEN_FRAMES))
     conds.append(ReferenceConditionConfig(video=row_ref_path(row), downscale_factor=1, attention="one_way",
-                                          temporal_scale_factor=1, include_in_output=False, dcg_null_video=None))
+                                          temporal_scale_factor=1, include_in_output=False, dcg_null_video=null_video))
     return ValidationSample(prompt=row["prompt"], conditions=conds)
+
+
+NEW_KINDS = ("shuffled", "other_ref")
+
+
+class NullSpecRunner(ValidationRunner):
+    """ValidationRunner whose DCG null BUILDER is replaced per sample (null kinds shuffled / other_ref). The runner is
+    configured with dcg_null_kind='crossfade' so the null goes through the crossfade encode path unchanged: the null
+    source (cond.video, or cond.dcg_null_video for other_ref) is read with max_frames, preprocessed by
+    _preprocess_reference, handed to self._build_crossfade_null (overridden here), VAE-encoded and sliced into the null
+    reference tokens with the same position-grid / token-count asserts. `specs` is aligned with config.samples."""
+
+    def __init__(self, *a, specs: list[dict], nulls_dir: Path, **kw):
+        self._nd_specs = specs
+        self._nd_dir = nulls_dir
+        self._nd_cur = None
+        super().__init__(*a, **kw)  # encodes the conditioning media (and our nulls) here
+
+    def _encode_sample_conditions(self, sample, *a, **kw):
+        self._nd_cur = next(sp for sp, smp in zip(self._nd_specs, self._config.samples, strict=True) if smp is sample)
+        try:
+            return super()._encode_sample_conditions(sample, *a, **kw)
+        finally:
+            self._nd_cur = None
+
+    def _build_crossfade_null(self, pixels: torch.Tensor) -> torch.Tensor:  # instance override of the staticmethod
+        sp = self._nd_cur
+        assert sp is not None, "null builder called outside a sample encode"
+        n = pixels.shape[1]
+        rec = dict(sp, n_frames_fed=n, shape=list(pixels.shape))
+        if sp["kind"] == "shuffled":
+            assert n == sp["n_frames"], f"{sp['item_id']}: {n} frames fed != {sp['n_frames']} expected"
+            perm = np.random.default_rng(sp["seed"]).permutation(n)
+            null = pixels[:, torch.from_numpy(perm)].clone()
+            rec["perm"] = perm.tolist()
+        elif sp["kind"] == "other_ref":
+            null = pixels.clone()  # the other reference, read + preprocessed exactly like the positive one
+        else:
+            raise ValueError(sp["kind"])
+        self._nd_dir.mkdir(parents=True, exist_ok=True)
+        save_video((null.clamp(0, 1) * 255.0).round(), self._nd_dir / f"{sp['item_id']}.mp4", fps=24.0, video_format="CFHW")
+        (self._nd_dir / f"{sp['item_id']}.json").write_text(json.dumps(rec) + "\n")
+        print(f"[dcg-v3] null {sp['kind']} {sp['item_id']} frames={n}" +
+              (f" src={sp.get('null_reference')}" if sp["kind"] == "other_ref" else f" seed={sp.get('seed')}"), flush=True)
+        return null
 
 
 def main() -> None:
@@ -83,11 +137,13 @@ def main() -> None:
     ap.add_argument("--arm", required=True)
     ap.add_argument("--w", type=float, default=6.0)
     ap.add_argument("--null-kind", default="crossfade",
-                    choices=["crossfade", "vae_lerp", "identity", "endpoint_only", "target_x0", "hold_swap", "hold_start"],
+                    choices=["crossfade", "vae_lerp", "identity", "endpoint_only", "target_x0", "hold_swap", "hold_start", *NEW_KINDS],
                     help="DCG null construction (default crossfade = pixel dissolve of the reference's endpoints; "
                          "hold_swap = hold-start / short centered crossfade / hold-end; hold_start = the reference's first frame held for all frames).")
     ap.add_argument("--holdswap-window", type=int, default=8,
                     help="hold_swap null only: crossfade window width in frames (default 8; n-1 == crossfade).")
+    ap.add_argument("--null-specs", default=os.environ.get("DCG_NULL_SPECS"),
+                    help="shuffled / other_ref only: JSON {rows: {item_id: spec}} (misc/2026-11-02_rebuttal/nulls68/null_specs.json).")
     ap.add_argument("--seed", type=int, required=True)
     ap.add_argument("--chunk", type=int, default=0)
     ap.add_argument("--num-chunks", type=int, default=1)
@@ -140,15 +196,28 @@ def main() -> None:
     if not pending:
         return
 
-    samples = [make_sample(r) for r in pending]
+    specs = None
+    if args.null_kind in NEW_KINDS:
+        assert args.null_specs, "--null-specs (or DCG_NULL_SPECS) is required for --null-kind shuffled / other_ref"
+        allspec = json.loads(Path(args.null_specs).read_text())["rows"]
+        specs = [dict(allspec[r["item_id"]], item_id=r["item_id"]) for r in pending]
+        assert all(sp["kind"] == args.null_kind for sp in specs), "null spec kind != --null-kind"
+        samples = [make_sample(r, str(DR / sp["null_reference_path"]) if sp["kind"] == "other_ref" else None)
+                   for r, sp in zip(pending, specs)]
+    else:
+        samples = [make_sample(r) for r in pending]
     cfg = ValidationConfig(samples=samples, video_dims=RES, frame_rate=24.0, seed=args.seed,
                            inference_steps=30, guidance_scale=GS, stg_scale=STG, stg_blocks=[29], stg_mode="stg_v",
-                           generate_audio=False, dcg_scale=args.w, dcg_null_kind=args.null_kind,
+                           generate_audio=False, dcg_scale=args.w,
+                           dcg_null_kind=("crossfade" if args.null_kind in NEW_KINDS else args.null_kind),
                            dcg_holdswap_window=args.holdswap_window)
     cfg.dcg_use_null_as_reference = False
     cfg.dcg_rescale = 0.0
     device = torch.device("cuda")
-    runner = ValidationRunner(config=cfg, model_path=MODEL, text_encoder_path=GEMMA)
+    if specs is not None:
+        runner = NullSpecRunner(config=cfg, model_path=MODEL, text_encoder_path=GEMMA, specs=specs, nulls_dir=out / "nulls")
+    else:
+        runner = ValidationRunner(config=cfg, model_path=MODEL, text_encoder_path=GEMMA)
     transformer = load_transformer(MODEL, device="cpu", dtype=torch.bfloat16)
     targets = yaml.safe_load((EVAL / "arms.yaml").read_text())["targets"]["attn_ffn"]
     transformer = get_peft_model(transformer, LoraConfig(r=RANK, lora_alpha=ALPHA, target_modules=targets,

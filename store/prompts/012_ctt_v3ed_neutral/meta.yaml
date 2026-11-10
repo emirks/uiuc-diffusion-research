@@ -15,3 +15,4 @@ derived:   # deterministic transforms (stamp_rows.py flags)
   strip_sksz: 6e2b9d5dd6da        # base arms: ' sksz.' removed (registry_base_cond_neutral_v3ed81)
   zs_subset60: 57862d0f71fd       # advisor-picked 60-row subset, ED 30 rows (row subset, prompts BYTE-IDENTICAL) -- dcg empty-null w6 scoring, misc/2026-09-16_dcg_emptynull
   sub134_s42: b2b9094bf0bc        # row SUBSET eval_ladder/subsets/gridv3_sub134_s42.json (34 rows), prompts byte-identical; rebuttal ablation arms (2026-11-09)
+  zs68_s42: b2b9094bf0bc          # row SUBSET = the 34 ED zero-shot rows of eval_ladder/subsets/gridv3_sub134_s42.json (= sub134_s42, all ED rows are zero-shot), prompts byte-identical; NRG null-design arms shufnull/otherref (rebuttal 2026-11-10)

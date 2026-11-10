@@ -17,3 +17,4 @@ derived:   # deterministic transforms (stamp_rows.py flags)
   zs_subset60: 4492328e6b96       # advisor-picked 60-row subset, HF 30 rows (row subset, prompts BYTE-IDENTICAL) -- dcg empty-null w6 scoring, misc/2026-09-16_dcg_emptynull
   zs_one_sided10: 2fe98d758e67    # 10-row one-sided zero-shot probe subset (4 cross/3 foreign/3 same, distinct refs; row subset, prompts BYTE-IDENTICAL) -- dcg hold_start null w6, misc/2026-09-24_dcg_emptynull_gridv3/holdstart_probe (2026-09-25)
   sub134_s42: 97a7a48ed463        # row SUBSET eval_ladder/subsets/gridv3_sub134_s42.json (100 rows), prompts byte-identical; rebuttal ablation arms (2026-11-09)
+  zs68_s42: 48d6986a25b2          # row SUBSET = the 34 HF zero-shot rows of eval_ladder/subsets/gridv3_sub134_s42.json, prompts byte-identical; NRG null-design arms shufnull/otherref (rebuttal 2026-11-10, misc/2026-11-02_rebuttal/nulls68)
