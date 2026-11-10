@@ -1,0 +1,27 @@
+id: 052_copy_emptynull_gridv3__dai__2026-11-10
+seq: 52
+shelf: evals
+created: '2026-11-10'
+machine: dai (login CPU, numpy over stored features)
+instrument: scripts/copy_metrics.py @ e3b4961
+copy_score: src/diffusion/transition_eval/m2_integrity.py (reused verbatim)
+tau_copy: 0.858
+definition:
+  - "For each generation g with own reference r (the `reference` field of the gen's grid.jsonl row; r's features are in the corpus store, data/processed/transitions_std121/<class>/features/<r>/dino_cls@dinov2b-r256.npz):"
+  - "gen_mid = mid_mask(T_g, n_pre, n_suf) with the SAME n_pre/n_suf rules as handoff_metrics (HF 9/8|0 by sidedness; ED 1/0; externals 1/0). TEG baselines (2026-09-20, two-sided rows): frame-conditioned externals (refVFX two-sided, Wan FLF2V) 1/1; the VACE first-last CLIP baseline (grid type VACE16) 6/4."
+  - "ref_core = the reference's core mask computed exactly as the harness computes a reference bundle: morph_profile(r_feats, n_prefix=9, n_suffix=8, n_endpoints=2) then core_mask_v3(profile, r's sidedness) (transition_eval/score.py::_ref_bundle_cache)."
+  - "copy_score(gen_feats, gen_mid, ref_feats, ref_core, TAU_COPY) -> copy_max, near_copy, copy_gen_frame, copy_ref_frame; ref_idx = the reference's NON-core (~ref_core) frames \u2014 its own scenes A/B, the content that must never appear."
+  - "Also emit ref_core_frac (fraction of reference frames in core) and n_mid (gen mid frames), and `missing` when a feature is absent."
+why: "In evals/028/030 every pool clip is an eval item, so copy_max/near_copy were scored against POOL references, never against the generation's own conditioning reference; near_copy was identical across all four paper arms on 100% of the pool rows (coordinator check 2026-09-18). This eval scores M2a against the OWN reference: did the generation replay the reference's own shots?"
+caveat: "copy_max is a max over mid frames, so longer generations (121 f) have more chances than the externals' 49 f / 33 f \u2014 the externals' copy rate is, if anything, under-estimated relative to ours; disclosed, not corrected."
+arms_scored:
+  dualforce_dcg_emptynull_w6_neutral_v3:
+    gen: store/gens/040_dualforce_dcg_emptynull_w6/03_neutral_v3__dai
+    rows: 564
+    grid_type: HF
+    coverage: {copy_defined: 564, near_copy: 8, copy_rate_pct: 1.42, copy_max_mean: 0.4258}
+  dualforce_dcg_emptynull_w6_neutral_v3ed81:
+    gen: store/gens/040_dualforce_dcg_emptynull_w6/04_neutral_v3ed81__dai
+    rows: 204
+    grid_type: ED
+    coverage: {copy_defined: 204, near_copy: 2, copy_rate_pct: 0.98, copy_max_mean: 0.6004}
