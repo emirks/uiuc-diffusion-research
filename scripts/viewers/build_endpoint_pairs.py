@@ -13,6 +13,7 @@ REPO = pathlib.Path(__file__).resolve().parents[2]
 RT = REPO / "misc/2026-11-02_rebuttal/real_transitions"
 OUT = REPO / "outputs/viewers/endpoint_pairs/index.html"
 SOURCES = [("moviecuts", "MovieCuts", "A = 1 s ending 2 frames before the hard cut, B = 1 s starting 2 frames after it (same clip); letterbox cropped. Label = editorial cut type."),
+           ("humanvid", "HumanVid (procedural tier)", "The 63 reserved never-trained HumanVid clips the procedural tier used (480x640, 24 fps, clean stock footage of people): A = first second of clip X, B = last second of clip Y (the procedural conds are X[0:9] and Y[112:121]). Label = the procedural tier's 16 target pairs, or random pairs from the same clips."),
            ("imagenet_vid", "ImageNet-VID", "Same video (VidVRD clip, first <=12 s): A = first second, B = last second. Label = main object."),
            ("edit3k", "Edit3K pairs", "Edit3K's two ImageNet-VID material slots (as rendered with a plain dissolve): A = slot A, B = slot B.")]
 
