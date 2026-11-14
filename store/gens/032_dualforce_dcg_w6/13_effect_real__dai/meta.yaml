@@ -1,0 +1,23 @@
+id: gens/032_dualforce_dcg_w6/13_effect_real__dai
+seq: 13
+shelf: gens
+arm: dualforce_dcg_w6
+harness_arm: dualforce_dcg_w6_effect_real   # frozen stamp inside items.jsonl/item_ids — joins use THIS
+variant: effect_real
+machine: dai
+created: 2026-11-14
+inputs: {run: runs/012_dualforce_control, step: 1000}
+code: src/LTX-2-ctt-v2-train packages + scripts/grid_v3/gen_dcg_v3.py (crossfade null, gs4/stg1, w=6, r128/a128, one_way; row reference_path) @ repo 7dd1d39
+prompt_family: prompts/024_real_tier_effect
+prompt_sha: 555174356cc1
+grid_rows: 220
+videos: 220
+source: scripts/store_register.py over misc/2026-11-02_rebuttal/real_transitions/registry/registry_dualforce_dcg_w6_effect_real.jsonl
+notes: real-transition TEG tier (ICLR 2027 rebuttal; prompts/024_real_tier_effect), 220 two-sided rows, effect prompt, seed 42; DeltaAI GH200, account bgms-dtai-gh (owner 2026-11-14), run folder misc/2026-11-02_rebuttal/real_transitions/run_dai (jobs.tsv, RUN_LEDGER.md); all clips probed; scored with the paper suite in misc/2026-11-02_rebuttal/real_transitions/score/SUITE.md (no evals/ entry, as the procedural tier); 97 f @ 24 fps 480x640, GEN_FRAMES=97; array 3601630 (22 x 10 clips, misc/2026-09-07_eval_grid_v2/gen/job_dcg_v3.sbatch)
+features:
+  dino_cls@dinov2b-r256: {have: 220, of: 220, hosts: [gh052.hsn.cm.delta.internal.ncsa.edu, gh083.hsn.cm.delta.internal.ncsa.edu, gh104.hsn.cm.delta.internal.ncsa.edu, gh111.hsn.cm.delta.internal.ncsa.edu, gh125.hsn.cm.delta.internal.ncsa.edu, gh138.hsn.cm.delta.internal.ncsa.edu]}
+  cotracker3@g20-m384-v2: {have: 220, of: 220, hosts: [gh052.hsn.cm.delta.internal.ncsa.edu, gh083.hsn.cm.delta.internal.ncsa.edu, gh104.hsn.cm.delta.internal.ncsa.edu, gh111.hsn.cm.delta.internal.ncsa.edu, gh125.hsn.cm.delta.internal.ncsa.edu, gh138.hsn.cm.delta.internal.ncsa.edu]}
+  lpips_t@alex-r256: {have: 220, of: 220, hosts: [gh052.hsn.cm.delta.internal.ncsa.edu, gh083.hsn.cm.delta.internal.ncsa.edu, gh104.hsn.cm.delta.internal.ncsa.edu, gh111.hsn.cm.delta.internal.ncsa.edu, gh125.hsn.cm.delta.internal.ncsa.edu, gh138.hsn.cm.delta.internal.ncsa.edu]}
+  videoprism@f16r288: {have: 220, of: 220, hosts: [gh052.hsn.cm.delta.internal.ncsa.edu, gh083.hsn.cm.delta.internal.ncsa.edu, gh104.hsn.cm.delta.internal.ncsa.edu, gh111.hsn.cm.delta.internal.ncsa.edu, gh125.hsn.cm.delta.internal.ncsa.edu, gh138.hsn.cm.delta.internal.ncsa.edu]}
+  trackdesc@cotracker3-s64-v1: {have: 220, of: 220, hosts: [gh-login01.delta.ncsa.illinois.edu]}
+  action@swin3db-k400-u32: {have: 220, of: 220, hosts: [gh052.hsn.cm.delta.internal.ncsa.edu, gh083.hsn.cm.delta.internal.ncsa.edu, gh104.hsn.cm.delta.internal.ncsa.edu, gh111.hsn.cm.delta.internal.ncsa.edu, gh125.hsn.cm.delta.internal.ncsa.edu, gh138.hsn.cm.delta.internal.ncsa.edu]}
