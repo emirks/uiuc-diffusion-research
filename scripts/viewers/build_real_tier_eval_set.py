@@ -45,6 +45,7 @@ video{display:block;width:100%;background:#111;border-radius:3px}.ref video{aspe
  <option value="excess_motion">transition: its own motion ↓</option><option value="new_content">transition: new content ↓</option>
  <option value="mlo">endpoints: motion (weaker side) ↓</option><option value="ab">endpoints: A–B DINO ↑ (most different first)</option>
  <option value="style">ref→target style gap ↓</option></select></label>
+<label>endpoints <select id="fsrc"><option value="">all</option><option value="moviecuts">MovieCuts</option><option value="reserve">HumanVid / reserve</option></select></label>
 <label>transition <select id="ftb"><option value="">all</option><option>dissolve-like</option><option>mid</option><option>far from dissolve</option></select></label>
 <label>motion <select id="fmb"><option value="">all</option><option>low</option><option>mid</option><option>high</option></select></label>
 <label>A–B gap <select id="fgb"><option value="">all</option><option>similar</option><option>mid</option><option>different</option></select></label>
@@ -52,9 +53,10 @@ video{display:block;width:100%;background:#111;border-radius:3px}.ref video{aspe
 <main id="main"></main>
 <script>
 const D = __DATA__;
-document.getElementById("sub").textContent = `${D.items.length} rows = ${D.n_classes} Edit3K transition classes x 2 references, each paired with a different MovieCuts target endpoint pair ` +
-  `(the shot before and after a real hard cut; ${D.n_films} films). Targets are both-moving and spread evenly over a 3x3 grid of weaker-side motion (cuts ${D.mcut}) x A–B DINO ` +
-  `(cuts ${D.dcut}); each transition tercile gets every grid cell equally. Generation: 97 frames, 24 fps, 480x640, conditioning = the 9 frames nearest the cut on each side. Built ${D.built}.`;
+document.getElementById("sub").textContent = `${D.items.length} rows = ${D.n_classes} Edit3K transition classes x 2 references; per class one reference gets a MovieCuts target ` +
+  `(shot before / after a real hard cut, ${D.n_films} films) and the other a reserve pair (start of one never-trained HumanVid/DAVIS/OpenVid/VCBench clip, end of another). ` +
+  `Both halves: both endpoints moving, spread evenly over their own 3x3 grid of weaker-side motion x A–B DINO (MovieCuts cuts ${D.mcut} / ${D.dcut}; reserve cuts ${D.rmcut} / ${D.rdcut}); ` +
+  `each transition tercile gets every cell of each half equally. Generation: 97 frames, 24 fps, 480x640, conditioning 9+9 frames. Built ${D.built}.`;
 const main = document.getElementById("main"), f2 = x => (+x).toFixed(2);
 const io = new IntersectionObserver(es => es.forEach(e => {
   const v = e.target;
@@ -68,7 +70,8 @@ function render() {
   const ft = document.getElementById("ftb").value, fm = document.getElementById("fmb").value, fg = document.getElementById("fgb").value;
   const key = {item: r => r.item, d_dissolve: r => -r.d_dissolve, excess_motion: r => -r.excess_motion, new_content: r => -r.new_content,
                mlo: r => -Math.min(...r.motion), ab: r => r.ab_dino, style: r => -r.style_gap}[k];
-  const rs = D.items.filter(r => (!ft || r.transition_bin === ft) && (!fm || r.motion_bin === fm) && (!fg || r.gap_bin === fg) &&
+  const fsrc = document.getElementById("fsrc").value;
+  const rs = D.items.filter(r => (!fsrc || r.source === fsrc) && (!ft || r.transition_bin === ft) && (!fm || r.motion_bin === fm) && (!fg || r.gap_bin === fg) &&
     (!document.getElementById("flag").checked || (r.text && r.text.effect_status === "FLAGGED")) &&
     (!q || `${r.item} ${r.class} ${r.class_name} ${r.cut_type} ${r.text ? r.text.S1 + " " + r.text.EFFECT + " " + r.text.S2 : ""}`.toLowerCase().includes(q)))
     .sort((a, b) => { const x = key(a), y = key(b); return x < y ? -1 : x > y ? 1 : 0; });
@@ -76,14 +79,14 @@ function render() {
   rs.forEach(r => {
     const d = document.createElement("div"); d.className = "row";
     d.innerHTML = `<div class="ref"><div class="vh">reference (Edit3K)</div><video muted loop playsinline preload="none" poster="${r.ref_poster}" data-src="${r.ref_src}"></video></div>
-      <div class="tgt"><div class="vh">target endpoints: A (before cut) | B (after cut)</div><video muted loop playsinline preload="none" poster="${r.strip_poster}" data-src="${r.strip_src}"></video></div>
+      <div class="tgt"><div class="vh">target endpoints: A (start) | B (end)</div><video muted loop playsinline preload="none" poster="${r.strip_poster}" data-src="${r.strip_src}"></video></div>
       <div class="st"><h3>${r.item} · class ${r.class}${r.class_name ? " (" + r.class_name + ")" : ""}</h3>
-       <div><span class="chip">${r.transition_bin}</span><span class="chip">motion ${r.motion_bin}</span><span class="chip">gap ${r.gap_bin}</span></div>
+       <div><span class="chip" style="background:${r.source === "moviecuts" ? "#fdf0e1;color:#8a4b00" : "#e6f4ea;color:#1e6b34"}">${r.source === "moviecuts" ? "MovieCuts endpoints" : "HumanVid / reserve endpoints"}</span><span class="chip">${r.transition_bin}</span><span class="chip">motion ${r.motion_bin}</span><span class="chip">gap ${r.gap_bin}</span></div>
        <table>
         <tr><td>transition</td><td>dist. from dissolve <b>${f2(r.d_dissolve)}</b> · own motion <b>${f2(r.excess_motion)}</b> · new content <b>${f2(r.new_content)}</b></td></tr>
         <tr><td>endpoints</td><td>motion A <b>${r.motion[0]}</b> · B <b>${r.motion[1]}</b> · A–B DINO <b>${f2(r.ab_dino)}</b></td></tr>
         <tr><td>ref→target</td><td>style gap <b>${f2(r.style_gap)}</b></td></tr>
-        <tr><td>target</td><td>MovieCuts ${r.target} · ${r.cut_type} · film ${r.movie_id}</td></tr>
+        <tr><td>target</td><td>${r.source === "moviecuts" ? `MovieCuts ${r.target} · ${r.cut_type} · film ${r.movie_id}` : `reserve pair: start ${r.start_clip} (${r.banks[0]}) → end ${r.end_clip} (${r.banks[1]})`}</td></tr>
         <tr><td>reference</td><td>Edit3K pair ${r.ref_pair}</td></tr>
         ${r.text ? `<tr><td>start (S1)</td><td>${r.text.S1}</td></tr>
         <tr><td>effect</td><td><b>${r.text.EFFECT}</b>${r.text.effect_status === "FLAGGED" ? ' <span class="chip" style="background:#fde8e6;color:#b42318">flagged by audit</span>' : ""}</td></tr>
@@ -92,7 +95,7 @@ function render() {
     main.appendChild(d); d.querySelectorAll("video").forEach(v => io.observe(v));
   });
 }
-["sort", "ftb", "fmb", "fgb", "flag"].forEach(id => document.getElementById(id).onchange = render);
+["sort", "fsrc", "ftb", "fmb", "fgb", "flag"].forEach(id => document.getElementById(id).onchange = render);
 document.getElementById("q").oninput = render;
 render();
 </script></body></html>
@@ -110,8 +113,9 @@ def main():
         it.update({"ref_src": f"media/{it['ref']}", "ref_poster": f"media/{it['ref'][:-4]}.jpg",
                    "strip_src": f"media/{it['strip']}.mp4", "strip_poster": f"media/{it['strip']}.jpg"})
         if it["item"] in texts: it["text"] = texts[it["item"]]
-    d = {"items": items, "n_classes": len({i["class"] for i in items}), "n_films": len({i["movie_id"] for i in items}),
-         "mcut": " / ".join(f"{x:.2f}" for x in T["motion_cuts"]), "dcut": " / ".join(f"{x:.2f}" for x in T["dino_cuts"]),
+    d = {"items": items, "n_classes": len({i["class"] for i in items}), "n_films": len({i["movie_id"] for i in items if i.get("source") == "moviecuts"}),
+         "mcut": " / ".join(f"{x:.2f}" for x in T["grids"]["moviecuts"]["motion_cuts"]), "dcut": " / ".join(f"{x:.2f}" for x in T["grids"]["moviecuts"]["dino_cuts"]),
+         "rmcut": " / ".join(f"{x:.2f}" for x in T["grids"]["reserve"]["motion_cuts"]), "rdcut": " / ".join(f"{x:.2f}" for x in T["grids"]["reserve"]["dino_cuts"]),
          "built": datetime.datetime.now().strftime("%Y-%m-%d %H:%M")}
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(PAGE.replace("__DATA__", json.dumps(d, separators=(",", ":"))))
