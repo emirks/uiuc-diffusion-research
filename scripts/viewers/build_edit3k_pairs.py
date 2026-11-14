@@ -32,7 +32,7 @@ video{width:100%;aspect-ratio:16/9;display:block;background:#111;border-radius:3
 </style></head><body>
 <header><h1>Edit3K endpoint pairs (ImageNet-VID)</h1>
 <div class="sub" id="sub"></div>
-<div class="bar"><label>show <select id="f"><option value="all">all</option><option value="both">both moving</option><option value="star">starred</option></select></label>
+<div class="bar"><label>sort <select id="sort"><option value="md">moving &amp; different first</option><option value="m">motion (weaker side) ↓</option><option value="d">A–B DINO similarity ↑ (most different first)</option></select></label><label>show <select id="f"><option value="all">all</option><option value="both">both moving</option><option value="star">starred</option></select></label>
 <span id="cnt" class="sub"></span><button id="export">copy starred</button></div><textarea id="out" readonly></textarea></header>
 <main><div class="grid" id="grid"></div></main>
 <script>
@@ -41,17 +41,24 @@ let star = {}; try { star = JSON.parse(localStorage.getItem(KEY) || "{}"); } cat
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(star)); } catch (e) {} };
 document.getElementById("sub").textContent = `The ${D.pairs.length} video endpoint pairs every Edit3K class is rendered on (materials 500-699 = ImageNet-VID clips, picked at random by Edit3K). ` +
   `Each card = that pair as Edit3K rendered it with a plain dissolve: 1 s clip A, 2 s dissolve, 1 s clip B. Motion = mean pixel change per frame inside A / inside B (0-255); ` +
-  `"both moving" = both > 1.0, stills score ~0.01. Sorted by the weaker side. Star the pairs you like as endpoints. Built ${D.built}.`;
+  `"both moving" = both > 1.0, stills score ~0.01. A–B DINO = DINOv2-base CLS cosine, 3 frames of A vs 3 of B (low = different scenes). Star the pairs you like as endpoints. Built ${D.built}.`;
 const g = document.getElementById("grid");
-D.pairs.forEach(p => {
+D.pairs.forEach((p, i) => {
   const lo = Math.min(...p.motion), cls = lo > 1 ? "both" : (Math.max(...p.motion) > 0.3 ? "one" : "none");
-  const c = document.createElement("div"); c.className = "card"; c.dataset.pair = p.pair; c.dataset.cls = cls;
+  const c = document.createElement("div"); c.className = "card"; c.dataset.pair = p.pair; c.dataset.cls = cls; c.dataset.i = i;
   c.innerHTML = `<video muted loop playsinline preload="none" poster="${p.poster}" data-src="${p.src}"></video>
     <div class="row"><span class="p">${p.pair}</span><span class="tag ${cls}">${cls === "both" ? "both moving" : cls === "one" ? "one side moving" : "static"}</span></div>
-    <div class="row"><span class="m">motion A ${p.motion[0]} · B ${p.motion[1]}</span><button>★</button></div>`;
+    <div class="row"><span class="m">motion A ${p.motion[0]} · B ${p.motion[1]} · A–B DINO ${p.dino_ab}</span><button>★</button></div>`;
   c.querySelector("button").onclick = () => { if (star[p.pair]) delete star[p.pair]; else star[p.pair] = 1; save(); paint(); };
   g.appendChild(c);
 });
+function order() {
+  const k = document.getElementById("sort").value, cards = [...g.children];
+  const key = c => { const p = D.pairs[+c.dataset.i], lo = Math.min(...p.motion);
+    return k === "m" ? -lo : k === "d" ? p.dino_ab : (lo > 1 ? 0 : 10) + p.dino_ab; };
+  cards.sort((a, b) => key(a) - key(b)).forEach(c => g.appendChild(c));
+}
+document.getElementById("sort").onchange = order;
 function paint() {
   const f = document.getElementById("f").value; let n = 0;
   document.querySelectorAll(".card").forEach(c => {
@@ -70,7 +77,7 @@ const io = new IntersectionObserver(es => es.forEach(e => {
   else if (v.getAttribute("src")) { v.pause(); v.removeAttribute("src"); v.load(); }
 }), {rootMargin: "150px 0px"});
 document.querySelectorAll("video").forEach(v => io.observe(v));
-paint();
+order(); paint();
 </script></body></html>
 """
 

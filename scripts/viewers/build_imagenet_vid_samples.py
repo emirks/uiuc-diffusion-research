@@ -26,29 +26,40 @@ main{padding:4px 16px 60px}section{margin-top:16px}h2{font-size:16px;margin:0 0 
 .card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:6px}
 video{width:100%;aspect-ratio:16/9;object-fit:contain;display:block;background:#111;border-radius:3px}.m{color:var(--mute);font-size:12px;margin-top:3px}
 </style></head><body>
-<header><h1>ImageNet-VID — sample videos</h1><div class="sub" id="sub"></div><div class="toc" id="toc"></div></header>
+<header><h1>ImageNet-VID — sample videos</h1><div class="sub" id="sub"></div>
+<div class="toc"><label>sort <select id="sort"><option value="cat">by category</option><option value="m">motion ↓</option><option value="m2">motion ↑</option><option value="d">start→end change ↓ (DINO similarity low first)</option></select></label></div>
+<div class="toc" id="toc"></div></header>
 <main id="main"></main>
 <script>
 const D = __DATA__;
 document.getElementById("sub").textContent = `ImageNet-VID (ILSVRC 2015 video detection: YouTube snippets of 30 object categories, ~300 frames each) is the footage ` +
   `Edit3K used for its video endpoint pairs. Shown: ${D.n} videos, 2 per category, from ImageNet-VidVRD (1,000 VID videos as mp4), first 12 s at <=640 px; ` +
-  `category = the main annotated object. Native size and length under each clip. Built ${D.built}.`;
+  `category = the main annotated object. Motion = mean pixel change per frame (64x36 gray, 0-255); start→end = DINOv2-base CLS cosine between the first and last second (low = the scene changes a lot). Built ${D.built}.`;
 const main = document.getElementById("main"), toc = document.getElementById("toc");
-Object.entries(D.cats).forEach(([cat, its]) => {
+function render() {
+main.querySelectorAll("video[src]").forEach(v => { v.pause(); v.removeAttribute("src"); v.load(); });
+main.innerHTML = ""; toc.innerHTML = "";
+const k = document.getElementById("sort").value;
+const groups = k === "cat" ? Object.entries(D.cats) : [["all clips", Object.values(D.cats).flat().sort((a, b) =>
+  k === "m" ? b.motion - a.motion : k === "m2" ? a.motion - b.motion : a.dino_se - b.dino_se)]];
+groups.forEach(([cat, its]) => {
   toc.insertAdjacentHTML("beforeend", `<a href="#c-${cat}">${cat}</a>`);
   const s = document.createElement("section"); s.id = "c-" + cat;
   s.innerHTML = `<h2>${cat}</h2><div class="grid">` + its.map(i =>
     `<div class="card"><video muted loop playsinline preload="none" poster="${i.poster}" data-src="${i.src}"></video>` +
-    `<div class="m">${i.vid} · ${i.src_wh[0]}x${i.src_wh[1]} · ${i.frames} frames · objects: ${i.objects.join(", ")}</div></div>`).join("") + `</div>`;
+    `<div class="m">${i.vid} · ${i.src_wh[0]}x${i.src_wh[1]} · ${i.frames} frames · motion ${i.motion} · start→end DINO ${i.dino_se} · ${i.objects.join(", ")}</div></div>`).join("") + `</div>`;
   main.appendChild(s);
 });
+document.querySelectorAll("video").forEach(v => io.observe(v));
+}
 // Only on-screen videos hold a source: load + play when visible, pause + drop the source (frees the decoder) when not.
 const io = new IntersectionObserver(es => es.forEach(e => {
   const v = e.target;
   if (e.isIntersecting) { if (!v.getAttribute("src")) v.src = v.dataset.src; v.play().catch(() => {}); }
   else if (v.getAttribute("src")) { v.pause(); v.removeAttribute("src"); v.load(); }
 }), {rootMargin: "150px 0px"});
-document.querySelectorAll("video").forEach(v => io.observe(v));
+document.getElementById("sort").onchange = () => { io.disconnect(); render(); };
+render();
 </script></body></html>
 """
 
