@@ -20,6 +20,11 @@ SOURCES = [
     ("clipshots", "ClipShots", "Real edited YouTube / Weibo videos (Tang et al. 2018; MIT; 48 GB gzip on Drive, stream-only). "
      "Gradual transitions annotated by frame range but NOT by type (mostly dissolves, also fades, blinds, mosaics). "
      "Shown: 16 hand-picked 5 s windows from the first 1.5 GB (160 videos, 75 clean windows); type labels are by eye."),
+    ("moviecuts", "MovieCuts (endpoint source)", "Real movie scenes from 1,958 films (Pardo et al. ECCV 2022; access by request, granted "
+     "2026-11-13; 61 GB zip, any clip fetchable alone). Every transition is a HARD CUT; labels are editorial reasons for the cut. "
+     "Candidate use: the two shots around a cut as real, unseen-source TEG endpoints (no ground truth). Native 455x256 letterboxed "
+     "with a MOVIECLIPS watermark (shown upscaled to 640x360). Shown: 3 single-label val clips per cut type, 5 s around the cut "
+     "(the thin band marks the cut)."),
     ("autotransition", "AutoTransition", "CapCut user templates (Shen et al. 2022; CC-BY-4.0; 53 GB plain tar). "
      "107 timestamped transition types; noisy (text, stickers, slideshow content). Shown cropped to 3:4 480x640, "
      "8 best of 131 cut candidates."),
@@ -41,6 +46,12 @@ def items():
                                  "src": f"media/real_transitions/clipshots/win/{w['id']}.mp4",
                                  "poster": f"media/real_transitions/clipshots/win/{w['id']}.jpg",
                                  "dur": 121 / 24, "tr": w["tr_in_win_s"]})
+    for x in json.load(open(R / "real_transitions/moviecuts/examples.json")):
+        c = x["cut_in_win"]
+        out["moviecuts"].append({"label": x["type"], "sub": x["clip_id"],
+                                 "src": f"media/real_transitions/moviecuts/win/{x['clip_id']}.mp4",
+                                 "poster": f"media/real_transitions/moviecuts/win/{x['clip_id']}.jpg",
+                                 "dur": 121 / 24, "tr": [c - 0.04, c + 0.04]})
     C = {c["cid"]: c for c in json.load(open(R / "autotransition/cands.json"))["candidates"]}
     for cid in picks["autotransition"]:
         c = C[cid]
@@ -67,7 +78,7 @@ main{padding:4px 16px 60px;max-width:1500px}section{margin-top:22px}h2{font-size
 video{width:100%;display:block;background:#000;border-radius:3px;aspect-ratio:16/9;object-fit:contain}
 .tall video{aspect-ratio:3/4}
 .tl{position:relative;height:6px;background:#e9e9e9;border-radius:2px;margin:5px 0 3px}
-.tl .tr{position:absolute;top:0;bottom:0;background:var(--band)}.tl .ph{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink)}
+.tl .tr{position:absolute;top:0;bottom:0;min-width:3px;background:var(--band)}.tl .ph{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink)}
 .lab{font-weight:600}.sub{color:var(--mute);font-size:12px;word-break:break-all}
 .also{color:var(--mute);margin-top:28px}
 </style></head><body>
@@ -97,7 +108,7 @@ D.sources.forEach(([key, name, about]) => {
   });
   s.appendChild(g); main.appendChild(s);
 });
-main.insertAdjacentHTML("beforeend", `<p class="also"><b>Also checked, no usable samples:</b> MovieCuts (all 195k transitions are hard cuts; kept as an endpoint source) ·
+main.insertAdjacentHTML("beforeend", `<p class="also"><b>Also checked, no usable samples:</b>
   OmniShotCutBench (real, typed dissolve/wipe/push/zoom/fade; not released yet).</p>`);
 
 // Only on-screen videos hold a source: load + play when visible, pause + drop the source (frees the decoder) when not.
