@@ -48,7 +48,7 @@ video{display:block;width:100%;background:#111;border-radius:3px}.ref video{aspe
 <label>transition <select id="ftb"><option value="">all</option><option>dissolve-like</option><option>mid</option><option>far from dissolve</option></select></label>
 <label>motion <select id="fmb"><option value="">all</option><option>low</option><option>mid</option><option>high</option></select></label>
 <label>A–B gap <select id="fgb"><option value="">all</option><option>similar</option><option>mid</option><option>different</option></select></label>
-<input type="search" id="q" placeholder="class / cut type / item"><span id="cnt" class="sub"></span></div></header>
+<label><input type="checkbox" id="flag"> flagged effect text only</label><input type="search" id="q" placeholder="class / cut type / item / text"><span id="cnt" class="sub"></span></div></header>
 <main id="main"></main>
 <script>
 const D = __DATA__;
@@ -69,7 +69,8 @@ function render() {
   const key = {item: r => r.item, d_dissolve: r => -r.d_dissolve, excess_motion: r => -r.excess_motion, new_content: r => -r.new_content,
                mlo: r => -Math.min(...r.motion), ab: r => r.ab_dino, style: r => -r.style_gap}[k];
   const rs = D.items.filter(r => (!ft || r.transition_bin === ft) && (!fm || r.motion_bin === fm) && (!fg || r.gap_bin === fg) &&
-    (!q || `${r.item} ${r.class} ${r.class_name} ${r.cut_type}`.toLowerCase().includes(q)))
+    (!document.getElementById("flag").checked || (r.text && r.text.effect_status === "FLAGGED")) &&
+    (!q || `${r.item} ${r.class} ${r.class_name} ${r.cut_type} ${r.text ? r.text.S1 + " " + r.text.EFFECT + " " + r.text.S2 : ""}`.toLowerCase().includes(q)))
     .sort((a, b) => { const x = key(a), y = key(b); return x < y ? -1 : x > y ? 1 : 0; });
   document.getElementById("cnt").textContent = `${rs.length} rows`;
   rs.forEach(r => {
@@ -83,11 +84,15 @@ function render() {
         <tr><td>endpoints</td><td>motion A <b>${r.motion[0]}</b> · B <b>${r.motion[1]}</b> · A–B DINO <b>${f2(r.ab_dino)}</b></td></tr>
         <tr><td>ref→target</td><td>style gap <b>${f2(r.style_gap)}</b></td></tr>
         <tr><td>target</td><td>MovieCuts ${r.target} · ${r.cut_type} · film ${r.movie_id}</td></tr>
-        <tr><td>reference</td><td>Edit3K pair ${r.ref_pair}</td></tr></table></div>`;
+        <tr><td>reference</td><td>Edit3K pair ${r.ref_pair}</td></tr>
+        ${r.text ? `<tr><td>start (S1)</td><td>${r.text.S1}</td></tr>
+        <tr><td>effect</td><td><b>${r.text.EFFECT}</b>${r.text.effect_status === "FLAGGED" ? ' <span class="chip" style="background:#fde8e6;color:#b42318">flagged by audit</span>' : ""}</td></tr>
+        <tr><td>end (S2)</td><td>${r.text.S2}</td></tr>
+        <tr><td>prompts</td><td><details><summary class="vh">show the exact prompts</summary><div class="vh">SEGUE effect</div>${r.text.segue_E}<div class="vh">SEGUE neutral</div>${r.text.segue_N}<div class="vh">baselines (effect, no sksz)</div>${r.text.base_E}</details></td></tr>` : ""}</table></div>`;
     main.appendChild(d); d.querySelectorAll("video").forEach(v => io.observe(v));
   });
 }
-["sort", "ftb", "fmb", "fgb"].forEach(id => document.getElementById(id).onchange = render);
+["sort", "ftb", "fmb", "fgb", "flag"].forEach(id => document.getElementById(id).onchange = render);
 document.getElementById("q").oninput = render;
 render();
 </script></body></html>
@@ -96,6 +101,7 @@ render();
 
 def main():
     T = json.load(open(RT / "tier/items.json")); items = T["items"]
+    pj = RT / "tier/texts/prompts.json"; texts = json.load(open(pj)) if pj.exists() else {}
     for it in items:   # reference posters: the mid-transition frame (48 of 97)
         jpg = RT / (it["ref"][:-4] + ".jpg")
         if not jpg.exists():
@@ -103,6 +109,7 @@ def main():
                             "-frames:v", "1", "-q:v", "5", str(jpg)], check=True)
         it.update({"ref_src": f"media/{it['ref']}", "ref_poster": f"media/{it['ref'][:-4]}.jpg",
                    "strip_src": f"media/{it['strip']}.mp4", "strip_poster": f"media/{it['strip']}.jpg"})
+        if it["item"] in texts: it["text"] = texts[it["item"]]
     d = {"items": items, "n_classes": len({i["class"] for i in items}), "n_films": len({i["movie_id"] for i in items}),
          "mcut": " / ".join(f"{x:.2f}" for x in T["motion_cuts"]), "dcut": " / ".join(f"{x:.2f}" for x in T["dino_cuts"]),
          "built": datetime.datetime.now().strftime("%Y-%m-%d %H:%M")}
