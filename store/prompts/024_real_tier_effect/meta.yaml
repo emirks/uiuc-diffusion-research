@@ -1,0 +1,17 @@
+id: prompts/024_real_tier_effect
+seq: 24
+shelf: prompts
+created: 2026-11-14
+family: B
+lane: gen_eval
+grammar: "{S1}. sksz. {EFFECT}. {S2}."
+role: EFFECT prompts for the REAL-TRANSITION TEG tier (ICLR 2027 rebuttal, owner 2026-11-14; reviewer p5WC W2 "unknown-tool transitions, diverse semantic endpoint combinations, large style discrepancies" + icXV two-sided size) — 220 two-sided rows, 97 f @ 24 fps, 480x640; effect prompt for EVERY arm (owner: no neutral); base/externals = --strip-token
+rows: 220
+prompt_corpus_sha: 555174356cc1   # stamp_rows.corpus_sha (sha256[:12] over prompts in (cell,endpoint,reference,sided) order)
+cells: "R-moviecuts (110: MovieCuts val shots before / after a real hard cut) · R-reserve (110: start of one never-trained reserved eval clip, end of another — 100 HumanVid + 20 DAVIS/OpenVid/VCBench)"
+references: Edit3K (Gu et al. 2024, HF Gstar666/Edit3K) CapCut transition presets on ImageNet-VID video pairs — 110 owner-selected classes (misc/2026-11-02_rebuttal/real_transitions/edit3k/selected_classes_110.json) x 2 references on different pairs; centre-cropped 3:4, 480x640, 97 f (1 s A, 2 s transition, 1 s B); TF pool per class = its 10 renders minus the row's own reference (misc/.../real_transitions/score/pool_map.json)
+media: refs + pool renders misc/2026-11-02_rebuttal/real_transitions/tier/e3k_renders/videos · conds eval_ladder/conds/real_rtNNN_{start9,end9}.mp4 (gitignored; source tier/conds, tier/conds_res) · stills tier/frames
+balance: per half, 3x3 grid weaker-side endpoint motion x A-B DINO (both endpoints moving > 1.0), 12-13 per cell; each d_dissolve tercile of the classes spread evenly over each half's cells (4-5 per tercile x cell); every class appears on both endpoint sources
+texts: captions/007_real_tier_texts (S1/S2 endpoint captions: generate_descriptions v2, gemini-3.6-flash + 3.5-flash-lite audit; EFFECT = build_ref_effects_v3 instrument verbatim, pro-audited v3)
+builders: misc/2026-11-02_rebuttal/real_transitions/{select_tier_v2.py, texts.py, reserve_captions.py, effects_v2.py, effects_v3.py, assemble_prompts.py, build_registration.py}
+consumers: (pending) gens/032_dualforce_dcg_w6/13_effect_real__cc · 005_base_cond/10_effect_real__cc · 042_wan_flf2v/04_effect_real__cc · 043_wan_vace/04_effect_real__cc · 003_refvfx/08_effect_real_teg__cc

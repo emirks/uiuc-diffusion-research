@@ -1,0 +1,13 @@
+id: captions/007_real_tier_texts
+seq: 7
+shelf: captions
+created: 2026-11-14
+role: texts of the REAL-TRANSITION TEG tier (prompts/024_real_tier_effect); Lane B EVAL ONLY (never in training)
+count: 497 endpoint descriptions + 110 effect clauses
+content_hash: 00a2967d5a6a   # sha256[:12] over the sorted id -> text map (descriptions + effects)
+keys: "moviecuts:<clip_id>|A" (start = the 9 frames ending 2 before the cut) / "|B" (end = the 9 frames starting 2 after it) · "<reserve clip>|A" (frames 0-8; the 57 reserved clips captions/005 lacks; the other 63 are captions/005) · "e3k.<class>|effect"
+endpoint_generator: scripts/ctt_v2/captions/generate_descriptions.run() unchanged, prompt variant v2 (= captions/005), gemini-3.6-flash temp 0.7 thinking minimal, 9-frame anchors re-timed to 8 fps; auditor gemini-3.5-flash-lite (CTT_AUDIT_MODEL); <= 3 attempts — MovieCuts 440/440 accepted (434 on attempt 1), reserve 57/57
+effect_generator: scripts/grid_v3/build_ref_effects_v3.py SYSTEM + post() verbatim (gemini-3.6-flash, temp 0.2, 12-35-word subject-generic clause = the paper's Table-3 E text, captions/003 style) on the class's Edit3K render on a clean pair (698_699, full 16:9); v3 audit by gemini-3.1-pro-preview (the A13 pinned auditor) on the half-speed clip: 93 v2 clauses kept, 17 regenerated on the half-speed clip, 0 flagged (v1 from the tier references misread burned-in text / fast transitions; v2's flash-lite audit passed two "hard cut" errors)
+key: junho (owner 2026-11-14)
+source: misc/2026-11-02_rebuttal/real_transitions/tier/texts/ (captions/records.json raw, raw_effects_v2/, raw_effects_v3/) + reserve/captions/
+consumed_by: prompts/024_real_tier_effect
