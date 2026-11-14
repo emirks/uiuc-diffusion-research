@@ -1,0 +1,15 @@
+id: prompts/025_real_tier_neutral
+seq: 25
+shelf: prompts
+created: 2026-11-14
+family: B
+lane: gen_eval
+grammar: "{S1}. sksz. {S2}."
+role: NEUTRAL prompts for the REAL-TRANSITION TEG tier (ICLR 2027 rebuttal; owner 2026-11-14 — run by Ozgur on the lab H100s) — the same 220 two-sided rows as prompts/024_real_tier_effect (endpoints, references, conds, stills, tier metadata identical), only the prompt is the paper's neutral grammar; base/externals = --strip-token ("{S1}. {S2}.")
+rows: 220
+prompt_corpus_sha: 42897c1efbac   # stamp_rows.corpus_sha (sha256[:12] over prompts in (cell,endpoint,reference,sided) order)
+cells: "R-moviecuts (110) · R-reserve (110) — see prompts/024_real_tier_effect"
+references: as prompts/024_real_tier_effect (Edit3K CapCut presets, 110 classes x 2 references; TF pool = the class's other 9 renders)
+texts: captions/007_real_tier_texts (S1/S2 only; no effect clause)
+builders: misc/2026-11-02_rebuttal/real_transitions/{assemble_prompts.py (segue_N), build_registration_neutral.py}
+consumers: (pending) gens/032_dualforce_dcg_w6/14_neutral_real__cc · 005_base_cond/11_neutral_real__cc · 042_wan_flf2v/05_neutral_real__cc · 043_wan_vace/05_neutral_real__cc · 003_refvfx/09_neutral_real_teg__cc
