@@ -1,23 +1,71 @@
 {
- "title": "SEGUE: Visual Signal as Exclusive Guidance for One-Shot Transition Effect Generation",
- "authors": [
-  {"name": "Emir Kisa", "aff": [1]},
-  {"name": "Victor Escorcia", "aff": [2]},
-  {"name": "Junho Kim", "aff": [1]},
-  {"name": "Alexander G. Schwing", "aff": [1]},
-  {"name": "James M. Rehg", "aff": [1]},
-  {"name": "Ozgur Kara", "aff": [1]}
- ],
- "affiliations": {
-  "1": "UIUC",
-  "2": "MacondoLabs"
- },
- "links": {
-  "paper": "",
-  "code": "",
-  "model": "",
-  "dataset": "",
-  "supplementary": "../../supplementary/site/index.html"
- },
- "bibtex": "@article{kisa2026segue,\n  title={SEGUE: Visual Signal as Exclusive Guidance for One-Shot Transition Effect Generation},\n  author={Kisa, Emir and Escorcia, Victor and Kim, Junho and Schwing, Alexander G. and Rehg, James M. and Kara, Ozgur},\n  journal={arXiv preprint},\n  year={2026}\n}"
+  "title": "SEGUE: Visual Signal as Exclusive Guidance for One-Shot Transition Effect Generation",
+  "authors": [
+    {
+      "name": "Emir Kisa",
+      "aff": [
+        1
+      ],
+      "url": "https://emirkisa.com"
+    },
+    {
+      "name": "Victor Escorcia",
+      "aff": [
+        2
+      ],
+      "url": "https://escorciav.github.io"
+    },
+    {
+      "name": "Junho Kim",
+      "aff": [
+        1
+      ],
+      "url": "https://jhkim0911.github.io"
+    },
+    {
+      "name": "Alexander Schwing",
+      "aff": [
+        1
+      ],
+      "url": "https://www.alexander-schwing.de"
+    },
+    {
+      "name": "Ozgur Kara",
+      "aff": [
+        1
+      ],
+      "mark": "†",
+      "break": true,
+      "url": "https://karaozgur.com"
+    },
+    {
+      "name": "James Matthew Rehg",
+      "aff": [
+        1
+      ],
+      "mark": "†",
+      "url": "https://rehg.org"
+    }
+  ],
+  "affiliations": {
+    "1": "University of Illinois Urbana-Champaign",
+    "2": "MacondoLabs"
+  },
+  "links": {
+    "paper": "",
+    "code": "https://github.com/emirks/SEGUE",
+    "model": "https://huggingface.co/emirkisa/SEGUE",
+    "dataset": "",
+    "supplementary": "supp/",
+    "paper_pdf": "paper.pdf"
+  },
+  "bibtex": "@article{kisa2026segue,\n  title={SEGUE: Visual Signal as Exclusive Guidance for One-Shot Transition Effect Generation},\n  author={Kisa, Emir and Escorcia, Victor and Kim, Junho and Schwing, Alexander and Kara, Ozgur and Rehg, James Matthew},\n  journal={arXiv preprint},\n  year={2026}\n}",
+  "accent": "#2563eb",
+  "accent_dark": "#124bc7",
+  "accent_dark_theme": "#769bea",
+  "accent_dark_theme_hover": "#487ae3",
+  "author_note": "† Joint last authors",
+  "accent_band": "#769bea",
+  "accent_band_dark": "#487ae3",
+  "site_url": "https://segue-video.github.io/"
 }

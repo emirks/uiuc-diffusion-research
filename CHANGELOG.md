@@ -1,3 +1,7 @@
+## 2026-11-17
+
+- **11:22** Project page (segue-video.github.io) deployed twice (site commits 40c4413 on 11-16, 3fab3e2 on 11-17) with content unchanged (same clips, samples, order and text as the 10-09 deploy): clips now load and start per row (a reference with its samples or a comparison row starts all its clips at the same moment; rows far off screen are released, only the next pager page is preloaded); phones/tablets get stacked rows, a two-column button grid and a thin line between stacked rows; on desktop each results gallery with its title fits one screen and its card hugs the rows; method/NRG figures load as WebP. Two undeployed 10-09 previews left in the tree (3 samples per reference in picks.json, 260px clips) were removed so the sources match what is live. Details: project_page/README.md.
+
 ## 2026-11-14
 
 - **11:47** Real-transition TEG tier, effect half generated and scored on DeltaAI (bgms only): SEGUE NRG w=6, base LTX-2, Wan2.1-FLF2V, Wan2.1-VACE and refVFX x 220 two-sided rows (1,100 clips, all probed), registered as gens 032/13, 005/10, 042/04, 043/04, 003/08 (`*_effect_real*__dai`). Scored with the paper suite (Transport pool = the class's other 9 Edit3K renders, ceiling from the renders) in misc/2026-11-02_rebuttal/real_transitions/score/SUITE.md: transition fidelity SEGUE 94.7, base 76.8, FLF2V 75.1, VACE 67.9, refVFX 51.1 (seam-free 95.5 / 73.2 / 55.9 / 79.1 / 91.4 %). The neutral half runs on the campus cluster (RUN_REAL_TIER_NEUTRAL_FOR_OZGUR.md).

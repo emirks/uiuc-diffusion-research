@@ -4,15 +4,24 @@
   "teg": [
     {
       "block": "teg_ref__shadow_smoke_0",
-      "cells": null
+      "cells": [
+        "9r6ssuva",
+        "kjgpzj3r"
+      ]
     },
     {
       "block": "teg_ref__firelava_1",
-      "cells": null
+      "cells": [
+        "n75ywwm5",
+        "ij0sowr7"
+      ]
     },
     {
       "block": "teg_ref__flying_cam_transition_1",
-      "cells": null
+      "cells": [
+        "3iqanzta",
+        "dymjlciz"
+      ]
     },
     {
       "block": "teg_ref__water_bending_3",
@@ -20,49 +29,158 @@
     },
     {
       "block": "teg_ref__flame_transition_3",
-      "cells": null
+      "cells": [
+        "g999tmy5",
+        "pdznb0p0"
+      ]
     },
     {
       "block": "teg_ref__earth_wave_3",
-      "cells": null
+      "cells": [
+        "e1q8zgrk",
+        "q1vh7zp9"
+      ]
     },
     {
       "block": "teg_ref__air_bending_1",
+      "cells": null
+    },
+    {
+      "block": "teg_ref__firelava_0",
+      "cells": [
+        "6831obm2",
+        "c7md7j9g"
+      ]
+    },
+    {
+      "block": "teg_ref__display_transition_1",
+      "cells": [
+        "r4rdzykq",
+        "gvsylasq"
+      ]
+    },
+    {
+      "block": "teg_ref__melt_transition_3",
+      "cells": [
+        "1qkisvya",
+        "tv957zdr"
+      ]
+    },
+    {
+      "block": "teg_ref__melt_transition_1",
+      "cells": null
+    },
+    {
+      "block": "teg_ref__giant_grab_3",
       "cells": null
     }
   ],
   "vet": [
     {
       "block": "vfx_ref__ed.Bile_aura_hands.ac198e9b1922c8b5.M",
-      "cells": null
+      "cells": [
+        "rhaus4im",
+        "6wlsq4w3"
+      ]
     },
     {
       "block": "vfx_ref__train_rush_0",
-      "cells": null
-    },
-    {
-      "block": "vfx_ref__ed.Amber_roots_from_feet.b1c41aca9ebede4f.M",
-      "cells": null
-    },
-    {
-      "block": "vfx_ref__ed.Chest_Erupting_Shield.958f2642980d32df.M",
-      "cells": null
+      "cells": [
+        "n093erkc",
+        "ytkxm7g3"
+      ]
     },
     {
       "block": "vfx_ref__earth_element_4",
-      "cells": null
+      "cells": [
+        "nlhloko0",
+        "0jfsu11q"
+      ]
     },
     {
       "block": "vfx_ref__super_fast_run_0",
-      "cells": null
+      "cells": [
+        "hsmzewi8",
+        "9363ji4n"
+      ]
+    },
+    {
+      "block": "vfx_ref__ed.Amber_roots_from_feet.b1c41aca9ebede4f.M",
+      "cells": [
+        "8h5rta2s",
+        "5wjfe18t"
+      ]
+    },
+    {
+      "block": "vfx_ref__ed.Chest_Erupting_Shield.958f2642980d32df.M",
+      "cells": [
+        "r78krcf6",
+        "dex5tbx4"
+      ]
     },
     {
       "block": "vfx_ref__animalization_0",
-      "cells": null
+      "cells": [
+        "xezft41o",
+        "h29lte46"
+      ]
     },
     {
       "block": "vfx_ref__portal_1",
+      "cells": [
+        "3vfgzlec",
+        "7csxp5w9"
+      ]
+    },
+    {
+      "block": "vfx_ref__gas_transformation_7",
+      "cells": [
+        "stnnq1c5",
+        "9ccohr2v"
+      ]
+    },
+    {
+      "block": "vfx_ref__color_rain_0",
+      "cells": [
+        "rndexgcm",
+        "o9cuex37"
+      ]
+    },
+    {
+      "block": "vfx_ref__luminous_gaze_1",
+      "cells": [
+        "po8aas5r",
+        "xkwpv62x"
+      ]
+    },
+    {
+      "block": "vfx_ref__explosion_0",
+      "cells": [
+        "buzjlbr2",
+        "ay182rf3"
+      ]
+    },
+    {
+      "block": "vfx_ref__wireframe_0",
       "cells": null
+    },
+    {
+      "block": "vfx_ref__cotton_cloud_2",
+      "cells": null
+    },
+    {
+      "block": "vfx_ref__saint_glow_1",
+      "cells": [
+        "ze70ojgn",
+        "j9kyp5np"
+      ]
+    },
+    {
+      "block": "vfx_ref__ed.Amber_crystal_wings_on_back.74338fd6ddab169a.M",
+      "cells": [
+        "tx5w8gbc",
+        "ya8q62p3"
+      ]
     }
   ],
   "teg_cmp": [
