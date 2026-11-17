@@ -329,6 +329,10 @@ def figure_html(name, alt):
 
 FULL_ROWS = True    # default since 2026-10-07 ("full rows is ok"); --full-rows kept as a no-op switch
 
+# Label under every reference clip on this site (2026-11-17: "reference effect"). The shared supplementary
+# builder writes "reference"; the anonymous supplementary site keeps that, only this site is relabelled.
+REF_LABEL = ('<div class="seg-label">reference</div>', '<div class="seg-label">reference effect</div>')
+
 GALLERY_SLOTS = 2   # samples per reference row (deployed 2026-10-09 layout: 2); fewer -> empty slot(s)
 PAGE_SIZE = 2       # gallery rows per page (2026-10-09: 2); comparison groups use CMP_PAGE_SIZE
 CMP_PAGE_SIZE = 2   # comparison rows per page (2026-10-09: same as the galleries)
@@ -823,6 +827,7 @@ def do_supp():
     out = out.replace("__ACCENT_DARK__", accent_dark).replace("__ACCENT__", accent)
     out = _apply_seo(out, cfg, "supp")
 
+    out = out.replace(*REF_LABEL)
     # the public gallery must carry no curation/overlay/internal leftovers
     for bad in ('data-hidden', 'seg-ov-', 'applyPlan', 'anonymous', '__ACCENT', '__BAND', '__THEME'):
         assert bad not in out, "supp gallery not clean: found %r" % bad
@@ -1008,6 +1013,7 @@ def do_html(theme="dark"):
     out = _apply_seo(out, cfg, "main")
     write_robots_and_sitemap(cfg)
 
+    out = out.replace(*REF_LABEL)
     # the public page must be clean of any curation/overlay leftovers
     for bad in ('data-hidden', 'seg-ov-', 'applyPlan', 'anonymous'):
         assert bad not in out, "project page not clean: found %r" % bad
