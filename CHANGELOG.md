@@ -1,5 +1,6 @@
 ## 2026-11-17
 
+- **12:05** Project page, phones/tablets: comparison rows show the inputs as one centred pair (reference box + an endpoints box that hugs its two stacked clips, together one clip tall, as on desktop), outputs centred under the arrow (project_page/template_light.html pp-responsive); deployed as site commit 27ed4e5.
 - **11:48** Project page: the label under every reference clip reads "reference effect" (main page + results gallery; set in project_page/build_page.py REF_LABEL, the anonymous supplementary keeps "reference"); deployed as site commit 8126c49.
 - **11:22** Project page (segue-video.github.io) deployed twice (site commits 40c4413 on 11-16, 3fab3e2 on 11-17) with content unchanged (same clips, samples, order and text as the 10-09 deploy): clips now load and start per row (a reference with its samples or a comparison row starts all its clips at the same moment; rows far off screen are released, only the next pager page is preloaded); phones/tablets get stacked rows, a two-column button grid and a thin line between stacked rows; on desktop each results gallery with its title fits one screen and its card hugs the rows; method/NRG figures load as WebP. Two undeployed 10-09 previews left in the tree (3 samples per reference in picks.json, 260px clips) were removed so the sources match what is live. Details: project_page/README.md.
 

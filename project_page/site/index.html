@@ -532,12 +532,17 @@ html, body { max-width:100%; overflow-x:clip; }
   .seg-blockwrap .seg-celllabel { max-width:none; }
 
   /* comparison / guidance / limitation rows */
-  .seg-strip .seg-cellsrow { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:12px;
-    overflow:visible; padding-bottom:0; align-items:start; }
-  .seg-strip .seg-unit { width:100%; min-width:0; }
+  /* 2026-11-17: centred wrapping rows of equal clip boxes (--u wide: 4 per line on tablets, 2 on phones).
+     The inputs read as one centred pair: reference box + an endpoints box that hugs its two stacked clips,
+     sized so those two clips are exactly one clip tall (box = 7px padding + 1px border a side, 6px stack gap:
+     2*(e-16)*4/3 + 6 = (u-16)*4/3  ->  e = u/2 + 5.75px), like the desktop row. Outputs centre under the arrow. */
+  .seg-strip .seg-cellsrow { display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-start; gap:12px;
+    overflow:visible; padding-bottom:0; --u:calc((100% - 36px) / 4); }
+  .seg-strip .seg-unit { flex:none; width:var(--u); min-width:0; }
+  .seg-strip .seg-unit.seg-endstack { width:calc(var(--u) / 2 + 5.75px); }
   .seg-strip .seg-media, .seg-strip .seg-noend { width:100%; height:auto !important; aspect-ratio:3/4; }
-  .seg-strip .seg-endstack .seg-stack { width:50%; margin:0 auto; }   /* the two stacked clips = one clip tall */
-  .seg-strip .seg-arrow { grid-column:1 / -1; justify-content:center; align-self:center; height:auto;
+  .seg-strip .seg-endstack .seg-stack { width:100%; }
+  .seg-strip .seg-arrow { flex:0 0 100%; justify-content:center; align-self:center; height:auto;
     padding:0; margin:-4px 0; font-size:0; }
   .seg-strip .seg-arrow::after { content:"\2193"; font-size:20px; line-height:1; }
   /* rows stacked vertically: a thin line between rows so each reference reads as one group (2026-11-17) */
@@ -545,7 +550,7 @@ html, body { max-width:100%; overflow-x:clip; }
   :is(html.theme-dark,.pp-band) .pp-pager .pp-row + .pp-row { border-top-color:rgba(255,255,255,.14); }
 }
 @media (max-width:600px) {
-  .seg-strip .seg-cellsrow { grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; }
+  .seg-strip .seg-cellsrow { gap:10px; --u:calc((100% - 10px) / 2); }
 }
 @media (max-width:768px) {
   .authors-fancy { font-size:1.05rem; line-height:1.8; }
